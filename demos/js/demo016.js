@@ -7,6 +7,15 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
+	var bgOff = scrawl.makeColor({
+			name: 'backgroundOff',
+			color: 'peachpuff'
+		}),
+		bgOn = scrawl.makeColor({
+			name: 'backgroundOn',
+			color: 'peru'
+		});
+
 	//define entity
 	scrawl.makeEllipse({
 		name: 'ellie',
@@ -15,8 +24,12 @@ var mycode = function() {
 		radiusX: 150,
 		radiusY: 50,
 		lineWidth: 5,
-		fillStyle: 'blue',
-		strokeStyle: 'red',
+		fillStyle: scrawl.makeColor({
+			color: 'indigo'
+		}).name,
+		strokeStyle: scrawl.makeColor({
+			color: 'firebrick'
+		}).name,
 		method: 'fillDraw',
 		shape: true,
 	});
@@ -36,7 +49,7 @@ var mycode = function() {
 				roll: 1,
 			});
 			scrawl.cell.mycanvas_base.set({
-				backgroundColor: (scrawl.entity.ellie.checkHit(scrawl.pad.mycanvas.getMouse())) ? 'lightblue' : 'lightgreen'
+				backgroundColor: (scrawl.entity.ellie.checkHit(scrawl.pad.mycanvas.getMouse())) ? bgOn.get() : bgOff.get()
 			});
 			scrawl.render();
 
@@ -53,7 +66,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['shape', 'factories', 'animation'],
+	extensions: ['shape', 'factories', 'animation', 'color'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

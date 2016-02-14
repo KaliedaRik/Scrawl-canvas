@@ -1847,7 +1847,7 @@ Be aware that the timeline may finish before tweens near the end of the timeline
 
 @property event
 @type Number
-@default 1000
+@default 100
 **/
 			event: 100
 		};

@@ -25,7 +25,7 @@
 
 ## Purpose and features
 
-The Path module adds Path entitys - path-based objects - to the core module
+The Path extension adds Path entitys - path-based objects - to the core module
 
 * Defines a entity composed of lines, quadratic and bezier curves, etc
 * Can act as a path along which other entitys can be positioned and animated
@@ -38,6 +38,12 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 	var scrawl = (function(my) {
 		'use strict';
 
+		/**
+Object containing a set of vectors, for link calculations
+@property scrawl.work.worklink
+@type {Object}
+@private
+**/
 		my.work.worklink = {
 			start: my.makeVector({
 				name: 'scrawl.worklink.start'
@@ -68,7 +74,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlPath module adaptions to the Scrawl library object
+scrawlPath module adaptions to the scrawl-canvas library object
 
 ## New library sections
 
@@ -782,7 +788,7 @@ Array of POINTNAME Strings for Point objects associated with this Path entity
 **/
 			pointList: [],
 			/**
-Path length - calculated automatically by scrawl
+Path length - calculated automatically by scrawl-canvas
 
 _Note: this value will be affected by the value of the precision attribute - hiher precisions lead to more accurate perimeterLength values, particularly along curves_
 @property perimeterLength
@@ -1503,11 +1509,6 @@ Path creation factories will all create Point objects automatically as part of t
 			this.current.x = get(items.startX, items.currentX, local.x, 0);
 			this.current.y = get(items.startY, items.currentY, local.y, 0);
 			this.setLocal(items);
-			// this.local = vec({
-			// 	name: this.type + '.' + this.name + '.local',
-			// 	x: get(items.startX, items.currentX, local.x, 0),
-			// 	y: get(items.startY, items.currentY, local.y, 0)
-			// });
 			this.startLink = get(items.startLink, '');
 			this.fixed = get(items.fixed, false);
 			if (my.xto(items.angle, items.distance)) {

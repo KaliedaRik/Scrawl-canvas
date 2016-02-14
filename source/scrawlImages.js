@@ -28,10 +28,7 @@
 
 The Images module adds support for displaying images on canvas elements
 
-* Defines the EntityImage object, which wraps &lt;img&gt; and &lt;svg&gt; elements
-* Adds functionality to load images into the Scrawl library dynamically (after the web page hads loaded)
 * Defines the Picture entity, which can be used to display file images (including animated entity sheets), other &lt;canvas&gt; elements, and &lt;video&gt; elements (experimental)
-* Defines the AnimSheet object, which in turn define and control action sequences from entity sheet images
 * Defines the Pattern design, which uses images for entity fillStyle and strokeStyle attributes
 
 @module scrawlImages
@@ -94,7 +91,7 @@ A __factory__ function to generate new Picture entitys
 video support
 
 False if device does not support the video element; true otherwise
-@property video
+@property Device.video
 @type Boolean
 @default false
 **/
@@ -103,7 +100,7 @@ False if device does not support the video element; true otherwise
 video autoplay support
 
 False if device does not support video autoplay element; true otherwise
-@property videoAutoplay
+@property Device.videoAutoplay
 @type Boolean
 @default false
 **/
@@ -112,7 +109,7 @@ False if device does not support video autoplay element; true otherwise
 video fullscreen restraint
 
 False if device does not force videos to play in fullscreen mode; true otherwise
-@property videoForceFullScreen
+@property Device.videoForceFullScreen
 @type Boolean
 @default false
 **/
@@ -121,7 +118,7 @@ False if device does not force videos to play in fullscreen mode; true otherwise
 video as canvas source
 
 False if device does not permit video elements to be used as sources for canvas draw functions
-@property videoAsCanvasSource
+@property Device.videoAsCanvasSource
 @type Boolean
 @default false
 **/
@@ -196,7 +193,7 @@ Check if device supports various video functionalities
 						v.pause();
 						v.currentTime = 0.5;
 						x.drawImage(v, 50, 50, 10, 10, 0, 0, 10, 10);
-						setTimeout(function(){
+						setTimeout(function() {
 							test = x.getImageData(0, 0, 1, 1);
 							my.device.videoAsCanvasSource = (test.data[3] > 0) ? true : false;
 							v.removeEventListener('playing', myusevideo, false);
@@ -521,7 +518,7 @@ Builds &lt;canvas&gt; element's contenxt engine's pattern object
 			return this;
 		};
 		/**
-Remove this pattern from the scrawl library
+Remove this pattern from the scrawl-canvas library
 @method remove
 @return Always true
 **/
@@ -620,7 +617,7 @@ Alias for Pattern.makeDesign()
 		my.Picture.prototype.classname = 'entitynames';
 		my.work.d.Picture = {
 			/**
-SCRAWLIMAGE String - source image for this entity
+IMAGENAME String - source image for this entity
 @property source
 @type String
 @default ''
@@ -629,7 +626,7 @@ SCRAWLIMAGE String - source image for this entity
 			/**
 IMAGEDATANAME String - name of the Image Data object
 
-Calculated automatically by Scrawl following a .getImageData() call
+Calculated automatically by scrawl-canvas following a .getImageData() call
 @property imageData
 @type String
 @default ''
@@ -654,7 +651,7 @@ SPRITEANIMATIONNAME String - Entity sheet image linked to this entity
 			/**
 Identifier String - permitted values include: 'animation', 'canvas', 'img'
 
-Detected automatically by scrawl during entity construction
+Detected automatically by scrawl-canvas during entity construction
 @property imageType
 @type String
 @default ''
@@ -1231,7 +1228,7 @@ Stamp helper function - perform a 'floatOver' method draw
 		};
 
 		/**
-Display helper function - retrieve copy attributes for ScrawlImage, taking into account the current frame for entity sheet images
+Display helper function - retrieve copy attributes for Image object, taking into account the current frame for entity sheet images
 
 Also generates new filtered images, when necessary
 @method getImage
@@ -1253,7 +1250,7 @@ getImage helper object
 			img: function(src) {
 				var a = my.asset[src],
 					img = my.image[src];
-				if(img.width < 2 && img.height < 2){
+				if (img.width < 2 && img.height < 2) {
 					img.checkNaturalDimensions();
 				}
 				return a;
@@ -1262,7 +1259,7 @@ getImage helper object
 				var anim = my.spriteanimation[animation].getData(),
 					img = my.image[src],
 					perc = my.Picture.prototype.numberConvert;
-				if(img.width < 2 && img.height < 2){
+				if (img.width < 2 && img.height < 2) {
 					img.checkNaturalDimensions();
 				}
 				copyData.x = (anim.x.substring) ? perc(anim.x, img.width) : anim.x;
@@ -1282,7 +1279,7 @@ getImage helper object
 			}
 		};
 		/**
-Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl library
+Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl-canvas library
 @method getImageData
 @param {String} [label] IMAGEDATANAME - default: PICTURENAME_data
 @return This

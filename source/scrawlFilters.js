@@ -26,7 +26,7 @@
 
 ## Purpose and features
 
-The Filters module adds a set of filter algorithms to the Scrawl library
+The Filters extension adds a set of filter algorithms to the scrawl-canvas library
 
 @module scrawlFilters
 **/
@@ -37,12 +37,11 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlFilters module adaptions to the Scrawl library object
+scrawlFilters extension adaptions to the scrawl-canvas library object
 
 ## New library sections
 
 * scrawl.filter - for filter objects
-* scrawl.filterFactory - for filter factory objects
 
 @class window.scrawl_Filters
 **/
@@ -50,7 +49,7 @@ scrawlFilters module adaptions to the Scrawl library object
 		my.pushUnique(my.work.nameslist, 'filternames');
 		/**
 Utility canvases - never displayed
-@property filterCanvas
+@property scrawl.work.filterCanvas
 @type {CasnvasObject}
 @private
 **/
@@ -59,35 +58,35 @@ Utility canvases - never displayed
 		my.work.f.appendChild(my.work.filterCanvas);
 		/**
 Utility canvas 2d context engine
-@property filterCvx
+@property scrawl.work.filterCvx
 @type {CasnvasContextObject}
 @private
 **/
 		my.work.filterCvx = my.work.filterCanvas.getContext('2d');
 		/**
 Array of FILTERNAME strings, for filters to be applied to the Pad
-@property filters
+@property Pad.filters
 @type Array
 @default []
 **/
 		my.work.d.Pad.filters = [];
 		/**
 Array of FILTERNAME strings, for filters to be applied to the Cell
-@property filters
+@property Cell.filters
 @type Array
 @default []
 **/
 		my.work.d.Cell.filters = [];
 		/**
 Array of FILTERNAME strings, for filters to be applied to this entity
-@property filters
+@property Entity.filters
 @type Array
 @default []
 **/
 		my.work.d.Entity.filters = [];
 		/**
 Filter flag - when true, will draw the entity; on false (default), the clip method is used instead
-@property filterOnStroke
+@property Entity.filterOnStroke
 @type Boolean
 @default false
 **/
@@ -99,7 +98,7 @@ The filterLevel attribute determines at which point in the display cycle the fil
 * '__cell__' - filter is applied after all Entites have completed stamping themselves onto the cell
 * '__pad__' - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell
 
-@property filterLevel
+@property Entity.filterLevel
 @type String
 @default 'entity'
 **/
@@ -124,6 +123,8 @@ The filterLevel attribute determines at which point in the display cycle the fil
 		}
 		/**
 Pad constructor hook function - modified by filters module
+
+Adds the filters attribute to Pad objects
 @method filtersPadInit
 @private
 **/
@@ -132,6 +133,8 @@ Pad constructor hook function - modified by filters module
 		};
 		/**
 Cell constructor hook function - modified by filters module
+
+Adds the filters attribute to Cell objects
 @method filtersCellInit
 @private
 **/
@@ -140,6 +143,8 @@ Cell constructor hook function - modified by filters module
 		};
 		/**
 Entity constructor hook function - modified by filters module
+
+Adds the filters, filterOnStroke and filterLevel attributes to Entity objects
 @method filtersEntityInit
 @private
 **/
@@ -542,7 +547,7 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 		};
 		/**
 Entity.stampFilter helper object
-@method stampFilterActions
+@method stampFilterActions (not a function)
 @private
 **/
 		my.Entity.prototype.stampFilterActions = {

@@ -27,7 +27,7 @@
 
 Adds the ability to save and load Scrawl objects and scenes as JSON strings
 
-_This module is experimental and thus likely to change significantly as Scrawl evolves_
+_This extension is experimental and thus likely to change significantly as scrawl-canvas evolves_
 
 @module scrawlSaveLoad
 **/
@@ -39,7 +39,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlSaveLoad module adaptions to the Scrawl library object
+scrawlSaveLoad extension adaptions to the scrawl-canvas library object
 
 @class window.scrawl_SaveLoad
 **/

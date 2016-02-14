@@ -28,27 +28,33 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlImages module adaptions to the Scrawl library object
+scrawlImages extension adaptions to the scrawl-canvas library object
+
+* Defines the Image object, which wraps &lt;img&gt; elements
+* Adds functionality to load images into the scrawl-canvas library dynamically (after the web page hads loaded)
+* Defines the SpriteAnimation object, which in turn define and control action sequences from spritesheet images
+* Defines the Video object, which wraps &lt;video&gt; elements
 
 ## New library sections
 
+* scrawl.asset - linking to copies of DOM &lt;img&gt; and &lt;video&gt; elements
 * scrawl.image - for Image objects
-* scrawl.img - linking to copies of DOM &lt;img&gt; elements - links to the original elements are stored in scrawl.object
-* scrawl.anim - for SpriteAnimation objects
+* scrawl.spriteanimation - for SpriteAnimation objects
+* scrawl.video - for Video objects
 
 @class window.scrawl_Images
 **/
 
 		/**
 DOM document fragment
-@property imageFragment
+@property scrawl.work.imageFragment
 @type {Object}
 @private
 **/
 		my.work.imageFragment = document.createDocumentFragment();
 		/**
 Utility canvas - never displayed
-@property imageCanvas
+@property scrawl.work.imageCanvas
 @type {CasnvasObject}
 @private
 **/
@@ -57,7 +63,7 @@ Utility canvas - never displayed
 		my.work.imageFragment.appendChild(my.work.imageCanvas);
 		/**
 Utility canvas 2d context engine
-@property imageCvx
+@property scrawl.work.imageCvx
 @type {CasnvasContextObject}
 @private
 **/
@@ -111,13 +117,18 @@ A __factory__ function to generate new SpriteAnimation objects
 A __factory__ function to generate new Video objects
 @method makeVideo
 @param {Object} items Key:value Object argument for setting attributes
-@return ScrawlImage object
+@return Video object
 @private
 **/
 		my.makeVideo = function(items) {
 			return new my.Video(items);
 		};
-
+		/**
+Work vector, for calculations
+@property scrawl.work.workimg
+@type {Vector}
+@private
+**/
 		my.work.workimg = {
 			v1: my.makeVector(),
 		};
@@ -132,7 +143,7 @@ A __factory__ function to generate new Video objects
 		/**
 A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;video&gt; or &lt;svg&gt; elements identified by class string
 @method getImagesByClass
-@param {String} classtag Class string value of DOM objects to be imported into the scrawl library
+@param {String} classtag Class string value of DOM objects to be imported into the scrawl-canvas library
 @param {Boolean} [kill] when set to true, the &lt;img&gt; elements will be removed from the DOM when imported into the library
 @return true if one or more images are identified; false otherwise
 **/
@@ -172,7 +183,7 @@ A __general__ function to generate a Image wrapper object for an &lt;img&gt; or 
 Note: if an &lt;img&gt; (or &lt;picture&gt;) element uses the srcset attribute some browsers (eg chrome) will attempt to reload the image during browser resize. For this reason it is good policy to set this function's second argument (kill) to false, particularly if it is being used within an image load event listener. By default, the kill argument is set to true.
 
 @method getImageById
-@param {String} idtag Id string value of DOM object to be imported into the scrawl library
+@param {String} idtag Id string value of DOM object to be imported into the scrawl-canvas library
 @param {Boolean} [kill] when set to true, the &lt;img&gt; element will be removed from the DOM when imported into the library
 @return true if image is identified; false otherwise
 **/
@@ -215,7 +226,7 @@ Helper function
 		/**
 A __general__ function to generate a Video wrapper object for a &lt;video&gt; element identified by an id string
 @method getVideoById
-@param {String} idtag Id string value of DOM object to be imported into the scrawl library
+@param {String} idtag Id string value of DOM object to be imported into the scrawl-canvas library
 @param {Boolean} [stream] defaults to 'raw'
 @return true if video is identified; false otherwise
 **/
@@ -247,7 +258,7 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 
 ## Purpose
 
-* Wraps DOM &lt;img&gt; elements imported into the scrawl library
+* Wraps DOM &lt;img&gt; elements imported into the scrawl-canvas library
 * Used by __Picture__ entitys and __Pattern__ designs
 
 ## Access
@@ -280,7 +291,7 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 					items.name = get(items.name, tempname, '');
 				}
 				my.Base.call(this, items);
-				if(xt(my.image[items.name])){
+				if (xt(my.image[items.name])) {
 					this.name = items.name;
 					updatesRequired = true;
 				}
@@ -295,7 +306,7 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 				else if (xt(items.url)) {
 					this.addImageByUrl(items);
 				}
-				if(updatesRequired){
+				if (updatesRequired) {
 					this.updateDependentEntitys();
 				}
 				return this;
@@ -525,19 +536,19 @@ Check whether image's natural dimensions have changed and, if they have, update 
 				getTrue = my.xtGetTrue,
 				changed = false,
 				w, h;
-			if(el){
+			if (el) {
 				w = parseFloat(getTrue(el.offsetWidth, el.width, el.style.width, 1));
 				h = parseFloat(getTrue(el.offsetHeight, el.height, el.style.height, 1));
-				if(w !== this.width){
+				if (w !== this.width) {
 					this.width = w;
 					changed = true;
 				}
-				if(h !== this.height){
+				if (h !== this.height) {
 					this.height = h;
 					changed = true;
 				}
 			}
-			if(changed){
+			if (changed) {
 				this.updateDependentEntitys();
 			}
 			return changed;
@@ -553,10 +564,10 @@ Update the copyData of entitys that use this image as their source
 				ent,
 				eNames = scrawl.entitynames,
 				i, iz;
-			for(i = 0, iz = eNames.length; i < iz; i++){
+			for (i = 0, iz = eNames.length; i < iz; i++) {
 				ent = e[eNames[i]];
-				if(ent.type === 'Picture'){
-					if(ent.source === this.name){
+				if (ent.type === 'Picture') {
+					if (ent.source === this.name) {
 						ent.setCopy();
 					}
 				}
@@ -677,6 +688,12 @@ Datestamp when SpriteAnimation.getData() function was last called
 **/
 			lastCalled: 0,
 		};
+		/**
+Array of keys used with SpriteAnimation object
+@property scrawl.work.animKeys
+@type {Array}
+@private
+**/
 		my.work.animKeys = Object.keys(my.work.d.SpriteAnimation);
 		my.mergeInto(my.work.d.SpriteAnimation, my.work.d.Scrawl);
 		/**
@@ -799,7 +816,7 @@ getData helper object
 
 ## Purpose
 
-* Wraps DOM &lt;video&gt; elements imported into the scrawl library
+* Wraps DOM &lt;video&gt; elements imported into the scrawl-canvas library
 * Used by __Picture__ entitys and __Pattern__ designs
 
 ## Access

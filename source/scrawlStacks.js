@@ -25,10 +25,10 @@
 
 ## Purpose and features
 
-The Stacks module adds support for CSS3 3d transformations to visible &lt;canvas&gt;, and other, elements
+The Stacks extension adds support for CSS3 3d transformations to visible &lt;canvas&gt;, and other, elements
 
 * Significantly amends the PageElement object and functions
-* Adds core functions for detecting and including Scrawl stacks and associated elements in the library
+* Adds core functions for detecting and including scrawl-canvas stacks and associated elements in the library
 * Defines the Stack object, which contains all DOM elements to be manipulated by this stack
 * Defines the Element object, which wrap DOM elements (excluding &lt;canvas&gt; elements) included in a stack
 
@@ -42,7 +42,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlStacks module adaptions to the Scrawl library object
+scrawlStacks extension adaptions to the scrawl-canvas library object
 
 ## New library sections
 
@@ -76,7 +76,19 @@ scrawlStacks module adaptions to the Scrawl library object
 @class window.scrawl_Stacks
 **/
 
+		/**
+Array of css attributes not requiring prefixes
+@property scrawl.work.css
+@type {Array}
+@private
+**/
 		my.work.css = ['all', 'background', 'backgroundAttachment', 'backgroundBlendMode', 'backgroundClip', 'backgroundColor', 'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderBottom', 'borderBottomColor', 'borderBottomStyle', 'borderBottomWidth', 'borderCollapse', 'borderColor', 'borderLeft', 'borderLeftColor', 'borderLeftStyle', 'borderLeftWidth', 'borderRight', 'borderRightColor', 'borderRightStyle', 'borderRightWidth', 'borderSpacing', 'borderStyle', 'borderTop', 'borderTopColor', 'borderTopStyle', 'borderTopWidth', 'borderWidth', 'clear', 'color', 'columns', 'content', 'counterIncrement', 'counterReset', 'cursor', 'direction', 'display', 'emptyCells', 'float', 'font', 'fontFamily', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontSynthesis', 'fontVariant', 'fontVariantAlternates', 'fontVariantCaps', 'fontVariantEastAsian', 'fontVariantLigatures', 'fontVariantNumeric', 'fontVariantPosition', 'fontWeight', 'grid', 'gridArea', 'gridAutoColumns', 'gridAutoFlow', 'gridAutoPosition', 'gridAutoRows', 'gridColumn', 'gridColumnStart', 'gridColumnEnd', 'gridRow', 'gridRowStart', 'gridRowEnd', 'gridTemplate', 'gridTemplateAreas', 'gridTemplateRows', 'gridTemplateColumns', 'imageResolution', 'imeMode', 'inherit', 'inlineSize', 'isolation', 'letterSpacing', 'lineBreak', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginBlockStart', 'marginBlockEnd', 'marginInlineStart', 'marginInlineEnd', 'marginBottom', 'marginLeft', 'marginRight', 'marginTop', 'marks', 'mask', 'maskType', 'maxWidth', 'maxHeight', 'maxBlockSize', 'maxInlineSize', 'maxZoom', 'minWidth', 'minHeight', 'minBlockSize', 'minInlineSize', 'minZoom', 'mixBlendMode', 'objectFit', 'objectPosition', 'offsetBlockStart', 'offsetBlockEnd', 'offsetInlineStart', 'offsetInlineEnd', 'orphans', 'overflow', 'overflowWrap', 'overflowX', 'overflowY', 'pad', 'padding', 'paddingBlockStart', 'paddingBlockEnd', 'paddingInlineStart', 'paddingInlineEnd', 'paddingBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pointerEvents', 'position', 'prefix', 'quotes', 'rubyAlign', 'rubyMerge', 'rubyPosition', 'scrollBehavior', 'scrollSnapCoordinate', 'scrollSnapDestination', 'scrollSnapPointsX', 'scrollSnapPointsY', 'scrollSnapType', 'scrollSnapTypeX', 'scrollSnapTypeY', 'shapeImageThreshold', 'shapeMargin', 'shapeOutside', 'tableLayout', 'textAlign', 'textDecoration', 'textIndent', 'textOrientation', 'textOverflow', 'textRendering', 'textShadow', 'textTransform', 'textUnderlinePosition', 'unicodeRange', 'unset', 'verticalAlign', 'widows', 'willChange', 'wordBreak', 'wordSpacing', 'wordWrap'];
+		/**
+Array of css attributes that do require prefixes
+@property scrawl.work.xcss
+@type {Array}
+@private
+**/
 		my.work.xcss = ['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap', 'fontFeatureSettings', 'fontKerning', 'fontLanguageOverride', 'hyphens', 'imageRendering', 'imageOrientation', 'initial', 'justifyContent', 'linearGradient', 'opacity', 'order', 'orientation', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'resize', 'tabSize', 'textAlignLast', 'textCombineUpright', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'touchAction', 'transformStyle', 'transition', 'transitionDelay', 'transitionDuration', 'transitionProperty', 'transitionTimingFunction', 'unicodeBidi', 'whiteSpace', 'writingMode'];
 
 		/**
@@ -92,9 +104,9 @@ scrawl.init hook function - modified by stacks module
 			my.getElements();
 		};
 		/**
-A __utility__ function for performing bucket sorts on scrawl string arrays eg Group.elements
+A __utility__ function for performing bucket sorts on scrawl-canvas string arrays eg Group.elements
 @method multiSectionBucketSort
-@param {Array} section Array of scrawl library section names
+@param {Array} section Array of scrawl-canvas library section names
 @param {String} attribute on which sort will be performed
 @param {Array} a array to be sorted
 @return sorted array
@@ -424,7 +436,7 @@ The argument is an optional String - permitted values include 'stack', 'pad', 'e
 (This function replaces the one defined in the core module)
 @method setDisplayOffsets
 @param {String} [item] Command string detailing which element types are to be set
-@return The Scrawl library object (scrawl)
+@return The scrawl-canvas library object (scrawl)
 @chainable
 @example
     scrawl.setDisplayOffsets();
@@ -463,7 +475,7 @@ Set the perspective for all stacks
 
 @method setPerspectives
 @param {Array} [stacks] Array of STACKNAMEs - can also be a String - if null, all stacks will be processed
-@return The Scrawl library object (scrawl)
+@return The scrawl-canvas library object (scrawl)
 @chainable
 **/
 		my.setPerspectives = function(stacks) {
@@ -489,7 +501,7 @@ A __display__ function to ask Pads to undertake a complete clear-compile-show di
 
 @method render
 @param {Array} [pads] Array of PADNAMEs - can also be a String
-@return The Scrawl library object (scrawl)
+@return The scrawl-canvas library object (scrawl)
 @chainable
 **/
 		my.render = function(pads, mouse) {
@@ -852,65 +864,65 @@ A flag to determine whether an element uses the browser viewport for its positio
 **/
 		my.work.d.PageElement.viewport = false;
 		/**
-A flag to tell scrawl to add corner trackers to the element
+A flag to tell scrawl-canvas to add corner trackers to the element
 
-Corner trackers can be used by the PerspectiveCornersCell entity to bind its corners to a DOM element within a stack
+Corner trackers can be used by the Frame entity to bind its corners to a DOM element within a stack
 @property PageElement.includeCornerTrackers
 @type Boolean
 @default false
 **/
 		my.work.d.PageElement.includeCornerTrackers = false;
 		/**
-Corner tracker vector
+Corner tracker vector - used only with Frame emtitys
 @property PageElement.topLeft
 @type Vector
 @default false
 **/
 		my.work.d.PageElement.topLeft = false;
 		/**
-Corner tracker vector
+Corner tracker vector - used only with Frame emtitys
 @property PageElement.topRight
 @type Vector
 @default false
 **/
 		my.work.d.PageElement.topRight = false;
 		/**
-Corner tracker vector
+Corner tracker vector - used only with Frame emtitys
 @property PageElement.bottomRight
 @type Vector
 @default false
 **/
 		my.work.d.PageElement.bottomRight = false;
 		/**
-Corner tracker vector
+Corner tracker vector - used only with Frame emtitys
 @property PageElement.bottomLeft
 @type Vector
 @default false
 **/
 		my.work.d.PageElement.bottomLeft = false;
 		/**
-Corner tracker div element
+Corner tracker div element - used only with Frame entitys
 @property PageElement.topLeftDiv
 @type DOM element object
 @default false
 **/
 		my.work.d.PageElement.topLeftDiv = false;
 		/**
-Corner tracker div element
+Corner tracker div element - used only with Frame entitys
 @property PageElement.topRightDiv
 @type DOM element object
 @default false
 **/
 		my.work.d.PageElement.topRightDiv = false;
 		/**
-Corner tracker div element
+Corner tracker div element - used only with Frame entitys
 @property PageElement.bottomRightDiv
 @type DOM element object
 @default false
 **/
 		my.work.d.PageElement.bottomRightDiv = false;
 		/**
-Corner tracker div element
+Corner tracker div element - used only with Frame entitys
 @property PageElement.bottomLeftDiv
 @type DOM element object
 @default false
@@ -1038,7 +1050,7 @@ PageElement constructor hook function - modified by stacks module
 			this.drag = get(items.drag, false);
 		};
 		/**
-@method addCornerTrackers
+@method addCornerTrackers - used only with Frame entitys
 @return This
 @chainable
 @private
@@ -1085,7 +1097,7 @@ PageElement constructor hook function - modified by stacks module
 			return this;
 		};
 		/**
-@method updateCornerTrackers
+@method updateCornerTrackers - used only with Frame entitys
 @return This
 @chainable
 @private
@@ -1112,7 +1124,7 @@ PageElement constructor hook function - modified by stacks module
 			return this;
 		};
 		/**
-Augments Base.get() to retrieve DOM element width and height values, and stack-related attributes
+Augments Base.get() to retrieve DOM element width and height values, and stack-related attributes (startX, startY, handleX, handleY, deltaX, deltaY, translateX, translateY, translateZ, deltaTranslateX, deltaTranslateY, deltaTranslateZ). Can also be used to retrieve a number of current CSS attributes on the DOM element
 
 (The stack module replaces the core function rather than augmenting it via a hook function)
 
@@ -1122,7 +1134,7 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 **/
 		my.PageElement.prototype.get = function(item) {
 			var stat1 = ['width', 'height'],
-				stat2 = ['startX', 'startY', 'handleX', 'handleY', 'deltaX', 'deltaY', 'translateX', 'translateY', 'translateZ'],
+				stat2 = ['startX', 'startY', 'handleX', 'handleY', 'deltaX', 'deltaY', 'translateX', 'translateY', 'translateZ', 'deltaTranslateX', 'deltaTranslateY', 'deltaTranslateZ'],
 				el,
 				cont = my.contains;
 			el = this.getElement();
@@ -1165,6 +1177,12 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 						return this.translate.y;
 					case 'translateZ':
 						return this.translate.z;
+					case 'deltaTranslateX':
+						return this.deltaTranslate.x;
+					case 'deltaTranslateY':
+						return this.deltaTranslate.y;
+					case 'deltaTranslateZ':
+						return this.deltaTranslate.z;
 				}
 			}
 
@@ -1174,7 +1192,7 @@ Augments Base.get() to retrieve DOM element width and height values, and stack-r
 			return my.Base.prototype.get.call(this, item);
 		};
 		/**
-Augments Base.set() to allow the setting of DOM element dimension values, and stack-related attributes
+Augments Base.set() to allow the setting of DOM element dimension values, and stack-related attributes (start, startX, startY, handle, handleX, handleY, delta, deltaX, deltaY, translate, translateX, translateY, 'translateZ, deltaTranslate, deltaTranslateX, deltaTranslateY, deltaTranslateZ). Can also be used to set a number of current CSS attributes on the DOM element
 
 (The stack module replaces the core function rather than augmenting it via a hook function)
 
@@ -1317,7 +1335,7 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 		/**
 Augments PageElement.set(), to allow users to set the delta attributes using delta, deltaX, deltaY
 
-The scrawlAnimation module adds a __delta__ attribute to Cells and Entitys - this is an inbuilt delta vector which can be used to automatically animate the start vector of these objects - via the updateStart, revertStart and reverse functions - as part of the animation cycle.
+The scrawlAnimation extension adds a __delta__ attribute to Cells and Entitys - this is an inbuilt delta vector which can be used to automatically animate the start vector of these objects - via the updateStart, revertStart and reverse functions - as part of the animation cycle.
 
 Be aware that this is different to the PageElement.setDelta() function inherited by Cells and Entitys. setDelta is used to add a supplied argument value to the existing values of any numerical attribute of a Cell or Entity object, and is thus not limited to the animation cycle.
 
@@ -1694,7 +1712,7 @@ Permitted argument values include
 		/**
 updateStart helper object
 
-@method PageElement.updateStartActions
+@method PageElement.updateStartActions (not a function)
 @private
 **/
 		my.PageElement.prototype.updateStartActions = {
@@ -1745,7 +1763,7 @@ Permitted argument values include
 		/**
 revertStart helper object
 
-@method PageElement.revertStartActions
+@method PageElement.revertStartActions (not a function)
 @private
 **/
 		my.PageElement.prototype.revertStartActions = {
@@ -1803,7 +1821,7 @@ Changes the sign (+/-) of specified attribute values
 		};
 		/**
 reverse helper object
-@method PageElement.reverseActions
+@method PageElement.reverseActions (not a function)
 @private
 **/
 		my.PageElement.prototype.reverseActions = {
@@ -2080,7 +2098,15 @@ Calculate start Vector in reference to a Shape entity object's path
 				obj.setStampUsingDomElementPivot(obj, pivot);
 			}
 		};
+		/**
+Directly calls the equivalent Position function
+@method PageElement.setStampUsingPivot
+**/
 		my.PageElement.prototype.setStampUsingPivot = my.Position.prototype.setStampUsingPivot;
+		/**
+stamp helper object
+@method PageElement.setStampUsingPivot (not a function)
+**/
 		my.PageElement.prototype.setStampUsingPivotCalculations = {};
 		my.PageElement.prototype.setStampUsingPivotCalculations.point = my.Position.prototype.setStampUsingPivotCalculations.point;
 		my.PageElement.prototype.setStampUsingPivotCalculations.entity = my.Position.prototype.setStampUsingPivotCalculations.entity;
@@ -3263,45 +3289,97 @@ STACKNAME of the default Stack object to which this group is associated
 		};
 		my.mergeInto(my.work.d.ElementGroup, my.work.d.Base);
 
+			/**
+Directly calls the equivalent Group function
+@method set
+**/
 		my.ElementGroup.prototype.set = function(items) {
 			return my.Group.prototype.set.call(this, items);
 		};
+			/**
+Directly calls the equivalent Group function
+@method sortEntitys
+**/
 		my.ElementGroup.prototype.sortEntitys = function(force) {
 			return my.Group.prototype.sortEntitys.call(this, force);
 		};
+			/**
+Directly calls the equivalent Group function
+@method forceStamp
+**/
 		my.ElementGroup.prototype.forceStamp = function(method, cellname, cell) {
 			return my.Group.prototype.forceStamp.call(this, method, cellname, cell);
 		};
+			/**
+Directly calls the equivalent Group function
+@method stamp
+**/
 		my.ElementGroup.prototype.stamp = function(method, cellname, cell) {
 			var get = my.xtGet;
 			cellname = get(cellname, this.stack);
 			cell = get(cell, my.stack[this.stack]);
 			return my.Group.prototype.stamp.call(this, method, cellname, cell);
 		};
+			/**
+Directly calls the equivalent Group function
+@method filtersGroupInit
+**/
 		my.ElementGroup.prototype.filtersGroupInit = function() {
 			return my.Group.prototype.filtersGroupInit.call(this, arguments);
 		};
+			/**
+Directly calls the equivalent Group function
+@method addEntitysToGroup
+**/
 		my.ElementGroup.prototype.addEntitysToGroup = function() {
 			return my.Group.prototype.addEntitysToGroup.call(this, arguments);
 		};
+			/**
+Directly calls the equivalent Group function
+@method removeEntitysFromGroup
+**/
 		my.ElementGroup.prototype.removeEntitysFromGroup = function() {
 			return my.Group.prototype.removeEntitysFromGroup.call(this, arguments);
 		};
+			/**
+Directly calls the equivalent Group function
+@method updateEntitysBy
+**/
 		my.ElementGroup.prototype.updateEntitysBy = function(items) {
 			return my.Group.prototype.updateEntitysBy.call(this, items);
 		};
+			/**
+Directly calls the equivalent Group function
+@method setEntitysTo
+**/
 		my.ElementGroup.prototype.setEntitysTo = function(items) {
 			return my.Group.prototype.setEntitysTo.call(this, items);
 		};
+			/**
+Directly calls the equivalent Group function
+@method pivotEntitysTo
+**/
 		my.ElementGroup.prototype.pivotEntitysTo = function(item) {
 			return my.Group.prototype.pivotEntitysTo.call(this, item);
 		};
+			/**
+Directly calls the equivalent Group function
+@method getEntityAt
+**/
 		my.ElementGroup.prototype.getEntityAt = function(items) {
 			return my.Group.prototype.getEntityAt.call(this, items);
 		};
+			/**
+Directly calls the equivalent Group function
+@method getEntitysByMouseIndex
+**/
 		my.ElementGroup.prototype.getEntitysByMouseIndex = function(item) {
 			return my.Group.prototype.getEntitysByMouseIndex.call(this, item);
 		};
+			/**
+Directly calls the equivalent Group function
+@method getAllEntitysAt
+**/
 		my.ElementGroup.prototype.getAllEntitysAt = function(items) {
 			return my.Group.prototype.getAllEntitysAt.call(this, items);
 		};

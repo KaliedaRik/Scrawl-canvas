@@ -25,7 +25,7 @@
 
 ## Purpose and features
 
-The Collisions module adds support for detecting collisions between entitys
+The Collisions extension adds support for detecting collisions between entitys
 
 * Adds functionality to various core objects and functions so they can take detect collisions
 
@@ -38,7 +38,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlCollisions module adaptions to the Scrawl library object
+scrawlCollisions extension adaptions to the scrawl-canvas library object
 
 ## New default attributes
 
@@ -54,6 +54,8 @@ scrawlCollisions module adaptions to the Scrawl library object
 
 		/**
 Collision vectors, for use in collision detection calculations
+
+_Note: at some point in the future, this object needs to be moved into the scrawl.work object, for consistency_
 @property scrawl.workcols
 @type Object 
 @value Object containing three vectors - v1, v2, v3
@@ -253,7 +255,7 @@ Test will return:
 		};
 		/**
 checkFieldAt helper object
-@method Cell.checkFieldAtActions
+@method Cell.checkFieldAtActions (not a function)
 @private
 **/
 		my.Cell.prototype.checkFieldAtActions = {
@@ -364,7 +366,7 @@ Check all entitys in the Group to see if they are colliding with the supplied en
 		/**
 Check all entitys in the Group against each other to see if they are in collision
 @method Group.getInGroupEntityHits
-@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
+@return Array of [ENTITYNAME, ENTITYNAME] Arrays, one for each pair of entitys currently in collision
 **/
 		my.Group.prototype.getInGroupEntityHits = function() {
 			var j,
@@ -425,7 +427,7 @@ Check all entitys in the Group against each other to see if they are in collisio
 Check all entitys in this Group against all entitys in the argument Group, to see if they are in collision
 @method Group.getBetweenGroupEntityHits
 @param {String} g GROUPNAME of Group to be checked against this group; alternatively, the Group object itself can be supplied as the argument
-@return Array of [SPRITENAME, SPRITENAME] Arrays, one for each pair of entitys currently in collision
+@return Array of [ENTITYNAME, ENTITYNAME] Arrays, one for each pair of entitys currently in collision
 **/
 		my.Group.prototype.getBetweenGroupEntityHits = function(g) {
 			var j,
@@ -513,7 +515,7 @@ If no argument is supplied, the Group's default Cell's &lt;canvas&gt; element wi
 An Array of Arrays is returned, with each constituent array consisting of the the SPRITENAME of the entity that has reported a positive hit, alongside a coordinate Vector of where the collision is occuring
 @method Group.getFieldEntityHits
 @param {String} [cell] CELLNAME of Cell whose &lt;canvas&gt; element is to be used for the check
-@return Array of [SPRITENAME, Vector] Arrays
+@return Array of [ENTITYNAME, Vector] Arrays
 **/
 		my.Group.prototype.getFieldEntityHits = function(cell) {
 			var j,

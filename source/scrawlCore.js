@@ -2961,14 +2961,14 @@ Entity, cell or element height (in pixels)
 		height: 0
 		/**
 (Added by the path extension)
-The SPRITENAME of a Shape entity whose path is used to calculate this object's start point
+The ENTITYNAME of a Shape entity whose path is used to calculate this object's start point
 @property path
 @type String
 @default ''
 **/
 		/**
 (Added by the path extension)
-A value between 0 and 1 to represent the distance along a Shape object's path, where 0 is the path start and 1 is the path end
+A value between 0 and 1 to represent the distance along a Path object's path, where 0 is the path start and 1 is the path end
 @property pathPlace
 @type Number
 @default 0
@@ -4233,7 +4233,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 
 * scrawl.pad.PADNAME - for the Pad object
 * scrawl.canvas.PADNAME - for the Pad object's visible (display) &lt;canvas&gt; element
-* scrawl.context.PADNAME - for the visible (display) &ltcanvas&gt; element's 2d context engine
+* scrawl.context.PADNAME - for the visible (display) &ltcanvas&gt; element's 2d context engine (CanvasRenderingContext2D interface)
 * scrawl.cell[scrawl.pad.PADNAME.display] - for the Pad object's display cell
 * scrawl.cell[scrawl.pad.PADNAME.base] - for the Pad object's base cell
 
@@ -6361,7 +6361,7 @@ Blur border for a entity's shadow, in pixels
 **/
 		shadowBlur: 0,
 		/**
-Color, gradient or pattern used for entity shadow effect. Can be:
+Color used for entity shadow effect. Can be:
 
 * Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
 * COLORNAME String
@@ -7508,7 +7508,8 @@ Stamp helper function - perform a 'clear' method draw
 _Note: not supported by this entity_
 @method clear
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7522,7 +7523,8 @@ Stamp helper function - perform a 'clearWithBackground' method draw
 _Note: not supported by this entity_
 @method clearWithBackground
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7536,7 +7538,8 @@ Stamp helper function - perform a 'draw' method draw
 _Note: not supported by this entity_
 @method draw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7550,7 +7553,8 @@ Stamp helper function - perform a 'fill' method draw
 _Note: not supported by this entity_
 @method fill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7564,7 +7568,8 @@ Stamp helper function - perform a 'drawFill' method draw
 _Note: not supported by this entity_
 @method drawFill
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7578,7 +7583,8 @@ Stamp helper function - perform a 'fillDraw' method draw
 _Note: not supported by this entity_
 @method fillDraw
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7592,7 +7598,8 @@ Stamp helper function - perform a 'sinkInto' method draw
 _Note: not supported by this entity_
 @method sinkInto
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7606,7 +7613,8 @@ Stamp helper function - perform a 'floatOver' method draw
 _Note: not supported by this entity_
 @method floatOver
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7620,7 +7628,8 @@ Stamp helper function - perform a 'clip' method draw
 _Note: not supported by this entity_
 @method clip
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private
@@ -7632,7 +7641,8 @@ _Note: not supported by this entity_
 Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this entity's context values, but not defining or drawing the entity on the canvas.
 @method none
 @param {Object} ctx JavaScript context engine for Cell's &lt;canvas&gt; element
-@param {String} cell CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {String} cellname CELLNAME string of Cell to be drawn on; by default, will use the Cell associated with this entity's Group object
+@param {Object} cell scrawl Cell object
 @return This
 @chainable
 @private

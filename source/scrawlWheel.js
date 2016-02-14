@@ -24,7 +24,7 @@
 
 ## Purpose and features
 
-The Wheel module adds Wheel entitys - circles, segments and filled arcs - to the core module
+The Wheel extension adds Wheel entitys - circles, segments and filled arcs - to the core module
 
 * Defines 'arc' objects for displaying on a Cell's canvas
 * Performs 'arc' based drawing operations on canvases
@@ -38,7 +38,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlWheel module adaptions to the Scrawl library object
+scrawlWheel extension adaptions to the scrawl-canvas library object
 
 @class window.scrawl_Wheel
 **/
@@ -69,7 +69,12 @@ A __factory__ function to generate new Wheel entitys
 		my.makeWheel = function(items) {
 			return new my.Wheel(items);
 		};
-
+		/**
+Work vector, for wheel-specific calculations
+@property scrawl.work.workwheel
+@type {Vector}
+@private
+**/
 		my.work.workwheel = {
 			v1: my.makeVector(),
 		};

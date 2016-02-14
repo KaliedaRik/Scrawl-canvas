@@ -690,6 +690,12 @@ Retrieve Euler roll value from a quaternion
 				return parseFloat(result.toFixed(4));
 			}
 		};
+		/**
+Object containing a set of quaternions, for calculations
+@property scrawl.work.workquat
+@type {Object}
+@private
+**/
 		my.work.workquat = {
 			q1: my.makeQuaternion({
 				name: 'scrawl.workquat.q1'

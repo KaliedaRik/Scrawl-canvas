@@ -25,7 +25,7 @@
 
 ## Purpose and features
 
-The Factories module adds a set of factory functions to the Scrawl library, which can be used to generate both Path and Shape entitys
+The Factories extension adds a set of factory functions to the scrawl-canvas library, which can be used to generate both Path and Shape entitys
 
 @module scrawlPathFactories
 **/
@@ -37,7 +37,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlPathFactories module adaptions to the Scrawl library object
+scrawlPathFactories extension adaptions to the scrawl-canvas library object
 
 @class window.scrawl_Factories
 **/

@@ -25,7 +25,7 @@
 
 ## Purpose and features
 
-The Block module adds Block entitys - squares and rectangles - to the core module
+The Block extension adds Block entitys - squares and rectangles - to the core module
 
 * Defines 'rect' objects for displaying on a Cell's canvas
 * Performs 'rect' based drawing operations on canvases
@@ -39,7 +39,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlBlock module adaptions to the Scrawl library object
+scrawlBlock extension adaptions to the scrawl-canvas library object
 
 @class window.scrawl_Block
 **/

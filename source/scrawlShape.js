@@ -25,7 +25,7 @@
 
 ## Purpose and features
 
-The Shape module adds Shape entitys - path-based objects - to the core module
+The Shape extension adds Shape entitys - path-based objects - to the core module
 
 * Defines a entity composed of lines, quadratic and bezier curves, etc
 * See also Path object, which achieves a similar thing in a different way
@@ -40,7 +40,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlShape module adaptions to the Scrawl library object
+scrawlShape extension adaptions to the scrawl-canvas library object
 
 @class window.scrawl_Shape
 **/
@@ -115,7 +115,7 @@ Additional factory functions to instantiate Shape objects are available in the _
 		my.Shape.prototype.classname = 'entitynames';
 		my.work.d.Shape = {
 			/**
-Interpreted path data - calculated by scrawl from the data attribute
+Interpreted path data - calculated by scrawl-canvas from the data attribute
 @property dataSet
 @type Array
 @default false

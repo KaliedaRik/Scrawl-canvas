@@ -25,7 +25,7 @@
 
 ## Purpose and features
 
-The Phrase module adds Phrase entitys - single and multi-line text objects - to the core module
+The Phrase extension adds Phrase entitys - single and multi-line text objects - to the core module
 
 * Defines text objects for displaying on a Cell's canvas
 * Handles all related font functionality
@@ -41,7 +41,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		/**
 # window.scrawl
 
-scrawlPhrase module adaptions to the Scrawl library object
+scrawlPhrase extension adaptions to the scrawl-canvas library object
 
 ## New library sections
 
