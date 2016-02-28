@@ -528,6 +528,48 @@ Clone an Image object
 		/**
 Check whether image's natural dimensions have changed and, if they have, update any relevant Picture entity copy data
 
+... [BUG] trying to integrate this function - not working; issues with correct scoping between the fragment img asset and the image object - 'this' currently refers to image object, but when assigned to a load listener 'this' probably refers to the fragment img asset. Particularly unhelpful if fragment asset is a clone of the DOM asset (working assumption for scrawl tour is that responsive img needs to remain in DOM if it is going to pick up chrome browser resize reloads)
+
+Current work-round (for scrawl tour page, which loads DOM img assets dynamically once canvas capability is confirmed) is to add a load event to each dynamically created img tag which, when triggered, invokes scrawl.getImageById(), which correctly updates everything to use the new img src file
+
+@example
+var imageData = [
+	{filename: 'seedhead', filesuffix: 'png', id: 'seedhead', panel: 0},
+	{filename: 'seedhead-partial', filesuffix: 'png', id: 'seedheadPartial', panel: 0},
+	{filename: 'whiteflower', filesuffix: 'png', id: 'whiteflower', panel: 1}
+];
+var iTemplate_src, iTemplate_srcset, iTemplate_sizes, iContainer;
+var lazyImageAssetLoad = function(){
+	var i, iz;
+	iTemplate_src = 'assets/img/~~filename~~-1200.~~filesuffix~~';
+	iTemplate_srcset = 'assets/img/~~filename~~-400.~~filesuffix~~ 400w, assets/img/~~filename~~-800.~~filesuffix~~ 800w, assets/img/~~filename~~-1200.~~filesuffix~~ 1200w, assets/img/~~filename~~-1600.~~filesuffix~~ 1600w, assets/img/~~filename~~-2400.~~filesuffix~~ 2400w, assets/img/~~filename~~-3600.~~filesuffix~~ 3600w';
+	iTemplate_sizes='(min-width: 1024px) 800px, (min-width: 768px) 1200px, (min-width: 400px) 800px, (min-width: 320px) 400px, 100vw';
+	iContainer = document.createElement('div');
+	//set appropriate styles on iContainer to hide it; alternatively, add a css-defined classList String to it
+	for(i = 0, iz = imageData.length; i < iz; i++){
+		iContainer.appendChild(buildImage(imageData[i]));
+	}
+	document.body.appendChild(iContainer);
+};
+var buildImage = function(data){
+	var img = document.createElement('img'),
+		file = /~~filename~~/g,
+		suffix = /~~filesuffix~~/g,
+		src = iTemplate_src.replace(file, data.filename),
+		srcset = iTemplate_srcset.replace(file, data.filename);
+	src = src.replace(suffix, data.filesuffix);
+	srcset = srcset.replace(suffix, data.filesuffix);
+	img.id = data.id;
+	img.src = src;
+	img.srcset = srcset;
+	img.sizes = iTemplate_sizes;
+	img.addEventListener('load', function(){
+		scrawl.getImageById(data.id, false); //not moving img out of DOM, instead cloning it into scrawl.work.imageFragment
+	}, false);
+	return img;
+};
+lazyImageAssetLoad();
+
 @method checkNaturalDimensions
 @return true if dimensions have changed; false otherwise
 **/
