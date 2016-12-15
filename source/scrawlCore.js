@@ -23,7 +23,7 @@
 /**
 # scrawlCore
 
-## Version 5.0.3 - 2 December 2015
+## Version 5.0.5 - 15 December 2016
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -108,10 +108,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 5.0.3
+@default 5.0.5
 @final
 **/
-	my.version = '5.0.3';
+	my.version = '5.0.5';
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -8045,6 +8045,7 @@ Will also accept an object containing start and end attributes, each of which ca
 **/
 	my.Design.prototype.set = function(items) {
 		var temp, x, y,
+			xt = my.xt,
 			xto = my.xto,
 			so = my.safeObject,
 			get = my.xtGet;
@@ -8061,8 +8062,14 @@ Will also accept an object containing start and end attributes, each of which ca
 			this.endY = get(temp.y, temp.endY, items.endY, this.endY);
 			this.endRadius = get(temp.r, temp.endRadius, items.endRadius, this.endRadius);
 		}
-		if (items.shift && my.xt(my.work.d.Design.shift)) {
+		if (items.shift && xt(my.work.d.Design.shift)) {
 			this.shift = items.shift;
+		}
+		if (xt(items.autoUpdate)) {
+			this.autoUpdate = items.autoUpdate;
+		}
+		if (xt(items.color)) {
+			this.color = [].concat(items.color);
 		}
 		return this;
 	};

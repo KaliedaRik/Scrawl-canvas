@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.4</em>
+            <em>API Docs for: 5.0.5</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -1468,6 +1468,13 @@ Datetime for the current time
 @private
 **/
 			currentTime: 0,
+			/**
+Time value - used only when adding a tween to a timeline using the addTween function
+@property time
+@type Number - milliseconds; can also accept timestrings (eg % values)? NOT TESTED
+@default 0
+**/
+			time: 0,
 			/**
 Duration of the tween, measured in milliseconds
 @property duration

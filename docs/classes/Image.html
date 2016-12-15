@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.4</em>
+            <em>API Docs for: 5.0.5</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -978,6 +978,8 @@
 
     <div class="description">
         <p>Check whether image&#39;s natural dimensions have changed and, if they have, update any relevant Picture entity copy data</p>
+<p>... [BUG] trying to integrate this function - not working; issues with correct scoping between the fragment img asset and the image object - &#39;this&#39; currently refers to image object, but when assigned to a load listener &#39;this&#39; probably refers to the fragment img asset. Particularly unhelpful if fragment asset is a clone of the DOM asset (working assumption for scrawl tour is that responsive img needs to remain in DOM if it is going to pick up chrome browser resize reloads)</p>
+<p>Current work-round (for scrawl tour page, which loads DOM img assets dynamically once canvas capability is confirmed) is to add a load event to each dynamically created img tag which, when triggered, invokes scrawl.getImageById(), which correctly updates everything to use the new img src file</p>
 
     </div>
 
@@ -997,6 +999,50 @@
         </div>
     
 
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>var imageData = [
+    {filename: &#39;seedhead&#39;, filesuffix: &#39;png&#39;, id: &#39;seedhead&#39;, panel: 0},
+    {filename: &#39;seedhead-partial&#39;, filesuffix: &#39;png&#39;, id: &#39;seedheadPartial&#39;, panel: 0},
+    {filename: &#39;whiteflower&#39;, filesuffix: &#39;png&#39;, id: &#39;whiteflower&#39;, panel: 1}
+];
+var iTemplate_src, iTemplate_srcset, iTemplate_sizes, iContainer;
+var lazyImageAssetLoad = function(){
+    var i, iz;
+    iTemplate_src = &#39;assets/img/<del>filename</del>-1200.<del>filesuffix</del>&#39;;
+    iTemplate_srcset = &#39;assets/img/<del>filename</del>-400.<del>filesuffix</del> 400w, assets/img/<del>filename</del>-800.<del>filesuffix</del> 800w, assets/img/<del>filename</del>-1200.<del>filesuffix</del> 1200w, assets/img/<del>filename</del>-1600.<del>filesuffix</del> 1600w, assets/img/<del>filename</del>-2400.<del>filesuffix</del> 2400w, assets/img/<del>filename</del>-3600.<del>filesuffix</del> 3600w&#39;;
+    iTemplate_sizes=&#39;(min-width: 1024px) 800px, (min-width: 768px) 1200px, (min-width: 400px) 800px, (min-width: 320px) 400px, 100vw&#39;;
+    iContainer = document.createElement(&#39;div&#39;);
+    //set appropriate styles on iContainer to hide it; alternatively, add a css-defined classList String to it
+    for(i = 0, iz = imageData.length; i &lt; iz; i++){
+        iContainer.appendChild(buildImage(imageData[i]));
+    }
+    document.body.appendChild(iContainer);
+};
+var buildImage = function(data){
+    var img = document.createElement(&#39;img&#39;),
+        file = /<del>filename</del>/g,
+        suffix = /<del>filesuffix</del>/g,
+        src = iTemplate_src.replace(file, data.filename),
+        srcset = iTemplate_srcset.replace(file, data.filename);
+    src = src.replace(suffix, data.filesuffix);
+    srcset = srcset.replace(suffix, data.filesuffix);
+    img.id = data.id;
+    img.src = src;
+    img.srcset = srcset;
+    img.sizes = iTemplate_sizes;
+    img.addEventListener(&#39;load&#39;, function(){
+        scrawl.getImageById(data.id, false); //not moving img out of DOM, instead cloning it into scrawl.work.imageFragment
+    }, false);
+    return img;
+};
+lazyImageAssetLoad();</p>
+
+            </div>
+        </div>
     
 </div>
 
@@ -1282,7 +1328,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2239"><code>source\scrawlCore.js:2239</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2382"><code>source\scrawlCore.js:2382</code></a>
         
         </p>
 
@@ -1406,7 +1452,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2333"><code>source\scrawlCore.js:2333</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2476"><code>source\scrawlCore.js:2476</code></a>
         
         </p>
 
@@ -1514,7 +1560,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2325"><code>source\scrawlCore.js:2325</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2468"><code>source\scrawlCore.js:2468</code></a>
         
         </p>
 
@@ -1594,7 +1640,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2255"><code>source\scrawlCore.js:2255</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2398"><code>source\scrawlCore.js:2398</code></a>
         
         </p>
 
@@ -1709,7 +1755,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlImageLoad.js.html#l556"><code>source\scrawlImageLoad.js:556</code></a>
+        <a href="../files/source_scrawlImageLoad.js.html#l598"><code>source\scrawlImageLoad.js:598</code></a>
         
         </p>
 
@@ -1820,7 +1866,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2217"><code>source\scrawlCore.js:2217</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2360"><code>source\scrawlCore.js:2360</code></a>
         
         </p>
 
@@ -2007,7 +2053,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2195"><code>source\scrawlCore.js:2195</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2338"><code>source\scrawlCore.js:2338</code></a>
         
         </p>
 
@@ -2097,7 +2143,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2231"><code>source\scrawlCore.js:2231</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2374"><code>source\scrawlCore.js:2374</code></a>
         
         </p>
 
@@ -2141,7 +2187,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2224"><code>source\scrawlCore.js:2224</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2367"><code>source\scrawlCore.js:2367</code></a>
         
         </p>
 

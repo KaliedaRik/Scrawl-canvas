@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.4</em>
+            <em>API Docs for: 5.0.5</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -283,7 +283,7 @@
 /**
 # scrawlCore
 
-## Version 5.0.3 - 2 December 2015
+## Version 5.0.5 - 15 December 2016
 
 Developed by Rik Roots - &lt;rik.roots@gmail.com&gt;, &lt;rik@rikweb.org.uk&gt;
 
@@ -368,10 +368,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 5.0.3
+@default 5.0.5
 @final
 **/
-	my.version = &#x27;5.0.3&#x27;;
+	my.version = &#x27;5.0.5&#x27;;
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -395,6 +395,14 @@ For converting between degrees and radians
 @final
 **/
 	my.work.radian = Math.PI / 180;
+	/**
+Flag - Promise API is supported by browser
+@property promise
+@type {Boolean}
+@default null
+@final
+**/
+	my.work.promise = null;
 	/**
 An Object containing OBJECTTYPE:Object pairs which in turn contain default attribute values for each Scrawl object constructor
 @property d
@@ -600,9 +608,75 @@ A __general__ function that resets the Scrawl library to empty arrays and object
 		return my;
 	};
 	/**
+A __general__ function for loading img, css and js files
+
+Copied and pasted (a terrible example - don&#x27;t do this!) from https://davidwalsh.name/javascript-loader
+
+All assets are added to the body tag in the DOM
+
+This function auto-runs when scrawl.core loads
+@method simpleLoader
+@return Javascript object containing .css(), .js() and .img() load functions
+@private
+**/
+	my.simpleLoader = (function() {
+		function _load(tag) {
+			return function(url) {
+				return new Promise(function(resolve, reject) {
+					var element = document.createElement(tag),
+						parent = &#x27;body&#x27;,
+						attr = &#x27;src&#x27;;
+					element.onload = function() {
+						resolve(url);
+					};
+					element.onerror = function() {
+						reject(url);
+					};
+					switch (tag) {
+						case &#x27;script&#x27;:
+							element.type = &#x27;text/javascript&#x27;;
+							element.async = true;
+							break;
+						case &#x27;link&#x27;:
+							element.type = &#x27;text/css&#x27;;
+							element.rel = &#x27;stylesheet&#x27;;
+							attr = &#x27;href&#x27;;
+							parent = &#x27;head&#x27;;
+					}
+					element[attr] = url;
+					document[parent].appendChild(element);
+				});
+			};
+		}
+		return {
+			css: _load(&#x27;link&#x27;),
+			js: _load(&#x27;script&#x27;),
+			img: _load(&#x27;img&#x27;)
+		};
+	})();
+	/**
+A __general__ function that checks to see if the Promise API is supported by the browser
+@method checkForPromise
+@return true if Promise is supported natively; false otherwise
+@private
+**/
+	my.checkForPromise = function() {
+		if (my.work.promise !== null) {
+			return my.work.promise;
+		}
+		else {
+			if (typeof Promise !== &quot;undefined&quot; &amp;&amp; Promise.toString().indexOf(&quot;[native code]&quot;) !== -1) {
+				my.work.promise = true;
+				return true;
+			}
+			my.work.promise = false;
+			return false;
+		}
+	};
+	/**
 A __general__ function that loads supporting extensions and integrates them into the core
 
-Extension names are supplied as an array of Strings and can be either the extension filename (with or without the &#x27;.js&#x27; suffix), or an alias string.
+Extension names are supplied as an array of Strings, each of which should be an _alias_ string, as follows:
 
 Scrawl currently supports the following extensions:
 * __scrawlAnimation.js__ - alias __animation__ - adds animation and tween functionality to the core
@@ -627,6 +701,15 @@ Scrawl currently supports the following extensions:
 Where permitted, Scrawl will load extensions asynchronously. Extensions have no external dependencies beyond their need for the core module, and can be loaded in any order.
 
 Any supplied callback function will only be run once all extensions have been loaded.
+
+The argument object can include the following attributes:
+
+* __path__ - String path-to-directory/folder where scrawl extension files are kept (default: &#x27;&#x27;)
+* __minified__ - Boolean - if true (default) minified extensions will be loaded; false for source extensions
+* __extensions__ - an Array of extension alias Strings
+* __callback__ - Function to run once all extension files have been loaded (defaults to an empty function)
+* __error__ - Function to run if one or more extension files fails to load (defaults to an empty function)
+
 @example
     &lt;!DOCTYPE html&gt;
     &lt;html&gt;
@@ -645,80 +728,80 @@ Any supplied callback function will only be run once all extensions have been lo
                     };
                 scrawl.loadExtensions({
                     path: &#x27;js/&#x27;,
-                    extensions: [&#x27;wheel&#x27;],         
+                    extensions: [&#x27;wheel&#x27;],
                     callback: function(){
                         window.addEventListener(&#x27;load&#x27;, function(){
                             scrawl.init();
                             mycode();
                             }, false);
-                        },
+                        }
                     });
             &lt;/script&gt;
         &lt;/body&gt;
     &lt;/html&gt;
 
 @method loadExtensions
-@param {String} [path] File path String to the directory where the Scrawl extension scripts have been stored, relative to the web page&#x27;s main file; default (&#x27;&#x27;) will assume extensions are in the same directory as the web page file
-@param {Array} extensions Array of extension Strings (either filenames or extension aliases), representing Scrawl extensions to be loaded into the core
-@param {Boolean} [mini] When set to true (the default), will load minified versions of the extensions; false will load source versions
-@param {Function} [callback] An anonymous function to be run once extension loading completes
+@param {Object} items - JavaScript object containing key:value pairs
 @return The Scrawl library object (scrawl)
 @chainable
 **/
 	my.loadExtensions = function(items) {
+		if (my.checkForPromise()) {
+			return my.loadExtensionsUsingPromise(items);
+		}
+		else {
+			return my.loadExtensionsUsingVanilla(items);
+		}
+	};
+	/**
+loadExtensions helper function
+@method loadExtensionsUsingVanilla
+@param {Object} items - JavaScript object containing key:value pairs
+@return The Scrawl library object (scrawl)
+@chainable
+@private
+**/
+	my.loadExtensionsUsingVanilla = function(items) {
+		var path, callback, error, mini, tail, loaded, required, startTime, timeout, i, iz, getExtensions, done;
 		items = my.safeObject(items);
-		var path = items.path || &#x27;&#x27;,
-			exts = [],
-			callback = (my.isa_fn(items.callback)) ? items.callback : function() {},
-			error = (my.isa_fn(items.error)) ? items.error : function() {},
-			mini = my.xtGet(items.minified, true),
-			tail = (mini) ? &#x27;-min.js&#x27; : &#x27;.js&#x27;,
-			loaded = [],
-			required = [],
-			startTime = Date.now(),
-			timeout = 30000, // allow a maximum of 30 seconds to get all extensions
-			i, iz, j, jz,
-			getExtensions = function(ext) {
-				var scriptTag,
-					myExt = my.work.loadAlias[ext] || ext;
-				if (!my.contains(my.work.extensions, myExt)) {
-					scriptTag = document.createElement(&#x27;script&#x27;);
-					scriptTag.type = &#x27;text/javascript&#x27;;
-					scriptTag.async = &#x27;true&#x27;;
-					scriptTag.onload = function(e) {
-						done(ext);
-					};
-					scriptTag.onerror = function(e) {
-						done(ext, true);
-					};
-					scriptTag.src = (/\.js$/.test(myExt)) ? path + myExt : path + myExt + tail;
-					document.body.appendChild(scriptTag);
-				}
-			},
-			done = function(m, e) {
-				my.removeItem(loaded, m);
-				if (e || Date.now() &gt; startTime + timeout) {
-					error();
-				}
-				else {
-					my.pushUnique(my.work.extensions, m);
-				}
-				if (loaded.length === 0) {
-					callback();
-				}
-			};
-		if (my.xt(items.extensions)) {
-			exts = exts.concat([].concat(items.extensions));
-		}
-		if (my.xt(items.modules)) {
-			exts = exts.concat([].concat(items.modules));
-		}
-		for (i = 0, iz = exts.length; i &lt; iz; i++) {
-			for (j = 0, jz = my.work.loadDependencies[exts[i]].length; j &lt; jz; j++) {
-				my.pushUnique(required, my.work.loadDependencies[exts[i]][j]);
+		path = items.path || &#x27;&#x27;;
+		callback = (my.isa_fn(items.callback)) ? items.callback : function() {};
+		error = (my.isa_fn(items.error)) ? items.error : function() {};
+		mini = my.xtGet(items.minified, true);
+		tail = (mini) ? &#x27;-min.js&#x27; : &#x27;.js&#x27;;
+		loaded = [];
+		startTime = Date.now();
+		timeout = 30000; // allow a maximum of 30 seconds to get all extensions
+		getExtensions = function(ext) {
+			var scriptTag,
+				myExt = my.work.loadAlias[ext] || ext;
+			if (!my.contains(my.work.extensions, myExt)) {
+				scriptTag = document.createElement(&#x27;script&#x27;);
+				scriptTag.type = &#x27;text/javascript&#x27;;
+				scriptTag.async = &#x27;true&#x27;;
+				scriptTag.onload = function(e) {
+					done(ext);
+				};
+				scriptTag.onerror = function(e) {
+					done(ext, true);
+				};
+				scriptTag.src = (/\.js$/.test(myExt)) ? path + myExt : path + myExt + tail;
+				document.body.appendChild(scriptTag);
 			}
-			my.pushUnique(required, exts[i]);
-		}
+		};
+		done = function(m, e) {
+			my.removeItem(loaded, m);
+			if (e || Date.now() &gt; startTime + timeout) {
+				error();
+			}
+			else {
+				my.pushUnique(my.work.extensions, m);
+			}
+			if (loaded.length === 0) {
+				callback();
+			}
+		};
+		required = my.loadExtensionsConcatenator(items);
 		loaded = [].concat(required);
 		for (i = 0, iz = required.length; i &lt; iz; i++) {
 			getExtensions(required[i]);
@@ -726,15 +809,68 @@ Any supplied callback function will only be run once all extensions have been lo
 		return my;
 	};
 	/**
+loadExtensions helper function - uses the new Promise api, if it is available
+@method loadExtensionsUsingPromise
+@param {Object} items - JavaScript object containing key:value pairs
+@return The Scrawl library object (scrawl)
+@chainable
+@private
+**/
+	my.loadExtensionsUsingPromise = function(items) {
+		items = my.safeObject(items);
+		var loader, path, file, alias, callback, error, mini, tail, required, request, i, iz;
+		loader = my.simpleLoader;
+		path = items.path || &#x27;&#x27;;
+		alias = my.work.loadAlias;
+		callback = (my.isa_fn(items.callback)) ? items.callback : function() {};
+		error = (my.isa_fn(items.error)) ? items.error : function() {};
+		mini = my.xtGet(items.minified, true);
+		tail = (mini) ? &#x27;-min.js&#x27; : &#x27;.js&#x27;;
+		required = my.loadExtensionsConcatenator(items);
+		request = [];
+		for (i = 0, iz = required.length; i &lt; iz; i++) {
+			file = alias[required[i]] || required[i];
+			request.push(loader.js((/\.js$/.test(file)) ? path + file : path + file + tail));
+		}
+		Promise.all(request).then(callback).catch(error);
+		return my;
+	};
+	/**
+loadExtensions helper function
+@method loadExtensionsConcatenator
+@param {Object} items - JavaScript object containing key:value pairs
+@return Array of extension aliases
+@private
+**/
+	my.loadExtensionsConcatenator = function(items) {
+		items = my.safeObject(items);
+		var exts = [],
+			required = [],
+			xt = my.xt,
+			pu = my.pushUnique,
+			depends = my.work.loadDependencies,
+			i, iz, j, jz;
+		if (xt(items.extensions)) {
+			exts = exts.concat([].concat(items.extensions));
+		}
+		if (xt(items.modules)) {
+			exts = exts.concat([].concat(items.modules));
+		}
+		for (i = 0, iz = exts.length; i &lt; iz; i++) {
+			for (j = 0, jz = depends[exts[i]].length; j &lt; jz; j++) {
+				pu(required, depends[exts[i]][j]);
+			}
+			pu(required, exts[i]);
+		}
+		return required;
+	};
+	/**
 A __general__ function that loads supporting extensions and integrates them into the core
 
 (function name changed from loadModules to loadExtensions because Scrawl &#x27;modules&#x27; are not modules)
 
 @method loadModules
-@param {String} [path] File path String to the directory where the Scrawl extension scripts have been stored, relative to the web page&#x27;s main file; default (&#x27;&#x27;) will assume extensions are in the same directory as the web page file
-@param {Array} extensions Array of extension Strings (either filenames or extension aliases), representing Scrawl extensions to be loaded into the core
-@param {Boolean} [mini] When set to true (the default), will load minified versions of the extensions; false will load source versions
-@param {Function} [callback] An anonymous function to be run once extension loading completes
+@param {Object} items - JavaScript object containing key:value pairs
 @return The Scrawl library object (scrawl)
 @chainable
 @deprecated
@@ -931,9 +1067,16 @@ Valid identifier Strings include:
     scrawl.isa(myboolean, &#x27;bool&#x27;);  //returns true
     scrawl.isa(myboolean, &#x27;str&#x27;);   //returns false
 **/
+	my.work.isa_whitelist = [&#x27;str&#x27;, &#x27;fn&#x27;, &#x27;arr&#x27;, &#x27;bool&#x27;, &#x27;canvas&#x27;, &#x27;date&#x27;, &#x27;dom&#x27;, &#x27;event&#x27;, &#x27;img&#x27;, &#x27;num&#x27;, &#x27;realnum&#x27;, &#x27;obj&#x27;, &#x27;quaternion&#x27;, &#x27;vector&#x27;, &#x27;video&#x27;];
 	my.isa = function() {
-		if (arguments.length == 2 &amp;&amp; typeof arguments[0] != &#x27;undefined&#x27;) {
-			return my[&#x27;isa_&#x27; + arguments[1]](arguments[0]);
+		var len = arguments.length,
+			arg, label;
+		if (len == 2) {
+			arg = arguments[0];
+			label = arguments[1].toLowerCase();
+			if (typeof arg != &#x27;undefined&#x27; &amp;&amp; my.work.isa_whitelist.indexOf(label) &gt;= 0) {
+				return my[&#x27;isa_&#x27; + label](arg);
+			}
 		}
 		return false;
 	};
@@ -8162,6 +8305,7 @@ Will also accept an object containing start and end attributes, each of which ca
 **/
 	my.Design.prototype.set = function(items) {
 		var temp, x, y,
+			xt = my.xt,
 			xto = my.xto,
 			so = my.safeObject,
 			get = my.xtGet;
@@ -8178,8 +8322,14 @@ Will also accept an object containing start and end attributes, each of which ca
 			this.endY = get(temp.y, temp.endY, items.endY, this.endY);
 			this.endRadius = get(temp.r, temp.endRadius, items.endRadius, this.endRadius);
 		}
-		if (items.shift &amp;&amp; my.xt(my.work.d.Design.shift)) {
+		if (items.shift &amp;&amp; xt(my.work.d.Design.shift)) {
 			this.shift = items.shift;
+		}
+		if (xt(items.autoUpdate)) {
+			this.autoUpdate = items.autoUpdate;
+		}
+		if (xt(items.color)) {
+			this.color = [].concat(items.color);
 		}
 		return this;
 	};

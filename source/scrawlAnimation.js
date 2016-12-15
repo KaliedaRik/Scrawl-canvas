@@ -1209,6 +1209,13 @@ Datetime for the current time
 **/
 			currentTime: 0,
 			/**
+Time value - used only when adding a tween to a timeline using the addTween function
+@property time
+@type Number - milliseconds; can also accept timestrings (eg % values)? NOT TESTED
+@default 0
+**/
+			time: 0,
+			/**
 Duration of the tween, measured in milliseconds
 @property duration
 @type Number
