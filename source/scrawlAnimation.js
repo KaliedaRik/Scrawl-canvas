@@ -2069,44 +2069,44 @@ The argument object must include the following attributes, otherwise the action 
 				name = items.name || 'unnamedCompositionChangeAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(my.xta(items.from, items.to) && targets.length){
-				fAction = function(){
+			if (my.xta(items.from, items.to) && targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								globalCompositeOperation: items.to
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								globalCompositeOperation: items.from
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								globalCompositeOperation: items.from
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -2142,44 +2142,44 @@ The argument object must include the following attributes, otherwise the action 
 				name = items.name || 'unnamedCompositionChangeAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(my.xta(items.from, items.to) && targets.length){
-				fAction = function(){
+			if (my.xta(items.from, items.to) && targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								globalCompositeOperation: items.to
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								globalCompositeOperation: items.from
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								globalCompositeOperation: items.from
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -2215,44 +2215,44 @@ The argument object must include the following attributes, otherwise the action 
 				name = items.name || 'unnamedCompositionChangeAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(my.xta(items.from, items.to) && targets.length){
-				fAction = function(){
+			if (my.xta(items.from, items.to) && targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.setEntitysTo({
 								globalCompositeOperation: items.to
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.setEntitysTo({
 								globalCompositeOperation: items.from
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.setEntitysTo({
 								globalCompositeOperation: items.from
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -2290,30 +2290,32 @@ The argument object must include the following attributes, otherwise the action 
 			var targets = [].concat(items.targets),
 				name = items.name || 'unnamedCompositionChangeAction',
 				time = items.time || 0,
-				entitys = [], cells = [], groups = [],
+				entitys = [],
+				cells = [],
+				groups = [],
 				item, obj, i, iz;
-			if(my.xta(items.from, items.to) && targets.length){
-				for(i = 0, iz = targets.length; i < iz; i++){
+			if (my.xta(items.from, items.to) && targets.length) {
+				for (i = 0, iz = targets.length; i < iz; i++) {
 					item = targets[i];
-					if(item.substring){
+					if (item.substring) {
 						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
 					}
-					else{
+					else {
 						obj = item;
 					}
-					if(obj){
-						if(my.contains(my.entitynames, obj.name)){
+					if (obj) {
+						if (my.contains(my.entitynames, obj.name)) {
 							entitys.push(obj);
 						}
-						else if(my.contains(my.groupnames, obj.name)){
+						else if (my.contains(my.groupnames, obj.name)) {
 							groups.push(obj);
 						}
-						else if(my.contains(my.cellnames, obj.name)){
+						else if (my.contains(my.cellnames, obj.name)) {
 							cells.push(obj);
 						}
 					}
 				}
-				if(entitys.length > 0){
+				if (entitys.length > 0) {
 					this.doCompositionEntitys({
 						targets: entitys,
 						name: name,
@@ -2322,7 +2324,7 @@ The argument object must include the following attributes, otherwise the action 
 						time: time
 					});
 				}
-				if(groups.length > 0){
+				if (groups.length > 0) {
 					this.doCompositionGroups({
 						targets: groups,
 						name: name,
@@ -2331,7 +2333,7 @@ The argument object must include the following attributes, otherwise the action 
 						time: time
 					});
 				}
-				if(cells.length > 0){
+				if (cells.length > 0) {
 					this.doCompositionCells({
 						targets: cells,
 						name: name,
@@ -2442,44 +2444,44 @@ The argument object must include the following attributes, otherwise the action 
 				name = items.name || 'unnamedOrderChangeAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(my.xta(items.from, items.to) && targets.length){
-				fAction = function(){
+			if (my.xta(items.from, items.to) && targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								order: items.to
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								order: items.from
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								order: items.from
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -2515,44 +2517,44 @@ The argument object must include the following attributes, otherwise the action 
 				name = items.name || 'unnamedOrderChangeAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(my.xta(items.from, items.to) && targets.length){
-				fAction = function(){
+			if (my.xta(items.from, items.to) && targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								order: items.to
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								order: items.from
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								order: items.from
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -2588,44 +2590,44 @@ The argument object must include the following attributes, otherwise the action 
 				name = items.name || 'unnamedOrderChangeAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(my.xta(items.from, items.to) && targets.length){
-				fAction = function(){
+			if (my.xta(items.from, items.to) && targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								showOrder: items.to
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								showOrder: items.from
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								showOrder: items.from
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -2663,30 +2665,32 @@ Note that if string names are supplied as part of the targets attribute, library
 			var targets = [].concat(items.targets),
 				name = items.name || 'unnamedOrderChangeAction',
 				time = items.time || 0,
-				entitys = [], cells = [], groups = [],
+				entitys = [],
+				cells = [],
+				groups = [],
 				item, obj, i, iz;
-			if(my.xta(items.from, items.to) && targets.length){
-				for(i = 0, iz = targets.length; i < iz; i++){
+			if (my.xta(items.from, items.to) && targets.length) {
+				for (i = 0, iz = targets.length; i < iz; i++) {
 					item = targets[i];
-					if(item.substring){
+					if (item.substring) {
 						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
 					}
-					else{
+					else {
 						obj = item;
 					}
-					if(obj){
-						if(my.contains(my.entitynames, obj.name)){
+					if (obj) {
+						if (my.contains(my.entitynames, obj.name)) {
 							entitys.push(obj);
 						}
-						else if(my.contains(my.groupnames, obj.name)){
+						else if (my.contains(my.groupnames, obj.name)) {
 							groups.push(obj);
 						}
-						else if(my.contains(my.cellnames, obj.name)){
+						else if (my.contains(my.cellnames, obj.name)) {
 							cells.push(obj);
 						}
 					}
 				}
-				if(entitys.length > 0){
+				if (entitys.length > 0) {
 					this.doOrderEntitys({
 						targets: entitys,
 						name: name,
@@ -2695,7 +2699,7 @@ Note that if string names are supplied as part of the targets attribute, library
 						time: time
 					});
 				}
-				if(groups.length > 0){
+				if (groups.length > 0) {
 					this.doOrderGroups({
 						targets: groups,
 						name: name,
@@ -2704,7 +2708,7 @@ Note that if string names are supplied as part of the targets attribute, library
 						time: time
 					});
 				}
-				if(cells.length > 0){
+				if (cells.length > 0) {
 					this.doOrderCells({
 						targets: cells,
 						name: name,
@@ -2897,14 +2901,14 @@ For the start, end, engines and calculations Objects, the keys should be the att
 			items = my.safeObject(items);
 			e = items.engines || {};
 			c = items.calculations || {};
-			if(items.type && items.type === 'Tween'){
+			if (items.type && items.type === 'Tween') {
 				this.addAction({
 					name: items.name + '_action',
 					time: items.time || 0,
 					action: my.animation[items.name]
 				});
 			}
-			else{
+			else {
 				if (my.xta(items.targets, items.time, items.duration, items.name, items.start, items.end)) {
 					this.addAction({
 						name: items.name + '_action',
@@ -3046,44 +3050,44 @@ The argument object must include the following attributes, otherwise the command
 				name = items.name || 'unnamedShowAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(targets.length){
-				fAction = function(){
+			if (targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: true
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: false
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: false
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -3118,44 +3122,44 @@ The argument object must include the following attributes, otherwise the command
 				name = items.name || 'unnamedHideAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(targets.length){
-				fAction = function(){
+			if (targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: false
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: true
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.entity;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: true
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -3190,53 +3194,53 @@ The argument object must include the following attributes, otherwise the command
 				name = items.name || 'unnamedShowAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(targets.length){
-				fAction = function(){
+			if (targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: true
 							});
 							obj.setEntitysTo({
 								visibility: true
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: false
 							});
 							obj.setEntitysTo({
 								visibility: false
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: false
 							});
 							obj.setEntitysTo({
 								visibility: false
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -3271,53 +3275,53 @@ The argument object must include the following attributes, otherwise the command
 				name = items.name || 'unnamedHideAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(targets.length){
-				fAction = function(){
+			if (targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: true
 							});
 							obj.setEntitysTo({
 								visibility: true
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: false
 							});
 							obj.setEntitysTo({
 								visibility: false
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.group;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								visibility: false
 							});
 							obj.setEntitysTo({
 								visibility: false
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -3352,44 +3356,44 @@ The argument object must include the following attributes, otherwise the command
 				name = items.name || 'unnamedShowAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(targets.length){
-				fAction = function(){
+			if (targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								rendered: true
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								rendered: false
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								rendered: false
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -3424,44 +3428,44 @@ The argument object must include the following attributes, otherwise the command
 				name = items.name || 'unnamedHideAction',
 				time = items.time || 0,
 				act, fAction, fRollback, fReset;
-			if(targets.length){
-				fAction = function(){
+			if (targets.length) {
+				fAction = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								rendered: false
 							});
-						} 
+						}
 					}
 				};
-				fRollback = function(){
+				fRollback = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								rendered: true
 							});
-						} 
+						}
 					}
 				};
-				fReset = function(){
+				fReset = function() {
 					var item, obj, i, iz,
 						e = my.cell;
-					for(i = 0, iz = targets.length; i < iz; i++){
+					for (i = 0, iz = targets.length; i < iz; i++) {
 						item = targets[i];
 						obj = (item.substring) ? e[item] : item;
-						if(obj){
+						if (obj) {
 							obj.set({
 								rendered: true
 							});
-						} 
+						}
 					}
 				};
 				act = my.makeAction({
@@ -3500,44 +3504,46 @@ Note that if string names are supplied as part of the targets attribute, library
 			var targets = [].concat(items.targets),
 				name = items.name || 'unnamedShowAction',
 				time = items.time || 0,
-				entitys = [], cells = [], groups = [],
+				entitys = [],
+				cells = [],
+				groups = [],
 				item, obj, i, iz;
-			if(targets.length){
-				for(i = 0, iz = targets.length; i < iz; i++){
+			if (targets.length) {
+				for (i = 0, iz = targets.length; i < iz; i++) {
 					item = targets[i];
-					if(item.substring){
+					if (item.substring) {
 						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
 					}
-					else{
+					else {
 						obj = item;
 					}
-					if(obj){
-						if(my.contains(my.entitynames, obj.name)){
+					if (obj) {
+						if (my.contains(my.entitynames, obj.name)) {
 							entitys.push(obj);
 						}
-						else if(my.contains(my.groupnames, obj.name)){
+						else if (my.contains(my.groupnames, obj.name)) {
 							groups.push(obj);
 						}
-						else if(my.contains(my.cellnames, obj.name)){
+						else if (my.contains(my.cellnames, obj.name)) {
 							cells.push(obj);
 						}
 					}
 				}
-				if(entitys.length > 0){
+				if (entitys.length > 0) {
 					this.doShowEntitys({
 						targets: entitys,
 						name: name,
 						time: time
 					});
 				}
-				if(groups.length > 0){
+				if (groups.length > 0) {
 					this.doShowGroups({
 						targets: groups,
 						name: name,
 						time: time
 					});
 				}
-				if(cells.length > 0){
+				if (cells.length > 0) {
 					this.doShowCells({
 						targets: cells,
 						name: name,
@@ -3570,44 +3576,46 @@ Note that if string names are supplied as part of the targets attribute, library
 			var targets = [].concat(items.targets),
 				name = items.name || 'unnamedHideAction',
 				time = items.time || 0,
-				entitys = [], cells = [], groups = [],
+				entitys = [],
+				cells = [],
+				groups = [],
 				item, obj, i, iz;
-			if(targets.length){
-				for(i = 0, iz = targets.length; i < iz; i++){
+			if (targets.length) {
+				for (i = 0, iz = targets.length; i < iz; i++) {
 					item = targets[i];
-					if(item.substring){
+					if (item.substring) {
 						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
 					}
-					else{
+					else {
 						obj = item;
 					}
-					if(obj){
-						if(my.contains(my.entitynames, obj.name)){
+					if (obj) {
+						if (my.contains(my.entitynames, obj.name)) {
 							entitys.push(obj);
 						}
-						else if(my.contains(my.groupnames, obj.name)){
+						else if (my.contains(my.groupnames, obj.name)) {
 							groups.push(obj);
 						}
-						else if(my.contains(my.cellnames, obj.name)){
+						else if (my.contains(my.cellnames, obj.name)) {
 							cells.push(obj);
 						}
 					}
 				}
-				if(entitys.length > 0){
+				if (entitys.length > 0) {
 					this.doHideEntitys({
 						targets: entitys,
 						name: name,
 						time: time
 					});
 				}
-				if(groups.length > 0){
+				if (groups.length > 0) {
 					this.doHideGroups({
 						targets: groups,
 						name: name,
 						time: time
 					});
 				}
-				if(cells.length > 0){
+				if (cells.length > 0) {
 					this.doHideCells({
 						targets: cells,
 						name: name,

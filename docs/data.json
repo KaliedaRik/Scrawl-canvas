@@ -268,7 +268,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "source\\scrawlAnimation.js",
-            "line": 2959,
+            "line": 4183,
             "description": "# scrawlAnimation\n\n## Purpose and features\n\nThe Animation module adds support for animation and tweening to the core\n\n* Adds and starts an animation loop to the core\n* Defines the Animation object, used to program animation sequences\n* Defines the Tween object - a specialized form of animation which has pre-determined start and end points, durations and easing options\n* Adds functionality to various core objects and functions so they can take advantage of the animation object"
         },
         "scrawlBlock": {
@@ -572,7 +572,7 @@
             "module": "scrawlAnimation",
             "namespace": "",
             "file": "source\\scrawlAnimation.js",
-            "line": 1774,
+            "line": 1775,
             "description": "# Timeline\n\n## Instantiation\n\n* scrawl.makeTimeline()\n\n## Purpose\n\n* Defines a sequence of functions or tweens to be performed at given moments along a timeline\n\nNote: Timelines need to be defined before Actions can be added to them. Because Timelines, Tweens, Actions and other animations all share the same space in the Scrawl library, they must all be given unique names\n\n## Access\n\n* scrawl.animation.TIMELINENAME - for the Timeline object\n\n## Timeline functions\n\n* Start a Timeline from the beginning by calling the __run()__ function on it.\n* Timelines can be stopped by calling the __halt()__ function on it.\n* Start a Timeline from the poinht at which it was previously halted by calling the __resume()__ function on it.\n* A Timeline can be deleted by calling the __kill()__ function on it.\n* Add Actions to the Timeline using the __add()__ function.\n* Remove Actions from the Timeline using the __remove()__ function.",
             "is_constructor": 1,
             "extends": "Base",
@@ -596,7 +596,7 @@
             "module": "scrawlAnimation",
             "namespace": "",
             "file": "source\\scrawlAnimation.js",
-            "line": 2959,
+            "line": 4183,
             "description": "# Action\n\n## Instantiation\n\n* scrawl.makeAction()\n\n## Purpose\n\n* Defines an action to be performed along a timeline\n\n## Access\n\n* scrawl.animation.ACTIONNAME - for the Action object\n\n## Action functions\n\n* __run()__ - run associated function\n* __kill()__ - delete Action",
             "is_constructor": 1,
             "extends": "Base",
@@ -2644,7 +2644,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1102,
+            "line": 1103,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -2655,7 +2655,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1111,
+            "line": 1112,
             "description": "Array of entitys, cells, etc to be animated using this tween; expects to be passed handles to the entity objects, not SPRITENAME strings",
             "itemtype": "property",
             "name": "targets",
@@ -2666,7 +2666,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1118,
+            "line": 1119,
             "description": "Array of entitys, cells, etc currently being animated using this tween",
             "itemtype": "property",
             "name": "currentTargets",
@@ -2679,7 +2679,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1126,
+            "line": 1127,
             "description": "Object containing the start positions (for absolute transitions) or delta values (for relative transitions) for given settable (ie: Number) attributes",
             "itemtype": "property",
             "name": "start",
@@ -2690,7 +2690,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1133,
+            "line": 1134,
             "description": "Object containing attribute: value pairs determining which easing engine will be applied to each tweened attribute\n\nCurrently, Scrawl offers the following easing engines. _Out_ signifies that the end of the tween is faster than the start; _In_ signifies the the end of the tween is slower. (This is the opposite of 'Flash' usage, but in line with wider programming conventions):\n\n* __in__, __easeIn__, __easeIn3__, __easeIn4__, __easeIn5__\n* __out__, __easeOut__, __easeOut3__, __easeOut4__, __easeOut5__\n* __easeOutIn__, __easeOutIn3__, __easeOutIn4__, __easeOutIn5__\n* __linear__ (default) - an even speed throughout the duration of the tween\n* __calc__ to tell the tween to use a function (set in the calculations object) to determine the tween value",
             "itemtype": "property",
             "name": "engines",
@@ -2701,7 +2701,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1148,
+            "line": 1149,
             "description": "Object containing attribute: function pairs\n\nThe attribute must be the key of the attribute being tweened; the function can be anonymous or named. The function should return a value which the tween engine can then assign to the attribute. \n\nThe function should accept three arguments. The first argument will be an object containing the following attributes:\n\n* __start__ Start point for tween action\n* __change__ Total change required for tween action\n* __position__ Normalized time (time elapsed/duration)\n\nThe second argument will be the tween object itself, while the third will be the Entity (or Cell, etc) being tweened",
             "itemtype": "property",
             "name": "calculations",
@@ -2712,7 +2712,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1166,
+            "line": 1167,
             "description": "Object containing the end positions for given settable (ie: Number) attributes",
             "itemtype": "property",
             "name": "end",
@@ -2723,7 +2723,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1173,
+            "line": 1174,
             "description": "Object containing set instructions to be performed at the end of the tween",
             "itemtype": "property",
             "name": "onComplete",
@@ -2734,7 +2734,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1180,
+            "line": 1181,
             "description": "Object containing runtime initial values for each object being tweened",
             "itemtype": "property",
             "name": "initVals",
@@ -2747,7 +2747,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1188,
+            "line": 1189,
             "description": "Object containing set instructions to be performed at the start of the tween",
             "itemtype": "property",
             "name": "onCommence",
@@ -2758,7 +2758,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1195,
+            "line": 1196,
             "description": "Datetime when the tween starts running",
             "itemtype": "property",
             "name": "startTime",
@@ -2771,7 +2771,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1203,
+            "line": 1204,
             "description": "Datetime for the current time",
             "itemtype": "property",
             "name": "currentTime",
@@ -2784,7 +2784,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1211,
+            "line": 1212,
             "description": "Time value - used only when adding a tween to a timeline using the addTween function",
             "itemtype": "property",
             "name": "time",
@@ -2795,7 +2795,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1218,
+            "line": 1219,
             "description": "Duration of the tween, measured in milliseconds",
             "itemtype": "property",
             "name": "duration",
@@ -2806,7 +2806,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1225,
+            "line": 1226,
             "description": "Flag - when true, tween is running",
             "itemtype": "property",
             "name": "active",
@@ -2819,7 +2819,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1233,
+            "line": 1234,
             "description": "Flag - when true, tween has been paused (halted)",
             "itemtype": "property",
             "name": "paused",
@@ -2832,7 +2832,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1241,
+            "line": 1242,
             "description": "Flag - when true, tween runs in reverse, from end values to start values (for absolute transitions) or applying negative start values (for relative transitions)",
             "itemtype": "property",
             "name": "reverse",
@@ -2843,7 +2843,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1248,
+            "line": 1249,
             "description": "Flag - when true, tween will automatically reverse its direction when it completes",
             "itemtype": "property",
             "name": "autoReverse",
@@ -2854,7 +2854,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1255,
+            "line": 1256,
             "description": "Callback function to run when tween completes - will not run if nextTween is set",
             "itemtype": "property",
             "name": "callback",
@@ -2865,7 +2865,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1262,
+            "line": 1263,
             "description": "Flag - when true, tween will automatically reverse its direction when it completes, and immediately run again",
             "itemtype": "property",
             "name": "autoReverseAndRun",
@@ -2876,7 +2876,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1269,
+            "line": 1270,
             "description": "Counter for the number of cycles the tween will run; set to true for countinuous repetition",
             "itemtype": "property",
             "name": "count",
@@ -2887,7 +2887,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1276,
+            "line": 1277,
             "description": "Internal attribute",
             "itemtype": "property",
             "name": "currentCount",
@@ -2900,7 +2900,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1284,
+            "line": 1285,
             "description": "Flag - when true, tween will automatically delete itself when it completes",
             "itemtype": "property",
             "name": "killOnComplete",
@@ -2911,7 +2911,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1291,
+            "line": 1292,
             "description": "Flag - when true, tween will automatically lock the objects it is operating on\n\nLocking an object means that other tweens cannot operate on them",
             "itemtype": "property",
             "name": "lockObjects",
@@ -2922,7 +2922,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1300,
+            "line": 1301,
             "description": "TWEENNAME Sring of the tween to be run when this tween completes",
             "itemtype": "property",
             "name": "nextTween",
@@ -2933,7 +2933,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1307,
+            "line": 1308,
             "description": "Lower order animations are run during each frame before higher order ones",
             "itemtype": "property",
             "name": "order",
@@ -2944,7 +2944,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1316,
+            "line": 1317,
             "description": "Set tween values",
             "itemtype": "method",
             "name": "set",
@@ -2957,7 +2957,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1341,
+            "line": 1342,
             "description": "Tween animation function",
             "itemtype": "method",
             "name": "fn",
@@ -2971,7 +2971,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1434,
+            "line": 1435,
             "description": "Tween engines",
             "itemtype": "method",
             "name": "engine",
@@ -3027,7 +3027,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1459,
+            "line": 1460,
             "description": "Tween engine helper object",
             "itemtype": "method",
             "name": "engineActions",
@@ -3038,7 +3038,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1528,
+            "line": 1529,
             "description": "Run a tween animation",
             "itemtype": "method",
             "name": "run",
@@ -3050,7 +3050,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1612,
+            "line": 1613,
             "description": "Finish running a tween",
             "itemtype": "method",
             "name": "runComplete",
@@ -3064,7 +3064,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1660,
+            "line": 1661,
             "description": "Stop a tween animation",
             "itemtype": "method",
             "name": "halt",
@@ -3077,7 +3077,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1672,
+            "line": 1673,
             "description": "Reset a tween animation to its initial conditions",
             "itemtype": "method",
             "name": "reset",
@@ -3090,7 +3090,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1690,
+            "line": 1691,
             "description": "Complete a tween animation to its final conditions",
             "itemtype": "method",
             "name": "complete",
@@ -3103,7 +3103,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1705,
+            "line": 1706,
             "description": "Seek to a different time in the Tween",
             "itemtype": "method",
             "name": "seekTo",
@@ -3125,7 +3125,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1735,
+            "line": 1736,
             "description": "Start the tween running from the point at which it was halted",
             "itemtype": "method",
             "name": "resume",
@@ -3138,7 +3138,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1752,
+            "line": 1753,
             "description": "Remove this tween from the scrawl library",
             "itemtype": "method",
             "name": "kill",
@@ -3150,7 +3150,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1825,
+            "line": 1826,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -3161,7 +3161,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1834,
+            "line": 1835,
             "description": "Timeline length, in milliseconds\n\nIf no duration is set, Timeline will set the last Action's time as its duration, or alternatively default to 1000 (1 second)",
             "itemtype": "property",
             "name": "duration",
@@ -3172,7 +3172,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1843,
+            "line": 1844,
             "description": "Event choke value\n\nA timeline will trigger a __timeupdate__ event on the document object as it runs, with details of the timeline's current state including:\n\n* __name__\n* __currentTime__ (milliseconds)\n\nIf the event attribute is set to 0, no timeupdate events are fired as the timeline runs. Otherwise, this value represents the frequency at which the event is fired, with a default value of 100 (milliseconds)\n\nBe aware that the timeline may finish before tweens near the end of the timeline complete their action.",
             "itemtype": "property",
             "name": "event",
@@ -3183,7 +3183,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1861,
+            "line": 1862,
             "description": "Sort the actions based on their timeValue values",
             "itemtype": "method",
             "name": "sortActions",
@@ -3195,7 +3195,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1869,
+            "line": 1870,
             "description": "Make a new timeupdate customEvent object",
             "itemtype": "method",
             "name": "makeTimeupdateEvent",
@@ -3207,7 +3207,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1900,
+            "line": 1901,
             "description": "Set the timeline duration (for actions with % time strings) or event choke value;",
             "itemtype": "method",
             "name": "set",
@@ -3227,7 +3227,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1923,
+            "line": 1924,
             "description": "add() and remove() helper function",
             "itemtype": "method",
             "name": "resolve",
@@ -3241,7 +3241,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1941,
+            "line": 1942,
             "description": "Add Actions to the timeline - list Actions as one or more arguments to this function; the first argument may be a string, or an array of strings",
             "itemtype": "method",
             "name": "add",
@@ -3261,7 +3261,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1960,
+            "line": 1961,
             "description": "Add an Action to the timeline - creates an action and adds it to the timeline",
             "itemtype": "method",
             "name": "addAction",
@@ -3282,7 +3282,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1972,
+            "line": 1973,
             "description": "Change the globalCompositionOperation for an entity, group or cell on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __target__ - String name of the entity, group or cell\n* __type__ - String - one from 'entity', 'group', 'cell'\n* __from__ - String - globalCompositionObject value\n* __to__ - String - globalCompositionObject value\n* __time__ - time either a String % value, or a number in milliseconds",
             "itemtype": "method",
             "name": "changeComposition",
@@ -3298,12 +3298,98 @@
                 "description": "this"
             },
             "chainable": 1,
+            "deprecated": true,
+            "deprecationMessage": "- will be removed in a future update; use doComposition functions instead",
             "class": "Timeline",
             "module": "scrawlAnimation"
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2048,
+            "line": 2050,
+            "description": "Change the globalCompositionOperation attribute for an entity at a given point on the timeline\n\nThe argument object must include the following attributes, otherwise the action will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'\n* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects\n* __from__ - String - old globalCompositionOrder value\n* __to__ - String - new globalCompositionOrder value\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doCompositionEntitys",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 2123,
+            "description": "Change the globalCompositionOperation attribute for a cell at a given point on the timeline\n\nThe argument object must include the following attributes, otherwise the action will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'\n* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects\n* __from__ - String - old globalCompositionOrder value\n* __to__ - String - new globalCompositionOrder value\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doCompositionCells",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 2196,
+            "description": "Change the globalCompositionOperation attribute for all entitys in a group at a given point on the timeline\n\nThe argument object must include the following attributes, otherwise the action will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'\n* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects\n* __from__ - String - old globalCompositionOrder value\n* __to__ - String - new globalCompositionOrder value\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doCompositionGroups",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 2271,
+            "description": "Change the globalCompositionOperation attribute for an entity, cell, or all entitys in a group at a given point on the timeline\n\nThe argument object must include the following attributes, otherwise the action will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'\n* __targets__ - String name of the entity, cell or group, or the object itself; can also be a mixed array of such strings or objects\n* __from__ - String - old globalCompositionOrder value\n* __to__ - String - new globalCompositionOrder value\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doComposition",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 2348,
             "description": "Change the stamp/show order command for an entity, group or cell on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __target__ - String name of the entity, group or cell\n* __type__ - String - one from 'entity', 'group', 'cell'\n* __from__ - Integer - old order/show number\n* __to__ - Integer - new order/show number\n* __time__ - time either a String % value, or a number in milliseconds",
             "itemtype": "method",
             "name": "changeOrder",
@@ -3319,15 +3405,17 @@
                 "description": "this"
             },
             "chainable": 1,
+            "deprecated": true,
+            "deprecationMessage": "- will be removed in a future update; use doOrder functions instead",
             "class": "Timeline",
             "module": "scrawlAnimation"
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2124,
-            "description": "Change the stamp order command for all entitys in a group on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __target__ - String name of the group\n* __from__ - Integer - old order number\n* __to__ - Integer - new order number\n* __time__ - time either a String % value, or a number in milliseconds",
+            "line": 2425,
+            "description": "Change the stamp/show order attribute for an entity at a given point on the timeline\n\nThe argument object must include the following attributes, otherwise the action will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'\n* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects\n* __from__ - Integer - old order/show number\n* __to__ - Integer - new order/show number\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
             "itemtype": "method",
-            "name": "changeGroupEntitysOrderTo",
+            "name": "doOrderEntitys",
             "params": [
                 {
                     "name": "items",
@@ -3345,7 +3433,93 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2173,
+            "line": 2498,
+            "description": "Change the stamp/show order attribute for a group at a given point on the timeline\n\nThe argument object must include the following attributes, otherwise the action will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'\n* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects\n* __from__ - Integer - old order/show number\n* __to__ - Integer - new order/show number\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doOrderGroups",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 2571,
+            "description": "Change the showOrder attribute for a cell at a given point on the timeline\n\nThe argument object must include the following attributes, otherwise the action will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'\n* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects\n* __from__ - Integer - old order/show number\n* __to__ - Integer - new order/show number\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doOrderCells",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 2644,
+            "description": "Change the order/showOrder attribute for entitys, groups and cells at a given time on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'\n* __targets__ - String name of the entity, group or cell, or the object itself; can also be a mixed array of such strings or objects\n* __from__ - Integer - old order/show number\n* __to__ - Integer - new order/show number\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0\n\nNote that if string names are supplied as part of the targets attribute, library sections will be searched for in the order: entity, group, cell, element",
+            "itemtype": "method",
+            "name": "doOrder",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 2723,
+            "description": "Change the stamp order command for all entitys in a group on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __target__ - String name of the group\n* __from__ - Integer - old order number\n* __to__ - Integer - new order number\n* __time__ - time either a String % value, or a number in milliseconds",
+            "itemtype": "method",
+            "name": "changeGroupEntitysOrderTo",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "deprecated": true,
+            "deprecationMessage": "- will be removed in a future update; use doOrder functions instead",
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 2773,
             "description": "Fade in a set of entitys\n\nThe argument object must include the following attributes (engine is optional), otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __targets__ - Array of entity String names\n* __engine__ - easing engine String (eg 'linear')\n* __duration__ - Number length of tween, in milliseconds\n* __time__ - time either a String % value, or a number in milliseconds",
             "itemtype": "method",
             "name": "fadeIn",
@@ -3366,7 +3540,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2221,
+            "line": 2821,
             "description": "Fade out a set of entitys\n\nThe argument object must include the following attributes (engine is optional), otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __targets__ - Array of entity String names\n* __engine__ - easing engine String (eg 'linear')\n* __duration__ - Number length of tween, in milliseconds\n* __time__ - time either a String % value, or a number in milliseconds",
             "itemtype": "method",
             "name": "fadeOut",
@@ -3387,8 +3561,8 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2269,
-            "description": "Tween a set of entity attributes\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __targets__ - Array of entity String names\n* __start__ - Object containing attriburte start values\n* __end__ - Object containing attribute end values\n* __duration__ - Number length of tween, in milliseconds\n* __time__ - time either a String % value, or a number in milliseconds\n\nThe following attributes are optional:\n\n* __engines__ - Object containing easing engine Strings (eg 'linear') - all engines default to 'linear'\n* __calculations__ - Object containing easing engine functions\n\nFor the start, end, engines and calculations Objects, the keys should be the attributes being tweened, supplied with appropriate values",
+            "line": 2869,
+            "description": "Tween a set of entity attributes\n\nThis function is 'overloaded' inasmuch as it can accept either a raw object which includes the definition required for building a new tween, or it can accept an existing tween object.\n\nWhere the argument has a type attribute === 'Tween'\n\n* __time__ - if the tween lacks a time value, then a default value of 0ms is assigned\n\nWhere the argument is a raw JavaScript object, it must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __targets__ - Array of entity String names\n* __start__ - Object containing attriburte start values\n* __end__ - Object containing attribute end values\n* __duration__ - Number length of tween, in milliseconds\n* __time__ - time either a String % value, or a number in milliseconds\n\nIn addition to the above, the following attributes are optional. Any other attributes are ignored:\n\n* __engines__ - Object containing easing engine Strings (eg 'linear') - all engines default to 'linear'\n* __calculations__ - Object containing easing engine functions\n\nFor the start, end, engines and calculations Objects, the keys should be the attributes being tweened, supplied with appropriate values",
             "itemtype": "method",
             "name": "addTween",
             "params": [
@@ -3408,7 +3582,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2317,
+            "line": 2932,
             "description": "Add a visibility: true command for an entity, group or cell (rendered: true) to the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __target__ - String name of the entity, group or cell\n* __type__ - String - one from 'entity', 'group', 'cell'\n* __time__ - time either a String % value, or a number in milliseconds",
             "itemtype": "method",
             "name": "addShow",
@@ -3424,12 +3598,182 @@
                 "description": "this"
             },
             "chainable": 1,
+            "deprecated": true,
+            "deprecationMessage": "- will be removed in a future update; use doShow functions instead",
             "class": "Timeline",
             "module": "scrawlAnimation"
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2416,
+            "line": 3033,
+            "description": "Make entitys visible (visibility: true) at a given time on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedShowAction'\n* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doShowEntitys",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 3105,
+            "description": "Make entitys invisible (visibility: false) at a given time on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedHideAction'\n* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doHideEntitys",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 3177,
+            "description": "Make groups visible (visibility: true) at a given time on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedShowAction'\n* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doShowGroups",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 3258,
+            "description": "Make groups invisible (visibility: false) at a given time on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedShowAction'\n* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doHideGroups",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 3339,
+            "description": "Make cells visible (rendered: true) at a given time on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedShowAction'\n* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doShowCells",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 3411,
+            "description": "Make cells invisible (rendered: false) at a given time on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedShowAction'\n* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0",
+            "itemtype": "method",
+            "name": "doHideCells",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 3485,
+            "description": "Make entitys, groups and cells visible at a given time on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedShowAction'\n* __targets__ - String name of the entity, group or cell, or the object itself; can also be a mixed array of such strings or objects\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0\n\nNote that if string names are supplied as part of the targets attribute, library sections will be searched for in the order: entity, group, cell, element",
+            "itemtype": "method",
+            "name": "doShow",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 3557,
+            "description": "Make entitys, groups and cells invisible at a given time on the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - (optional) String name of the new action - default 'unnamedShowAction'\n* __targets__ - String name of the entity, group or cell, or the object itself; can also be a mixed array of such strings or objects\n* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0\n\nNote that if string names are supplied as part of the targets attribute, library sections will be searched for in the order: entity, group, cell, element",
+            "itemtype": "method",
+            "name": "doHide",
+            "params": [
+                {
+                    "name": "items",
+                    "description": "Key:value Object argument for setting Action attributes",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "this"
+            },
+            "chainable": 1,
+            "class": "Timeline",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 3632,
             "description": "Add a visibility: true command for a set of entitys and/or cells (rendered: true) to the timeline\n\nThe argument object must include the following attributes, otherwise the commands will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __targets__ - Array of String names of entitys and/or cells\n* __time__ - time either a String % value, or a number in milliseconds",
             "itemtype": "method",
             "name": "showMany",
@@ -3445,12 +3789,14 @@
                 "description": "this"
             },
             "chainable": 1,
+            "deprecated": true,
+            "deprecationMessage": "- will be removed in a future update; use doShow functions instead",
             "class": "Timeline",
             "module": "scrawlAnimation"
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2453,
+            "line": 3670,
             "description": "Add a visibility: false command for an entity, group or cell (rendered: false) to the timeline\n\nThe argument object must include the following attributes, otherwise the command will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __item__ - String name of the entity, group or cell\n* __type__ - String - one from 'entity', 'group', 'cell'\n* __time__ - time either a String % value, or a number in milliseconds",
             "itemtype": "method",
             "name": "addHide",
@@ -3466,12 +3812,14 @@
                 "description": "this"
             },
             "chainable": 1,
+            "deprecated": true,
+            "deprecationMessage": "- will be removed in a future update; use doHide functions instead",
             "class": "Timeline",
             "module": "scrawlAnimation"
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2552,
+            "line": 3770,
             "description": "Add a visibility: false command for a set of entitys and/or cells (rendered: false) to the timeline\n\nThe argument object must include the following attributes, otherwise the commands will not be added to the timeline:\n\n* __name__ - String name of the new action\n* __targets__ - Array of String names of entitys and/or cells\n* __time__ - time either a String % value, or a number in milliseconds",
             "itemtype": "method",
             "name": "hideMany",
@@ -3487,12 +3835,14 @@
                 "description": "this"
             },
             "chainable": 1,
+            "deprecated": true,
+            "deprecationMessage": "- will be removed in a future update; use doHide functions instead",
             "class": "Timeline",
             "module": "scrawlAnimation"
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2589,
+            "line": 3808,
             "description": "Remove Actions from the timeline - list Actions as one or more arguments to this function; the first argument may be a string, or an array of strings",
             "itemtype": "method",
             "name": "remove",
@@ -3512,7 +3862,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2608,
+            "line": 3827,
             "description": "Start the timeline running from the beginning",
             "itemtype": "method",
             "name": "run",
@@ -3525,7 +3875,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2627,
+            "line": 3846,
             "description": "Start the timeline running from the point at which it was halted",
             "itemtype": "method",
             "name": "resume",
@@ -3538,7 +3888,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2651,
+            "line": 3870,
             "description": "Function triggered by the animation loop",
             "itemtype": "method",
             "name": "fn",
@@ -3552,7 +3902,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2686,
+            "line": 3905,
             "description": "Stop a Timeline; can be resumed using resume() or started again from the beginning using run()",
             "itemtype": "method",
             "name": "halt",
@@ -3565,7 +3915,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2705,
+            "line": 3924,
             "description": "Reset a Timeline animation to its initial conditions",
             "itemtype": "method",
             "name": "reset",
@@ -3578,7 +3928,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2731,
+            "line": 3950,
             "description": "Set the timeline ticker to a new value, and move tweens and action functions to that new time",
             "itemtype": "method",
             "name": "seekTo",
@@ -3599,7 +3949,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2769,
+            "line": 3988,
             "itemtype": "method",
             "name": "seekForward",
             "params": [
@@ -3619,7 +3969,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2833,
+            "line": 4052,
             "itemtype": "method",
             "name": "getActionTimes",
             "params": [
@@ -3640,7 +3990,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2861,
+            "line": 4080,
             "itemtype": "method",
             "name": "getTimelineDuration",
             "return": {
@@ -3653,7 +4003,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2883,
+            "line": 4107,
             "itemtype": "method",
             "name": "seekBack",
             "params": [
@@ -3673,7 +4023,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2947,
+            "line": 4171,
             "description": "Remove this Timeline from the scrawl library",
             "itemtype": "method",
             "name": "kill",
@@ -3685,7 +4035,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3001,
+            "line": 4225,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -3696,7 +4046,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3010,
+            "line": 4234,
             "description": "Keyframe time - may be expressed as a Number (in milliseconds), or as a string:\n* '10ms' - ten milliseconds\n* '10s' - ten seconds\n* '10%' - ten percent along a timeline (relative value)",
             "itemtype": "property",
             "name": "time",
@@ -3707,7 +4057,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3020,
+            "line": 4244,
             "description": "Keyframe time value, in milliseconds (calculated)",
             "itemtype": "property",
             "name": "timeValue",
@@ -3718,7 +4068,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3027,
+            "line": 4251,
             "description": "Keyframe time unit value (calculated)",
             "itemtype": "property",
             "name": "timeUnit",
@@ -3729,7 +4079,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3034,
+            "line": 4258,
             "description": "Keyframe function to be called",
             "itemtype": "property",
             "name": "action",
@@ -3740,7 +4090,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3041,
+            "line": 4265,
             "description": "Keyframe function to be called - can be used to set initial conditions for objects in the timeline\n\nOnly one action object in a timeline should include a reset function",
             "itemtype": "property",
             "name": "reset",
@@ -3751,7 +4101,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3051,
+            "line": 4275,
             "description": "Keyframe function to be called - can be used to set final conditions for objects in the timeline\n\nOnly one action object in a timeline should include a complete function",
             "itemtype": "property",
             "name": "complete",
@@ -3762,7 +4112,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3061,
+            "line": 4285,
             "description": "Keyframe function to be called - can be used to reverse the action function",
             "itemtype": "property",
             "name": "rollback",
@@ -3773,7 +4123,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3068,
+            "line": 4292,
             "description": "Seek functionality flag\n\nIn normal mode - false, default - a seek action will cascade through nested timelines. To prevent this, set the attribute to true; any action reset (seekBack) and complete (seekForward) functions will still be triggered",
             "itemtype": "property",
             "name": "skipSeek",
@@ -3784,7 +4134,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3079,
+            "line": 4303,
             "description": "Convert a time into its component properties",
             "itemtype": "method",
             "name": "convertTime",
@@ -3798,7 +4148,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3097,
+            "line": 4321,
             "description": "Invoke the associated function",
             "itemtype": "method",
             "name": "run",
@@ -3810,7 +4160,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 3115,
+            "line": 4339,
             "description": "Remove this Action from the scrawl library",
             "itemtype": "method",
             "name": "kill",

@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 5.0.4 - 14 February 2016
+*	version 5.0.5 - 17 December 2016
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -45,6 +45,36 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+161217
+	- version 5.0.5 released
+	- inline documentation updated
+	- minor hotfixes
+
+December 2016
+	- doing some hotfixes
+		- for issues discovered while coding up new codepen interactive lessons for website
+	- fix bug in design (gradients) .set() function
+	- add new functionality to timeline
+		- addTween will now accept a tween object as an argument
+		- new doXxx functionality
+			- doComposition, doCompositionEntitys, doCompositionGroups, doCompositionCells
+			- doShow, doShowEntitys, doShowGroups, doShowCells
+			- doHide, doHideEntitys, doHideGroups, doHideCells
+			- doOrder, doOrderEntitys, doOrderGroups, doOrderCells
+		- deprecating functions
+			- changeComposition
+			- changeOrder
+			- changeGroupEntitysOrderTo
+			- addShow
+			- showMany
+			- addHide
+			- hideMany
+		- the old convenience functions are
+			- inefficient - generate too many action objects
+			- inconsistent - difficult to understand
+	- add the .time attribute to tweens
+		- to aid with using the new timeline functionality
+
 160214
 	- version 5.0.4 released
 	- inline documentation updated

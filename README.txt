@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 5.0.4 - 14 February 2016
+*	version 5.0.5 - 17 December 2016
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -86,13 +86,13 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 5.0.4 released 14 February 2016
+VERSION 5.0.5 released 17 December 2016
 
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (79kb)
-		- scrawlAnimation-min.js (31kb)
+		- scrawlCore-min.js (80kb)
+		- scrawlAnimation-min.js (41kb)
 		- scrawlBlock-min.js (5kb)
 		- scrawlCollisions-min.js (11kb)
 		- scrawlColor-min.js (18kb)
@@ -111,8 +111,8 @@ VERSION 5.0.4 released 14 February 2016
 		- scrawlWheel-min.js (7kb)
 
 		Development:
-		- scrawlCore.js (233kb)
-		- scrawlAnimation.js (88kb)
+		- scrawlCore.js (237kb)
+		- scrawlAnimation.js (122kb)
 		- scrawlBlock.js (14kb)
 		- scrawlCollisions.js (29kb)
 		- scrawlColor.js (36kb)
@@ -147,6 +147,10 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 5.0.5 uploaded 17 December 2016
+	- enhanced tween and timeline functionality
+	- minor bugfix
+	- updated documentation
 Version 5.0.4 uploaded 14 February 2016
 	- minor bugfix
 	- updated documentation

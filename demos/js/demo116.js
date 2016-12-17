@@ -3,9 +3,9 @@ var mycode = function() {
 
 	//hide-start
 	var testTicker = Date.now(),
-	testTime = testTicker,
-	testNow,
-	testMessage = document.getElementById('testmessage');
+		testTime = testTicker,
+		testNow,
+		testMessage = document.getElementById('testmessage');
 	//hide-end
 
 	scrawl.getImageById('demo116');
@@ -17,8 +17,8 @@ var mycode = function() {
 	var myTimeline;
 
 
-	for(y = 0; y < 5; y++){
-		for(x = 0; x < 5; x++){
+	for (y = 0; y < 5; y++) {
+		for (x = 0; x < 5; x++) {
 			scrawl.makeWheel({
 				name: 'dot_' + y + x,
 				radius: '10%',
@@ -29,7 +29,7 @@ var mycode = function() {
 			});
 		}
 	}
-  
+
 	scrawl.makePicture({
 		name: 'iris',
 		source: 'demo116',
@@ -41,7 +41,7 @@ var mycode = function() {
 		name: 'disappearTimeline'
 	});
 
-	for(k = 0; k < 5; k++){
+	for (k = 0; k < 5; k++) {
 		myTimeline.addTween({
 			name: 'sequenceTween' + k,
 			start: {
