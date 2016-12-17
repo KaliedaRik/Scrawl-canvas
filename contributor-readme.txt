@@ -1,6 +1,7 @@
 # For Developers who want to make Scrawl.js even better
+(These instructions are as much for my benefit as for yours)
 
-I'm assuming that you have 'node' already installed on your local machine, alongside 'git', 'grunt' and 'git flow'. These instructions are as much for my benefit as for yours.
+I'm assuming that you have 'node' already installed on your local machine, alongside 'git', 'grunt' and 'git flow'. 
 
 I'm also assuming that you know how to drive a GitHub repository thingy ...
 
@@ -71,7 +72,20 @@ To start the server:
 
 Be aware that the server will often take its own sweet time to stir itself into action and display the index page. The page will display on your default browser, but can also be (simultaneously) tested in other browsers by copy-pasting the page address over to them. 
 
+### Alternatives to grunt-express
+
+Lately the server has been getting very, very slow. I'm currently experimenting with Docker containers and nginx to see if I can get things speeded up - see bottom of this page.
+
+For non-Docker folks, an alternative approach is to navigate to the demos folder and start a node server:
+(doesn't refresh pages when code changes - probably not a Bad Thing)
+
+    $ http-server
+
+The demo index page can then be viewed at localhost:8080
+
 ## New releases
+
+(Typically I'm ignoring my own advice at the moment - I'm not using git flow for creating branches, just plain old git commands. I'm branching and merging locally - occasionally pushing branches to github - and creating tags and releases directly on GitHub.)
 
 Scrawl uses an x.y.z approach to tagging releases, where
 
@@ -79,13 +93,11 @@ Scrawl uses an x.y.z approach to tagging releases, where
     y = minor release - adds new functionality to the library
     z = bug fixes
 
-Current version (at the time of writing this document) is 5.0.5
+Current version (at the time of writing this document) is 5.0.4
 
-Start a release branch via git flow
+> pull develop branch
 
-    $ git flow release start [next.version.tag]
-
-After any final bug fixes have been committed to the release branch, the following operations need to be performed:
+> merge branch back into develop, fixing conflicts
 
 > change the version number in the following files:
 
@@ -115,13 +127,39 @@ Note that these four grunt tasks can be run using a single command:
     $ git add -A
     $ git commit -m "new release: [next.version.tag] - [brief details of the changes]"
 
-> finish the release
-
-    $ git flow release finish [next.version.tag]
-
 > and push everything to GitHub
 
     $ git push
     $ git push --tags
 
-I'm still working out how releases are published on the GitHub website. At the moment I'm doing releases manually on the website in addition to the above steps. This is probably a Bad Approach, and anyone willing to offer me A Clue on how to do it properly will have my deepest gratitude.
+> make a pull request on GitHub
+
+## Docker
+
+An alternative to the (very, very) slow grunt server situation ... (currently tested only on a Windows machine)
+
+1. Install docker 
+
+https://www.docker.com/
+https://docs.docker.com/engine/userguide/containers/usingdocker/
+https://hub.docker.com/_/nginx/
+
+2. In the docker quickstart shell, navigate to the cloned Scrawl-canvas directory
+
+3. Run the following command: 
+
+    $ ./dev/run.sh
+
+4. To make sure changed files comply with lint and beautifier standards, run: 
+
+    $ grunt keepclean
+
+5. Find out the correct local url ('default' is the name of my Docker vm in virtualbox - yours could be different)
+
+    $ docker-machine ip default
+
+6. View the demos at http://<your_local_url>/demos/index.html
+
+7. At end of session, clean up by running: 
+
+    $ ./dev/halt.sh

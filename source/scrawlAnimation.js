@@ -1030,6 +1030,7 @@ Tweens can run a callback function on completion by setting the __callback__ att
 			this.engines = (my.isa_obj(items.engines)) ? items.engines : {};
 			this.calculations = (my.isa_obj(items.calculations)) ? items.calculations : {};
 			this.end = (my.isa_obj(items.end)) ? items.end : {};
+			this.time = items.time || 0;
 			this.startTime = Date.now();
 			this.currentTime = Date.now();
 			this.duration = items.duration || 0;
@@ -1985,6 +1986,7 @@ The argument object must include the following attributes, otherwise the command
 @param {Object} [items] Key:value Object argument for setting Action attributes
 @return this
 @chainable
+@deprecated - will be removed in a future update; use doComposition functions instead
 **/
 		my.Timeline.prototype.changeComposition = function(items) {
 			var act, obj, fAction, fRollback, fReset;
@@ -2046,6 +2048,302 @@ The argument object must include the following attributes, otherwise the command
 			return this;
 		};
 		/**
+Change the globalCompositionOperation attribute for an entity at a given point on the timeline
+
+The argument object must include the following attributes, otherwise the action will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'
+* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects
+* __from__ - String - old globalCompositionOrder value
+* __to__ - String - new globalCompositionOrder value
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doCompositionEntitys
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doCompositionEntitys = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedCompositionChangeAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(my.xta(items.from, items.to) && targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								globalCompositeOperation: items.to
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								globalCompositeOperation: items.from
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								globalCompositeOperation: items.from
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doCompositionEntitys',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+		/**
+Change the globalCompositionOperation attribute for a cell at a given point on the timeline
+
+The argument object must include the following attributes, otherwise the action will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'
+* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects
+* __from__ - String - old globalCompositionOrder value
+* __to__ - String - new globalCompositionOrder value
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doCompositionCells
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doCompositionCells = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedCompositionChangeAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(my.xta(items.from, items.to) && targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								globalCompositeOperation: items.to
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								globalCompositeOperation: items.from
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								globalCompositeOperation: items.from
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doCompositionCells',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+		/**
+Change the globalCompositionOperation attribute for all entitys in a group at a given point on the timeline
+
+The argument object must include the following attributes, otherwise the action will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'
+* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects
+* __from__ - String - old globalCompositionOrder value
+* __to__ - String - new globalCompositionOrder value
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doCompositionGroups
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doCompositionGroups = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedCompositionChangeAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(my.xta(items.from, items.to) && targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.setEntitysTo({
+								globalCompositeOperation: items.to
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.setEntitysTo({
+								globalCompositeOperation: items.from
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.setEntitysTo({
+								globalCompositeOperation: items.from
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doCompositionGroups',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+		// TODO - add stack-related objects to the mix
+
+		/**
+Change the globalCompositionOperation attribute for an entity, cell, or all entitys in a group at a given point on the timeline
+
+The argument object must include the following attributes, otherwise the action will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'
+* __targets__ - String name of the entity, cell or group, or the object itself; can also be a mixed array of such strings or objects
+* __from__ - String - old globalCompositionOrder value
+* __to__ - String - new globalCompositionOrder value
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doComposition
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doComposition = function(items) {
+			// TODO - add stack-related objects to the mix
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedCompositionChangeAction',
+				time = items.time || 0,
+				entitys = [], cells = [], groups = [],
+				item, obj, i, iz;
+			if(my.xta(items.from, items.to) && targets.length){
+				for(i = 0, iz = targets.length; i < iz; i++){
+					item = targets[i];
+					if(item.substring){
+						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
+					}
+					else{
+						obj = item;
+					}
+					if(obj){
+						if(my.contains(my.entitynames, obj.name)){
+							entitys.push(obj);
+						}
+						else if(my.contains(my.groupnames, obj.name)){
+							groups.push(obj);
+						}
+						else if(my.contains(my.cellnames, obj.name)){
+							cells.push(obj);
+						}
+					}
+				}
+				if(entitys.length > 0){
+					this.doCompositionEntitys({
+						targets: entitys,
+						name: name,
+						from: items.from,
+						to: items.to,
+						time: time
+					});
+				}
+				if(groups.length > 0){
+					this.doCompositionGroups({
+						targets: groups,
+						name: name,
+						from: items.from,
+						to: items.to,
+						time: time
+					});
+				}
+				if(cells.length > 0){
+					this.doCompositionCells({
+						targets: cells,
+						name: name,
+						from: items.from,
+						to: items.to,
+						time: time
+					});
+				}
+			}
+			return this;
+		};
+		/**
 Change the stamp/show order command for an entity, group or cell on the timeline
 
 The argument object must include the following attributes, otherwise the command will not be added to the timeline:
@@ -2061,6 +2359,7 @@ The argument object must include the following attributes, otherwise the command
 @param {Object} [items] Key:value Object argument for setting Action attributes
 @return this
 @chainable
+@deprecated - will be removed in a future update; use doOrder functions instead
 **/
 		my.Timeline.prototype.changeOrder = function(items) {
 			var act, obj, fAction, fRollback, fReset;
@@ -2122,6 +2421,302 @@ The argument object must include the following attributes, otherwise the command
 			return this;
 		};
 		/**
+Change the stamp/show order attribute for an entity at a given point on the timeline
+
+The argument object must include the following attributes, otherwise the action will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'
+* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects
+* __from__ - Integer - old order/show number
+* __to__ - Integer - new order/show number
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doOrderEntitys
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doOrderEntitys = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedOrderChangeAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(my.xta(items.from, items.to) && targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								order: items.to
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								order: items.from
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								order: items.from
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doOrderEntitys',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+		/**
+Change the stamp/show order attribute for a group at a given point on the timeline
+
+The argument object must include the following attributes, otherwise the action will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'
+* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects
+* __from__ - Integer - old order/show number
+* __to__ - Integer - new order/show number
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doOrderGroups
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doOrderGroups = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedOrderChangeAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(my.xta(items.from, items.to) && targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								order: items.to
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								order: items.from
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								order: items.from
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doOrderGroups',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+		/**
+Change the showOrder attribute for a cell at a given point on the timeline
+
+The argument object must include the following attributes, otherwise the action will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'
+* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects
+* __from__ - Integer - old order/show number
+* __to__ - Integer - new order/show number
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doOrderCells
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doOrderCells = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedOrderChangeAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(my.xta(items.from, items.to) && targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								showOrder: items.to
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								showOrder: items.from
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								showOrder: items.from
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doOrderCells',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+		/**
+Change the order/showOrder attribute for entitys, groups and cells at a given time on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'
+* __targets__ - String name of the entity, group or cell, or the object itself; can also be a mixed array of such strings or objects
+* __from__ - Integer - old order/show number
+* __to__ - Integer - new order/show number
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+Note that if string names are supplied as part of the targets attribute, library sections will be searched for in the order: entity, group, cell, element
+
+@method doOrder
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doOrder = function(items) {
+			// TODO - add stack-related objects to the mix
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedOrderChangeAction',
+				time = items.time || 0,
+				entitys = [], cells = [], groups = [],
+				item, obj, i, iz;
+			if(my.xta(items.from, items.to) && targets.length){
+				for(i = 0, iz = targets.length; i < iz; i++){
+					item = targets[i];
+					if(item.substring){
+						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
+					}
+					else{
+						obj = item;
+					}
+					if(obj){
+						if(my.contains(my.entitynames, obj.name)){
+							entitys.push(obj);
+						}
+						else if(my.contains(my.groupnames, obj.name)){
+							groups.push(obj);
+						}
+						else if(my.contains(my.cellnames, obj.name)){
+							cells.push(obj);
+						}
+					}
+				}
+				if(entitys.length > 0){
+					this.doOrderEntitys({
+						targets: entitys,
+						name: name,
+						from: items.from,
+						to: items.to,
+						time: time
+					});
+				}
+				if(groups.length > 0){
+					this.doOrderGroups({
+						targets: groups,
+						name: name,
+						from: items.from,
+						to: items.to,
+						time: time
+					});
+				}
+				if(cells.length > 0){
+					this.doOrderCells({
+						targets: cells,
+						name: name,
+						from: items.from,
+						to: items.to,
+						time: time
+					});
+				}
+			}
+			return this;
+		};
+		/**
 Change the stamp order command for all entitys in a group on the timeline
 
 The argument object must include the following attributes, otherwise the command will not be added to the timeline:
@@ -2136,6 +2731,7 @@ The argument object must include the following attributes, otherwise the command
 @param {Object} [items] Key:value Object argument for setting Action attributes
 @return this
 @chainable
+@deprecated - will be removed in a future update; use doOrder functions instead
 **/
 		my.Timeline.prototype.changeGroupEntitysOrderTo = function(items) {
 			var act, obj, fAction, fRollback, fReset;
@@ -2269,7 +2865,13 @@ The argument object must include the following attributes (engine is optional), 
 		/**
 Tween a set of entity attributes
 
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+This function is 'overloaded' inasmuch as it can accept either a raw object which includes the definition required for building a new tween, or it can accept an existing tween object.
+
+Where the argument has a type attribute === 'Tween'
+
+* __time__ - if the tween lacks a time value, then a default value of 0ms is assigned
+
+Where the argument is a raw JavaScript object, it must include the following attributes, otherwise the command will not be added to the timeline:
 
 * __name__ - String name of the new action
 * __targets__ - Array of entity String names
@@ -2278,7 +2880,7 @@ The argument object must include the following attributes, otherwise the command
 * __duration__ - Number length of tween, in milliseconds
 * __time__ - time either a String % value, or a number in milliseconds
 
-The following attributes are optional:
+In addition to the above, the following attributes are optional. Any other attributes are ignored:
 
 * __engines__ - Object containing easing engine Strings (eg 'linear') - all engines default to 'linear'
 * __calculations__ - Object containing easing engine functions
@@ -2295,22 +2897,31 @@ For the start, end, engines and calculations Objects, the keys should be the att
 			items = my.safeObject(items);
 			e = items.engines || {};
 			c = items.calculations || {};
-			if (my.xta(items.targets, items.time, items.duration, items.name, items.start, items.end)) {
+			if(items.type && items.type === 'Tween'){
 				this.addAction({
-					name: items.name,
-					time: items.time,
-					action: my.makeTween({
-						name: items.name + '_tween',
-						targets: items.targets,
-						onCommence: items.start,
-						start: items.start,
-						end: items.end,
-						onComplete: items.end,
-						engines: e,
-						calculations: c,
-						duration: items.duration
-					})
+					name: items.name + '_action',
+					time: items.time || 0,
+					action: my.animation[items.name]
 				});
+			}
+			else{
+				if (my.xta(items.targets, items.time, items.duration, items.name, items.start, items.end)) {
+					this.addAction({
+						name: items.name + '_action',
+						time: items.time,
+						action: my.makeTween({
+							name: items.name,
+							targets: items.targets,
+							onCommence: items.start,
+							start: items.start,
+							end: items.end,
+							onComplete: items.end,
+							engines: e,
+							calculations: c,
+							duration: items.duration
+						})
+					});
+				}
 			}
 			return this;
 		};
@@ -2328,6 +2939,7 @@ The argument object must include the following attributes, otherwise the command
 @param {Object} [items] Key:value Object argument for setting Action attributes
 @return this
 @chainable
+@deprecated - will be removed in a future update; use doShow functions instead
 **/
 		my.Timeline.prototype.addShow = function(items) {
 			var act, obj, fAction, fRollback, fReset;
@@ -2413,6 +3025,602 @@ The argument object must include the following attributes, otherwise the command
 			}
 			return this;
 		};
+
+		/**
+Make entitys visible (visibility: true) at a given time on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
+* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doShowEntitys
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doShowEntitys = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedShowAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: true
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: false
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: false
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doShowEntitys',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+
+		/**
+Make entitys invisible (visibility: false) at a given time on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedHideAction'
+* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doHideEntitys
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doHideEntitys = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedHideAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: false
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: true
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.entity;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: true
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doHideEntitys',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+
+		/**
+Make groups visible (visibility: true) at a given time on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
+* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doShowGroups
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doShowGroups = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedShowAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: true
+							});
+							obj.setEntitysTo({
+								visibility: true
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: false
+							});
+							obj.setEntitysTo({
+								visibility: false
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: false
+							});
+							obj.setEntitysTo({
+								visibility: false
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doShowGroups',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+
+		/**
+Make groups invisible (visibility: false) at a given time on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
+* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doHideGroups
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doHideGroups = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedHideAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: true
+							});
+							obj.setEntitysTo({
+								visibility: true
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: false
+							});
+							obj.setEntitysTo({
+								visibility: false
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.group;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								visibility: false
+							});
+							obj.setEntitysTo({
+								visibility: false
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doHideGroups',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+
+		/**
+Make cells visible (rendered: true) at a given time on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
+* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doShowCells
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doShowCells = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedShowAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								rendered: true
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								rendered: false
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								rendered: false
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doShowCells',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+
+		/**
+Make cells invisible (rendered: false) at a given time on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
+* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+@method doHideCells
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doHideCells = function(items) {
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedHideAction',
+				time = items.time || 0,
+				act, fAction, fRollback, fReset;
+			if(targets.length){
+				fAction = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								rendered: false
+							});
+						} 
+					}
+				};
+				fRollback = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								rendered: true
+							});
+						} 
+					}
+				};
+				fReset = function(){
+					var item, obj, i, iz,
+						e = my.cell;
+					for(i = 0, iz = targets.length; i < iz; i++){
+						item = targets[i];
+						obj = (item.substring) ? e[item] : item;
+						if(obj){
+							obj.set({
+								rendered: true
+							});
+						} 
+					}
+				};
+				act = my.makeAction({
+					name: name + '_doHideCells',
+					time: time,
+					action: fAction,
+					rollback: fRollback,
+					reset: fReset
+				});
+				this.add(act.name);
+			}
+			return this;
+		};
+
+		// TODO: add stack-related objects to the mix
+
+		/**
+Make entitys, groups and cells visible at a given time on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
+* __targets__ - String name of the entity, group or cell, or the object itself; can also be a mixed array of such strings or objects
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+Note that if string names are supplied as part of the targets attribute, library sections will be searched for in the order: entity, group, cell, element
+
+@method doShow
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doShow = function(items) {
+			// TODO - add stack-related objects to the mix
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedShowAction',
+				time = items.time || 0,
+				entitys = [], cells = [], groups = [],
+				item, obj, i, iz;
+			if(targets.length){
+				for(i = 0, iz = targets.length; i < iz; i++){
+					item = targets[i];
+					if(item.substring){
+						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
+					}
+					else{
+						obj = item;
+					}
+					if(obj){
+						if(my.contains(my.entitynames, obj.name)){
+							entitys.push(obj);
+						}
+						else if(my.contains(my.groupnames, obj.name)){
+							groups.push(obj);
+						}
+						else if(my.contains(my.cellnames, obj.name)){
+							cells.push(obj);
+						}
+					}
+				}
+				if(entitys.length > 0){
+					this.doShowEntitys({
+						targets: entitys,
+						name: name,
+						time: time
+					});
+				}
+				if(groups.length > 0){
+					this.doShowGroups({
+						targets: groups,
+						name: name,
+						time: time
+					});
+				}
+				if(cells.length > 0){
+					this.doShowCells({
+						targets: cells,
+						name: name,
+						time: time
+					});
+				}
+			}
+			return this;
+		};
+
+		/**
+Make entitys, groups and cells invisible at a given time on the timeline
+
+The argument object must include the following attributes, otherwise the command will not be added to the timeline:
+
+* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
+* __targets__ - String name of the entity, group or cell, or the object itself; can also be a mixed array of such strings or objects
+* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
+
+Note that if string names are supplied as part of the targets attribute, library sections will be searched for in the order: entity, group, cell, element
+
+@method doHide
+@param {Object} [items] Key:value Object argument for setting Action attributes
+@return this
+@chainable
+**/
+		my.Timeline.prototype.doHide = function(items) {
+			// TODO - add stack-related objects to the mix
+			items = my.safeObject(items);
+			var targets = [].concat(items.targets),
+				name = items.name || 'unnamedHideAction',
+				time = items.time || 0,
+				entitys = [], cells = [], groups = [],
+				item, obj, i, iz;
+			if(targets.length){
+				for(i = 0, iz = targets.length; i < iz; i++){
+					item = targets[i];
+					if(item.substring){
+						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
+					}
+					else{
+						obj = item;
+					}
+					if(obj){
+						if(my.contains(my.entitynames, obj.name)){
+							entitys.push(obj);
+						}
+						else if(my.contains(my.groupnames, obj.name)){
+							groups.push(obj);
+						}
+						else if(my.contains(my.cellnames, obj.name)){
+							cells.push(obj);
+						}
+					}
+				}
+				if(entitys.length > 0){
+					this.doHideEntitys({
+						targets: entitys,
+						name: name,
+						time: time
+					});
+				}
+				if(groups.length > 0){
+					this.doHideGroups({
+						targets: groups,
+						name: name,
+						time: time
+					});
+				}
+				if(cells.length > 0){
+					this.doHideCells({
+						targets: cells,
+						name: name,
+						time: time
+					});
+				}
+			}
+			return this;
+		};
+
+
+
+
 		/**
 Add a visibility: true command for a set of entitys and/or cells (rendered: true) to the timeline
 
@@ -2426,6 +3634,7 @@ The argument object must include the following attributes, otherwise the command
 @param {Object} [items] Key:value Object argument for setting Action attributes
 @return this
 @chainable
+@deprecated - will be removed in a future update; use doShow functions instead
 **/
 		my.Timeline.prototype.showMany = function(items) {
 			var type, t, target, i, iz, obj,
@@ -2464,6 +3673,7 @@ The argument object must include the following attributes, otherwise the command
 @param {Object} [items] Key:value Object argument for setting Action attributes
 @return this
 @chainable
+@deprecated - will be removed in a future update; use doHide functions instead
 **/
 		my.Timeline.prototype.addHide = function(items) {
 			var act, obj, fAction, fRollback, fReset;
@@ -2562,6 +3772,7 @@ The argument object must include the following attributes, otherwise the command
 @param {Object} [items] Key:value Object argument for setting Action attributes
 @return this
 @chainable
+@deprecated - will be removed in a future update; use doHide functions instead
 **/
 		my.Timeline.prototype.hideMany = function(items) {
 			var type, t, target, i, iz, obj,
@@ -2868,12 +4079,17 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 				d = 0;
 			for (i = 0, iz = iz = this.actionsList.length; i < iz; i++) {
 				a = my.animation[this.actionsList[i]];
+
 				if (a.action.type === 'Tween') {
 					t = a.timeValue + a.action.duration;
 					d = (t > d) ? t : d;
 				}
 				else if (a.action.type === 'Timeline') {
 					t = a.timeValue + a.action.getTimelineDuration();
+					d = (t > d) ? t : d;
+				}
+				else if (a.type === 'Action') {
+					t = a.timeValue;
 					d = (t > d) ? t : d;
 				}
 			}
