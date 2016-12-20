@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Demo 119</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <style type="text/css">
+    #controls {
+      width: 400px;
+      text-align: center;
+    }
+    #slide {
+      width: 400px;
+      height: 30px;
+      position: relative;
+    }
+    #slideCounter {
+      display: inline-block;
+      position: absolute;
+      top: 10px;
+    }
+    #slideValue {
+      font-weight: bold;
+      color: #c00000;
+    }
+    #seeker {
+      display: inline-block;
+      width: 330px;
+      position: absolute;
+      top: 12px;
+      left: 60px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 119</h1>
+  <h2>Checking design set() functionality</h2>
+  <h3>Extensions: animation, wheel, images</h3>
+
+  <canvas id="myCanvas" width="400" height="400"></canvas>
+  <img src="img/iris.png" id="flower" />
+
+  <div id="controls">
+    <button id="run-button" class="control">Run</button>
+    <button id="halt-button" class="control">Halt</button>
+    <button id="resume-button" class="control">Resume</button>
+  </div>
+  <div id="slide">
+    <div id="slideCounter">
+      <span id="slideValue">0</span> ms
+    </div>
+    <input id="seeker" type="range" value="0" min="0" max="13500" step="10" class="control" />
+  </div>
+
+  <p id="testmessage"></p>
+
+  <!-- test details block -->
+  <div id="testdetails">
+    <p><b>Scenario:</b> text</p>
+    <p><b>Actions:</b>
+    </p>
+    <ol>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ol>
+    <p><b>Known browser issues:</b> text</p>
+    <p><b>Result images:</b>
+    </p>
+    <img src="img/demopics/demo118.png" alt="image of expected test result" />
+  </div>
+
+  <script src="../source/scrawlCore.js"></script>
+  <script id="testscript" src="js/demo119.js"></script>
+</body>
+
+</html>

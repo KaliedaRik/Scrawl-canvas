@@ -1724,9 +1724,19 @@ A __general__ function to delete entity objects
 			iz,
 			j,
 			jz,
+			k,
+			kz,
+			t,
+			tz,
+			targets,
+			target,
+			targetFlag,
 			entityName,
 			contextName,
-			ri = my.removeItem;
+			ri = my.removeItem,
+			anim = my.animation,
+			animnames = my.animationnames,
+			a;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
 			slice = slice[0];

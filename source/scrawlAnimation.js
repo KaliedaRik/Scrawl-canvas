@@ -117,7 +117,7 @@ Expected values:
 **/
 		my.convertTime = function(item) {
 			var a, timeUnit, timeValue;
-			if (item && (item.substring || item.toFixed)) {
+			if (my.xt(item)) {
 				if (item.toFixed) {
 					return ['ms', item];
 				}
@@ -132,6 +132,7 @@ Expected values:
 						timeValue = 0;
 						break;
 					default:
+						timeUnit = 'ms';
 						timeValue = parseFloat(item);
 				}
 				return [timeUnit, timeValue];
@@ -1321,6 +1322,7 @@ Set tween values
 @chainable
 **/
 		my.Tween.prototype.set = function(items) {
+			console.log('set', this.name);
 			var i, iz, a,
 				animationnames = my.animationnames,
 				animation = my.animation,
@@ -1365,6 +1367,7 @@ Tween animation function
 			progress = (this.currentTime - this.startTime) / this.duration;
 			keys = Object.keys(this.end);
 			if (this.active) {
+				// console.log(this.name, 'fn #1: ', progress);
 				if (progress < 1) {
 					for (t = 0, tz = currentTargets.length; t < tz; t++) {
 						entity = currentTargets[t];
@@ -1532,6 +1535,7 @@ Run a tween animation
 @return Always true
 **/
 		my.Tween.prototype.run = function() {
+			console.log('run', this.name);
 			var test,
 				keys,
 				start,
@@ -1617,6 +1621,7 @@ Finish running a tween
 @private
 **/
 		my.Tween.prototype.runComplete = function() {
+			console.log('runComplete', this.name);
 			var t,
 				tz;
 			for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
@@ -1665,6 +1670,7 @@ Stop a tween animation
 @chainable
 **/
 		my.Tween.prototype.halt = function() {
+			console.log('halt', this.name);
 			this.active = false;
 			this.paused = true;
 			my.removeItem(my.work.animate, this.name);
@@ -1677,6 +1683,7 @@ Reset a tween animation to its initial conditions
 @chainable
 **/
 		my.Tween.prototype.reset = function() {
+			console.log('reset', this.name);
 			var t, tz;
 			this.paused = false;
 			this.active = false;
@@ -1695,6 +1702,7 @@ Complete a tween animation to its final conditions
 @chainable
 **/
 		my.Tween.prototype.complete = function() {
+			console.log('complete', this.name);
 			this.active = true;
 			this.paused = false;
 			this.startTime = Date.now() - this.duration;
@@ -1713,6 +1721,7 @@ Seek to a different time in the Tween
 @private
 **/
 		my.Tween.prototype.seekTo = function(item) {
+			console.log('seekTo', this.name);
 			var myActive = this.active,
 				myPaused = this.paused,
 				t, tz;
@@ -1740,6 +1749,7 @@ Start the tween running from the point at which it was halted
 @chainable
 **/
 		my.Tween.prototype.resume = function() {
+			console.log('resume', this.name);
 			var t0 = this.currentTime - this.startTime;
 			if (this.paused) {
 				this.currentTime = Date.now();
@@ -1756,6 +1766,7 @@ Remove this tween from the scrawl library
 @return Always true
 **/
 		my.Tween.prototype.kill = function() {
+			console.log('kill', this.name);
 			var t,
 				tz;
 			if (this.active) {
@@ -3831,6 +3842,7 @@ Start the timeline running from the beginning
 @chainable
 **/
 		my.Timeline.prototype.run = function() {
+			console.log('timeline run', this.name);
 			var i, iz, a, e;
 			if (!this.active) {
 				this.reset();
@@ -3850,6 +3862,7 @@ Start the timeline running from the point at which it was halted
 @chainable
 **/
 		my.Timeline.prototype.resume = function() {
+			console.log('timeline resume', this.name);
 			var t0 = this.currentTime - this.startTime,
 				i, iz, a;
 			if (this.paused) {
@@ -3909,6 +3922,7 @@ Stop a Timeline; can be resumed using resume() or started again from the beginni
 @chainable
 **/
 		my.Timeline.prototype.halt = function() {
+			console.log('timeline halt', this.name);
 			var i, iz, a;
 			this.active = false;
 			this.paused = true;
@@ -3928,6 +3942,7 @@ Reset a Timeline animation to its initial conditions
 @chainable
 **/
 		my.Timeline.prototype.reset = function() {
+			console.log('timeline reset', this.name);
 			var i, iz, a;
 			this.active = false;
 			this.paused = false;
@@ -3955,9 +3970,10 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 @chainable
 **/
 		my.Timeline.prototype.seekTo = function(item) {
+			console.log('timeline seekTo', this.name);
 			var time, msTime, curTime, deltaTime;
 			if (!this.seeking) {
-				if (item && (item.substring || item.toFixed)) {
+				if (my.xt(item)) {
 					if (this.active) {
 						my.removeItem(my.work.animate, this.name);
 					}
@@ -3992,6 +4008,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 @chainable
 **/
 		my.Timeline.prototype.seekForward = function(item) {
+			console.log('timeline seekForward', this.name);
 			var i, iz, a,
 				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
 			//lock action
@@ -4000,25 +4017,28 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 				this.paused = true;
 			}
 			if (item.toFixed && item) {
-				if (item) {
-					oldCurrent = this.currentTime;
-					newCurrent = oldCurrent + item;
-					for (i = 0, iz = this.actionsList.length; i < iz; i++) {
-						a = my.animation[this.actionsList[i]];
-						actionTimes = this.getActionTimes(a);
-						actionStart = actionTimes[0] + this.startTime;
-						actionEnd = actionTimes[1] + this.startTime;
-						if (actionStart && actionEnd) {
-							if (my.isa_fn(a.action)) {
-								//raw function action wrapper
-								if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
-									a.action();
-								}
+				oldCurrent = this.currentTime;
+				newCurrent = oldCurrent + item;
+				for (i = 0, iz = this.actionsList.length; i < iz; i++) {
+					a = my.animation[this.actionsList[i]];
+					actionTimes = this.getActionTimes(a);
+					actionStart = actionTimes[0] + this.startTime;
+					actionEnd = actionTimes[1] + this.startTime;
+					if (actionStart && actionEnd) {
+						if (my.isa_fn(a.action)) {
+							//raw function action wrapper
+							if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
+								a.action();
 							}
-							else {
-								//tween action wrapper
-								if (a.action.type === 'Tween') {
-									if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+						}
+						else {
+							//tween action wrapper
+							if (a.action.type === 'Tween') {
+								if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+									if(actionEnd < newCurrent){
+										a.action.complete();
+									}
+									else{
 										if (!a.action.active) {
 											a.action.run();
 											a.action.halt();
@@ -4026,24 +4046,24 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 										a.action.seekTo(item - (actionStart - oldCurrent));
 									}
 								}
-								//timeline action wrapper
-								else {
-									if (a.skipSeek) {
-										if (a.complete) {
-											a.complete();
-										}
+							}
+							//timeline action wrapper
+							else {
+								if (a.skipSeek) {
+									if (a.complete) {
+										a.complete();
 									}
-									else {
-										if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
-											a.action.seekForward(item);
-										}
+								}
+								else {
+									if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
+										a.action.seekForward(item);
 									}
 								}
 							}
 						}
 					}
-					this.startTime -= item;
 				}
+				this.startTime -= item;
 			}
 			//unlock action
 			this.seeking = false;
@@ -4111,6 +4131,7 @@ Set the timeline ticker to a new value, and move tweens and action functions to 
 @chainable
 **/
 		my.Timeline.prototype.seekBack = function(item) {
+			console.log('timeline seekBack', this.name);
 			var i, iz, a,
 				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
 			//lock action
@@ -4174,6 +4195,7 @@ Remove this Timeline from the scrawl library
 @return Always true
 **/
 		my.Timeline.prototype.kill = function() {
+			console.log('timeline kill', this.name);
 			my.removeItem(my.work.animate, this.name);
 			my.removeItem(my.animationnames, this.name);
 			delete my.animation[this.name];
