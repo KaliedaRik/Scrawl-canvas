@@ -7,93 +7,128 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//variables
-	var myBlocks,
-		myTween,
-		myPad = scrawl.pad.mycanvas,
-		myCanvas = scrawl.canvas.mycanvas,
-		startNewTween,
-		myEntity,
-		myClone,
-		here;
+	document.getElementById('loop').value = 'loop';
 
-	//group
-	myBlocks = scrawl.makeGroup({
-		name: 'blocks',
-	});
-
-	//entitys
 	scrawl.makeBlock({
-		startX: 50,
-		startY: 70,
-		fillStyle: 'red',
-		strokeStyle: 'blue',
-		lineWidth: 5,
-		method: 'fillDraw',
-		width: 80,
-		height: 80,
+		name: 'myBlock',
+		width: '50%',
+		height: '65%',
+		startX: 'center',
+		startY: 'center',
 		handleX: 'center',
 		handleY: 'center',
-		group: 'blocks'
-	}).clone({
-		startX: 150,
-	}).clone({
-		startX: 250,
-	}).clone({
-		startX: 350,
-	}).clone({
-		startX: 450,
-	}).clone({
-		startX: 550,
+		method: 'fillDraw',
+		fillStyle: 'green',
+		strokeStyle: 'gold',
+		lineWidth: 8,
+		visibility: false
 	});
 
-	//tweens
-	myTween = scrawl.makeTween({
-		start: {
-			startY: 70,
-			roll: 0,
-		},
-		end: {
-			startY: 330,
-			roll: 180,
-		},
-		duration: 3000,
-		count: 2,
-		lockObjects: true,
-		autoReverseAndRun: true,
-		onComplete: {
-			startY: 70,
-			roll: 0,
-		},
-		killOnComplete: true,
+	scrawl.makeTicker({
+		name: 'myTicker',
+		cycles: 0,
+		duration: '5s'
 	});
 
-	//event listener
-	startNewTween = function(e) {
-		myEntity = myBlocks.getEntityAt(here);
-		if (myEntity) {
-			myClone = myTween.clone({
-				targets: myEntity,
-			});
-			if (!myClone.run()) {
-				myClone.kill();
+	scrawl.makeAction({
+		name: 'showAction',
+		ticker: 'myTicker',
+		targets: 'myBlock',
+		reverseOnCycleEnd: false,
+		time: '1s',
+		action: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({visibility: true});
+			}
+		},
+		revert: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({visibility: false});
 			}
 		}
-	};
-	scrawl.addListener('up', startNewTween, myCanvas);
-
-	//stop touchmove dragging the page up/down
-	scrawl.addListener('move', function(e) {
-		if (e) {
-			e.stopPropagation();
-			e.preventDefault();
+	}).clone({
+		name: 'rollAction',
+		time: '2s',
+		action: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({roll: 30});
+			}
+		},
+		revert: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({roll: 0});
+			}
 		}
-	}, myCanvas);
+	}).clone({
+		name: 'colorsAction',
+		time: '3s',
+		action: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({fillStyle: 'lightblue'});
+			}
+		},
+		revert: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({fillStyle: 'green'});
+			}
+		}
+	}).clone({
+		name: 'scaleAction',
+		time: '4s',
+		action: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({scale: 0.6});
+			}
+		},
+		revert: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({scale: 1});
+			}
+		}
+	}).clone({
+		name: 'heightAction',
+		time: '4.66s',
+		action: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({height: '5%'});
+			}
+		},
+		revert: function(){
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set({height: '65%'});
+			}
+		}
+	});
+
+
+	scrawl.animation.myTicker.run();
+
+	//event listeners
+	var stopE = function(e) {
+		e.preventDefault();
+		e.returnValue = false;
+	};
+	var events = function(e) {
+		var items = {},
+			actions,
+			ticker;
+		stopE(e);
+		switch (e.target.id) {
+			case 'loop':
+				items.reverseOnCycleEnd = (e.target.value === 'loop') ? false : true;
+				break;
+			default:
+				items = false;
+		}
+		if (items) {
+			scrawl.animation.myTicker.updateSubscribers(items);
+		}
+	};
+	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			here = myPad.getMouse();
 			scrawl.render();
 
 			//hide-start

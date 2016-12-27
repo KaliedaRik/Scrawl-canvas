@@ -43,6 +43,10 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 
 scrawlAnimation extension adaptions to the Scrawl library object
 
+## New library sections
+
+* scrawl.tween - for Tween and Action objects
+
 ## New default attributes
 
 * Position.delta - default: {x:0,y:0,z:0};
@@ -102,6 +106,9 @@ scrawlAnimation extension adaptions to the Scrawl library object
 			my.mergeInto(my.work.d.Element, my.work.d.PageElement);
 		}
 
+		my.pushUnique(my.work.sectionlist, 'tween');
+		my.pushUnique(my.work.nameslist, 'tweennames');
+
 		/**
 Convert a time into its component properties
 
@@ -122,14 +129,13 @@ Expected values:
 					return ['ms', item];
 				}
 				a = item.match(/^\d+\.?\d*(\D*)/);
-				if (a[1].toLowerCase)
-					timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
+				timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
 				switch (timeUnit) {
 					case 's':
 						timeValue = parseFloat(item) * 1000;
 						break;
 					case '%':
-						timeValue = 0;
+						timeValue = parseFloat(item);
 						break;
 					default:
 						timeUnit = 'ms';
@@ -912,28 +918,21 @@ Gradient builder helper function - sorts color attribute Objects by their stop a
 			this.color = color;
 		};
 		/**
+A __factory__ function to generate new Ticker objects
+@method makeTicker
+@param {Object} items Key:value Object argument for setting attributes
+@return Ticker object
+**/
+		my.makeTicker = function(items) {
+			return new my.Ticker(items);
+		};
+		/**
 Alias for makeTween()
 @method newTween
 @deprecated
 **/
 		my.newTween = function(items) {
 			return my.makeTween(items);
-		};
-		/**
-Alias for makeTimeline()
-@method newTimeline
-@deprecated
-**/
-		my.newTimeline = function(items) {
-			return my.makeTimeline(items);
-		};
-		/**
-Alias for makeAction()
-@method newAction
-@deprecated
-**/
-		my.newAction = function(items) {
-			return my.makeAction(items);
 		};
 		/**
 A __factory__ function to generate new Tween objects
@@ -945,962 +944,180 @@ A __factory__ function to generate new Tween objects
 			return new my.Tween(items);
 		};
 		/**
-A __factory__ function to generate new Timeline objects
-@method makeTimeline
-@param {Object} items Key:value Object argument for setting attributes
-@return Timeline object
+Alias for makeAction()
+@method newAction
+@deprecated
 **/
-		my.makeTimeline = function(items) {
-			return new my.Timeline(items);
+		my.newAction = function(items) {
+			return my.makeAction(items);
 		};
 		/**
 A __factory__ function to generate new Action objects
-@methodmakewAction
+@method makeAction
 @param {Object} items Key:value Object argument for setting attributes
 @return Action object
 **/
 		my.makeAction = function(items) {
 			return new my.Action(items);
 		};
-
+	/**
+Locate a target object
+@method locateTarget
+@param {String} OBJECTNAME string of required target
+@private
+@return target Object; false if not found
+**/
+		my.locateTarget = function(item) {
+			var sections = ['entity', 'cell', 'pad', 'stack', 'element', 'point', 'group', 'design', 'animation', 'tween', 'anim', 'filter', 'image', 'force', 'spring', 'physics'],
+				section, name, j, jz,
+				contains = my.contains,
+				xt = my.xt;
+			if(my.xt(item) && item.substring){
+				for(j = 0, jz = sections.length; j < jz; j++){
+					section = sections[j];
+					name = section + 'names';
+					if (xt(my[name]) && my[name].indexOf(item) >= 0){
+						return my[section][item];
+					}
+				}
+			}
+			return false;
+		};
 		/**
-# Tween
+# Ticker
 
 ## Instantiation
 
-* scrawl.makeTween()
+* scrawl.makeTicker()
 
 ## Purpose
 
-* Defines an animation to be applied to a Scrawl object
-
-Tweens are animations defined by duration (how long they should run for) and distance (how much an attribute needs to change over the course of the tween).
-
-* One tween can change several attributes of an object, and can apply these changes to one or more objects as the tween runs its course.
-* Any attribute that holds a Number, or a percentage String (5%), value can be tweened
-* The starting point for each attribute tween is set in the __start__ attribute object
-* The ending point for each attribute tween is set in the __end__ attribute object
-* If an ending point is defined for an attribute, but no starting point, then the tween will use the object's attribute's current value for the starting point.
-* Individual _easing engines_ can be defined for each attribute in the __engines__ attribute object.
-
-The objects on which the tween will operate are passed to the tween as an array of objects, in the __targets__ attribute. Strings can also be supplied - the tween factory will search the library for the object; the search is conducted in the following order: entity, spriteanimation, video, cell, element, pad, stack, point, design, force, spring, physics.
-
-* A tween will only run on an object that is not currently being animated by another tween
-* A tween cannot be run if it is already running.
-
-The duration of the tween is set in the __duration__ attribute, in milliseconds.
-
-Tweens can hold data for attribute changes to be applied to their object(s) before the tween starts(__onCommence__) and after the tween ends (__onComplete__).
-
-Tweens can be chained by setting the __nextTween__ attribute to the String _name_ attribute of the next tween to be run.
-
-Tweens come with a number of flags and attributes to indicate how many times they should be run before completing:
-
-* Set the __count__ attribute to a positive integer to run the tween that many times. Setting the attribute to _true_ will run the tween forever
-* Tween direction can be reversed by setting the __reverse__ flag to _true_
-* Setting the __autoReverse__ flag to true will automatically reverse the tween's direction at the end of each run
-* Setting __autoReverseAndRun__ reverses the tween's direction and immediately running it again.
-* Setting __killOnComplete__ will delete the tween once it has completed.
-
-Tweens can run a callback function on completion by setting the __callback__ attribute to an appropriate (anonymous) function
+* Defines a linear time sequence to which tweens and other actions can subscribe
 
 ## Access
 
-* scrawl.animation.TWEENNAME - for the Tween object
+* scrawl.animation.TICKERNAME - for the Ticker object
 
-## Tween functions
+## Ticker functions
 
-* Start a tween by calling the __run()__ function on it.
-* Tween animation can be stopped by calling the __halt()__ function on it.
-* A Tween can be deleted by calling the __kill()__ function on it.
-* Tweens can be cloned like many other Scrawl objects, using the __clone()__ function
+* Start a Ticker from 0 by calling the __run()__ function on it.
+* Tickers can be stopped by calling the __halt()__ function on it.
+* Start a Ticker from the point at which it was previously halted by calling the __resume()__ function on it.
+* A Ticker can have its current tick amended by calling the __seekTo()__ function on it.
+* A Ticker can be deleted by calling the __kill()__ function on it.
 
-@class Tween
+@class Ticker
 @constructor
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-		my.Tween = function(items) {
-			var i, iz, temp;
+		my.Ticker = function(items) {
+			var xtGet = my.xtGet,
+				temp;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.targets = (my.isa_arr(items.targets)) ? items.targets : ((my.xt(items.targets)) ? [items.targets] : []);
-			this.currentTargets = [];
-			this.initVals = [];
-			this.start = (my.isa_obj(items.start)) ? items.start : {};
-			this.engines = (my.isa_obj(items.engines)) ? items.engines : {};
-			this.calculations = (my.isa_obj(items.calculations)) ? items.calculations : {};
-			this.end = (my.isa_obj(items.end)) ? items.end : {};
-			this.time = items.time || 0;
-			this.startTime = Date.now();
-			this.currentTime = Date.now();
-			this.duration = items.duration || 0;
+			this.order = xtGet(items.order, 0);
+			this.subscribers = [];
+			this.duration = xtGet(items.duration, 0);
+			this.eventChoke = xtGet(items.eventChoke, 0);
+			this.cycles = xtGet(items.cycles, 1);
+			this.cycleCount = 0;
 			this.active = false;
-			this.reverse = items.reverse || false;
-			this.autoReverse = items.autoReverse || false;
-			this.autoReverseAndRun = items.autoReverseAndRun || false;
-			this.count = items.count || 0;
-			this.currentCount = 0;
-			this.onCommence = items.onCommence || {};
-			this.onComplete = items.onComplete || {};
-			this.nextTween = items.nextTween || '';
-			this.lockObjects = items.lockObjects || false;
-			this.killOnComplete = items.killOnComplete || false;
-			this.callback = (my.isa_fn(items.callback)) ? items.callback : false;
-			this.order = items.order || 0;
-			for (i = 0, iz = this.targets.length; i < iz; i++) {
-				if (this.targets[i].substring) {
-					temp = false;
-					if (my.entity[this.targets[i]]) {
-						temp = my.entity[this.targets[i]];
-					}
-					else if (my.spriteanimation && my.spriteanimation[this.targets[i]]) {
-						temp = my.spriteanimation[this.targets[i]];
-					}
-					else if (my.video && my.video[this.targets[i]]) {
-						temp = my.video[this.targets[i]];
-					}
-					else if (my.cell[this.targets[i]]) {
-						temp = my.cell[this.targets[i]];
-					}
-					else if (my.element && my.element[this.targets[i]]) {
-						temp = my.element[this.targets[i]];
-					}
-					else if (my.pad[this.targets[i]]) {
-						temp = my.pad[this.targets[i]];
-					}
-					else if (my.stack && my.stack[this.targets[i]]) {
-						temp = my.stack[this.targets[i]];
-					}
-					else if (my.point && my.point[this.targets[i]]) {
-						temp = my.point[this.targets[i]];
-					}
-					else if (my.design && my.design[this.targets[i]]) {
-						temp = my.design[this.targets[i]];
-					}
-					else if (my.force && my.force[this.targets[i]]) {
-						temp = my.force[this.targets[i]];
-					}
-					else if (my.spring && my.spring[this.targets[i]]) {
-						temp = my.spring[this.targets[i]];
-					}
-					else if (my.physics && my.physics[this.targets[i]]) {
-						temp = my.physics[this.targets[i]];
-					}
-					else if (my.filter && my.filter[this.targets[i]]) {
-						temp = my.filter[this.targets[i]];
-					}
-					if (temp) {
-						this.targets[i] = temp;
-					}
-				}
+			this.effectiveDuration = 0;
+			this.startTime = 0;
+			this.currentTime = 0;
+			this.tick = 0;
+			this.lastEvent = 0;
+			if(items.subscribers){
+				this.subscribe(items.subscribers);
 			}
+			this.setEffectiveDuration();
 			my.animation[this.name] = this;
 			my.pushUnique(my.animationnames, this.name);
-			my.work.resortAnimations = true;
 			return this;
 		};
-		my.Tween.prototype = Object.create(my.Base.prototype);
+		my.Ticker.prototype = Object.create(my.Base.prototype);
 		/**
 @property type
 @type String
-@default 'Tween'
+@default 'Ticker'
 @final
 **/
-		my.Tween.prototype.type = 'Tween';
-		my.Tween.prototype.classname = 'animationnames';
-		my.work.d.Tween = {
+		my.Ticker.prototype.type = 'Ticker';
+		my.Ticker.prototype.classname = 'animationnames';
+		my.work.d.Ticker = {
 			/**
-Array of entitys, cells, etc to be animated using this tween; expects to be passed handles to the entity objects, not SPRITENAME strings
-@property targets
-@type Array
-@default []
-**/
-			targets: [],
-			/**
-Array of entitys, cells, etc currently being animated using this tween
-@property currentTargets
-@type Array
-@default []
-@private
-**/
-			currentTargets: [],
-			/**
-Object containing the start positions (for absolute transitions) or delta values (for relative transitions) for given settable (ie: Number) attributes
-@property start
-@type Object
-@default {}
-**/
-			start: {},
-			/**
-Object containing attribute: value pairs determining which easing engine will be applied to each tweened attribute
+Animation order
 
-Currently, Scrawl offers the following easing engines. _Out_ signifies that the end of the tween is faster than the start; _In_ signifies the the end of the tween is slower. (This is the opposite of 'Flash' usage, but in line with wider programming conventions):
-
-* __in__, __easeIn__, __easeIn3__, __easeIn4__, __easeIn5__
-* __out__, __easeOut__, __easeOut3__, __easeOut4__, __easeOut5__
-* __easeOutIn__, __easeOutIn3__, __easeOutIn4__, __easeOutIn5__
-* __linear__ (default) - an even speed throughout the duration of the tween
-* __calc__ to tell the tween to use a function (set in the calculations object) to determine the tween value
-@property engines
-@type Object
-@default {}
-**/
-			engines: {},
-			/**
-Object containing attribute: function pairs
-
-The attribute must be the key of the attribute being tweened; the function can be anonymous or named. The function should return a value which the tween engine can then assign to the attribute. 
-
-The function should accept three arguments. The first argument will be an object containing the following attributes:
-
-* __start__ Start point for tween action
-* __change__ Total change required for tween action
-* __position__ Normalized time (time elapsed/duration)
-
-The second argument will be the tween object itself, while the third will be the Entity (or Cell, etc) being tweened
-
-@property calculations
-@type Object
-@default {}
-**/
-			calculations: {},
-			/**
-Object containing the end positions for given settable (ie: Number) attributes
-@property end
-@type Object
-@default {}
-**/
-			end: {},
-			/**
-Object containing set instructions to be performed at the end of the tween
-@property onComplete
-@type Object
-@default {}
-**/
-			onComplete: {},
-			/**
-Object containing runtime initial values for each object being tweened
-@property initVals
-@type Object
-@default {}
-@private
-**/
-			initVals: [],
-			/**
-Object containing set instructions to be performed at the start of the tween
-@property onCommence
-@type Object
-@default {}
-**/
-			onCommence: {},
-			/**
-Datetime when the tween starts running
-@property startTime
-@type Number - Date.now()
-@default 0
-@private
-**/
-			startTime: 0,
-			/**
-Datetime for the current time
-@property currentTime
-@type Number - Date.now()
-@default 0
-@private
-**/
-			currentTime: 0,
-			/**
-Time value - used only when adding a tween to a timeline using the addTween function
-@property time
-@type Number - milliseconds; can also accept timestrings (eg % values)? NOT TESTED
+Objects in the animation loop are sorted by their order values, and run as part of the animation loop from lowest to highest order value. There is no guarantee in which order objects with the same order value will run during each animation loop
+@property order
+@type Number
 @default 0
 **/
-			time: 0,
+			order: 0,
 			/**
-Duration of the tween, measured in milliseconds
+Ticker length, in milliseconds
+
+If no duration is set, Ticker will set the last subscribed object's end time as its effective duration
 @property duration
 @type Number
 @default 0
 **/
 			duration: 0,
 			/**
-Flag - when true, tween is running
-@property active
-@type Boolean
-@default false
-@private
-**/
-			active: false,
-			/**
-Flag - when true, tween has been paused (halted)
-@property paused
-@type Boolean
-@default false
-@private
-**/
-			paused: false,
-			/**
-Flag - when true, tween runs in reverse, from end values to start values (for absolute transitions) or applying negative start values (for relative transitions)
-@property reverse
-@type Boolean
-@default false
-**/
-			reverse: false,
-			/**
-Flag - when true, tween will automatically reverse its direction when it completes
-@property autoReverse
-@type Boolean
-@default false
-**/
-			autoReverse: false,
-			/**
-Callback function to run when tween completes - will not run if nextTween is set
-@property callback
-@type Function
-@default false
-**/
-			callback: false,
-			/**
-Flag - when true, tween will automatically reverse its direction when it completes, and immediately run again
-@property autoReverseAndRun
-@type Boolean
-@default false
-**/
-			autoReverseAndRun: false,
-			/**
-Counter for the number of cycles the tween will run; set to true for countinuous repetition
-@property count
-@type Mixed - Number or Boolean
-@default 0
-**/
-			count: 0,
-			/**
-Internal attribute
-@property currentCount
-@type Mixed - Number or Boolean
-@default 0
-@private
-**/
-			currentCount: 0,
-			/**
-Flag - when true, tween will automatically delete itself when it completes
-@property killOnComplete
-@type Boolean
-@default false
-**/
-			killOnComplete: false,
-			/**
-Flag - when true, tween will automatically lock the objects it is operating on
+Number of times to cycle the ticker:
 
-Locking an object means that other tweens cannot operate on them
-@property lockObjects
-@type Boolean
-@default false
-**/
-			lockObjects: false,
-			/**
-TWEENNAME Sring of the tween to be run when this tween completes
-@property nextTween
-@type String
-@default ''
-**/
-			nextTween: '',
-			/**
-Lower order animations are run during each frame before higher order ones
-@property order
+* 0 - the ticker will repeat until stopped
+* > 0 - the ticker will repeat the given number of cycles, then stop
+
+Default action is to run the ticker once, then stop it
+
+@property cycles
 @type Number
-@default 0
+@default 1
 **/
-			order: 0,
-		};
-		my.mergeInto(my.work.d.Tween, my.work.d.Base);
-		/**
-Set tween values
-@method set
-@return this
-@chainable
-**/
-		my.Tween.prototype.set = function(items) {
-			console.log('set', this.name);
-			var i, iz, a,
-				animationnames = my.animationnames,
-				animation = my.animation,
-				contains = my.contains;
-			my.Base.prototype.set.call(this, items);
-			for (i = 0, iz = animationnames.length; i < iz; i++) {
-				a = animation[animationnames[i]];
-				if (a.type === 'Timeline') {
-					if (contains(a.actionsList, this.name)) {
-						a.resolve();
-					}
-				}
-			}
-			if (my.xt(items.order)) {
-				my.work.resortAnimations = true;
-			}
-			return this;
-		};
-		/**
-Tween animation function
-@method fn
-@return Always true
-@private
-**/
-		my.Tween.prototype.fn = function() {
-			var progress,
-				entity,
-				argSet,
-				keys,
-				temp,
-				measure,
-				unit,
-				t,
-				tz,
-				k,
-				kz,
-				xt = my.xt,
-				currentTargets = this.currentTargets,
-				engine = this.engine,
-				engines = this.engines;
-			this.currentTime = Date.now();
-			progress = (this.currentTime - this.startTime) / this.duration;
-			keys = Object.keys(this.end);
-			if (this.active) {
-				// console.log(this.name, 'fn #1: ', progress);
-				if (progress < 1) {
-					for (t = 0, tz = currentTargets.length; t < tz; t++) {
-						entity = currentTargets[t];
-						if (xt(entity)) {
-							argSet = {};
-							for (k = 0, kz = keys.length; k < kz; k++) {
-								temp = this.initVals[t][keys[k]];
-								unit = 0;
-								if (temp.change.substring) {
-									measure = temp.change.match(/^-?\d+\.?\d*(\D*)/);
-									unit = measure[1];
-									if (!xt(unit)) {
-										unit = '%';
-									}
-								}
-								argSet[keys[k]] = engine(
-									parseFloat(temp.start),
-									parseFloat(temp.change),
-									progress,
-									engines[keys[k]],
-									this.reverse,
-									keys[k],
-									this,
-									entity);
-								if (argSet[keys[k]].toFixed) {
-									argSet[keys[k]] = argSet[keys[k]] + unit;
-								}
-							}
-							entity.set(argSet);
-						}
-					}
-				}
-				else {
-					for (t = 0, tz = currentTargets.length; t < tz; t++) {
-						if (xt(currentTargets[t])) {
-							currentTargets[t].tweenLock = false;
-						}
-					}
-					this.active = false;
-					my.removeItem(my.work.animate, this.name);
-					if (this.autoReverse || this.autoReverseAndRun) {
-						this.reverse = (this.reverse) ? false : true;
-					}
-					if (this.autoReverseAndRun) {
-						if (this.currentCount.toFixed) {
-							this.currentCount--;
-							if (this.currentCount > 0) {
-								this.run();
-							}
-							else {
-								this.runComplete();
-							}
-						}
-						else {
-							this.run();
-						}
-					}
-					else if (my.isa_bool(this.count) && this.count) {
-						this.run();
-					}
-					else {
-						this.runComplete();
-					}
-				}
-			}
-			return true;
-		};
-		/**
-Tween engines
-@method engine
-@return calculated current value for an attribute, which will vary depending on which engine has been selected 
-@param {Number} start Start point for tween action
-@param {Number} change Total change required for tween action
-@param {Number} position Normalized time (time elapsed/duration)
-@param {String} engine Calculation engine to be used
-@param {Boolean} reverse Reverse flag - true if tween is reversed
-@param {String} Attribute key
-@param {Tween} Tween object
-@param {Object} Entity (or Cell, etc) being tweened
-@private
-**/
-		my.Tween.prototype.engine = function(start, change, position, engine, reverse, key, tween, obj) {
-			engine = my.xtGet(engine, 'linear');
-			if (engine === 'calc') {
-				return tween.calculations[key]({
-					start: start,
-					change: change,
-					position: position
-				}, tween, obj);
-			}
-			return my.Tween.prototype.engineActions[engine](start, change, position, reverse);
-		};
-		/**
-Tween engine helper object
-@method engineActions
-@private
-**/
-		my.Tween.prototype.engineActions = {
-			out: function(start, change, position, reverse) {
-				var temp = 1 - position;
-				return (start + change) + (Math.cos((position * 90) * my.work.radian) * -change);
-			},
-			in : function(start, change, position, reverse) {
-				return start + (Math.sin((position * 90) * my.work.radian) * change);
-			},
-			easeIn: function(start, change, position, reverse) {
-				var temp = 1 - position;
-				return (start + change) + ((temp * temp) * -change);
-			},
-			easeIn3: function(start, change, position, reverse) {
-				var temp = 1 - position;
-				return (start + change) + ((temp * temp * temp) * -change);
-			},
-			easeIn4: function(start, change, position, reverse) {
-				var temp = 1 - position;
-				return (start + change) + ((temp * temp * temp * temp) * -change);
-			},
-			easeIn5: function(start, change, position, reverse) {
-				var temp = 1 - position;
-				return (start + change) + ((temp * temp * temp * temp * temp) * -change);
-			},
-			easeOutIn: function(start, change, position, reverse) {
-				var temp = 1 - position;
-				return (position < 0.5) ?
-					start + ((position * position) * change * 2) :
-					(start + change) + ((temp * temp) * -change * 2);
-			},
-			easeOutIn3: function(start, change, position, reverse) {
-				var temp = 1 - position;
-				return (position < 0.5) ?
-					start + ((position * position * position) * change * 4) :
-					(start + change) + ((temp * temp * temp) * -change * 4);
-			},
-			easeOutIn4: function(start, change, position, reverse) {
-				var temp = 1 - position;
-				return (position < 0.5) ?
-					start + ((position * position * position * position) * change * 8) :
-					(start + change) + ((temp * temp * temp * temp) * -change * 8);
-			},
-			easeOutIn5: function(start, change, position, reverse) {
-				var temp = 1 - position;
-				return (position < 0.5) ?
-					start + ((position * position * position * position * position) * change * 16) :
-					(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
-			},
-			easeOut: function(start, change, position, reverse) {
-				return start + ((position * position) * change);
-			},
-			easeOut3: function(start, change, position, reverse) {
-				return start + ((position * position * position) * change);
-			},
-			easeOut4: function(start, change, position, reverse) {
-				return start + ((position * position * position * position) * change);
-			},
-			easeOut5: function(start, change, position, reverse) {
-				return start + ((position * position * position * position * position) * change);
-			},
-			linear: function(start, change, position, reverse) {
-				return start + (position * change);
-			}
-		};
-		/**
-Run a tween animation
-@method run
-@return Always true
-**/
-		my.Tween.prototype.run = function() {
-			console.log('run', this.name);
-			var test,
-				keys,
-				start,
-				end,
-				percent,
-				measure,
-				unit,
-				temp,
-				i,
-				iz,
-				j,
-				jz,
-				k,
-				kz,
-				t,
-				tz,
-				m,
-				mz,
-				l,
-				lz;
-			if (!this.active) {
-				keys = Object.keys(this.end);
-				this.currentCount = this.currentCount || this.count;
-				this.currentTargets = [];
-				this.initVals = [];
-				for (i = 0, iz = this.targets.length; i < iz; i++) {
-					if (this.lockObjects) {
-						if (!this.targets[i].tweenLock) {
-							this.targets[i].tweenLock = true;
-							this.currentTargets.push(this.targets[i]);
-						}
-					}
-					else {
-						this.currentTargets.push(this.targets[i]);
-					}
-				}
-				if (this.currentTargets.length > 0) {
-					for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
-						if (my.xt(this.currentTargets[t])) {
-							if (this.reverse) {
-								this.currentTargets[t].set(this.onComplete);
-								this.currentTargets[t].set(this.end);
-							}
-							else {
-								this.currentTargets[t].set(this.onCommence);
-								this.currentTargets[t].set(this.start);
-							}
-							this.initVals.push({});
-							for (m = 0, mz = keys.length; m < mz; m++) {
-								start = (my.xt(this.start[keys[m]])) ? this.start[keys[m]] : this.currentTargets[t].get([keys[m]]);
-								end = this.end[keys[m]];
-								temp = parseFloat(end) - parseFloat(start);
-								unit = 0;
-								if (end.substring) {
-									measure = end.match(/^-?\d+\.?\d*(\D*)/);
-									unit = measure[1];
-									if (!my.xt(unit)) {
-										unit = '%';
-									}
-								}
-								if (this.reverse) {
-									temp = -temp;
-								}
-								this.initVals[t][keys[m]] = {
-									start: (this.reverse) ? end : start,
-									change: temp + unit,
-								};
-							}
-						}
-					}
-					this.startTime = Date.now();
-					my.pushUnique(my.work.animate, this.name);
-					this.active = true;
-					return true;
-				}
-			}
-			return false;
-		};
-		/**
-Finish running a tween
-@method runComplete
-@return Always true
-@private
-**/
-		my.Tween.prototype.runComplete = function() {
-			console.log('runComplete', this.name);
-			var t,
-				tz;
-			for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
-				if (my.xt(this.currentTargets[t])) {
-					//this.reverse will already have changed state if either of these two are set
-					if (this.autoReverse || this.autoReverseAndRun) {
-						if (this.reverse) {
-							this.currentTargets[t].set(this.end);
-							this.currentTargets[t].set(this.onComplete);
-						}
-						else {
-							this.currentTargets[t].set(this.start);
-							this.currentTargets[t].set(this.onCommence);
-						}
-					}
-					else {
-						if (this.reverse) {
-							this.currentTargets[t].set(this.start);
-							this.currentTargets[t].set(this.onCommence);
-						}
-						else {
-							this.currentTargets[t].set(this.end);
-							this.currentTargets[t].set(this.onComplete);
-						}
-					}
-				}
-			}
-			this.currentTargets = [];
-			if (this.nextTween) {
-				if (my.xt(my.animation[this.nextTween])) {
-					my.animation[this.nextTween].run();
-				}
-			}
-			else if (this.callback) {
-				this.callback();
-			}
-			if (this.killOnComplete) {
-				this.kill();
-			}
-			return true;
-		};
-		/**
-Stop a tween animation
-@method halt
-@return this
-@chainable
-**/
-		my.Tween.prototype.halt = function() {
-			console.log('halt', this.name);
-			this.active = false;
-			this.paused = true;
-			my.removeItem(my.work.animate, this.name);
-			return this;
-		};
-		/**
-Reset a tween animation to its initial conditions
-@method reset
-@return this
-@chainable
-**/
-		my.Tween.prototype.reset = function() {
-			console.log('reset', this.name);
-			var t, tz;
-			this.paused = false;
-			this.active = false;
-			this.startTime = Date.now();
-			this.currentTime = this.startTime;
-			for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
-				this.currentTargets[t].set(this.start);
-				this.currentTargets[t].set(this.onCommence);
-			}
-			return this;
-		};
-		/**
-Complete a tween animation to its final conditions
-@method complete
-@return this
-@chainable
-**/
-		my.Tween.prototype.complete = function() {
-			console.log('complete', this.name);
-			this.active = true;
-			this.paused = false;
-			this.startTime = Date.now() - this.duration;
-			this.currentTime = Date.now();
-			this.fn();
-			this.active = false;
-			return this;
-		};
-		/**
-Seek to a different time in the Tween
-
-@method seekTo
-@param {Number} item - time in ms to move forward or back; negative values move backwards
-@return this
-@chainable
-@private
-**/
-		my.Tween.prototype.seekTo = function(item) {
-			console.log('seekTo', this.name);
-			var myActive = this.active,
-				myPaused = this.paused,
-				t, tz;
-			if (item.toFixed) {
-				if (item > 0) {
-					this.currentTime = Date.now();
-					this.startTime = this.currentTime;
-					this.active = true;
-					this.paused = false;
-					this.startTime -= item;
-					this.fn();
-					this.paused = myPaused;
-					this.active = myActive;
-				}
-				else {
-					this.reset();
-				}
-			}
-			return this;
-		};
-		/**
-Start the tween running from the point at which it was halted
-@method resume
-@return this
-@chainable
-**/
-		my.Tween.prototype.resume = function() {
-			console.log('resume', this.name);
-			var t0 = this.currentTime - this.startTime;
-			if (this.paused) {
-				this.currentTime = Date.now();
-				this.startTime = this.currentTime - t0;
-				my.pushUnique(my.work.animate, this.name);
-				this.active = true;
-				this.paused = false;
-			}
-			return this;
-		};
-		/**
-Remove this tween from the scrawl library
-@method kill
-@return Always true
-**/
-		my.Tween.prototype.kill = function() {
-			console.log('kill', this.name);
-			var t,
-				tz;
-			if (this.active) {
-				for (t = 0, tz = this.currentTargets.length; t < tz; t++) {
-					if (my.xt(this.currentTargets[t])) {
-						this.currentTargets[t].set(this.onComplete);
-					}
-				}
-			}
-			my.removeItem(my.work.animate, this.name);
-			my.removeItem(my.animationnames, this.name);
-			delete my.animation[this.name];
-			my.work.resortAnimations = true;
-			return true;
-		};
-
-		/**
-# Timeline
-
-## Instantiation
-
-* scrawl.makeTimeline()
-
-## Purpose
-
-* Defines a sequence of functions or tweens to be performed at given moments along a timeline
-
-Note: Timelines need to be defined before Actions can be added to them. Because Timelines, Tweens, Actions and other animations all share the same space in the Scrawl library, they must all be given unique names
-
-## Access
-
-* scrawl.animation.TIMELINENAME - for the Timeline object
-
-## Timeline functions
-
-* Start a Timeline from the beginning by calling the __run()__ function on it.
-* Timelines can be stopped by calling the __halt()__ function on it.
-* Start a Timeline from the poinht at which it was previously halted by calling the __resume()__ function on it.
-* A Timeline can be deleted by calling the __kill()__ function on it.
-* Add Actions to the Timeline using the __add()__ function.
-* Remove Actions from the Timeline using the __remove()__ function.
-
-@class Timeline
-@constructor
-@extends Base
-@param {Object} [items] Key:value Object argument for setting attributes
-**/
-		my.Timeline = function(items) {
-			my.Base.call(this, items);
-			items = my.safeObject(items);
-			this.duration = my.xtGet(items.duration, 1000);
-			this.order = my.xtGet(items.order, 0);
-			this.effectiveDuration = 0;
-			this.counter = 0;
-			this.startTime = 0;
-			this.currentTime = 0;
-			this.active = false;
-			this.paused = false;
-			this.event = my.xtGet(items.event, 100);
-			this.lastEvent = 0;
-			this.seeking = false;
-			this.actionsList = [];
-			my.animation[this.name] = this;
-			my.pushUnique(my.animationnames, this.name);
-			return this;
-		};
-		my.Timeline.prototype = Object.create(my.Base.prototype);
-		/**
-@property type
-@type String
-@default 'Tween'
-@final
-**/
-		my.Timeline.prototype.type = 'Timeline';
-		my.Timeline.prototype.classname = 'animationnames';
-		my.work.d.Timeline = {
-			/**
-Timeline length, in milliseconds
-
-If no duration is set, Timeline will set the last Action's time as its duration, or alternatively default to 1000 (1 second)
-@property duration
-@type Number
-@default 1000
-**/
-			duration: 1000,
+			cycles: 1,
 			/**
 Event choke value
 
-A timeline will trigger a __timeupdate__ event on the document object as it runs, with details of the timeline's current state including:
+A ticker will trigger a __timeupdate__ event on the document object as it runs, with details of the ticker's current state including:
 
 * __name__
-* __currentTime__ (milliseconds)
+* __tick__ (milliseconds)
 
-If the event attribute is set to 0, no timeupdate events are fired as the timeline runs. Otherwise, this value represents the frequency at which the event is fired, with a default value of 100 (milliseconds)
+If the eventChoke attribute is set to 0 (default), no tickerupdate events are fired as the ticker runs - thus this value needs to be set explicitly to make the Ticker emit events. Otherwise, this value represents the time between each event emission
 
-Be aware that the timeline may finish before tweens near the end of the timeline complete their action.
-
-@property event
+@property eventChoke
 @type Number
-@default 100
+@default 0
 **/
-			event: 100
+			eventChoke: 0
 		};
+	my.mergeInto(my.work.d.Ticker, my.work.d.Base);
 		/**
-Sort the actions based on their timeValue values
-@method sortActions
-@return nothing
-**/
-		my.Timeline.prototype.sortActions = function() {
-			this.actionsList = my.bucketSort('animation', 'timeValue', this.actionsList);
-		};
-		/**
-Make a new timeupdate customEvent object
-@method makeTimeupdateEvent
+Make a new tickerupdate customEvent object
+@method makeTickerUpdateEvent
 @return customEvent object, or null if browser does not support custom events
 **/
-		my.Timeline.prototype.makeTimeupdateEvent = function() {
+		my.Ticker.prototype.makeTickerUpdateEvent = function() {
 			var e = null;
 			if (window.MSInputMethodContext) {
 				//do IE9-11 stuff
 				e = document.createEvent('CustomEvent');
-				e.initCustomEvent("timeline-updated", true, true, {
+				e.initCustomEvent("tickerupdate", true, true, {
 					name: this.name,
-					type: 'Timeline',
-					currentTime: this.currentTime - this.startTime
+					type: 'Ticker',
+					tick: this.tick
 				});
 			}
 			else {
 				if (window.CustomEvent) {
-					e = new CustomEvent('timeline-updated', {
+					e = new CustomEvent('tickerupdate', {
 						detail: {
 							name: this.name,
-							type: 'Timeline',
-							currentTime: this.currentTime - this.startTime
+							type: 'Ticker',
+							tick: this.tick,
+							reverseTick: this.effectiveDuration - this.tick
 						},
 						bubbles: true,
 						cancelable: true
@@ -1910,1131 +1127,230 @@ Make a new timeupdate customEvent object
 			return e;
 		};
 		/**
-Set the timeline duration (for actions with % time strings) or event choke value;
-@method set
-@param {Object} [items] Key:value Object argument for setting attributes
+Add a Tween or Action's name to the Ticker's .subscribers array
+
+@method subscribe
+@param {Array} [items] Array containing String name values, or Objects with a .name attribute; alternatively can be a single String or Object
 @return this
 **/
-		my.Timeline.prototype.set = function(items) {
-			var i, iz, a,
-				xt = my.xt;
-			items = my.safeObject(items);
-			if (xt(items.duration) && items.duration.toFixed) {
-				this.duration = items.duration;
+		my.Ticker.prototype.subscribe = function(items) {
+			var myItems = [].concat(items),
+				i, iz,
+				item, safeItem, name,
+				pu = my.pushUnique,
+				so = my.safeObject;
+			for(i = 0, iz = myItems.length; i < iz; i++){
+				item = myItems[i];
+				if(item.substring){
+					name = item;
+				}
+				else{
+					safeItem = so(item);
+					name = safeItem.name || false;
+				}
+				if(name){
+					pu(this.subscribers, name);
+				}
 			}
-			if (xt(items.event) && items.event.toFixed) {
-				this.event = items.event;
+			if(myItems.length){
+				this.sortSubscribers();
+				this.recalculateEffectiveDuration();
 			}
-			if (xt(items.order)) {
-				this.order = items.order;
-				my.work.resortAnimations = true;
-			}
-			this.resolve();
 			return this;
 		};
 		/**
-add() and remove() helper function
-@method resolve
-@return always true
+Remove a Tween or Action's name from the Ticker's .subscribers array
+
+@method unsubscribe
+@param {Array} [items] Array containing String name values, or Tween/Action Objects with a .name attribute; alternatively can be a single String or Object
+@return this
+**/
+		my.Ticker.prototype.unsubscribe = function(items) {
+			var myItems = [].concat(items),
+				i, iz,
+				item, safeItem, name,
+				ri = my.removeItem,
+				so = my.safeObject;
+			for(i = 0, iz = myItems.length; i < iz; i++){
+				item = items[i];
+				if(item.substring){
+					name = item;
+				}
+				else{
+					safeItem = so(item);
+					name = safeItem.name || false;
+				}
+				if(name){
+					ri(this.subscribers, name);
+				}
+			}
+			if(myItems.length){
+				this.sortSubscribers();
+				this.recalculateEffectiveDuration();
+			}
+			return this;
+		};
+		/**
+Recalculate the ticker's effective duration
+
+@method recalculateEffectiveDuration
+@chainable
 @private
+@return this
 **/
-		my.Timeline.prototype.resolve = function() {
-			var i, iz, a;
-			for (i = 0, iz = this.actionsList.length; i < iz; i++) {
-				a = my.animation[this.actionsList[i]];
-				if (a.timeUnit === '%') {
-					a.timeValue = (parseFloat(a.time) / 100) * this.duration;
+		my.Ticker.prototype.recalculateEffectiveDuration = function() {
+			var i, iz, obj, durationValue, duration = 0,
+				t = my.tween;
+			if(!this.duration){
+				for(i = 0, iz = this.subscribers.length; i < iz; i++){
+					obj = t[this.subscribers[i]];
+					durationValue = obj.getEndTime();
+					if(durationValue > duration){
+						duration = durationValue;
+					}
+				}
+				this.effectiveDuration = duration;
+			}
+			else{
+				this.setEffectiveDuration();	// shouldn't cause an infinite loop ...
+			}
+			return this;
+		};
+		/**
+Set the ticker's effective duration from this.duration
+
+@method setEffectiveDuration
+@chainable
+@private
+@return this
+**/
+		my.Ticker.prototype.setEffectiveDuration = function() {
+			var temp;
+			if(this.duration){
+				temp = my.convertTime(this.duration);
+				if(temp[0] === '%'){
+					// cannot use percentage values for ticker durations
+					this.duration = 0
+					this.recalculateEffectiveDuration();
+				}
+				else{
+					this.effectiveDuration = temp[1];
 				}
 			}
-			this.sortActions();
-			this.effectiveDuration = this.getTimelineDuration();
-			return true;
-		};
-		/**
-Add Actions to the timeline - list Actions as one or more arguments to this function; the first argument may be a string, or an array of strings
-@method add
-@param {String} One or more string arguments
-@return this
-@chainable
-**/
-		my.Timeline.prototype.add = function() {
-			var i, iz,
-				slice = Array.prototype.slice.call(arguments);
-			if (my.isa_arr(slice[0])) {
-				slice = slice[0];
-			}
-			for (i = 0, iz = slice.length; i < iz; i++) {
-				my.pushUnique(this.actionsList, slice[i]);
-			}
-			this.resolve();
 			return this;
 		};
 		/**
-Add an Action to the timeline - creates an action and adds it to the timeline
-@method addAction
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
+Order subscriber tweens by their time attributes, lowest to highest
+
+@method sortSubscribers
 @chainable
+@private
+@return this
 **/
-		my.Timeline.prototype.addAction = function(items) {
-			var a = my.makeAction(items);
-			this.add(a.name);
-			return this;
+		my.Ticker.prototype.sortSubscribers = function() {
+			my.bucketSort('tween', 'effectiveTime', this.subscribers);
 		};
 		/**
-Change the globalCompositionOperation for an entity, group or cell on the timeline
+Set attributes - restricted so that only subscribers, order, duration and cycles attributes can be amended
 
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __target__ - String name of the entity, group or cell
-* __type__ - String - one from 'entity', 'group', 'cell'
-* __from__ - String - globalCompositionObject value
-* __to__ - String - globalCompositionObject value
-* __time__ - time either a String % value, or a number in milliseconds
-
-@method changeComposition
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
+@method set
+@param {Object} [items] Object containing key:value parameters for updating
 @chainable
-@deprecated - will be removed in a future update; use doComposition functions instead
+@return this
 **/
-		my.Timeline.prototype.changeComposition = function(items) {
-			var act, obj, fAction, fRollback, fReset;
+		my.Ticker.prototype.set = function(items) {
 			items = my.safeObject(items);
-			if (my.xta(items.target, items.type, items.time, items.name, items.from, items.to)) {
-				if (my.contains(my.work.sectionlist, items.type)) {
-					obj = my[items.type][items.target];
-					if (my.xt(obj)) {
-						switch (items.type) {
-							case 'entity':
-							case 'cell':
-								fAction = function() {
-									obj.set({
-										globalCompositeOperation: items.to
-									});
-								};
-								fRollback = function() {
-									obj.set({
-										globalCompositeOperation: items.from
-									});
-								};
-								fReset = function() {
-									obj.set({
-										globalCompositeOperation: items.from
-									});
-								};
-								break;
-							case 'group':
-								fAction = function() {
-									obj.setEntitysTo({
-										globalCompositeOperation: items.to
-									});
-								};
-								fRollback = function() {
-									obj.setEntitysTo({
-										globalCompositeOperation: items.from
-									});
-								};
-								fReset = function() {
-									obj.setEntitysTo({
-										globalCompositeOperation: items.from
-									});
-								};
-								break;
-						}
-						if (my.xt(fAction)) {
-							act = my.makeAction({
-								name: items.name + '_changeCompositeAction',
-								time: items.time,
-								action: fAction,
-								rollback: fRollback,
-								reset: fReset
-							});
-							this.add(act.name);
-						}
+			var xt = my.xt,
+				i, iz, obj;
+			if(xt(items.order)){
+				this.order = items.order;
+				if(this.active){
+					my.work.resortAnimations = true;
+				}
+			}
+			if(xt(items.cycles)){
+				this.cycles = items.cycles;
+				if(!this.cycles){
+					this.cycleCount = 0;
+				}
+			}
+			if(xt(items.subscribers)){
+				this.subscribers = [];
+				this.subscribe(items.subscribers);
+			}
+			if(xt(items.duration)){
+				this.duration = items.duration;
+				this.setEffectiveDuration();
+				for (i = 0, iz = this.subscribers.length; i < iz; i++){
+					obj = my.tween[this.subscribers[i]];
+					obj.calculateEffectiveTime();
+					if(obj.type === 'Tween'){
+						obj.calculateEffectiveDuration();
 					}
 				}
 			}
 			return this;
 		};
 		/**
-Change the globalCompositionOperation attribute for an entity at a given point on the timeline
+Animation function
 
-The argument object must include the following attributes, otherwise the action will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'
-* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects
-* __from__ - String - old globalCompositionOrder value
-* __to__ - String - new globalCompositionOrder value
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doCompositionEntitys
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
+@method fn
 @chainable
-**/
-		my.Timeline.prototype.doCompositionEntitys = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedCompositionChangeAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (my.xta(items.from, items.to) && targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								globalCompositeOperation: items.to
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								globalCompositeOperation: items.from
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								globalCompositeOperation: items.from
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doCompositionEntitys',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-		/**
-Change the globalCompositionOperation attribute for a cell at a given point on the timeline
-
-The argument object must include the following attributes, otherwise the action will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'
-* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects
-* __from__ - String - old globalCompositionOrder value
-* __to__ - String - new globalCompositionOrder value
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doCompositionCells
-@param {Object} [items] Key:value Object argument for setting Action attributes
+@private
 @return this
-@chainable
 **/
-		my.Timeline.prototype.doCompositionCells = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedCompositionChangeAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (my.xta(items.from, items.to) && targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								globalCompositeOperation: items.to
-							});
-						}
-					}
+		my.Ticker.prototype.fn = function() {
+			var i, iz, sub,
+				t = my.tween,
+				result = {
+					tick: 0,
+					reverseTick: 0,
+					willLoop: false,
+					next: false
 				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								globalCompositeOperation: items.from
-							});
+			if(this.active && this.startTime){
+				if(!this.cycles || this.cycleCount < this.cycles){
+					this.currentTime = Date.now();
+					this.tick = this.currentTime - this.startTime;
+					if(!this.cycles || this.cycleCount + 1 < this.cycles){
+						if(this.tick >= this.effectiveDuration){
+							this.tick = 0;
+							this.startTime = this.currentTime;
+							result.tick = this.effectiveDuration;
+							result.reverseTick = 0;
+							result.willLoop = true;
+							if(this.cycles){
+								this.cycleCount++;
+							}
+						}
+						else{
+							result.tick = this.tick;
+							result.reverseTick = this.effectiveDuration - this.tick;
+						}
+						result.next = true;
+					}
+					else{
+						if(this.tick >= this.effectiveDuration){
+							result.tick = this.effectiveDuration;
+							result.reverseTick = 0;
+							this.active = false;
+							if(this.cycles){
+								this.cycleCount++;
+							}
+						}
+						else{
+							result.tick = this.tick;
+							result.reverseTick = this.effectiveDuration - this.tick;
+							result.next = true;
 						}
 					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								globalCompositeOperation: items.from
-							});
-						}
+					for(i = 0, iz = this.subscribers.length; i < iz; i++){
+						sub = t[this.subscribers[i]];
+						sub.update(result);
 					}
-				};
-				act = my.makeAction({
-					name: name + '_doCompositionCells',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-		/**
-Change the globalCompositionOperation attribute for all entitys in a group at a given point on the timeline
-
-The argument object must include the following attributes, otherwise the action will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'
-* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects
-* __from__ - String - old globalCompositionOrder value
-* __to__ - String - new globalCompositionOrder value
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doCompositionGroups
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doCompositionGroups = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedCompositionChangeAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (my.xta(items.from, items.to) && targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.setEntitysTo({
-								globalCompositeOperation: items.to
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.setEntitysTo({
-								globalCompositeOperation: items.from
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.setEntitysTo({
-								globalCompositeOperation: items.from
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doCompositionGroups',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-		// TODO - add stack-related objects to the mix
-
-		/**
-Change the globalCompositionOperation attribute for an entity, cell, or all entitys in a group at a given point on the timeline
-
-The argument object must include the following attributes, otherwise the action will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedCompositionChangeAction'
-* __targets__ - String name of the entity, cell or group, or the object itself; can also be a mixed array of such strings or objects
-* __from__ - String - old globalCompositionOrder value
-* __to__ - String - new globalCompositionOrder value
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doComposition
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doComposition = function(items) {
-			// TODO - add stack-related objects to the mix
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedCompositionChangeAction',
-				time = items.time || 0,
-				entitys = [],
-				cells = [],
-				groups = [],
-				item, obj, i, iz;
-			if (my.xta(items.from, items.to) && targets.length) {
-				for (i = 0, iz = targets.length; i < iz; i++) {
-					item = targets[i];
-					if (item.substring) {
-						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
-					}
-					else {
-						obj = item;
-					}
-					if (obj) {
-						if (my.contains(my.entitynames, obj.name)) {
-							entitys.push(obj);
-						}
-						else if (my.contains(my.groupnames, obj.name)) {
-							groups.push(obj);
-						}
-						else if (my.contains(my.cellnames, obj.name)) {
-							cells.push(obj);
-						}
-					}
-				}
-				if (entitys.length > 0) {
-					this.doCompositionEntitys({
-						targets: entitys,
-						name: name,
-						from: items.from,
-						to: items.to,
-						time: time
-					});
-				}
-				if (groups.length > 0) {
-					this.doCompositionGroups({
-						targets: groups,
-						name: name,
-						from: items.from,
-						to: items.to,
-						time: time
-					});
-				}
-				if (cells.length > 0) {
-					this.doCompositionCells({
-						targets: cells,
-						name: name,
-						from: items.from,
-						to: items.to,
-						time: time
-					});
-				}
-			}
-			return this;
-		};
-		/**
-Change the stamp/show order command for an entity, group or cell on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __target__ - String name of the entity, group or cell
-* __type__ - String - one from 'entity', 'group', 'cell'
-* __from__ - Integer - old order/show number
-* __to__ - Integer - new order/show number
-* __time__ - time either a String % value, or a number in milliseconds
-
-@method changeOrder
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-@deprecated - will be removed in a future update; use doOrder functions instead
-**/
-		my.Timeline.prototype.changeOrder = function(items) {
-			var act, obj, fAction, fRollback, fReset;
-			items = my.safeObject(items);
-			if (my.xta(items.target, items.type, items.time, items.name, items.from, items.to)) {
-				if (my.contains(my.work.sectionlist, items.type)) {
-					obj = my[items.type][items.target];
-					if (my.xt(obj)) {
-						switch (items.type) {
-							case 'entity':
-							case 'group':
-								fAction = function() {
-									obj.set({
-										order: items.to
-									});
-								};
-								fRollback = function() {
-									obj.set({
-										order: items.from
-									});
-								};
-								fReset = function() {
-									obj.set({
-										order: items.from
-									});
-								};
-								break;
-							case 'cell':
-								fAction = function() {
-									obj.set({
-										showOrder: items.to
-									});
-								};
-								fRollback = function() {
-									obj.set({
-										showOrder: items.from
-									});
-								};
-								fReset = function() {
-									obj.set({
-										showOrder: items.from
-									});
-								};
-								break;
-						}
-						if (my.xt(fAction)) {
-							act = my.makeAction({
-								name: items.name + '_changeOrderAction',
-								time: items.time,
-								action: fAction,
-								rollback: fRollback,
-								reset: fReset
-							});
-							this.add(act.name);
-						}
-					}
-				}
-			}
-			return this;
-		};
-		/**
-Change the stamp/show order attribute for an entity at a given point on the timeline
-
-The argument object must include the following attributes, otherwise the action will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'
-* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects
-* __from__ - Integer - old order/show number
-* __to__ - Integer - new order/show number
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doOrderEntitys
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doOrderEntitys = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedOrderChangeAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (my.xta(items.from, items.to) && targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								order: items.to
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								order: items.from
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								order: items.from
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doOrderEntitys',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-		/**
-Change the stamp/show order attribute for a group at a given point on the timeline
-
-The argument object must include the following attributes, otherwise the action will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'
-* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects
-* __from__ - Integer - old order/show number
-* __to__ - Integer - new order/show number
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doOrderGroups
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doOrderGroups = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedOrderChangeAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (my.xta(items.from, items.to) && targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								order: items.to
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								order: items.from
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								order: items.from
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doOrderGroups',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-		/**
-Change the showOrder attribute for a cell at a given point on the timeline
-
-The argument object must include the following attributes, otherwise the action will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'
-* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects
-* __from__ - Integer - old order/show number
-* __to__ - Integer - new order/show number
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doOrderCells
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doOrderCells = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedOrderChangeAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (my.xta(items.from, items.to) && targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								showOrder: items.to
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								showOrder: items.from
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								showOrder: items.from
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doOrderCells',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-		/**
-Change the order/showOrder attribute for entitys, groups and cells at a given time on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedOrderChangeAction'
-* __targets__ - String name of the entity, group or cell, or the object itself; can also be a mixed array of such strings or objects
-* __from__ - Integer - old order/show number
-* __to__ - Integer - new order/show number
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-Note that if string names are supplied as part of the targets attribute, library sections will be searched for in the order: entity, group, cell, element
-
-@method doOrder
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doOrder = function(items) {
-			// TODO - add stack-related objects to the mix
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedOrderChangeAction',
-				time = items.time || 0,
-				entitys = [],
-				cells = [],
-				groups = [],
-				item, obj, i, iz;
-			if (my.xta(items.from, items.to) && targets.length) {
-				for (i = 0, iz = targets.length; i < iz; i++) {
-					item = targets[i];
-					if (item.substring) {
-						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
-					}
-					else {
-						obj = item;
-					}
-					if (obj) {
-						if (my.contains(my.entitynames, obj.name)) {
-							entitys.push(obj);
-						}
-						else if (my.contains(my.groupnames, obj.name)) {
-							groups.push(obj);
-						}
-						else if (my.contains(my.cellnames, obj.name)) {
-							cells.push(obj);
-						}
-					}
-				}
-				if (entitys.length > 0) {
-					this.doOrderEntitys({
-						targets: entitys,
-						name: name,
-						from: items.from,
-						to: items.to,
-						time: time
-					});
-				}
-				if (groups.length > 0) {
-					this.doOrderGroups({
-						targets: groups,
-						name: name,
-						from: items.from,
-						to: items.to,
-						time: time
-					});
-				}
-				if (cells.length > 0) {
-					this.doOrderCells({
-						targets: cells,
-						name: name,
-						from: items.from,
-						to: items.to,
-						time: time
-					});
-				}
-			}
-			return this;
-		};
-		/**
-Change the stamp order command for all entitys in a group on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __target__ - String name of the group
-* __from__ - Integer - old order number
-* __to__ - Integer - new order number
-* __time__ - time either a String % value, or a number in milliseconds
-
-@method changeGroupEntitysOrderTo
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-@deprecated - will be removed in a future update; use doOrder functions instead
-**/
-		my.Timeline.prototype.changeGroupEntitysOrderTo = function(items) {
-			var act, obj, fAction, fRollback, fReset;
-			items = my.safeObject(items);
-			if (my.xta(items.target, items.time, items.name, items.from, items.to)) {
-				obj = my.group[items.target];
-				if (my.xt(obj)) {
-					fAction = function() {
-						obj.setEntitysTo({
-							order: items.to
-						});
-					};
-					fRollback = function() {
-						obj.setEntitysTo({
-							order: items.from
-						});
-					};
-					fReset = function() {
-						obj.setEntitysTo({
-							order: items.from
-						});
-					};
-					act = my.makeAction({
-						name: items.name + '_changeGEOrderAction',
-						time: items.time,
-						action: fAction,
-						rollback: fRollback,
-						reset: fReset
-					});
-					this.add(act.name);
-				}
-			}
-			return this;
-		};
-		/**
-Fade in a set of entitys
-
-The argument object must include the following attributes (engine is optional), otherwise the command will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __targets__ - Array of entity String names
-* __engine__ - easing engine String (eg 'linear')
-* __duration__ - Number length of tween, in milliseconds
-* __time__ - time either a String % value, or a number in milliseconds
-
-@method fadeIn
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.fadeIn = function(items) {
-			var e;
-			items = my.safeObject(items);
-			e = items.engine || 'linear';
-			if (my.xta(items.targets, items.time, items.duration, items.name)) {
-				this.addAction({
-					name: items.name,
-					time: items.time,
-					action: my.makeTween({
-						name: items.name + '_fadeInTween',
-						targets: items.targets,
-						onCommence: {
-							globalAlpha: 0
-						},
-						start: {
-							globalAlpha: 0
-						},
-						end: {
-							globalAlpha: 1
-						},
-						onComplete: {
-							globalAlpha: 1
-						},
-						engines: {
-							globalAlpha: e
-						},
-						duration: items.duration
-					})
-				});
-			}
-			return this;
-		};
-		/**
-Fade out a set of entitys
-
-The argument object must include the following attributes (engine is optional), otherwise the command will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __targets__ - Array of entity String names
-* __engine__ - easing engine String (eg 'linear')
-* __duration__ - Number length of tween, in milliseconds
-* __time__ - time either a String % value, or a number in milliseconds
-
-@method fadeOut
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.fadeOut = function(items) {
-			var e;
-			items = my.safeObject(items);
-			e = items.engine || 'linear';
-			if (my.xta(items.targets, items.time, items.duration, items.name)) {
-				this.addAction({
-					name: items.name,
-					time: items.time,
-					action: my.makeTween({
-						name: items.name + '_fadeOutTween',
-						targets: items.targets,
-						onCommence: {
-							globalAlpha: 1
-						},
-						start: {
-							globalAlpha: 1
-						},
-						end: {
-							globalAlpha: 0
-						},
-						onComplete: {
-							globalAlpha: 0
-						},
-						engines: {
-							globalAlpha: e
-						},
-						duration: items.duration
-					})
-				});
-			}
-			return this;
-		};
-		/**
-Tween a set of entity attributes
-
-This function is 'overloaded' inasmuch as it can accept either a raw object which includes the definition required for building a new tween, or it can accept an existing tween object.
-
-Where the argument has a type attribute === 'Tween'
-
-* __time__ - if the tween lacks a time value, then a default value of 0ms is assigned
-
-Where the argument is a raw JavaScript object, it must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __targets__ - Array of entity String names
-* __start__ - Object containing attriburte start values
-* __end__ - Object containing attribute end values
-* __duration__ - Number length of tween, in milliseconds
-* __time__ - time either a String % value, or a number in milliseconds
-
-In addition to the above, the following attributes are optional. Any other attributes are ignored:
-
-* __engines__ - Object containing easing engine Strings (eg 'linear') - all engines default to 'linear'
-* __calculations__ - Object containing easing engine functions
-
-For the start, end, engines and calculations Objects, the keys should be the attributes being tweened, supplied with appropriate values
-
-@method addTween
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.addTween = function(items) {
-			var e, c;
-			items = my.safeObject(items);
-			e = items.engines || {};
-			c = items.calculations || {};
-			if (items.type && items.type === 'Tween') {
-				this.addAction({
-					name: items.name + '_action',
-					time: items.time || 0,
-					action: my.animation[items.name]
-				});
-			}
-			else {
-				if (my.xta(items.targets, items.time, items.duration, items.name, items.start, items.end)) {
-					this.addAction({
-						name: items.name + '_action',
-						time: items.time,
-						action: my.makeTween({
-							name: items.name,
-							targets: items.targets,
-							onCommence: items.start,
-							start: items.start,
-							end: items.end,
-							onComplete: items.end,
-							engines: e,
-							calculations: c,
-							duration: items.duration
-						})
-					});
-				}
-			}
-			return this;
-		};
-		/**
-Add a visibility: true command for an entity, group or cell (rendered: true) to the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __target__ - String name of the entity, group or cell
-* __type__ - String - one from 'entity', 'group', 'cell'
-* __time__ - time either a String % value, or a number in milliseconds
-
-@method addShow
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-@deprecated - will be removed in a future update; use doShow functions instead
-**/
-		my.Timeline.prototype.addShow = function(items) {
-			var act, obj, fAction, fRollback, fReset;
-			items = my.safeObject(items);
-			if (my.xta(items.target, items.type, items.time, items.name)) {
-				if (my.contains(my.work.sectionlist, items.type)) {
-					obj = my[items.type][items.target];
-					if (my.xt(obj)) {
-						switch (items.type) {
-							case 'entity':
-								fAction = function() {
-									obj.set({
-										visibility: true
-									});
-								};
-								fRollback = function() {
-									obj.set({
-										visibility: false
-									});
-								};
-								fReset = function() {
-									obj.set({
-										visibility: false
-									});
-								};
-								break;
-							case 'group':
-								fAction = function() {
-									obj.set({
-										visibility: true
-									});
-									obj.setEntitysTo({
-										visibility: true
-									});
-								};
-								fRollback = function() {
-									obj.set({
-										visibility: false
-									});
-									obj.setEntitysTo({
-										visibility: false
-									});
-								};
-								fReset = function() {
-									obj.set({
-										visibility: false
-									});
-									obj.setEntitysTo({
-										visibility: false
-									});
-								};
-								break;
-							case 'cell':
-								fAction = function() {
-									obj.set({
-										rendered: true
-									});
-								};
-								fRollback = function() {
-									obj.set({
-										rendered: false
-									});
-								};
-								fReset = function() {
-									obj.set({
-										rendered: false
-									});
-								};
-								break;
-						}
-						if (my.xt(fAction)) {
-							act = my.makeAction({
-								name: items.name + '_showAction',
-								time: items.time,
-								action: fAction,
-								rollback: fRollback,
-								reset: fReset
-							});
-							this.add(act.name);
-						}
+					// need to add in here code for triggering makeTickerUpdateEvent calls
+					if(!this.active){
+						this.halt();
 					}
 				}
 			}
@@ -3042,1166 +1358,191 @@ The argument object must include the following attributes, otherwise the command
 		};
 
 		/**
-Make entitys visible (visibility: true) at a given time on the timeline
+Change the supplied attributes for each subscribed tween and action
 
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
-* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doShowEntitys
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
+@method updateSubscribers
+@param {Object} items Object containing key:value parameters for updating
+@param {Boolean} [reversed] when true, perform update from last subscriber to first; default false
 @chainable
+@return this
 **/
-		my.Timeline.prototype.doShowEntitys = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedShowAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: true
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: false
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: false
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doShowEntitys',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
+		my.Ticker.prototype.updateSubscribers = function(items, reversed) {
+			var subs = [].concat(this.subscribers);
+			reversed = (my.xt(reversed)) ? reversed : false 
+			if(reversed){
+				subs.reverse();
 			}
-			return this;
-		};
-
-		/**
-Make entitys invisible (visibility: false) at a given time on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedHideAction'
-* __targets__ - String name of the entity, or the entity object itself; can also be a mixed array of such strings or objects
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doHideEntitys
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doHideEntitys = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedHideAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: false
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: true
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.entity;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: true
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doHideEntitys',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-
-		/**
-Make groups visible (visibility: true) at a given time on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
-* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doShowGroups
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doShowGroups = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedShowAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: true
-							});
-							obj.setEntitysTo({
-								visibility: true
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: false
-							});
-							obj.setEntitysTo({
-								visibility: false
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: false
-							});
-							obj.setEntitysTo({
-								visibility: false
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doShowGroups',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-
-		/**
-Make groups invisible (visibility: false) at a given time on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
-* __targets__ - String name of the group, or the group object itself; can also be a mixed array of such strings or objects
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doHideGroups
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doHideGroups = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedHideAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: true
-							});
-							obj.setEntitysTo({
-								visibility: true
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: false
-							});
-							obj.setEntitysTo({
-								visibility: false
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.group;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								visibility: false
-							});
-							obj.setEntitysTo({
-								visibility: false
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doHideGroups',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-
-		/**
-Make cells visible (rendered: true) at a given time on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
-* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doShowCells
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doShowCells = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedShowAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								rendered: true
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								rendered: false
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								rendered: false
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doShowCells',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-
-		/**
-Make cells invisible (rendered: false) at a given time on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
-* __targets__ - String name of the cell, or the cell object itself; can also be a mixed array of such strings or objects
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-@method doHideCells
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doHideCells = function(items) {
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedHideAction',
-				time = items.time || 0,
-				act, fAction, fRollback, fReset;
-			if (targets.length) {
-				fAction = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								rendered: false
-							});
-						}
-					}
-				};
-				fRollback = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								rendered: true
-							});
-						}
-					}
-				};
-				fReset = function() {
-					var item, obj, i, iz,
-						e = my.cell;
-					for (i = 0, iz = targets.length; i < iz; i++) {
-						item = targets[i];
-						obj = (item.substring) ? e[item] : item;
-						if (obj) {
-							obj.set({
-								rendered: true
-							});
-						}
-					}
-				};
-				act = my.makeAction({
-					name: name + '_doHideCells',
-					time: time,
-					action: fAction,
-					rollback: fRollback,
-					reset: fReset
-				});
-				this.add(act.name);
-			}
-			return this;
-		};
-
-		// TODO: add stack-related objects to the mix
-
-		/**
-Make entitys, groups and cells visible at a given time on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
-* __targets__ - String name of the entity, group or cell, or the object itself; can also be a mixed array of such strings or objects
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-Note that if string names are supplied as part of the targets attribute, library sections will be searched for in the order: entity, group, cell, element
-
-@method doShow
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doShow = function(items) {
-			// TODO - add stack-related objects to the mix
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedShowAction',
-				time = items.time || 0,
-				entitys = [],
-				cells = [],
-				groups = [],
-				item, obj, i, iz;
-			if (targets.length) {
-				for (i = 0, iz = targets.length; i < iz; i++) {
-					item = targets[i];
-					if (item.substring) {
-						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
-					}
-					else {
-						obj = item;
-					}
-					if (obj) {
-						if (my.contains(my.entitynames, obj.name)) {
-							entitys.push(obj);
-						}
-						else if (my.contains(my.groupnames, obj.name)) {
-							groups.push(obj);
-						}
-						else if (my.contains(my.cellnames, obj.name)) {
-							cells.push(obj);
-						}
-					}
-				}
-				if (entitys.length > 0) {
-					this.doShowEntitys({
-						targets: entitys,
-						name: name,
-						time: time
-					});
-				}
-				if (groups.length > 0) {
-					this.doShowGroups({
-						targets: groups,
-						name: name,
-						time: time
-					});
-				}
-				if (cells.length > 0) {
-					this.doShowCells({
-						targets: cells,
-						name: name,
-						time: time
-					});
-				}
-			}
-			return this;
-		};
-
-		/**
-Make entitys, groups and cells invisible at a given time on the timeline
-
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - (optional) String name of the new action - default 'unnamedShowAction'
-* __targets__ - String name of the entity, group or cell, or the object itself; can also be a mixed array of such strings or objects
-* __time__ - (optional) time either a String % value, or a number in milliseconds - default 0
-
-Note that if string names are supplied as part of the targets attribute, library sections will be searched for in the order: entity, group, cell, element
-
-@method doHide
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-**/
-		my.Timeline.prototype.doHide = function(items) {
-			// TODO - add stack-related objects to the mix
-			items = my.safeObject(items);
-			var targets = [].concat(items.targets),
-				name = items.name || 'unnamedHideAction',
-				time = items.time || 0,
-				entitys = [],
-				cells = [],
-				groups = [],
-				item, obj, i, iz;
-			if (targets.length) {
-				for (i = 0, iz = targets.length; i < iz; i++) {
-					item = targets[i];
-					if (item.substring) {
-						obj = my.entity[item] || my.group[item] || my.cell[item] || false;
-					}
-					else {
-						obj = item;
-					}
-					if (obj) {
-						if (my.contains(my.entitynames, obj.name)) {
-							entitys.push(obj);
-						}
-						else if (my.contains(my.groupnames, obj.name)) {
-							groups.push(obj);
-						}
-						else if (my.contains(my.cellnames, obj.name)) {
-							cells.push(obj);
-						}
-					}
-				}
-				if (entitys.length > 0) {
-					this.doHideEntitys({
-						targets: entitys,
-						name: name,
-						time: time
-					});
-				}
-				if (groups.length > 0) {
-					this.doHideGroups({
-						targets: groups,
-						name: name,
-						time: time
-					});
-				}
-				if (cells.length > 0) {
-					this.doHideCells({
-						targets: cells,
-						name: name,
-						time: time
-					});
-				}
-			}
-			return this;
-		};
-
-
-
-
-		/**
-Add a visibility: true command for a set of entitys and/or cells (rendered: true) to the timeline
-
-The argument object must include the following attributes, otherwise the commands will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __targets__ - Array of String names of entitys and/or cells
-* __time__ - time either a String % value, or a number in milliseconds
-
-@method showMany
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-@deprecated - will be removed in a future update; use doShow functions instead
-**/
-		my.Timeline.prototype.showMany = function(items) {
-			var type, t, target, i, iz, obj,
-				entity = my.entity,
-				cell = my.cell,
-				get = my.xtGet;
-			items = my.safeObject(items);
-			if (my.xta(items.targets, items.time, items.name)) {
-				obj = {
-					time: items.time
-				};
-				for (i = 0, iz = items.targets.length; i < iz; i++) {
-					t = items.targets[i];
-					target = get(entity[t], cell[t], false);
-					if (target) {
-						obj.name = items.name + '_' + i;
-						obj.target = t;
-						obj.type = (target.type === 'Cell') ? 'cell' : 'entity';
-						this.addShow(obj);
-					}
-				}
+			for(var i = 0, iz = subs.length; i < iz; i++){
+				scrawl.tween[subs[i]].set(items);
 			}
 			return this;
 		};
 		/**
-Add a visibility: false command for an entity, group or cell (rendered: false) to the timeline
+Start ticker from 0
 
-The argument object must include the following attributes, otherwise the command will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __item__ - String name of the entity, group or cell
-* __type__ - String - one from 'entity', 'group', 'cell'
-* __time__ - time either a String % value, or a number in milliseconds
-
-@method addHide
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-@deprecated - will be removed in a future update; use doHide functions instead
-**/
-		my.Timeline.prototype.addHide = function(items) {
-			var act, obj, fAction, fRollback, fReset;
-			items = my.safeObject(items);
-			if (my.xta(items.target, items.type, items.time, items.name)) {
-				if (my.contains(my.work.sectionlist, items.type)) {
-					obj = my[items.type][items.target];
-					if (my.xt(obj)) {
-						switch (items.type) {
-							case 'entity':
-								fAction = function() {
-									obj.set({
-										visibility: false
-									});
-								};
-								fRollback = function() {
-									obj.set({
-										visibility: true
-									});
-								};
-								fReset = function() {
-									obj.set({
-										visibility: true
-									});
-								};
-								break;
-							case 'group':
-								fAction = function() {
-									obj.set({
-										visibility: false
-									});
-									obj.setEntitysTo({
-										visibility: false
-									});
-								};
-								fRollback = function() {
-									obj.set({
-										visibility: true
-									});
-									obj.setEntitysTo({
-										visibility: true
-									});
-								};
-								fReset = function() {
-									obj.set({
-										visibility: true
-									});
-									obj.setEntitysTo({
-										visibility: true
-									});
-								};
-								break;
-							case 'cell':
-								fAction = function() {
-									obj.set({
-										rendered: false
-									});
-								};
-								fRollback = function() {
-									obj.set({
-										rendered: true
-									});
-								};
-								fReset = function() {
-									obj.set({
-										rendered: true
-									});
-								};
-								break;
-						}
-						if (my.xt(fAction)) {
-							act = my.makeAction({
-								name: items.name + '_hideAction',
-								time: items.time,
-								action: fAction,
-								rollback: fRollback,
-								reset: fReset
-							});
-							this.add(act.name);
-						}
-					}
-				}
-			}
-			return this;
-		};
-		/**
-Add a visibility: false command for a set of entitys and/or cells (rendered: false) to the timeline
-
-The argument object must include the following attributes, otherwise the commands will not be added to the timeline:
-
-* __name__ - String name of the new action
-* __targets__ - Array of String names of entitys and/or cells
-* __time__ - time either a String % value, or a number in milliseconds
-
-@method hideMany
-@param {Object} [items] Key:value Object argument for setting Action attributes
-@return this
-@chainable
-@deprecated - will be removed in a future update; use doHide functions instead
-**/
-		my.Timeline.prototype.hideMany = function(items) {
-			var type, t, target, i, iz, obj,
-				entity = my.entity,
-				cell = my.cell,
-				get = my.xtGet;
-			items = my.safeObject(items);
-			if (my.xta(items.targets, items.time, items.name)) {
-				obj = {
-					time: items.time
-				};
-				for (i = 0, iz = items.targets.length; i < iz; i++) {
-					t = items.targets[i];
-					target = get(entity[t], cell[t], false);
-					if (target) {
-						obj.name = items.name + '_' + i;
-						obj.target = t;
-						obj.type = (t.type === 'Cell') ? 'cell' : 'entity';
-						this.addHide(obj);
-					}
-				}
-			}
-			return this;
-		};
-		/**
-Remove Actions from the timeline - list Actions as one or more arguments to this function; the first argument may be a string, or an array of strings
-@method remove
-@param {String} One or more string arguments
-@return this
-@chainable
-**/
-		my.Timeline.prototype.remove = function() {
-			var i, iz,
-				slice = Array.prototype.slice.call(arguments);
-			if (my.isa_arr(slice[0])) {
-				slice = slice[0];
-			}
-			for (i = 0, iz = slice.length; i < iz; i++) {
-				my.removeItem(this.actionsList, slice[i]);
-			}
-			this.resolve();
-			return this;
-		};
-		/**
-Start the timeline running from the beginning
 @method run
 @return this
-@chainable
 **/
-		my.Timeline.prototype.run = function() {
-			console.log('timeline run', this.name);
-			var i, iz, a, e;
-			if (!this.active) {
-				this.reset();
-				my.pushUnique(my.work.animate, this.name);
+		my.Ticker.prototype.run = function() {
+			if(!this.active){
+				this.startTime = this.currentTime = Date.now();
+				this.updateSubscribers({
+					reversed: false,
+					triggered: false,
+					status: 'before'
+				}, true);
 				this.active = true;
-				if (this.event) {
-					e = this.makeTimeupdateEvent();
-					document.dispatchEvent(e);
-				}
-			}
-			return this;
-		};
-		/**
-Start the timeline running from the point at which it was halted
-@method resume
-@return this
-@chainable
-**/
-		my.Timeline.prototype.resume = function() {
-			console.log('timeline resume', this.name);
-			var t0 = this.currentTime - this.startTime,
-				i, iz, a;
-			if (this.paused) {
-				for (i = 0, iz = this.actionsList.length; i < iz; i++) {
-					a = my.animation[this.actionsList[i]];
-					if (a.action && a.action.paused) {
-						a.action.resume();
-					}
-				}
-				this.currentTime = Date.now();
-				this.startTime = this.currentTime - t0;
+				this.cycleCount = 0;
 				my.pushUnique(my.work.animate, this.name);
-				this.paused = false;
-				this.active = true;
+				my.work.resortAnimations = true;
 			}
 			return this;
 		};
 		/**
-Function triggered by the animation loop
-@method fn
-@return nothing
-@private
-**/
-		my.Timeline.prototype.fn = function() {
-			var i, iz, a, e;
-			this.currentTime = Date.now();
-			if (this.counter < this.actionsList.length) {
-				for (i = this.counter, iz = this.actionsList.length; i < iz; i++) {
-					a = my.animation[this.actionsList[i]];
-					if (a.timeValue + this.startTime <= this.currentTime) {
-						a.run();
-						this.counter++;
-						if (this.counter + 1 === this.actionsList.length) {
-							this.counter++;
-						}
-					}
-					else {
-						this.counter = i;
-						break;
-					}
-				}
-			}
-			if (this.event && this.currentTime >= this.lastEvent + this.event) {
-				e = this.makeTimeupdateEvent();
-				document.dispatchEvent(e);
-				this.lastEvent = this.currentTime;
-			}
-			if (this.currentTime >= this.startTime + this.effectiveDuration) {
-				this.active = false;
-				my.removeItem(my.work.animate, this.name);
-			}
-		};
-		/**
-Stop a Timeline; can be resumed using resume() or started again from the beginning using run()
-@method halt
-@return this
-@chainable
-**/
-		my.Timeline.prototype.halt = function() {
-			console.log('timeline halt', this.name);
-			var i, iz, a;
-			this.active = false;
-			this.paused = true;
-			for (i = 0, iz = this.actionsList.length; i < iz; i++) {
-				a = my.animation[this.actionsList[i]];
-				if (a.action && a.action.halt && a.action.active) {
-					a.action.halt();
-				}
-			}
-			my.removeItem(my.work.animate, this.name);
-			return this;
-		};
-		/**
-Reset a Timeline animation to its initial conditions
+Reset ticker to initial conditions
+
 @method reset
 @return this
-@chainable
 **/
-		my.Timeline.prototype.reset = function() {
-			console.log('timeline reset', this.name);
-			var i, iz, a;
-			this.active = false;
-			this.paused = false;
-			this.startTime = Date.now();
-			this.currentTime = Date.now();
-			this.lastEvent = Date.now();
-			this.counter = 0;
-			for (i = this.actionsList.length - 1, iz = 0; i >= iz; i--) {
-				a = my.animation[this.actionsList[i]];
-				if (a.action && a.action.reset) {
-					a.action.reset();
-				}
-				if (a.reset) {
-					a.reset();
-				}
+		my.Ticker.prototype.reset = function() {
+			this.startTime = this.currentTime = Date.now();
+			this.fn();
+			if(this.active){
+				this.halt();
 			}
-			my.removeItem(my.work.animate, this.name);
+			this.updateSubscribers({
+				reversed: false,
+				triggered: false,
+				status: 'before'
+			}, true);
+			this.cycleCount = 0;
 			return this;
 		};
 		/**
-Set the timeline ticker to a new value, and move tweens and action functions to that new time
-@method seekTo
-@param {Number} [item] time in milliseconds; can aslo accept strings eg '500ms', '1.23s'
-@return this
-@chainable
-**/
-		my.Timeline.prototype.seekTo = function(item) {
-			console.log('timeline seekTo', this.name);
-			var time, msTime, curTime, deltaTime;
-			if (!this.seeking) {
-				if (my.xt(item)) {
-					if (this.active) {
-						my.removeItem(my.work.animate, this.name);
-					}
-					if (!this.startTime) {
-						this.startTime = this.currentTime = Date.now();
-					}
-					time = my.convertTime(item);
-					if (time) {
-						msTime = time[1];
-						curTime = this.currentTime - this.startTime;
-						deltaTime = msTime - curTime;
-						if (deltaTime) { //no point doing anything if no change is required
-							if (deltaTime < 0) {
-								this.seekBack(deltaTime);
-							}
-							else {
-								this.seekForward(deltaTime);
-							}
-						}
-					}
-					if (this.active) {
-						my.pushUnique(my.work.animate, this.name);
-					}
-				}
-			}
-			return this;
-		};
-		/**
-@method seekForward
-@param {Number} [item] relative time to move forward, in milliseconds. Must be a positive value!
-@return this
-@chainable
-**/
-		my.Timeline.prototype.seekForward = function(item) {
-			console.log('timeline seekForward', this.name);
-			var i, iz, a,
-				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
-			//lock action
-			this.seeking = true;
-			if (!this.active) {
-				this.paused = true;
-			}
-			if (item.toFixed && item) {
-				oldCurrent = this.currentTime;
-				newCurrent = oldCurrent + item;
-				for (i = 0, iz = this.actionsList.length; i < iz; i++) {
-					a = my.animation[this.actionsList[i]];
-					actionTimes = this.getActionTimes(a);
-					actionStart = actionTimes[0] + this.startTime;
-					actionEnd = actionTimes[1] + this.startTime;
-					if (actionStart && actionEnd) {
-						if (my.isa_fn(a.action)) {
-							//raw function action wrapper
-							if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
-								a.action();
-							}
-						}
-						else {
-							//tween action wrapper
-							if (a.action.type === 'Tween') {
-								if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
-									if(actionEnd < newCurrent){
-										a.action.complete();
-									}
-									else{
-										if (!a.action.active) {
-											a.action.run();
-											a.action.halt();
-										}
-										a.action.seekTo(item - (actionStart - oldCurrent));
-									}
-								}
-							}
-							//timeline action wrapper
-							else {
-								if (a.skipSeek) {
-									if (a.complete) {
-										a.complete();
-									}
-								}
-								else {
-									if (!(actionEnd < oldCurrent || actionStart > newCurrent)) {
-										a.action.seekForward(item);
-									}
-								}
-							}
-						}
-					}
-				}
-				this.startTime -= item;
-			}
-			//unlock action
-			this.seeking = false;
-			return this;
-		};
-		/**
-@method getActionTimes
-@param {Object} [item] - Action object
-@return [Number startTime, Number endTime]
-@private
-**/
-		my.Timeline.prototype.getActionTimes = function(item) {
-			var result = [null, null],
-				actionStart, actionEnd;
-			if (item.action) {
-				actionStart = item.timeValue;
-				if (item.action) {
-					if (item.action.type === 'Tween') {
-						result = [actionStart, actionStart + item.action.duration];
-					}
-					else if (item.action.type === 'Timeline') {
-						result = [actionStart, this.getTimelineDuration()];
-					}
-					else {
-						result = [actionStart, actionStart];
-					}
-				}
-				else {
-					result = [actionStart, actionStart];
-				}
-			}
-			return result;
-		};
-		/**
-@method getTimelineDuration
-@return Number
-@private
-**/
-		my.Timeline.prototype.getTimelineDuration = function() {
-			var i, iz, a, t,
-				d = 0;
-			for (i = 0, iz = iz = this.actionsList.length; i < iz; i++) {
-				a = my.animation[this.actionsList[i]];
+Halt ticker
 
-				if (a.action.type === 'Tween') {
-					t = a.timeValue + a.action.duration;
-					d = (t > d) ? t : d;
-				}
-				else if (a.action.type === 'Timeline') {
-					t = a.timeValue + a.action.getTimelineDuration();
-					d = (t > d) ? t : d;
-				}
-				else if (a.type === 'Action') {
-					t = a.timeValue;
-					d = (t > d) ? t : d;
-				}
-			}
-			d = (this.duration > d) ? this.duration : d;
-			return d;
-		};
-		/**
-@method seekBack
-@param {Number} [item] relative time to move back, in milliseconds. Must be a negative value!
+@method halt
 @return this
-@chainable
 **/
-		my.Timeline.prototype.seekBack = function(item) {
-			console.log('timeline seekBack', this.name);
-			var i, iz, a,
-				oldCurrent, newCurrent, actionTimes, actionStart, actionEnd;
-			//lock action
-			this.seeking = true;
-			if (!this.active) {
-				this.paused = true;
-			}
-			if (item.toFixed && item) {
-				oldCurrent = this.currentTime;
-				newCurrent = oldCurrent + item;
-				for (i = this.actionsList.length - 1; i >= 0; i--) {
-					a = my.animation[this.actionsList[i]];
-					actionTimes = this.getActionTimes(a);
-					actionStart = actionTimes[0] + this.startTime;
-					actionEnd = actionTimes[1] + this.startTime;
-					if (actionStart && actionEnd) {
-						if (my.isa_fn(a.action)) {
-							//raw function action wrapper
-							if (my.isBetween(actionStart, oldCurrent, newCurrent, true)) {
-								if (a.rollback) {
-									a.rollback();
-								}
-							}
-						}
-						else {
-							//tween action wrapper
-							if (a.action.type === 'Tween') {
-								if (!(actionEnd < newCurrent || actionStart > oldCurrent)) {
-									if (!a.action.active) {
-										a.action.run();
-										a.action.halt();
-									}
-									a.action.seekTo(item - (actionStart - oldCurrent));
-								}
-							}
-							//timeline action wrapper
-							else {
-								if (a.skipSeek) {
-									if (a.rollback) {
-										a.rollback();
-									}
-								}
-								else {
-									if (!(actionEnd < newCurrent || actionStart > oldCurrent)) {
-										a.action.seekBack(item);
-									}
-								}
-							}
-						}
-					}
-				}
-				this.startTime -= item;
-			}
-			//unlock action
-			this.seeking = false;
+		my.Ticker.prototype.halt = function() {
+			this.active = false;
+			my.removeItem(my.work.animate, this.name);
+			my.work.resortAnimations = true;
 			return this;
 		};
 		/**
-Remove this Timeline from the scrawl library
+Resume ticker
+
+@method resume
+@return this
+**/
+		my.Ticker.prototype.resume = function() {
+			var now, current, start;
+			if(!this.active){
+				now = Date.now(),
+				current = this.currentTime,
+				start = this.startTime;
+				this.startTime = now - (current - start);
+				this.currentTime = now;
+				this.active = true;
+				my.pushUnique(my.work.animate, this.name);
+				my.work.resortAnimations = true;
+			}
+			return this;
+		};
+		/**
+seekTo a different specific point on the ticker
+
+@method seekTo
+@param {Number} seekto time in milliseconds from start of ticker; default 0 - effectively sets ticker back to starting conditions
+@param {Boolean} [resume] - flag - when true, the resume() function will trigger; false (default) triggers a single call to the fn() function
+@return this
+**/
+		my.Ticker.prototype.seekTo = function(milliseconds, resume) {
+			var xtGet = my.xtGet;
+			milliseconds = xtGet(milliseconds, 0);
+			resume = xtGet(resume, false);
+			if(this.active){
+				this.halt();
+			}
+			if(this.cycles && this.cycleCount >= this.cycles){
+				this.cycleCount = this.cycles - 1;
+			}
+			this.currentTime =  Date.now();
+			this.startTime = this.currentTime - milliseconds;
+			if(resume){
+				this.resume();
+			}
+			else{
+				this.active = true;
+				this.fn();
+				this.active = false;
+			}
+			return this;
+		};
+		/**
+seekFor a different relative point on the ticker
+
+@method seekFor
+@param {Number} seekfor time in milliseconds from current tick; default 0 - no change
+@param {Boolean} [resume] - flag - when true, the resume() function will trigger; false (default) triggers a single call to the fn() function
+@return this
+**/
+		my.Ticker.prototype.seekFor = function(milliseconds, resume) {
+			var xtGet = my.xtGet;
+			milliseconds = xtGet(milliseconds, 0);
+			milliseconds = xtGet(resume, false);
+			if(this.active){
+				this.halt();
+			}
+			if(this.cycles && this.cycleCount >= this.cycles){
+				this.cycleCount = this.cycles - 1;
+			}
+			this.startTime -= milliseconds;
+			if(resume){
+				this.resume();
+			}
+			else{
+				this.active = true;
+				this.fn();
+				this.active = false;
+			}
+			return this;
+		};
+	/**
+Remove this Ticker from the scrawl library
 @method kill
 @return Always true
 **/
-		my.Timeline.prototype.kill = function() {
-			console.log('timeline kill', this.name);
-			my.removeItem(my.work.animate, this.name);
-			my.removeItem(my.animationnames, this.name);
+		my.Ticker.prototype.kill = function() {
+			if(this.active){
+				this.halt();
+			}
 			delete my.animation[this.name];
+			my.removeItem(my.animationnames, this.name);
+			my.removeItem(my.work.animate, this.name);
+			my.work.resortAnimations = true;
 			return true;
 		};
-
+	/**
+Remove this Ticker from the scrawl library (if argument is true), alongside any tweens associated with it
+@method killTweens
+@return true if argument is true; this otherwise (default)
+**/
+		my.Ticker.prototype.killTweens = function(autokill) {
+			var i, iz, sub,
+				t = my.tween,
+			autokill = (my.xt(autokill)) ? autokill : false;
+			for(i = 0, iz = this.subscribers.length; i < iz; i++){
+				sub = t[this.subscribers[i]];
+				sub.kill();
+			}
+			if(autokill){
+				this.kill();
+				return true;
+			}
+			return this;
+		};
 		/**
 # Action
 
@@ -4211,16 +1552,26 @@ Remove this Timeline from the scrawl library
 
 ## Purpose
 
-* Defines an action to be performed along a timeline
+* Defines a reversible function which can subscribe to a ticker so that it gets invoked at a particular moment after the ticker starts to run
+
+Actions only really make sense when they are associated with a Ticker object. They have no duration as such (unless their action/revert functions include asynchronous activities, in which case - you're on your own!). The action() function should define a set of near-instant actions; the revert() function should mirror the action, to allow the Action object to be reversible.
+
+Action and revert functions are not expected to take any arguments - they are expected to act on the objects assigned to their __targets__ Array
+
+To access the Action functions directly, assign it to a variable, or call it from the library: 
+
+* scrawl.tween[ACTIONNAME].action()
+* scrawl.tween[ACTIONNAME].revert()
 
 ## Access
 
-* scrawl.animation.ACTIONNAME - for the Action object
+* scrawl.tween.ACTIONNAME - for the Action object
 
 ## Action functions
 
-* __run()__ - run associated function
-* __kill()__ - delete Action
+* An Action can be invoked by calling its __action()__ function.
+* An Action can be reversed by calling its __revert()__ function.
+* An Action can be deleted by calling the __kill()__ function on it.
 
 @class Action
 @constructor
@@ -4228,19 +1579,29 @@ Remove this Timeline from the scrawl library
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 		my.Action = function(items) {
+			var xtGet = my.xtGet;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			this.time = items.time || 0;
-			this.order = my.xtGet(items.order, 0);
-			this.convertTime();
-			this.action = my.xtGet(items.action, false);
-			this.reset = my.xtGet(items.reset, false);
-			this.rollback = my.xtGet(items.rollback, false);
-			this.complete = my.xtGet(items.complete, false);
-			this.skipSeek = my.xtGet(items.skipSeek, false);
-			my.animation[this.name] = this;
-			my.pushUnique(my.animationnames, this.name);
-			my.work.resortAnimations = true;
+			if(my.xt(items.targets)){
+				this.setTargets(items.targets);
+			}
+			else{
+				this.targets = [];
+			}
+			this.reverseOnCycleEnd = xtGet(items.reverseOnCycleEnd, false);
+			this.reversed = xtGet(items.reversed, false);
+			this.action = (typeof items.action === 'function') ? items.action : function(){};
+			this.revert = (typeof items.revert === 'function') ? items.revert : function(){};
+			this.time = xtGet(items.time, 0);
+			this.order = xtGet(items.order, 0);
+			this.triggered = false;
+			this.calculateEffectiveTime();
+			my.tween[this.name] = this;
+			my.pushUnique(my.tweennames, this.name);
+			this.ticker = '';
+			if(my.xt(items.ticker)){
+				this.addToTicker(items.ticker);
+			}
 			return this;
 		};
 		my.Action.prototype = Object.create(my.Base.prototype);
@@ -4251,123 +1612,1049 @@ Remove this Timeline from the scrawl library
 @final
 **/
 		my.Action.prototype.type = 'Action';
-		my.Action.prototype.classname = 'animationnames';
+		my.Action.prototype.classname = 'tweennames';
 		my.work.d.Action = {
 			/**
-Keyframe time - may be expressed as a Number (in milliseconds), or as a string:
-* '10ms' - ten milliseconds
-* '10s' - ten seconds
-* '10%' - ten percent along a timeline (relative value)
-@property time
-@type String (or number)
-@default '0ms'
+Ticker name
+If an Action object is associated with a ticker, it will fire (or revert) at the appropriate point in the course of the ticker's run.
+@property ticker
+@type String
+@default ''
 **/
-			time: '0ms',
+			ticker: '',
 			/**
-Keyframe time value, in milliseconds (calculated)
-@property timeValue
+Array of Objects on which this Action will perform its action and revert functions; if the array includes Strings, the constructor, set and clone functions will search for the Objects in the Scrawl library, checking sections (if they currently exist) in the following order: 
+
+* entity, cell, pad, stack, element, point, group, design, animation, tween, anim, filter, image, force, spring, physics
+
+This attribute can also accept a single Object or String as its value in the 
+
+@property targets
+@type Array
+@default []
+**/
+			targets: [],
+			/**
+Action function
+@property action
+@type Function
+@default function(){}
+**/
+			action: function(){},
+			/**
+Revert function - should reverse the actions of the .action function
+@property revert
+@type Function
+@default function(){}
+**/
+			revert: function(){},
+			/**
+Time - point (in milliseconds) following the start of the Action's ticker when the action function will trigger
+@property time
 @type Number
 @default 0
 **/
-			timeValue: 0,
+			time: 0,
 			/**
-Keyframe time unit value (calculated)
-@property timeUnit
-@type String
-@default 'ms'
-**/
-			timeUnit: 'ms',
-			/**
-Keyframe function to be called
-@property action
-@type Function
-@default false
-**/
-			action: false,
-			/**
-Keyframe function to be called - can be used to set initial conditions for objects in the timeline
-
-Only one action object in a timeline should include a reset function
-
-@property reset
-@type Function
-@default false
-**/
-			reset: false,
-			/**
-Keyframe function to be called - can be used to set final conditions for objects in the timeline
-
-Only one action object in a timeline should include a complete function
-
-@property complete
-@type Function
-@default false
-**/
-			complete: false,
-			/**
-Keyframe function to be called - can be used to reverse the action function
-@property rollback
-@type Function
-@default false
-**/
-			rollback: false,
-			/**
-Seek functionality flag
-
-In normal mode - false, default - a seek action will cascade through nested timelines. To prevent this, set the attribute to true; any action reset (seekBack) and complete (seekForward) functions will still be triggered
-
-@property skipSeek
+Reversable flag - when true, the action will alternate the tick and reverseTick values as the ticker cycles
+@property reverseOnCycleEnd
 @type Boolean
 @default false
 **/
-			skipSeek: false
-		};
-		/**
-Convert a time into its component properties
-@method convertTime
-@return always true
-@private
+			reverseOnCycleEnd: false,
+			/**
+Reversed - when true, the action is using reverseTick value
+@property reversed
+@type Boolean
+@default false
 **/
-		my.Action.prototype.convertTime = function() {
-			var res = my.convertTime(this.time);
-			if (res) {
-				this.timeUnit = res[0] || 'ms';
-				this.timeValue = res[1] || 0;
+			reversed: false,
+			/**
+Sort order - for Actions that share the same time value on a given Ticker. Without a sort order, there will be no guarantee which actions with the same time value will be performed first
+@property order
+@type Number
+@default 0
+**/
+			order: 0
+		};
+		my.mergeInto(my.work.d.Action, my.work.d.Base);
+	/**
+Get the effective (millisecond number) time when action will trigger
+@method calculateEffectiveTime
+@param {String} [item] new time value; defaults to this.time
+@chainable
+@private
+@return this
+**/
+		my.Action.prototype.calculateEffectiveTime = function(item) {
+			var time = my.xtGet(item, this.time),
+				calculatedTime = my.convertTime(time),
+				cTime = calculatedTime[1],
+				cType = calculatedTime[0],
+				ticker, tickerDuration = 0;
+			this.effectiveTime = 0;
+			if(cType === '%' && cTime <= 100){
+				if(this.ticker){
+					ticker = my.animation[this.ticker];
+					if(ticker){
+						tickerDuration = ticker.effectiveDuration;
+						this.effectiveTime = tickerDuration * (cTime / 100);
+					}
+				}
+			}
+			else{
+				this.effectiveTime = cTime;
+			}
+			return this;
+		};
+	/**
+Add action to given ticker
+
+If action is already subscribed to a different ticker, the function will automatically unsubscribe from that ticker before subscribing to the new ticker
+@method addToTicker
+@param {String} item TICKERNAME to which this Action will subscribe  
+@chainable
+@return this
+**/
+		my.Action.prototype.addToTicker = function(item) {
+			var xt = my.xt,
+				tick;
+			if(xt(item)){
+				if(this.ticker && this.ticker !== item){
+					this.removeFromTicker(this.ticker);
+				}
+				tick = my.animation[item];
+				if(xt(tick)){
+					this.ticker = item;
+					tick.subscribe(this.name);
+					this.calculateEffectiveTime();
+				}
+			}
+			return this;
+		};
+	/**
+Remove action from given ticker
+@method removeFromTicker
+@param {String} item TICKERNAME to which this Action will unsubscribe  
+@chainable
+@return this
+**/
+		my.Action.prototype.removeFromTicker = function(item) {
+			var xt = my.xt,
+				tick;
+			if(xt(item)){
+				tick = my.animation[item];
+				if(xt(tick)){
+					this.ticker = '';
+					tick.unsubscribe(this.name);
+				}
+			}
+			return this;
+		};
+	/**
+retrieve the completion time for the action
+@method getEndTime
+@private
+@return Number
+**/
+		my.Action.prototype.getEndTime = function() {
+			return this.effectiveTime;
+		};
+	/**
+Investigate the data supplied by the ticker and, if necessary, invoke the action or revert functions, as appropriate
+
+The object passed by the ticker has the following attributes:
+
+* tick - milliseconds since ticker started its run
+* reverseTick - milliseconds before ticker reaches the end of its run
+* willLoop - boolean indicating whether ticker is about to restart
+* next - boolean indicating whether this is the ticker's last update
+
+@method update
+@param {Object} items Object sent by ticker  
+@private
+@return always true
+**/
+		my.Action.prototype.update = function(items) {
+			if(this.reversed){
+				if(items.reverseTick >= this.effectiveTime){
+					if(!this.triggered){
+						this.action();
+						this.triggered = true;
+					}
+				}
+				else{
+					if(this.triggered){
+						this.revert();
+						this.triggered = false;
+					}
+				}
 			}
 			else {
-				this.timeUnit = 'ms';
-				this.timeValue = 0;
+				if(items.tick >= this.effectiveTime){
+					if(!this.triggered){
+						this.action();
+						this.triggered = true;
+					}
+				}
+				else{
+					if(this.triggered){
+						this.revert();
+						this.triggered = false;
+					}
+				}
+			}
+			if(this.reverseOnCycleEnd && items.willLoop){
+				if(items.next){
+					this.reversed = !this.reversed;
+				}
+				else{
+					this.reversed = false;
+					this.triggered = false;
+				}
 			}
 			return true;
 		};
-		/**
-Invoke the associated function
-@method run
-@return always true
+	/**
+Set attributes
+@method set
+@param {Object} Object containing key:value attributes
+@chainable
+@return this
 **/
-		my.Action.prototype.run = function() {
-			var a = ['Tween', 'Timeline', 'Animation'];
-			if (my.xt(this.action)) {
-				if (my.contains(a, this.action.type)) {
-					this.action.run();
-				}
-				else {
+		my.Action.prototype.set = function(items) {
+			var xt = my.xt, ticker;
+			items = my.safeObject(items);
+			ticker = (xt(items.ticker)) ? this.ticker : false;
+			// my.Base.prototype.set.call(this, items);
+			// if either ticker or time change, then this.effectiveTime will need recalculation
+			if(ticker){
+				this.ticker = ticker;
+				this.addToTicker(items.ticker);
+			}
+			else if(xt(items.time)){
+				this.calculateEffectiveTime();
+			}
+			if(xt(items.targets)){
+				this.setTargets(items.targets);
+			}
+			if(xt(items.triggered) && this.triggered !== items.triggered){
+				if(items.triggered){
 					this.action();
 				}
-				return true;
+				else{
+					this.revert();
+				}
+				this.triggered = items.triggered;
 			}
-			return false;
+			if(xt(items.action)){
+				this.action = items.action;
+				if(typeof this.action !== 'function'){
+					this.action = function(){};
+				}
+			}
+			if(xt(items.revert)){
+				this.revert = items.revert;
+				if(typeof this.revert !== 'function'){
+					this.revert = function(){};
+				}
+			}
+			return this;
 		};
-		/**
+	/**
+Set targets attribute - assumes that the supplied Array will replace, not amend, any existing targets array
+@method setTargets
+@param {Array} items Array of Objects and/or Strings, can also be single Object or string
+@chainable
+@private
+@return this
+**/
+		my.Action.prototype.setTargets = function(items) {
+			items = [].concat(items);
+			var newTargets = [],
+				item, i, iz, result;
+			for(i = 0, iz = items.length; i < iz; i++){
+				item = items[i];
+				if(typeof item === 'function'){
+					if(typeof item.set === 'function'){
+						newTargets.push(item);
+					}
+				}
+				else if(typeof item === 'object' && my.xt(item.name)){
+					newTargets.push(item);
+				}
+				else{
+					result = my.locateTarget(item);
+					if(result){
+						newTargets.push(result);
+					}
+				}
+			}
+			this.targets = newTargets;
+			return this;
+		};
+	/**
+Add Objects to targets attribute - assumes that the supplied Array will augment any existing targets array
+@method addToTargets
+@param {Array} items Array of Objects and/or Strings, can also be single Object or string
+@chainable
+@return this
+**/
+		my.Action.prototype.addToTargets = function(items) {
+			items = [].concat(items);
+			var item, i, iz, result;
+			for(i = 0, iz = items.length; i < iz; i++){
+				item = items[i];
+				if(typeof item === 'function'){
+					if(typeof item.set === 'function'){
+						this.targets.push(item);
+					}
+				}
+				else{
+					result = my.locateTarget(item);
+					if(result){
+						this.targets.push(result);
+					}
+				}
+			}
+			return this;
+		};
+	/**
+Remove Objects from targets attribute - will not remove an object with no name and/or type attributes
+@method removeFromTargets
+@param {Array} items Array of Objects and/or Strings, can also be single Object or string
+@chainable
+@return this
+**/
+		my.Action.prototype.removeFromTargets = function(items) {
+			items = [].concat(items);
+			var item, i, iz, j, jz, k, kz,
+				t, type, name, doRemove, obj, objName, 
+				identifiers = [],
+				newTargets = [].concat(this.targets),
+				contains = my.contains;
+			for (j = 0, jz = newTargets.length; j < jz; j++){
+				t = newTargets[j];
+				type = t.type || 'unknown';
+				name = t.name || 'unnamed';
+				if(type !== 'unknown' && name !== 'unnamed'){
+					identifiers.push(type + '_' + name);
+				}
+			}
+			for(i = 0, iz = items.length; i < iz; i++){
+				item = items[i];
+				obj = false;
+				if(typeof item === 'function'){
+					obj = item;
+				}
+				else{
+					// obj = this.locateTarget(item);
+					obj = my.locateTarget(item);
+				}
+				if(obj){
+					type = obj.type || 'unknown';
+					name = obj.name || 'unnamed';
+					if(type !== 'unknown' && name !== 'unnamed'){
+						objName = type + '_' + name;
+						doRemove = identifiers.indexOf(objName);
+						if(doRemove >= 0){
+							newTargets[doRemove] = false;
+						}
+					}
+				}
+			}
+			this.targets = [];
+			for(k = 0, kz = newTargets; k < kz; k++){
+				if(newTargets[k]){
+					this.targets.push(newTargets[k]);
+				}
+			}
+			return this;
+		};
+	/**
+Create a clone of this Action
+
+Note: strongly advise every call to this function includes newly created anonymous functions for the action and revert attributes in the argument object - Scrawl's clone functionality does not clone function attributes!
+
+@method clone
+@param {Object} Object containing key:value attributes
+@chainable
+@return a new copy of the Action object
+**/
+		my.Action.prototype.clone = function(items) {
+			items = my.safeObject(items);
+			var c, xt = my.xt;
+			c = my.Base.prototype.clone.call(this, items);
+			if(xt(items.targets)) {
+				c.setTargets(items.targets);
+			}
+			else{
+				c.targets = [].concat(this.targets);
+			}
+			c.reverseOnCycleEnd = (xt(items.reverseOnCycleEnd)) ? items.reverseOnCycleEnd : this.reverseOnCycleEnd;
+			c.revert = (xt(items.revert)) ? items.revert : this.revert;
+			c.action = (xt(items.action)) ? items.action : this.action;
+			c.revert = (xt(items.revert)) ? items.revert : this.revert;
+			c.time = (xt(items.time)) ? items.time : this.time;
+			c.order = (xt(items.order)) ? items.order : this.order;
+			c.triggered = false;
+			c.calculateEffectiveTime();
+			return c;
+		};
+	/**
 Remove this Action from the scrawl library
 @method kill
 @return Always true
 **/
 		my.Action.prototype.kill = function() {
-			my.removeItem(my.animationnames, this.name);
-			delete my.animation[this.name];
-			my.work.resortAnimations = true;
+			if(this.ticker){
+				this.removeFromTicker(this.ticker);
+			}
+			delete my.tween[this.name];
+			my.removeItem(my.tweennames, this.name);
 			return true;
+		};
+	/**
+# Tween
+
+## Instantiation
+
+* scrawl.makeTween()
+
+## Purpose
+
+* Defines a set of attribute update definitions for objects
+
+## Access
+
+* scrawl.tween.TWEENNAME - for the Tween object
+
+## Tween functions
+
+* A Tween can be deleted by calling the __kill()__ function on it.
+
+@class Tween
+@constructor
+@extends Base
+@param {Object} [items] Key:value Object argument for setting attributes
+**/
+		my.Tween = function(items) {
+			var xtGet = my.xtGet,
+				tickerName;
+			my.Base.call(this, items);
+			items = my.safeObject(items);
+			this.ticker = xtGet(items.ticker, '');
+			if(my.xt(items.targets)){
+				this.setTargets(items.targets);
+			}
+			else{
+				this.targets = [];
+			}
+			this.definitions = my.xt(items.definitions) ? [].concat(items.definitions) : [];
+			this.setDefinitionsValues();
+			this.time = xtGet(items.time, 0);
+			this.duration = xtGet(items.duration, 0);
+			this.reverseOnCycleEnd = xtGet(items.reverseOnCycleEnd, false);
+			this.reversed = xtGet(items.reversed, false);
+			this.order = xtGet(items.order, 0);
+			this.status = 'before';
+			this.calculateEffectiveTime();
+			this.calculateEffectiveDuration();
+			my.tween[this.name] = this;
+			my.pushUnique(my.tweennames, this.name);
+			this.ticker = '';
+			if(my.xt(items.ticker)){
+				this.addToTicker(items.ticker);
+			}
+			else{
+				// here is where we create the ticker - will have same name as the tween
+				tickerName = this.name + '_ticker';
+				my.makeTicker({
+					name: tickerName,
+					order: this.order,
+					subscribers: this.name,
+					duration: this.effectiveDuration,
+					eventChoke: xtGet(items.eventChoke, 0),
+					cycles: xtGet(items.cycles, 1)
+				});
+				this.ticker = tickerName;
+				my.animation[tickerName].recalculateEffectiveDuration();
+			}
+			return this;
+		};
+		my.Tween.prototype = Object.create(my.Base.prototype);
+		/**
+@property type
+@type String
+@default 'Tween'
+@final
+**/
+		my.Tween.prototype.type = 'Tween';
+		my.Tween.prototype.classname = 'tweennames';
+		my.work.d.Tween = {
+			/**
+Ticker name
+If a Tween object is associated with a ticker, it will fire (or revert) at the appropriate point in the course of the ticker's run.
+@property ticker
+@type String
+@default ''
+**/
+			ticker: '',
+			/**
+Array of Objects on which this Tween will perform its action and revert functions; if the array includes Strings, the constructor, set and clone functions will search for the Objects in the Scrawl library, checking sections (if they currently exist) in the following order: 
+
+* entity, cell, pad, stack, element, point, group, design, animation, tween, anim, filter, image, force, spring, physics
+
+This attribute can also accept a single Object or String as its value in the 
+
+@property targets
+@type Array
+@default []
+**/
+			targets: [],
+			/**
+Array of Objects which define the actions this tween will take. The Objects must include the following attributes: 
+* attribute - (required) a String of the attribute key value
+* start - (required) a Number or String value determining the point on the Ticker at which the tween will activate (eg: 100, '10%', '2px')
+* end - (required) a Number or String value determining the point on the Ticker at which the tween will deactivate (eg: 900, '90%', '50px')
+* engine - (optional) a String value supplying the name of the easing engine to use; default 'linear'
+* integer - (optional) a Boolean: when true, the calculated value will have Math.round() applied before targets are set; default false
+
+This attribute can also accept a single Object as its value 
+
+@property definitions
+@type Array
+@default []
+**/
+			definitions: [],
+			/**
+Time - point (in milliseconds) following the start of the Tween's ticker when the tween will trigger
+@property time
+@type Number
+@default 0
+**/
+			time: 0,
+			/**
+Duration - time required for tween to run
+@property duration
+@type Number
+@default 0
+**/
+			duration: 0,
+			/**
+Reversable flag - when true, the tween will reverse its direction of play as each ticker cycle completes; default false (will go back to beginning and play in the current direction)
+@property reverseOnCycleEnd
+@type Boolean
+@default false
+**/
+			reverseOnCycleEnd: false,
+			/**
+Reversed - determines the directin in which the tween will run - true means that reverseTick values will be used for calculations; default false
+@property reversed
+@type Boolean
+@default false
+**/
+			reversed: false,
+			/**
+Sort order - for Actions that share the same time value on a given Ticker. Without a sort order, there will be no guarantee which actions with the same time value will be performed first
+@property order
+@type Number
+@default 0
+**/
+			order: 0
+		};
+	my.mergeInto(my.work.d.Tween, my.work.d.Base);
+	/**
+retrieve the completion time for the action
+@method getEndTime
+@private
+@return Number
+**/
+		my.Tween.prototype.getEndTime = function() {
+			return this.effectiveTime + this.effectiveDuration;
+		};
+	/**
+Get the effective (millisecond number) time when tween will trigger
+@method calculateEffectiveTime
+@param {String} [item] new time value; defaults to this.time
+@chainable
+@private
+@return this
+**/
+		my.Tween.prototype.calculateEffectiveTime = function(item) {
+			my.Action.prototype.calculateEffectiveTime.call(this, item);
+			return this;
+		};
+	/**
+Get the effective (millisecond number) duration for the tween
+@method calculateEffectiveDuration
+@param {String} [item] new time value; defaults to this.time
+@chainable
+@private
+@return this
+**/
+		my.Tween.prototype.calculateEffectiveDuration = function(item) {
+			var tweenDuration = my.xtGet(item, this.duration),
+				calculatedDur = my.convertTime(tweenDuration),
+				cDur = calculatedDur[1],
+				cType = calculatedDur[0],
+				ticker, tickerDuration = 0;
+			this.effectiveDuration = 0;
+			if(cType === '%'){
+				if(this.ticker){
+					ticker = my.animation[this.ticker];
+					if(ticker){
+						tickerDuration = ticker.effectiveDuration;
+						this.effectiveDuration = tickerDuration * (cDur / 100);
+					}
+				}
+			}
+			else{
+				this.effectiveDuration = cDur;
+			}
+			return this;
+		};
+	/**
+Add tween to given ticker
+
+If tween is already subscribed to a different ticker, the function will automatically unsubscribe from that ticker before subscribing to the new ticker
+@method addToTicker
+@param {String} item TICKERNAME to which this Tween will subscribe  
+@chainable
+@return this
+**/
+		my.Tween.prototype.addToTicker = function(item) {
+			my.Action.prototype.addToTicker.call(this, item);
+			this.calculateEffectiveDuration();
+			return this;
+		};
+	/**
+Remove action from given ticker
+@method removeFromTicker
+@param {String} item TICKERNAME to which this Tween will unsubscribe  
+@chainable
+@return this
+**/
+		my.Tween.prototype.removeFromTicker = function(item) {
+			my.Action.prototype.removeFromTicker.call(this, item);
+			return this;
+		};
+	/**
+Investigate the data supplied by the ticker and, if necessary, invoke the action or revert functions, as appropriate
+
+The object passed by the ticker has the following attributes:
+
+* tick - milliseconds since ticker started its run
+* reverseTick - milliseconds before ticker reaches the end of its run
+* willLoop - boolean indicating whether ticker is about to restart
+* next - boolean indicating whether this is the ticker's last update
+
+@method update
+@param {Object} items Object sent by ticker  
+@private
+@return always true
+**/
+		my.Tween.prototype.update = function(items) {
+			items = my.safeObject(items);
+			var starts, ends,
+				tick = items.tick || 0,
+				revTick = items.reverseTick || 0,
+				status = 'running';
+
+			// 1. Should we do work for this tween?
+			if(!this.reversed){
+				starts = this.effectiveTime;
+				ends = this.effectiveTime + this.effectiveDuration;
+				if(tick < starts){
+					status = 'before';
+				}
+				else if(tick > ends){
+					status = 'after'
+				}
+			}
+			else{
+				starts = this.effectiveTime + this.effectiveDuration;
+				ends = this.effectiveTime;
+				if(revTick > starts){
+					status = 'after';
+				}
+				else if(revTick < ends){
+					status = 'before'
+				}
+			}
+
+			// for tweens with a duration > 0
+			if(this.effectiveDuration){
+				if(status === 'running' || status !== this.status){
+					this.status = status;
+					this.doSimpleUpdate(items);
+					this.updateCleanup(items);
+				}
+			}
+			// for tweens with a duration == 0
+			else{
+				if(status !== this.status){
+					this.status = status;
+					this.doSimpleUpdate(items);
+					this.updateCleanup(items);
+				}
+			}
+			if(items.willLoop){
+				if(this.reverseOnCycleEnd){
+					this.reversed = !this.reversed;
+				}
+				else{
+					this.status = 'before';
+				}
+			}
+			return true;
+		};
+	/**
+Perform a simple update
+@method doSimpleUpdate
+@param {Object} items Object sent by ticker  
+@private
+@return always true
+**/
+		my.Tween.prototype.doSimpleUpdate = function(items) {
+			items = my.safeObject(items);
+			var starts = this.effectiveTime,
+				effectiveTick,
+				actions = my.Tween.prototype.engineActions,
+				i, iz, j, jz, def, progress,
+				setObj = {};
+
+			// 2. Ticks only run forward - check if tween is in reverse mode
+			effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
+
+			// 3. determine the current progress of the tween
+			if(this.effectiveDuration && this.status === 'running'){
+				progress = effectiveTick / this.effectiveDuration;
+			}
+			else{
+				progress = (this.status === 'after') ? 1 : 0;
+			}
+
+			// 4. calculate the current value for each definition
+			for(i = 0, iz = this.definitions.length; i < iz; i++){
+				def = this.definitions[i];
+				if(def.engine.substring){
+					def.value = actions[def.engine](def.effectiveStart, def.effectiveChange, progress);
+				}
+				else{
+					def.value = def.engine(def.effectiveStart, def.effectiveChange, progress);
+				}
+				if(def.integer){
+					def.value = Math.round(def.value);
+				}
+				if(def.suffix){
+					def.value += def.suffix;
+				}
+				setObj[def.attribute] = def.value;
+			}
+
+			// 5. Apply all definitions updates to target objects
+			for(j = 0, jz = this.targets.length; j < jz; j++){
+				this.targets[j].set(setObj);
+			}
+			return true;
+		};
+	/**
+update cleanup
+@method updateCleanup
+@param {Object} items Object sent by ticker  
+@private
+@return always true
+**/
+		my.Tween.prototype.updateCleanup = function(items) {
+			items = my.safeObject(items);
+			// do cleanup stuff here
+			if(!items.next){
+				this.status = (this.reverse) ? 'before' : 'after';
+			}
+			return true;
+		};
+		/**
+Tween engine helper object
+@method engineActions
+@private
+**/
+		my.Tween.prototype.engineActions = {
+			out: function(start, change, position) {
+				var temp = 1 - position;
+				return (start + change) + (Math.cos((position * 90) * my.work.radian) * -change);
+			},
+			in : function(start, change, position) {
+				return start + (Math.sin((position * 90) * my.work.radian) * change);
+			},
+			easeIn: function(start, change, position) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp) * -change);
+			},
+			easeIn3: function(start, change, position) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp * temp) * -change);
+			},
+			easeIn4: function(start, change, position) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp * temp * temp) * -change);
+			},
+			easeIn5: function(start, change, position) {
+				var temp = 1 - position;
+				return (start + change) + ((temp * temp * temp * temp * temp) * -change);
+			},
+			easeOutIn: function(start, change, position) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position) * change * 2) :
+					(start + change) + ((temp * temp) * -change * 2);
+			},
+			easeOutIn3: function(start, change, position) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position * position) * change * 4) :
+					(start + change) + ((temp * temp * temp) * -change * 4);
+			},
+			easeOutIn4: function(start, change, position) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position * position * position) * change * 8) :
+					(start + change) + ((temp * temp * temp * temp) * -change * 8);
+			},
+			easeOutIn5: function(start, change, position) {
+				var temp = 1 - position;
+				return (position < 0.5) ?
+					start + ((position * position * position * position * position) * change * 16) :
+					(start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
+			},
+			easeOut: function(start, change, position) {
+				return start + ((position * position) * change);
+			},
+			easeOut3: function(start, change, position) {
+				return start + ((position * position * position) * change);
+			},
+			easeOut4: function(start, change, position) {
+				return start + ((position * position * position * position) * change);
+			},
+			easeOut5: function(start, change, position) {
+				return start + ((position * position * position * position * position) * change);
+			},
+			linear: function(start, change, position) {
+				return start + (position * change);
+			}
+		};
+	/**
+Set attributes
+@method set
+@param {Object} Object containing key:value attributes
+@chainable
+@return this
+**/
+		my.Tween.prototype.set = function(items) {
+			var xt = my.xt, ticker;
+			items = my.safeObject(items);
+			ticker = (xt(items.ticker)) ? this.ticker : false;
+			my.Base.prototype.set.call(this, items);
+			// if either ticker or time change, then this.effectiveTime will need recalculation
+			if(ticker){
+				this.ticker = ticker;
+				this.addToTicker(items.ticker);
+			}
+			else if(my.xto(items.time, items.duration)){
+				this.calculateEffectiveTime();
+				this.calculateEffectiveDuration();
+			}
+			if(xt(items.targets)){
+				this.setTargets(items.targets);
+			}
+			if(xt(items.definitions)){
+				this.definitions = [].concat(items.definitions);
+				this.setDefinitionsValues();
+			}
+			return this;
+		};
+	/**
+Calculate the effective values for definitions
+@method setDefinitionsValues
+@param {Object} Object containing key:value attributes
+@chainable
+@private
+@return this
+**/
+		my.Tween.prototype.setDefinitionsValues = function() {
+			var i, iz, temp, def,
+				xt = my.xt;
+			for(i = 0, iz = this.definitions.length; i < iz; i++){
+				def = this.definitions[i];
+				temp = this.parseDefinitionsValue(def.start);
+				def.effectiveStart = temp[1];
+				def.suffix = temp[0];
+				temp = this.parseDefinitionsValue(def.end);
+				def.effectiveEnd = temp[1];
+				if(!xt(def.engine)){
+					def.engine = 'linear';
+				}
+				def.effectiveChange = def.effectiveEnd - def.effectiveStart;
+			}
+			return this;
+		};
+	/**
+setDefinitionsValues helper function
+@method parseDefinitionsValue
+@param {String} value to be parsed; can also be a Number
+@private
+@return Array of parsed values in the form ['Suffix', Number]
+**/
+		my.Tween.prototype.parseDefinitionsValue = function(item) {
+			var result = ['', 0],
+				a, xt = my.xt;
+			if(xt(item)){
+				if (item.toFixed) {
+					result[1] = item;
+				}
+				else if(item.substring){
+					a = item.match(/^\d+\.?\d*(\D*)/);
+					if(xt(a[0])){
+						result[1] = parseFloat(a);
+					}
+					if(xt(a[1])){
+						result[0] = a[1];
+					}
+				}
+			}
+			return result;
+		};
+	/**
+Set targets attribute - assumes that the supplied Array will replace, not amend, any existing targets array
+@method setTargets
+@param {Array} items Array of Objects and/or Strings, can also be single Object or string
+@chainable
+@private
+@return this
+**/
+		my.Tween.prototype.setTargets = function(items) {
+			my.Action.prototype.setTargets.call(this, items);
+			return this;
+		};
+	/**
+Add Objects to targets attribute - assumes that the supplied Array will augment any existing targets array
+@method addToTargets
+@param {Array} items Array of Objects and/or Strings, can also be single Object or string
+@chainable
+@return this
+**/
+		my.Tween.prototype.addToTargets = function(items) {
+			my.Action.prototype.addToTargets.call(this, items);
+			return this;
+		};
+	/**
+Remove Objects from targets attribute - will not remove an object with no name and/or type attributes
+@method removeFromTargets
+@param {Array} items Array of Objects and/or Strings, can also be single Object or string
+@chainable
+@return this
+**/
+		my.Tween.prototype.removeFromTargets = function(items) {
+			my.Action.prototype.removeFromTargets.call(this, items);
+			return this;
+		};
+	/**
+Create a clone of this Tween
+
+Note: strongly advise every call to this function includes newly created anonymous functions for the action and revert attributes in the argument object - Scrawl's clone functionality does not clone function attributes!
+
+@method clone
+@param {Object} Object containing key:value attributes
+@chainable
+@return a new copy of the Tween object
+**/
+		my.Tween.prototype.clone = function(items) {
+			var c = my.Base.prototype.clone.call(this, items);
+			items = my.safeObject(items);
+			if(!items.targets){
+				c.setTargets(this.targets);
+			}
+			return c;
+		};
+		/**
+Start the tween's ticker from 0
+
+@method run
+@return this
+**/
+		my.Tween.prototype.run = function() {
+			var t = my.animation[this.ticker];
+			if(t){
+				t.run();
+			}
+			return this;
+		};
+		/**
+Halt the tween's ticker
+
+@method halt
+@return this
+**/
+		my.Tween.prototype.halt = function() {
+			var t = my.animation[this.ticker];
+			if(t){
+				t.halt();
+			}
+			return this;
+		};
+		/**
+Resume the tween's ticker
+
+@method resume
+@return this
+**/
+		my.Tween.prototype.resume = function() {
+			var t = my.animation[this.ticker];
+			if(t){
+				t.resume();
+			}
+			return this;
+		};
+		/**
+seekTo a different specific point on the tween's ticker
+
+@method seekTo
+@return this
+**/
+		my.Tween.prototype.seekTo = function(milliseconds) {
+			var t = my.animation[this.ticker];
+			if(t){
+				t.seekTo(milliseconds);
+			}
+			return this;
+		};
+		/**
+seekFor a different relative point on the tween's ticker
+
+@method seekFor
+@return this
+**/
+		my.Tween.prototype.seekFor = function(milliseconds) {
+			var t = my.animation[this.ticker];
+			if(t){
+				t.seekFor(milliseconds);
+			}
+			return this;
+		};
+	/**
+Remove this Tween from the scrawl library (including any self-created ticker associated with the tween)
+@method kill
+@return Always true
+**/
+		my.Tween.prototype.kill = function() {
+			var t;
+			if(this.ticker === this.name + '_ticker'){
+				t = my.animation[this.ticker];
+				if(t){
+					t.kill();
+				}
+			}
+			my.Action.prototype.kill.call(this);
 		};
 
 		return my;

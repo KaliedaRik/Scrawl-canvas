@@ -10,113 +10,119 @@ var mycode = function() {
 	//entitys
 	scrawl.makeBlock({
 		name: 'block1',
-		startX: 50,
-		startY: 70,
+		startX: 100,
+		startY: 100,
 		fillStyle: 'red',
 		strokeStyle: 'blue',
-		lineWidth: 5,
+		lineWidth: 3,
 		method: 'fillDraw',
-		width: 80,
-		height: 80,
+		width: 100,
+		height: 60,
+		handleY: '140%',
 		handleX: 'center',
-		handleY: 'center',
-	}).clone({
-		name: 'block2',
-		startY: 200,
-	}).clone({
-		name: 'block3',
-		startY: 330,
-		handleX: 40,
 	});
 
-	//tweens
+	// ticker
+	scrawl.makeTicker({
+		name: 'myTicker',
+		cycles: 0
+	});
+
+	// tweens
 	scrawl.makeTween({
 		name: 'tween1',
-		targets: scrawl.entity.block1,
-		start: {
-			startX: 50,
-			width: 80,
-			roll: 0,
-		},
-		end: {
-			startX: 550,
-			width: 20,
-			roll: 360,
-		},
-		duration: 3000,
-		count: true,
-		autoReverseAndRun: true,
-	}).run();
-	scrawl.animation.tween1.clone({
-		name: 'tween2',
-		targets: scrawl.entity.block3,
+		ticker: 'myTicker',
 		duration: 4000,
-		start: {
-			startX: 50,
-			handleX: 40,
-			roll: 0,
-		},
-		end: {
-			startX: 550,
-			handleX: 140,
-			roll: 360,
-		},
-	}).run();
-	scrawl.makeTween({
-		name: 'tween3',
-		targets: scrawl.entity.block2,
-		duration: 2000,
-		start: {
-			startX: 50,
-			width: 80,
-		},
-		end: {
-			startX: 300,
-			width: 20,
-			roll: 90,
-		},
-		nextTween: 'tween4',
-	}).clone({
-		name: 'tween4',
-		targets: scrawl.entity.block2,
-		start: {
-			startX: 300,
-			width: 20,
-		},
-		end: {
-			startX: 550,
-			width: 80,
-			roll: 90,
-		},
-		nextTween: 'tween5',
+		time: 0,
+		targets: 'block1',
+		definitions: [
+			{
+				attribute: 'startX',
+				start: 100,
+				end: 500,
+				engine: 'easeOutIn3',
+			}
+		]
 	}).clone({
 		name: 'tween5',
-		targets: scrawl.entity.block2,
-		start: {
-			startX: 550,
-			width: 80,
-		},
-		end: {
-			startX: 300,
-			width: 120,
-			roll: 90,
-		},
-		nextTween: 'tween6',
+		time: 8000,
+		definitions: [
+			{
+				attribute: 'startX',
+				start: 500,
+				end: 100,
+				engine: 'easeOutIn3',
+			}
+		]
+	}).clone({
+		name: 'tween3',
+		time: 5000,
+		duration: 2000,
+		definitions: [
+			{
+				attribute: 'startY',
+				start: 100,
+				end: 300,
+				engine: 'easeOutIn3',
+			}
+		]
+	}).clone({
+		name: 'tween7',
+		time: 13000,
+		definitions: [
+			{
+				attribute: 'startY',
+				start: 300,
+				end: 100,
+				engine: 'easeOutIn3',
+			}
+		]
+	}).clone({
+		name: 'tween2',
+		time: 4000,
+		duration: 1000,
+		definitions: [
+			{
+				attribute: 'roll',
+				start: 0,
+				end: 90,
+				engine: 'easeOutIn',
+			}
+		]
+	}).clone({
+		name: 'tween4',
+		time: 7000,
+		definitions: [
+			{
+				attribute: 'roll',
+				start: 90,
+				end: 180,
+				engine: 'easeOutIn',
+			}
+		]
 	}).clone({
 		name: 'tween6',
-		targets: scrawl.entity.block2,
-		start: {
-			startX: 300,
-			width: 120,
-		},
-		end: {
-			startX: 50,
-			width: 80,
-			roll: 90,
-		},
-		nextTween: 'tween3',
-	});
-	scrawl.animation.tween3.run();
+		time: 12000,
+		definitions: [
+			{
+				attribute: 'roll',
+				start: 180,
+				end: 270,
+				engine: 'easeOutIn',
+			}
+		]
+	}).clone({
+		name: 'tween8',
+		time: 15000,
+		definitions: [
+			{
+				attribute: 'roll',
+				start: 270,
+				end: 360,
+				engine: 'easeOutIn',
+			}
+		]
+	}).run();
 
 	//animation object
 	scrawl.makeAnimation({

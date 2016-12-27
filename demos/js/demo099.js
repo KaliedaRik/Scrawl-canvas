@@ -117,38 +117,39 @@ var mycode = function() {
 
 	//tweens
 	colorTween = scrawl.makeTween({
-		targets: scrawl.design.mycolor,
-		start: {
-			r: 0,
-			g: 0
-		},
-		end: {
-			r: 100,
-			g: 200
-		},
-		onComplete: {
-			r: 0,
-			g: 0
-		},
+		name: 'tween1',
 		duration: 3000,
-		count: 2,
-		autoReverseAndRun: true,
+		targets: scrawl.design.mycolor,
+		reverseOnCycleEnd: true,
+		cycles: 2,
+		definitions: [
+			{
+				attribute: 'r',
+				start: 0,
+				end: 100,
+
+			},
+			{
+				attribute: 'g',
+				start: 0,
+				end: 200,
+			}
+		]
 	});
 
 	gradientTween = scrawl.makeTween({
-		targets: scrawl.design.mygradient,
-		end: {
-			shift: 0.025
-		},
-		start: {
-			shift: 0
-		},
-		onComplete: {
-			shift: 0
-		},
+		name: 'tween2',
 		duration: 3000,
-		count: 2,
-		autoReverseAndRun: true,
+		targets: scrawl.design.mygradient,
+		reverseOnCycleEnd: true,
+		cycles: 2,
+		definitions: [
+			{
+				attribute: 'shift',
+				start: 0,
+				end: 0.02,
+			}
+		]
 	});
 
 	//event listener

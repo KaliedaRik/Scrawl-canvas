@@ -10,13 +10,22 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 100</h1>
-  <h2>Tween easing engines</h2>
-  <h3>Extensions: animation, block</h3>
-  <p>Click on a block to clone the tween to it</p>
+  <h2>Tween built-in easing engines</h2>
+  <h3>Extensions: animation, phrase</h3>
+  <p><i>Demo includes a test to make sure that we can change the ticker duration value via its set() function, and change cascades to subscribed tweens</i></p>
 
-  <canvas id="mycanvas" width="600" height="400"></canvas>
+  <canvas id="mycanvas" width="800" height="460"></canvas>
 
   <p id="testmessage"></p>
+
+  <p>Ticker duration:
+    <select class="controlItem" id="duration">
+      <option value="3000">3000</option>
+      <option value="4s">'4s'</option>
+      <option value="5500ms">'5500ms'</option>
+      <option value="8.345s">'8.345s'</option>
+    </select>
+  </p>
 
   <div id="testdetails">
     <p><b>Scenario:</b> ???</p>

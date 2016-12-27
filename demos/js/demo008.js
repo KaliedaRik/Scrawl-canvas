@@ -116,25 +116,22 @@ var mycode = function() {
 
 	//tweens
 	scrawl.makeTween({
-		name: 'goldTween',
-		targets: scrawl.entity.goldwheel,
-		start: {
-			pathPlace: 0
-		},
-		end: {
-			pathPlace: 1
-		},
-		duration: 10000,
-		nextTween: 'goldTween',
-	}).run();
-	scrawl.animation.goldTween.clone({
-		name: 'pinkTween',
-		targets: scrawl.entity.pinkwheel,
-		nextTween: 'pinkTween',
+		order: 0,
+		name: 'pathTween',
+		duration: '10s',
+		targets: ['goldwheel', 'pinkwheel'],
+		cycles: 0,
+		definitions: [{
+			attribute: 'pathPlace',
+			start: 0,
+			end: 1,
+			engine: 'linear'
+		}]
 	}).run();
 
 	//animation object
 	scrawl.makeAnimation({
+		order: 1,
 		fn: function() {
 			if (myEntity) {
 				bendy.buildPositions();

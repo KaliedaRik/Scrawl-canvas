@@ -10,16 +10,20 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 098</h1>
-  <h2>Entity tween animation #3 - cloning tweens</h2>
+  <h2>Actions and tickers</h2>
   <h3>Extensions: block, animation</h3>
-  <p>Click on a block to clone the tween to it</p>
-  <p>
-    <i>Tweening: startY; clone on demand, killOnComplete</i>
-  </p>
+  <p><i>Demo includes a test to make sure that we can change subscribed tween/action attributes via the ticker</i></p>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
   <p id="testmessage"></p>
+
+  <p>Tween cycle end directive:
+    <select class="controlItem" id="loop">
+      <option value="loop">loop</option>
+      <option value="reverse">reverse</option>
+    </select>
+  </p>
 
   <div id="testdetails">
     <p><b>Scenario:</b> ???</p>

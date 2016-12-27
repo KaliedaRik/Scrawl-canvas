@@ -7,7 +7,7 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//entitys
+	// entitys
 	scrawl.makeWheel({
 		name: 'circle1',
 		startX: 50,
@@ -28,59 +28,116 @@ var mycode = function() {
 	}).clone({
 		name: 'circle4',
 		startY: 350,
+		roll: 90
 	});
 
-	//tweens
+	// tickers
+	scrawl.makeTicker({
+		name: 'myTicker',
+		duration: 4000,
+		cycles: 0
+	});
+
+	// tweens
 	scrawl.makeTween({
 		name: 'tween1',
-		targets: scrawl.entity.circle1,
-		start: {
-			startX: 50,
-			globalAlpha: 1,
-			scale: 1,
-		},
-		end: {
-			startX: 550,
-			globalAlpha: 0.2,
-			lineDashOffset: -100,
-			scale: 0.4,
-		},
-		duration: 3500,
-	}).run();
-	scrawl.animation.tween1.clone({
-		targets: scrawl.entity.circle2,
-		start: {
-			startX: '9.2%',
-			globalAlpha: 1,
-			scale: 1,
-		},
-		end: {
-			startX: '91%',
-			globalAlpha: 0.2,
-			lineDashOffset: -100,
-			scale: 1.3,
-		},
-		onComplete: {
-			startX: '9.2%',
-		},
-		count: 4,
-		autoReverseAndRun: true,
-	}).run();
-	scrawl.animation.tween1.clone({
-		targets: scrawl.entity.circle3,
-		duration: 2500,
-		count: 2,
-		autoReverseAndRun: true,
-	}).run();
-	scrawl.animation.tween1.clone({
-		targets: scrawl.entity.circle4,
+		ticker: 'myTicker',
+		duration: '50%',
+		time: '25%',
+		targets: 'circle1',
+		reverseOnCycleEnd: true,
+		definitions: [
+			{
+				attribute: 'startX',
+				start: 50,
+				end: 550,
+				engine: 'easeOutIn3',
+				integer: true
+			},
+			{
+				attribute: 'globalAlpha',
+				start: 1,
+				end: 0.3,
+				engine: 'linear'
+			},
+			{
+				attribute: 'roll',
+				start: 0,
+				end: 360,
+				engine: 'easeOutIn3'
+			}
+		]
+	}).clone({
+		name: 'tween2',
+		time: 0,
 		duration: 3000,
-		count: true,
-		autoReverseAndRun: true,
+		targets: 'circle2',
+		definitions: [
+			{
+				attribute: 'startX',
+				start: 50,
+				end: 550,
+				engine: 'easeIn3'
+			}
+		]
+	});
+
+	scrawl.animation.myTicker.run();
+
+
+	scrawl.makeTween({
+		name: 'tween3',
+		duration: '4s',
+		targets: 'circle3',
+		cycles: 5,
+		reverseOnCycleEnd: true,
+		definitions: [
+			{
+				attribute: 'startX',
+				start: '10%',
+				end: '90%',
+				engine: 'easeIn4'
+			},
+			{
+				attribute: 'scale',
+				start: 1,
+				end: 0.2
+			}
+		]
+	}).run();
+
+	scrawl.tween.tween3.clone({
+		name: 'tween4',
+		targets: 'circle4',
+		definitions: [
+			{
+				attribute: 'startX',
+				start: '10%',
+				end: '90%',
+				engine: 'easeOut4'
+			},
+			{
+				attribute: 'startAngle',
+				start: 0,
+				end: 90
+			},
+			{
+				attribute: 'endAngle',
+				start: 360,
+				end: 270
+			},
+			{
+				attribute: 'handleX',
+				engine: 'easeOut4',
+				start: 0,
+				end: -40
+			}
+		]
 	}).run();
 
 	//animation object
 	scrawl.makeAnimation({
+		order: 1,
 		fn: function() {
 			scrawl.render();
 

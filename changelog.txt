@@ -45,6 +45,33 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+to 161226
+	- complete rewrite of Tweens and Timelines
+		- THESE ARE BREAKING CHANGES
+			- next version will be v6.0.0
+		- existing code too complicated
+			- abandoned existing conceptual model, and all associated code
+			- Ticker objects are (relatively) simple animation objects
+			- Tween and Action objects now subscribe to Tickers
+		- new model follows a subscribe concept
+			- only Tickers keep track of sequenced time; tickers are animation objects
+			- Tweens and Actions subscribe to Tickers
+			- tween definition radically changed
+				- from onCommence/start/end/onComplete structure
+				- to attribute-specific objects
+			- 
+		- coding to date:
+			- introduced new Animation object - Ticker
+			- new Tween section added to Scrawl library
+			- Tween code completely rewritten to make use of Ticker
+			- Action code reconceptualised, and rewritten to use Tickers
+			- Tween and Action objects saved in scrawl.tween - Tweens are no longer animation objects
+			- Timeline code binned
+		- rewritten demos: 004, 008, 096, 097, 098, 099, 100
+			- tested all demos in Firefox
+				- needs updating: 207, 504
+				- broken: 68, 81, 107, 113, 116, 117, 210, 212
+
 161217
 	- version 5.0.5 released
 	- inline documentation updated

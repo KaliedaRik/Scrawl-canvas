@@ -109,26 +109,24 @@ var mycode = function() {
 	scrawl.addListener('down', getWheel, scrawl.canvas.mycanvas);
 	scrawl.addListener(['up', 'leave'], dropWheel, scrawl.canvas.mycanvas);
 
-	//tweens
+	//tween
 	scrawl.makeTween({
-		name: 'goldTween',
-		targets: scrawl.entity.goldwheel,
-		start: {
-			pathPlace: 0
-		},
-		end: {
-			pathPlace: 1
-		},
-		duration: 10000,
-		count: true
-	}).run();
-	scrawl.animation.goldTween.clone({
-		name: 'pinkTween',
-		targets: scrawl.entity.pinkwheel
+		order: 0,
+		name: 'pathTween',
+		duration: '10s',
+		targets: ['goldwheel', 'pinkwheel'],
+		cycles: 0,
+		definitions: [{
+			attribute: 'pathPlace',
+			start: 0,
+			end: 1,
+			engine: 'linear'
+		}]
 	}).run();
 
 	//animation object
 	scrawl.makeAnimation({
+		order: 1,
 		fn: function() {
 
 			//update curve
