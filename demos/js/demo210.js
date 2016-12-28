@@ -11,8 +11,7 @@ var mycode = function() {
 	var stack,
 		buttons = [],
 		moveButton,
-		left = '10%',
-		right = '90%',
+		color,
 		i;
 
 	//add stack to web page
@@ -31,10 +30,15 @@ var mycode = function() {
 	buttons.push(scrawl.element.button2);
 	buttons.push(scrawl.element.button3);
 
+	color = scrawl.makeColor();
+	scrawl.element.button1.set({
+		color: color
+	});
+
 	//position and size buttons
 	for (i = 0; i < 4; i++) {
 		buttons[i].set({
-			startX: left,
+			startX: '20%',
 			startY: (i * 50) + 20,
 			width: 100,
 			height: 40,
@@ -44,109 +48,115 @@ var mycode = function() {
 	}
 	scrawl.renderElements();
 
+
+
 	scrawl.makeTween({
 		name: 'button0',
 		targets: buttons,
-		start: {
-			startX: left,
-			roll: 0
-		},
-		engines: {
-			startX: 'easeOutIn3',
-			roll: 'easeOutIn3'
-		},
-		end: {
-			startX: right,
-			roll: 360
-		},
-		onComplete: {
-			startX: left,
-			roll: 0
-		},
 		duration: 3000,
-		lockObjects: true,
-		count: 2,
-		autoReverseAndRun: true
-	}).clone({
+		cycles: 2,
+		reverseOnCycleEnd: true,
+		definitions: [{
+			attribute: 'startX',
+			start: '20%',
+			end: '120%',
+			engine: 'easeOutIn3'
+		}, {
+			attribute: 'roll',
+			start: 0,
+			end: 360,
+			engine: 'easeOutIn3'
+		}]
+	});
+
+	scrawl.makeTween({
 		name: 'button1',
 		targets: scrawl.element.button1,
-		start: {
-			startX: left,
-			roll: 0,
-			scale: 1,
-			fontSize: '100%'
-		},
-		end: {
-			startX: right,
-			roll: 360,
-			scale: 2,
-			fontSize: '200%'
-		},
-		onComplete: {
-			startX: left,
-			roll: 0,
-			scale: 1,
-			fontSize: '100%'
-		},
-		engines: {
-			startX: 'easeIn5',
-			roll: 'easeOut5'
-		}
-	}).clone({
+		duration: 3000,
+		cycles: 2,
+		reverseOnCycleEnd: true,
+		definitions: [{
+			attribute: 'startX',
+			start: '20%',
+			end: '120%',
+			engine: 'easeIn5'
+		}, {
+			attribute: 'roll',
+			start: 0,
+			end: 360,
+			engine: 'easeOut5'
+		}, {
+			attribute: 'scale',
+			start: 1,
+			end: 2
+		}, {
+			attribute: 'fontSize',
+			start: '100%',
+			end: '200%'
+		}, {
+			attribute: 'color',
+			start: 0,
+			end: 255,
+			engine: function(start, change, progress){
+				var r = Math.round(change * progress);
+				color.set({r: r});
+				return color.get();
+			}
+		}]
+	});
+
+	scrawl.makeTween({
 		name: 'button2',
 		targets: scrawl.element.button2,
-		start: {
-			startX: left,
-			height: 40
-		},
-		end: {
-			startX: right,
-			height: 100
-		},
-		onComplete: {
-			startX: left,
-			height: 40
-		},
-		engines: {
-			startX: 'easeIn3',
-			height: 'easeIn3'
-		},
-		duration: 2000
-	}).clone({
+		duration: 3000,
+		cycles: 2,
+		reverseOnCycleEnd: true,
+		definitions: [{
+			attribute: 'startX',
+			start: '20%',
+			end: '120%',
+			engine: 'easeIn3'
+		}, {
+			attribute: 'height',
+			start: 40,
+			end: 100,
+			engine: 'easeIn3'
+		}]
+	});
+	scrawl.makeTween({
 		name: 'button3',
 		targets: [scrawl.element.button1, buttons[3]],
-		start: {
-			startX: left,
-			roll: 0,
-			pitch: 0,
-			yaw: 0
-		},
-		end: {
-			startX: right,
-			roll: 360,
-			pitch: 360,
-			yaw: 360
-		},
-		onComplete: {
-			startX: left,
-			roll: 0,
-			pitch: 0,
-			yaw: 0
-		},
-		engines: {
-			startX: 'easeOutIn3',
-			roll: 'easeOut4',
-			pitch: 'in',
-			yaw: 'out'
-		},
-		duration: 4000
+		duration: 3000,
+		cycles: 2,
+		reverseOnCycleEnd: true,
+		definitions: [{
+			attribute: 'startX',
+			start: '20%',
+			end: '120%',
+			engine: 'easeOutIn3'
+		}, {
+			attribute: 'roll',
+			start: 0,
+			end: 360,
+			engine: 'easeOutIn3'
+		}, {
+			attribute: 'pitch',
+			start: 0,
+			end: 360,
+			engine: 'in'
+		}, {
+			attribute: 'yaw',
+			start: 0,
+			end: 360,
+			engine: 'out'
+		}]
 	});
 
 	//button event listeners
 	moveButton = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
-		scrawl.animation[e.target.id].run();
+		scrawl.tween[e.target.id].run();
 	};
 	scrawl.addListener('up', moveButton, [
 		scrawl.elm.button0,
@@ -173,7 +183,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['animation', 'stacks'],
+	extensions: ['animation', 'stacks', 'color'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

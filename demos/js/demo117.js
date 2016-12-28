@@ -248,9 +248,6 @@ var mycode = function() {
 			case 'run':
 				myTimeline.run();
 				break;
-			case 'reset':
-				myTimeline.reset();
-				break;
 			case 'halt':
 				myTimeline.halt();
 				break;

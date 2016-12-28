@@ -15,13 +15,7 @@ var mycode = function() {
 		mycopytext = scrawl.element.mycopytext,
 		myrule = scrawl.element.myrule,
 		coreItems,
-		tweenFadeOutImg, tweenTitle, tweenGrowStack,
-		tweenText, tweenGrowRule,
-		tweensActive = false,
-		tweenCounter = 0,
-		tweenReduce,
-		expanded = false,
-		mouseIn, mouseOut, triggerTween,
+		timeline,
 		here;
 
 	// prepare elements
@@ -76,141 +70,118 @@ var mycode = function() {
 	// initial render to position elements
 	scrawl.renderElements();
 
-	// define animation tweens
-	// (needs to be rewritten to make use of timelines)
-	tweenReduce = function() {
-		//check to see if this is the last remaining tween (plus the animation loop) still running
-		if (tweenCounter) {
-			tweenCounter--;
-		}
-		if (!tweenCounter) {
-			tweensActive = false;
-			expanded = !expanded;
-		}
-	};
-	tweenFadeOutImg = scrawl.makeTween({
-		start: {
-			opacity: 1,
-			width: '99%',
-			height: '99%'
-		},
-		end: {
-			opacity: 0.6,
-			width: '94%',
-			height: '94%'
-		},
-		engines: {
-			opacity: 'easeOutIn',
-			width: 'easeOutIn5',
-			height: 'easeOutIn5'
-		},
-		targets: [penguin],
-		duration: 800,
-		callback: tweenReduce
-	});
-	tweenText = scrawl.makeTween({
-		start: {
-			opacity: 0,
-			startY: '70%',
-			fontSize: '75%'
-		},
-		end: {
-			opacity: 1,
-			startY: '55%',
-			fontSize: '105%'
-		},
-		engines: {
-			opacity: 'easeOutIn',
-			startY: 'easeOutIn'
-		},
-		targets: [mycopytext],
-		duration: 800,
-		callback: tweenReduce
-	});
-	tweenTitle = scrawl.makeTween({
-		start: {
-			opacity: 0,
-			pitch: 90,
-			startY: '10%',
-			fontSize: '100%'
-		},
-		end: {
-			opacity: 1,
-			pitch: 0,
-			startY: '25%',
-			fontSize: '250%'
-		},
-		engines: {
-			opacity: 'easeIn4',
-			pitch: 'easeOutIn',
-			startY: 'easeOutIn'
-		},
-		targets: [mytitle],
-		duration: 800,
-		callback: tweenReduce
-	});
-	tweenGrowStack = scrawl.makeTween({
-		start: {
-			scale: 1
-		},
-		end: {
-			scale: 1.40
-		},
-		engines: {
-			scale: 'easeOutIn'
-		},
-		targets: [mystack],
-		duration: 800,
-		callback: tweenReduce
-	});
-	tweenGrowRule = scrawl.makeTween({
-		start: {
-			opacity: 0,
-			width: '60%'
-		},
-		end: {
-			opacity: 1,
-			width: '75%'
-		},
-		engines: {
-			opacity: 'easeOutIn',
-			width: 'easeOutIn'
-		},
-		targets: [myrule],
-		duration: 800,
-		callback: tweenReduce
+	// tweens
+	timeline = scrawl.makeTicker({
+		name: 'myTimeline',
+		duration: 800
 	});
 
-	// define the event listener routines
-	triggerTween = function() {
-		tweensActive = true;
-		tweenCounter = 5;
-		tweenGrowStack.run();
-		tweenFadeOutImg.run();
-		tweenText.run();
-		tweenTitle.run();
-		tweenGrowRule.run();
-	};
-	mouseIn = function() {
-		if (!expanded) {
-			tweenGrowStack.reverse = false;
-			tweenFadeOutImg.reverse = false;
-			tweenText.reverse = false;
-			tweenTitle.reverse = false;
-			tweenGrowRule.reverse = false;
-			triggerTween();
+	scrawl.makeTween({
+		name: 'growStack',
+		ticker: 'myTimeline',
+		targets: mystack,
+		start: '0%',
+		duration: '100%',
+		definitions: [{
+			attribute: 'scale',
+			start: 1,
+			end: 1.4,
+			engine: 'easeOutIn'
+		}]
+	}).clone({
+		name: 'fadeOutImage',
+		targets: penguin,
+		definitions: [{
+			attribute: 'opacity',
+			start: 1,
+			end: 0.6,
+			engine: 'easeOutIn'
+		}, {
+			attribute: 'width',
+			start: '99%',
+			end: '94%',
+			engine: 'easeOutIn5'
+		}, {
+			attribute: 'height',
+			start: '99%',
+			end: '94%',
+			engine: 'easeOutIn5'
+		}]
+	}).clone({
+		name: 'moveText',
+		targets: mycopytext,
+		definitions: [{
+			attribute: 'opacity',
+			start: 0,
+			end: 1,
+			engine: 'easeOutIn'
+		}, {
+			attribute: 'startY',
+			start: '70%',
+			end: '55%',
+			engine: 'easeOutIn'
+		}, {
+			attribute: 'fontSize',
+			start: '75%',
+			end: '105%'
+		}]
+	}).clone({
+		name: 'moveTitle',
+		targets: mytitle,
+		definitions: [{
+			attribute: 'opacity',
+			start: 0,
+			end: 1,
+			engine: 'easeIn4'
+		}, {
+			attribute: 'pitch',
+			start: 90,
+			end: 0,
+			engine: 'easeOutIn'
+		}, {
+			attribute: 'startY',
+			start: '10%',
+			end: '25%',
+			engine: 'easeOutIn'
+		}, {
+			attribute: 'fontSize',
+			start: '100%',
+			end: '250%'
+		}]
+	}).clone({
+		name: 'growRule',
+		targets: myrule,
+		definitions: [{
+			attribute: 'opacity',
+			start: 0,
+			end: 1,
+			engine: 'easeOutIn'
+		}, {
+			attribute: 'width',
+			start: '60%',
+			end: '75%',
+			engine: 'easeOutIn'
+		}]
+	});
+
+	// event listeners
+	scrawl.addListener('enter', function(e){
+		if(timeline.active){
+			timeline.reverse().resume();
 		}
-	};
-	mouseOut = function() {
-		if (expanded) {
-			tweenGrowStack.reverse = true;
-			tweenFadeOutImg.reverse = true;
-			tweenText.reverse = true;
-			tweenTitle.reverse = true;
-			tweenGrowRule.reverse = true;
-			triggerTween();
+		else{
+			timeline.reset().resume();
 		}
-	};
+	}, actionZone);
+
+	scrawl.addListener('leave', function(e){
+		if(timeline.active){
+			timeline.reverse().resume();
+		}
+		else{
+			timeline.complete().resume();
+		}
+	}, actionZone);
 
 	// animation object
 	scrawl.makeAnimation({
@@ -218,17 +189,8 @@ var mycode = function() {
 		fn: function() {
 
 			//only need to render the elements while they're being animated
-			if (tweensActive) {
+			if (timeline.active) {
 				scrawl.renderElements();
-			}
-			else {
-				here = mystack.getMouse();
-				if (here.active) {
-					mouseIn();
-				}
-				else {
-					mouseOut();
-				}
 			}
 
 			//hide-start

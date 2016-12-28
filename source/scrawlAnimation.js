@@ -1390,6 +1390,22 @@ Change the supplied attributes for each subscribed tween and action
 			return this;
 		};
 		/**
+Bulk-change the playing direction for all subscribed tweens and actions
+
+@method changeSubscriberDirection
+@chainable
+@return this
+**/
+		my.Ticker.prototype.changeSubscriberDirection = function() {
+			var subs = [].concat(this.subscribers),
+				sub;
+			for(var i = 0, iz = subs.length; i < iz; i++){
+				sub = scrawl.tween[subs[i]];
+				sub.reversed = !sub.reversed;
+			}
+			return this;
+		};
+		/**
 Start ticker from 0
 
 @method run
@@ -1399,6 +1415,7 @@ Start ticker from 0
 			if(!this.active){
 				this.startTime = this.currentTime = Date.now();
 				this.cycleCount = 0;
+				this.updateSubscribers({ reversed: false });
 				this.active = true;
 				this.fn(true);
 				my.pushUnique(my.work.animate, this.name);
@@ -1418,8 +1435,46 @@ Reset ticker to initial conditions
 			}
 			this.startTime = this.currentTime = Date.now();
 			this.cycleCount = 0;
+			this.updateSubscribers({ reversed: false });
 			this.active = true;
 			this.fn(true);
+			this.active = false;
+			return this;
+		};
+		/**
+Reset ticker to final conditions
+
+@method complete
+@return this
+**/
+		my.Ticker.prototype.complete = function() {
+			if(this.active){
+				this.halt();
+			}
+			this.startTime = this.currentTime = Date.now();
+			this.cycleCount = 0;
+			this.updateSubscribers({ reversed: true });
+			this.active = true;
+			this.fn();
+			this.active = false;
+			return this;
+		};
+		/**
+Reverse tracker direction and continue playing
+
+@method reverse
+@return this
+**/
+		my.Ticker.prototype.reverse = function() {
+			var timePlayed;
+			if(this.active){
+				this.halt();
+			}
+			timePlayed = this.currentTime - this.startTime;
+			this.startTime = this.currentTime - (this.effectiveDuration - timePlayed);
+			this.changeSubscriberDirection();
+			this.active = true;
+			this.fn();
 			this.active = false;
 			return this;
 		};
