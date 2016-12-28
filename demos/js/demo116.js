@@ -37,22 +37,14 @@ var mycode = function() {
 		order: 1
 	});
 
-	myTimeline = scrawl.makeTimeline({
-		name: 'disappearTimeline'
+	myTimeline = scrawl.makeTicker({
+		name: 'disappear'
 	});
 
 	for (k = 0; k < 5; k++) {
-		myTimeline.addTween({
+		scrawl.makeTween({
 			name: 'sequenceTween' + k,
-			start: {
-				scale: 2
-			},
-			end: {
-				scale: 0.001
-			},
-			engines: {
-				scale: 'easeIn'
-			},
+			ticker: 'disappear',
 			duration: 8000,
 			time: k * 800,
 			targets: [
@@ -61,6 +53,14 @@ var mycode = function() {
 				'dot_' + k + '2',
 				'dot_' + k + '3',
 				'dot_' + k + '4'
+			],
+			definitions: [
+				{
+					attribute: 'scale',
+					start: 2,
+					end: 0.001,
+					engine: 'easeIn'
+				}
 			]
 		});
 	}
@@ -96,7 +96,6 @@ var mycode = function() {
 			switch (button.name) {
 				case 'runButton':
 					myTimeline.halt();
-					myTimeline.seekTo(1);
 					myTimeline.run();
 					break;
 				default:

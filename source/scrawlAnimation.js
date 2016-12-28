@@ -1100,25 +1100,22 @@ Make a new tickerupdate customEvent object
 @return customEvent object, or null if browser does not support custom events
 **/
 		my.Ticker.prototype.makeTickerUpdateEvent = function() {
-			var e = null;
+			var e = null,
+				data = {
+					name: this.name,
+					type: 'Ticker',
+					tick: this.tick,
+					reverseTick: this.effectiveDuration - this.tick
+				};
 			if (window.MSInputMethodContext) {
 				//do IE9-11 stuff
 				e = document.createEvent('CustomEvent');
-				e.initCustomEvent("tickerupdate", true, true, {
-					name: this.name,
-					type: 'Ticker',
-					tick: this.tick
-				});
+				e.initCustomEvent("tickerupdate", true, true, data);
 			}
 			else {
 				if (window.CustomEvent) {
 					e = new CustomEvent('tickerupdate', {
-						detail: {
-							name: this.name,
-							type: 'Ticker',
-							tick: this.tick,
-							reverseTick: this.effectiveDuration - this.tick
-						},
+						detail: data,
 						bubbles: true,
 						cancelable: true
 					});
@@ -1296,11 +1293,12 @@ Animation function
 
 @method fn
 @chainable
+@param {Boolean} [reverseOrder] when true, perform update from last subscriber to first; default false
 @private
 @return this
 **/
-		my.Ticker.prototype.fn = function() {
-			var i, iz, sub,
+		my.Ticker.prototype.fn = function(reverseOrder) {
+			var i, iz, subs, sub, eTime, now, e,
 				t = my.tween,
 				result = {
 					tick: 0,
@@ -1308,6 +1306,7 @@ Animation function
 					willLoop: false,
 					next: false
 				};
+			reverseOrder = my.xt(reverseOrder) ? reverseOrder : false;
 			if(this.active && this.startTime){
 				if(!this.cycles || this.cycleCount < this.cycles){
 					this.currentTime = Date.now();
@@ -1344,11 +1343,24 @@ Animation function
 							result.next = true;
 						}
 					}
-					for(i = 0, iz = this.subscribers.length; i < iz; i++){
-						sub = t[this.subscribers[i]];
+					subs = [].concat(this.subscribers);
+					if(reverseOrder){
+						subs.reverse();
+					}
+					for(i = 0, iz = subs.length; i < iz; i++){
+						sub = t[subs[i]];
 						sub.update(result);
 					}
 					// need to add in here code for triggering makeTickerUpdateEvent calls
+					if(this.eventChoke){
+						eTime = this.lastEvent + this.eventChoke;
+						now = Date.now();
+						if(eTime < now){
+							e = this.makeTickerUpdateEvent();
+							window.dispatchEvent(e);
+							this.lastEvent = now;
+						}
+					}
 					if(!this.active){
 						this.halt();
 					}
@@ -1386,13 +1398,9 @@ Start ticker from 0
 		my.Ticker.prototype.run = function() {
 			if(!this.active){
 				this.startTime = this.currentTime = Date.now();
-				this.updateSubscribers({
-					reversed: false,
-					triggered: false,
-					status: 'before'
-				}, true);
-				this.active = true;
 				this.cycleCount = 0;
+				this.active = true;
+				this.fn(true);
 				my.pushUnique(my.work.animate, this.name);
 				my.work.resortAnimations = true;
 			}
@@ -1405,17 +1413,14 @@ Reset ticker to initial conditions
 @return this
 **/
 		my.Ticker.prototype.reset = function() {
-			this.startTime = this.currentTime = Date.now();
-			this.fn();
 			if(this.active){
 				this.halt();
 			}
-			this.updateSubscribers({
-				reversed: false,
-				triggered: false,
-				status: 'before'
-			}, true);
+			this.startTime = this.currentTime = Date.now();
 			this.cycleCount = 0;
+			this.active = true;
+			this.fn(true);
+			this.active = false;
 			return this;
 		};
 		/**
@@ -1459,7 +1464,8 @@ seekTo a different specific point on the ticker
 @return this
 **/
 		my.Ticker.prototype.seekTo = function(milliseconds, resume) {
-			var xtGet = my.xtGet;
+			var xtGet = my.xtGet,
+				backwards = false;
 			milliseconds = xtGet(milliseconds, 0);
 			resume = xtGet(resume, false);
 			if(this.active){
@@ -1468,15 +1474,16 @@ seekTo a different specific point on the ticker
 			if(this.cycles && this.cycleCount >= this.cycles){
 				this.cycleCount = this.cycles - 1;
 			}
+			if(milliseconds < this.tick){
+				backwards = true;
+			}
 			this.currentTime =  Date.now();
 			this.startTime = this.currentTime - milliseconds;
+			this.active = true;
+			this.fn(backwards);
+			this.active = false;
 			if(resume){
 				this.resume();
-			}
-			else{
-				this.active = true;
-				this.fn();
-				this.active = false;
 			}
 			return this;
 		};
@@ -1489,7 +1496,8 @@ seekFor a different relative point on the ticker
 @return this
 **/
 		my.Ticker.prototype.seekFor = function(milliseconds, resume) {
-			var xtGet = my.xtGet;
+			var xtGet = my.xtGet,
+				backwards = false;
 			milliseconds = xtGet(milliseconds, 0);
 			milliseconds = xtGet(resume, false);
 			if(this.active){
@@ -1499,13 +1507,14 @@ seekFor a different relative point on the ticker
 				this.cycleCount = this.cycles - 1;
 			}
 			this.startTime -= milliseconds;
+			if(milliseconds < 0){
+				backwards = true;
+			}
+			this.active = true;
+			this.fn(backwards);
+			this.active = false;
 			if(resume){
 				this.resume();
-			}
-			else{
-				this.active = true;
-				this.fn();
-				this.active = false;
 			}
 			return this;
 		};
@@ -2013,6 +2022,19 @@ Remove this Action from the scrawl library
 			delete my.tween[this.name];
 			my.removeItem(my.tweennames, this.name);
 			return true;
+		};
+	/**
+Update target attributes
+@method updateTargets
+@param {Object} items - containing key:value attributes to be forwarded to target set() functions
+@chainable
+@return this
+**/
+		my.Action.prototype.updateTargets = function(items) {
+			for(var i = 0, iz = this.targets.length; i < iz; i++){
+				this.targets[i].set(items);
+			}
+			return this;
 		};
 	/**
 # Tween

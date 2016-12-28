@@ -7,17 +7,37 @@
   <link href="css/demo.css" rel="stylesheet" />
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <style type="text/css">
+    .slideContainer {
+      width: 100%;
+    }
+    #seeker {
+      width: 50%;
+    }
+  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 117</h1>
-  <h2>Scrawl timelines #2</h2>
+  <h2>Ticker event</h2>
   <h3>Extensions: images, wheel, animation</h3>
+
+  <div>
+    <button class="controls" id="run">Run</button>
+    <button class="controls" id="reset">Reset</button>
+    <button class="controls" id="halt">Halt</button>
+    <button class="controls" id="resume">Resume</button>
+  </div>
 
   <canvas id="myCanvas" width="400" height="400"></canvas>
   <img src="img/iris.png" id="flower" />
 
   <p id="testmessage"></p>
+
+  <div class="slideContainer controls">Seek to:
+    <input id="seeker" type="range" value="0" min="0" max="13500" step="20" />
+    <span id="slideValue">0</span>ms
+  </div>
 
   <!-- test details block -->
   <div id="testdetails">

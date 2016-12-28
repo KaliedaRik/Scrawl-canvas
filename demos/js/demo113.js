@@ -94,14 +94,10 @@ var mycode = function() {
 		time: '50%',
 		targets: scrawl.group.col4Group.entitys,
 		action: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({scale: 1.4});
-			}
+			this.updateTargets({scale: 1.4});
 		},
 		revert: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({scale: 1});
-			}
+			this.updateTargets({scale: 1});
 		}
 	});
 
@@ -198,7 +194,7 @@ var mycode = function() {
 
 	//event listeners
 	document.getElementById('duration').value = '10000';
-	mySlider = document.getElementById('seeker');
+	var mySlider = document.getElementById('seeker');
 	mySlider.value = '0';
 	// need a choke to prevent the listeners firing multiple times - each element has multiple listeners on it
 	// also, e.target.value may often return a number, not a string
