@@ -45,6 +45,12 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+to 161228
+	- tweens and timelines refactor completed
+		- fixing Ticker, Action and Tween bugs
+		- fixed demos 113, 116, 117, 210, 212
+		- fixed non-tween demos 068, 081 - others now working too.
+		
 to 161226
 	- complete rewrite of Tweens and Timelines
 		- THESE ARE BREAKING CHANGES

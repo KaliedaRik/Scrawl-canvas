@@ -33,9 +33,9 @@ var mycode = function() {
 	document.getElementById('cellgrad_endX_abs').value = 600;
 	document.getElementById('cellgrad_endY_abs').value = 400;
 	document.getElementById('cellgrad_startX_rel').value = 0;
-	document.getElementById('cellgrad_startY_rel').value = 100;
-	document.getElementById('cellgrad_endX_rel').value = 0;
-	document.getElementById('cellgrad_endY_rel').value = 0;
+	document.getElementById('cellgrad_startY_rel').value = 0;
+	document.getElementById('cellgrad_endX_rel').value = 100;
+	document.getElementById('cellgrad_endY_rel').value = 100;
 	document.getElementById('entityblock_startX_abs').value = 450;
 	document.getElementById('entityblock_startY_abs').value = 200;
 	document.getElementById('entityblock_handleX_abs').value = 0;
@@ -55,14 +55,18 @@ var mycode = function() {
 	document.getElementById('entitygrad_endX_abs').value = 100;
 	document.getElementById('entitygrad_endY_abs').value = 100;
 	document.getElementById('entitygrad_startX_rel').value = 0;
-	document.getElementById('entitygrad_startY_rel').value = 100;
-	document.getElementById('entitygrad_endX_rel').value = 0;
-	document.getElementById('entitygrad_endY_rel').value = 0;
+	document.getElementById('entitygrad_startY_rel').value = 0;
+	document.getElementById('entitygrad_endX_rel').value = 100;
+	document.getElementById('entitygrad_endY_rel').value = 100;
 	document.getElementById('flip').value = 'normal';
 
 	//code here
 	cellGrad = scrawl.makeGradient({
 		name: 'g1',
+		startX: 0,
+		startY: 0,
+		endX: 600,
+		endY: 400,
 		lockTo: false,
 		color: [{
 			color: 'red',
@@ -83,6 +87,10 @@ var mycode = function() {
 	});
 	entityGrad = scrawl.makeGradient({
 		name: 'g2',
+		startX: 0,
+		startY: 0,
+		endX: 100,
+		endY: 100,
 		lockTo: true,
 		color: [{
 			color: 'green',
