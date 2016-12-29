@@ -1020,6 +1020,7 @@ Locate a target object
 			this.subscribers = [];
 			this.duration = xtGet(items.duration, 0);
 			this.eventChoke = xtGet(items.eventChoke, 0);
+			this.killOnComplete = xtGet(items.killOnComplete, false);
 			this.cycles = xtGet(items.cycles, 1);
 			this.cycleCount = 0;
 			this.active = false;
@@ -1064,6 +1065,22 @@ If no duration is set, Ticker will set the last subscribed object's end time as 
 @default 0
 **/
 			duration: 0,
+			/**
+Array of String names of tween and action subscribers to this Ticker
+
+@property subscribers
+@type Array
+@default []
+**/
+			subscribers: [],
+			/**
+When set to true, Ticker will delete itself and any associated tweens from the scrawl library
+
+@property killOnComplete
+@type Boolean
+@default false
+**/
+			killOnComplete: false,
 			/**
 Number of times to cycle the ticker:
 
@@ -1363,6 +1380,9 @@ Animation function
 					}
 					if(!this.active){
 						this.halt();
+					}
+					if(this.killOnComplete && this.cycleCount >= this.cycles){
+						this.killTweens(true);
 					}
 				}
 			}
@@ -2117,6 +2137,7 @@ Update target attributes
 **/
 		my.Tween = function(items) {
 			var xtGet = my.xtGet,
+				xt = my.xt,
 				tickerName;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
@@ -2127,13 +2148,14 @@ Update target attributes
 			else{
 				this.targets = [];
 			}
-			this.definitions = my.xt(items.definitions) ? [].concat(items.definitions) : [];
+			this.definitions = xt(items.definitions) ? [].concat(items.definitions) : [];
 			this.setDefinitionsValues();
 			this.time = xtGet(items.time, 0);
 			this.duration = xtGet(items.duration, 0);
 			this.reverseOnCycleEnd = xtGet(items.reverseOnCycleEnd, false);
 			this.reversed = xtGet(items.reversed, false);
 			this.order = xtGet(items.order, 0);
+			this.action = (xt(items.action)) ? items.action : false;
 			this.status = 'before';
 			this.calculateEffectiveTime();
 			this.calculateEffectiveDuration();
@@ -2152,7 +2174,8 @@ Update target attributes
 					subscribers: this.name,
 					duration: this.effectiveDuration,
 					eventChoke: xtGet(items.eventChoke, 0),
-					cycles: xtGet(items.cycles, 1)
+					cycles: xtGet(items.cycles, 1),
+					killOnComplete: xtGet(items.killOnComplete, false)
 				});
 				this.ticker = tickerName;
 				my.animation[tickerName].recalculateEffectiveDuration();
@@ -2211,6 +2234,13 @@ Time - point (in milliseconds) following the start of the Tween's ticker when th
 @default 0
 **/
 			time: 0,
+			/**
+Function to be called at the end of each tween recalculation - takes no arguments
+@property action
+@type Function
+@default false
+**/
+			action: false,
 			/**
 Duration - time required for tween to run
 @property duration
@@ -2433,6 +2463,11 @@ Perform a simple update
 			// 5. Apply all definitions updates to target objects
 			for(j = 0, jz = this.targets.length; j < jz; j++){
 				this.targets[j].set(setObj);
+			}
+
+			// 6. perform any action
+			if(this.action){
+				this.action();
 			}
 			return true;
 		};

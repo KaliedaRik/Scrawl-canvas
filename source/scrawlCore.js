@@ -7260,7 +7260,7 @@ Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; ele
 **/
 		this.visibility = get(items.visibility, true);
 		/**
-Entity drawing method. A entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:
+Entity drawing method. An entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:
 
 * 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient
 * 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient
@@ -8457,10 +8457,10 @@ End circle radius, in pixels or percentage of entity/cell width
 		name: 'scrawl.v'
 	});
 	my.work.colv1 = my.makeVector({
-		name: 'scrawl.colv'
+		name: 'scrawl.colv1'
 	});
 	my.work.colv2 = my.makeVector({
-		name: 'scrawl.colv'
+		name: 'scrawl.colv2'
 	});
 
 	/**
@@ -8547,6 +8547,7 @@ Starts the animation loop
 **/
 	my.animationInit = function() {
 		my.makeAnimation({
+			name: 'viewportMasterAnimation',
 			fn: function() {
 				var dev = my.device,
 					testDims, testPos;

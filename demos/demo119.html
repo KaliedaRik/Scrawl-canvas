@@ -7,54 +7,15 @@
   <link href="css/demo.css" rel="stylesheet" />
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <style type="text/css">
-    #controls {
-      width: 400px;
-      text-align: center;
-    }
-    #slide {
-      width: 400px;
-      height: 30px;
-      position: relative;
-    }
-    #slideCounter {
-      display: inline-block;
-      position: absolute;
-      top: 10px;
-    }
-    #slideValue {
-      font-weight: bold;
-      color: #c00000;
-    }
-    #seeker {
-      display: inline-block;
-      width: 330px;
-      position: absolute;
-      top: 12px;
-      left: 60px;
-    }
-  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 119</h1>
-  <h2>Checking design set() functionality</h2>
-  <h3>Extensions: animation, wheel, images</h3>
+  <h2>Starfield</h2>
+  <h3>Extensions: animation, wheel</h3>
+  <p>A test to see how many tweens can be run simultaneously. Click on the canvas to add more tweens/stars</p>
 
-  <canvas id="myCanvas" width="400" height="400"></canvas>
-  <img src="img/iris.png" id="flower" />
-
-  <div id="controls">
-    <button id="run-button" class="control">Run</button>
-    <button id="halt-button" class="control">Halt</button>
-    <button id="resume-button" class="control">Resume</button>
-  </div>
-  <div id="slide">
-    <div id="slideCounter">
-      <span id="slideValue">0</span> ms
-    </div>
-    <input id="seeker" type="range" value="0" min="0" max="13500" step="10" class="control" />
-  </div>
+  <canvas id="myCanvas" width="600" height="600"></canvas>
 
   <p id="testmessage"></p>
 

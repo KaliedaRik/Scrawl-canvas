@@ -45,12 +45,16 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+161229
+	- new demo 119 to stress-test use of multiple tweens (thousands) in a scene
+	- updated demo index page
+	
 to 161228
 	- tweens and timelines refactor completed
 		- fixing Ticker, Action and Tween bugs
 		- fixed demos 113, 116, 117, 210, 212
 		- fixed non-tween demos 068, 081 - others now working too.
-		
+
 to 161226
 	- complete rewrite of Tweens and Timelines
 		- THESE ARE BREAKING CHANGES
@@ -65,7 +69,6 @@ to 161226
 			- tween definition radically changed
 				- from onCommence/start/end/onComplete structure
 				- to attribute-specific objects
-			- 
 		- coding to date:
 			- introduced new Animation object - Ticker
 			- new Tween section added to Scrawl library
