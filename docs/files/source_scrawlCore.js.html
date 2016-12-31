@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.5</em>
+            <em>API Docs for: 6.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -139,7 +139,7 @@
             
                 <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
             
-                <li><a href="../classes/Timeline.html">Timeline</a></li>
+                <li><a href="../classes/Ticker.html">Ticker</a></li>
             
                 <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
@@ -283,7 +283,7 @@
 /**
 # scrawlCore
 
-## Version 5.0.5 - 15 December 2016
+## Version 6.0.0 - 31 December 2016
 
 Developed by Rik Roots - &lt;rik.roots@gmail.com&gt;, &lt;rik@rikweb.org.uk&gt;
 
@@ -368,10 +368,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 5.0.5
+@default 6.0.0
 @final
 **/
-	my.version = &#x27;5.0.5&#x27;;
+	my.version = &#x27;6.0.0&#x27;;
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -1984,9 +1984,19 @@ A __general__ function to delete entity objects
 			iz,
 			j,
 			jz,
+			k,
+			kz,
+			t,
+			tz,
+			targets,
+			target,
+			targetFlag,
 			entityName,
 			contextName,
-			ri = my.removeItem;
+			ri = my.removeItem,
+			anim = my.animation,
+			animnames = my.animationnames,
+			a;
 		slice = Array.prototype.slice.call(arguments);
 		if (Array.isArray(slice[0])) {
 			slice = slice[0];
@@ -7510,7 +7520,7 @@ Visibility flag - entitys will (in general) not be drawn on a &amp;lt;canvas&amp
 **/
 		this.visibility = get(items.visibility, true);
 		/**
-Entity drawing method. A entity can be drawn onto a &amp;lt;canvas&amp;gt; element in a variety of ways; these methods include:
+Entity drawing method. An entity can be drawn onto a &amp;lt;canvas&amp;gt; element in a variety of ways; these methods include:
 
 * &#x27;draw&#x27; - stroke the entity&#x27;s path with the entity&#x27;s strokeStyle color, pattern or gradient
 * &#x27;fill&#x27; - fill the entity&#x27;s path with the entity&#x27;s fillStyle color, pattern or gradient
@@ -8707,10 +8717,10 @@ End circle radius, in pixels or percentage of entity/cell width
 		name: &#x27;scrawl.v&#x27;
 	});
 	my.work.colv1 = my.makeVector({
-		name: &#x27;scrawl.colv&#x27;
+		name: &#x27;scrawl.colv1&#x27;
 	});
 	my.work.colv2 = my.makeVector({
-		name: &#x27;scrawl.colv&#x27;
+		name: &#x27;scrawl.colv2&#x27;
 	});
 
 	/**
@@ -8797,6 +8807,7 @@ Starts the animation loop
 **/
 	my.animationInit = function() {
 		my.makeAnimation({
+			name: &#x27;viewportMasterAnimation&#x27;,
 			fn: function() {
 				var dev = my.device,
 					testDims, testPos;

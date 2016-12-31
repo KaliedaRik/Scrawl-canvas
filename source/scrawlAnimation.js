@@ -960,7 +960,7 @@ A __factory__ function to generate new Action objects
 		my.makeAction = function(items) {
 			return new my.Action(items);
 		};
-	/**
+		/**
 Locate a target object
 @method locateTarget
 @param {String} OBJECTNAME string of required target
@@ -972,11 +972,11 @@ Locate a target object
 				section, name, j, jz,
 				contains = my.contains,
 				xt = my.xt;
-			if(my.xt(item) && item.substring){
-				for(j = 0, jz = sections.length; j < jz; j++){
+			if (my.xt(item) && item.substring) {
+				for (j = 0, jz = sections.length; j < jz; j++) {
 					section = sections[j];
 					name = section + 'names';
-					if (xt(my[name]) && my[name].indexOf(item) >= 0){
+					if (xt(my[name]) && my[name].indexOf(item) >= 0) {
 						return my[section][item];
 					}
 				}
@@ -1029,7 +1029,7 @@ Locate a target object
 			this.currentTime = 0;
 			this.tick = 0;
 			this.lastEvent = 0;
-			if(items.subscribers){
+			if (items.subscribers) {
 				this.subscribe(items.subscribers);
 			}
 			this.setEffectiveDuration();
@@ -1110,7 +1110,7 @@ If the eventChoke attribute is set to 0 (default), no tickerupdate events are fi
 **/
 			eventChoke: 0
 		};
-	my.mergeInto(my.work.d.Ticker, my.work.d.Base);
+		my.mergeInto(my.work.d.Ticker, my.work.d.Base);
 		/**
 Make a new tickerupdate customEvent object
 @method makeTickerUpdateEvent
@@ -1153,20 +1153,20 @@ Add a Tween or Action's name to the Ticker's .subscribers array
 				item, safeItem, name,
 				pu = my.pushUnique,
 				so = my.safeObject;
-			for(i = 0, iz = myItems.length; i < iz; i++){
+			for (i = 0, iz = myItems.length; i < iz; i++) {
 				item = myItems[i];
-				if(item.substring){
+				if (item.substring) {
 					name = item;
 				}
-				else{
+				else {
 					safeItem = so(item);
 					name = safeItem.name || false;
 				}
-				if(name){
+				if (name) {
 					pu(this.subscribers, name);
 				}
 			}
-			if(myItems.length){
+			if (myItems.length) {
 				this.sortSubscribers();
 				this.recalculateEffectiveDuration();
 			}
@@ -1185,20 +1185,20 @@ Remove a Tween or Action's name from the Ticker's .subscribers array
 				item, safeItem, name,
 				ri = my.removeItem,
 				so = my.safeObject;
-			for(i = 0, iz = myItems.length; i < iz; i++){
+			for (i = 0, iz = myItems.length; i < iz; i++) {
 				item = items[i];
-				if(item.substring){
+				if (item.substring) {
 					name = item;
 				}
-				else{
+				else {
 					safeItem = so(item);
 					name = safeItem.name || false;
 				}
-				if(name){
+				if (name) {
 					ri(this.subscribers, name);
 				}
 			}
-			if(myItems.length){
+			if (myItems.length) {
 				this.sortSubscribers();
 				this.recalculateEffectiveDuration();
 			}
@@ -1215,18 +1215,18 @@ Recalculate the ticker's effective duration
 		my.Ticker.prototype.recalculateEffectiveDuration = function() {
 			var i, iz, obj, durationValue, duration = 0,
 				t = my.tween;
-			if(!this.duration){
-				for(i = 0, iz = this.subscribers.length; i < iz; i++){
+			if (!this.duration) {
+				for (i = 0, iz = this.subscribers.length; i < iz; i++) {
 					obj = t[this.subscribers[i]];
 					durationValue = obj.getEndTime();
-					if(durationValue > duration){
+					if (durationValue > duration) {
 						duration = durationValue;
 					}
 				}
 				this.effectiveDuration = duration;
 			}
-			else{
-				this.setEffectiveDuration();	// shouldn't cause an infinite loop ...
+			else {
+				this.setEffectiveDuration(); // shouldn't cause an infinite loop ...
 			}
 			return this;
 		};
@@ -1240,14 +1240,14 @@ Set the ticker's effective duration from this.duration
 **/
 		my.Ticker.prototype.setEffectiveDuration = function() {
 			var temp;
-			if(this.duration){
+			if (this.duration) {
 				temp = my.convertTime(this.duration);
-				if(temp[0] === '%'){
+				if (temp[0] === '%') {
 					// cannot use percentage values for ticker durations
 					this.duration = 0
 					this.recalculateEffectiveDuration();
 				}
-				else{
+				else {
 					this.effectiveDuration = temp[1];
 				}
 			}
@@ -1276,37 +1276,37 @@ Set attributes - restricted so that only subscribers, order, duration and cycles
 			items = my.safeObject(items);
 			var xt = my.xt,
 				i, iz, obj;
-			if(xt(items.order)){
+			if (xt(items.order)) {
 				this.order = items.order;
-				if(this.active){
+				if (this.active) {
 					my.work.resortAnimations = true;
 				}
 			}
-			if(xt(items.cycles)){
+			if (xt(items.cycles)) {
 				this.cycles = items.cycles;
-				if(!this.cycles){
+				if (!this.cycles) {
 					this.cycleCount = 0;
 				}
 			}
-			if(xt(items.subscribers)){
+			if (xt(items.subscribers)) {
 				this.subscribers = [];
 				this.subscribe(items.subscribers);
 			}
-			if(xt(items.duration)){
+			if (xt(items.duration)) {
 				this.duration = items.duration;
 				this.setEffectiveDuration();
-				for (i = 0, iz = this.subscribers.length; i < iz; i++){
+				for (i = 0, iz = this.subscribers.length; i < iz; i++) {
 					obj = my.tween[this.subscribers[i]];
 					obj.calculateEffectiveTime();
-					if(obj.type === 'Tween'){
+					if (obj.type === 'Tween') {
 						obj.calculateEffectiveDuration();
 					}
 				}
 			}
-			if(xt(items.killOnComplete)){
+			if (xt(items.killOnComplete)) {
 				this.killOnComplete = items.killOnComplete;
 			}
-			if(xt(items.eventChoke)){
+			if (xt(items.eventChoke)) {
 				this.eventChoke = items.eventChoke;
 			}
 			return this;
@@ -1330,64 +1330,64 @@ Animation function
 					next: false
 				};
 			reverseOrder = my.xt(reverseOrder) ? reverseOrder : false;
-			if(this.active && this.startTime){
-				if(!this.cycles || this.cycleCount < this.cycles){
+			if (this.active && this.startTime) {
+				if (!this.cycles || this.cycleCount < this.cycles) {
 					this.currentTime = Date.now();
 					this.tick = this.currentTime - this.startTime;
-					if(!this.cycles || this.cycleCount + 1 < this.cycles){
-						if(this.tick >= this.effectiveDuration){
+					if (!this.cycles || this.cycleCount + 1 < this.cycles) {
+						if (this.tick >= this.effectiveDuration) {
 							this.tick = 0;
 							this.startTime = this.currentTime;
 							result.tick = this.effectiveDuration;
 							result.reverseTick = 0;
 							result.willLoop = true;
-							if(this.cycles){
+							if (this.cycles) {
 								this.cycleCount++;
 							}
 						}
-						else{
+						else {
 							result.tick = this.tick;
 							result.reverseTick = this.effectiveDuration - this.tick;
 						}
 						result.next = true;
 					}
-					else{
-						if(this.tick >= this.effectiveDuration){
+					else {
+						if (this.tick >= this.effectiveDuration) {
 							result.tick = this.effectiveDuration;
 							result.reverseTick = 0;
 							this.active = false;
-							if(this.cycles){
+							if (this.cycles) {
 								this.cycleCount++;
 							}
 						}
-						else{
+						else {
 							result.tick = this.tick;
 							result.reverseTick = this.effectiveDuration - this.tick;
 							result.next = true;
 						}
 					}
 					subs = [].concat(this.subscribers);
-					if(reverseOrder){
+					if (reverseOrder) {
 						subs.reverse();
 					}
-					for(i = 0, iz = subs.length; i < iz; i++){
+					for (i = 0, iz = subs.length; i < iz; i++) {
 						sub = t[subs[i]];
 						sub.update(result);
 					}
 					// need to add in here code for triggering makeTickerUpdateEvent calls
-					if(this.eventChoke){
+					if (this.eventChoke) {
 						eTime = this.lastEvent + this.eventChoke;
 						now = Date.now();
-						if(eTime < now){
+						if (eTime < now) {
 							e = this.makeTickerUpdateEvent();
 							window.dispatchEvent(e);
 							this.lastEvent = now;
 						}
 					}
-					if(!this.active){
+					if (!this.active) {
 						this.halt();
 					}
-					if(this.killOnComplete && this.cycleCount >= this.cycles){
+					if (this.killOnComplete && this.cycleCount >= this.cycles) {
 						this.killTweens(true);
 					}
 				}
@@ -1406,11 +1406,11 @@ Change the supplied attributes for each subscribed tween and action
 **/
 		my.Ticker.prototype.updateSubscribers = function(items, reversed) {
 			var subs = [].concat(this.subscribers);
-			reversed = (my.xt(reversed)) ? reversed : false 
-			if(reversed){
+			reversed = (my.xt(reversed)) ? reversed : false
+			if (reversed) {
 				subs.reverse();
 			}
-			for(var i = 0, iz = subs.length; i < iz; i++){
+			for (var i = 0, iz = subs.length; i < iz; i++) {
 				scrawl.tween[subs[i]].set(items);
 			}
 			return this;
@@ -1425,7 +1425,7 @@ Bulk-change the playing direction for all subscribed tweens and actions
 		my.Ticker.prototype.changeSubscriberDirection = function() {
 			var subs = [].concat(this.subscribers),
 				sub;
-			for(var i = 0, iz = subs.length; i < iz; i++){
+			for (var i = 0, iz = subs.length; i < iz; i++) {
 				sub = scrawl.tween[subs[i]];
 				sub.reversed = !sub.reversed;
 			}
@@ -1438,10 +1438,12 @@ Start ticker from 0
 @return this
 **/
 		my.Ticker.prototype.run = function() {
-			if(!this.active){
+			if (!this.active) {
 				this.startTime = this.currentTime = Date.now();
 				this.cycleCount = 0;
-				this.updateSubscribers({ reversed: false });
+				this.updateSubscribers({
+					reversed: false
+				});
 				this.active = true;
 				this.fn(true);
 				my.pushUnique(my.work.animate, this.name);
@@ -1456,12 +1458,14 @@ Reset ticker to initial conditions
 @return this
 **/
 		my.Ticker.prototype.reset = function() {
-			if(this.active){
+			if (this.active) {
 				this.halt();
 			}
 			this.startTime = this.currentTime = Date.now();
 			this.cycleCount = 0;
-			this.updateSubscribers({ reversed: false });
+			this.updateSubscribers({
+				reversed: false
+			});
 			this.active = true;
 			this.fn(true);
 			this.active = false;
@@ -1474,12 +1478,14 @@ Reset ticker to final conditions
 @return this
 **/
 		my.Ticker.prototype.complete = function() {
-			if(this.active){
+			if (this.active) {
 				this.halt();
 			}
 			this.startTime = this.currentTime = Date.now();
 			this.cycleCount = 0;
-			this.updateSubscribers({ reversed: true });
+			this.updateSubscribers({
+				reversed: true
+			});
 			this.active = true;
 			this.fn();
 			this.active = false;
@@ -1493,7 +1499,7 @@ Reverse tracker direction and continue playing
 **/
 		my.Ticker.prototype.reverse = function() {
 			var timePlayed;
-			if(this.active){
+			if (this.active) {
 				this.halt();
 			}
 			timePlayed = this.currentTime - this.startTime;
@@ -1524,7 +1530,7 @@ Resume ticker
 **/
 		my.Ticker.prototype.resume = function() {
 			var now, current, start;
-			if(!this.active){
+			if (!this.active) {
 				now = Date.now(),
 				current = this.currentTime,
 				start = this.startTime;
@@ -1549,21 +1555,21 @@ seekTo a different specific point on the ticker
 				backwards = false;
 			milliseconds = xtGet(milliseconds, 0);
 			resume = xtGet(resume, false);
-			if(this.active){
+			if (this.active) {
 				this.halt();
 			}
-			if(this.cycles && this.cycleCount >= this.cycles){
+			if (this.cycles && this.cycleCount >= this.cycles) {
 				this.cycleCount = this.cycles - 1;
 			}
-			if(milliseconds < this.tick){
+			if (milliseconds < this.tick) {
 				backwards = true;
 			}
-			this.currentTime =  Date.now();
+			this.currentTime = Date.now();
 			this.startTime = this.currentTime - milliseconds;
 			this.active = true;
 			this.fn(backwards);
 			this.active = false;
-			if(resume){
+			if (resume) {
 				this.resume();
 			}
 			return this;
@@ -1581,31 +1587,31 @@ seekFor a different relative point on the ticker
 				backwards = false;
 			milliseconds = xtGet(milliseconds, 0);
 			milliseconds = xtGet(resume, false);
-			if(this.active){
+			if (this.active) {
 				this.halt();
 			}
-			if(this.cycles && this.cycleCount >= this.cycles){
+			if (this.cycles && this.cycleCount >= this.cycles) {
 				this.cycleCount = this.cycles - 1;
 			}
 			this.startTime -= milliseconds;
-			if(milliseconds < 0){
+			if (milliseconds < 0) {
 				backwards = true;
 			}
 			this.active = true;
 			this.fn(backwards);
 			this.active = false;
-			if(resume){
+			if (resume) {
 				this.resume();
 			}
 			return this;
 		};
-	/**
+		/**
 Remove this Ticker from the scrawl library
 @method kill
 @return Always true
 **/
 		my.Ticker.prototype.kill = function() {
-			if(this.active){
+			if (this.active) {
 				this.halt();
 			}
 			delete my.animation[this.name];
@@ -1614,7 +1620,7 @@ Remove this Ticker from the scrawl library
 			my.work.resortAnimations = true;
 			return true;
 		};
-	/**
+		/**
 Remove this Ticker from the scrawl library (if argument is true), alongside any tweens associated with it
 @method killTweens
 @return true if argument is true; this otherwise (default)
@@ -1622,12 +1628,12 @@ Remove this Ticker from the scrawl library (if argument is true), alongside any 
 		my.Ticker.prototype.killTweens = function(autokill) {
 			var i, iz, sub,
 				t = my.tween,
-			autokill = (my.xt(autokill)) ? autokill : false;
-			for(i = 0, iz = this.subscribers.length; i < iz; i++){
+				autokill = (my.xt(autokill)) ? autokill : false;
+			for (i = 0, iz = this.subscribers.length; i < iz; i++) {
 				sub = t[this.subscribers[i]];
 				sub.kill();
 			}
-			if(autokill){
+			if (autokill) {
 				this.kill();
 				return true;
 			}
@@ -1672,16 +1678,16 @@ To access the Action functions directly, assign it to a variable, or call it fro
 			var xtGet = my.xtGet;
 			my.Base.call(this, items);
 			items = my.safeObject(items);
-			if(my.xt(items.targets)){
+			if (my.xt(items.targets)) {
 				this.setTargets(items.targets);
 			}
-			else{
+			else {
 				this.targets = [];
 			}
 			this.reverseOnCycleEnd = xtGet(items.reverseOnCycleEnd, false);
 			this.reversed = xtGet(items.reversed, false);
-			this.action = (typeof items.action === 'function') ? items.action : function(){};
-			this.revert = (typeof items.revert === 'function') ? items.revert : function(){};
+			this.action = (typeof items.action === 'function') ? items.action : function() {};
+			this.revert = (typeof items.revert === 'function') ? items.revert : function() {};
 			this.time = xtGet(items.time, 0);
 			this.order = xtGet(items.order, 0);
 			this.triggered = false;
@@ -1689,7 +1695,7 @@ To access the Action functions directly, assign it to a variable, or call it fro
 			my.tween[this.name] = this;
 			my.pushUnique(my.tweennames, this.name);
 			this.ticker = '';
-			if(my.xt(items.ticker)){
+			if (my.xt(items.ticker)) {
 				this.addToTicker(items.ticker);
 			}
 			return this;
@@ -1730,14 +1736,14 @@ Action function
 @type Function
 @default function(){}
 **/
-			action: function(){},
+			action: function() {},
 			/**
 Revert function - should reverse the actions of the .action function
 @property revert
 @type Function
 @default function(){}
 **/
-			revert: function(){},
+			revert: function() {},
 			/**
 Time - point (in milliseconds) following the start of the Action's ticker when the action function will trigger
 @property time
@@ -1768,7 +1774,7 @@ Sort order - for Actions that share the same time value on a given Ticker. Witho
 			order: 0
 		};
 		my.mergeInto(my.work.d.Action, my.work.d.Base);
-	/**
+		/**
 Get the effective (millisecond number) time when action will trigger
 @method calculateEffectiveTime
 @param {String} [item] new time value; defaults to this.time
@@ -1783,21 +1789,21 @@ Get the effective (millisecond number) time when action will trigger
 				cType = calculatedTime[0],
 				ticker, tickerDuration = 0;
 			this.effectiveTime = 0;
-			if(cType === '%' && cTime <= 100){
-				if(this.ticker){
+			if (cType === '%' && cTime <= 100) {
+				if (this.ticker) {
 					ticker = my.animation[this.ticker];
-					if(ticker){
+					if (ticker) {
 						tickerDuration = ticker.effectiveDuration;
 						this.effectiveTime = tickerDuration * (cTime / 100);
 					}
 				}
 			}
-			else{
+			else {
 				this.effectiveTime = cTime;
 			}
 			return this;
 		};
-	/**
+		/**
 Add action to given ticker
 
 If action is already subscribed to a different ticker, the function will automatically unsubscribe from that ticker before subscribing to the new ticker
@@ -1809,12 +1815,12 @@ If action is already subscribed to a different ticker, the function will automat
 		my.Action.prototype.addToTicker = function(item) {
 			var xt = my.xt,
 				tick;
-			if(xt(item)){
-				if(this.ticker && this.ticker !== item){
+			if (xt(item)) {
+				if (this.ticker && this.ticker !== item) {
 					this.removeFromTicker(this.ticker);
 				}
 				tick = my.animation[item];
-				if(xt(tick)){
+				if (xt(tick)) {
 					this.ticker = item;
 					tick.subscribe(this.name);
 					this.calculateEffectiveTime();
@@ -1822,7 +1828,7 @@ If action is already subscribed to a different ticker, the function will automat
 			}
 			return this;
 		};
-	/**
+		/**
 Remove action from given ticker
 @method removeFromTicker
 @param {String} item TICKERNAME to which this Action will unsubscribe  
@@ -1832,16 +1838,16 @@ Remove action from given ticker
 		my.Action.prototype.removeFromTicker = function(item) {
 			var xt = my.xt,
 				tick;
-			if(xt(item)){
+			if (xt(item)) {
 				tick = my.animation[item];
-				if(xt(tick)){
+				if (xt(tick)) {
 					this.ticker = '';
 					tick.unsubscribe(this.name);
 				}
 			}
 			return this;
 		};
-	/**
+		/**
 retrieve the completion time for the action
 @method getEndTime
 @private
@@ -1850,7 +1856,7 @@ retrieve the completion time for the action
 		my.Action.prototype.getEndTime = function() {
 			return this.effectiveTime;
 		};
-	/**
+		/**
 Investigate the data supplied by the ticker and, if necessary, invoke the action or revert functions, as appropriate
 
 The object passed by the ticker has the following attributes:
@@ -1866,46 +1872,46 @@ The object passed by the ticker has the following attributes:
 @return always true
 **/
 		my.Action.prototype.update = function(items) {
-			if(this.reversed){
-				if(items.reverseTick >= this.effectiveTime){
-					if(!this.triggered){
+			if (this.reversed) {
+				if (items.reverseTick >= this.effectiveTime) {
+					if (!this.triggered) {
 						this.action();
 						this.triggered = true;
 					}
 				}
-				else{
-					if(this.triggered){
+				else {
+					if (this.triggered) {
 						this.revert();
 						this.triggered = false;
 					}
 				}
 			}
 			else {
-				if(items.tick >= this.effectiveTime){
-					if(!this.triggered){
+				if (items.tick >= this.effectiveTime) {
+					if (!this.triggered) {
 						this.action();
 						this.triggered = true;
 					}
 				}
-				else{
-					if(this.triggered){
+				else {
+					if (this.triggered) {
 						this.revert();
 						this.triggered = false;
 					}
 				}
 			}
-			if(this.reverseOnCycleEnd && items.willLoop){
-				if(items.next){
+			if (this.reverseOnCycleEnd && items.willLoop) {
+				if (items.next) {
 					this.reversed = !this.reversed;
 				}
-				else{
+				else {
 					this.reversed = false;
 					this.triggered = false;
 				}
 			}
 			return true;
 		};
-	/**
+		/**
 Set attributes
 @method set
 @param {Object} Object containing key:value attributes
@@ -1913,56 +1919,57 @@ Set attributes
 @return this
 **/
 		my.Action.prototype.set = function(items) {
-			var xt = my.xt, ticker;
+			var xt = my.xt,
+				ticker;
 			items = my.safeObject(items);
 			ticker = (xt(items.ticker)) ? this.ticker : false;
 			// if either ticker or time change, then this.effectiveTime will need recalculation
-			if(ticker){
+			if (ticker) {
 				this.ticker = ticker;
 				this.addToTicker(items.ticker);
 			}
-			else if(xt(items.time)){
+			else if (xt(items.time)) {
 				this.time = items.time;
 				this.calculateEffectiveTime();
 			}
-			if(xt(items.targets)){
+			if (xt(items.targets)) {
 				this.setTargets(items.targets);
 			}
-			if(my.xto(items.reverseOnCycleEnd, items.reversed, items.order)){
-				if(xt(items.reverseOnCycleEnd)){
+			if (my.xto(items.reverseOnCycleEnd, items.reversed, items.order)) {
+				if (xt(items.reverseOnCycleEnd)) {
 					this.reverseOnCycleEnd = items.reverseOnCycleEnd;
 				}
-				if(xt(items.reversed)){
+				if (xt(items.reversed)) {
 					this.reversed = items.reversed;
 				}
-				if(xt(items.order)){
+				if (xt(items.order)) {
 					this.order = items.order;
 				}
 			}
-			if(xt(items.triggered) && this.triggered !== items.triggered){
-				if(items.triggered){
+			if (xt(items.triggered) && this.triggered !== items.triggered) {
+				if (items.triggered) {
 					this.action();
 				}
-				else{
+				else {
 					this.revert();
 				}
 				this.triggered = items.triggered;
 			}
-			if(xt(items.action)){
+			if (xt(items.action)) {
 				this.action = items.action;
-				if(typeof this.action !== 'function'){
-					this.action = function(){};
+				if (typeof this.action !== 'function') {
+					this.action = function() {};
 				}
 			}
-			if(xt(items.revert)){
+			if (xt(items.revert)) {
 				this.revert = items.revert;
-				if(typeof this.revert !== 'function'){
-					this.revert = function(){};
+				if (typeof this.revert !== 'function') {
+					this.revert = function() {};
 				}
 			}
 			return this;
 		};
-	/**
+		/**
 Set targets attribute - assumes that the supplied Array will replace, not amend, any existing targets array
 @method setTargets
 @param {Array} items Array of Objects and/or Strings, can also be single Object or string
@@ -1974,19 +1981,19 @@ Set targets attribute - assumes that the supplied Array will replace, not amend,
 			items = [].concat(items);
 			var newTargets = [],
 				item, i, iz, result;
-			for(i = 0, iz = items.length; i < iz; i++){
+			for (i = 0, iz = items.length; i < iz; i++) {
 				item = items[i];
-				if(typeof item === 'function'){
-					if(typeof item.set === 'function'){
+				if (typeof item === 'function') {
+					if (typeof item.set === 'function') {
 						newTargets.push(item);
 					}
 				}
-				else if(typeof item === 'object' && my.xt(item.name)){
+				else if (typeof item === 'object' && my.xt(item.name)) {
 					newTargets.push(item);
 				}
-				else{
+				else {
 					result = my.locateTarget(item);
-					if(result){
+					if (result) {
 						newTargets.push(result);
 					}
 				}
@@ -1994,7 +2001,7 @@ Set targets attribute - assumes that the supplied Array will replace, not amend,
 			this.targets = newTargets;
 			return this;
 		};
-	/**
+		/**
 Add Objects to targets attribute - assumes that the supplied Array will augment any existing targets array
 @method addToTargets
 @param {Array} items Array of Objects and/or Strings, can also be single Object or string
@@ -2004,23 +2011,23 @@ Add Objects to targets attribute - assumes that the supplied Array will augment 
 		my.Action.prototype.addToTargets = function(items) {
 			items = [].concat(items);
 			var item, i, iz, result;
-			for(i = 0, iz = items.length; i < iz; i++){
+			for (i = 0, iz = items.length; i < iz; i++) {
 				item = items[i];
-				if(typeof item === 'function'){
-					if(typeof item.set === 'function'){
+				if (typeof item === 'function') {
+					if (typeof item.set === 'function') {
 						this.targets.push(item);
 					}
 				}
-				else{
+				else {
 					result = my.locateTarget(item);
-					if(result){
+					if (result) {
 						this.targets.push(result);
 					}
 				}
 			}
 			return this;
 		};
-	/**
+		/**
 Remove Objects from targets attribute - will not remove an object with no name and/or type attributes
 @method removeFromTargets
 @param {Array} items Array of Objects and/or Strings, can also be single Object or string
@@ -2030,49 +2037,49 @@ Remove Objects from targets attribute - will not remove an object with no name a
 		my.Action.prototype.removeFromTargets = function(items) {
 			items = [].concat(items);
 			var item, i, iz, j, jz, k, kz,
-				t, type, name, doRemove, obj, objName, 
+				t, type, name, doRemove, obj, objName,
 				identifiers = [],
 				newTargets = [].concat(this.targets),
 				contains = my.contains;
-			for (j = 0, jz = newTargets.length; j < jz; j++){
+			for (j = 0, jz = newTargets.length; j < jz; j++) {
 				t = newTargets[j];
 				type = t.type || 'unknown';
 				name = t.name || 'unnamed';
-				if(type !== 'unknown' && name !== 'unnamed'){
+				if (type !== 'unknown' && name !== 'unnamed') {
 					identifiers.push(type + '_' + name);
 				}
 			}
-			for(i = 0, iz = items.length; i < iz; i++){
+			for (i = 0, iz = items.length; i < iz; i++) {
 				item = items[i];
 				obj = false;
-				if(typeof item === 'function'){
+				if (typeof item === 'function') {
 					obj = item;
 				}
-				else{
+				else {
 					// obj = this.locateTarget(item);
 					obj = my.locateTarget(item);
 				}
-				if(obj){
+				if (obj) {
 					type = obj.type || 'unknown';
 					name = obj.name || 'unnamed';
-					if(type !== 'unknown' && name !== 'unnamed'){
+					if (type !== 'unknown' && name !== 'unnamed') {
 						objName = type + '_' + name;
 						doRemove = identifiers.indexOf(objName);
-						if(doRemove >= 0){
+						if (doRemove >= 0) {
 							newTargets[doRemove] = false;
 						}
 					}
 				}
 			}
 			this.targets = [];
-			for(k = 0, kz = newTargets; k < kz; k++){
-				if(newTargets[k]){
+			for (k = 0, kz = newTargets; k < kz; k++) {
+				if (newTargets[k]) {
 					this.targets.push(newTargets[k]);
 				}
 			}
 			return this;
 		};
-	/**
+		/**
 Create a clone of this Action
 
 Note: strongly advise every call to this function includes newly created anonymous functions for the action and revert attributes in the argument object - Scrawl's clone functionality does not clone function attributes!
@@ -2086,10 +2093,10 @@ Note: strongly advise every call to this function includes newly created anonymo
 			items = my.safeObject(items);
 			var c, xt = my.xt;
 			c = my.Base.prototype.clone.call(this, items);
-			if(xt(items.targets)) {
+			if (xt(items.targets)) {
 				c.setTargets(items.targets);
 			}
-			else{
+			else {
 				c.targets = [].concat(this.targets);
 			}
 			c.reverseOnCycleEnd = (xt(items.reverseOnCycleEnd)) ? items.reverseOnCycleEnd : this.reverseOnCycleEnd;
@@ -2102,20 +2109,20 @@ Note: strongly advise every call to this function includes newly created anonymo
 			c.calculateEffectiveTime();
 			return c;
 		};
-	/**
+		/**
 Remove this Action from the scrawl library
 @method kill
 @return Always true
 **/
 		my.Action.prototype.kill = function() {
-			if(this.ticker){
+			if (this.ticker) {
 				this.removeFromTicker(this.ticker);
 			}
 			delete my.tween[this.name];
 			my.removeItem(my.tweennames, this.name);
 			return true;
 		};
-	/**
+		/**
 Update target attributes
 @method updateTargets
 @param {Object} items - containing key:value attributes to be forwarded to target set() functions
@@ -2123,12 +2130,12 @@ Update target attributes
 @return this
 **/
 		my.Action.prototype.updateTargets = function(items) {
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
 				this.targets[i].set(items);
 			}
 			return this;
 		};
-	/**
+		/**
 # Tween
 
 ## Instantiation
@@ -2159,10 +2166,10 @@ Update target attributes
 			my.Base.call(this, items);
 			items = my.safeObject(items);
 			this.ticker = xtGet(items.ticker, '');
-			if(my.xt(items.targets)){
+			if (my.xt(items.targets)) {
 				this.setTargets(items.targets);
 			}
-			else{
+			else {
 				this.targets = [];
 			}
 			this.definitions = xt(items.definitions) ? [].concat(items.definitions) : [];
@@ -2179,10 +2186,10 @@ Update target attributes
 			my.tween[this.name] = this;
 			my.pushUnique(my.tweennames, this.name);
 			this.ticker = '';
-			if(my.xt(items.ticker)){
+			if (my.xt(items.ticker)) {
 				this.addToTicker(items.ticker);
 			}
-			else{
+			else {
 				// here is where we create the ticker - will have same name as the tween
 				tickerName = this.name + '_ticker';
 				my.makeTicker({
@@ -2287,8 +2294,8 @@ Sort order - for Actions that share the same time value on a given Ticker. Witho
 **/
 			order: 0
 		};
-	my.mergeInto(my.work.d.Tween, my.work.d.Base);
-	/**
+		my.mergeInto(my.work.d.Tween, my.work.d.Base);
+		/**
 retrieve the completion time for the action
 @method getEndTime
 @private
@@ -2297,7 +2304,7 @@ retrieve the completion time for the action
 		my.Tween.prototype.getEndTime = function() {
 			return this.effectiveTime + this.effectiveDuration;
 		};
-	/**
+		/**
 Get the effective (millisecond number) time when tween will trigger
 @method calculateEffectiveTime
 @param {String} [item] new time value; defaults to this.time
@@ -2309,7 +2316,7 @@ Get the effective (millisecond number) time when tween will trigger
 			my.Action.prototype.calculateEffectiveTime.call(this, item);
 			return this;
 		};
-	/**
+		/**
 Get the effective (millisecond number) duration for the tween
 @method calculateEffectiveDuration
 @param {String} [item] new time value; defaults to this.time
@@ -2324,21 +2331,21 @@ Get the effective (millisecond number) duration for the tween
 				cType = calculatedDur[0],
 				ticker, tickerDuration = 0;
 			this.effectiveDuration = 0;
-			if(cType === '%'){
-				if(this.ticker){
+			if (cType === '%') {
+				if (this.ticker) {
 					ticker = my.animation[this.ticker];
-					if(ticker){
+					if (ticker) {
 						tickerDuration = ticker.effectiveDuration;
 						this.effectiveDuration = tickerDuration * (cDur / 100);
 					}
 				}
 			}
-			else{
+			else {
 				this.effectiveDuration = cDur;
 			}
 			return this;
 		};
-	/**
+		/**
 Add tween to given ticker
 
 If tween is already subscribed to a different ticker, the function will automatically unsubscribe from that ticker before subscribing to the new ticker
@@ -2352,7 +2359,7 @@ If tween is already subscribed to a different ticker, the function will automati
 			this.calculateEffectiveDuration();
 			return this;
 		};
-	/**
+		/**
 Remove action from given ticker
 @method removeFromTicker
 @param {String} item TICKERNAME to which this Tween will unsubscribe  
@@ -2363,7 +2370,7 @@ Remove action from given ticker
 			my.Action.prototype.removeFromTicker.call(this, item);
 			return this;
 		};
-	/**
+		/**
 Investigate the data supplied by the ticker and, if necessary, invoke the action or revert functions, as appropriate
 
 The object passed by the ticker has the following attributes:
@@ -2386,54 +2393,54 @@ The object passed by the ticker has the following attributes:
 				status = 'running';
 
 			// 1. Should we do work for this tween?
-			if(!this.reversed){
+			if (!this.reversed) {
 				starts = this.effectiveTime;
 				ends = this.effectiveTime + this.effectiveDuration;
-				if(tick < starts){
+				if (tick < starts) {
 					status = 'before';
 				}
-				else if(tick > ends){
+				else if (tick > ends) {
 					status = 'after'
 				}
 			}
-			else{
+			else {
 				starts = this.effectiveTime + this.effectiveDuration;
 				ends = this.effectiveTime;
-				if(revTick > starts){
+				if (revTick > starts) {
 					status = 'after';
 				}
-				else if(revTick < ends){
+				else if (revTick < ends) {
 					status = 'before'
 				}
 			}
 
 			// for tweens with a duration > 0
-			if(this.effectiveDuration){
-				if(status === 'running' || status !== this.status){
+			if (this.effectiveDuration) {
+				if (status === 'running' || status !== this.status) {
 					this.status = status;
 					this.doSimpleUpdate(items);
 					this.updateCleanup(items);
 				}
 			}
 			// for tweens with a duration == 0
-			else{
-				if(status !== this.status){
+			else {
+				if (status !== this.status) {
 					this.status = status;
 					this.doSimpleUpdate(items);
 					this.updateCleanup(items);
 				}
 			}
-			if(items.willLoop){
-				if(this.reverseOnCycleEnd){
+			if (items.willLoop) {
+				if (this.reverseOnCycleEnd) {
 					this.reversed = !this.reversed;
 				}
-				else{
+				else {
 					this.status = 'before';
 				}
 			}
 			return true;
 		};
-	/**
+		/**
 Perform a simple update
 @method doSimpleUpdate
 @param {Object} items Object sent by ticker  
@@ -2452,43 +2459,43 @@ Perform a simple update
 			effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
 
 			// 3. determine the current progress of the tween
-			if(this.effectiveDuration && this.status === 'running'){
+			if (this.effectiveDuration && this.status === 'running') {
 				progress = effectiveTick / this.effectiveDuration;
 			}
-			else{
+			else {
 				progress = (this.status === 'after') ? 1 : 0;
 			}
 
 			// 4. calculate the current value for each definition
-			for(i = 0, iz = this.definitions.length; i < iz; i++){
+			for (i = 0, iz = this.definitions.length; i < iz; i++) {
 				def = this.definitions[i];
-				if(def.engine.substring){
+				if (def.engine.substring) {
 					def.value = actions[def.engine](def.effectiveStart, def.effectiveChange, progress);
 				}
-				else{
+				else {
 					def.value = def.engine(def.effectiveStart, def.effectiveChange, progress);
 				}
-				if(def.integer){
+				if (def.integer) {
 					def.value = Math.round(def.value);
 				}
-				if(def.suffix){
+				if (def.suffix) {
 					def.value += def.suffix;
 				}
 				setObj[def.attribute] = def.value;
 			}
 
 			// 5. Apply all definitions updates to target objects
-			for(j = 0, jz = this.targets.length; j < jz; j++){
+			for (j = 0, jz = this.targets.length; j < jz; j++) {
 				this.targets[j].set(setObj);
 			}
 
 			// 6. perform any action
-			if(this.action){
+			if (this.action) {
 				this.action();
 			}
 			return true;
 		};
-	/**
+		/**
 update cleanup
 @method updateCleanup
 @param {Object} items Object sent by ticker  
@@ -2498,7 +2505,7 @@ update cleanup
 		my.Tween.prototype.updateCleanup = function(items) {
 			items = my.safeObject(items);
 			// do cleanup stuff here
-			if(!items.next){
+			if (!items.next) {
 				this.status = (this.reverse) ? 'before' : 'after';
 			}
 			return true;
@@ -2572,7 +2579,7 @@ Tween engine helper object
 				return start + (position * change);
 			}
 		};
-	/**
+		/**
 Set attributes
 @method set
 @param {Object} Object containing key:value attributes
@@ -2580,35 +2587,36 @@ Set attributes
 @return this
 **/
 		my.Tween.prototype.set = function(items) {
-			var xt = my.xt, ticker;
+			var xt = my.xt,
+				ticker;
 			items = my.safeObject(items);
 			ticker = (xt(items.ticker)) ? this.ticker : false;
 			my.Base.prototype.set.call(this, items);
 			// if either ticker or time change, then this.effectiveTime will need recalculation
-			if(ticker){
+			if (ticker) {
 				this.ticker = ticker;
 				this.addToTicker(items.ticker);
 			}
-			else if(my.xto(items.time, items.duration)){
+			else if (my.xto(items.time, items.duration)) {
 				this.calculateEffectiveTime();
 				this.calculateEffectiveDuration();
 			}
-			if(xt(items.targets)){
+			if (xt(items.targets)) {
 				this.setTargets(items.targets);
 			}
-			if(xt(items.definitions)){
+			if (xt(items.definitions)) {
 				this.definitions = [].concat(items.definitions);
 				this.setDefinitionsValues();
 			}
-			if(xt(items.action)){
+			if (xt(items.action)) {
 				this.action = items.action;
-				if(typeof this.action !== 'function'){
+				if (typeof this.action !== 'function') {
 					this.action = false;
 				}
 			}
 			return this;
 		};
-	/**
+		/**
 Calculate the effective values for definitions
 @method setDefinitionsValues
 @param {Object} Object containing key:value attributes
@@ -2619,21 +2627,21 @@ Calculate the effective values for definitions
 		my.Tween.prototype.setDefinitionsValues = function() {
 			var i, iz, temp, def,
 				xt = my.xt;
-			for(i = 0, iz = this.definitions.length; i < iz; i++){
+			for (i = 0, iz = this.definitions.length; i < iz; i++) {
 				def = this.definitions[i];
 				temp = this.parseDefinitionsValue(def.start);
 				def.effectiveStart = temp[1];
 				def.suffix = temp[0];
 				temp = this.parseDefinitionsValue(def.end);
 				def.effectiveEnd = temp[1];
-				if(!xt(def.engine)){
+				if (!xt(def.engine)) {
 					def.engine = 'linear';
 				}
 				def.effectiveChange = def.effectiveEnd - def.effectiveStart;
 			}
 			return this;
 		};
-	/**
+		/**
 setDefinitionsValues helper function
 @method parseDefinitionsValue
 @param {String} value to be parsed; can also be a Number
@@ -2643,23 +2651,23 @@ setDefinitionsValues helper function
 		my.Tween.prototype.parseDefinitionsValue = function(item) {
 			var result = ['', 0],
 				a, xt = my.xt;
-			if(xt(item)){
+			if (xt(item)) {
 				if (item.toFixed) {
 					result[1] = item;
 				}
-				else if(item.substring){
+				else if (item.substring) {
 					a = item.match(/^\d+\.?\d*(\D*)/);
-					if(xt(a[0])){
+					if (xt(a[0])) {
 						result[1] = parseFloat(a);
 					}
-					if(xt(a[1])){
+					if (xt(a[1])) {
 						result[0] = a[1];
 					}
 				}
 			}
 			return result;
 		};
-	/**
+		/**
 Set targets attribute - assumes that the supplied Array will replace, not amend, any existing targets array
 @method setTargets
 @param {Array} items Array of Objects and/or Strings, can also be single Object or string
@@ -2671,7 +2679,7 @@ Set targets attribute - assumes that the supplied Array will replace, not amend,
 			my.Action.prototype.setTargets.call(this, items);
 			return this;
 		};
-	/**
+		/**
 Add Objects to targets attribute - assumes that the supplied Array will augment any existing targets array
 @method addToTargets
 @param {Array} items Array of Objects and/or Strings, can also be single Object or string
@@ -2682,7 +2690,7 @@ Add Objects to targets attribute - assumes that the supplied Array will augment 
 			my.Action.prototype.addToTargets.call(this, items);
 			return this;
 		};
-	/**
+		/**
 Remove Objects from targets attribute - will not remove an object with no name and/or type attributes
 @method removeFromTargets
 @param {Array} items Array of Objects and/or Strings, can also be single Object or string
@@ -2693,7 +2701,7 @@ Remove Objects from targets attribute - will not remove an object with no name a
 			my.Action.prototype.removeFromTargets.call(this, items);
 			return this;
 		};
-	/**
+		/**
 Create a clone of this Tween
 
 Note: strongly advise every call to this function includes newly created anonymous functions for the action and revert attributes in the argument object - Scrawl's clone functionality does not clone function attributes!
@@ -2706,7 +2714,7 @@ Note: strongly advise every call to this function includes newly created anonymo
 		my.Tween.prototype.clone = function(items) {
 			var c = my.Base.prototype.clone.call(this, items);
 			items = my.safeObject(items);
-			if(!items.targets){
+			if (!items.targets) {
 				c.setTargets(this.targets);
 			}
 			return c;
@@ -2719,7 +2727,7 @@ Start the tween's ticker from 0
 **/
 		my.Tween.prototype.run = function() {
 			var t = my.animation[this.ticker];
-			if(t){
+			if (t) {
 				t.run();
 			}
 			return this;
@@ -2732,7 +2740,7 @@ Halt the tween's ticker
 **/
 		my.Tween.prototype.halt = function() {
 			var t = my.animation[this.ticker];
-			if(t){
+			if (t) {
 				t.halt();
 			}
 			return this;
@@ -2745,7 +2753,7 @@ Resume the tween's ticker
 **/
 		my.Tween.prototype.resume = function() {
 			var t = my.animation[this.ticker];
-			if(t){
+			if (t) {
 				t.resume();
 			}
 			return this;
@@ -2758,7 +2766,7 @@ seekTo a different specific point on the tween's ticker
 **/
 		my.Tween.prototype.seekTo = function(milliseconds) {
 			var t = my.animation[this.ticker];
-			if(t){
+			if (t) {
 				t.seekTo(milliseconds);
 			}
 			return this;
@@ -2771,21 +2779,21 @@ seekFor a different relative point on the tween's ticker
 **/
 		my.Tween.prototype.seekFor = function(milliseconds) {
 			var t = my.animation[this.ticker];
-			if(t){
+			if (t) {
 				t.seekFor(milliseconds);
 			}
 			return this;
 		};
-	/**
+		/**
 Remove this Tween from the scrawl library (including any self-created ticker associated with the tween)
 @method kill
 @return Always true
 **/
 		my.Tween.prototype.kill = function() {
 			var t;
-			if(this.ticker === this.name + '_ticker'){
+			if (this.ticker === this.name + '_ticker') {
 				t = my.animation[this.ticker];
-				if(t){
+				if (t) {
 					t.kill();
 				}
 			}

@@ -10,8 +10,8 @@ var mycode = function() {
 	document.getElementById('duration').value = '4s';
 
 	var engines = [
-		'linear', 'in', 'easeIn', 'easeIn3', 'easeIn4', 'easeIn5', 
-		'out', 'easeOut', 'easeOut3', 'easeOut4', 'easeOut5', 
+		'linear', 'in', 'easeIn', 'easeIn3', 'easeIn4', 'easeIn5',
+		'out', 'easeOut', 'easeOut3', 'easeOut4', 'easeOut5',
 		'easeOutIn', 'easeOutIn3', 'easeOutIn4', 'easeOutIn5'];
 
 	scrawl.makeTicker({
@@ -20,7 +20,7 @@ var mycode = function() {
 		duration: '4s'
 	})
 
-	for(var i = 0, iz = engines.length; i < iz; i++){
+	for (var i = 0, iz = engines.length; i < iz; i++) {
 		scrawl.makeBlock({
 			name: 'b' + i,
 			width: 100,

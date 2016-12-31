@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 5.0.5 - 17 December 2016
+*	version 6.0.0 - 31 December 2016
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -10,36 +10,22 @@
 
 Currently working on ...
 ------------------------------------------------------------------------------------
-- bugtracking following release of v5.0.0
+- bugtracking following release of v6.0.0
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
-- new grid entity
-- frame backface visibility
 - improving the code base (always)
+- refactor filters
 - user accessibility issues
 - touch/pointer events on mobile/handheld devices
 - improve save/load operations - to allow realtime updates of a shared canvas over the net
 - physics engine - rigid body interactions
-- using scrawl with popular javascript frameworks and web building software
-	- jQuery
-	- WordPress
-	- Angular, Ember, Backbone
-	- Require?
-	- node version??
 	
 Currently known bugs
 ------------------------------------------------------------------------------------
 - tracking of touch/pointer events
 	- on mobile is less than satisfactory
 
-- Composite operations
-	- Safari(windows) is non-compliant for some global composite operations
-		- feature detection added to scrawl.device object
-
-- Older browsers with canvas support do not support 'evenodd' winding or dashed strokes
-	- feature detection added to scrawl.device object
-	
 - Text along path
 	- The text does not yet take into account any path handle offsets
 
@@ -48,6 +34,7 @@ CHANGE LOG
 161231
 	- fixed demo 107
 		- tested in: Firefox, Chrome, IE11, Edge - all pass
+	- prepare for release of v6.0.0
 		
 161230
 	- bugfix for demo 098 - bug was in Ticker, Action and Tween set() function

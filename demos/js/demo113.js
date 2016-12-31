@@ -53,8 +53,8 @@ var mycode = function() {
 		engine: 'easeOutIn'
 	};
 
-	for(r = 0; r < 3; r++){
-		for(c = 0; c < 4; c++){
+	for (r = 0; r < 3; r++) {
+		for (c = 0; c < 4; c++) {
 
 			t = (r * 4) + c;
 
@@ -81,9 +81,9 @@ var mycode = function() {
 		}
 	}
 	allCols = [].concat(
-		scrawl.group.col1Group.entitys, 
-		scrawl.group.col2Group.entitys, 
-		scrawl.group.col3Group.entitys, 
+		scrawl.group.col1Group.entitys,
+		scrawl.group.col2Group.entitys,
+		scrawl.group.col3Group.entitys,
 		scrawl.group.col4Group.entitys
 	);
 	col3Tweens = ['t_2', 't_6', 't_10'];
@@ -93,11 +93,15 @@ var mycode = function() {
 		ticker: 'timeline',
 		time: '50%',
 		targets: scrawl.group.col4Group.entitys,
-		action: function(){
-			this.updateTargets({scale: 1.4});
+		action: function() {
+			this.updateTargets({
+				scale: 1.4
+			});
 		},
-		revert: function(){
-			this.updateTargets({scale: 1});
+		revert: function() {
+			this.updateTargets({
+				scale: 1
+			});
 		}
 	});
 
@@ -105,20 +109,28 @@ var mycode = function() {
 		name: 'toRed',
 		ticker: 'timeline',
 		time: '35%',
-		action: function(){
-			myColor.set({color: 'red'});
+		action: function() {
+			myColor.set({
+				color: 'red'
+			});
 		},
-		revert: function(){
-			myColor.set({color: 'black'});
+		revert: function() {
+			myColor.set({
+				color: 'black'
+			});
 		}
 	}).clone({
 		name: 'toBlack',
 		time: '85%',
-		action: function(){
-			myColor.set({color: 'black'});
+		action: function() {
+			myColor.set({
+				color: 'black'
+			});
 		},
-		revert: function(){
-			myColor.set({color: 'red'});
+		revert: function() {
+			myColor.set({
+				color: 'red'
+			});
 		}
 	});
 
@@ -141,20 +153,28 @@ var mycode = function() {
 		name: 'showBlock',
 		ticker: 'timeline',
 		time: '20%',
-		action: function(){
-			scrawl.entity.myblock.set({visibility: true});
+		action: function() {
+			scrawl.entity.myblock.set({
+				visibility: true
+			});
 		},
-		revert: function(){
-			scrawl.entity.myblock.set({visibility: false});
+		revert: function() {
+			scrawl.entity.myblock.set({
+				visibility: false
+			});
 		}
 	}).clone({
 		name: 'hideBlock',
 		time: '90%',
-		action: function(){
-			scrawl.entity.myblock.set({visibility: false});
+		action: function() {
+			scrawl.entity.myblock.set({
+				visibility: false
+			});
 		},
-		revert: function(){
-			scrawl.entity.myblock.set({visibility: true});
+		revert: function() {
+			scrawl.entity.myblock.set({
+				visibility: true
+			});
 		}
 	});
 	scrawl.makeTween({
@@ -198,7 +218,7 @@ var mycode = function() {
 	mySlider.value = '0';
 	// need a choke to prevent the listeners firing multiple times - each element has multiple listeners on it
 	// also, e.target.value may often return a number, not a string
-	var currentDuration = '10000', 
+	var currentDuration = '10000',
 		currentSeeker = '0';
 	var stopE = function(e) {
 		e.preventDefault();
@@ -222,7 +242,7 @@ var mycode = function() {
 				break;
 			case 'duration':
 				temp = e.target.value.toString();
-				if(currentDuration !== temp){
+				if (currentDuration !== temp) {
 					myTicker.set({
 						duration: e.target.value
 					});
@@ -237,7 +257,7 @@ var mycode = function() {
 				break;
 			case 'seeker':
 				temp = e.target.value.toString()
-				if(currentSeeker !== temp){
+				if (currentSeeker !== temp) {
 					myTicker.seekTo(e.target.value);
 					currentSeeker = temp;
 				}

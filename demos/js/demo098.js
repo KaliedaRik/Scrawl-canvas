@@ -36,80 +36,102 @@ var mycode = function() {
 		targets: 'myBlock',
 		reverseOnCycleEnd: false,
 		time: '1s',
-		action: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({visibility: true});
+		action: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					visibility: true
+				});
 			}
 		},
-		revert: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({visibility: false});
+		revert: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					visibility: false
+				});
 			}
 		}
 	}).clone({
 		name: 'rollAction',
 		time: '2s',
-		action: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({roll: 30});
+		action: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					roll: 30
+				});
 			}
 		},
-		revert: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({roll: 0});
+		revert: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					roll: 0
+				});
 			}
 		}
 	}).clone({
 		name: 'colorsAction',
 		time: '3s',
-		action: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({fillStyle: 'lightblue'});
+		action: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					fillStyle: 'lightblue'
+				});
 			}
 		},
-		revert: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({fillStyle: 'green'});
+		revert: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					fillStyle: 'green'
+				});
 			}
 		}
 	}).clone({
 		name: 'scaleAction',
 		time: '4s',
-		action: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({scale: 0.6});
+		action: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					scale: 0.6
+				});
 			}
 		},
-		revert: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({scale: 1});
+		revert: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					scale: 1
+				});
 			}
 		}
 	}).clone({
 		name: 'heightAction',
 		time: '4.66s',
-		action: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({height: '5%'});
+		action: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					height: '5%'
+				});
 			}
 		},
-		revert: function(){
-			for(var i = 0, iz = this.targets.length; i < iz; i++){
-				this.targets[i].set({height: '65%'});
+		revert: function() {
+			for (var i = 0, iz = this.targets.length; i < iz; i++) {
+				this.targets[i].set({
+					height: '65%'
+				});
 			}
 		}
 	});
 
 	scrawl.animation.myTicker.run();
 
-	scrawl.addNativeListener(['input', 'change'], function(e){
+	scrawl.addNativeListener(['input', 'change'], function(e) {
 		var temp;
 		e.preventDefault();
 		e.returnValue = false;
 		switch (e.target.id) {
 			case 'loop':
 				temp = (e.target.value === 'loop') ? false : true;
-				scrawl.animation.myTicker.updateSubscribers({reverseOnCycleEnd: temp});
+				scrawl.animation.myTicker.updateSubscribers({
+					reverseOnCycleEnd: temp
+				});
 				break;
 		}
 	}, '.controlItem');

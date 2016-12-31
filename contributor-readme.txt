@@ -93,7 +93,7 @@ Scrawl uses an x.y.z approach to tagging releases, where
     y = minor release - adds new functionality to the library
     z = bug fixes
 
-Current version (at the time of writing this document) is 5.0.4
+Current version (at the time of writing this document) is 6.0.0
 
 > pull develop branch
 

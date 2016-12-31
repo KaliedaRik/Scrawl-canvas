@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 5.0.5 - 17 December 2016
+*	version 6.0.0 - 31 December 2016
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -43,8 +43,8 @@ JPG, PNG and SVG images (and videos – experimental) can be imported and used b
 Picture entitys and Patterns
 
 Animations can be achieved by manipulating a entity/gradient’s attributes within 
-a user-coded animation loop. Scrawl also supports animation timelines, tweens, and 
-easing.
+a user-coded animation loop. Scrawl also supports animation tickers, actions and tweens 
+for easing operations.
 
 All entitys, gradients and cells can be given drag-and-drop and attach-to-mouse 
 functionality.
@@ -79,14 +79,14 @@ entitys - and vice-versa.
 
 Does not add canvas functionality to those browsers that do not support 
 the HTML5 <canvas> element. Tested in: IE11, and modern versions of 
-Firefox, Chrome, Opera.
+Firefox, Chrome, Edge.
 
 http://scrawl.rikweb.org.uk/
 
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 5.0.5 released 17 December 2016
+VERSION 6.0.0 released 31 December 2016
 
     - the zip file includes:
 		
@@ -147,6 +147,15 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+VERSION 6.0.0 uploaded 31 December 2016
+	- breaking changes to the scrawl tweening system
+		- Timeline object deprecated and deleted
+		- new Ticker object for handling time sequences
+		- Tween object rewritten
+		- Action object rewritten
+		- All tween convenience functions deprecated and deleted
+		- tween-related demos rewritten
+
 Version 5.0.5 uploaded 17 December 2016
 	- enhanced tween and timeline functionality
 	- minor bugfix

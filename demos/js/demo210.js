@@ -97,9 +97,11 @@ var mycode = function() {
 			attribute: 'color',
 			start: 0,
 			end: 255,
-			engine: function(start, change, progress){
+			engine: function(start, change, progress) {
 				var r = Math.round(change * progress);
-				color.set({r: r});
+				color.set({
+					r: r
+				});
 				return color.get();
 			}
 		}]

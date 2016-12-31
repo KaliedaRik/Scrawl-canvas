@@ -22,17 +22,20 @@
   <h2>Ticker controls</h2>
   <h3>Extensions: phrase, animation, color, block</h3>
 
-  <p>A reasonable way to setup tickers, actions and tweens seems to be to define the ticker with a (millisecond or second) duration and then setup actions and tweens with percentage value time and duration attributes - ticker durations can be altered later, and the subscribed tweens and actions should amend their effective start and duration values accordingly. Note that:</p>
+  <p>A reasonable way to setup tickers, actions and tweens seems to be to define the ticker with a (millisecond or second) duration and then setup actions and tweens with percentage value time and duration attributes - ticker durations can be altered later,
+    and the subscribed tweens and actions should amend their effective start and duration values accordingly. Note that:</p>
 
   <ul>
-    <li>If not using % values for tweens and actions, do not set the ticker's duration value when defining it; instead let it calculate its effective duration from subscribed tweens/actions automatically - automated calculation does not happen if the ticker duration is set to any value</li>
-    <li>For tweens, the sum of a tween's percentage time and duration attributes should be <= 100% - if the sum is greater the tween will not complete: in the demo below, the '100%' entity will never spin!</li>
-    <li>Mixing percentages and millisecond/second times can be risky: in the demo below the '14s' entity will only spin when the ticker duration is set to 20 seconds</li>
-    <li>The 'run' button will only work if the ticker is <b>not</b> already running</li>
-    <li>The 'reset' button will stop the ticker and reset its subscribed actions and tweens back to their initial values</li>
-    <li>The 'halt' button stops the ticker</li>
-    <li>The 'resume' button starts the ticker from its current conditions</li>
-    <li>Changing the ticker's 'duration' value has an immediate effect on a running ticker</li>
+    <li>If not using % values for tweens and actions, do not set the ticker's duration value when defining it; instead let it calculate its effective duration from subscribed tweens/actions automatically - automated calculation does not happen if the ticker
+      duration is set to any value</li>
+    <li>For tweens, the sum of a tween's percentage time and duration attributes should be
+      <=1 00% - if the sum is greater the tween will not complete: in the demo below, the '100%' entity will never spin!</li>
+        <li>Mixing percentages and millisecond/second times can be risky: in the demo below the '14s' entity will only spin when the ticker duration is set to 20 seconds</li>
+        <li>The 'run' button will only work if the ticker is <b>not</b> already running</li>
+        <li>The 'reset' button will stop the ticker and reset its subscribed actions and tweens back to their initial values</li>
+        <li>The 'halt' button stops the ticker</li>
+        <li>The 'resume' button starts the ticker from its current conditions</li>
+        <li>Changing the ticker's 'duration' value has an immediate effect on a running ticker</li>
   </ul>
 
   <div>

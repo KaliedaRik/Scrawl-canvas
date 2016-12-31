@@ -165,20 +165,20 @@ var mycode = function() {
 	});
 
 	// event listeners
-	scrawl.addListener('enter', function(e){
-		if(timeline.active){
+	scrawl.addListener('enter', function(e) {
+		if (timeline.active) {
 			timeline.reverse().resume();
 		}
-		else{
+		else {
 			timeline.reset().resume();
 		}
 	}, actionZone);
 
-	scrawl.addListener('leave', function(e){
-		if(timeline.active){
+	scrawl.addListener('leave', function(e) {
+		if (timeline.active) {
 			timeline.reverse().resume();
 		}
-		else{
+		else {
 			timeline.complete().resume();
 		}
 	}, actionZone);

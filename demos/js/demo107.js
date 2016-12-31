@@ -17,7 +17,7 @@ var mycode = function() {
 	var button = document.getElementById('button');
 	var selector = document.getElementById('effect');
 	selector.value = 'fog';
-	
+
 	var sliderWidth = 17;
 	var runningTween = false;
 	var currentLoader = 'fog';
@@ -41,7 +41,7 @@ var mycode = function() {
 
 	pad.set({
 		viewport: true,
-		height: 0.1,	// scrawlStacks assumes if pad height is set to 0, it needs to be set to 'auto' (design feature, not a bug)
+		height: 0.1, // scrawlStacks assumes if pad height is set to 0, it needs to be set to 'auto' (design feature, not a bug)
 		startX: 0,
 		startY: 0
 	});
@@ -70,7 +70,7 @@ var mycode = function() {
 		startY: 0
 	});
 
-	var resetDimensions = function(){
+	var resetDimensions = function() {
 		titlestack.set({
 			width: device.width - sliderWidth,
 		});
@@ -139,7 +139,7 @@ var mycode = function() {
 		globalAlpha: 0
 	});
 
-	var buildEntitys = function(){
+	var buildEntitys = function() {
 		var x, y, i, greatestDimension;
 
 		scrawl.deleteEntity(scrawl.group.spinningStar.entitys);
@@ -160,7 +160,7 @@ var mycode = function() {
 			shape: true
 		});
 
-		for(i = 0; i < 100; i++){
+		for (i = 0; i < 100; i++) {
 			x = Math.round(Math.random() * device.width);
 			y = Math.round(Math.random() * device.height);
 			scrawl.makeWheel({
@@ -225,37 +225,57 @@ var mycode = function() {
 	scrawl.makeAction({
 		ticker: 'show_fog',
 		time: '100%',
-		action: function(){ iframeElement.src = frameSources[requestedFrame]; }
+		action: function() {
+			iframeElement.src = frameSources[requestedFrame];
+		}
 	}).clone({
 		ticker: 'show_rollingRectangle',
-		action: function(){ iframeElement.src = frameSources[requestedFrame]; }
+		action: function() {
+			iframeElement.src = frameSources[requestedFrame];
+		}
 	}).clone({
 		ticker: 'show_spinningStar',
-		action: function(){ iframeElement.src = frameSources[requestedFrame]; }
+		action: function() {
+			iframeElement.src = frameSources[requestedFrame];
+		}
 	}).clone({
 		ticker: 'show_chopFromTop',
-		action: function(){ iframeElement.src = frameSources[requestedFrame]; }
+		action: function() {
+			iframeElement.src = frameSources[requestedFrame];
+		}
 	}).clone({
 		ticker: 'show_clearWithCircles',
-		action: function(){ iframeElement.src = frameSources[requestedFrame]; }
+		action: function() {
+			iframeElement.src = frameSources[requestedFrame];
+		}
 	});
 
 	scrawl.makeAction({
 		ticker: 'hide_fog',
 		time: '100%',
-		action: function(){ cleanup(); }
+		action: function() {
+			cleanup();
+		}
 	}).clone({
 		ticker: 'hide_rollingRectangle',
-		action: function(){ cleanup(); }
+		action: function() {
+			cleanup();
+		}
 	}).clone({
 		ticker: 'hide_spinningStar',
-		action: function(){ cleanup(); }
+		action: function() {
+			cleanup();
+		}
 	}).clone({
 		ticker: 'hide_chopFromTop',
-		action: function(){ cleanup(); }
+		action: function() {
+			cleanup();
+		}
 	}).clone({
 		ticker: 'hide_clearWithCircles',
-		action: function(){ cleanup(); }
+		action: function() {
+			cleanup();
+		}
 	});
 
 	// Tweens
@@ -267,7 +287,7 @@ var mycode = function() {
 		duration: '98%',
 		definitions: [{
 			attribute: 'globalAlpha',
-			start: 0, 
+			start: 0,
 			end: 1
 		}]
 	}).clone({
@@ -275,7 +295,7 @@ var mycode = function() {
 		ticker: 'hide_fog',
 		definitions: [{
 			attribute: 'globalAlpha',
-			start: 1, 
+			start: 1,
 			end: 0
 		}]
 	}).clone({
@@ -284,11 +304,11 @@ var mycode = function() {
 		targets: scrawl.group.rollingRectangle.entitys,
 		definitions: [{
 			attribute: 'scale',
-			start: 0, 
+			start: 0,
 			end: 1
 		}, {
 			attribute: 'roll',
-			start: 0, 
+			start: 0,
 			end: 180,
 			engine: 'easeOutIn3'
 		}]
@@ -297,11 +317,11 @@ var mycode = function() {
 		ticker: 'hide_rollingRectangle',
 		definitions: [{
 			attribute: 'scale',
-			start: 1, 
+			start: 1,
 			end: 0
 		}, {
 			attribute: 'roll',
-			start: 0, 
+			start: 0,
 			end: 180,
 			engine: 'easeOutIn3'
 		}]
@@ -311,11 +331,11 @@ var mycode = function() {
 		targets: [],
 		definitions: [{
 			attribute: 'scale',
-			start: 0, 
+			start: 0,
 			end: 1
 		}, {
 			attribute: 'roll',
-			start: 0, 
+			start: 0,
 			end: 180,
 			engine: 'easeOutIn3'
 		}]
@@ -324,11 +344,11 @@ var mycode = function() {
 		ticker: 'hide_spinningStar',
 		definitions: [{
 			attribute: 'scale',
-			start: 1, 
+			start: 1,
 			end: 0,
 		}, {
 			attribute: 'roll',
-			start: 0, 
+			start: 0,
 			end: 180,
 			engine: 'easeOutIn3'
 		}]
@@ -338,7 +358,7 @@ var mycode = function() {
 		targets: scrawl.group.chopFromTop.entitys,
 		definitions: [{
 			attribute: 'height',
-			start: '0%', 
+			start: '0%',
 			end: '100%',
 			engine: 'easeOut3'
 		}]
@@ -347,7 +367,7 @@ var mycode = function() {
 		ticker: 'hide_chopFromTop',
 		definitions: [{
 			attribute: 'height',
-			start: '100%', 
+			start: '100%',
 			end: '0%',
 			engine: 'easeIn3'
 		}]
@@ -357,7 +377,7 @@ var mycode = function() {
 		targets: [],
 		definitions: [{
 			attribute: 'scale',
-			start: 0, 
+			start: 0,
 			end: 1,
 			engine: 'easeOut3'
 		}]
@@ -366,7 +386,7 @@ var mycode = function() {
 		ticker: 'hide_clearWithCircles',
 		definitions: [{
 			attribute: 'scale',
-			start: 1, 
+			start: 1,
 			end: 0,
 			engine: 'easeIn3'
 		}]
@@ -378,7 +398,7 @@ var mycode = function() {
 		duration: '50%',
 		definitions: [{
 			attribute: 'globalAlpha',
-			start: 0, 
+			start: 0,
 			end: 1
 		}]
 	}).clone({
@@ -386,12 +406,12 @@ var mycode = function() {
 		time: '45%',
 		definitions: [{
 			attribute: 'globalAlpha',
-			start: 1, 
+			start: 1,
 			end: 0
 		}]
 	});
 
-	var resetTargets = function(){
+	var resetTargets = function() {
 		scrawl.tween.tween_show_spinningStar.set({
 			targets: scrawl.group.spinningStar.entitys
 		});
@@ -426,39 +446,47 @@ var mycode = function() {
 		frameKeys = Object.keys(frameSources);
 
 	// action for selecting a different page load effect
-	var changeLoader = function(e){
-		if(!runningTween){
+	var changeLoader = function(e) {
+		if (!runningTween) {
 			currentLoader = e.target.value;
 		}
 	};
 
 	// actions for a new page load
-	var changePage = function(e){
+	var changePage = function(e) {
 		var myShow, myHide;
-		if(!runningTween){
+		if (!runningTween) {
 			runningTween = true;
 			myShow = 'show_' + currentLoader;
 			myHide = 'hide_' + currentLoader;
 			requestedFrame = frameKeys[Math.floor(Math.random() * frameKeys.length)];
-			while(!requestedFrame || requestedFrame === currentFrame){
+			while (!requestedFrame || requestedFrame === currentFrame) {
 				requestedFrame = frameKeys[Math.floor(Math.random() * frameKeys.length)];
 			}
-			pad.set({ height: device.height });
-			scrawl.group[currentLoader].set({ visibility: true });
+			pad.set({
+				height: device.height
+			});
+			scrawl.group[currentLoader].set({
+				visibility: true
+			});
 			scrawl.tween.showNote.addToTicker(myShow);
 			scrawl.tween.hideNote.addToTicker(myHide);
 			scrawl.animation[myShow].run();
 		}
 	};
 
-	var changePageLoaded = function(e){
+	var changePageLoaded = function(e) {
 		currentFrame = requestedFrame;
 		scrawl.animation['hide_' + currentLoader].run();
 	};
 
-	var cleanup = function(){
-		scrawl.group[currentLoader].set({ visibility: false });
-		pad.set({ height: 0.1 });
+	var cleanup = function() {
+		scrawl.group[currentLoader].set({
+			visibility: false
+		});
+		pad.set({
+			height: 0.1
+		});
 		runningTween = false;
 	};
 
@@ -466,10 +494,10 @@ var mycode = function() {
 	var resizeFlag = false,
 		resizeChoke = 500,
 		lastResize = 0;
-	var resize = function(e){
+	var resize = function(e) {
 		var now = Date.now();
 		resizeFlag = true;
-		if(!runningTween && lastResize + resizeChoke < now){
+		if (!runningTween && lastResize + resizeChoke < now) {
 			resetDimensions();
 			buildEntitys();
 			resetTargets();
@@ -487,7 +515,7 @@ var mycode = function() {
 	// animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			if(resizeFlag){
+			if (resizeFlag) {
 				resize();
 			}
 			scrawl.render();

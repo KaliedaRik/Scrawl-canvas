@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 5.0.5</em>
+            <em>API Docs for: 6.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -139,7 +139,7 @@
             
                 <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
             
-                <li><a href="../classes/Timeline.html">Timeline</a></li>
+                <li><a href="../classes/Ticker.html">Ticker</a></li>
             
                 <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
@@ -280,6 +280,10 @@
 <div class="box intro">
     <h1 id="window-scrawl">window.scrawl</h1>
 <p>scrawlAnimation extension adaptions to the Scrawl library object</p>
+<h2 id="new-library-sections">New library sections</h2>
+<ul>
+<li>scrawl.tween - for Tween and Action objects</li>
+</ul>
 <h2 id="new-default-attributes">New default attributes</h2>
 <ul>
 <li>Position.delta - default: {x:0,y:0,z:0};</li>
@@ -469,8 +473,22 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_locateTarget">locateTarget</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
-                                <a href="#method_makeTimeline">makeTimeline</a>
+                                <a href="#method_makeAction">makeAction</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_makeTicker">makeTicker</a>
 
                                 
                                 
@@ -485,15 +503,6 @@
                         
                             <li class="index-item method deprecated">
                                 <a href="#method_newAction">newAction</a>
-
-                                
-                                
-                                    <span class="flag deprecated">deprecated</span>
-                                
-                            </li>
-                        
-                            <li class="index-item method deprecated">
-                                <a href="#method_newTimeline">newTimeline</a>
 
                                 
                                 
@@ -656,7 +665,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l141"><code>source\scrawlAnimation.js:141</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l148"><code>source\scrawlAnimation.js:148</code></a>
         
         </p>
 
@@ -765,7 +774,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l427"><code>source\scrawlAnimation.js:427</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l434"><code>source\scrawlAnimation.js:434</code></a>
         
         </p>
 
@@ -822,7 +831,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l411"><code>source\scrawlAnimation.js:411</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l418"><code>source\scrawlAnimation.js:418</code></a>
         
         </p>
 
@@ -880,7 +889,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l444"><code>source\scrawlAnimation.js:444</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l451"><code>source\scrawlAnimation.js:451</code></a>
         
         </p>
 
@@ -937,7 +946,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l235"><code>source\scrawlAnimation.js:235</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l242"><code>source\scrawlAnimation.js:242</code></a>
         
         </p>
 
@@ -994,7 +1003,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l180"><code>source\scrawlAnimation.js:180</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l187"><code>source\scrawlAnimation.js:187</code></a>
         
         </p>
 
@@ -1051,7 +1060,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l159"><code>source\scrawlAnimation.js:159</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l166"><code>source\scrawlAnimation.js:166</code></a>
         
         </p>
 
@@ -1109,7 +1118,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l200"><code>source\scrawlAnimation.js:200</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l207"><code>source\scrawlAnimation.js:207</code></a>
         
         </p>
 
@@ -1180,7 +1189,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l547"><code>source\scrawlAnimation.js:547</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l554"><code>source\scrawlAnimation.js:554</code></a>
         
         </p>
 
@@ -1283,7 +1292,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l568"><code>source\scrawlAnimation.js:568</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l575"><code>source\scrawlAnimation.js:575</code></a>
         
         </p>
 
@@ -1354,7 +1363,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l701"><code>source\scrawlAnimation.js:701</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l708"><code>source\scrawlAnimation.js:708</code></a>
         
         </p>
 
@@ -1472,7 +1481,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l458"><code>source\scrawlAnimation.js:458</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l465"><code>source\scrawlAnimation.js:465</code></a>
         
         </p>
 
@@ -1575,7 +1584,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l479"><code>source\scrawlAnimation.js:479</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l486"><code>source\scrawlAnimation.js:486</code></a>
         
         </p>
 
@@ -1646,7 +1655,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l635"><code>source\scrawlAnimation.js:635</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l642"><code>source\scrawlAnimation.js:642</code></a>
         
         </p>
 
@@ -1743,7 +1752,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l105"><code>source\scrawlAnimation.js:105</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l112"><code>source\scrawlAnimation.js:112</code></a>
         
         </p>
 
@@ -1823,7 +1832,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l883"><code>source\scrawlAnimation.js:883</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l890"><code>source\scrawlAnimation.js:890</code></a>
         
         </p>
 
@@ -1912,7 +1921,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l867"><code>source\scrawlAnimation.js:867</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l874"><code>source\scrawlAnimation.js:874</code></a>
         
         </p>
 
@@ -2038,7 +2047,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l831"><code>source\scrawlAnimation.js:831</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l838"><code>source\scrawlAnimation.js:838</code></a>
         
         </p>
 
@@ -2147,7 +2156,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l814"><code>source\scrawlAnimation.js:814</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l821"><code>source\scrawlAnimation.js:821</code></a>
         
         </p>
 
@@ -2256,7 +2265,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l797"><code>source\scrawlAnimation.js:797</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l804"><code>source\scrawlAnimation.js:804</code></a>
         
         </p>
 
@@ -2317,8 +2326,115 @@
 </div>
 
                 
-                    <div id="method_makeTimeline" class="method item">
-    <h3 class="name"><code>makeTimeline</code></h3>
+                    <div id="method_locateTarget" class="method item private">
+    <h3 class="name"><code>locateTarget</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>OBJECTNAME</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlAnimation.js.html#l963"><code>source\scrawlAnimation.js:963</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Locate a target object</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">OBJECTNAME</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>string of required target</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>target Object; false if not found</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeAction" class="method item">
+    <h3 class="name"><code>makeAction</code></h3>
 
     
         <div class="args">
@@ -2363,7 +2479,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l946"><code>source\scrawlAnimation.js:946</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l954"><code>source\scrawlAnimation.js:954</code></a>
         
         </p>
 
@@ -2374,7 +2490,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate new Timeline objects</p>
+        <p>A <strong>factory</strong> function to generate new Action objects</p>
 
     </div>
 
@@ -2411,7 +2527,112 @@
             <div class="returns-description">
                 
                     
-                    <p>Timeline object</p>
+                    <p>Action object</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeTicker" class="method item">
+    <h3 class="name"><code>makeTicker</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlAnimation.js.html#l920"><code>source\scrawlAnimation.js:920</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>factory</strong> function to generate new Ticker objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Key:value Object argument for setting attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Ticker object</p>
 
                 
             </div>
@@ -2561,7 +2782,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l929"><code>source\scrawlAnimation.js:929</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l946"><code>source\scrawlAnimation.js:946</code></a>
         
         </p>
 
@@ -2573,63 +2794,6 @@
 
     <div class="description">
         <p>Alias for makeAction()</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_newTimeline" class="method item deprecated">
-    <h3 class="name"><code>newTimeline</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-        <span class="flag deprecated">deprecated</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlAnimation.js.html#l921"><code>source\scrawlAnimation.js:921</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Alias for makeTimeline()</p>
 
     </div>
 
@@ -2675,7 +2839,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l913"><code>source\scrawlAnimation.js:913</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l929"><code>source\scrawlAnimation.js:929</code></a>
         
         </p>
 
@@ -2752,7 +2916,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l349"><code>source\scrawlAnimation.js:349</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l356"><code>source\scrawlAnimation.js:356</code></a>
         
         </p>
 
@@ -2875,7 +3039,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l366"><code>source\scrawlAnimation.js:366</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l373"><code>source\scrawlAnimation.js:373</code></a>
         
         </p>
 
@@ -2969,7 +3133,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l378"><code>source\scrawlAnimation.js:378</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l385"><code>source\scrawlAnimation.js:385</code></a>
         
         </p>
 
@@ -3040,7 +3204,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l299"><code>source\scrawlAnimation.js:299</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l306"><code>source\scrawlAnimation.js:306</code></a>
         
         </p>
 
@@ -3141,7 +3305,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l321"><code>source\scrawlAnimation.js:321</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l328"><code>source\scrawlAnimation.js:328</code></a>
         
         </p>
 
@@ -3212,7 +3376,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l249"><code>source\scrawlAnimation.js:249</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l256"><code>source\scrawlAnimation.js:256</code></a>
         
         </p>
 
@@ -3313,7 +3477,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l271"><code>source\scrawlAnimation.js:271</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l278"><code>source\scrawlAnimation.js:278</code></a>
         
         </p>
 
@@ -3384,7 +3548,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l210"><code>source\scrawlAnimation.js:210</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l217"><code>source\scrawlAnimation.js:217</code></a>
         
         </p>
 
@@ -3476,7 +3640,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l855"><code>source\scrawlAnimation.js:855</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l862"><code>source\scrawlAnimation.js:862</code></a>
         
         </p>
 
@@ -3523,7 +3687,7 @@
             
         
         
-        <a href="../files/source_scrawlAnimation.js.html#l848"><code>source\scrawlAnimation.js:848</code></a>
+        <a href="../files/source_scrawlAnimation.js.html#l855"><code>source\scrawlAnimation.js:855</code></a>
         
         </p>
 

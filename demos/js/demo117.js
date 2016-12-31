@@ -89,11 +89,15 @@ var mycode = function() {
 		targets: allTheDots,
 		ticker: 'disappear',
 		time: 1800,
-		action: function(){
-			this.updateTargets({ visibility: true });
+		action: function() {
+			this.updateTargets({
+				visibility: true
+			});
 		},
-		revert: function(){
-			this.updateTargets({ visibility: false });
+		revert: function() {
+			this.updateTargets({
+				visibility: false
+			});
 		}
 	});
 
@@ -169,11 +173,15 @@ var mycode = function() {
 		targets: scrawl.group.allDots,
 		ticker: 'disappear',
 		time: 4410,
-		action: function(){
-			this.updateTargets({ order: 0 });
+		action: function() {
+			this.updateTargets({
+				order: 0
+			});
 		},
-		revert: function(){
-			this.updateTargets({ order: 2 });
+		revert: function() {
+			this.updateTargets({
+				order: 2
+			});
 		}
 	});
 
@@ -182,11 +190,15 @@ var mycode = function() {
 		targets: allTheDots,
 		ticker: 'disappear',
 		time: 4420,
-		action: function(){
-			this.updateTargets({ globalAlpha: 1 });
+		action: function() {
+			this.updateTargets({
+				globalAlpha: 1
+			});
 		},
-		revert: function(){
-			this.updateTargets({ globalAlpha: 0 });
+		revert: function() {
+			this.updateTargets({
+				globalAlpha: 0
+			});
 		}
 	});
 
@@ -195,11 +207,15 @@ var mycode = function() {
 		targets: 'iris',
 		ticker: 'disappear',
 		time: 4430,
-		action: function(){
-			this.updateTargets({ globalCompositeOperation: 'source-in' });
+		action: function() {
+			this.updateTargets({
+				globalCompositeOperation: 'source-in'
+			});
 		},
-		revert: function(){
-			this.updateTargets({ globalCompositeOperation: 'source-over' });
+		revert: function() {
+			this.updateTargets({
+				globalCompositeOperation: 'source-over'
+			});
 		}
 	});
 
@@ -256,7 +272,7 @@ var mycode = function() {
 				break;
 			case 'seeker':
 				temp = e.target.value.toString()
-				if(currentSeeker !== temp){
+				if (currentSeeker !== temp) {
 					myTimeline.seekTo(e.target.value);
 					currentSeeker = temp;
 				}
@@ -265,7 +281,7 @@ var mycode = function() {
 	};
 	scrawl.addNativeListener(['input', 'change', 'click'], events, '.controls');
 
-	scrawl.addNativeListener('tickerupdate', function(e){
+	scrawl.addNativeListener('tickerupdate', function(e) {
 		mySlider.value = e.detail.tick;
 	}, window);
 
