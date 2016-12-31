@@ -100,31 +100,19 @@ var mycode = function() {
 		}
 	});
 
-
 	scrawl.animation.myTicker.run();
 
-	//event listeners
-	var stopE = function(e) {
+	scrawl.addNativeListener(['input', 'change'], function(e){
+		var temp;
 		e.preventDefault();
 		e.returnValue = false;
-	};
-	var events = function(e) {
-		var items = {},
-			actions,
-			ticker;
-		stopE(e);
 		switch (e.target.id) {
 			case 'loop':
-				items.reverseOnCycleEnd = (e.target.value === 'loop') ? false : true;
+				temp = (e.target.value === 'loop') ? false : true;
+				scrawl.animation.myTicker.updateSubscribers({reverseOnCycleEnd: temp});
 				break;
-			default:
-				items = false;
 		}
-		if (items) {
-			scrawl.animation.myTicker.updateSubscribers(items);
-		}
-	};
-	scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
+	}, '.controlItem');
 
 	//animation object
 	scrawl.makeAnimation({

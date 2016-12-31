@@ -1303,6 +1303,12 @@ Set attributes - restricted so that only subscribers, order, duration and cycles
 					}
 				}
 			}
+			if(xt(items.killOnComplete)){
+				this.killOnComplete = items.killOnComplete;
+			}
+			if(xt(items.eventChoke)){
+				this.eventChoke = items.eventChoke;
+			}
 			return this;
 		};
 		/**
@@ -1910,17 +1916,28 @@ Set attributes
 			var xt = my.xt, ticker;
 			items = my.safeObject(items);
 			ticker = (xt(items.ticker)) ? this.ticker : false;
-			// my.Base.prototype.set.call(this, items);
 			// if either ticker or time change, then this.effectiveTime will need recalculation
 			if(ticker){
 				this.ticker = ticker;
 				this.addToTicker(items.ticker);
 			}
 			else if(xt(items.time)){
+				this.time = items.time;
 				this.calculateEffectiveTime();
 			}
 			if(xt(items.targets)){
 				this.setTargets(items.targets);
+			}
+			if(my.xto(items.reverseOnCycleEnd, items.reversed, items.order)){
+				if(xt(items.reverseOnCycleEnd)){
+					this.reverseOnCycleEnd = items.reverseOnCycleEnd;
+				}
+				if(xt(items.reversed)){
+					this.reversed = items.reversed;
+				}
+				if(xt(items.order)){
+					this.order = items.order;
+				}
 			}
 			if(xt(items.triggered) && this.triggered !== items.triggered){
 				if(items.triggered){
@@ -2582,6 +2599,12 @@ Set attributes
 			if(xt(items.definitions)){
 				this.definitions = [].concat(items.definitions);
 				this.setDefinitionsValues();
+			}
+			if(xt(items.action)){
+				this.action = items.action;
+				if(typeof this.action !== 'function'){
+					this.action = false;
+				}
 			}
 			return this;
 		};

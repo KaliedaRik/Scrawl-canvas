@@ -45,10 +45,47 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+161231
+	- fixed demo 107
+		- tested in: Firefox, Chrome, IE11, Edge - all pass
+		
+161230
+	- bugfix for demo 098 - bug was in Ticker, Action and Tween set() function
+	- TODO: demo 107 (very popular) is an utter mess and needs to be completely rewritten!
+		- must happen before moving to v6.0.0
+	- Testing (desktop):
+		- Firefox
+			- tested 096-504 (excluding 4xx filters)
+				- all pass except
+					- 107 (known broken)
+					- 211 (expected fail)
+		- IE11
+			- tested 001-504 (excluding 4xx filters, 213-216 stack positioning)
+				- all pass except
+					- 094 (expected fail)
+					- 107 (known broken)
+					- 108 (expected fail)
+					- 112 (fail - video)
+		- Chrome
+			- tested 001-504 (excluding 4xx filters, 213-216 stack positioning)
+				- all pass except
+					- 107 (known broken)
+					- 112 (fail - video)
+					- 211 (expected fail)
+		- Edge
+			- tested 001-504 (excluding 4xx filters, 213-216 stack positioning)
+				- all pass except
+					- 107 (known broken)
+					- 112 (expected fail - video)
+
 161229
 	- new demo 119 to stress-test use of multiple tweens (thousands) in a scene
 	- updated demo index page
-	
+	- Testing:
+		- Firefox
+			- tested 001-100
+				- test 098 fails - demo doesn't reverse
+
 to 161228
 	- tweens and timelines refactor completed
 		- fixing Ticker, Action and Tween bugs

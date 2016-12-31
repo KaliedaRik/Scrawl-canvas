@@ -11,55 +11,45 @@
       padding: 0;
       border: 0;
     }
-    .center {
-      width: 100%;
-      text-align: center;
-    }
   </style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body class="zero">
-  <div id="mystack" class="scrawlstack zero">
-    <canvas id="mycanvas" class="zero"></canvas>
-    <div id="page1" class="zero">
+
+  <div id="iframestack" class="scrawlstack">
+    <iframe id="myframe" src="http://en.wikipedia.org/wiki/Cat"></iframe>
+  </div>
+
+  <div id="titlestack" class="scrawlstack">
+    <div id="title">
       <h1><a href="index.html">Scrawl.js</a> - demonstration 107</h1>
       <h2>Page loading effects</h2>
-      <h3>Extensions: path, factories, animation, stacks, block, wheel</h3>
-      <div class="center">
-        <p>Select effect:</p>
-        <p>
-          <select id="effect">
-            <option value="fog" selected>Fog</option>
-            <option value="clearFromCenter">Rolling rectangle</option>
-            <option value="starburst">Spinning star</option>
-            <option value="roller">Chop from top</option>
-            <option value="clearCircles">Clear with circles</option>
-          </select>
-        </p>
-        <p>
-          <button id="startButton" type="button">Display effect</button>
-        </p>
-      </div>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper
-        porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero.</p>
-
-      <p>Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor. Morbi lectus risus, iaculis vel, suscipit quis,
-        luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit.</p>
-
-      <p>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis. Nulla facilisi. Ut fringilla. Suspendisse
-        potenti. Nunc feugiat mi a tellus consequat imperdiet. Vestibulum sapien. Proin quam. Etiam ultrices. Suspendisse in justo eu magna luctus suscipit. Sed lectus. Integer euismod lacus luctus magna.</p>
-    </div>
-
-    <div id="page2" class="zero">
-      <div class="center">
-        <button id="returnButton" type="button">Return to main page</button>
-      </div>
-      <iframe id="myframe" src="about:blank"></iframe>
+      <h3>Extensions: path, factories, animation, stacks, block, wheel, phrase</h3>
     </div>
   </div>
 
-  <!-- don't display code -->
+  <div id="controlsstack" class="scrawlstack">
+    <div id="controls">
+      <p>Select effect: </p>
+      <p>
+        <select id="effect">
+          <option value="fog" selected>Fog</option>
+          <option value="rollingRectangle">Rolling rectangle</option>
+          <option value="spinningStar">Spinning star</option>
+          <option value="chopFromTop">Chop from top</option>
+          <option value="clearWithCircles">Clear with circles</option>
+        </select>
+      </p>
+      <p>
+        <button id="button" type="button">Display effect</button>
+      </p>
+    </div>
+  </div>
+  
+  <div id="canvasstack" class="scrawlstack">
+    <canvas id="loadeffect"></canvas>
+  </div>
 
   <script src="../source/scrawlCore.js"></script>
   <script src="js/demo107.js"></script>

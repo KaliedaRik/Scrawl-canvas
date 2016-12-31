@@ -76,7 +76,6 @@ var mycode = function() {
 		startY: '4%',
 		handleX: 'center',
 		handleY: 'center',
-		handleX: 'center',
 		text: 'Run',
 		fillStyle: 'yellow',
 		backgroundColor: 'red',
