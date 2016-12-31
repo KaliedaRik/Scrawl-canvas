@@ -92,14 +92,14 @@ VERSION 6.0.0 released 31 December 2016
 		
 		Production:
 		- scrawlCore-min.js (80kb)
-		- scrawlAnimation-min.js (41kb)
+		- scrawlAnimation-min.js (28kb)
 		- scrawlBlock-min.js (5kb)
 		- scrawlCollisions-min.js (11kb)
 		- scrawlColor-min.js (18kb)
 		- scrawlFilters-min.js (25kb)
 		- scrawlFrame-min.js (20kb)
 		- scrawlImageLoad-min.js (9kb)
-		- scrawlImages-min.js (39kb)
+		- scrawlImages-min.js (40kb)
 		- scrawlPath-min.js (24kb)
 		- scrawlPathFactories-min.js (9kb)
 		- scrawlPhrase-min.js (13kb)
@@ -112,13 +112,13 @@ VERSION 6.0.0 released 31 December 2016
 
 		Development:
 		- scrawlCore.js (237kb)
-		- scrawlAnimation.js (122kb)
+		- scrawlAnimation.js (79kb)
 		- scrawlBlock.js (14kb)
 		- scrawlCollisions.js (29kb)
 		- scrawlColor.js (36kb)
 		- scrawlFilters.js (67kb)
 		- scrawlFrame (67kb)
-		- scrawlImageLoad.js (28kb)
+		- scrawlImageLoad.js (30kb)
 		- scrawlImages.js (68kb)
 		- scrawlPath.js (68kb)
 		- scrawlPathFactories.js (25kb)
