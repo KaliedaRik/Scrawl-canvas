@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 6.0.0 - 31 December 2016
+*	version 6.0.0 - 4 January 2017
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -31,6 +31,12 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+170104
+	- release v6.0.0
+
+to 170103
+	- fix website to use latest version
+
 161231
 	- fixed demo 107
 		- tested in: Firefox, Chrome, IE11, Edge - all pass

@@ -976,6 +976,17 @@ Used only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This
 @default &#x27;&#x27;
 **/
 			/**
+Prevent a clone from reverting to copyWidth = copyHeight = 100%
+
+By default a clone will copy all of the image, whether or not copyHeight or copyWidth have been set to values other than 100%; setting this attribute to true (default: false) ensures the clone&#x27;s copy dimensions respect the attributes passed to it.
+
+Used only with __Picture.clone()__ operations. This attribute is not retained
+@property keepCopyDimensions
+@type Boolean
+@default false
+**/
+
+			/**
 Asynchronous loading of image file from the server - function to run once image has successfully loaded
 
 Used only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This attribute is not retained

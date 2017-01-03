@@ -2656,7 +2656,7 @@ setDefinitionsValues helper function
 					result[1] = item;
 				}
 				else if (item.substring) {
-					a = item.match(/^\d+\.?\d*(\D*)/);
+					a = item.match(/^-?\d+\.?\d*(\D*)/);
 					if (xt(a[0])) {
 						result[1] = parseFloat(a);
 					}

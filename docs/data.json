@@ -337,7 +337,7 @@
             "tag": "module",
             "file": "source\\scrawlCore.js",
             "line": 8568,
-            "description": "# scrawlCore\n\n## Version 6.0.0 - 31 December 2016\n\nDeveloped by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>\n\nScrawl demo website: <http://scrawl.rikweb.org.uk>\n\n## Purpose and features\n\nThe core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. \n\n* Defines the Scrawl scope - __window.scrawl__\n\n* Defines a number of utility methods used throughout Scrawl.js\n\n* Defines the Scrawl library - all significant objects created by Scrawl can be found here\n\n* Searches the DOM for &lt;canvas&gt; elements, and imports them into the Scrawl library\n\n* Instantiates controllers (Pad objects) and wrappers (Cell objects) for each &lt;canvas&gt; element\n\n* Instantiates Context engine objects for each Cell object\n\n* Defines mouse functionality in relation to &lt;canvas&gt; elements\n\n* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core\n\n* Defines Group objects, used to group entitys together for display and interaction purposes\n\n* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions\n\n## Loading the module",
+            "description": "# scrawlCore\n\n## Version 6.0.0 - 4 January 2017\n\nDeveloped by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>\n\nScrawl demo website: <http://scrawl.rikweb.org.uk>\n\n## Purpose and features\n\nThe core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. \n\n* Defines the Scrawl scope - __window.scrawl__\n\n* Defines a number of utility methods used throughout Scrawl.js\n\n* Defines the Scrawl library - all significant objects created by Scrawl can be found here\n\n* Searches the DOM for &lt;canvas&gt; elements, and imports them into the Scrawl library\n\n* Instantiates controllers (Pad objects) and wrappers (Cell objects) for each &lt;canvas&gt; element\n\n* Instantiates Context engine objects for each Cell object\n\n* Defines mouse functionality in relation to &lt;canvas&gt; elements\n\n* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core\n\n* Defines Group objects, used to group entitys together for display and interaction purposes\n\n* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions\n\n## Loading the module",
             "example": [
                 "\n    <script src=\"path/to/scrawlCore-min.js\"></script>"
             ]
@@ -17312,6 +17312,17 @@
         {
             "file": "source\\scrawlImages.js",
             "line": 718,
+            "description": "Prevent a clone from reverting to copyWidth = copyHeight = 100%\n\nBy default a clone will copy all of the image, whether or not copyHeight or copyWidth have been set to values other than 100%; setting this attribute to true (default: false) ensures the clone's copy dimensions respect the attributes passed to it.\n\nUsed only with __Picture.clone()__ operations. This attribute is not retained",
+            "itemtype": "property",
+            "name": "keepCopyDimensions",
+            "type": "Boolean",
+            "default": "false",
+            "class": "Picture",
+            "module": "scrawlImages"
+        },
+        {
+            "file": "source\\scrawlImages.js",
+            "line": 729,
             "description": "Asynchronous loading of image file from the server - function to run once image has successfully loaded\n\nUsed only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This attribute is not retained",
             "itemtype": "property",
             "name": "callback",
@@ -17322,7 +17333,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 729,
+            "line": 740,
             "description": "Augments Entity.get()",
             "itemtype": "method",
             "name": "get",
@@ -17341,7 +17352,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 749,
+            "line": 760,
             "description": "Augments Entity.set()",
             "itemtype": "method",
             "name": "set",
@@ -17361,7 +17372,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 798,
+            "line": 809,
             "description": "Augments Entity.setDelta()",
             "itemtype": "method",
             "name": "setDelta",
@@ -17381,7 +17392,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 860,
+            "line": 871,
             "description": "Picture.setCopy update copyData object values",
             "itemtype": "method",
             "name": "setCopy",
@@ -17393,7 +17404,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 917,
+            "line": 928,
             "description": "Picture.setPaste update pasteData object values",
             "itemtype": "method",
             "name": "setPaste",
@@ -17405,7 +17416,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 946,
+            "line": 957,
             "description": "Augments Entity.clone()",
             "itemtype": "method",
             "name": "clone",
@@ -17425,7 +17436,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 961,
+            "line": 972,
             "description": "Clone helper function",
             "itemtype": "method",
             "name": "fitToImageSize",
@@ -17440,7 +17451,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 981,
+            "line": 992,
             "description": "Constructor and clone helper function",
             "itemtype": "method",
             "name": "sourceImage",
@@ -17454,7 +17465,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1003,
+            "line": 1014,
             "description": "Stamp helper function - update source and copy (for dynamically loading images)",
             "itemtype": "method",
             "name": "checkSource",
@@ -17469,7 +17480,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1017,
+            "line": 1028,
             "description": "Stamp helper function - perform a 'clip' method draw",
             "itemtype": "method",
             "name": "clip",
@@ -17496,7 +17507,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1038,
+            "line": 1049,
             "description": "Stamp helper function - perform a 'none' method draw",
             "itemtype": "method",
             "name": "none",
@@ -17523,7 +17534,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1050,
+            "line": 1061,
             "description": "Stamp helper function - perform a 'clear' method draw",
             "itemtype": "method",
             "name": "clear",
@@ -17550,7 +17561,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1068,
+            "line": 1079,
             "description": "Stamp helper function - perform a 'clearWithBackground' method draw",
             "itemtype": "method",
             "name": "clearWithBackground",
@@ -17577,7 +17588,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1094,
+            "line": 1105,
             "description": "Stamp helper function - perform a 'draw' method draw",
             "itemtype": "method",
             "name": "draw",
@@ -17604,7 +17615,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1113,
+            "line": 1124,
             "description": "Stamp helper function - perform a 'fill' method draw",
             "itemtype": "method",
             "name": "fill",
@@ -17631,7 +17642,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1135,
+            "line": 1146,
             "description": "Stamp helper function - perform a 'drawFill' method draw",
             "itemtype": "method",
             "name": "drawFill",
@@ -17658,7 +17669,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1159,
+            "line": 1170,
             "description": "Stamp helper function - perform a 'fillDraw' method draw",
             "itemtype": "method",
             "name": "fillDraw",
@@ -17685,7 +17696,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1183,
+            "line": 1194,
             "description": "Stamp helper function - perform a 'sinkInto' method draw",
             "itemtype": "method",
             "name": "sinkInto",
@@ -17712,7 +17723,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1206,
+            "line": 1217,
             "description": "Stamp helper function - perform a 'floatOver' method draw",
             "itemtype": "method",
             "name": "floatOver",
@@ -17739,7 +17750,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1230,
+            "line": 1241,
             "description": "Display helper function - retrieve copy attributes for Image object, taking into account the current frame for entity sheet images\n\nAlso generates new filtered images, when necessary",
             "itemtype": "method",
             "name": "getImage",
@@ -17753,7 +17764,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1244,
+            "line": 1255,
             "description": "getImage helper object",
             "itemtype": "method",
             "name": "getImageActions",
@@ -17764,7 +17775,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1281,
+            "line": 1292,
             "description": "Load the Picture entity's image data (via JavaScript getImageData() function) into the scrawl-canvas library",
             "itemtype": "method",
             "name": "getImageData",
@@ -17785,7 +17796,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1306,
+            "line": 1317,
             "description": "Get the pixel color or channel data from Picture object's image at given coordinate\n\nArgument needs to have __x__ and __y__ data (pixel coordinates) and, optionally, a __channel__ string - 'red', 'blue', 'green', 'alpha' (default), 'color'",
             "itemtype": "method",
             "name": "getImageDataValue",
@@ -17804,7 +17815,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1347,
+            "line": 1358,
             "description": "getImageDataValue helper object",
             "itemtype": "method",
             "name": "getImageDataValueActions",
@@ -17813,7 +17824,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1368,
+            "line": 1379,
             "description": "Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function\n\nArgument object contains the following attributes:\n\n* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector\n* __x__ - X coordinate\n* __y__ - Y coordinate\n\nEither the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values",
             "itemtype": "method",
             "name": "checkHit",
@@ -17832,7 +17843,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1434,
+            "line": 1445,
             "description": "Revert pickupEntity() actions, ensuring entity is left where the user drops it",
             "itemtype": "method",
             "name": "dropEntity",
@@ -17853,7 +17864,7 @@
         },
         {
             "file": "source\\scrawlImages.js",
-            "line": 1446,
+            "line": 1457,
             "description": "Calculate the box position of the entity\n\nReturns an object with the following attributes:\n\n* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner\n* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner",
             "itemtype": "method",
             "name": "getMaxDimensions",
