@@ -1145,6 +1145,7 @@ Add a Tween or Action's name to the Ticker's .subscribers array
 
 @method subscribe
 @param {Array} [items] Array containing String name values, or Objects with a .name attribute; alternatively can be a single String or Object
+@chainable
 @return this
 **/
 		my.Ticker.prototype.subscribe = function(items) {
@@ -1177,6 +1178,7 @@ Remove a Tween or Action's name from the Ticker's .subscribers array
 
 @method unsubscribe
 @param {Array} [items] Array containing String name values, or Tween/Action Objects with a .name attribute; alternatively can be a single String or Object
+@chainable
 @return this
 **/
 		my.Ticker.prototype.unsubscribe = function(items) {
@@ -1402,6 +1404,7 @@ Change the supplied attributes for each subscribed tween and action
 @param {Object} items Object containing key:value parameters for updating
 @param {Boolean} [reversed] when true, perform update from last subscriber to first; default false
 @chainable
+@private
 @return this
 **/
 		my.Ticker.prototype.updateSubscribers = function(items, reversed) {
@@ -1420,6 +1423,7 @@ Bulk-change the playing direction for all subscribed tweens and actions
 
 @method changeSubscriberDirection
 @chainable
+@private
 @return this
 **/
 		my.Ticker.prototype.changeSubscriberDirection = function() {
@@ -1435,6 +1439,7 @@ Bulk-change the playing direction for all subscribed tweens and actions
 Start ticker from 0
 
 @method run
+@chainable
 @return this
 **/
 		my.Ticker.prototype.run = function() {
@@ -1455,6 +1460,7 @@ Start ticker from 0
 Reset ticker to initial conditions
 
 @method reset
+@chainable
 @return this
 **/
 		my.Ticker.prototype.reset = function() {
@@ -1475,6 +1481,7 @@ Reset ticker to initial conditions
 Reset ticker to final conditions
 
 @method complete
+@chainable
 @return this
 **/
 		my.Ticker.prototype.complete = function() {
@@ -1495,6 +1502,7 @@ Reset ticker to final conditions
 Reverse tracker direction and continue playing
 
 @method reverse
+@chainable
 @return this
 **/
 		my.Ticker.prototype.reverse = function() {
@@ -1514,6 +1522,7 @@ Reverse tracker direction and continue playing
 Halt ticker
 
 @method halt
+@chainable
 @return this
 **/
 		my.Ticker.prototype.halt = function() {
@@ -1526,6 +1535,7 @@ Halt ticker
 Resume ticker
 
 @method resume
+@chainable
 @return this
 **/
 		my.Ticker.prototype.resume = function() {
@@ -1548,6 +1558,7 @@ seekTo a different specific point on the ticker
 @method seekTo
 @param {Number} seekto time in milliseconds from start of ticker; default 0 - effectively sets ticker back to starting conditions
 @param {Boolean} [resume] - flag - when true, the resume() function will trigger; false (default) triggers a single call to the fn() function
+@chainable
 @return this
 **/
 		my.Ticker.prototype.seekTo = function(milliseconds, resume) {
@@ -1580,6 +1591,7 @@ seekFor a different relative point on the ticker
 @method seekFor
 @param {Number} seekfor time in milliseconds from current tick; default 0 - no change
 @param {Boolean} [resume] - flag - when true, the resume() function will trigger; false (default) triggers a single call to the fn() function
+@chainable
 @return this
 **/
 		my.Ticker.prototype.seekFor = function(milliseconds, resume) {

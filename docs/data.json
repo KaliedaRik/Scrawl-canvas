@@ -268,7 +268,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "source\\scrawlAnimation.js",
-            "line": 2138,
+            "line": 2150,
             "description": "# scrawlAnimation\n\n## Purpose and features\n\nThe Animation module adds support for animation and tweening to the core\n\n* Adds and starts an animation loop to the core\n* Defines the Animation object, used to program animation sequences\n* Defines the Tween object - a specialized form of animation which has pre-determined start and end points, durations and easing options\n* Adds functionality to various core objects and functions so they can take advantage of the animation object"
         },
         "scrawlBlock": {
@@ -572,7 +572,7 @@
             "module": "scrawlAnimation",
             "namespace": "",
             "file": "source\\scrawlAnimation.js",
-            "line": 1642,
+            "line": 1654,
             "description": "# Action\n\n## Instantiation\n\n* scrawl.makeAction()\n\n## Purpose\n\n* Defines a reversible function which can subscribe to a ticker so that it gets invoked at a particular moment after the ticker starts to run\n\nActions only really make sense when they are associated with a Ticker object. They have no duration as such (unless their action/revert functions include asynchronous activities, in which case - you're on your own!). The action() function should define a set of near-instant actions; the revert() function should mirror the action, to allow the Action object to be reversible.\n\nAction and revert functions are not expected to take any arguments - they are expected to act on the objects assigned to their __targets__ Array\n\nTo access the Action functions directly, assign it to a variable, or call it from the library: \n\n* scrawl.tween[ACTIONNAME].action()\n* scrawl.tween[ACTIONNAME].revert()\n\n## Access\n\n* scrawl.tween.ACTIONNAME - for the Action object\n\n## Action functions\n\n* An Action can be invoked by calling its __action()__ function.\n* An Action can be reversed by calling its __revert()__ function.\n* An Action can be deleted by calling the __kill()__ function on it.",
             "is_constructor": 1,
             "extends": "Base",
@@ -596,7 +596,7 @@
             "module": "scrawlAnimation",
             "namespace": "",
             "file": "source\\scrawlAnimation.js",
-            "line": 2138,
+            "line": 2150,
             "description": "# Tween\n\n## Instantiation\n\n* scrawl.makeTween()\n\n## Purpose\n\n* Defines a set of attribute update definitions for objects\n\n## Access\n\n* scrawl.tween.TWEENNAME - for the Tween object\n\n## Tween functions\n\n* A Tween can be deleted by calling the __kill()__ function on it.",
             "is_constructor": 1,
             "extends": "Base",
@@ -2757,6 +2757,7 @@
                     "optional": true
                 }
             ],
+            "chainable": 1,
             "return": {
                 "description": "this"
             },
@@ -2765,7 +2766,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1175,
+            "line": 1176,
             "description": "Remove a Tween or Action's name from the Ticker's .subscribers array",
             "itemtype": "method",
             "name": "unsubscribe",
@@ -2777,6 +2778,7 @@
                     "optional": true
                 }
             ],
+            "chainable": 1,
             "return": {
                 "description": "this"
             },
@@ -2785,7 +2787,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1207,
+            "line": 1209,
             "description": "Recalculate the ticker's effective duration",
             "itemtype": "method",
             "name": "recalculateEffectiveDuration",
@@ -2800,7 +2802,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1233,
+            "line": 1235,
             "description": "Set the ticker's effective duration from this.duration",
             "itemtype": "method",
             "name": "setEffectiveDuration",
@@ -2815,7 +2817,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1256,
+            "line": 1258,
             "description": "Order subscriber tweens by their time attributes, lowest to highest",
             "itemtype": "method",
             "name": "sortSubscribers",
@@ -2830,7 +2832,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1267,
+            "line": 1269,
             "description": "Set attributes - restricted so that only subscribers, order, duration and cycles attributes can be amended",
             "itemtype": "method",
             "name": "set",
@@ -2851,7 +2853,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1314,
+            "line": 1316,
             "description": "Animation function",
             "itemtype": "method",
             "name": "fn",
@@ -2874,7 +2876,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1398,
+            "line": 1400,
             "description": "Change the supplied attributes for each subscribed tween and action",
             "itemtype": "method",
             "name": "updateSubscribers",
@@ -2892,6 +2894,8 @@
                 }
             ],
             "chainable": 1,
+            "access": "private",
+            "tagname": "",
             "return": {
                 "description": "this"
             },
@@ -2900,10 +2904,25 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1418,
+            "line": 1421,
             "description": "Bulk-change the playing direction for all subscribed tweens and actions",
             "itemtype": "method",
             "name": "changeSubscriberDirection",
+            "chainable": 1,
+            "access": "private",
+            "tagname": "",
+            "return": {
+                "description": "this"
+            },
+            "class": "Ticker",
+            "module": "scrawlAnimation"
+        },
+        {
+            "file": "source\\scrawlAnimation.js",
+            "line": 1438,
+            "description": "Start ticker from 0",
+            "itemtype": "method",
+            "name": "run",
             "chainable": 1,
             "return": {
                 "description": "this"
@@ -2913,22 +2932,11 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1434,
-            "description": "Start ticker from 0",
-            "itemtype": "method",
-            "name": "run",
-            "return": {
-                "description": "this"
-            },
-            "class": "Ticker",
-            "module": "scrawlAnimation"
-        },
-        {
-            "file": "source\\scrawlAnimation.js",
-            "line": 1454,
+            "line": 1459,
             "description": "Reset ticker to initial conditions",
             "itemtype": "method",
             "name": "reset",
+            "chainable": 1,
             "return": {
                 "description": "this"
             },
@@ -2937,10 +2945,11 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1474,
+            "line": 1480,
             "description": "Reset ticker to final conditions",
             "itemtype": "method",
             "name": "complete",
+            "chainable": 1,
             "return": {
                 "description": "this"
             },
@@ -2949,10 +2958,11 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1494,
+            "line": 1501,
             "description": "Reverse tracker direction and continue playing",
             "itemtype": "method",
             "name": "reverse",
+            "chainable": 1,
             "return": {
                 "description": "this"
             },
@@ -2961,10 +2971,11 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1513,
+            "line": 1521,
             "description": "Halt ticker",
             "itemtype": "method",
             "name": "halt",
+            "chainable": 1,
             "return": {
                 "description": "this"
             },
@@ -2973,10 +2984,11 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1525,
+            "line": 1534,
             "description": "Resume ticker",
             "itemtype": "method",
             "name": "resume",
+            "chainable": 1,
             "return": {
                 "description": "this"
             },
@@ -2985,7 +2997,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1545,
+            "line": 1555,
             "description": "seekTo a different specific point on the ticker",
             "itemtype": "method",
             "name": "seekTo",
@@ -3002,6 +3014,7 @@
                     "optional": true
                 }
             ],
+            "chainable": 1,
             "return": {
                 "description": "this"
             },
@@ -3010,7 +3023,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1577,
+            "line": 1588,
             "description": "seekFor a different relative point on the ticker",
             "itemtype": "method",
             "name": "seekFor",
@@ -3027,6 +3040,7 @@
                     "optional": true
                 }
             ],
+            "chainable": 1,
             "return": {
                 "description": "this"
             },
@@ -3035,7 +3049,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1608,
+            "line": 1620,
             "description": "Remove this Ticker from the scrawl library",
             "itemtype": "method",
             "name": "kill",
@@ -3047,7 +3061,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1623,
+            "line": 1635,
             "description": "Remove this Ticker from the scrawl library (if argument is true), alongside any tweens associated with it",
             "itemtype": "method",
             "name": "killTweens",
@@ -3059,7 +3073,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1704,
+            "line": 1716,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -3070,7 +3084,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1713,
+            "line": 1725,
             "description": "Ticker name\nIf an Action object is associated with a ticker, it will fire (or revert) at the appropriate point in the course of the ticker's run.",
             "itemtype": "property",
             "name": "ticker",
@@ -3081,7 +3095,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1721,
+            "line": 1733,
             "description": "Array of Objects on which this Action will perform its action and revert functions; if the array includes Strings, the constructor, set and clone functions will search for the Objects in the Scrawl library, checking sections (if they currently exist) in the following order: \n\n* entity, cell, pad, stack, element, point, group, design, animation, tween, anim, filter, image, force, spring, physics\n\nThis attribute can also accept a single Object or String as its value in the",
             "itemtype": "property",
             "name": "targets",
@@ -3092,7 +3106,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1733,
+            "line": 1745,
             "description": "Action function",
             "itemtype": "property",
             "name": "action",
@@ -3103,7 +3117,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1740,
+            "line": 1752,
             "description": "Revert function - should reverse the actions of the .action function",
             "itemtype": "property",
             "name": "revert",
@@ -3114,7 +3128,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1747,
+            "line": 1759,
             "description": "Time - point (in milliseconds) following the start of the Action's ticker when the action function will trigger",
             "itemtype": "property",
             "name": "time",
@@ -3125,7 +3139,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1754,
+            "line": 1766,
             "description": "Reversable flag - when true, the action will alternate the tick and reverseTick values as the ticker cycles",
             "itemtype": "property",
             "name": "reverseOnCycleEnd",
@@ -3136,7 +3150,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1761,
+            "line": 1773,
             "description": "Reversed - when true, the action is using reverseTick value",
             "itemtype": "property",
             "name": "reversed",
@@ -3147,7 +3161,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1768,
+            "line": 1780,
             "description": "Sort order - for Actions that share the same time value on a given Ticker. Without a sort order, there will be no guarantee which actions with the same time value will be performed first",
             "itemtype": "property",
             "name": "order",
@@ -3158,7 +3172,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1777,
+            "line": 1789,
             "description": "Get the effective (millisecond number) time when action will trigger",
             "itemtype": "method",
             "name": "calculateEffectiveTime",
@@ -3181,7 +3195,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1806,
+            "line": 1818,
             "description": "Add action to given ticker\n\nIf action is already subscribed to a different ticker, the function will automatically unsubscribe from that ticker before subscribing to the new ticker",
             "itemtype": "method",
             "name": "addToTicker",
@@ -3201,7 +3215,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1831,
+            "line": 1843,
             "description": "Remove action from given ticker",
             "itemtype": "method",
             "name": "removeFromTicker",
@@ -3221,7 +3235,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1850,
+            "line": 1862,
             "description": "retrieve the completion time for the action",
             "itemtype": "method",
             "name": "getEndTime",
@@ -3235,7 +3249,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1859,
+            "line": 1871,
             "description": "Investigate the data supplied by the ticker and, if necessary, invoke the action or revert functions, as appropriate\n\nThe object passed by the ticker has the following attributes:\n\n* tick - milliseconds since ticker started its run\n* reverseTick - milliseconds before ticker reaches the end of its run\n* willLoop - boolean indicating whether ticker is about to restart\n* next - boolean indicating whether this is the ticker's last update",
             "itemtype": "method",
             "name": "update",
@@ -3256,7 +3270,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1914,
+            "line": 1926,
             "description": "Set attributes",
             "itemtype": "method",
             "name": "set",
@@ -3276,7 +3290,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 1972,
+            "line": 1984,
             "description": "Set targets attribute - assumes that the supplied Array will replace, not amend, any existing targets array",
             "itemtype": "method",
             "name": "setTargets",
@@ -3298,7 +3312,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2004,
+            "line": 2016,
             "description": "Add Objects to targets attribute - assumes that the supplied Array will augment any existing targets array",
             "itemtype": "method",
             "name": "addToTargets",
@@ -3318,7 +3332,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2030,
+            "line": 2042,
             "description": "Remove Objects from targets attribute - will not remove an object with no name and/or type attributes",
             "itemtype": "method",
             "name": "removeFromTargets",
@@ -3338,7 +3352,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2082,
+            "line": 2094,
             "description": "Create a clone of this Action\n\nNote: strongly advise every call to this function includes newly created anonymous functions for the action and revert attributes in the argument object - Scrawl's clone functionality does not clone function attributes!",
             "itemtype": "method",
             "name": "clone",
@@ -3358,7 +3372,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2112,
+            "line": 2124,
             "description": "Remove this Action from the scrawl library",
             "itemtype": "method",
             "name": "kill",
@@ -3370,7 +3384,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2125,
+            "line": 2137,
             "description": "Update target attributes",
             "itemtype": "method",
             "name": "updateTargets",
@@ -3390,7 +3404,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2210,
+            "line": 2222,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -3401,7 +3415,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2219,
+            "line": 2231,
             "description": "Ticker name\nIf a Tween object is associated with a ticker, it will fire (or revert) at the appropriate point in the course of the ticker's run.",
             "itemtype": "property",
             "name": "ticker",
@@ -3412,7 +3426,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2227,
+            "line": 2239,
             "description": "Array of Objects on which this Tween will perform its action and revert functions; if the array includes Strings, the constructor, set and clone functions will search for the Objects in the Scrawl library, checking sections (if they currently exist) in the following order: \n\n* entity, cell, pad, stack, element, point, group, design, animation, tween, anim, filter, image, force, spring, physics\n\nThis attribute can also accept a single Object or String as its value in the",
             "itemtype": "property",
             "name": "targets",
@@ -3423,7 +3437,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2239,
+            "line": 2251,
             "description": "Array of Objects which define the actions this tween will take. The Objects must include the following attributes: \n* attribute - (required) a String of the attribute key value\n* start - (required) a Number or String value determining the point on the Ticker at which the tween will activate (eg: 100, '10%', '2px')\n* end - (required) a Number or String value determining the point on the Ticker at which the tween will deactivate (eg: 900, '90%', '50px')\n* engine - (optional) a String value supplying the name of the easing engine to use; default 'linear'\n* integer - (optional) a Boolean: when true, the calculated value will have Math.round() applied before targets are set; default false\n\nThis attribute can also accept a single Object as its value",
             "itemtype": "property",
             "name": "definitions",
@@ -3434,7 +3448,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2254,
+            "line": 2266,
             "description": "Time - point (in milliseconds) following the start of the Tween's ticker when the tween will trigger",
             "itemtype": "property",
             "name": "time",
@@ -3445,7 +3459,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2261,
+            "line": 2273,
             "description": "Function to be called at the end of each tween recalculation - takes no arguments",
             "itemtype": "property",
             "name": "action",
@@ -3456,7 +3470,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2268,
+            "line": 2280,
             "description": "Duration - time required for tween to run",
             "itemtype": "property",
             "name": "duration",
@@ -3467,7 +3481,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2275,
+            "line": 2287,
             "description": "Reversable flag - when true, the tween will reverse its direction of play as each ticker cycle completes; default false (will go back to beginning and play in the current direction)",
             "itemtype": "property",
             "name": "reverseOnCycleEnd",
@@ -3478,7 +3492,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2282,
+            "line": 2294,
             "description": "Reversed - determines the directin in which the tween will run - true means that reverseTick values will be used for calculations; default false",
             "itemtype": "property",
             "name": "reversed",
@@ -3489,7 +3503,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2289,
+            "line": 2301,
             "description": "Sort order - for Actions that share the same time value on a given Ticker. Without a sort order, there will be no guarantee which actions with the same time value will be performed first",
             "itemtype": "property",
             "name": "order",
@@ -3500,7 +3514,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2298,
+            "line": 2310,
             "description": "retrieve the completion time for the action",
             "itemtype": "method",
             "name": "getEndTime",
@@ -3514,7 +3528,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2307,
+            "line": 2319,
             "description": "Get the effective (millisecond number) time when tween will trigger",
             "itemtype": "method",
             "name": "calculateEffectiveTime",
@@ -3537,7 +3551,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2319,
+            "line": 2331,
             "description": "Get the effective (millisecond number) duration for the tween",
             "itemtype": "method",
             "name": "calculateEffectiveDuration",
@@ -3560,7 +3574,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2348,
+            "line": 2360,
             "description": "Add tween to given ticker\n\nIf tween is already subscribed to a different ticker, the function will automatically unsubscribe from that ticker before subscribing to the new ticker",
             "itemtype": "method",
             "name": "addToTicker",
@@ -3580,7 +3594,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2362,
+            "line": 2374,
             "description": "Remove action from given ticker",
             "itemtype": "method",
             "name": "removeFromTicker",
@@ -3600,7 +3614,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2373,
+            "line": 2385,
             "description": "Investigate the data supplied by the ticker and, if necessary, invoke the action or revert functions, as appropriate\n\nThe object passed by the ticker has the following attributes:\n\n* tick - milliseconds since ticker started its run\n* reverseTick - milliseconds before ticker reaches the end of its run\n* willLoop - boolean indicating whether ticker is about to restart\n* next - boolean indicating whether this is the ticker's last update",
             "itemtype": "method",
             "name": "update",
@@ -3621,7 +3635,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2443,
+            "line": 2455,
             "description": "Perform a simple update",
             "itemtype": "method",
             "name": "doSimpleUpdate",
@@ -3642,7 +3656,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2498,
+            "line": 2510,
             "description": "update cleanup",
             "itemtype": "method",
             "name": "updateCleanup",
@@ -3663,7 +3677,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2513,
+            "line": 2525,
             "description": "Tween engine helper object",
             "itemtype": "method",
             "name": "engineActions",
@@ -3674,7 +3688,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2582,
+            "line": 2594,
             "description": "Set attributes",
             "itemtype": "method",
             "name": "set",
@@ -3694,7 +3708,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2619,
+            "line": 2631,
             "description": "Calculate the effective values for definitions",
             "itemtype": "method",
             "name": "setDefinitionsValues",
@@ -3716,7 +3730,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2644,
+            "line": 2656,
             "description": "setDefinitionsValues helper function",
             "itemtype": "method",
             "name": "parseDefinitionsValue",
@@ -3737,7 +3751,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2670,
+            "line": 2682,
             "description": "Set targets attribute - assumes that the supplied Array will replace, not amend, any existing targets array",
             "itemtype": "method",
             "name": "setTargets",
@@ -3759,7 +3773,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2682,
+            "line": 2694,
             "description": "Add Objects to targets attribute - assumes that the supplied Array will augment any existing targets array",
             "itemtype": "method",
             "name": "addToTargets",
@@ -3779,7 +3793,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2693,
+            "line": 2705,
             "description": "Remove Objects from targets attribute - will not remove an object with no name and/or type attributes",
             "itemtype": "method",
             "name": "removeFromTargets",
@@ -3799,7 +3813,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2704,
+            "line": 2716,
             "description": "Create a clone of this Tween\n\nNote: strongly advise every call to this function includes newly created anonymous functions for the action and revert attributes in the argument object - Scrawl's clone functionality does not clone function attributes!",
             "itemtype": "method",
             "name": "clone",
@@ -3819,7 +3833,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2722,
+            "line": 2734,
             "description": "Start the tween's ticker from 0",
             "itemtype": "method",
             "name": "run",
@@ -3831,7 +3845,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2735,
+            "line": 2747,
             "description": "Halt the tween's ticker",
             "itemtype": "method",
             "name": "halt",
@@ -3843,7 +3857,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2748,
+            "line": 2760,
             "description": "Resume the tween's ticker",
             "itemtype": "method",
             "name": "resume",
@@ -3855,7 +3869,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2761,
+            "line": 2773,
             "description": "seekTo a different specific point on the tween's ticker",
             "itemtype": "method",
             "name": "seekTo",
@@ -3867,7 +3881,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2774,
+            "line": 2786,
             "description": "seekFor a different relative point on the tween's ticker",
             "itemtype": "method",
             "name": "seekFor",
@@ -3879,7 +3893,7 @@
         },
         {
             "file": "source\\scrawlAnimation.js",
-            "line": 2787,
+            "line": 2799,
             "description": "Remove this Tween from the scrawl library (including any self-created ticker associated with the tween)",
             "itemtype": "method",
             "name": "kill",
