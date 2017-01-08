@@ -74,22 +74,22 @@ var mycode = function() {
 					attribute: 'startX',
 					start: 300,
 					end: x
-        }, {
+        		}, {
 					attribute: 'startY',
 					start: 300,
 					end: y
-        }, {
+        		}, {
 					attribute: 'scale',
 					start: 0.1,
 					end: scale
-        }]
+        		}]
 			}).run();
 
 			tweenCounter++;
 		}
 	}
 
-	buildStar(1000);
+	buildStar(100);
 
 	addStars = function() {
 		buildStar(100);
@@ -114,7 +114,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['animation', 'wheel', 'images'],
+	extensions: ['animation', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();
