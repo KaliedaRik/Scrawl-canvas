@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 6.0.0 - 4 January 2017
+*	version 6.0.1 - 14 January 2017
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -86,7 +86,7 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 6.0.0 released 4 January 2017
+VERSION 6.0.1 released 14 January 2017
 
     - the zip file includes:
 		
@@ -147,6 +147,9 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+Version 6.0.1 uploaded 14 January 2017
+	- scrawl stacks (and frames) efficiency refactor
+	- minor bugfix
 VERSION 6.0.0 uploaded 4 January 2017
 	- breaking changes to the scrawl tweening system
 		- Timeline object deprecated and deleted

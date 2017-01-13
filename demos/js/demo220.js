@@ -21,7 +21,7 @@ var mycode = function() {
 		backgroundColor: 'black'
 	});
 
-	buildStar = function(){
+	buildStar = function() {
 		var e = document.createElement('div'),
 			id = 'star_' + starsCount;
 		e.id = id;
@@ -90,10 +90,10 @@ var mycode = function() {
 		starsCount++;
 	};
 
-	addStars = function(){
-		for(var i = 0; i < 100; i++){
+	addStars = function() {
+		for (var i = 0; i < 100; i++) {
 			buildStar();
-		} 
+		}
 	}
 	addStars();
 

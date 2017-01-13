@@ -24,7 +24,7 @@ var mycode = function() {
 		perspectiveZ: 100
 	});
 
-	buildStar = function(){
+	buildStar = function() {
 		var e, id, star,
 			v, duration, scale, r1;
 
@@ -48,7 +48,9 @@ var mycode = function() {
 		});
 
 		r1 = Math.random();
-		v = scrawl.makeVector({x: 1}).rotate(Math.random() * 360).scalarMultiply(420);
+		v = scrawl.makeVector({
+			x: 1
+		}).rotate(Math.random() * 360).scalarMultiply(420);
 		duration = Math.round((r1 * 3000) + 2000);
 		scale = Math.round((1 - r1) * 300);
 
@@ -75,10 +77,10 @@ var mycode = function() {
 		starsCount++;
 	};
 
-	addStars = function(){
-		for(var i = 0; i < 100; i++){
+	addStars = function() {
+		for (var i = 0; i < 100; i++) {
 			buildStar();
-		} 
+		}
 	}
 	addStars();
 

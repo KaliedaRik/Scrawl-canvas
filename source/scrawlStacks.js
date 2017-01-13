@@ -1958,16 +1958,16 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				recalcStart = true;
 			}
 
-			if(this.viewport || this.topLeft){
+			if (this.viewport || this.topLeft) {
 				recalcStart = true;
 			}
 
-			if(!this.translate.flag || !this.rotation.flag){
+			if (!this.translate.flag || !this.rotation.flag) {
 
 				rotation = this.rotation;
 				translate = this.translate;
 
-				if(!translate.flag){
+				if (!translate.flag) {
 					p = [0, 0, 0];
 					round = Math.round;
 					scale = this.scale;
@@ -1976,7 +1976,7 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 					p[1] = round(translate.y * scale);
 					p[2] = round(translate.z * scale);
 
-					if(this.zIndexIsTranslateZ){
+					if (this.zIndexIsTranslateZ) {
 						style.zIndex = p[2];
 					}
 
@@ -1984,7 +1984,7 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 					translate.flag = true;
 				}
 
-				if(!rotation.flag){
+				if (!rotation.flag) {
 					p = [0, 0, 0, 0];
 
 					if (rotation.getMagnitude() !== 1) {
@@ -2012,7 +2012,7 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 				style.transform = result;
 			}
 
-			if(recalcStart){
+			if (recalcStart) {
 				start = this.currentStart;
 				handle = this.currentHandle;
 				if (this.viewport) {
@@ -2028,7 +2028,7 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 					result = (start.y + handle.y) + 'px';
 					style.top = result;
 				}
-				if(this.topLeft){
+				if (this.topLeft) {
 					this.updateCornerTrackers();
 				}
 			}

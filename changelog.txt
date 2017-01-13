@@ -1,7 +1,7 @@
 /***********************************************************************************
 * SCRAWL.JS Library 
 *
-*	version 6.0.0 - 4 January 2017
+*	version 6.0.1 - 14 January 2017
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -10,7 +10,7 @@
 
 Currently working on ...
 ------------------------------------------------------------------------------------
-- bugtracking following release of v6.0.0
+- bugtracking following release of v6.0.1
 
 Topics that I want|need to look at (in no particular order) ...
 ------------------------------------------------------------------------------------
@@ -33,6 +33,8 @@ CHANGE LOG
 ------------------------------------------------------------------------------------
 to 170113
 	- refactor stacks (and frames) for DOM efficiency gains
+		- translate and rotation now have dirty flags
+		- decoupled zIndex from translateZ (though still coupled by default)
 		- efficiency gains excellent - tweens now on a par with (or just below) GSAP
 	- new demos 220 and 221 to test tween resilience when animating hundreds of DOM div elements
 		- fixed bugs introduced by new code for frames (and stacks)

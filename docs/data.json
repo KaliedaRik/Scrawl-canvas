@@ -2,7 +2,7 @@
     "project": {
         "name": "scrawl-canvas",
         "description": "Responsive, integrated and interactive HTML5 canvas elements",
-        "version": "6.0.0",
+        "version": "6.0.1",
         "url": "http://scrawl.rikweb.org.uk"
     },
     "files": {
@@ -337,7 +337,7 @@
             "tag": "module",
             "file": "source\\scrawlCore.js",
             "line": 8568,
-            "description": "# scrawlCore\n\n## Version 6.0.0 - 4 January 2017\n\nDeveloped by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>\n\nScrawl demo website: <http://scrawl.rikweb.org.uk>\n\n## Purpose and features\n\nThe core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. \n\n* Defines the Scrawl scope - __window.scrawl__\n\n* Defines a number of utility methods used throughout Scrawl.js\n\n* Defines the Scrawl library - all significant objects created by Scrawl can be found here\n\n* Searches the DOM for &lt;canvas&gt; elements, and imports them into the Scrawl library\n\n* Instantiates controllers (Pad objects) and wrappers (Cell objects) for each &lt;canvas&gt; element\n\n* Instantiates Context engine objects for each Cell object\n\n* Defines mouse functionality in relation to &lt;canvas&gt; elements\n\n* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core\n\n* Defines Group objects, used to group entitys together for display and interaction purposes\n\n* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions\n\n## Loading the module",
+            "description": "# scrawlCore\n\n## Version 6.0.1 - 14 January 2017\n\nDeveloped by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>\n\nScrawl demo website: <http://scrawl.rikweb.org.uk>\n\n## Purpose and features\n\nThe core module is the only essential file in Scrawl. It must always be directly, and completely, loaded into the web page before any Scrawl extensions are added to it. \n\n* Defines the Scrawl scope - __window.scrawl__\n\n* Defines a number of utility methods used throughout Scrawl.js\n\n* Defines the Scrawl library - all significant objects created by Scrawl can be found here\n\n* Searches the DOM for &lt;canvas&gt; elements, and imports them into the Scrawl library\n\n* Instantiates controllers (Pad objects) and wrappers (Cell objects) for each &lt;canvas&gt; element\n\n* Instantiates Context engine objects for each Cell object\n\n* Defines mouse functionality in relation to &lt;canvas&gt; elements\n\n* Defines the core functionality for Entity objects to be displayed on &lt;canvas&gt; elements; the different types of Entitys are defined in separate extensions which need to be loaded into the core\n\n* Defines Group objects, used to group entitys together for display and interaction purposes\n\n* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions\n\n## Loading the module",
             "example": [
                 "\n    <script src=\"path/to/scrawlCore-min.js\"></script>"
             ]
@@ -504,7 +504,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "source\\scrawlStacks.js",
-            "line": 3181,
+            "line": 3253,
             "description": "# scrawlStacks\n\n## Purpose and features\n\nThe Stacks extension adds support for CSS3 3d transformations to visible &lt;canvas&gt;, and other, elements\n\n* Significantly amends the PageElement object and functions\n* Adds core functions for detecting and including scrawl-canvas stacks and associated elements in the library\n* Defines the Stack object, which contains all DOM elements to be manipulated by this stack\n* Defines the Element object, which wrap DOM elements (excluding &lt;canvas&gt; elements) included in a stack"
         },
         "scrawlWheel": {
@@ -1969,7 +1969,7 @@
             "module": "scrawlStacks",
             "namespace": "",
             "file": "source\\scrawlStacks.js",
-            "line": 2594,
+            "line": 2666,
             "description": "# Stack\n\n## Instantiation\n\n* scrawl.addStackToPage()\n\n## Purpose\n\n* add/manipulate perspective data to a DOM element\n\n## Access\n\n* scrawl.stack.STACKNAME - for the Stack object\n* scrawl.stk.STACKNAME - for a handle to the DOM stack element",
             "is_constructor": 1,
             "extends": "PageElement",
@@ -1993,7 +1993,7 @@
             "module": "scrawlStacks",
             "namespace": "",
             "file": "source\\scrawlStacks.js",
-            "line": 3095,
+            "line": 3167,
             "description": "# Element\n\n## Instantiation\n\n* Stack.addElementById()\n* Stack.addElementsByClassNames()\n\n## Purpose\n\n* provide a wrapper object for a DOM element\n\n## Access\n\n* scrawl.element.ELEMENTNAME - for the Element object\n* scrawl.elm.ELEMENTNAME - for a handle to the DOM element",
             "is_constructor": 1,
             "extends": "PageElement",
@@ -2017,7 +2017,7 @@
             "module": "scrawlStacks",
             "namespace": "",
             "file": "source\\scrawlStacks.js",
-            "line": 3181,
+            "line": 3253,
             "description": "# ElementGroup\n\n## Instantiation\n\n* scrawl.makeElementGroup()\n\n## Purpose\n\n* associates DOM elements with a Stack object, for rendering the stack scene\n* groups DOM elements for specific purposes\n\n## Access\n\n* scrawl.group.GROUPNAME - for the ElementGroup object\n* scrawl.stack[scrawl.group.ELEMENTGROUPNAME.stack] - for the ElementGroup object's default Stack object",
             "is_constructor": 1,
             "extends": "Base",
@@ -5226,7 +5226,7 @@
             "itemtype": "property",
             "name": "version",
             "type": "{String}",
-            "default": "6.0.0",
+            "default": "6.0.1",
             "final": 1,
             "class": "window.scrawl",
             "module": "scrawlCore"
@@ -14355,7 +14355,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 557,
+            "line": 556,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -14366,7 +14366,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 566,
+            "line": 565,
             "description": "Current coordinate for top left corner",
             "itemtype": "property",
             "name": "topLeft",
@@ -14379,7 +14379,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 574,
+            "line": 573,
             "description": "Current coordinate for top right corner",
             "itemtype": "property",
             "name": "topRight",
@@ -14392,7 +14392,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 582,
+            "line": 581,
             "description": "Current coordinate for bottom right corner",
             "itemtype": "property",
             "name": "bottomRight",
@@ -14405,7 +14405,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 590,
+            "line": 589,
             "description": "Current coordinate for bottom left corner",
             "itemtype": "property",
             "name": "bottomLeft",
@@ -14418,7 +14418,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 598,
+            "line": 597,
             "description": "Enclosing width of entity",
             "itemtype": "property",
             "name": "width",
@@ -14431,7 +14431,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 606,
+            "line": 605,
             "description": "Enclosing height of entity",
             "itemtype": "property",
             "name": "height",
@@ -14444,7 +14444,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 614,
+            "line": 613,
             "description": "Used as part of core entity collision detection functionality - must always be the same as width attribute",
             "itemtype": "property",
             "name": "localWidth",
@@ -14457,7 +14457,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 622,
+            "line": 621,
             "description": "Used as part of core entity collision detection functionality - must always be the same as height attribute",
             "itemtype": "property",
             "name": "localHeight",
@@ -14470,7 +14470,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 630,
+            "line": 629,
             "description": "Top left corner reference point for enclosing dimension box of entity",
             "itemtype": "property",
             "name": "height",
@@ -14481,7 +14481,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 637,
+            "line": 636,
             "description": "If present, the DOM &lt;div&gt; element being used to position entity within the stack",
             "itemtype": "property",
             "name": "currentFrame",
@@ -14494,7 +14494,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 645,
+            "line": 644,
             "description": "Entity drawing method. A entity can be drawn onto a &lt;canvas&gt; element in a variety of ways; these methods include:\n\n* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient\n* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient\n* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action\n* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action\n* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions\n* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions\n* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'\n* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor\n* 'clip' - clip the drawing zone to the entity's path (not tested)\n* 'none' - perform all necessary updates, but do not draw the entity onto the canvas\n\n_Note: not all entitys support all of these operations_",
             "itemtype": "property",
             "name": "method",
@@ -14505,7 +14505,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 665,
+            "line": 664,
             "description": "Visibility flag - entitys will (in general) not be drawn on a &lt;canvas&gt; element when this flag is set to false",
             "itemtype": "property",
             "name": "visibility",
@@ -14516,7 +14516,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 672,
+            "line": 671,
             "description": "Entity order value - lower order entitys are drawn on &lt;canvas&gt; elements before higher order entitys",
             "itemtype": "property",
             "name": "order",
@@ -14527,7 +14527,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 679,
+            "line": 678,
             "description": "ELEMENTNAME of stack element which frame entity will use for positioning data",
             "itemtype": "property",
             "name": "lockFrameTo",
@@ -14538,7 +14538,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 686,
+            "line": 685,
             "description": "JavaScript Object containing key:value pairs - used to cascade data to underlying stack element (if present)",
             "itemtype": "property",
             "name": "lockElementAttributes",
@@ -14551,7 +14551,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 694,
+            "line": 693,
             "description": "Entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque",
             "itemtype": "property",
             "name": "globalAlpha",
@@ -14564,7 +14564,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 702,
+            "line": 701,
             "description": "Compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include\n\n* 'source-over'\n* 'source-atop'\n* 'source-in'\n* 'source-out'\n* 'destination-over'\n* 'destination-atop'\n* 'destination-in'\n* 'destination-out'\n* 'lighter'\n* 'darker'\n* 'copy'\n* 'xor'\n\n_Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers_",
             "itemtype": "property",
             "name": "globalCompositeOperation",
@@ -14575,7 +14575,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 725,
+            "line": 724,
             "description": "Outline width, in pixels",
             "itemtype": "property",
             "name": "lineWidth",
@@ -14586,7 +14586,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 732,
+            "line": 731,
             "description": "Outline cap styling. Permitted values include:\n\n* 'butt'\n* 'round'\n* 'square'",
             "itemtype": "property",
             "name": "lineCap",
@@ -14597,7 +14597,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 744,
+            "line": 743,
             "description": "Outline join styling. Permitted values include:\n\n* 'miter'\n* 'round'\n* 'bevel'",
             "itemtype": "property",
             "name": "lineJoin",
@@ -14608,7 +14608,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 756,
+            "line": 755,
             "description": "Outline dash format - an array of Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern",
             "itemtype": "property",
             "name": "lineDash",
@@ -14619,7 +14619,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 763,
+            "line": 762,
             "description": "Outline dash offset - distance along the entity's outline at which to start the line dash. Changing this value can be used to create a 'marching ants effect",
             "itemtype": "property",
             "name": "lineDashOffset",
@@ -14630,7 +14630,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 770,
+            "line": 769,
             "description": "miterLimit - affecting the 'pointiness' of the outline join where two lines join at an acute angle",
             "itemtype": "property",
             "name": "miterLimit",
@@ -14641,7 +14641,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 777,
+            "line": 776,
             "description": "Color, gradient or pattern used to outline a entity. Can be:\n\n* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'\n* COLORNAME String\n* GRADIENTNAME String\n* RADIALGRADIENTNAME String\n* PATTERNNAME String",
             "itemtype": "property",
             "name": "strokeStyle",
@@ -14652,7 +14652,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 790,
+            "line": 789,
             "description": "Horizontal offset of a entity's shadow, in pixels",
             "itemtype": "property",
             "name": "shadowOffsetX",
@@ -14663,7 +14663,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 797,
+            "line": 796,
             "description": "Vertical offset of a entity's shadow, in pixels",
             "itemtype": "property",
             "name": "shadowOffsetY",
@@ -14674,7 +14674,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 804,
+            "line": 803,
             "description": "Blur border for a entity's shadow, in pixels",
             "itemtype": "property",
             "name": "shadowBlur",
@@ -14685,7 +14685,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 811,
+            "line": 810,
             "description": "Color used for entity shadow effect. Can be:\n\n* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'\n* COLORNAME String",
             "itemtype": "property",
             "name": "shadowColor",
@@ -14696,7 +14696,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 821,
+            "line": 820,
             "description": "ASSETNAME or CANVASNAME of source asset used to fill frame",
             "itemtype": "property",
             "name": "source",
@@ -14707,7 +14707,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 829,
+            "line": 828,
             "description": "Every Frame entity includes its own personal &lt;canvas&gt; element, which is not part of the DOM and which can only be accessed through this attribute",
             "itemtype": "property",
             "name": "cell",
@@ -14720,7 +14720,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 837,
+            "line": 836,
             "description": "The Frame entity's &lt;canvas&gt; element's 2d context engine - not stored in the scrawl library and can only be accessed through this attribute",
             "itemtype": "property",
             "name": "engine",
@@ -14733,7 +14733,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 845,
+            "line": 844,
             "description": "Array of FILTERNAME strings, for filters to be applied to this entity",
             "itemtype": "property",
             "name": "filters",
@@ -14744,7 +14744,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 852,
+            "line": 851,
             "description": "Filter flag - when true, will draw the entity; on false (default), the clip method is used instead",
             "itemtype": "property",
             "name": "filterOnStroke",
@@ -14755,7 +14755,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 859,
+            "line": 858,
             "description": "The filterLevel attribute determines at which point in the display cycle the filter will be applied. Permitted values are:\n\n* '__entity__' - filter is applied immediately after the Entity has stamped itself onto a cell\n* '__cell__' - filter is applied after all Entites have completed stamping themselves onto the cell\n* '__pad__' - filter is applied to the base canvas after all cells have completed copying themselves onto it, and before the base cell copies itself onto the display cell",
             "itemtype": "property",
             "name": "filterLevel",
@@ -14766,7 +14766,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 871,
+            "line": 870,
             "description": "The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object's start point - will only affect any underlying stack div element used for positioning the frame entity. \n\nNote that each corner can also have its own pivot reference",
             "itemtype": "property",
             "name": "pivot",
@@ -14777,7 +14777,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 880,
+            "line": 879,
             "description": "The ENTITYNAME of a Path entity to be used for setting this entity's start point - will only affect any underlying stack div element used for positioning the frame entity. \n\nNote that each corner can also have its own path reference",
             "itemtype": "property",
             "name": "path",
@@ -14788,7 +14788,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 889,
+            "line": 888,
             "description": "Index of mouse vector to use when pivot === 'mouse'\n\nThe Pad.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)",
             "itemtype": "property",
             "name": "mouseIndex",
@@ -14799,7 +14799,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 898,
+            "line": 897,
             "description": "Reflection flag; set to true to flip entity, cell or element along the Y axis - this has no meaning to Frame entitys (which can be repositioned either by directly repositioning corners, or by rotating any associated stack element), but has to be included for compatibility with core entity functionality",
             "itemtype": "property",
             "name": "flipReverse",
@@ -14810,7 +14810,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 905,
+            "line": 904,
             "description": "Reflection flag; set to true to flip entity, cell or element along the X axis - this has no meaning to Frame entitys (which can be repositioned either by directly repositioning corners, or by rotating any associated stack element), but has to be included for compatibility with core entity functionality",
             "itemtype": "property",
             "name": "flipUpend",
@@ -14821,7 +14821,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 912,
+            "line": 911,
             "description": "Positioning flag; set to true to ignore path/pivot/mouse changes along the X axis - will only affect any underlying stack div element used for positioning the frame entity. Note that each corner can also be individually restricted",
             "itemtype": "property",
             "name": "lockX",
@@ -14832,7 +14832,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 919,
+            "line": 918,
             "description": "Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axis - will only affect any underlying stack div element used for positioning the frame entity. Note that each corner can also be individually restricted",
             "itemtype": "property",
             "name": "lockY",
@@ -14843,7 +14843,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 926,
+            "line": 925,
             "description": "GROUPNAME String for this entity's default group\n\n_Note: an entity can belong to more than one group by being added to other Group objects via the __scrawl.addEntitysToGroups()__ and __Group.addEntityToGroup()__ functions_",
             "itemtype": "property",
             "name": "group",
@@ -14854,7 +14854,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 935,
+            "line": 934,
             "description": "Dirty flag - sets to true when certain entity attributes change",
             "itemtype": "property",
             "name": "redraw",
@@ -14867,7 +14867,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 943,
+            "line": 942,
             "description": "The current Frame drawing process often leads to moire interference patterns appearing in the resulting image. Scrawl uses resizing to blur out these patterns. The interferenceLoops attribute sets the number of times the image gets resized; if patterns still appear in the final image, increase this value",
             "itemtype": "property",
             "name": "interferenceLoops",
@@ -14878,7 +14878,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 950,
+            "line": 949,
             "description": "The current Frame drawing process often leads to moire interference patterns appearing in the resulting image. Scrawl uses resizing to blur out these patterns. The interferenceFactor attribute sets the resizing ratio; if patterns still appear in the final image, change this value to something more appropriate",
             "itemtype": "property",
             "name": "interferenceFactor",
@@ -14889,7 +14889,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 957,
+            "line": 956,
             "description": "Maximum dimensions - used as part of entity filter and collision detection functionality",
             "itemtype": "property",
             "name": "maxDimensions",
@@ -14902,7 +14902,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 972,
+            "line": 971,
             "description": "Attribute cascaded to appropriate FramePoint object path attribute",
             "itemtype": "property",
             "name": "topLeftPath",
@@ -14913,7 +14913,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 978,
+            "line": 977,
             "description": "Attribute cascaded to appropriate FramePoint object path attribute",
             "itemtype": "property",
             "name": "topRightPath",
@@ -14924,7 +14924,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 984,
+            "line": 983,
             "description": "Attribute cascaded to appropriate FramePoint object path attribute",
             "itemtype": "property",
             "name": "bottomRightPath",
@@ -14935,7 +14935,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 990,
+            "line": 989,
             "description": "Attribute cascaded to appropriate FramePoint object path attribute",
             "itemtype": "property",
             "name": "bottomLeftPath",
@@ -14946,7 +14946,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 996,
+            "line": 995,
             "description": "Attribute cascaded to appropriate FramePoint object pathPlace attribute",
             "itemtype": "property",
             "name": "topLeftPathPlace",
@@ -14957,7 +14957,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1002,
+            "line": 1001,
             "description": "Attribute cascaded to appropriate FramePoint object pathPlace attribute",
             "itemtype": "property",
             "name": "topRightPathPlace",
@@ -14968,7 +14968,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1008,
+            "line": 1007,
             "description": "Attribute cascaded to appropriate FramePoint object pathPlace attribute",
             "itemtype": "property",
             "name": "bottomRightPathPlace",
@@ -14979,7 +14979,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1014,
+            "line": 1013,
             "description": "Attribute cascaded to appropriate FramePoint object pathPlace attribute",
             "itemtype": "property",
             "name": "bottomLeftPathPlace",
@@ -14990,7 +14990,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1020,
+            "line": 1019,
             "description": "Attribute cascaded to appropriate FramePoint object deltaPathPlace attribute",
             "itemtype": "property",
             "name": "topLeftDeltaPathPlace",
@@ -15001,7 +15001,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1026,
+            "line": 1025,
             "description": "Attribute cascaded to appropriate FramePoint object deltaPathPlace attribute",
             "itemtype": "property",
             "name": "topRightDeltaPathPlace",
@@ -15012,7 +15012,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1032,
+            "line": 1031,
             "description": "Attribute cascaded to appropriate FramePoint object deltaPathPlace attribute",
             "itemtype": "property",
             "name": "bottomRightDeltaPathPlace",
@@ -15023,7 +15023,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1038,
+            "line": 1037,
             "description": "Attribute cascaded to appropriate FramePoint object deltaPathPlace attribute",
             "itemtype": "property",
             "name": "bottomLeftDeltaPathPlace",
@@ -15034,7 +15034,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1044,
+            "line": 1043,
             "description": "Attribute cascaded to appropriate FramePoint object pathSpeedConstant attribute",
             "itemtype": "property",
             "name": "topLeftPathSpeedConstant",
@@ -15045,7 +15045,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1050,
+            "line": 1049,
             "description": "Attribute cascaded to appropriate FramePoint object pathSpeedConstant attribute",
             "itemtype": "property",
             "name": "topRightPathSpeedConstant",
@@ -15056,7 +15056,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1056,
+            "line": 1055,
             "description": "Attribute cascaded to appropriate FramePoint object pathSpeedConstant attribute",
             "itemtype": "property",
             "name": "bottomRightPathSpeedConstant",
@@ -15067,7 +15067,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1062,
+            "line": 1061,
             "description": "Attribute cascaded to appropriate FramePoint object pathSpeedConstant attribute",
             "itemtype": "property",
             "name": "bottomLeftPathSpeedConstant",
@@ -15078,7 +15078,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1068,
+            "line": 1067,
             "description": "Attribute cascaded to appropriate FramePoint object pivot attribute",
             "itemtype": "property",
             "name": "topLeftPivot",
@@ -15089,7 +15089,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1074,
+            "line": 1073,
             "description": "Attribute cascaded to appropriate FramePoint object pivot attribute",
             "itemtype": "property",
             "name": "topRightPivot",
@@ -15100,7 +15100,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1080,
+            "line": 1079,
             "description": "Attribute cascaded to appropriate FramePoint object pivot attribute",
             "itemtype": "property",
             "name": "bottomRightPivot",
@@ -15111,7 +15111,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1086,
+            "line": 1085,
             "description": "Attribute cascaded to appropriate FramePoint object pivot attribute",
             "itemtype": "property",
             "name": "bottomLeftPivot",
@@ -15122,7 +15122,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1092,
+            "line": 1091,
             "description": "Attribute cascaded to appropriate FramePoint object lockX attribute",
             "itemtype": "property",
             "name": "topLeftLockX",
@@ -15133,7 +15133,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1098,
+            "line": 1097,
             "description": "Attribute cascaded to appropriate FramePoint object lockX attribute",
             "itemtype": "property",
             "name": "topRightLockX",
@@ -15144,7 +15144,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1104,
+            "line": 1103,
             "description": "Attribute cascaded to appropriate FramePoint object lockX attribute",
             "itemtype": "property",
             "name": "bottomRightLockX",
@@ -15155,7 +15155,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1110,
+            "line": 1109,
             "description": "Attribute cascaded to appropriate FramePoint object lockX attribute",
             "itemtype": "property",
             "name": "bottomLeftLockX",
@@ -15166,7 +15166,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1116,
+            "line": 1115,
             "description": "Attribute cascaded to appropriate FramePoint object lockY attribute",
             "itemtype": "property",
             "name": "topLeftLockY",
@@ -15177,7 +15177,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1122,
+            "line": 1121,
             "description": "Attribute cascaded to appropriate FramePoint object lockY attribute",
             "itemtype": "property",
             "name": "topRightLockY",
@@ -15188,7 +15188,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1128,
+            "line": 1127,
             "description": "Attribute cascaded to appropriate FramePoint object lockY attribute",
             "itemtype": "property",
             "name": "bottomRightLockY",
@@ -15199,7 +15199,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1134,
+            "line": 1133,
             "description": "Attribute cascaded to appropriate FramePoint object lockY attribute",
             "itemtype": "property",
             "name": "bottomLeftLockY",
@@ -15210,7 +15210,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1141,
+            "line": 1140,
             "description": "Frame.registerInLibrary hook function - modified by collisions extension",
             "itemtype": "method",
             "name": "collisionsEntityRegisterInLibrary",
@@ -15221,7 +15221,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1149,
+            "line": 1148,
             "description": "Augments Base.set()",
             "itemtype": "method",
             "name": "set",
@@ -15241,7 +15241,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1188,
+            "line": 1187,
             "description": "Augments Base.clone()",
             "itemtype": "method",
             "name": "clone",
@@ -15261,7 +15261,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1216,
+            "line": 1215,
             "itemtype": "method",
             "name": "setCorners",
             "params": [
@@ -15282,7 +15282,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1286,
+            "line": 1285,
             "itemtype": "method",
             "name": "getCorners",
             "return": {
@@ -15296,7 +15296,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1315,
+            "line": 1314,
             "itemtype": "method",
             "name": "checkCorners",
             "params": [
@@ -15317,7 +15317,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1338,
+            "line": 1337,
             "itemtype": "method",
             "name": "setEngine",
             "params": [
@@ -15334,7 +15334,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1402,
+            "line": 1401,
             "itemtype": "method",
             "name": "setDestinationEngine",
             "params": [
@@ -15358,7 +15358,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1481,
+            "line": 1480,
             "description": "Attach a Frame entity to an existing stack element, or create a new stack &lt;div&gt; element",
             "itemtype": "method",
             "name": "lockOn",
@@ -15376,7 +15376,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1523,
+            "line": 1524,
             "description": "Array of key Strings used to whitelist the permitted attributes for cascade to stack element, if present. Used by lockElementAttributes attribute",
             "itemtype": "property",
             "name": "lockElementAttributesList",
@@ -15389,7 +15389,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1531,
+            "line": 1532,
             "itemtype": "method",
             "name": "setLockElementAttributes",
             "params": [
@@ -15410,7 +15410,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1553,
+            "line": 1554,
             "description": "Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, regardless of the setting of its visibility attribute\n\nPermitted methods include:\n\n* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient\n* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient\n* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action\n* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action\n* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions\n* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions\n* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'\n* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor\n* 'clip' - clip the drawing zone to the entity's path (not tested)\n* 'none' - perform all necessary updates, but do not draw the entity onto the canvas",
             "itemtype": "method",
             "name": "forceStamp",
@@ -15449,7 +15449,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1583,
+            "line": 1584,
             "description": "Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true\n\nPermitted methods include:\n\n* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient\n* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient\n* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action\n* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action\n* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions\n* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions\n* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'\n* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor\n* 'clip' - clip the drawing zone to the entity's path (not tested)\n* 'none' - perform all necessary updates, but do not draw the entity onto the canvas",
             "itemtype": "method",
             "name": "stamp",
@@ -15488,7 +15488,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1622,
+            "line": 1623,
             "description": "Entity constructor hook function - modified by filters module",
             "itemtype": "method",
             "name": "filtersEntityInit",
@@ -15499,7 +15499,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1630,
+            "line": 1631,
             "description": "Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity",
             "itemtype": "method",
             "name": "stampFilter",
@@ -15510,7 +15510,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1638,
+            "line": 1639,
             "description": "Entity.stamp hook helper function",
             "itemtype": "method",
             "name": "stampFilterDefault",
@@ -15521,7 +15521,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1647,
+            "line": 1648,
             "description": "Draw Frame entity in its own local canvas, then copy over to destimation canvas",
             "itemtype": "method",
             "name": "redrawCanvas",
@@ -15532,7 +15532,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1759,
+            "line": 1760,
             "description": "redrawCanvas helper function - updates copy parameters",
             "itemtype": "method",
             "name": "updateCurrentCopy",
@@ -15543,7 +15543,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1788,
+            "line": 1789,
             "description": "redrawCanvas helper function",
             "itemtype": "method",
             "name": "getPosition",
@@ -15554,7 +15554,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1796,
+            "line": 1797,
             "description": "redrawCanvas helper function",
             "itemtype": "method",
             "name": "getLength",
@@ -15565,7 +15565,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1804,
+            "line": 1805,
             "description": "redrawCanvas helper function",
             "itemtype": "method",
             "name": "getAngle",
@@ -15576,7 +15576,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1812,
+            "line": 1813,
             "description": "redrawCanvas helper function",
             "itemtype": "method",
             "name": "setEasel",
@@ -15587,7 +15587,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1822,
+            "line": 1823,
             "description": "redrawCanvas helper function",
             "itemtype": "method",
             "name": "resetEasel",
@@ -15598,7 +15598,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1831,
+            "line": 1832,
             "description": "Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999",
             "itemtype": "method",
             "name": "pickupEntity",
@@ -15618,7 +15618,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1848,
+            "line": 1849,
             "description": "Revert pickupEntity() actions, ensuring entity is left where the user drops it",
             "itemtype": "method",
             "name": "dropEntity",
@@ -15639,7 +15639,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1865,
+            "line": 1866,
             "description": "stamp helper function - clear shadow parameters during a multi draw operation (drawFill and fillDraw methods)",
             "itemtype": "method",
             "name": "clearShadow",
@@ -15671,7 +15671,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1881,
+            "line": 1882,
             "description": "stamp helper function",
             "itemtype": "method",
             "name": "prepareStamp",
@@ -15699,7 +15699,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1893,
+            "line": 1894,
             "description": "stamp helper function - draw the path between the corner points",
             "itemtype": "method",
             "name": "drawPath",
@@ -15727,7 +15727,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1916,
+            "line": 1917,
             "description": "stamp helper function - fill thge entity",
             "itemtype": "method",
             "name": "drawImage",
@@ -15755,7 +15755,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1929,
+            "line": 1930,
             "description": "Stamp helper function - perform a 'clip' method draw",
             "itemtype": "method",
             "name": "clip",
@@ -15787,7 +15787,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1945,
+            "line": 1946,
             "description": "Stamp helper function - perform a 'clear' method draw",
             "itemtype": "method",
             "name": "clear",
@@ -15819,7 +15819,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1969,
+            "line": 1970,
             "description": "Stamp helper function - perform a 'clearWithBackground' method draw",
             "itemtype": "method",
             "name": "clearWithBackground",
@@ -15851,7 +15851,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 1994,
+            "line": 1995,
             "description": "Stamp helper function - perform a 'draw' method draw",
             "itemtype": "method",
             "name": "draw",
@@ -15883,7 +15883,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 2010,
+            "line": 2011,
             "description": "Stamp helper function - perform a 'fill' method draw",
             "itemtype": "method",
             "name": "fill",
@@ -15915,7 +15915,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 2025,
+            "line": 2026,
             "description": "Stamp helper function - perform a 'drawFill' method draw",
             "itemtype": "method",
             "name": "drawFill",
@@ -15947,7 +15947,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 2043,
+            "line": 2044,
             "description": "Stamp helper function - perform a 'fillDraw' method draw",
             "itemtype": "method",
             "name": "fillDraw",
@@ -15979,7 +15979,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 2061,
+            "line": 2062,
             "description": "Stamp helper function - perform a 'sinkInto' method draw",
             "itemtype": "method",
             "name": "sinkInto",
@@ -16011,7 +16011,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 2078,
+            "line": 2079,
             "description": "Stamp helper function - perform a 'floatOver' method draw",
             "itemtype": "method",
             "name": "floatOver",
@@ -16043,7 +16043,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 2095,
+            "line": 2096,
             "description": "Stamp helper function - perform a 'none' method draw. This involves setting the &lt;canvas&gt; element's context engine's values with this entity's context values, but not defining or drawing the entity on the canvas.",
             "itemtype": "method",
             "name": "none",
@@ -16075,7 +16075,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 2110,
+            "line": 2111,
             "description": "Check Cell coordinates to see if any of them fall within this entity's path - uses JavaScript's _isPointInPath_ function\n\nArgument object contains the following attributes:\n\n* __tests__ - an array of Vector coordinates to be checked; alternatively can be a single Vector\n* __x__ - X coordinate\n* __y__ - Y coordinate\n\nEither the 'tests' attribute should contain a Vector, or an array of vectors, or the x and y attributes should be set to Number values",
             "itemtype": "method",
             "name": "checkHit",
@@ -16094,7 +16094,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 2142,
+            "line": 2143,
             "description": "Calculate the box position of the entity\n\nReturns an object with the following attributes:\n\n* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner\n* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner\n* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner",
             "itemtype": "method",
             "name": "getMaxDimensions",
@@ -16120,7 +16120,7 @@
         },
         {
             "file": "source\\scrawlFrame.js",
-            "line": 2218,
+            "line": 2219,
             "description": "reciprocal assignment - also occurs in scrawlFilters as there's no way to tell which file (scrawlFrame, scrawlFilters) will be loaded first",
             "itemtype": "method",
             "name": "stampFilterActions",
@@ -23300,6 +23300,17 @@
         {
             "file": "source\\scrawlStacks.js",
             "line": 859,
+            "description": "A flag to determine whether zIndex uses translateZ values (default: true), or if it can be independently set (as style zIndex)",
+            "itemtype": "property",
+            "name": "PageElement.zIndexIsTranslateZ",
+            "type": "Boolean",
+            "default": "true",
+            "class": "window.scrawl_Stacks",
+            "module": "scrawlStacks"
+        },
+        {
+            "file": "source\\scrawlStacks.js",
+            "line": 866,
             "description": "A flag to determine whether an element uses the browser viewport for its position and dimensions reference",
             "itemtype": "property",
             "name": "PageElement.viewport",
@@ -23310,7 +23321,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 866,
+            "line": 873,
             "description": "A flag to tell scrawl-canvas to add corner trackers to the element\n\nCorner trackers can be used by the Frame entity to bind its corners to a DOM element within a stack",
             "itemtype": "property",
             "name": "PageElement.includeCornerTrackers",
@@ -23321,7 +23332,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 875,
+            "line": 882,
             "description": "Corner tracker vector - used only with Frame emtitys",
             "itemtype": "property",
             "name": "PageElement.topLeft",
@@ -23332,7 +23343,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 882,
+            "line": 889,
             "description": "Corner tracker vector - used only with Frame emtitys",
             "itemtype": "property",
             "name": "PageElement.topRight",
@@ -23343,7 +23354,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 889,
+            "line": 896,
             "description": "Corner tracker vector - used only with Frame emtitys",
             "itemtype": "property",
             "name": "PageElement.bottomRight",
@@ -23354,7 +23365,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 896,
+            "line": 903,
             "description": "Corner tracker vector - used only with Frame emtitys",
             "itemtype": "property",
             "name": "PageElement.bottomLeft",
@@ -23365,7 +23376,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 903,
+            "line": 910,
             "description": "Corner tracker div element - used only with Frame entitys",
             "itemtype": "property",
             "name": "PageElement.topLeftDiv",
@@ -23376,7 +23387,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 910,
+            "line": 917,
             "description": "Corner tracker div element - used only with Frame entitys",
             "itemtype": "property",
             "name": "PageElement.topRightDiv",
@@ -23387,7 +23398,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 917,
+            "line": 924,
             "description": "Corner tracker div element - used only with Frame entitys",
             "itemtype": "property",
             "name": "PageElement.bottomRightDiv",
@@ -23398,7 +23409,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 924,
+            "line": 931,
             "description": "Corner tracker div element - used only with Frame entitys",
             "itemtype": "property",
             "name": "PageElement.bottomLeftDiv",
@@ -23409,7 +23420,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 931,
+            "line": 938,
             "description": "Index of mouse vector to use when pivot === 'mouse'\n\nThe Pad/Stack/Element.mice object can hold details of multiple touch events - when an entity is assigned to a 'mouse', it needs to know which of those mouse trackers to use. Default: mouse (for the mouse cursor vector)",
             "itemtype": "property",
             "name": "mouseIndex",
@@ -23420,7 +23431,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 940,
+            "line": 947,
             "description": "Sorting order - must be a positive integer",
             "itemtype": "property",
             "name": "order",
@@ -23431,7 +23442,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 947,
+            "line": 954,
             "description": "Drag boolean - indicates the element can be manipulated via mouse/touch events (eg pickup, drop)",
             "itemtype": "property",
             "name": "drag",
@@ -23442,7 +23453,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 955,
+            "line": 962,
             "description": "PageElement constructor hook function - modified by stacks module",
             "itemtype": "method",
             "name": "stacksPageElementConstructor",
@@ -23453,7 +23464,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1052,
+            "line": 1075,
             "itemtype": "method",
             "name": "addCornerTrackers - used only with Frame entitys",
             "return": {
@@ -23467,7 +23478,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1099,
+            "line": 1122,
             "itemtype": "method",
             "name": "updateCornerTrackers - used only with Frame entitys",
             "return": {
@@ -23481,7 +23492,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1126,
+            "line": 1149,
             "description": "Augments Base.get() to retrieve DOM element width and height values, and stack-related attributes (startX, startY, handleX, handleY, deltaX, deltaY, translateX, translateY, translateZ, deltaTranslateX, deltaTranslateY, deltaTranslateZ). Can also be used to retrieve a number of current CSS attributes on the DOM element\n\n(The stack module replaces the core function rather than augmenting it via a hook function)",
             "itemtype": "method",
             "name": "PageElement.get",
@@ -23500,7 +23511,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1194,
+            "line": 1217,
             "description": "Augments Base.set() to allow the setting of DOM element dimension values, and stack-related attributes (start, startX, startY, handle, handleX, handleY, delta, deltaX, deltaY, translate, translateX, translateY, 'translateZ, deltaTranslate, deltaTranslateX, deltaTranslateY, deltaTranslateZ). Can also be used to set a number of current CSS attributes on the DOM element\n\n(The stack module replaces the core function rather than augmenting it via a hook function)",
             "itemtype": "method",
             "name": "PageElement.set",
@@ -23520,7 +23531,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1277,
+            "line": 1300,
             "description": "Augments Base.setStart(), to allow users to set the start attributes using start, startX, startY",
             "itemtype": "method",
             "name": "setStart",
@@ -23540,7 +23551,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1306,
+            "line": 1329,
             "description": "Augments Base.setHandle(), to allow users to set the handle attributes using handle, handleX, handleY",
             "itemtype": "method",
             "name": "setHandle",
@@ -23560,7 +23571,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1335,
+            "line": 1358,
             "description": "Augments PageElement.set(), to allow users to set the delta attributes using delta, deltaX, deltaY\n\nThe scrawlAnimation extension adds a __delta__ attribute to Cells and Entitys - this is an inbuilt delta vector which can be used to automatically animate the start vector of these objects - via the updateStart, revertStart and reverse functions - as part of the animation cycle.\n\nBe aware that this is different to the PageElement.setDelta() function inherited by Cells and Entitys. setDelta is used to add a supplied argument value to the existing values of any numerical attribute of a Cell or Entity object, and is thus not limited to the animation cycle.",
             "itemtype": "method",
             "name": "setDeltaAttribute",
@@ -23580,7 +23591,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1360,
+            "line": 1383,
             "description": "Augments PageElement.set()",
             "itemtype": "method",
             "name": "setPivotAttribute",
@@ -23600,7 +23611,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1375,
+            "line": 1398,
             "description": "Augments PageElement.set()",
             "itemtype": "method",
             "name": "setGroupAttribute",
@@ -23620,7 +23631,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1404,
+            "line": 1427,
             "description": "Augments PageElement.set()",
             "itemtype": "method",
             "name": "setRotation",
@@ -23640,7 +23651,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1419,
+            "line": 1443,
             "description": "Augments PageElement.set()",
             "itemtype": "method",
             "name": "setDeltaRotation",
@@ -23660,7 +23671,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1434,
+            "line": 1458,
             "description": "Augments PageElement.set()",
             "itemtype": "method",
             "name": "setTranslate",
@@ -23680,47 +23691,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1456,
-            "description": "Add a CSS class to the DOM element",
-            "itemtype": "method",
-            "name": "addClass",
-            "params": [
-                {
-                    "name": "item",
-                    "description": "String consisting of one or more classes to be added to the DOM element - a space will be prepended to the start of the string automatically",
-                    "type": "String"
-                }
-            ],
-            "return": {
-                "description": "This"
-            },
-            "chainable": 1,
-            "class": "window.scrawl_Stacks",
-            "module": "scrawlStacks"
-        },
-        {
-            "file": "source\\scrawlStacks.js",
-            "line": 1479,
-            "description": "Remove a CSS class from the DOM element",
-            "itemtype": "method",
-            "name": "removeClass",
-            "params": [
-                {
-                    "name": "item",
-                    "description": "String consisting of one or more classes to be removed from the DOM element",
-                    "type": "String"
-                }
-            ],
-            "return": {
-                "description": "This"
-            },
-            "chainable": 1,
-            "class": "window.scrawl_Stacks",
-            "module": "scrawlStacks"
-        },
-        {
-            "file": "source\\scrawlStacks.js",
-            "line": 1504,
+            "line": 1481,
             "description": "Augments PageElement.set()",
             "itemtype": "method",
             "name": "setDeltaTranslate",
@@ -23740,7 +23711,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1526,
+            "line": 1503,
             "description": "Handles the setting of many CSS attributes",
             "itemtype": "method",
             "name": "PageElement.setStyles",
@@ -23760,7 +23731,47 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1575,
+            "line": 1557,
+            "description": "Add a CSS class to the DOM element",
+            "itemtype": "method",
+            "name": "addClass",
+            "params": [
+                {
+                    "name": "item",
+                    "description": "String consisting of one or more classes to be added to the DOM element - a space will be prepended to the start of the string automatically",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "This"
+            },
+            "chainable": 1,
+            "class": "window.scrawl_Stacks",
+            "module": "scrawlStacks"
+        },
+        {
+            "file": "source\\scrawlStacks.js",
+            "line": 1580,
+            "description": "Remove a CSS class from the DOM element",
+            "itemtype": "method",
+            "name": "removeClass",
+            "params": [
+                {
+                    "name": "item",
+                    "description": "String consisting of one or more classes to be removed from the DOM element",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "This"
+            },
+            "chainable": 1,
+            "class": "window.scrawl_Stacks",
+            "module": "scrawlStacks"
+        },
+        {
+            "file": "source\\scrawlStacks.js",
+            "line": 1605,
             "description": "Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function",
             "itemtype": "method",
             "name": "PageElement.setDelta",
@@ -23780,7 +23791,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1643,
+            "line": 1675,
             "description": "Adds the value of each attribute supplied in the argument to existing values; This function accepts start, startX, startY",
             "itemtype": "method",
             "name": "setDeltaStart",
@@ -23800,7 +23811,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1666,
+            "line": 1698,
             "description": "Adds the value of each attribute supplied in the argument to existing values. This function accepts handle, handleX, handleY",
             "itemtype": "method",
             "name": "setDeltaHandle",
@@ -23820,7 +23831,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1689,
+            "line": 1721,
             "description": "Adds delta values to the start vector; adds deltaPathPlace to pathPlace\n\nPermitted argument values include \n* 'x' - delta.x added to start.x\n* 'y' - delta.y added to start.y\n* 'path' - deltaPathPlace added to pathPlace \n* undefined: all values are amended",
             "itemtype": "method",
             "name": "PageElement.updateStart",
@@ -23841,7 +23852,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1712,
+            "line": 1744,
             "description": "updateStart helper object",
             "itemtype": "method",
             "name": "PageElement.updateStartActions (not a function)",
@@ -23852,7 +23863,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1740,
+            "line": 1772,
             "description": "Subtracts delta values from the start vector; subtracts deltaPathPlace from pathPlace\n\nPermitted argument values include \n* 'x' - delta.x subtracted from start.x\n* 'y' - delta.y subtracted from start.y\n* 'path' - deltaPathPlace subtracted from pathPlace \n* undefined: all values are amended",
             "itemtype": "method",
             "name": "PageElement.revertStart",
@@ -23873,7 +23884,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1763,
+            "line": 1795,
             "description": "revertStart helper object",
             "itemtype": "method",
             "name": "PageElement.revertStartActions (not a function)",
@@ -23884,7 +23895,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1791,
+            "line": 1823,
             "description": "Swaps the values of an attribute between two objects",
             "itemtype": "method",
             "name": "PageElement.exchange",
@@ -23909,7 +23920,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1809,
+            "line": 1841,
             "description": "Changes the sign (+/-) of specified attribute values",
             "itemtype": "method",
             "name": "PageElement.reverse",
@@ -23930,7 +23941,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1822,
+            "line": 1854,
             "description": "reverse helper object",
             "itemtype": "method",
             "name": "PageElement.reverseActions (not a function)",
@@ -23941,7 +23952,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1847,
+            "line": 1879,
             "description": "Rotate and translate a DOM element around a quaternion rotation\n\n* Element's initial rotation values should be stored in the deltaRotation attribute quaternion\n* Element's initial translation values should be stored in the deltaTranslate attribute vector\n\nArgument can contain the following (optional) attributes:\n\n* __quaternion__ - quaternion representing the rotation to be applied to the element\n* __distance__ - distance of element from the rotation origin",
             "itemtype": "method",
             "name": "PageElement.update3d",
@@ -23962,7 +23973,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1881,
+            "line": 1915,
             "description": "Reposition an element within its stack by changing 'left' and 'top' style attributes; rotate it using matrix3d transform",
             "itemtype": "method",
             "name": "PageElement.renderElement",
@@ -23975,7 +23986,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1967,
+            "line": 2038,
             "description": "updateCurrentHandle helper object",
             "itemtype": "method",
             "name": "getReferenceDimensions",
@@ -23997,7 +24008,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 1995,
+            "line": 2066,
             "description": "Convert handle percentage values to numerical values, stored in currentHandle",
             "itemtype": "method",
             "name": "updateCurrentHandle",
@@ -24012,7 +24023,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2027,
+            "line": 2098,
             "description": "Convert start percentage values to numerical values, stored in currentStart",
             "itemtype": "method",
             "name": "updateCurrentStart",
@@ -24034,7 +24045,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2064,
+            "line": 2135,
             "description": "Calculate start Vector in reference to a Shape entity object's path",
             "itemtype": "method",
             "name": "PageElement.setStampUsingPath",
@@ -24049,7 +24060,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2101,
+            "line": 2173,
             "description": "Directly calls the equivalent Position function",
             "itemtype": "method",
             "name": "PageElement.setStampUsingPivot",
@@ -24058,7 +24069,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2106,
+            "line": 2178,
             "description": "stamp helper object",
             "itemtype": "method",
             "name": "PageElement.setStampUsingPivot (not a function)",
@@ -24067,7 +24078,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2135,
+            "line": 2207,
             "description": "setStampUsingPivot helper function",
             "itemtype": "method",
             "name": "PageElement.setStampUsingDomElementPivot",
@@ -24081,7 +24092,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2148,
+            "line": 2220,
             "description": "setStampUsingPivot helper function",
             "itemtype": "method",
             "name": "PageElement.setStampUsingLockTo",
@@ -24095,7 +24106,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2190,
+            "line": 2262,
             "description": "Set the transform origin style attribute",
             "itemtype": "method",
             "name": "PageElement.setTransformOrigin",
@@ -24108,7 +24119,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2220,
+            "line": 2292,
             "description": "Calculate the element's display offset values",
             "itemtype": "method",
             "name": "PageElement.setDisplayOffsets",
@@ -24121,7 +24132,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2249,
+            "line": 2321,
             "description": "Helper function - set local dimensions (width, height)",
             "itemtype": "method",
             "name": "setLocalDimensions",
@@ -24136,7 +24147,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2330,
+            "line": 2402,
             "description": "Helper function - set DOM element dimensions (width, height)\n\nOverwritesa core setDimensions()",
             "itemtype": "method",
             "name": "setDimensions",
@@ -24151,7 +24162,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2356,
+            "line": 2428,
             "description": "Reinitialize element with existing values",
             "itemtype": "method",
             "name": "domInitialize",
@@ -24164,7 +24175,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2377,
+            "line": 2449,
             "description": "Set element's pivot to 'mouse'; set handles to supplied Vector value; set order to +9999",
             "itemtype": "method",
             "name": "pickupEntity",
@@ -24184,7 +24195,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2397,
+            "line": 2469,
             "description": "Revert pickupEntity() actions, ensuring element is left where the user drops it",
             "itemtype": "method",
             "name": "dropEntity",
@@ -24205,7 +24216,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2421,
+            "line": 2493,
             "description": "Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use styling to set their drawing region dimensions",
             "itemtype": "method",
             "name": "setDimensions",
@@ -24218,7 +24229,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2444,
+            "line": 2516,
             "description": "Alias for makeStack()",
             "itemtype": "method",
             "name": "newStack",
@@ -24239,7 +24250,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2454,
+            "line": 2526,
             "description": "Alias for makeElement()",
             "itemtype": "method",
             "name": "newElement",
@@ -24260,7 +24271,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2464,
+            "line": 2536,
             "description": "Alias for makeElementGroup()",
             "itemtype": "method",
             "name": "newElementGroup",
@@ -24281,7 +24292,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2474,
+            "line": 2546,
             "description": "A __factory__ function to generate new Stack objects",
             "itemtype": "method",
             "name": "makeStack",
@@ -24302,7 +24313,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2484,
+            "line": 2556,
             "description": "A __factory__ function to generate new Element objects",
             "methodmakewelement": "",
             "params": [
@@ -24322,7 +24333,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2494,
+            "line": 2566,
             "description": "A __factory__ function to generate new ElementGroup objects",
             "itemtype": "method",
             "name": "makeElementGroup",
@@ -24343,7 +24354,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2508,
+            "line": 2580,
             "description": "Pad constructor hook function - amended by Stacks module",
             "itemtype": "method",
             "name": "sortCellsCompile",
@@ -24357,7 +24368,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2518,
+            "line": 2590,
             "description": "Pad set hook function - amended by Stacks module",
             "itemtype": "method",
             "name": "padStacksSet",
@@ -24371,7 +24382,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2540,
+            "line": 2612,
             "description": "Pad lockTo helper",
             "itemtype": "method",
             "name": "setCellLocalDimensions",
@@ -24385,7 +24396,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2570,
+            "line": 2642,
             "description": "Stamp helper hook function - amended by stacks module",
             "itemtype": "method",
             "name": "setStampUsingStacksPivot",
@@ -24397,7 +24408,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2678,
+            "line": 2750,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -24408,7 +24419,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2687,
+            "line": 2759,
             "description": "An Object (in fact, a Vector) containing perspective details for the stack element. \n\nthe Stack constructor, and set() function, supports the following 'virtual' attributes for this attribute:\n\n* __perspectiveX__ - (Mixed) the horizontal offset, either as a Number (in pixels), or a percentage String of the object's width, or the String literal 'left', 'right' or 'center'\n* __perspectiveY__ - (Mixed) the vertical offset, either as a Number (in pixels), or a percentage String of the object's height, or the String literal 'top', 'bottom' or 'center'\n* __perspectiveZ__ - (Number) perspective depth, in pixels",
             "itemtype": "property",
             "name": "perspective",
@@ -24418,7 +24429,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2708,
+            "line": 2780,
             "description": "The PADNAME String of a canvas locked to the stack",
             "itemtype": "property",
             "name": "canvas",
@@ -24429,7 +24440,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2716,
+            "line": 2788,
             "description": "Groups array",
             "itemtype": "property",
             "name": "groups",
@@ -24440,7 +24451,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2726,
+            "line": 2798,
             "description": "Return the DOM element wrapped by this object",
             "itemtype": "method",
             "name": "getElement",
@@ -24452,7 +24463,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2734,
+            "line": 2806,
             "description": "Augments PageElement.set(), to allow users to set the stack perspective using perspectiveX, perspectiveY, perspectiveZ",
             "itemtype": "method",
             "name": "set",
@@ -24472,7 +24483,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2790,
+            "line": 2862,
             "description": "Augments PageElement.setDelta(), to allow users to set the stack perspective using perspectiveX, perspectiveY, perspectiveZ",
             "itemtype": "method",
             "name": "setDelta",
@@ -24492,7 +24503,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2850,
+            "line": 2922,
             "description": "Helper function - set local dimensions (width, height)\n\n_Replaces PageElement.setLocalDimensions",
             "itemtype": "method",
             "name": "setLocalDimensions",
@@ -24507,7 +24518,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2930,
+            "line": 3002,
             "description": "Import elements into the stack DOM object, and create element object wrappers for them",
             "itemtype": "method",
             "name": "addElementById",
@@ -24526,7 +24537,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2948,
+            "line": 3020,
             "description": "Import elements into the stack DOM object, and create element object wrappers for them",
             "itemtype": "method",
             "name": "addElementsByClassName",
@@ -24545,7 +24556,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2981,
+            "line": 3053,
             "description": "Move DOM elements within a Stack, via the Stack's groups",
             "itemtype": "method",
             "name": "render",
@@ -24557,7 +24568,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 2994,
+            "line": 3066,
             "description": "Reinitialize element with existing values",
             "itemtype": "method",
             "name": "domInit",
@@ -24569,7 +24580,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3007,
+            "line": 3079,
             "description": "Update element 3d transitions, via the Stack's groups",
             "itemtype": "method",
             "name": "update",
@@ -24581,7 +24592,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3020,
+            "line": 3092,
             "description": "Update Pads via the Stack's groups",
             "itemtype": "method",
             "name": "renderPads",
@@ -24593,7 +24604,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3033,
+            "line": 3105,
             "description": "Calculates the pixels value of the object's perspective attribute",
             "itemtype": "method",
             "name": "setPerspective",
@@ -24605,7 +24616,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3064,
+            "line": 3136,
             "description": "setCurrentPerspective helper function",
             "itemtype": "method",
             "name": "setCurrentPerspective",
@@ -24617,7 +24628,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3085,
+            "line": 3157,
             "description": "Get dimensions of Stack",
             "itemtype": "method",
             "name": "getStackDimensions",
@@ -24629,7 +24640,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3153,
+            "line": 3225,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -24640,7 +24651,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3162,
+            "line": 3234,
             "description": "Element's default height",
             "itemtype": "property",
             "name": "height",
@@ -24651,7 +24662,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3171,
+            "line": 3243,
             "description": "Return the DOM element wrapped by this object",
             "itemtype": "method",
             "name": "getElement",
@@ -24663,7 +24674,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3224,
+            "line": 3296,
             "itemtype": "property",
             "name": "type",
             "type": "String",
@@ -24674,7 +24685,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3233,
+            "line": 3305,
             "description": "Array of SPRITENAME Strings of entitys that complement this ElementGroup",
             "itemtype": "property",
             "name": "entitys",
@@ -24685,7 +24696,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3240,
+            "line": 3312,
             "description": "Array of ELEMENTNAME Strings of elements that complement this ElementGroup",
             "itemtype": "property",
             "name": "elements",
@@ -24696,7 +24707,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3247,
+            "line": 3319,
             "description": "current value of widest element width",
             "itemtype": "property",
             "name": "currentWidth",
@@ -24707,7 +24718,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3254,
+            "line": 3326,
             "description": "Current value of takkest element height",
             "itemtype": "property",
             "name": "currentHeight",
@@ -24718,7 +24729,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3261,
+            "line": 3333,
             "description": "When true, forces all elements (including stacks, pads) to use the width of the currently widest element; default: false",
             "itemtype": "property",
             "name": "equalWidth",
@@ -24729,7 +24740,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3268,
+            "line": 3340,
             "description": "When true, forces all elements (including stacks, pads) to use the height of the currently tallest element; default: false",
             "itemtype": "property",
             "name": "equalHeight",
@@ -24740,7 +24751,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3275,
+            "line": 3347,
             "description": "STACKNAME of the default Stack object to which this group is associated",
             "itemtype": "property",
             "name": "recalculateDimensions",
@@ -24751,7 +24762,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3282,
+            "line": 3354,
             "description": "STACKNAME of the default Stack object to which this group is associated",
             "itemtype": "property",
             "name": "stack",
@@ -24762,7 +24773,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3292,
+            "line": 3364,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "set",
@@ -24771,7 +24782,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3299,
+            "line": 3371,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "sortEntitys",
@@ -24780,7 +24791,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3306,
+            "line": 3378,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "forceStamp",
@@ -24789,7 +24800,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3313,
+            "line": 3385,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "stamp",
@@ -24798,7 +24809,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3323,
+            "line": 3395,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "filtersGroupInit",
@@ -24807,7 +24818,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3330,
+            "line": 3402,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "addEntitysToGroup",
@@ -24816,7 +24827,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3337,
+            "line": 3409,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "removeEntitysFromGroup",
@@ -24825,7 +24836,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3344,
+            "line": 3416,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "updateEntitysBy",
@@ -24834,7 +24845,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3351,
+            "line": 3423,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "setEntitysTo",
@@ -24843,7 +24854,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3358,
+            "line": 3430,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "pivotEntitysTo",
@@ -24852,7 +24863,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3365,
+            "line": 3437,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "getEntityAt",
@@ -24861,7 +24872,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3372,
+            "line": 3444,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "getEntitysByMouseIndex",
@@ -24870,7 +24881,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3379,
+            "line": 3451,
             "description": "Directly calls the equivalent Group function",
             "itemtype": "method",
             "name": "getAllEntitysAt",
@@ -24879,7 +24890,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3387,
+            "line": 3459,
             "description": "Element sorting routine - elements are sorted according to their element.order attribute value, in ascending order\n\nOrder values are treated as integers. The sort routine is a form of bucket sort, and should be stable (elements with equal order values should not be swapped)",
             "itemtype": "method",
             "name": "sortElements",
@@ -24901,7 +24912,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3402,
+            "line": 3474,
             "description": "Get collective dimensions of ElementGroup elements",
             "itemtype": "method",
             "name": "getElementGroupDimensions",
@@ -24913,7 +24924,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3440,
+            "line": 3512,
             "description": "Tell the Group to ask its constituent elements to render",
             "itemtype": "method",
             "name": "render",
@@ -24926,7 +24937,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3489,
+            "line": 3561,
             "description": "Tell the Group to ask its constituent pads to render - will cascade through to sub-stacks",
             "itemtype": "method",
             "name": "renderPads",
@@ -24939,7 +24950,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3517,
+            "line": 3589,
             "description": "Reinitialize group elements with existing values",
             "itemtype": "method",
             "name": "domInit",
@@ -24952,7 +24963,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3538,
+            "line": 3610,
             "description": "A __display__ function to update DOM elements' 3d position/rotation\n\nArgument can contain the following (optional) attributes:\n\n* __quaternion__ - quaternion representing the rotation to be applied to the element\n* __distance__ - distance of element from the rotation origin",
             "itemtype": "method",
             "name": "update",
@@ -24972,7 +24983,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3566,
+            "line": 3638,
             "description": "check whether this.equalHeight or this.equalWidth has been set to true",
             "itemtype": "method",
             "name": "checkEqualDimensions",
@@ -24984,7 +24995,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3575,
+            "line": 3647,
             "description": "Add elements to the Group",
             "itemtype": "method",
             "name": "addElementsToGroup",
@@ -25004,7 +25015,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3593,
+            "line": 3665,
             "description": "Remove elements from the Group",
             "itemtype": "method",
             "name": "removeElementsFromGroup",
@@ -25024,7 +25035,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3611,
+            "line": 3683,
             "description": "Ask all elements in the Group to perform a setDelta() operation",
             "itemtype": "method",
             "name": "updateElementsBy",
@@ -25044,7 +25055,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3631,
+            "line": 3703,
             "description": "Ask all elements and entitys in the Group to perform a setDelta() operation",
             "itemtype": "method",
             "name": "updateBy",
@@ -25064,7 +25075,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3644,
+            "line": 3716,
             "description": "Ask all elements in the Group to perform a set() operation",
             "itemtype": "method",
             "name": "setElementsTo",
@@ -25084,7 +25095,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3662,
+            "line": 3734,
             "description": "Ask all elements in the Group to perform a dimension update operation",
             "itemtype": "method",
             "name": "updateDimensions",
@@ -25104,7 +25115,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3685,
+            "line": 3757,
             "description": "Ask all elements and entitys in the Group to perform a set() operation",
             "itemtype": "method",
             "name": "setEntitysTo",
@@ -25124,7 +25135,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3697,
+            "line": 3769,
             "description": "Return the entity or element at a given coordinate (in that order)",
             "itemtype": "method",
             "name": "getAt",
@@ -25148,7 +25159,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3720,
+            "line": 3792,
             "description": "Check all entitys and elements in the Group to see which one(s) are associated with a particular mouse index",
             "itemtype": "method",
             "name": "getByMouseIndex",
@@ -25167,7 +25178,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3732,
+            "line": 3804,
             "description": "Check all entitys and elements in the Group to see if they are colliding with the supplied coordinate.",
             "itemtype": "method",
             "name": "getAllAt",
@@ -25186,7 +25197,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3744,
+            "line": 3816,
             "description": "Return the element at a given coordinate (in that order)",
             "itemtype": "method",
             "name": "getElementAt",
@@ -25205,7 +25216,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3767,
+            "line": 3839,
             "description": "Check all elements in the Group to see which one(s) are associated with a particular mouse index",
             "itemtype": "method",
             "name": "getElementsByMouseIndex",
@@ -25224,7 +25235,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3776,
+            "line": 3848,
             "description": "Check all elements in the Group to see if they are colliding with the supplied coordinate.",
             "itemtype": "method",
             "name": "getAllElementsAt",
@@ -25243,7 +25254,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3785,
+            "line": 3857,
             "description": "Require all elements in the Group to set their pivot attribute to the supplied STACKNAME, PADNAME, ELEMENTNAME, POINTNAME or SPRITENAME string, and set their handle Vector to reflect the current vector between that object's start Vector and their own Vector\n\nThis has the effect of turning a set of disparate eelements into a single, coordinated group.",
             "itemtype": "method",
             "name": "pivotElementsTo",
@@ -25263,7 +25274,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3828,
+            "line": 3900,
             "description": "Augments ElementGroup.set()",
             "itemtype": "method",
             "name": "setDirtyStarts",
@@ -25278,7 +25289,7 @@
         },
         {
             "file": "source\\scrawlStacks.js",
-            "line": 3863,
+            "line": 3935,
             "description": "Augments ElementGroup.set()",
             "itemtype": "method",
             "name": "setDirtyHandles",
@@ -25883,7 +25894,7 @@
     "warnings": [
         {
             "message": "unknown tag: methodmakewelement",
-            "line": " source\\scrawlStacks.js:2484"
+            "line": " source\\scrawlStacks.js:2556"
         },
         {
             "message": "Missing item type\nsetStampUsingPivot helper object",
@@ -25899,7 +25910,7 @@
         },
         {
             "message": "Missing item type\nA __factory__ function to generate new Element objects",
-            "line": " source\\scrawlStacks.js:2484"
+            "line": " source\\scrawlStacks.js:2556"
         }
     ]
 }

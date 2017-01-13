@@ -1159,7 +1159,7 @@ Augments Base.set()
 				get = my.xtGet;
 			my.Base.prototype.set.call(this, items);
 			items = so(items);
-			if(this.lockFrameTo || items.lockFrameTo){
+			if (this.lockFrameTo || items.lockFrameTo) {
 				this.setLockElementAttributes(items);
 				if (items.lockFrameTo) {
 					this.lockOn(items);
