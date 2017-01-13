@@ -537,7 +537,6 @@ setLocal() helper function - position supplied by Path entity
 				this.lockFrameTo = items.lockFrameTo;
 				this.lockOn(items);
 			}
-
 			this.setCorners(items);
 			this.setEngine(this);
 			this.filtersEntityInit(items);
@@ -1160,12 +1159,12 @@ Augments Base.set()
 				get = my.xtGet;
 			my.Base.prototype.set.call(this, items);
 			items = so(items);
-			if (items.lockFrameTo) {
-				this.lockOn(items);
-				this.lockFrameTo = items.lockFrameTo;
-			}
-			else if (this.lockFrameTo) {
+			if(this.lockFrameTo || items.lockFrameTo){
 				this.setLockElementAttributes(items);
+				if (items.lockFrameTo) {
+					this.lockOn(items);
+					this.lockFrameTo = items.lockFrameTo;
+				}
 				e = get(so(my.element)[this.lockFrameTo], so(my.stack)[this.lockFrameTo], so(my.pad)[this.lockFrameTo]);
 				if (e) {
 					e.set(this.lockElementAttributes);
@@ -1507,6 +1506,8 @@ Attach a Frame entity to an existing stack element, or create a new stack &lt;di
 				}
 			}
 			if (el) {
+				this.setLockElementAttributes(items);
+				el.set(this.lockElementAttributes);
 				if (!el.topLeft) {
 					el.addCornerTrackers();
 					for (i = 0; i < 4; i++) {

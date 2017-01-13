@@ -300,9 +300,6 @@ var mycode = function() {
 
 			// Get current mouse/touch position
 			here = myStack.getMouse();
-			if (currentObject && currentObject.type === 'Block') {
-				console.log(here.name, here.x, here.y, here.active, here.id);
-			}
 
 			// If mouse/touch position is over an entity, change the Pad's canvas element's cursor to a pointer
 			if (here.active) {

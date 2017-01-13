@@ -857,6 +857,13 @@ A flag to determine whether an element displays itself
 **/
 		my.work.d.PageElement.visibility = true;
 		/**
+A flag to determine whether zIndex uses translateZ values (default: true), or if it can be independently set (as style zIndex)
+@property PageElement.zIndexIsTranslateZ
+@type Boolean
+@default true
+**/
+		my.work.d.PageElement.zIndexIsTranslateZ = true;
+		/**
 A flag to determine whether an element uses the browser viewport for its position and dimensions reference
 @property PageElement.viewport
 @type Boolean
@@ -964,6 +971,7 @@ PageElement constructor hook function - modified by stacks module
 				get = my.xtGet,
 				quat = my.makeQuaternion,
 				d = my.work.d[this.type];
+
 			this.start = vec({
 				name: this.type + '.' + this.name + '.start',
 				x: get(items.startX, temp.x, 0),
@@ -973,29 +981,36 @@ PageElement constructor hook function - modified by stacks module
 				name: this.type + '.' + this.name + '.current.start'
 			});
 			this.currentStart.flag = false;
+
 			temp = so(items.delta);
 			this.delta = vec({
 				name: this.type + '.' + this.name + '.delta',
 				x: get(items.deltaX, temp.x, 0),
 				y: get(items.deltaY, temp.y, 0)
 			});
+
 			temp = so(items.handle);
 			this.handle = vec({
 				name: this.type + '.' + this.name + '.handle',
 				x: get(items.handleX, temp.x, 0),
 				y: get(items.handleY, temp.y, 0)
 			});
-			temp = so(items.translate);
 			this.currentHandle = vec({
 				name: this.type + '.' + this.name + '.current.handle'
 			});
 			this.currentHandle.flag = false;
+
+			temp = so(items.translate);
 			this.translate = vec({
 				name: this.type + '.' + this.name + '.translate',
 				x: get(items.translateX, temp.x, 0),
 				y: get(items.translateY, temp.y, 0),
 				z: get(items.translateZ, temp.z, 0)
 			});
+			this.translate.flag = false;
+			this.translate.string = 'translate3d(0px,0px,0px)';
+			this.zIndexIsTranslateZ = get(items.zIndexIsTranslateZ, true);
+
 			temp = so(items.deltaTranslate);
 			this.deltaTranslate = vec({
 				name: this.type + '.' + this.name + '.deltaTranslate',
@@ -1003,6 +1018,7 @@ PageElement constructor hook function - modified by stacks module
 				y: get(items.deltaTranslateY, temp.y, 0),
 				z: get(items.deltaTranslateZ, temp.z, 0)
 			});
+
 			this.pivot = get(items.pivot, d.pivot);
 			this.path = get(items.path, d.path);
 			this.pathRoll = get(items.pathRoll, d.pathRoll);
@@ -1016,6 +1032,7 @@ PageElement constructor hook function - modified by stacks module
 			this.scale = get(items.scale, 1);
 			this.viewport = get(items.viewport, false);
 			this.visibility = get(items.visibility, d.visibility);
+
 			this.pitch = items.pitch || 0;
 			this.yaw = items.yaw || 0;
 			this.roll = items.roll || 0;
@@ -1026,6 +1043,9 @@ PageElement constructor hook function - modified by stacks module
 				yaw: this.yaw,
 				roll: this.roll
 			});
+			this.rotation.flag = false;
+			this.rotation.string = 'rotate3d(0,0,0,0rad)';
+
 			this.deltaPitch = items.deltaPitch || 0;
 			this.deltaYaw = items.deltaYaw || 0;
 			this.deltaRoll = items.deltaRoll || 0;
@@ -1037,14 +1057,17 @@ PageElement constructor hook function - modified by stacks module
 				roll: this.deltaRoll
 			});
 			this.rotationTolerance = get(items.rotationTolerance, d.rotationTolerance);
+
 			this.group = get(items.group, false);
 			if (this.group) {
 				my.group[this.group].addElementsToGroup(this.name);
 			}
+
 			this.includeCornerTrackers = get(items.includeCornerTrackers, false);
 			if (this.includeCornerTrackers) {
 				this.addCornerTrackers();
 			}
+
 			this.mouseIndex = get(items.mouseIndex, 'mouse');
 			this.order = get(items.order, 0);
 			this.drag = get(items.drag, false);
@@ -1414,6 +1437,7 @@ Augments PageElement.set()
 				yaw: items.yaw || 0,
 				roll: items.roll || 0,
 			});
+			this.rotation.flag = false;
 			return this;
 		};
 		/**
@@ -1451,6 +1475,83 @@ Augments PageElement.set()
 			t.x = get(items.translateX, temp.x, t.x);
 			t.y = get(items.translateY, temp.y, t.y);
 			t.z = get(items.translateZ, temp.z, t.z);
+			this.translate.flag = false;
+			return this;
+		};
+		/**
+Augments PageElement.set()
+@method setDeltaTranslate
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setDeltaTranslate = function(items) {
+			var temp,
+				get = my.xtGet,
+				t;
+			items = my.safeObject(items);
+			if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
+				this.deltaTranslate = my.makeVector(items.deltaTranslate || this.deltaTranslate);
+			}
+			temp = my.safeObject(items.deltaTranslate);
+			t = this.deltaTranslate;
+			t.x = get(items.deltaTranslateX, temp.x, t.x);
+			t.y = get(items.deltaTranslateY, temp.y, t.y);
+			t.z = get(items.deltaTranslateZ, temp.z, t.z);
+			return this;
+		};
+		/**
+Handles the setting of many CSS attributes
+@method PageElement.setStyles
+@param {Object} items Object consisting of key:value attributes
+@return This
+@chainable
+**/
+		my.PageElement.prototype.setStyles = function(items) {
+			var stat = ['hidden', 'none'],
+				el,
+				k,
+				i,
+				iz,
+				item,
+				firstLetter,
+				remainder,
+				cont = my.contains;
+			items = my.safeObject(items);
+			el = this.getElement();
+			k = Object.keys(items);
+			for (i = 0, iz = k.length; i < iz; i++) {
+				item = k[i];
+				if (item === 'visibility') {
+					if (items.visibility.substring) {
+						this.visibility = (!cont(stat, items.visibility)) ? true : false;
+					}
+					else {
+						this.visibility = (items.visibility) ? true : false;
+					}
+					if (this.group) {
+						el.style.opacity = (this.visibility) ? 1 : 0;
+					}
+					else {
+						el.style.display = (this.visibility) ? 'block' : 'none';
+					}
+				}
+				else if (item === 'zIndex' && !this.zIndexIsTranslateZ) {
+					el.style.zIndex = items[item];
+				}
+				else if (cont(my.work.xcss, item)) {
+					firstLetter = item[0].toUpperCase;
+					remainder = item.substr(1);
+					el.style['webkit' + firstLetter + remainder] = items[item];
+					el.style['moz' + firstLetter + remainder] = items[item];
+					el.style['ms' + firstLetter + remainder] = items[item];
+					el.style['o' + firstLetter + remainder] = items[item];
+					el.style[item] = items[item];
+				}
+				else if (cont(my.work.css, item)) {
+					el.style[item] = items[item];
+				}
+			}
 			return this;
 		};
 		/**
@@ -1502,77 +1603,6 @@ Remove a CSS class from the DOM element
 			return this;
 		};
 		/**
-Augments PageElement.set()
-@method setDeltaTranslate
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-**/
-		my.PageElement.prototype.setDeltaTranslate = function(items) {
-			var temp,
-				get = my.xtGet,
-				t;
-			items = my.safeObject(items);
-			if (!this.deltaTranslate.type || this.deltaTranslate.type !== 'Vector') {
-				this.deltaTranslate = my.makeVector(items.deltaTranslate || this.deltaTranslate);
-			}
-			temp = my.safeObject(items.deltaTranslate);
-			t = this.deltaTranslate;
-			t.x = get(items.deltaTranslateX, temp.x, t.x);
-			t.y = get(items.deltaTranslateY, temp.y, t.y);
-			t.z = get(items.deltaTranslateZ, temp.z, t.z);
-			return this;
-		};
-		/**
-Handles the setting of many CSS attributes
-@method PageElement.setStyles
-@param {Object} items Object consisting of key:value attributes
-@return This
-@chainable
-**/
-		my.PageElement.prototype.setStyles = function(items) {
-			var stat = ['hidden', 'none'],
-				el,
-				k,
-				i,
-				iz,
-				firstLetter,
-				remainder,
-				cont = my.contains;
-			items = my.safeObject(items);
-			el = this.getElement();
-			k = Object.keys(items);
-			for (i = 0, iz = k.length; i < iz; i++) {
-				if (k[i] === 'visibility') {
-					if (items.visibility.substring) {
-						this.visibility = (!cont(stat, items.visibility)) ? true : false;
-					}
-					else {
-						this.visibility = (items.visibility) ? true : false;
-					}
-					if (this.group) {
-						el.style.opacity = (this.visibility) ? 1 : 0;
-					}
-					else {
-						el.style.display = (this.visibility) ? 'block' : 'none';
-					}
-				}
-				else if (cont(my.work.xcss, k[i])) {
-					firstLetter = k[i][0].toUpperCase;
-					remainder = k[i].substr(1);
-					el.style['webkit' + firstLetter + remainder] = items[k[i]];
-					el.style['moz' + firstLetter + remainder] = items[k[i]];
-					el.style['ms' + firstLetter + remainder] = items[k[i]];
-					el.style['o' + firstLetter + remainder] = items[k[i]];
-					el.style[k[i]] = items[k[i]];
-				}
-				else if (cont(my.work.css, k[i])) {
-					el.style[k[i]] = items[k[i]];
-				}
-			}
-			return this;
-		};
-		/**
 Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function
 @method PageElement.setDelta
 @param {Object} items Object consisting of key:value attributes
@@ -1598,6 +1628,7 @@ Adds the value of each attribute supplied in the argument to existing values; on
 				translate.x += my.xtGet(items.translateX, temp.x, 0);
 				translate.y += my.xtGet(items.translateY, temp.y, 0);
 				translate.z += my.xtGet(items.translateZ, temp.z, 0);
+				this.translate.flag = false;
 			}
 			if (xto(items.deltaTranslate, items.deltaTranslateX, items.deltaTranslateY)) {
 				temp = (my.isa_obj(items.deltaTranslate)) ? items.deltaTranslate : {};
@@ -1612,6 +1643,7 @@ Adds the value of each attribute supplied in the argument to existing values; on
 					roll: items.roll || 0,
 				});
 				this.rotation.quaternionMultiply(temp);
+				this.rotation.flag = false;
 			}
 			if (xto(items.deltaPitch, items.deltaYaw, items.deltaRoll)) {
 				temp = q1.setFromEuler({
@@ -1876,6 +1908,8 @@ Argument can contain the following (optional) attributes:
 				rotation.quaternionRotate(this.deltaRotation);
 				translate.vectorAdd(this.deltaTranslate);
 			}
+			this.translate.flag = false;
+			this.rotation.flag = false;
 			return this;
 		};
 		/**
@@ -1885,82 +1919,119 @@ Reposition an element within its stack by changing 'left' and 'top' style attrib
 @chainable
 **/
 		my.PageElement.prototype.renderElement = function() {
-			var pere = [0, 0, 0, 0, 0, 0, 0],
-				pere2 = [0, 0, 0, 0, 0],
+			var p,
 				g,
 				i,
-				ox,
-				oy,
-				dx,
-				dy,
 				handle,
 				start,
 				device,
-				round = Math.round,
-				rotation = this.rotation,
-				v = rotation.v,
-				scale = this.scale,
+				round,
+				rotation,
+				v,
+				scale,
 				style,
-				translate = this.translate,
-				el,
-				result;
+				translate,
+				result,
+				recalcStart = false;
+
 			g = my.group[this.group];
-			el = this.getElement();
-			style = el.style;
+			style = this.getElement().style;
+
 			if (!this.currentHandle.flag) {
 				this.updateCurrentHandle();
 			}
-			handle = this.currentHandle;
+
 			if (!this.currentStart.flag && g.stack) {
 				this.updateCurrentStart(my.stack[g.stack]);
+				if (g.equalWidth || g.equalHeight) {
+					this.setDimensions();
+				}
+				recalcStart = true;
 			}
-			if (this.pivot) {
-				this.setStampUsingPivot();
-			}
-			else if (this.path) {
+
+			if (this.path) {
 				this.setStampUsingPath();
+				recalcStart = true;
 			}
-			start = this.currentStart;
-
-			if (g && (g.equalWidth || g.equalHeight)) {
-				this.setDimensions();
-			}
-
-			if (rotation.getMagnitude() !== 1) {
-				rotation.normalize();
+			else if (this.pivot) {
+				this.setStampUsingPivot();
+				recalcStart = true;
 			}
 
-			pere[0] = round(translate.x * scale);
-			pere[1] = round(translate.y * scale);
-			pere[2] = round(translate.z * scale);
-			pere[3] = v.x;
-			pere[4] = v.y;
-			pere[5] = v.z;
-			pere[6] = rotation.getAngle(false);
+			if(this.viewport || this.topLeft){
+				recalcStart = true;
+			}
 
-			for (i = 0; i < 7; i++) {
-				if (pere[i] < 0.000001 && pere[i] > -0.000001) {
-					pere[i] = 0;
+			if(!this.translate.flag || !this.rotation.flag){
+
+				rotation = this.rotation;
+				translate = this.translate;
+
+				if(!translate.flag){
+					p = [0, 0, 0];
+					round = Math.round;
+					scale = this.scale;
+
+					p[0] = round(translate.x * scale);
+					p[1] = round(translate.y * scale);
+					p[2] = round(translate.z * scale);
+
+					if(this.zIndexIsTranslateZ){
+						style.zIndex = p[2];
+					}
+
+					translate.string = 'translate3d(' + p[0] + 'px,' + p[1] + 'px,' + p[2] + 'px)';
+					translate.flag = true;
+				}
+
+				if(!rotation.flag){
+					p = [0, 0, 0, 0];
+
+					if (rotation.getMagnitude() !== 1) {
+						rotation.normalize();
+					}
+					v = rotation.v;
+
+					p[0] = v.x;
+					p[1] = v.y;
+					p[2] = v.z;
+					p[3] = rotation.getAngle(false);
+
+					for (i = 0; i < 4; i++) {
+						if (p[i] < 0.000001 && p[i] > -0.000001) {
+							p[i] = 0;
+						}
+					}
+
+					rotation.string = 'rotate3d(' + p[0] + ',' + p[1] + ',' + p[2] + ',' + p[3] + 'rad)';
+					rotation.flag = true;
+				}
+
+				result = translate.string + ' ' + rotation.string;
+				style.webkitTransform = result;
+				style.transform = result;
+			}
+
+			if(recalcStart){
+				start = this.currentStart;
+				handle = this.currentHandle;
+				if (this.viewport) {
+					device = my.device;
+					result = device.offsetX - this.displayOffsetX + handle.x + start.x + 'px';
+					style.left = result;
+					result = device.offsetY - this.displayOffsetY + handle.y + start.y + 'px';
+					style.top = result;
+				}
+				else {
+					result = (start.x + handle.x) + 'px';
+					style.left = result;
+					result = (start.y + handle.y) + 'px';
+					style.top = result;
+				}
+				if(this.topLeft){
+					this.updateCornerTrackers();
 				}
 			}
-
-			result = 'translate3d(' + pere[0] + 'px,' + pere[1] + 'px,' + pere[2] + 'px) rotate3d(' + pere[3] + ',' + pere[4] + ',' + pere[5] + ',' + pere[6] + 'rad)';
-			style.webkitTransform = result;
-			style.transform = result;
-
-			style.zIndex = pere[2];
-
-			if (this.viewport) {
-				device = my.device;
-				style.left = device.offsetX - this.displayOffsetX + handle.x + start.x + 'px';
-				style.top = device.offsetY - this.displayOffsetY + handle.y + start.y + 'px';
-			}
-			else {
-				style.left = (start.x + handle.x) + 'px';
-				style.top = (start.y + handle.y) + 'px';
-			}
-
-			this.updateCornerTrackers();
 
 			return this;
 		};
@@ -2085,6 +2156,7 @@ Calculate start Vector in reference to a Shape entity object's path
 							yaw: this.yaw,
 							roll: this.pathRoll + this.roll
 						});
+						this.rotation.flag = false;
 					}
 				}
 			}

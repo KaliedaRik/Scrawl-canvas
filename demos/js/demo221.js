@@ -18,46 +18,26 @@ var mycode = function() {
 		width: 600,
 		height: 600,
 		overflow: 'hidden',
-		backgroundColor: 'black'
+		backgroundColor: 'black',
+		perspectiveX: 300,
+		perspectiveY: 300,
+		perspectiveZ: 100
 	});
 
 	buildStar = function(){
-		var e = document.createElement('div'),
-			id = 'star_' + starsCount;
+		var e, id, star,
+			v, duration, scale, r1;
+
+		e = document.createElement('div');
+		id = 'star_' + starsCount;
 		e.id = id;
 		starHold.appendChild(e);
-
-		var rand1, rand2, rand3,
-			x, y, scale, duration, star;
-
-		rand1 = Math.random();
-		rand2 = Math.round(Math.random() * 600);
-		rand3 = Math.random();
-
-		if (rand1 < 0.25) {
-			x = 0;
-			y = rand2;
-		}
-		else if (rand1 < 0.5) {
-			x = 600;
-			y = rand2;
-		}
-		else if (rand1 < 0.75) {
-			x = rand2;
-			y = 0;
-		}
-		else {
-			x = rand2;
-			y = 600;
-		}
-		duration = Math.round((rand3 * 3000) + 1000);
-		scale = 0.5 + ((1 - rand3) * 1.4);
 
 		stack.addElementById(id);
 		star = scrawl.element[id];
 		star.set({
-			width: 8,
-			height: 8,
+			width: 6,
+			height: 6,
 			startX: 300,
 			startY: 300,
 			handleX: 'center',
@@ -67,24 +47,29 @@ var mycode = function() {
 			zIndexIsTranslateZ: false
 		});
 
+		r1 = Math.random();
+		v = scrawl.makeVector({x: 1}).rotate(Math.random() * 360).scalarMultiply(420);
+		duration = Math.round((r1 * 3000) + 2000);
+		scale = Math.round((1 - r1) * 300);
+
 		scrawl.makeTween({
 			name: star.name + '_tween',
 			targets: star,
 			duration: duration,
 			cycles: 0,
 			definitions: [{
-				attribute: 'startX',
-				start: 300,
-				end: x
-	        }, {
-				attribute: 'startY',
-				start: 300,
-				end: y
-    		}, {
-				attribute: 'scale',
-				start: 0.1,
+				attribute: 'translateX',
+				start: 0,
+				end: v.x
+			}, {
+				attribute: 'translateY',
+				start: 0,
+				end: v.y
+			}, {
+				attribute: 'translateZ',
+				start: -100,
 				end: scale
-    		}]
+			}]
 		}).run();
 
 		starsCount++;

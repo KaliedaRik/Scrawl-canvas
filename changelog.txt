@@ -31,6 +31,20 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+to 170113
+	- refactor stacks (and frames) for DOM efficiency gains
+		- efficiency gains excellent - tweens now on a par with (or just below) GSAP
+	- new demos 220 and 221 to test tween resilience when animating hundreds of DOM div elements
+		- fixed bugs introduced by new code for frames (and stacks)
+	- testing:
+		- tested demos 107, 114, 115, 120, 121 and 201-221
+		- tested in latest versions of Firefox, Chrome, IE11, Edge
+			- all tests passed
+			- IE11 and Edge juddery when positioning elements relative to browser viewport
+			- only IE11 and Edge correctly track mouse on rotated frames
+	- TODO:
+		- start preparing for release 6.0.1
+
 170104
 	- release v6.0.0
 
