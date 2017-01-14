@@ -210,6 +210,7 @@ Key:value pairs of extension alias:filename Strings, used by scrawl.loadExtensio
 		factories: 'scrawlPathFactories',
 		color: 'scrawlColor',
 		filters: 'scrawlFilters',
+		multifilters: 'scrawlMultiFilters',
 		physics: 'scrawlPhysics',
 		saveload: 'scrawlSaveLoad',
 		stacks: 'scrawlStacks',
@@ -257,6 +258,7 @@ Key:value pairs of extension alias:Array, used by scrawl.loadExtensions()
 		factories: [],
 		color: [],
 		filters: [],
+		multifilters: [],
 		physics: ['quaternion'],
 		saveload: [],
 		stacks: ['quaternion'],
@@ -280,6 +282,7 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 			my.setDisplayOffsets('all');
 			my.physicsInit();
 			my.filtersInit();
+			my.multifiltersInit();
 			my.animationInit();
 		}
 		return my;
@@ -306,6 +309,12 @@ scrawl.init hook function - modified by filters extension
 @private
 **/
 	my.filtersInit = function() {};
+	/**
+scrawl.init hook function - modified by multifilters extension
+@method multifiltersInit
+@private
+**/
+	my.multifiltersInit = function() {};
 	/**
 scrawl.init hook function - modified by stacks extension
 @method pageInit
@@ -418,12 +427,15 @@ A __general__ function that loads supporting extensions and integrates them into
 
 Extension names are supplied as an array of Strings, each of which should be an _alias_ string, as follows:
 
+NOTE: the filters and multifilters extensions are exclusionary and cannot be mixed in code - if both are requested, only the multifilters extension is loaded
+
 Scrawl currently supports the following extensions:
 * __scrawlAnimation.js__ - alias __animation__ - adds animation and tween functionality to the core
 * __scrawlBlock.js__ - alias __block__ - adds _Block_ (square and rectangle) entitys to the core
 * __scrawlCollisions.js__ - alias __collisions__ - adds entity collision detection functionality to the core
 * __scrawlColor.js__ - alias __color__ - adds the _Color_ Design object to the core
-* __scrawlFilters.js__ - alias __filters__ - adds image filter functionality to the core
+* __scrawlFilters.js__ - alias __filters__ - adds filter functionality to the core (legacy filters)
+* __scrawlMultiFilters.js__ - alias __multifilters__ - adds filter functionality to the core (new filter functionlity as an alternate to legacy filters)
 * __scrawlFrame.js__ - alias __frame__ - enhanced Picture entity
 * __scrawlImages.js__ - alias __images__ - adds all image functionality, including static and animated _Picture_ entitys and the _Pattern_ Design object, to the core
 * __scrawlPath.js__ - alias __path__ - adds _Path_ (SVGTiny path data) entitys to the core
@@ -595,6 +607,10 @@ loadExtensions helper function
 		}
 		if (xt(items.modules)) {
 			exts = exts.concat([].concat(items.modules));
+		}
+		// filters and multifilters are mutually exclusive, with multifilters preferred
+		if(exts.indexOf('filters') >= 0 && exts.indexOf('multifilters') >= 0){
+			my.removeItem(exts, 'filters');
 		}
 		for (i = 0, iz = exts.length; i < iz; i++) {
 			for (j = 0, jz = depends[exts[i]].length; j < jz; j++) {
@@ -4473,6 +4489,7 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 			this.setDisplayOffsets();
 			this.setAccessibility(items);
 			this.filtersPadInit();
+			this.multifiltersPadInit();
 			this.padStacksConstructor(items);
 			this.interactive = get(items.interactive, true);
 			if (this.interactive) {
@@ -4517,6 +4534,12 @@ Pad constructor hook function - modified by filters extension
 @private
 **/
 	my.Pad.prototype.filtersPadInit = function(items) {};
+	/**
+Pad constructor hook function - modified by multifilters extension
+@method multifiltersPadInit
+@private
+**/
+	my.Pad.prototype.multifiltersPadInit = function(items) {};
 	/**
 Pad constructor hook function - modified by stacks extension
 @method stacksPadInit
@@ -4633,7 +4656,7 @@ By default:
 * the initial base canvas has a compileOrder of 9999 and compiles last
 * the initial display canvas has compiled = false and will not compile
 
-(This function is replaced by the Filters extension)
+(This function is replaced by the Filters or multifilters extension)
 
 @method compile
 @return This
@@ -4663,7 +4686,7 @@ By default, the initial base and display canvases have shown = false:
 * 'show' involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself
 * the last action is to copy the base cell onto the display cell
 
-(This function is replaced by the Filters extension)
+(This function is replaced by the Filters or multifilters extension)
 
 @method show
 @return This
@@ -4907,6 +4930,7 @@ Cell supports the following 'virtual' attributes for this attribute:
 			this.animationCellInit(items);
 			this.collisionsCellInit(items);
 			this.filtersCellInit(items);
+			this.multifiltersCellInit(items);
 			return this;
 		}
 		return false;
@@ -5207,6 +5231,12 @@ Cell constructor hook function - modified by filters extension
 @private
 **/
 	my.Cell.prototype.filtersCellInit = function(items) {};
+	/**
+Cell constructor hook function - modified by multifilters extension
+@method multifiltersCellInit
+@private
+**/
+	my.Cell.prototype.multifiltersCellInit = function(items) {};
 	/**
 Cell constructor hook function - modified by animation extension
 @method animationCellInit
@@ -5953,7 +5983,7 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 	/**
 Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
 
-(This function is replaced by the Filters extension)
+(This function is replaced by the Filters or multifilters extension)
 @method compile
 @return This
 @chainable
@@ -7281,6 +7311,7 @@ _Note: not all entitys support all of these operations_
 		this.method = get(items.method, my.work.d[this.type].method);
 		this.collisionsEntityConstructor(items);
 		this.filtersEntityInit(items);
+		this.multifiltersEntityInit(items);
 		return this;
 	};
 	my.Entity.prototype = Object.create(my.Position.prototype);
@@ -7322,6 +7353,12 @@ Entity constructor hook function - modified by filters extension
 @private
 **/
 	my.Entity.prototype.filtersEntityInit = function(items) {};
+	/**
+Entity constructor hook function - modified by multifilters extension
+@method multifiltersEntityInit
+@private
+**/
+	my.Entity.prototype.multifiltersEntityInit = function(items) {};
 	/**
 Entity constructor hook function - modified by collisions extension
 @method collisionsEntityConstructor
@@ -7535,6 +7572,9 @@ Permitted methods include:
 @param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
 @return This
 @chainable
+
+// I THINK THIS NEEDS TO BE OVERWRITTEN IN ITS ENTIRETY BY MULTIFILTERS? THOUGH THAT LEADS TO PROBLEMS FOR ENTITYS THAT OVERWRITE THIS FUNCTION?
+// HOWEVER, FOR NOW WE CAN TRY TO REDIRECT THE STAMPING ONTO THE MULTIFILTER HIDDEN CELL ...?
 **/
 	my.Entity.prototype.stamp = function(method, cellname, cell, mouse) {
 		var engine,
@@ -7571,6 +7611,7 @@ Permitted methods include:
 			}
 			this[method](engine, cellname, cell);
 			this.stampFilter(engine, cellname, cell);
+			this.stampMultifilter(engine, cellname, cell);
 		}
 		return this;
 	};
@@ -7594,6 +7635,12 @@ Entity.stamp hook function - modified by filters extension
 **/
 	my.Entity.prototype.stampFilter = function() {};
 	my.Entity.prototype.stampFilterDimensionsActions = {};
+	/**
+Entity.stamp hook function - modified by multifilters extension
+@method stampMultifilter
+@private
+**/
+	my.Entity.prototype.stampMultifilter = function() {};
 	/**
 Stamp helper function - rotate and position canvas ready for drawing entity
 @method rotateCell
