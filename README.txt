@@ -107,7 +107,7 @@ VERSION 6.0.1 released 14 January 2017
 		- scrawlQuaternion-min.js (6kb)
 		- scrawlSaveLoad-min.js (9kb)
 		- scrawlShape-min.js (9kb)
-		- scrawlStacks-min.js (49kb)
+		- scrawlStacks-min.js (50kb)
 		- scrawlWheel-min.js (7kb)
 
 		Development:
@@ -127,7 +127,7 @@ VERSION 6.0.1 released 14 January 2017
 		- scrawlQuaternion.js (18kb)
 		- scrawlSaveLoad.js (18kb)
 		- scrawlShape.js (26kb)
-		- scrawlStacks.js (114kb)
+		- scrawlStacks.js (116kb)
 		- scrawlWheel.js (20kb)
 
 		Documentation:
