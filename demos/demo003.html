@@ -2,10 +2,12 @@
 <html>
 
 <head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo 003</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
@@ -18,21 +20,6 @@
   </canvas>
 
   <p id="testmessage"></p>
-
-  <div id="testdetails">
-    <p><b>Scenario:</b> automatically detect a canvas element defined in the DOM, and populate it with sprites</p>
-    <p><b>Actions:</b>
-    </p>
-    <ol>
-      <li>detect the existence of a canvas element via scrawl.init(), scrawl.pageInit() and scrawl.getCanvases()</li>
-      <li>create several phrase sprites using factory and clone functions, and associate them with canvas element's Cell wrapper</li>
-      <li>display phrase sprites on canvas</li>
-    </ol>
-    <p><b>Known browser issues:</b> none</p>
-    <p><b>Result images:</b>
-    </p>
-    <img src="img/demopics/demo003.png" alt="image of expected test result" />
-  </div>
 
   <script src="../source/scrawlCore.js"></script>
   <script id="testscript" src="js/demo003.js"></script>

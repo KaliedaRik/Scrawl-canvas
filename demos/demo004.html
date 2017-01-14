@@ -2,10 +2,12 @@
 <html>
 
 <head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Demo 004</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
@@ -19,40 +21,6 @@
   <canvas id="mycanvas" width="750" height="400"></canvas>
 
   <p id="testmessage"></p>
-
-  <div id="testdetails">
-    <p><b>Scenario:</b> testing scrawl.init(), scrawl.loadModules(), scrawl.makeQuadratic(), scrawl.newAnimation(), scrawl.newGroup(), scrawl.newPhrase(), scrawl.newTween(), scrawl.newWheel(), scrawl.render(), Group.getSpriteAt(), Pad.getMouse(), Path.buildPositions(),
-      Phrase.clone(), Point.setToFixed(), Tween.clone(), Tween.nextTween, Tween.run(), Wheel.clone(), Wheel.pathSpeedConstant, Wheel.pickupSprite(), Wheel.dropSprite()</p>
-    <p><b>Actions:</b>
-    </p>
-    <ol>
-      <li>create two groups: one to hold details of animated balls; the other for detecting interactions with curve handles</li>
-      <li>create 3 Wheel sprites to act as handles for shaping a Path sprite</li>
-      <li>create the quadratic Path sprite</li>
-      <li>fix Path sprite point objects to the Wheel sprite handles</li>
-      <li>create/clone 3 Phrase sprite labels; pivot them to their respective Wheel sprite</li>
-      <li>create/clone 2 Wheel sprites; 'path' them to the Path sprite</li>
-      <li>define event listeners for dragging and dropping the Wheel sprite handles</li>
-      <li>create/clone Tween objects for animating the other Wheel sprites along the Path sprite</li>
-      <li>create an Animation object</li>
-      <li>load Scrawl modules; initialize Scrawl; run scenario code</li>
-    </ol>
-    <p>During the animation:</p>
-    <ol>
-      <li>test cursor position</li>
-      <li>if cursor not over canvas, stop dragging any sprites</li>
-      <li>if user initiates mousedown while over canvas, test for hits with Wheel handle sprites</li>
-      <li>if user mousedown over Wheel handle sprite, pivot sprite to cursor</li>
-      <li>if user mouseup over canvas, stop dragging any sprite</li>
-      <li>when user drags Wheel handle sprite, recalculate Path sprite data</li>
-      <li>tween animations should run continuously</li>
-    </ol>
-    <p><b>Known browser issues:</b> none</p>
-    <p><b>Result images:</b>
-    </p>
-    <img src="img/demopics/demo004.png" alt="image of expected test result" />
-    <iframe width="420" height="315" src="//www.youtube.com/embed/HUi9FWOKY30" frameborder="0" allowfullscreen></iframe>
-  </div>
 
   <script src="../source/scrawlCore.js"></script>
   <script id="testscript" src="js/demo004.js"></script>
