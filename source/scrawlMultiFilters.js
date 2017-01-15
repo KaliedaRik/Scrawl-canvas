@@ -46,127 +46,93 @@ scrawlMultiFilters extension adaptions to the scrawl-canvas library object
 
 * scrawl.multifilter - for multifilter objects
 
-@class window.scrawl_Multifilters
+### Hidden canvas
+
+makes use of the default hidden canvases:
+my.work.cv = my.canvas.defaultHiddenCanvasElement_base;
+my.work.cvx = my.context.defaultHiddenCanvasElement_base;
+my.work.cvmodel = my.ctx.defaultHiddenCanvasElement_base;
+my.work.cvwrapper = my.cell.defaultHiddenCanvasElement_base;
+my.work.cvcontroller = my.pad.defaultHiddenCanvasElement;
+my.work.cv2 = my.canvas.defaultHiddenCanvasElement;
+my.work.cvx2 = my.context.defaultHiddenCanvasElement;
+my.work.cvmodel2 = my.ctx.defaultHiddenCanvasElement;
+my.work.cvwrapper2 = my.cell.defaultHiddenCanvasElement;
+
+
+
+@class window.scrawl_MultiFilters
 **/
 		my.pushUnique(my.work.sectionlist, 'multifilter');
 		my.pushUnique(my.work.nameslist, 'multifilternames');
 
+
 		/**
 A __factory__ function to generate new Multifilter objects
-@method makeMultifilter
+@method makeMultiFilter
 @param {Object} items Key:value Object argument for setting attributes
 @return Multifilter object
 **/
-		my.makeMultifilter = function(items) {
-			return new my.Multifilter(items);
+		my.makeMultiFilter = function(items) {
+			return new my.MultiFilter(items);
 		};
-		// THIS IS TEMPORARY! NO SUCH FACTORY IN MULTIFILTERS!!
-		my.makeGreyscaleFilter = function(items) {return false;};
-
-
-
-// THESE HOOK FUNCTIONS NEED TO BE CODED UP!
-// =========================================
-
-
-
-	/**
-scrawl.init hook function - modified by multifilters extension
-@method multifiltersInit
-@private
+		/**
+MULTIFILTERNAME String, to be applied to the Cell
+@property Cell.multiFilter
+@type String
+@default ''
 **/
-	my.multifiltersInit = function() {};
-
-
-
-	/**
-Pad constructor hook function - modified by multifilters extension
-@method multifiltersPadInit
-@private
+		my.work.d.Cell.multiFilter = '';
+		/**
+MULTIFILTERNAME String, to be applied to this entity
+@property Entity.multiFilter
+@type String
+@default ''
 **/
-	my.Pad.prototype.multifiltersPadInit = function(items) {};
-
-
-
-	/**
-Display function - requests Cells to compile their &lt;canvas&gt; element
-
-Cells will compile in ascending order of their compileOrder attributes, if their compiled attribute = true
-
-By default:
-* the initial base canvas has a compileOrder of 9999 and compiles last
-* the initial display canvas has compiled = false and will not compile
-
-(This function is replaced by the Filters or multifilters extension)
-
-@method compile
-@return This
-@chainable
-**/
-	my.Pad.prototype.compile = function(mouse) {
-		var cell = my.cell,
-			cells = this.cellsCompileOrder,
-			current,
-			i,
-			iz;
-		this.sortCellsCompile();
-		for (i = 0, iz = cells.length; i < iz; i++) {
-			current = cell[cells[i]];
-			if (current.rendered && current.compiled) {
-				current.compile(mouse);
-			}
+		my.work.d.Entity.multiFilter = '';
+		if (my.xt(my.work.d.Block)) {
+			my.mergeInto(my.work.d.Block, my.work.d.Entity);
 		}
-		return this;
-	};
-
-
-
-	/**
-Display function - requests Cells to show their &lt;canvas&gt; element 
-
-Cells will show in ascending order of their showOrder attributes, if their show attribute = true
-
-By default, the initial base and display canvases have shown = false:
-* 'show' involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself
-* the last action is to copy the base cell onto the display cell
-
-(This function is replaced by the Filters or multifilters extension)
-
-@method show
-@return This
-@chainable
-**/
-	my.Pad.prototype.show = function() {
-		var display,
-			base,
-			cell,
-			cells = my.cell,
-			order = this.cellsShowOrder,
-			i,
-			iz;
-		display = cells[this.display];
-		base = cells[this.base];
-		this.sortCellsShow();
-		for (i = 0, iz = order.length; i < iz; i++) {
-			cell = cells[order[i]];
-			if (cell.rendered && cell.shown) {
-				base.copyCellToSelf(cell);
-			}
+		if (my.xt(my.work.d.Shape)) {
+			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
 		}
-		display.copyCellToSelf(base, true);
-		return this;
-	};
+		if (my.xt(my.work.d.Wheel)) {
+			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
+		}
+		if (my.xt(my.work.d.Picture)) {
+			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
+		}
+		if (my.xt(my.work.d.Phrase)) {
+			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
+		}
+		if (my.xt(my.work.d.Path)) {
+			my.mergeInto(my.work.d.Path, my.work.d.Entity);
+		}
+		/**
+Cell constructor hook function - modified by multiFilter module
 
-
-
-	/**
-Cell constructor hook function - modified by multifilters extension
+Adds the multiFilter attribute to Cell objects
 @method multifiltersCellInit
 @private
 **/
-	my.Cell.prototype.multifiltersCellInit = function(items) {};
+		my.Cell.prototype.multifiltersCellInit = function(items) {
+			items = my.safeObject(items);
+			this.multiFilter = (my.xt(items.multiFilter)) ? items.multiFilter : '';
+		};
+		/**
+Entity constructor hook function - modified by multiFilter module
 
+Adds the multiFilter, filterOnStroke and filterLevel attributes to Entity objects
+@method multifiltersEntityInit
+@private
+**/
+		my.Entity.prototype.multifiltersEntityInit = function(items) {
+			items = my.safeObject(items);
+			this.multiFilter = (my.xt(items.multiFilter)) ? items.multiFilter : '';
+		};
 
+// THESE OVERWRITTEN FUNCTIONS NEED TO BE CODED UP!
+// =========================================
 
 	/**
 Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
@@ -191,89 +157,40 @@ Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the
 	};
 
 
-
-	/**
-Entity constructor hook function - modified by multifilters extension
-@method multifiltersEntityInit
-@private
-**/
-	my.Entity.prototype.multifiltersEntityInit = function(items) {};
-
-
-
-
-	/**
-Stamp function - instruct entity to draw itself on a Cell's &lt;canvas&gt; element, if its visibility attribute is true
-
-Permitted methods include:
-
-* 'draw' - stroke the entity's path with the entity's strokeStyle color, pattern or gradient
-* 'fill' - fill the entity's path with the entity's fillStyle color, pattern or gradient
-* 'drawFill' - stroke, and then fill, the entity's path; if a shadow offset is present, the shadow is added only to the stroke action
-* 'fillDraw' - fill, and then stroke, the entity's path; if a shadow offset is present, the shadow is added only to the fill action
-* 'floatOver' - stroke, and then fill, the entity's path; shadow offset is added to both actions
-* 'sinkInto' - fill, and then stroke, the entity's path; shadow offset is added to both actions
-* 'clear' - fill the entity's path with transparent color 'rgba(0, 0, 0, 0)'
-* 'clearWithBackground' - fill the entity's path with the Cell's current backgroundColor
-* 'clip' - clip the drawing zone to the entity's path (not tested)
-* 'none' - perform all necessary updates, but do not draw the entity onto the canvas
-@method stamp
-@param {String} [method] Permitted method attribute String; by default, will use entity's own method setting
-@param {String} [cellname] CELLNAME of cell on which entitys are to draw themselves
-@param {Object} [cell] cell wrapper object
-@param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
-@return This
-@chainable
-
-// I THINK THIS NEEDS TO BE OVERWRITTEN IN ITS ENTIRETY BY MULTIFILTERS? THOUGH THAT LEADS TO PROBLEMS FOR ENTITYS THAT OVERWRITE THIS FUNCTION?
-// HOWEVER, FOR NOW WE CAN TRY TO REDIRECT THE STAMPING ONTO THE MULTIFILTER HIDDEN CELL ...?
-**/
-	// my.Entity.prototype.stamp = function(method, cellname, cell, mouse) {
-	// 	var engine,
-	// 		cellCtx,
-	// 		eCtx,
-	// 		here,
-	// 		sCanvas,
-	// 		sEngine,
-	// 		sFlag = !this.currentStart.flag,
-	// 		hFlag = !this.currentHandle.flag,
-	// 		data;
-	// 	if (this.visibility) {
-	// 		if (!cell) {
-	// 			cell = my.cell[cellname] || my.cell[my.group[this.group].cell];
-	// 			cellname = cell.name;
-	// 		}
-	// 		engine = my.context[cellname];
-	// 		method = method || this.method;
-	// 		if (sFlag || hFlag) {
-	// 			if (sFlag) {
-	// 				this.updateCurrentStart(cell);
-	// 			}
-	// 			if (hFlag) {
-	// 				this.updateCurrentHandle();
-	// 			}
-	// 			this.resetCollisionPoints();
-	// 		}
-	// 		if (this.pivot) {
-	// 			this.setStampUsingPivot(cellname, mouse);
-	// 			this.maxDimensions.flag = true;
-	// 		}
-	// 		else {
-	// 			this.pathStamp();
-	// 		}
-	// 		this[method](engine, cellname, cell);
-	// 		this.stampFilter(engine, cellname, cell);
-	// 		this.stampMultifilter(engine, cellname, cell);
-	// 	}
-	// 	return this;
-	// };
-
 	/**
 Entity.stamp hook function - modified by multifilters extension
 @method stampMultifilter
 @private
 **/
-	my.Entity.prototype.stampMultifilter = function() {};
+	my.Entity.prototype.stampMultifilter = function(engine, cellname, cell) {
+// my.work.cv2 = my.canvas.defaultHiddenCanvasElement;
+// my.work.cvx2 = my.context.defaultHiddenCanvasElement;
+// my.work.cvmodel2 = my.ctx.defaultHiddenCanvasElement;
+// my.work.cvwrapper2 = my.cell.defaultHiddenCanvasElement;
+		var filter = my.multifilter[this.multiFilter],
+			work = my.work,
+			hostCanvas = work.cv2,
+			hostCell = work.cvwrapper2,
+			hostCtx = my.work.cvmodel2,
+			hostEngine = my.work.cvx2,
+			gco,
+			ctx = my.ctx[this.name];
+
+		if(filter.stencil){
+			hostEngine.globalCompositeOperation = 'source-in';
+			hostCell.copyCellToSelf(cell);
+			hostEngine.globalCompositeOperation = 'source-over';
+		}
+
+		// then do filters stuff here
+		filter.apply();
+
+		// it's at this point we need to take into account the entity's own GCO
+		gco = engine.globalCompositeOperation;
+		engine.globalCompositeOperation = ctx.globalCompositeOperation;
+		cell.copyCellToSelf(hostCell);
+		engine.globalCompositeOperation = gco;
+	};
 
 
 
@@ -316,24 +233,33 @@ Entity.stamp hook function - modified by multifilters extension
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-		my.Multifilter = function Multifilter(items) {
+		my.MultiFilter = function MultiFilter(items) {
 			var get = my.xtGet;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
 			this.stencil = get(items.stencil, false);
-			this.definitions = get(items.definitions, false);
+			this.definitions = get(items.definitions, []);
+		/**
+@property rowsData
+@type Array
+@default []
+@private
+**/
+			this.rowsData = [];
+			my.multifilter[this.name] = this;
+			my.pushUnique(my.multifilternames, this.name);
 			return this;
 		};
-		my.Multifilter.prototype = Object.create(my.Base.prototype);
+		my.MultiFilter.prototype = Object.create(my.Base.prototype);
 		/**
 @property type
 @type String
-@default 'Multifilter'
+@default 'MultiFilter'
 @final
 **/
-		my.Multifilter.prototype.type = 'Multifilter';
-		my.Multifilter.prototype.classname = 'multifilternames';
-		my.work.d.Multifilter = {
+		my.MultiFilter.prototype.type = 'MultiFilter';
+		my.MultiFilter.prototype.classname = 'multifilternames';
+		my.work.d.MultiFilter = {
 			/**
 Whether to treat the entity or cell being filtered as a stencil (true) in which case the background behind the stencil is filtered, or just filter the entity itself (the default setting)
 @property stencil
@@ -342,45 +268,342 @@ Whether to treat the entity or cell being filtered as a stencil (true) in which 
 **/
 			stencil: false,
 			/**
-An Array of filter definition Objects - each type of filter definition object must include a __type__ attribute, and an optional __order__ attribute, alongside any specific attributes required by that particular filter
+An Array of filter definition Objects - each type of filter definition object must include a __filter__ String attribute (eg: 'grayscale'), alongside any specific attributes required by that particular filter. Filters are processed in array order, first to last.
 @property definitions
 @type Array
 @default []
 **/
 			definitions: []
 		};
-		my.mergeInto(my.work.d.Multifilter, my.work.d.Base);
+		my.mergeInto(my.work.d.MultiFilter, my.work.d.Base);
 		/**
-Checks every fourth item in the array to see if it is > 0; when this occurs, something in that row is going to appear, thus the row needs to be actioned. Performs the check both left-to-right and right-to-left so we can restrict the area of work to be performed 
+multifilter main function:
+- prepare data from my.canvas.defaultHiddenCanvasElement
+- sort filters (if required)
+- iterate through filters, applying algorithms to data
+- recreate filtered data in my.canvas.defaultHiddenCanvasElement
 
-@method checkRowForWork
+@method apply
+@private
+@return always true
+**/
+		my.MultiFilter.prototype.apply = function() {
+// my.work.cv2 = my.canvas.defaultHiddenCanvasElement;
+// my.work.cvx2 = my.context.defaultHiddenCanvasElement;
+// my.work.cvmodel2 = my.ctx.defaultHiddenCanvasElement;
+// my.work.cvwrapper2 = my.cell.defaultHiddenCanvasElement;
+			var canvas = my.work.cv2,
+				cvx = my.work.cvx2,
+				cols = canvas.width,
+				rows = canvas.height,
+				img = cvx.getImageData(0, 0, cols, rows),
+				terminals,
+				rowWidth = cols * 4,
+				current,
+				def, filter,
+				i, j, jz;
+
+			terminals = this.checkDataForWork(img);
+
+			for(j = 0, jz = this.definitions.length; j < jz; j++){
+				def = this.definitions[j];
+				if(def.filter){
+					filter = this.filters[def.filter];
+					if(filter){
+						img = filter(img, terminals, def);
+					}
+				}
+			}
+
+			cvx.putImageData(img, 0, 0);
+			return true;
+		};
+		/**
+Determines the positions of relevant (non-zero) alpha data in the image data
+
+@method checkDataForWork
 @param {Array} data - An array representing a row from a canvas
 @private
-@return a 2-item array of Numbers: [leftValue, rightValue] - if no work is required on the row then the return is [-1, -1]
+@return a one-dimensional array comprising of 2 items of data for each descending row in the image - the first pixel from the left, and from the right, between which there is data for processing
 **/
-		my.Multifilter.prototype.checkRowForWork = function(data) {
-			var len = data.length,
-				left = -1,
-				right = -1,
-				i, j;
-			for(i = 3; i < len; i += 4){
-				if(data[i]){
-					left = i - 3;
-					break;
-				}
-			}
-			if(left >= 0){
-				for(j = len - 1; j > 0; j -= 4){
-					if(j < left){
-						break;
-					}
+		my.MultiFilter.prototype.checkDataForWork = function(img) {
+			var cols = img.width,
+				rows = img.height,
+				data = img.data,
+				i, j, k,
+				left, right, posStart, posEnd,
+				result = [];
+
+			for(i = 0; i < rows; i++){
+				posStart = i * cols * 4;
+				posEnd = posStart + (cols * 4);
+				left = -1;
+				right = -1;
+				for(j = posStart + 3; j < posEnd; j += 4){
 					if(data[j]){
-						right = j - 3;
+						left = j - 3;
 						break;
 					}
 				}
+				if(left >= 0){
+					for(k = posEnd - 1; k > 0; k -= 4){
+						if(data[k]){
+							right = k - 3;
+							break;
+						}
+					}
+				}
+				result.push(left);
+				result.push(right);
 			}
-			return [left, right];
+			return result;
+		};
+
+		/**
+An object containing filter functionality.
+**/
+		my.MultiFilter.prototype.filters = {
+			default: function(img, terms, args){
+				return img;
+			},
+			grayscale: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					gray, r, g, b,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								r = j;
+								g = j + 1;
+								b = j + 2;
+								gray = Math.floor((0.2126 * data[r]) + (0.7152 * data[g]) + (0.0722 * data[b]));
+								data[r] = gray;
+								data[g] = gray;
+								data[b] = gray;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			invert: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					r, g, b, val,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								r = j;
+								g = j + 1;
+								b = j + 2;
+								val = data[r]
+								data[r] = 255 - val;
+								val = data[g]
+								data[g] = 255 - val;
+								val = data[b]
+								data[b] = 255 - val;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			red: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								data[j + 1] = 0;
+								data[j + 2] = 0;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			green: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								data[j] = 0;
+								data[j + 2] = 0;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			blue: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								data[j] = 0;
+								data[j + 1] = 0;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			notred: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								data[j] = 0;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			notgreen: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								data[j + 1] = 0;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			notblue: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								data[j + 2] = 0;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			cyan: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					r, g, b, val,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								r = j;
+								g = j + 1;
+								b = j + 2;
+								val = Math.floor((data[g] + data[b]) / 2);
+								data[r] = 0;
+								data[g] = val;
+								data[b] = val;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			magenta: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					r, g, b, val,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								r = j;
+								g = j + 1;
+								b = j + 2;
+								val = Math.floor((data[r] + data[b]) / 2);
+								data[r] = val;
+								data[g] = 0;
+								data[b] = val;
+							}
+						}
+					}
+				}
+				return img;
+			},
+			yellow: function(img, terms, args){
+				var rows = img.height,
+					cols = img.width,
+					data = img.data,
+					i, j, jz,
+					r, g, b, val,
+					currentTermPos;
+				for(i = 0; i < rows; i++){
+					currentTermPos = i * 2;
+					if(terms[currentTermPos] >= 0){
+						for(j = terms[currentTermPos], jz = terms[currentTermPos + 1]; j <= jz; j += 4){
+							if(data[j + 3]){
+								r = j;
+								g = j + 1;
+								b = j + 2;
+								val = Math.floor((data[r] + data[g]) / 2);
+								data[r] = val;
+								data[g] = val;
+								data[b] = 0;
+							}
+						}
+					}
+				}
+				return img;
+			},
 		};
 
 

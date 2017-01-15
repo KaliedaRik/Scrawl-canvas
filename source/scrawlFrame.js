@@ -50,14 +50,6 @@ scrawlFrame module adaptions to the Scrawl library object
 **/
 
 		/**
-Alias for makeFramePoint()
-@method newFramePoint
-@deprecated
-**/
-		my.newFramePoint = function(items) {
-			return new my.FramePoint(items);
-		};
-		/**
 A __factory__ function to generate new FramePoint entitys
 @method makeFramePoint
 @param {Object} items Key:value Object argument for setting attributes
@@ -65,14 +57,6 @@ A __factory__ function to generate new FramePoint entitys
 **/
 		my.makeFramePoint = function(items) {
 			return new my.FramePoint(items);
-		};
-		/**
-Alias for makeFrame()
-@method newFrame
-@deprecated
-**/
-		my.newFrame = function(items) {
-			return new my.Frame(items);
 		};
 		/**
 A __factory__ function to generate new Frame entitys

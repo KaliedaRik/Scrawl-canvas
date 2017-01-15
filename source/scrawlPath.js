@@ -223,24 +223,6 @@ Entity.stamp hook function - modified by path module
 			}
 		};
 		/**
-Alias for makePoint()
-@method newPoint
-@deprecated
-@private
-**/
-		my.newPoint = function(items) {
-			return my.makePoint(items);
-		};
-		/**
-Alias for makeLink()
-@method newLink
-@deprecated
-@private
-**/
-		my.newLink = function(items) {
-			return my.makeLink(items);
-		};
-		/**
 A __factory__ function to generate new Point objects
 @method makePoint
 @param {Object} items Key:value Object argument for setting attributes

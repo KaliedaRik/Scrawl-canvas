@@ -46,14 +46,6 @@ scrawlShape extension adaptions to the scrawl-canvas library object
 **/
 
 		/**
-Alias for makeShape()
-@method newShape
-@deprecated
-**/
-		my.newShape = function(items) {
-			return my.makeShape(items);
-		};
-		/**
 A __factory__ function to generate new Shape entitys
 @method makeShape
 @param {Object} items Key:value Object argument for setting attributes

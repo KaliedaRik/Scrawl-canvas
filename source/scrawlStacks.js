@@ -2514,36 +2514,6 @@ Overrides PageElement.setDimensions(); &lt;canvas&gt; elements do not use stylin
 		};
 
 		/**
-Alias for makeStack()
-@method newStack
-@param {Object} items Key:value Object argument for setting attributes
-@return Stack object
-@private
-**/
-		my.newStack = function(items) {
-			return my.makeStack(items);
-		};
-		/**
-Alias for makeElement()
-@method newElement
-@param {Object} items Key:value Object argument for setting attributes
-@return Element object
-@private
-**/
-		my.newElement = function(items) {
-			return my.makeElement(items);
-		};
-		/**
-Alias for makeElementGroup()
-@method newElementGroup
-@param {Object} items Key:value Object argument for setting attributes
-@return ElementGroup object
-@private
-**/
-		my.newElementGroup = function(items) {
-			return my.makeElementGroup(items);
-		};
-		/**
 A __factory__ function to generate new Stack objects
 @method makeStack
 @param {Object} items Key:value Object argument for setting attributes

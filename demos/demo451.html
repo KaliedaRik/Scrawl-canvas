@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo 451</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/demo.css" rel="stylesheet" />
+
+  <style>
+    table {
+      width: 100%;
+    }
+    th,
+    td {
+      border: 1px solid gray;
+      font-size: 0.65em;
+      text-align: center;
+      width: 24%;
+    }
+    .rowlabel {
+      font-weight: bold;
+    }
+    table input {
+      width: 80%;
+    }
+    .t0 {
+      background-color: lightgreen;
+    }
+    .t1 {
+      background-color: lightblue;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 451</h1>
+  <h2>Scrawl multifilters - filters which take no arguments</h2>
+  <h3>Extensions: images, filters, animation</h3>
+  <p>The 'default' filter does not apply any filter engines to the parrot Picture entity. It does, however, make the entity use the multiFilter stamp code rather than the normal code. The Wheel entity, which is stamped on the cell before the parrot, has no multiFilter set on it.</p>
+  <p>The other filters in this demo are 'as-is' - they take no additional arguments in their definition beyond a name and their specific filter string value for the filter attribute. Like other multifilters, they can be stacked in the definitions array so the output of the first defined filter becomes the input for the second.</p>
+
+  <canvas width="400" height="400" id="mycanvas"></canvas>
+
+  <p id="testmessage"></p>
+
+  <table>
+    <tr class="t0">
+      <td class="rowlabel">globalAlpha</td>
+      <td>
+        <input id="globalAlpha" class="controls" type="range" value="1" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">GCO</td>
+      <td>
+        <select class="controls" id="gco">
+          <option value="source-over">source-over</option>
+          <option value="source-atop">source-atop</option>
+          <option value="source-in">source-in</option>
+          <option value="source-out">source-out</option>
+        </select>
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">Filter</td>
+      <td>
+        <select class="controls" id="filter">
+          <option value="default">default</option>
+          <option value="grayscale">grayscale</option>
+          <option value="invert">invert</option>
+          <option value="red">red</option>
+          <option value="green">green</option>
+          <option value="blue">blue</option>
+          <option value="notred">notred</option>
+          <option value="notgreen">notgreen</option>
+          <option value="notblue">notblue</option>
+          <option value="cyan">cyan</option>
+          <option value="magenta">magenta</option>
+          <option value="yellow">yellow</option>
+        </select>
+      </td>
+      <td class="rowlabel">&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+
+  <script src="../source/scrawlCore.js"></script>
+  <script id="testscript" src="js/demo451.js"></script>
+</body>
+
+</html>

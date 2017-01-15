@@ -51,14 +51,6 @@ scrawlPhrase extension adaptions to the scrawl-canvas library object
 **/
 
 		/**
-Alias for makePhrase()
-@method newPhrase
-@deprecated
-**/
-		my.newPhrase = function(items) {
-			return my.makePhrase(items);
-		};
-		/**
 A __factory__ function to generate new Phrase entitys
 @method makePhrase
 @param {Object} items Key:value Object argument for setting attributes

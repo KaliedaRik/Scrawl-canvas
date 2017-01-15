@@ -75,7 +75,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'filters', 'multifilters'],
+	extensions: ['images', 'filters'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

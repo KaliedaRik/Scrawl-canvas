@@ -53,22 +53,6 @@ scrawlImages module adaptions to the Scrawl library object
 **/
 
 		/**
-Alias for makePattern()
-@method newPattern
-@deprecated
-**/
-		my.newPattern = function(items) {
-			return my.makePattern(items);
-		};
-		/**
-Alias for makePicture()
-@method newPicture
-@deprecated
-**/
-		my.newPicture = function(items) {
-			return my.makePicture(items);
-		};
-		/**
 A __factory__ function to generate new Pattern objects
 @method makePattern
 @param {Object} items Key:value Object argument for setting attributes

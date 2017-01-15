@@ -281,8 +281,6 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 			my.createDefaultPad();
 			my.setDisplayOffsets('all');
 			my.physicsInit();
-			my.filtersInit();
-			my.multifiltersInit();
 			my.animationInit();
 		}
 		return my;
@@ -304,18 +302,6 @@ scrawl.init hook function - modified by physics extension
 **/
 	my.physicsInit = function() {};
 	/**
-scrawl.init hook function - modified by filters extension
-@method filtersInit
-@private
-**/
-	my.filtersInit = function() {};
-	/**
-scrawl.init hook function - modified by multifilters extension
-@method multifiltersInit
-@private
-**/
-	my.multifiltersInit = function() {};
-	/**
 scrawl.init hook function - modified by stacks extension
 @method pageInit
 @private
@@ -332,10 +318,14 @@ scrawl.init hook function - modified by stacks extension
 			my.removeItem(my.padnames, name);
 			my.removeItem(my.work.activeListeners, name);
 			my.work.f.appendChild(my.canvas[name]);
-			my.work.cv = my.canvas[cellname];
-			my.work.cvx = my.context[cellname];
-			my.work.cvmodel = my.ctx[cellname];
-			my.work.cvwrapper = my.cell[cellname];
+			my.work.cv = my.canvas[name];
+			my.work.cvx = my.context[name];
+			my.work.cvmodel = my.ctx[name];
+			my.work.cvwrapper = my.cell[name];
+			my.work.cv2 = my.canvas[cellname];
+			my.work.cvx2 = my.context[cellname];
+			my.work.cvmodel2 = my.ctx[cellname];
+			my.work.cvwrapper2 = my.cell[cellname];
 			my.work.cvcontroller = my.pad[name];
 		}
 	};
@@ -1779,65 +1769,6 @@ scrawl.deleteEntity hook function - modified by path extension
 @private
 **/
 	my.pathDeleteEntity = function(items) {};
-	/**
-Alias for makeVector()
-@method newVector
-@deprecated
-**/
-	my.newVector = function(items) {
-		return my.makeVector(items);
-	};
-	/**
-Alias for makePad()
-@method newPad
-@private
-@deprecated
-**/
-	my.newPad = function(items) {
-		return my.makePad(items);
-	};
-	/**
-Alias for makeCell()
-@method newCell
-@private
-@deprecated
-**/
-	my.newCell = function(items) {
-		return my.makeCell(items);
-	};
-	/**
-Alias for makeContext()
-@method newContext
-@private
-@deprecated
-**/
-	my.newContext = function(items) {
-		return my.makeContext(items);
-	};
-	/**
-Alias for makeGroup()
-@method newGroup
-@deprecated
-**/
-	my.newGroup = function(items) {
-		return my.makeGroup(items);
-	};
-	/**
-Alias for makeGradient()
-@method newGradient
-@deprecated
-**/
-	my.newGradient = function(items) {
-		return my.makeGradient(items);
-	};
-	/**
-Alias for makeRadialGradient()
-@method newRadialGradient
-@deprecated
-**/
-	my.newRadialGradient = function(items) {
-		return my.makeRadialGradient(items);
-	};
 	/**
 A __factory__ function to generate new Vector objects
 @method makeVector
@@ -4489,7 +4420,6 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 			this.setDisplayOffsets();
 			this.setAccessibility(items);
 			this.filtersPadInit();
-			this.multifiltersPadInit();
 			this.padStacksConstructor(items);
 			this.interactive = get(items.interactive, true);
 			if (this.interactive) {
@@ -4534,12 +4464,6 @@ Pad constructor hook function - modified by filters extension
 @private
 **/
 	my.Pad.prototype.filtersPadInit = function(items) {};
-	/**
-Pad constructor hook function - modified by multifilters extension
-@method multifiltersPadInit
-@private
-**/
-	my.Pad.prototype.multifiltersPadInit = function(items) {};
 	/**
 Pad constructor hook function - modified by stacks extension
 @method stacksPadInit
@@ -7577,15 +7501,11 @@ Permitted methods include:
 // HOWEVER, FOR NOW WE CAN TRY TO REDIRECT THE STAMPING ONTO THE MULTIFILTER HIDDEN CELL ...?
 **/
 	my.Entity.prototype.stamp = function(method, cellname, cell, mouse) {
-		var engine,
-			cellCtx,
-			eCtx,
-			here,
-			sCanvas,
-			sEngine,
+		var engine, ctx,
+			tempCellname, tempCell, tempEngine, tempGCO,
 			sFlag = !this.currentStart.flag,
 			hFlag = !this.currentHandle.flag,
-			data;
+			multifilterFlag, work;
 		if (this.visibility) {
 			if (!cell) {
 				cell = my.cell[cellname] || my.cell[my.group[this.group].cell];
@@ -7593,6 +7513,23 @@ Permitted methods include:
 			}
 			engine = my.context[cellname];
 			method = method || this.method;
+			multifilterFlag = (this.multiFilter && my.multifilter[this.multiFilter]) ? true : false;
+			if(multifilterFlag){
+				work = my.work;
+				ctx = my.ctx[this.name];
+				tempEngine = engine;
+				tempCell = cell;
+				tempCellname = cellname;
+				tempGCO = ctx.globalCompositeOperation;
+				ctx.globalCompositeOperation = 'source-over';
+				engine = work.cvx2;
+				cell = work.cvwrapper2;
+				cellname = work.cvwrapper2.name;
+				cell.set({
+					width: tempCell.actualWidth,
+					height: tempCell.actualHeight
+				});
+			}
 			if (sFlag || hFlag) {
 				if (sFlag) {
 					this.updateCurrentStart(cell);
@@ -7610,8 +7547,16 @@ Permitted methods include:
 				this.pathStamp();
 			}
 			this[method](engine, cellname, cell);
-			this.stampFilter(engine, cellname, cell);
-			this.stampMultifilter(engine, cellname, cell);
+			if(this.filters && this.filters.length){
+				this.stampFilter(engine, cellname, cell);
+			}
+			if(multifilterFlag){
+				engine = tempEngine;
+				cell = tempCell;
+				cellname = tempCellname;
+				ctx.globalCompositeOperation = tempGCO;
+				this.stampMultifilter(engine, cellname, cell);
+			}
 		}
 		return this;
 	};

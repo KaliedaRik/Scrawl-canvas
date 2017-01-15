@@ -43,14 +43,6 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 	**/
 
 		/**
-Alias for makeColor()
-@method newColor
-@deprecated
-**/
-		my.newColor = function(items) {
-			return my.makeColor(items);
-		};
-		/**
 A __factory__ function to generate new Color objects
 @method makeColor
 @param {Object} items Key:value Object argument for setting attributes

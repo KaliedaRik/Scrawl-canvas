@@ -45,14 +45,6 @@ scrawlBlock extension adaptions to the scrawl-canvas library object
 **/
 
 		/**
-Alias for makeBlock()
-@method newBlock
-@deprecated
-**/
-		my.newBlock = function(items) {
-			return new my.Block(items);
-		};
-		/**
 A __factory__ function to generate new Block entitys
 @method makeBlock
 @param {Object} items Key:value Object argument for setting attributes

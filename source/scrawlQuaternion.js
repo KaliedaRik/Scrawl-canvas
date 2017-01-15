@@ -25,14 +25,6 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 		'use strict';
 
 		/**
-Alias for makeQuaternion()
-@method newQuaternion
-@deprecated
-**/
-		my.newQuaternion = function(items) {
-			return my.makeQuaternion(items);
-		};
-		/**
 A __factory__ function to build a Quaternion object from Euler angle values
 
 Argument object can be in the following form, where all values (which default to 0) are in degrees:

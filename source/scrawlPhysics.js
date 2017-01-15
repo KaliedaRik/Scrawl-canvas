@@ -166,30 +166,6 @@ Initiates two forces:
 			});
 		};
 		/**
-Alias for makeParticle()
-@method newParticle
-@deprecated
-**/
-		my.newParticle = function(items) {
-			return my.makeParticle(items);
-		};
-		/**
-Alias for makeSpring()
-@method newSpring
-@deprecated
-**/
-		my.newSpring = function(items) {
-			return my.makeSpring(items);
-		};
-		/**
-Alias for makeForce()
-@method newForce
-@deprecated
-**/
-		my.newForce = function(items) {
-			return my.makeForce(items);
-		};
-		/**
 A __factory__ function to generate new Particle objects
 @method makeParticle
 @param {Object} items Key:value Object argument for setting attributes

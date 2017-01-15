@@ -69,32 +69,6 @@ Utility canvas 2d context engine
 **/
 		my.work.imageCvx = my.work.imageCanvas.getContext('2d');
 		/**
-Alias for makeImage()
-@method newImage
-@deprecated
-@private
-**/
-		my.newImage = function(items) {
-			return my.makeImage(items);
-		};
-		/**
-Alias for makeSpriteAnimation()
-@method newSpriteAnimation
-@deprecated
-**/
-		my.newSpriteAnimation = function(items) {
-			return my.makeSpriteAnimation(items);
-		};
-		/**
-Alias for makeVideo()
-method newVideo
-@deprecated
-@private
-**/
-		my.newVideo = function(items) {
-			return my.makeVideo(items);
-		};
-		/**
 A __factory__ function to generate new Image objects
 @method makeImage
 @param {Object} items Key:value Object argument for setting attributes

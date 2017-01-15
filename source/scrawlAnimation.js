@@ -927,14 +927,6 @@ A __factory__ function to generate new Ticker objects
 			return new my.Ticker(items);
 		};
 		/**
-Alias for makeTween()
-@method newTween
-@deprecated
-**/
-		my.newTween = function(items) {
-			return my.makeTween(items);
-		};
-		/**
 A __factory__ function to generate new Tween objects
 @method makeTween
 @param {Object} items Key:value Object argument for setting attributes
@@ -942,14 +934,6 @@ A __factory__ function to generate new Tween objects
 **/
 		my.makeTween = function(items) {
 			return new my.Tween(items);
-		};
-		/**
-Alias for makeAction()
-@method newAction
-@deprecated
-**/
-		my.newAction = function(items) {
-			return my.makeAction(items);
 		};
 		/**
 A __factory__ function to generate new Action objects
