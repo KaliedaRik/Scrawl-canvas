@@ -826,6 +826,13 @@ The Frame entity's &lt;canvas&gt; element's 2d context engine - not stored in th
 **/
 			engine: false,
 			/**
+MULTIFILTERNAME Strings, for multifilters to be applied to this entity
+@property multiFilter
+@type String
+@default ''
+**/
+			multiFilter: '',
+			/**
 Array of FILTERNAME strings, for filters to be applied to this entity
 @property filters
 @type Array

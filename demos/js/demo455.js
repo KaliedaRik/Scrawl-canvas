@@ -9,40 +9,30 @@ var mycode = function() {
 
 	// define variables
 	var filter,
-		filterDefinitions,
 		events,
 		stopE,
 		current = {
 			globalAlpha: 1,
 			globalCompositeOperation: 'source-over',
-		},
-		currentFilter = 'default';
+		};
 
 	//set the initial imput values
 	document.getElementById('globalAlpha').value = '1';
 	document.getElementById('gco').value = 'source-over';
-	document.getElementById('filter').value = 'default';
+	document.getElementById('width').value = '20';
+	document.getElementById('height').value = '20';
+	document.getElementById('offsetX').value = '0';
+	document.getElementById('offsetY').value = '0';
 
-	// define multifilter
-	filterDefinitions = {
-		default: [{filter: 'default'}],
-		grayscale: [{filter: 'grayscale'}],
-		sepia: [{filter: 'sepia'}],
-		invert: [{filter: 'invert'}],
-		red: [{filter: 'red'}],
-		green: [{filter: 'green'}],
-		blue: [{filter: 'blue'}],
-		notred: [{filter: 'notred'}],
-		notgreen: [{filter: 'notgreen'}],
-		notblue: [{filter: 'notblue'}],
-		cyan: [{filter: 'cyan'}],
-		magenta: [{filter: 'magenta'}],
-		yellow: [{filter: 'yellow'}],
-	};
-
-	scrawl.makeMultiFilter({
+	filter = scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: filterDefinitions[currentFilter]
+		definitions: [{
+			filter: 'pixelate',
+			width: 20,
+			height: 20,
+			offsetX: 0,
+			offsetY: 0,
+		}]
 	});
 
 	// define entitys
@@ -77,28 +67,32 @@ var mycode = function() {
 	};
 
 	events = function(e) {
-		var parrot = false;
 		stopE(e);
 		switch (e.target.id) {
 			case 'globalAlpha':
 				current.globalAlpha = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set(current);
 				break;
 			case 'gco':
 				current.globalCompositeOperation = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set(current);
 				break;
-			case 'filter':
-				currentFilter = e.target.value;
+			case 'width':
+				filter.definitions[0].width = parseInt(e.target.value, 10);
+				filter.cache.pixelate = false;
 				break;
-		}
-		if(parrot){
-			scrawl.entity.parrot.set(current);
-		}
-		else{
-			scrawl.multifilter.myFilter.set({
-				definitions: filterDefinitions[currentFilter]
-			});
+			case 'height':
+				filter.definitions[0].height = parseInt(e.target.value, 10);
+				filter.cache.pixelate = false;
+				break;
+			case 'offsetX':
+				filter.definitions[0].offsetX = parseInt(e.target.value, 10);
+				filter.cache.pixelate = false;
+				break;
+			case 'offsetY':
+				filter.definitions[0].offsetY = parseInt(e.target.value, 10);
+				filter.cache.pixelate = false;
+				break;
 		}
 	};
 	scrawl.addNativeListener(['input', 'change'], events, '.controls');

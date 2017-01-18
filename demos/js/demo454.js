@@ -9,40 +9,40 @@ var mycode = function() {
 
 	// define variables
 	var filter,
-		filterDefinitions,
 		events,
 		stopE,
 		current = {
 			globalAlpha: 1,
 			globalCompositeOperation: 'source-over',
-		},
-		currentFilter = 'default';
+		};
 
 	//set the initial imput values
 	document.getElementById('globalAlpha').value = '1';
 	document.getElementById('gco').value = 'source-over';
-	document.getElementById('filter').value = 'default';
+	document.getElementById('redInRed').value = '1';
+	document.getElementById('greenInRed').value = '0';
+	document.getElementById('blueInRed').value = '0';
+	document.getElementById('redInGreen').value = '0';
+	document.getElementById('greenInGreen').value = '1';
+	document.getElementById('blueInGreen').value = '0';
+	document.getElementById('redInBlue').value = '0';
+	document.getElementById('greenInBlue').value = '0';
+	document.getElementById('blueInBlue').value = '1';
 
-	// define multifilter
-	filterDefinitions = {
-		default: [{filter: 'default'}],
-		grayscale: [{filter: 'grayscale'}],
-		sepia: [{filter: 'sepia'}],
-		invert: [{filter: 'invert'}],
-		red: [{filter: 'red'}],
-		green: [{filter: 'green'}],
-		blue: [{filter: 'blue'}],
-		notred: [{filter: 'notred'}],
-		notgreen: [{filter: 'notgreen'}],
-		notblue: [{filter: 'notblue'}],
-		cyan: [{filter: 'cyan'}],
-		magenta: [{filter: 'magenta'}],
-		yellow: [{filter: 'yellow'}],
-	};
-
-	scrawl.makeMultiFilter({
+	filter = scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: filterDefinitions[currentFilter]
+		definitions: [{
+			filter: 'tint',
+			redInRed: 1,
+			redInGreen: 0,
+			redInBlue: 0,
+			greenInRed: 0,
+			greenInGreen: 1,
+			greenInBlue: 0,
+			blueInRed: 0,
+			blueInGreen: 0,
+			blueInBlue: 1,
+		}]
 	});
 
 	// define entitys
@@ -77,28 +77,43 @@ var mycode = function() {
 	};
 
 	events = function(e) {
-		var parrot = false;
 		stopE(e);
 		switch (e.target.id) {
 			case 'globalAlpha':
 				current.globalAlpha = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set(current);
 				break;
 			case 'gco':
 				current.globalCompositeOperation = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set(current);
 				break;
-			case 'filter':
-				currentFilter = e.target.value;
+			case 'redInRed':
+				filter.definitions[0].redInRed = parseFloat(e.target.value);
 				break;
-		}
-		if(parrot){
-			scrawl.entity.parrot.set(current);
-		}
-		else{
-			scrawl.multifilter.myFilter.set({
-				definitions: filterDefinitions[currentFilter]
-			});
+			case 'redInGreen':
+				filter.definitions[0].redInGreen = parseFloat(e.target.value);
+				break;
+			case 'redInBlue':
+				filter.definitions[0].redInBlue = parseFloat(e.target.value);
+				break;
+			case 'greenInRed':
+				filter.definitions[0].greenInRed = parseFloat(e.target.value);
+				break;
+			case 'greenInGreen':
+				filter.definitions[0].greenInGreen = parseFloat(e.target.value);
+				break;
+			case 'greenInBlue':
+				filter.definitions[0].greenInBlue = parseFloat(e.target.value);
+				break;
+			case 'blueInRed':
+				filter.definitions[0].blueInRed = parseFloat(e.target.value);
+				break;
+			case 'blueInGreen':
+				filter.definitions[0].blueInGreen = parseFloat(e.target.value);
+				break;
+			case 'blueInBlue':
+				filter.definitions[0].blueInBlue = parseFloat(e.target.value);
+				break;
 		}
 	};
 	scrawl.addNativeListener(['input', 'change'], events, '.controls');

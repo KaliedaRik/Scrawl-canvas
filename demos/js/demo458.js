@@ -9,40 +9,26 @@ var mycode = function() {
 
 	// define variables
 	var filter,
-		filterDefinitions,
+		multiFilter,
 		events,
-		stopE,
-		current = {
-			globalAlpha: 1,
-			globalCompositeOperation: 'source-over',
-		},
-		currentFilter = 'default';
+		stopE;
 
 	//set the initial imput values
 	document.getElementById('globalAlpha').value = '1';
 	document.getElementById('gco').value = 'source-over';
-	document.getElementById('filter').value = 'default';
+	document.getElementById('radius').value = '3';
+	document.getElementById('blurType').value = 'plus';
 
 	// define multifilter
-	filterDefinitions = {
-		default: [{filter: 'default'}],
-		grayscale: [{filter: 'grayscale'}],
-		sepia: [{filter: 'sepia'}],
-		invert: [{filter: 'invert'}],
-		red: [{filter: 'red'}],
-		green: [{filter: 'green'}],
-		blue: [{filter: 'blue'}],
-		notred: [{filter: 'notred'}],
-		notgreen: [{filter: 'notgreen'}],
-		notblue: [{filter: 'notblue'}],
-		cyan: [{filter: 'cyan'}],
-		magenta: [{filter: 'magenta'}],
-		yellow: [{filter: 'yellow'}],
+	filter = {
+		filter: 'simpleBlur',
+		radius: 3,
+		blurType: 'plus'
 	};
 
-	scrawl.makeMultiFilter({
+	multiFilter = scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: filterDefinitions[currentFilter]
+		definitions: [filter]
 	});
 
 	// define entitys
@@ -77,28 +63,28 @@ var mycode = function() {
 	};
 
 	events = function(e) {
-		var parrot = false;
 		stopE(e);
 		switch (e.target.id) {
 			case 'globalAlpha':
-				current.globalAlpha = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set({
+					globalAlpha: e.target.value
+				})
 				break;
 			case 'gco':
-				current.globalCompositeOperation = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set({
+					globalCompositeOperation: e.target.value
+				})
 				break;
-			case 'filter':
-				currentFilter = e.target.value;
+			case 'radius':
+				console.log('radius')
+				filter.radius = parseInt(e.target.value, 10);
+				multiFilter.cache.simpleBlur = false;
 				break;
-		}
-		if(parrot){
-			scrawl.entity.parrot.set(current);
-		}
-		else{
-			scrawl.multifilter.myFilter.set({
-				definitions: filterDefinitions[currentFilter]
-			});
+			case 'blurType':
+				console.log('blurType')
+				filter.blurType = e.target.value;
+				multiFilter.cache.simpleBlur = false;
+				break;
 		}
 	};
 	scrawl.addNativeListener(['input', 'change'], events, '.controls');

@@ -9,40 +9,27 @@ var mycode = function() {
 
 	// define variables
 	var filter,
-		filterDefinitions,
 		events,
 		stopE,
 		current = {
 			globalAlpha: 1,
 			globalCompositeOperation: 'source-over',
-		},
-		currentFilter = 'default';
+		};
 
 	//set the initial imput values
 	document.getElementById('globalAlpha').value = '1';
 	document.getElementById('gco').value = 'source-over';
-	document.getElementById('filter').value = 'default';
 
-	// define multifilter
-	filterDefinitions = {
-		default: [{filter: 'default'}],
-		grayscale: [{filter: 'grayscale'}],
-		sepia: [{filter: 'sepia'}],
-		invert: [{filter: 'invert'}],
-		red: [{filter: 'red'}],
-		green: [{filter: 'green'}],
-		blue: [{filter: 'blue'}],
-		notred: [{filter: 'notred'}],
-		notgreen: [{filter: 'notgreen'}],
-		notblue: [{filter: 'notblue'}],
-		cyan: [{filter: 'cyan'}],
-		magenta: [{filter: 'magenta'}],
-		yellow: [{filter: 'yellow'}],
-	};
-
-	scrawl.makeMultiFilter({
+	filter = scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: filterDefinitions[currentFilter]
+		definitions: [{
+			filter: 'matrix',
+			width: 5,
+			height: 5,
+			offsetX: -2,
+			offsetY: -2,
+			weights: [-1,  0,  0,  0,  0, 0, -2,  0,  0,  0, 0,  0,  6,  0,  0, 0,  0,  0, -2,  0, 0,  0,  0,  0, -1]
+		}]
 	});
 
 	// define entitys
@@ -77,28 +64,16 @@ var mycode = function() {
 	};
 
 	events = function(e) {
-		var parrot = false;
 		stopE(e);
 		switch (e.target.id) {
 			case 'globalAlpha':
 				current.globalAlpha = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set(current);
 				break;
 			case 'gco':
 				current.globalCompositeOperation = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set(current);
 				break;
-			case 'filter':
-				currentFilter = e.target.value;
-				break;
-		}
-		if(parrot){
-			scrawl.entity.parrot.set(current);
-		}
-		else{
-			scrawl.multifilter.myFilter.set({
-				definitions: filterDefinitions[currentFilter]
-			});
 		}
 	};
 	scrawl.addNativeListener(['input', 'change'], events, '.controls');

@@ -22,22 +22,15 @@ var mycode = function() {
 	document.getElementById('globalAlpha').value = '1';
 	document.getElementById('gco').value = 'source-over';
 	document.getElementById('filter').value = 'default';
+	document.getElementById('red').value = '1';
+	document.getElementById('green').value = '1';
+	document.getElementById('blue').value = '1';
 
 	// define multifilter
 	filterDefinitions = {
-		default: [{filter: 'default'}],
-		grayscale: [{filter: 'grayscale'}],
-		sepia: [{filter: 'sepia'}],
-		invert: [{filter: 'invert'}],
-		red: [{filter: 'red'}],
-		green: [{filter: 'green'}],
-		blue: [{filter: 'blue'}],
-		notred: [{filter: 'notred'}],
-		notgreen: [{filter: 'notgreen'}],
-		notblue: [{filter: 'notblue'}],
-		cyan: [{filter: 'cyan'}],
-		magenta: [{filter: 'magenta'}],
-		yellow: [{filter: 'yellow'}],
+		default: [{filter: 'default', red: 1, green: 1, blue: 1}],
+		channels: [{filter: 'channels', red: 1, green: 1, blue: 1}],
+		channelstep: [{filter: 'channelstep', red: 1, green: 1, blue: 1}],
 	};
 
 	scrawl.makeMultiFilter({
@@ -77,28 +70,46 @@ var mycode = function() {
 	};
 
 	events = function(e) {
-		var parrot = false;
 		stopE(e);
 		switch (e.target.id) {
 			case 'globalAlpha':
 				current.globalAlpha = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set(current);
 				break;
 			case 'gco':
 				current.globalCompositeOperation = e.target.value;
-				parrot = true;
+				scrawl.entity.parrot.set(current);
 				break;
 			case 'filter':
 				currentFilter = e.target.value;
+				scrawl.multifilter.myFilter.set({
+					definitions: filterDefinitions[currentFilter]
+				});
 				break;
-		}
-		if(parrot){
-			scrawl.entity.parrot.set(current);
-		}
-		else{
-			scrawl.multifilter.myFilter.set({
-				definitions: filterDefinitions[currentFilter]
-			});
+			case 'red':
+				if(currentFilter === 'channels'){
+					filterDefinitions[currentFilter][0].red = parseFloat(e.target.value);
+				}
+				else{
+					filterDefinitions[currentFilter][0].red = parseFloat(e.target.value) * 64;
+				}
+				break;
+			case 'green':
+				if(currentFilter === 'channels'){
+					filterDefinitions[currentFilter][0].green = parseFloat(e.target.value);
+				}
+				else{
+					filterDefinitions[currentFilter][0].green = parseFloat(e.target.value) * 64;
+				}
+				break;
+			case 'blue':
+				if(currentFilter === 'channels'){
+					filterDefinitions[currentFilter][0].blue = parseFloat(e.target.value);
+				}
+				else{
+					filterDefinitions[currentFilter][0].blue = parseFloat(e.target.value) * 64;
+				}
+				break;
 		}
 	};
 	scrawl.addNativeListener(['input', 'change'], events, '.controls');

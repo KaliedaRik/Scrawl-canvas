@@ -26,18 +26,11 @@ var mycode = function() {
 	// define multifilter
 	filterDefinitions = {
 		default: [{filter: 'default'}],
-		grayscale: [{filter: 'grayscale'}],
-		sepia: [{filter: 'sepia'}],
-		invert: [{filter: 'invert'}],
-		red: [{filter: 'red'}],
-		green: [{filter: 'green'}],
-		blue: [{filter: 'blue'}],
-		notred: [{filter: 'notred'}],
-		notgreen: [{filter: 'notgreen'}],
-		notblue: [{filter: 'notblue'}],
-		cyan: [{filter: 'cyan'}],
-		magenta: [{filter: 'magenta'}],
-		yellow: [{filter: 'yellow'}],
+		gaussian1: [{filter: 'gaussian1'}],
+		gaussian2: [{filter: 'gaussian2'}],
+		gaussian3: [{filter: 'gaussian3'}],
+		gaussian4: [{filter: 'gaussian4'}],
+		gaussian5: [{filter: 'gaussian5'}],
 	};
 
 	scrawl.makeMultiFilter({

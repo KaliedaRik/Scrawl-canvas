@@ -7505,7 +7505,9 @@ Permitted methods include:
 			tempCellname, tempCell, tempEngine, tempGCO,
 			sFlag = !this.currentStart.flag,
 			hFlag = !this.currentHandle.flag,
-			multifilterFlag, work;
+			multifilterFlag = false, 
+			tempFilter, work;
+
 		if (this.visibility) {
 			if (!cell) {
 				cell = my.cell[cellname] || my.cell[my.group[this.group].cell];
@@ -7513,7 +7515,13 @@ Permitted methods include:
 			}
 			engine = my.context[cellname];
 			method = method || this.method;
-			multifilterFlag = (this.multiFilter && my.multifilter[this.multiFilter]) ? true : false;
+
+			if(this.multiFilter){
+				tempFilter = my.multifilter[this.multiFilter];
+				if(tempFilter && tempFilter.definitions && tempFilter.definitions.length){
+					multifilterFlag = true;
+				}
+			}
 			if(multifilterFlag){
 				work = my.work;
 				ctx = my.ctx[this.name];
@@ -7555,7 +7563,7 @@ Permitted methods include:
 				cell = tempCell;
 				cellname = tempCellname;
 				ctx.globalCompositeOperation = tempGCO;
-				this.stampMultifilter(engine, cellname, cell);
+				this.stampMultifilter(engine, cell);
 			}
 		}
 		return this;
