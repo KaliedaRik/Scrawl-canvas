@@ -14,22 +14,77 @@ var mycode = function() {
 		current = {
 			globalAlpha: 1,
 			globalCompositeOperation: 'source-over',
-		};
+		},
+		matrix;
 
 	//set the initial imput values
 	document.getElementById('globalAlpha').value = '1';
 	document.getElementById('gco').value = 'source-over';
+	document.getElementById('matrix').value = 'nochange';
+
+	matrix = {
+		nochange: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 1,
+			blockHeight: 1,
+			offsetX: 0,
+			offsetY: 0,
+			weights: [1]
+		}),
+		edge: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 3,
+			blockHeight: 3,
+			offsetX: -1,
+			offsetY: -1,
+			weights: [1, 1, 0, 1, 0, -1, 0, -1, -1]
+		}),
+		sharp: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 3,
+			blockHeight: 3,
+			offsetX: -1,
+			offsetY: -1,
+			weights: [1, 0, 0, 0, 1, 0, 0, 0, -1]
+		}),
+		horizontalBlur: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 20,
+			blockHeight: 1,
+			offsetX: -9,
+			offsetY: 0,
+			normalize: true,
+			weights: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+		}),
+		verticalBlur: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 1,
+			blockHeight: 20,
+			offsetX: 0,
+			offsetY: -9,
+			normalize: true,
+			weights: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+		}),
+		gaussian: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 5,
+			blockHeight: 5,
+			offsetX: -2,
+			offsetY: -2,
+			normalize: true,
+			weights: [0.003765, 0.015019, 0.023792, 0.015019, 0.003765, 0.015019, 0.059912, 0.094907, 0.059912, 0.015019, 0.023792, 0.094907, 0.150342, 0.094907, 0.023792, 0.015019, 0.059912, 0.094907, 0.059912, 0.015019, 0.003765, 0.015019, 0.023792, 0.015019, 0.003765]
+		}),
+	}
 
 	filter = scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: [{
-			filter: 'matrix',
-			width: 5,
-			height: 5,
-			offsetX: -2,
-			offsetY: -2,
-			weights: [-1,  0,  0,  0,  0, 0, -2,  0,  0,  0, 0,  0,  6,  0,  0, 0,  0,  0, -2,  0, 0,  0,  0,  0, -1]
-		}]
+		filters: matrix.nochange
 	});
 
 	// define entitys
@@ -73,6 +128,9 @@ var mycode = function() {
 			case 'gco':
 				current.globalCompositeOperation = e.target.value;
 				scrawl.entity.parrot.set(current);
+				break;
+			case 'matrix':
+				filter.set({filters: matrix[e.target.value]});
 				break;
 		}
 	};

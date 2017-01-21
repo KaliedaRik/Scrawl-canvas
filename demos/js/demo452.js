@@ -27,15 +27,31 @@ var mycode = function() {
 
 	// define multifilter
 	filterDefinitions = {
-		default: [{filter: 'default', level: 1}],
-		brightness: [{filter: 'brightness', level: 1}],
-		saturation: [{filter: 'saturation', level: 1}],
-		threshold: [{filter: 'threshold', level: 0.5}],
+		default: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'default',
+			level: 1
+		}),
+		brightness: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'brightness',
+			level: 1
+		}),
+		saturation: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'saturation',
+			level: 1
+		}),
+		threshold: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'threshold',
+			level: 127
+		}),
 	};
 
 	scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: filterDefinitions[currentFilter]
+		filters: filterDefinitions[currentFilter]
 	});
 
 	// define entitys
@@ -83,16 +99,15 @@ var mycode = function() {
 			case 'filter':
 				currentFilter = e.target.value;
 				scrawl.multifilter.myFilter.set({
-					definitions: filterDefinitions[currentFilter]
+					filters: filterDefinitions[currentFilter]
 				});
 				break;
 			case 'level':
 				currentLevel = parseFloat(e.target.value);
 				if(currentFilter === 'threshold'){
-					currentLevel /= 2;
+					currentLevel *= 127;
 				}
-
-				filterDefinitions[currentFilter][0].level = currentLevel;
+				filterDefinitions[currentFilter].set({level: currentLevel});
 				break;
 		}
 	};

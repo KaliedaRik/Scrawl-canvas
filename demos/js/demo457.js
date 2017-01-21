@@ -8,34 +8,29 @@ var mycode = function() {
 	//hide-end
 
 	// define variables
-	var filter,
-		filterDefinitions,
+	var multi,
+		filter,
 		events,
 		stopE,
-		current = {
-			globalAlpha: 1,
-			globalCompositeOperation: 'source-over',
-		},
 		currentFilter = 'default';
 
 	//set the initial imput values
 	document.getElementById('globalAlpha').value = '1';
 	document.getElementById('gco').value = 'source-over';
-	document.getElementById('filter').value = 'default';
+	document.getElementById('normalize').value = '1';
+	document.getElementById('radius').value = '3';
 
 	// define multifilter
-	filterDefinitions = {
-		default: [{filter: 'default'}],
-		gaussian1: [{filter: 'gaussian1'}],
-		gaussian2: [{filter: 'gaussian2'}],
-		gaussian3: [{filter: 'gaussian3'}],
-		gaussian4: [{filter: 'gaussian4'}],
-		gaussian5: [{filter: 'gaussian5'}],
-	};
+	filter = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'blur',
+		radius: 3,
+		normalize: true,
+	});
 
-	scrawl.makeMultiFilter({
+	multi = scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: filterDefinitions[currentFilter]
+		filters: filter
 	});
 
 	// define entitys
@@ -74,24 +69,27 @@ var mycode = function() {
 		stopE(e);
 		switch (e.target.id) {
 			case 'globalAlpha':
-				current.globalAlpha = e.target.value;
-				parrot = true;
+				parrot.set({
+					globalAlpha: parseFloat(e.target.value)
+				});
 				break;
 			case 'gco':
-				current.globalCompositeOperation = e.target.value;
-				parrot = true;
+				parrot.set({
+					globalCompositeOperation: e.target.value
+				});
 				break;
-			case 'filter':
-				currentFilter = e.target.value;
+			case 'normalize':
+				filter.set({
+					normalize: (parseInt(e.target.value, 10)) ? true : false
+				});
+				multi.updateFilters();
 				break;
-		}
-		if(parrot){
-			scrawl.entity.parrot.set(current);
-		}
-		else{
-			scrawl.multifilter.myFilter.set({
-				definitions: filterDefinitions[currentFilter]
-			});
+			case 'radius':
+				filter.set({
+					radius: parseInt(e.target.value, 10)
+				});
+				multi.updateFilters();
+				break;
 		}
 	};
 	scrawl.addNativeListener(['input', 'change'], events, '.controls');

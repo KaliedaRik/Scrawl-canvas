@@ -25,24 +25,24 @@ var mycode = function() {
 
 	// define multifilter
 	filterDefinitions = {
-		default: [{filter: 'default'}],
-		grayscale: [{filter: 'grayscale'}],
-		sepia: [{filter: 'sepia'}],
-		invert: [{filter: 'invert'}],
-		red: [{filter: 'red'}],
-		green: [{filter: 'green'}],
-		blue: [{filter: 'blue'}],
-		notred: [{filter: 'notred'}],
-		notgreen: [{filter: 'notgreen'}],
-		notblue: [{filter: 'notblue'}],
-		cyan: [{filter: 'cyan'}],
-		magenta: [{filter: 'magenta'}],
-		yellow: [{filter: 'yellow'}],
+		default: scrawl.makeFilter({multiFilter: 'myFilter', species: 'default'}),
+		grayscale: scrawl.makeFilter({multiFilter: 'myFilter', species: 'grayscale', useWorker: true}),
+		sepia: scrawl.makeFilter({multiFilter: 'myFilter', species: 'sepia'}),
+		invert: scrawl.makeFilter({multiFilter: 'myFilter', species: 'invert'}),
+		red: scrawl.makeFilter({multiFilter: 'myFilter', species: 'red'}),
+		green: scrawl.makeFilter({multiFilter: 'myFilter', species: 'green'}),
+		blue: scrawl.makeFilter({multiFilter: 'myFilter', species: 'blue'}),
+		notred: scrawl.makeFilter({multiFilter: 'myFilter', species: 'notred'}),
+		notgreen: scrawl.makeFilter({multiFilter: 'myFilter', species: 'notgreen'}),
+		notblue: scrawl.makeFilter({multiFilter: 'myFilter', species: 'notblue'}),
+		cyan: scrawl.makeFilter({multiFilter: 'myFilter', species: 'cyan'}),
+		magenta: scrawl.makeFilter({multiFilter: 'myFilter', species: 'magenta'}),
+		yellow: scrawl.makeFilter({multiFilter: 'myFilter', species: 'yellow'}),
 	};
 
 	scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: filterDefinitions[currentFilter]
+		filters: filterDefinitions[currentFilter]
 	});
 
 	// define entitys
@@ -97,7 +97,7 @@ var mycode = function() {
 		}
 		else{
 			scrawl.multifilter.myFilter.set({
-				definitions: filterDefinitions[currentFilter]
+				filters: filterDefinitions[currentFilter]
 			});
 		}
 	};

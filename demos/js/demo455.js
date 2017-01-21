@@ -8,7 +8,8 @@ var mycode = function() {
 	//hide-end
 
 	// define variables
-	var filter,
+	var multi,
+		pixels,
 		events,
 		stopE,
 		current = {
@@ -24,15 +25,18 @@ var mycode = function() {
 	document.getElementById('offsetX').value = '0';
 	document.getElementById('offsetY').value = '0';
 
-	filter = scrawl.makeMultiFilter({
+	pixels = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'pixelate',
+		blockWidth: 20,
+		blockHeight: 20,
+		offsetX: 0,
+		offsetY: 0
+	});
+
+	multi = scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: [{
-			filter: 'pixelate',
-			width: 20,
-			height: 20,
-			offsetX: 0,
-			offsetY: 0,
-		}]
+		filters: pixels
 	});
 
 	// define entitys
@@ -78,20 +82,20 @@ var mycode = function() {
 				scrawl.entity.parrot.set(current);
 				break;
 			case 'width':
-				filter.definitions[0].width = parseInt(e.target.value, 10);
-				filter.cache.pixelate = false;
+				pixels.set({blockWidth: parseInt(e.target.value, 10)});
+				multi.updateFilters();
 				break;
 			case 'height':
-				filter.definitions[0].height = parseInt(e.target.value, 10);
-				filter.cache.pixelate = false;
+				pixels.set({blockHeight: parseInt(e.target.value, 10)});
+				multi.updateFilters();
 				break;
 			case 'offsetX':
-				filter.definitions[0].offsetX = parseInt(e.target.value, 10);
-				filter.cache.pixelate = false;
+				pixels.set({offsetX: parseInt(e.target.value, 10)});
+				multi.updateFilters();
 				break;
 			case 'offsetY':
-				filter.definitions[0].offsetY = parseInt(e.target.value, 10);
-				filter.cache.pixelate = false;
+				pixels.set({offsetY: parseInt(e.target.value, 10)});
+				multi.updateFilters();
 				break;
 		}
 	};

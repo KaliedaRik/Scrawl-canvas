@@ -37,9 +37,9 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 457</h1>
-  <h2>Scrawl multiFilters - pre-defined matrix filters</h2>
+  <h2>Scrawl multiFilters - blur</h2>
   <h3>Extensions: images, filters, animation</h3>
-  <p>The filters shown in this demo, which take no additional attributes in their definition objects, are pre-defined by Scrawl</p>
+  <p>The blur filter is effectively a combination of the previous demo's horizontal and vertical blur matrixes, combined in two passes.</p>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -62,19 +62,17 @@
       </td>
     </tr>
     <tr class="t1">
-      <td class="rowlabel">Filter</td>
+      <td class="rowlabel">normalize</td>
       <td>
-        <select class="controls" id="filter">
-          <option value="default">default</option>
-          <option value="gaussian1">gaussian1</option>
-          <option value="gaussian2">gaussian2</option>
-          <option value="gaussian3">gaussian3</option>
-          <option value="gaussian4">gaussian4</option>
-          <option value="gaussian5">gaussian5</option>
+        <select class="controls" id="normalize">
+          <option value="1">true</option>
+          <option value="0">false</option>
         </select>
       </td>
-      <td class="rowlabel">&nbsp;</td>
-      <td>&nbsp;</td>
+      <td class="rowlabel">radius</td>
+      <td>
+        <input id="radius" class="controls" type="range" value="3" min="0" max="15" step="1" />
+      </td>
     </tr>
   </table>
 

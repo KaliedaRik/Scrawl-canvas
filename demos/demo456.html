@@ -39,15 +39,7 @@
   <h1><a href="index.html">Scrawl.js</a> - demonstration 456</h1>
   <h2>Scrawl multiFilters - matrix</h2>
   <h3>Extensions: images, filters, animation</h3>
-  <p>The matrix filter accepts four attributes: width, height, offsetX and offsetY. The offsets are relative to the current pixel during the calculations, so for a 5 x 5 matrix centred on the current pixel, the offset values should be -2. The number of items in the weights array must match the volume of the matrix (width * height). The filter below uses the following values:</p>
-  <ul>
-    <li>width: 5,</li>
-    <li>height: 5,</li>
-    <li>offsetX: -2,</li>
-    <li>offsetY: -2,</li>
-    <li>weights: [-1,  0,  0,  0,  0, 0, -2,  0,  0,  0, 0,  0,  6,  0,  0, 0,  0,  0, -2,  0, 0,  0,  0,  0, -1]</li>
-  </ul>
-  <p>This filter caches precalculated data in the multiFilter cache - MultiFilter.cache.matrix - when updating the filter's attributes dynamically this cache needs to be set to false so the filter knows it needs recalculating.</p>
+  <p>The matrix filter accepts four attributes: width, height, offsetX and offsetY. The offsets are relative to the current pixel during the calculations, so for a 5 x 5 matrix centred on the current pixel, the offset values should be -2. The filter also requires a weights attribute; the number of items in the weights array must match the volume of the matrix (width * height).</p>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -68,6 +60,21 @@
           <option value="source-out">source-out</option>
         </select>
       </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">Matrix filter</td>
+      <td>
+        <select class="controls" id="matrix">
+          <option value="nochange">nochange</option>
+          <option value="edge">edge</option>
+          <option value="sharp">sharp</option>
+          <option value="horizontalBlur">horizontalBlur</option>
+          <option value="verticalBlur">verticalBlur</option>
+          <option value="gaussian">gaussian</option>
+        </select>
+      </td>
+      <td class="rowlabel">&nbsp;</td>
+      <td>&nbsp;</td>
     </tr>
   </table>
 

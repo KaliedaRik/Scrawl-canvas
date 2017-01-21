@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo 457</title>
+  <title>Demo 458</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/demo.css" rel="stylesheet" />
 
@@ -36,10 +36,10 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl.js</a> - demonstration 457</h1>
-  <h2>Scrawl multiFilters - simpleBlur</h2>
+  <h1><a href="index.html">Scrawl.js</a> - demonstration 458</h1>
+  <h2>Scrawl multiFilters - combining filters</h2>
   <h3>Extensions: images, filters, animation</h3>
-  <p>The simpleBlur filter definition can take two additional attributes: radius; and blurType.</p>
+  <p>A multiFilter's filters array can take more than one filter:</p>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -62,19 +62,17 @@
       </td>
     </tr>
     <tr class="t1">
-      <td class="rowlabel">blurType</td>
+      <td class="rowlabel">Filters array</td>
       <td>
-        <select class="controls" id="blurType">
-          <option value="plus">plus</option>
-          <option value="cross">cross</option>
-          <option value="horizontal">horizontal</option>
-          <option value="vertical">vertical</option>
+        <select class="controls" id="filters">
+          <option value="1">default</option>
+          <option value="2">blur + grayscale</option>
+          <option value="3">channels + edge matrix</option>
+          <option value="4">blur + blur + blur + blur</option>
         </select>
       </td>
-      <td class="rowlabel">radius</td>
-      <td>
-        <input id="radius" class="controls" type="range" value="3" min="0" max="20" step="1" />
-      </td>
+      <td class="rowlabel">&nbsp;</td>
+      <td>&nbsp;</td>
     </tr>
   </table>
 

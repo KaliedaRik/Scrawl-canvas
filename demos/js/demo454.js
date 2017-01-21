@@ -14,7 +14,8 @@ var mycode = function() {
 		current = {
 			globalAlpha: 1,
 			globalCompositeOperation: 'source-over',
-		};
+		},
+		myTint;
 
 	//set the initial imput values
 	document.getElementById('globalAlpha').value = '1';
@@ -29,20 +30,23 @@ var mycode = function() {
 	document.getElementById('greenInBlue').value = '0';
 	document.getElementById('blueInBlue').value = '1';
 
+	myTint = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'tint',
+		redInRed: 1,
+		redInGreen: 0,
+		redInBlue: 0,
+		greenInRed: 0,
+		greenInGreen: 1,
+		greenInBlue: 0,
+		blueInRed: 0,
+		blueInGreen: 0,
+		blueInBlue: 1
+	});
+
 	filter = scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: [{
-			filter: 'tint',
-			redInRed: 1,
-			redInGreen: 0,
-			redInBlue: 0,
-			greenInRed: 0,
-			greenInGreen: 1,
-			greenInBlue: 0,
-			blueInRed: 0,
-			blueInGreen: 0,
-			blueInBlue: 1,
-		}]
+		filters: myTint
 	});
 
 	// define entitys
@@ -88,31 +92,31 @@ var mycode = function() {
 				scrawl.entity.parrot.set(current);
 				break;
 			case 'redInRed':
-				filter.definitions[0].redInRed = parseFloat(e.target.value);
+				myTint.set({redInRed: parseFloat(e.target.value)});
 				break;
 			case 'redInGreen':
-				filter.definitions[0].redInGreen = parseFloat(e.target.value);
+				myTint.set({redInGreen: parseFloat(e.target.value)});
 				break;
 			case 'redInBlue':
-				filter.definitions[0].redInBlue = parseFloat(e.target.value);
+				myTint.set({redInBlue: parseFloat(e.target.value)});
 				break;
 			case 'greenInRed':
-				filter.definitions[0].greenInRed = parseFloat(e.target.value);
+				myTint.set({greenInRed: parseFloat(e.target.value)});
 				break;
 			case 'greenInGreen':
-				filter.definitions[0].greenInGreen = parseFloat(e.target.value);
+				myTint.set({greenInGreen: parseFloat(e.target.value)});
 				break;
 			case 'greenInBlue':
-				filter.definitions[0].greenInBlue = parseFloat(e.target.value);
+				myTint.set({greenInBlue: parseFloat(e.target.value)});
 				break;
 			case 'blueInRed':
-				filter.definitions[0].blueInRed = parseFloat(e.target.value);
+				myTint.set({blueInRed: parseFloat(e.target.value)});
 				break;
 			case 'blueInGreen':
-				filter.definitions[0].blueInGreen = parseFloat(e.target.value);
+				myTint.set({blueInGreen: parseFloat(e.target.value)});
 				break;
 			case 'blueInBlue':
-				filter.definitions[0].blueInBlue = parseFloat(e.target.value);
+				myTint.set({blueInBlue: parseFloat(e.target.value)});
 				break;
 		}
 	};

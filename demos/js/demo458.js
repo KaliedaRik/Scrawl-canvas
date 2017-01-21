@@ -8,7 +8,12 @@ var mycode = function() {
 	//hide-end
 
 	// define variables
-	var filter,
+	var def,
+		blur1, blur2, blur3, blur4, blur5,
+		grayscale,
+		channels,
+		edge,
+		options,
 		multiFilter,
 		events,
 		stopE;
@@ -16,19 +21,48 @@ var mycode = function() {
 	//set the initial imput values
 	document.getElementById('globalAlpha').value = '1';
 	document.getElementById('gco').value = 'source-over';
-	document.getElementById('radius').value = '3';
-	document.getElementById('blurType').value = 'plus';
+	document.getElementById('filters').value = '1';
 
 	// define multifilter
-	filter = {
-		filter: 'simpleBlur',
+	def = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'default'
+	});
+	blur1 = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'blur',
 		radius: 3,
-		blurType: 'plus'
-	};
+		normalize: true,
+	});
+	blur2 = blur1.clone();
+	blur3 = blur1.clone();
+	blur4 = blur1.clone();
+	blur5 = blur1.clone();
+	grayscale = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'grayscale'
+	});
+	channels = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'channelstep',
+		red: 127,
+		green: 127,
+		blue: 127
+	});
+	edge = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'matrix',
+		blockWidth: 1,
+		blockHeight: 3,
+		offsetX: 0,
+		offsetY: -1,
+		weights: [1, 0, -1]
+	});
+	options = [null, [def], [blur1, grayscale], [channels, edge], [blur2, blur3, blur4, blur5]];
 
 	multiFilter = scrawl.makeMultiFilter({
 		name: 'myFilter',
-		definitions: [filter]
+		filters: options[1]
 	});
 
 	// define entitys
@@ -67,23 +101,18 @@ var mycode = function() {
 		switch (e.target.id) {
 			case 'globalAlpha':
 				scrawl.entity.parrot.set({
-					globalAlpha: e.target.value
-				})
+					globalAlpha: parseFloat(e.target.value)
+				});
 				break;
 			case 'gco':
 				scrawl.entity.parrot.set({
 					globalCompositeOperation: e.target.value
-				})
+				});
 				break;
-			case 'radius':
-				console.log('radius')
-				filter.radius = parseInt(e.target.value, 10);
-				multiFilter.cache.simpleBlur = false;
-				break;
-			case 'blurType':
-				console.log('blurType')
-				filter.blurType = e.target.value;
-				multiFilter.cache.simpleBlur = false;
+			case 'filters':
+				multiFilter.set({
+					filters: options[parseInt(e.target.value, 10)]
+				});
 				break;
 		}
 	};

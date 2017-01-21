@@ -144,6 +144,14 @@ Flag - Promise API is supported by browser
 **/
 	my.work.promise = null;
 	/**
+Flag - Web Workers are supported by browser
+@property worker
+@type {Boolean}
+@default null
+@final
+**/
+	my.work.worker = null;
+	/**
 An Object containing OBJECTTYPE:Object pairs which in turn contain default attribute values for each Scrawl object constructor
 @property d
 @type {Object}
@@ -413,6 +421,17 @@ A __general__ function that checks to see if the Promise API is supported by the
 		}
 	};
 	/**
+Random uuid generator - http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+@method generateUuid
+@return random (v4) id
+**/
+	my.generateUuid = function() {
+		function s4() {
+			return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+		}
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+	};
+	/**
 A __general__ function that loads supporting extensions and integrates them into the core
 
 Extension names are supplied as an array of Strings, each of which should be an _alias_ string, as follows:
@@ -488,6 +507,9 @@ The argument object can include the following attributes:
 @chainable
 **/
 	my.loadExtensions = function(items) {
+		items = my.safeObject(items);
+		my.work.currentPath = items.path || '';
+		my.work.currentPathMinified = my.xtGet(items.minified, true);
 		if (my.checkForPromise()) {
 			return my.loadExtensionsUsingPromise(items);
 		}
@@ -506,10 +528,10 @@ loadExtensions helper function
 	my.loadExtensionsUsingVanilla = function(items) {
 		var path, callback, error, mini, tail, loaded, required, startTime, timeout, i, iz, getExtensions, done;
 		items = my.safeObject(items);
-		path = items.path || '';
+		path = my.work.currentPath;
 		callback = (my.isa_fn(items.callback)) ? items.callback : function() {};
 		error = (my.isa_fn(items.error)) ? items.error : function() {};
-		mini = my.xtGet(items.minified, true);
+		mini = my.work.currentPathMinified;
 		tail = (mini) ? '-min.js' : '.js';
 		loaded = [];
 		startTime = Date.now();
@@ -562,11 +584,11 @@ loadExtensions helper function - uses the new Promise api, if it is available
 		items = my.safeObject(items);
 		var loader, path, file, alias, callback, error, mini, tail, required, request, i, iz;
 		loader = my.simpleLoader;
-		path = items.path || '';
+		path = my.work.currentPath;
 		alias = my.work.loadAlias;
 		callback = (my.isa_fn(items.callback)) ? items.callback : function() {};
 		error = (my.isa_fn(items.error)) ? items.error : function() {};
-		mini = my.xtGet(items.minified, true);
+		mini = my.work.currentPathMinified;
 		tail = (mini) ? '-min.js' : '.js';
 		required = my.loadExtensionsConcatenator(items);
 		request = [];
@@ -7518,7 +7540,8 @@ Permitted methods include:
 
 			if(this.multiFilter){
 				tempFilter = my.multifilter[this.multiFilter];
-				if(tempFilter && tempFilter.definitions && tempFilter.definitions.length){
+				// if(tempFilter && tempFilter.definitions && tempFilter.definitions.length){
+				if(tempFilter && tempFilter.filters && tempFilter.filters.length){
 					multifilterFlag = true;
 				}
 			}
