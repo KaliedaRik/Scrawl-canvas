@@ -51,6 +51,7 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 			my.FilterWorkPool = function FilterWorkPool(){
 				this.file = my.work.currentPath + 'scrawlMultiFiltersWorkers' + ((my.work.currentPathMinified) ? '-min' : '') + '.js';
 				this.workers = {};
+				this.listeners = {};
 				this.availableWorkers = [];
 			};
 			my.FilterWorkPool.prototype = Object.create(Object.prototype);
@@ -70,16 +71,60 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 				var that = this;
 				return new Promise(function(resolve, reject){
 					var uuid;
-					if(Object.keys(that.workers).length < my.work.filterWorkPoolMax){
+					// first check
+					if(that.currentWorkers() < my.work.filterWorkPoolMax){
 						uuid = my.generateUuid();
+						that.makeNewWorker()
+						.then(function(res){
+							if(that.currentWorkers()  < my.work.filterWorkPoolMax){
+								that.workers[uuid] = res;
+								that.listeners[uuid] = false;
+								that.availableWorkers.push(uuid);
+								resolve(uuid);
+							}
+							else{
+								res.terminate();
+								reject(new Error('worker create error 2 - pool at capacity; new worker terminated'));
+							}
+						})
+						.catch(function(err){
+							reject(err);
+						})
 					}
-					reject(new Error('worker create - uuid would have been: ' + uuid));
+					else{
+						reject(new Error('worker create error 1 - pool at capacity; no worker created'));
+					}
 				});
 			};
-			my.FilterWorkPool.prototype.acquire = function(items){
-				var that = this;
+			my.FilterWorkPool.prototype.makeNewWorker = function(){
+				var that = this,
+					w;
 				return new Promise(function(resolve, reject){
-					reject(new Error('worker acquire - not yet coded up'));
+					w = new Worker(that.file + '?' + (Math.random() * 1000000));
+					w.addEventListener('message', function(e){
+						// resolve(e.data);
+						resolve();
+					}, false);
+					w.addEventListener('error', function(err){
+						console.log('listener error', err.message);
+						// reject(err.message);
+						reject();
+					}, false);
+					resolve(w);
+				});
+			};
+			my.FilterWorkPool.prototype.acquire = function(filter){
+				var that = this,
+					worker, wid;
+				return new Promise(function(resolve, reject){
+					if(that.availableWorkers.length){
+						wid = that.availableWorkers.shift();
+						that.listeners[wid] = filter;
+						resolve({id:wid, worker:that.workers[wid]});
+					}
+					else{
+						reject(new Error('worker acquire error - no workers currently available in the pool'));
+					}
 				});
 			};
 			my.FilterWorkPool.prototype.release = function(items){
@@ -269,6 +314,7 @@ Entity.stamp hook function - modified by multifilters extension
 			this.radius = get(items.radius, 0);
 			this.wrap = get(items.wrap, false);
 			this.useWorker = false;
+			this.useWorkerId = false;
 			if(items.useWorker){
 				this.addWorker();
 			}
@@ -307,6 +353,8 @@ Entity.stamp hook function - modified by multifilters extension
 			wrap: false,
 			radius: 0,
 		};
+
+
 		my.Filter.prototype.set = function(items) {
 			var d = my.work.d.Filter,
 				xt = my.xt;
@@ -317,29 +365,43 @@ Entity.stamp hook function - modified by multifilters extension
 			}
 			return this;
 		};
+
+
 		my.Filter.prototype.addWorker = function() {
-			var pool, data, m,
-				that = this;
+			var pool, data, m, msg,
+				that = this,
+				title = this.species + ':' + this.name;
 			if(my.work.promise){
 				if(my.work.worker && my.work.filterWorkPool){
+					
 					pool = my.work.filterWorkPool;
+
 					data = JSON.parse(JSON.stringify(that));
-					m = my.multifilter[that.multiFilter];that
+					m = my.multifilter[that.multiFilter];
 					if(m){
 						data.currentWidth = m.currentWidth;
 						data.currentHeight = m.currentHeight;
 						data.currentGrid = m.currentGrid;
 					}
+					
+					msg = {
+						id: my.generateUuid(),
+						action: 'provision',
+						data: data
+					}
+					
 					if(pool.hasAvailableWorker()){
 						// use an available worker
-						pool.acquire(data)
+						pool.acquire(that)
 						.then(function(res){
-							console.log(that.species + ':' + that.name + ' - scrawl.Filter.addWorker - using ' + res.id + ' via acquire');
-							that.useWorker = res;
+							that.useWorker = res.worker;
+							that.useWorkerId = res.id;
+							msg.data.id = that.useWorkerId;
+							that.postMessage(msg);
 							return that;
 						})
 						.catch(function(err){
-							console.log(that.species + ':' + that.name + ' - scrawl.Filter.addWorker error 1 - failed to acquire a web worker - ' + err.message);
+							console.log(title + ' - scrawl.Filter.addWorker error 1 - failed to acquire a web worker - ' + err.message);
 							that.useWorker = false;
 							return that;
 						});
@@ -348,23 +410,24 @@ Entity.stamp hook function - modified by multifilters extension
 						// create a new Worker
 						pool.create()
 						.then(function(res){
-							console.log(that.species + ':' + that.name + ' - ' + res);
-							return pool.acquire(data);
+							return pool.acquire(that);
 						})
 						.then(function(res){
-							console.log(that.species + ':' + that.name + ' - scrawl.Filter.addWorker - using ' + res.id + ' via create/acquire');
-							that.useWorker = res;
+							that.useWorker = res.worker;
+							that.useWorkerId = res.id;
+							msg.data.id = that.useWorkerId;
+							that.postMessage(msg);
 							return that;
 						})
 						.catch(function(err){
-							console.log(that.species + ':' + that.name + ' - scrawl.Filter.addWorker error 2 - failed to create a web worker - ' + err.message);
+							console.log(title + ' - scrawl.Filter.addWorker error 2 - failed to create a web worker - ' + err.message);
 							that.useWorker = false;
 							return that;
 						});
 					}
 					else{
 						// no worker available
-						console.log(that.species + ':' + that.name + ' - scrawl.Filter.addWorker error 3 - no available workers, pool at max');
+						console.log(title + ' - scrawl.Filter.addWorker error 3 - no available workers, pool at max');
 						that.useWorker = false;
 						return that;
 					}
@@ -374,10 +437,43 @@ Entity.stamp hook function - modified by multifilters extension
 				return that;
 			}
 		};
+
+
+		my.Filter.prototype.postMessage = function(msg) {
+/*
+All messages sent to scrawlMultiFilterWorkers expected to be a stringified JSON object containing the following attributes:
+- id - a unique uuid message identifier
+- action - String
+- data - an Object containing the data payload
+- stream (optional) - the canvas image data for the Worker to manipulate
+*/
+			var title = this.species + ':' + this.name,
+				that = this;
+			if(this.useWorker){
+				return new Promise(function(resolve, reject){
+					if(msg.buffer){
+						// NEED THE MESSAGE EVENT LISTENER TO RESOLVE, ALSO NEED TO ADD AND REMOVE IT (OH HECK!)
+						// CURRENTLY ADDING IT WHEN WORKER IS INITIALLY CREATED - NOT GOOD ENOUGH!
+						// ABANDON PROMISES MAY BE THE WAY OUT IF DYNAMIC LISTENER DOESN'T WORK OUT???
+						that.useWorker.postMessage(msg, [msg.buffer]);
+					}
+					else{
+						that.useWorker.postMessage(msg);
+					}
+				});
+			}
+			else{
+				console.log(title + ' - postMessage error - no worker designated to receive message');
+			}
+		};
+
+
 		my.Filter.prototype.clone = function(items) {
 			var merged = my.mergeOver(JSON.parse(JSON.stringify(this)), my.safeObject(items));
 			return new my.Filter(merged);
 		};
+
+
 		my.Filter.prototype.update = function() {
 			var m = my.multifilter[this.multiFilter];
 			if(m){
@@ -391,51 +487,65 @@ Entity.stamp hook function - modified by multifilters extension
 					this.cache = false;
 				}
 			}
-			if(m){
-			}
 		};
+
+
 		my.Filter.prototype.prepare = function() {
-			if(this.useWorker){
-				this.prepareWorker()
+			if(this.checkCache[this.species]){
+				this.checkCache[this.species].call(this);
 			}
-			else{
-				if(this.checkCache[this.species]){
-					this.checkCache[this.species].call(this);
-				}
-				if(this.cacheAction){
-					this.cacheAction();
-				}
+			if(this.cacheAction){
+				this.cacheAction();
 			}
 		};
+
+
 		my.Filter.prototype.do = function(data) {
-			if(this.useWorker){
-				this.doWorker();
+			if(this.defs[this.species]){
+				this.defs[this.species].call(this, data);
 			}
-			else{
-				if(this.defs[this.species]){
-					this.defs[this.species].call(this, data);
-				}
-				if(this.action){
-					this.action(data);
-				}
+			if(this.action){
+				this.action(data);
 			}
 		};
+
+
 		my.Filter.prototype.updateWorker = function(m) {
-			// stuff here
-			console.log(this.species + ':' + this.name + ' - updateWorker');
+			var msg = {
+				id: my.generateUuid(),
+				action: 'set',
+				data: {
+					width: m.currentWidth,
+					height: m.currentHeight,
+					area: m.currentArea,
+					cache: false,
+				}
+			};
+			this.postMessage(msg);
 		};
-		my.Filter.prototype.prepareWorker = function() {
-			// stuff here
-			console.log(this.species + ':' + this.name + ' - prepareWorker');
+
+
+		my.Filter.prototype.doWorker = function(img) {
+			var that = this;
+			return new Promise(function(resolve, reject){
+				that.postMessage(img)
+				.then(function(res){
+					console.log('main: ', res);
+					resolve(res);
+				})
+				.catch(function(err){
+					console.log('main error: ', err.message);
+					reject(err);
+				});
+			});
 		};
-		my.Filter.prototype.doWorker = function(data) {
-			// stuff here
-			console.log(this.species + ':' + this.name + ' - doWorker');
-		};
+
 		my.Filter.prototype.doLine = function(data) {
 			// stuff here
 			console.log(this.species + ':' + this.name + ' - doLine');
 		};
+
+
 		/**
 An object containing pre-defined filter functionality.
 **/
@@ -579,6 +689,8 @@ An object containing pre-defined filter functionality.
 				}
 			},
 		};
+
+
 		my.Filter.prototype.defs = {
 			default: function(data){},
 			grayscale: function(data){
@@ -1013,6 +1125,8 @@ An object containing pre-defined filter functionality.
 				}
 			},
 		};
+
+
 		/**
 # Multifilter
 
@@ -1138,13 +1252,26 @@ multifilter main function:
 				}
 
 				for(j = 0, jz = this.filters.length; j < jz; j++){
-					this.filters[j].prepare();
-				}
-				for(j = 0, jz = this.filters.length; j < jz; j++){
-					this.filters[j].do(data);
+					filter = this.filters[j];
+					if(filter.useWorker){
+						filter.doWorker(data)
+						.then(function(res){
+							// data = res;
+							console.log('worker route');
+							cvx.putImageData(img, 0, 0);
+						})
+						.catch(function(err){
+							console.log('multiFilter worker apply error', err.message);
+						})
+					}
+					else{
+						filter.prepare()
+						filter.do(data);
+						console.log('default route');
+						cvx.putImageData(img, 0, 0);
+					}
 				}
 
-				cvx.putImageData(img, 0, 0);
 			}
 			return true;
 		};

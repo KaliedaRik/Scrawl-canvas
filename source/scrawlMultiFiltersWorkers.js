@@ -26,7 +26,7 @@
 var Filter = function Filter(items) {
 	items = (Object.prototype.toString.call(items) === '[object Object]') ? items : {};
 	this.id = this.get(items.id, '');
-	this.name = get(items.name, 'generic');
+	this.name = this.get(items.name, 'generic');
 	this.species = this.get(items.species, 'undefined');
 	this.level = this.get(items.level, 0);
 	this.red = this.get(items.red, 0);
@@ -73,36 +73,33 @@ Filter.prototype.checkCache = {
 			i, j, x1, x2, y1, y2;
 
 		if(!cache){
-		// 	multi = my.multifilter[this.multiFilter];
-		// 	if(multi){
-				w = this.blockWidth || 1;
-				h = this.blockHeight || 1;
-				ceil = Math.ceil;
-				cols = ceil(this.currentWidth / w);
-				rows = ceil(this.currentHeight / h);
+			w = this.blockWidth || 1;
+			h = this.blockHeight || 1;
+			ceil = Math.ceil;
+			cols = ceil(this.currentWidth / w);
+			rows = ceil(this.currentHeight / h);
 
-				x = this.offsetX || 0;
-				x = (x > w) ? 0 : x;
-				y = this.offsetY || 0;
-				y = (y > h) ? 0 : y;
+			x = this.offsetX || 0;
+			x = (x > w) ? 0 : x;
+			y = this.offsetY || 0;
+			y = (y > h) ? 0 : y;
 
-				cache = [];
-				c = 0;
-				get = this.getIndexes;
+			cache = [];
+			c = 0;
+			get = this.getIndexes;
 
-				for(i = -1; i < rows; i++){
-					for(j = -1; j < cols; j++){
-						y1 = (i * h) + y;
-						x1 = (j * w) + x;
-						y2 = y1 + h;
-						x2 = x1 + w;
-						// cache[c] = get.call(multi, x1, y1, x2, y2);
-						cache[c] = get(x1, y1, x2, y2);
-						c++;
-					}
+			for(i = -1; i < rows; i++){
+				for(j = -1; j < cols; j++){
+					y1 = (i * h) + y;
+					x1 = (j * w) + x;
+					y2 = y1 + h;
+					x2 = x1 + w;
+					// cache[c] = get.call(multi, x1, y1, x2, y2);
+					cache[c] = get(x1, y1, x2, y2);
+					c++;
 				}
-				this.cache = cache;
-		// 	}
+			}
+			this.cache = cache;
 		}
 	},
 	matrix: function(){
@@ -112,34 +109,31 @@ Filter.prototype.checkCache = {
 			i, j, x1, x2, y1, y2;
 
 		if(!cache){
-		// 	multi = my.multifilter[this.multiFilter];
-		// 	if(multi){
-				w = this.blockWidth || 1;
-				h = this.blockHeight || 1;
-				x = this.offsetX || 0;
-				y = this.offsetY || 0;
-				wrap = this.wrap || false;
-				cw = this.currentWidth;
-				ch = this.currentHeight;
+			w = this.blockWidth || 1;
+			h = this.blockHeight || 1;
+			x = this.offsetX || 0;
+			y = this.offsetY || 0;
+			wrap = this.wrap || false;
+			cw = this.currentWidth;
+			ch = this.currentHeight;
 
-				cache = [];
-				c = 0;
-				get = (wrap) ? this.getWrappedIndexes : this.getIndexes;
+			cache = [];
+			c = 0;
+			get = (wrap) ? this.getWrappedIndexes : this.getIndexes;
 
-				for(i = 0; i < ch; i++){
-					for(j = 0; j < cw; j++){
-						y1 = i + y;
-						x1 = j + x;
-						y2 = y1 + h;
-						x2 = x1 + w;
-						// cache[c] = get.call(multi, x1, y1, x2, y2);
-						cache[c] = get(x1, y1, x2, y2);
-						c++;
-					}
+			for(i = 0; i < ch; i++){
+				for(j = 0; j < cw; j++){
+					y1 = i + y;
+					x1 = j + x;
+					y2 = y1 + h;
+					x2 = x1 + w;
+					// cache[c] = get.call(multi, x1, y1, x2, y2);
+					cache[c] = get(x1, y1, x2, y2);
+					c++;
 				}
-				this.cache = cache;
-		// 	}
-		// }
+			}
+			this.cache = cache;
+		}
 	},
 	blur: function(){
 		var cache = this.cache,
@@ -149,65 +143,64 @@ Filter.prototype.checkCache = {
 			wt, weights;
 
 		if(!cache){
-		// 	multi = my.multifilter[this.multiFilter];
-		// 	if(multi){
-				r = this.radius || 0;
-				wrap = this.wrap || false;
-				cw = this.currentWidth;
-				ch = this.currentHeight;
+			r = this.radius || 0;
+			wrap = this.wrap || false;
+			cw = this.currentWidth;
+			ch = this.currentHeight;
 
-				cache = [];
-				cache[0] = [];
-				cache[1] = [];
-				get = (wrap) ? this.getWrappedIndexes : this.getIndexes;
+			cache = [];
+			cache[0] = [];
+			cache[1] = [];
+			get = (wrap) ? this.getWrappedIndexes : this.getIndexes;
 
-				// horizontal sweep
-				c = 0;
-				w = (r * 2) + 1;
-				h = 1;
-				x = -r;
-				y = 0;
-				for(i = 0; i < ch; i++){
-					for(j = 0; j < cw; j++){
-						y1 = i + y;
-						x1 = j + x;
-						y2 = y1 + h;
-						x2 = x1 + w;
-						cache[0][c] = get(x1, y1, x2, y2);
-						c++;
-					}
+			// horizontal sweep
+			c = 0;
+			w = (r * 2) + 1;
+			h = 1;
+			x = -r;
+			y = 0;
+			for(i = 0; i < ch; i++){
+				for(j = 0; j < cw; j++){
+					y1 = i + y;
+					x1 = j + x;
+					y2 = y1 + h;
+					x2 = x1 + w;
+					cache[0][c] = get(x1, y1, x2, y2);
+					c++;
 				}
+			}
 
-				// vertical sweep
-				c = 0;
-				w = 1;
-				h = (r * 2) + 1;
-				x = 0;
-				y = -r;
-				for(i = 0; i < ch; i++){
-					for(j = 0; j < cw; j++){
-						y1 = i + y;
-						x1 = j + x;
-						y2 = y1 + h;
-						x2 = x1 + w;
-						cache[1][c] = get(x1, y1, x2, y2);
-						c++;
-					}
+			// vertical sweep
+			c = 0;
+			w = 1;
+			h = (r * 2) + 1;
+			x = 0;
+			y = -r;
+			for(i = 0; i < ch; i++){
+				for(j = 0; j < cw; j++){
+					y1 = i + y;
+					x1 = j + x;
+					y2 = y1 + h;
+					x2 = x1 + w;
+					cache[1][c] = get(x1, y1, x2, y2);
+					c++;
 				}
-				this.cache = cache;
+			}
+			this.cache = cache;
 
-				wt = 1 / h;
-				weights = [];
-				for(i = 0; i < h; i++){
-					weights.push(wt);
-				}
-				this.weights = weights;
-		// 	}
+			wt = 1 / h;
+			weights = [];
+			for(i = 0; i < h; i++){
+				weights.push(wt);
+			}
+			this.weights = weights;
 		}
 	},
 };
 Filter.prototype.defs = {
-	default: function(data){},
+	default: function(data){
+		return data;
+	},
 	grayscale: function(data){
 		var len, posR, posG, posB, posA, gray;
 
@@ -737,3 +730,124 @@ Filter.prototype.get = function() {
 	}
 	return null;
 };
+Filter.prototype.prepare = function() {
+	var that = this;
+	return new Promise(function(resolve, reject){
+		try{
+			if(that.checkCache[that.species]){
+				that.checkCache[that.species]();
+			}
+			if(that.cacheAction){
+				that.cacheAction();
+			}
+			resolve();
+		}
+		catch(e){
+			console.log('prepare fail', e.message);
+			reject(e.message);
+		}
+	});
+};
+Filter.prototype.do = function(data) {
+	var that = this;
+	return new Promise(function(resolve, reject){
+		try{
+			if(that.defs[that.species]){
+				that.defs[that.species](data);
+			}
+			if(this.action){
+				that.action(data);
+			}
+			resolve(data);
+		}
+		catch(e){
+			console.log('do fail', e.message);
+			reject(e.message);
+		}
+	});
+};
+
+var filter = false;
+
+/*
+All messages sent to scrawlMultiFilterWorkers expected to be a JSON object containing the following attributes:
+- id - a unique uuid message identifier
+- action - String
+- data - an Object containing the data payload
+- stream (optional) - the canvas image data for the Worker to manipulate
+*/
+
+var actionMessage = function(msg){
+	var response = false, 
+		error = false;
+	if(msg && msg.id && msg.action){
+		if(msg.data || msg.stream){
+
+			switch(msg.action){
+
+				case 'provision' :
+					filter = new Filter(msg.data);
+					response = 'Worker ' + filter.id + ': filter ' + filter.species + '.' + filter.name + ' provisioned';
+					respond(msg, error, response);
+					break;
+
+				case 'set' :
+					if(filter){
+						response = filter.set(msg.data);
+						respond(msg, error, response);
+					}
+					else{
+						error = 'Filter Worker error 3: no filter to set';
+						respond(msg, error, response);
+					}
+					break;
+
+				case 'respondImmediately' :
+						response = msg.data;
+						respond(msg, error, response);
+					break;
+			}
+		}
+		else{
+			error = 'Filter Worker error 2: no data payload received';
+			respond(msg, error, response);
+		}
+	}
+	else{
+		error = 'Filter Worker error 1: bad message';
+		respond(msg, error, response);
+		self.postMessage('Filter Worker error 1: bad message - id=' + msg.id + '; action=' + msg.action);
+	}
+}
+
+var respond = function(msg, error, response){
+	self.postMessage({
+		id: msg.id, 
+		action: msg.action, 
+		data: false,
+		error: error
+	});
+}
+
+self.addEventListener('message', function(e) {
+	var msg = e.data;
+	if(msg.buffer){
+		if(filter){
+			filter.prepare()
+			.then(function(res){
+				filter.do(msg);
+				self.postMessage(msg, [msg.buffer])
+			})
+			.catch(function(err){
+				console.log('worker buffer error - ' + err);
+				self.postMessage(msg, [msg.buffer])
+			});
+		}
+	}
+	else{
+		if(msg.substring){
+			msg = JSON.parse(msg);
+		}
+		actionMessage(msg);
+	}
+}, false);
