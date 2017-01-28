@@ -7,43 +7,51 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
+	// define variables
 	var filter,
-
-		current_alpha = 1,
-		input_alpha = document.getElementById('alpha'),
-		event_alpha,
-
-		current_red = 63,
-		input_red = document.getElementById('red'),
-		event_red,
-
-		current_green = 63,
-		input_green = document.getElementById('green'),
-		event_green,
-
-		current_blue = 63,
-		input_blue = document.getElementById('blue'),
-		event_blue,
-
-		stopE;
+		events,
+		stopE,
+		current = {
+			globalAlpha: 1,
+			globalCompositeOperation: 'source-over',
+		},
+		currentFilter = 'default';
 
 	//set the initial imput values
-	input_alpha.value = '1';
-	input_red.value = '63';
-	input_green.value = '63';
-	input_blue.value = '63';
+	document.getElementById('globalAlpha').value = '1';
+	document.getElementById('gco').value = 'source-over';
 
-	//define filter
-	filter = scrawl.makeChannelStepFilter({
-		name: 'myfilter',
-		alpha: 1,
-		red: 63,
-		green: 63,
-		blue: 63,
+	// define multifilter
+	filter = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'default',
+		action: function(data){
+			var len, posR, posG, posB, posA;
+			for(var posA = 3, len = data.length; posA < len; posA += 4){
+				if(data[posA]){
+					posR = posA - 3;
+					posG = posA - 2;
+					posB = posA - 1;
+					data[posR] += 20;
+					data[posG] -= 40;
+					data[posB] += 60;
+				}
+			}
+		},
+	})
+
+	scrawl.makeMultiFilter({
+		name: 'myFilter',
+		filters: filter
 	});
 
-	//define entity
+	// define entitys
+	scrawl.makeWheel({
+		radius: '50%',
+		startX: 'center',
+		startY: 'center',
+		order: 0,
+	});
 	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
@@ -51,63 +59,41 @@ var mycode = function() {
 		pasteWidth: 360,
 		pasteHeight: 360,
 		copyX: 50,
-		pasteX: 20,
-		pasteY: 20,
-		filters: ['myfilter'],
-		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		startX: 'center',
+		startY: 'center',
+		handleX: 'center',
+		handleY: 'center',
+		globalAlpha: 1,
+		globalCompositeOperation: 'source-over',
+		order: 1,
+		multiFilter: 'myFilter',
 		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//event listeners
+	// define event listeners
 	stopE = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
 	};
 
-	event_alpha = function(e) {
+	events = function(e) {
 		stopE(e);
-		current_alpha = parseFloat(input_alpha.value);
-		filter.set({
-			alpha: current_alpha,
-		});
+		switch (e.target.id) {
+			case 'globalAlpha':
+				current.globalAlpha = e.target.value;
+				scrawl.entity.parrot.set(current);
+				break;
+			case 'gco':
+				current.globalCompositeOperation = e.target.value;
+				scrawl.entity.parrot.set(current);
+				break;
+		}
 	};
-	input_alpha.addEventListener('input', event_alpha, false);
-	input_alpha.addEventListener('change', event_alpha, false);
+	scrawl.addNativeListener(['input', 'change'], events, '.controls');
 
-	event_red = function(e) {
-		stopE(e);
-		current_red = parseFloat(input_red.value);
-		filter.set({
-			red: current_red,
-		});
-	};
-	input_red.addEventListener('input', event_red, false);
-	input_red.addEventListener('change', event_red, false);
-
-	event_green = function(e) {
-		stopE(e);
-		current_green = parseFloat(input_green.value);
-		filter.set({
-			green: current_green,
-		});
-	};
-	input_green.addEventListener('input', event_green, false);
-	input_green.addEventListener('change', event_green, false);
-
-	event_blue = function(e) {
-		stopE(e);
-		current_blue = parseFloat(input_blue.value);
-		filter.set({
-			blue: current_blue,
-		});
-	};
-	input_blue.addEventListener('input', event_blue, false);
-	input_blue.addEventListener('change', event_blue, false);
-
-	//animation object
+	// define animation object
 	scrawl.makeAnimation({
 		fn: function() {
-
 			scrawl.render();
 
 			//hide-start
@@ -124,7 +110,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'filters', 'animation'],
+	extensions: ['images', 'multifilters', 'wheel', 'block'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

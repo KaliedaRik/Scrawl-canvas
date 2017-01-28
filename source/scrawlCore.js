@@ -217,7 +217,6 @@ Key:value pairs of extension alias:filename Strings, used by scrawl.loadExtensio
 		collisions: 'scrawlCollisions',
 		factories: 'scrawlPathFactories',
 		color: 'scrawlColor',
-		filters: 'scrawlFilters',
 		multifilters: 'scrawlMultiFilters',
 		physics: 'scrawlPhysics',
 		saveload: 'scrawlSaveLoad',
@@ -265,7 +264,6 @@ Key:value pairs of extension alias:Array, used by scrawl.loadExtensions()
 		collisions: [],
 		factories: [],
 		color: [],
-		filters: [],
 		multifilters: [],
 		physics: ['quaternion'],
 		saveload: [],
@@ -357,7 +355,7 @@ A __general__ function that resets the Scrawl library to empty arrays and object
 	/**
 A __general__ function for loading img, css and js files
 
-Copied and pasted (a terrible example - don't do this!) from https://davidwalsh.name/javascript-loader
+Copied and pasted from https://davidwalsh.name/javascript-loader
 
 All assets are added to the body tag in the DOM
 
@@ -436,15 +434,12 @@ A __general__ function that loads supporting extensions and integrates them into
 
 Extension names are supplied as an array of Strings, each of which should be an _alias_ string, as follows:
 
-NOTE: the filters and multifilters extensions are exclusionary and cannot be mixed in code - if both are requested, only the multifilters extension is loaded
-
 Scrawl currently supports the following extensions:
 * __scrawlAnimation.js__ - alias __animation__ - adds animation and tween functionality to the core
 * __scrawlBlock.js__ - alias __block__ - adds _Block_ (square and rectangle) entitys to the core
 * __scrawlCollisions.js__ - alias __collisions__ - adds entity collision detection functionality to the core
 * __scrawlColor.js__ - alias __color__ - adds the _Color_ Design object to the core
-* __scrawlFilters.js__ - alias __filters__ - adds filter functionality to the core (legacy filters)
-* __scrawlMultiFilters.js__ - alias __multifilters__ - adds filter functionality to the core (new filter functionlity as an alternate to legacy filters)
+* __scrawlMultiFilters.js__ - alias __multifilters__ - adds filter functionality to the core
 * __scrawlFrame.js__ - alias __frame__ - enhanced Picture entity
 * __scrawlImages.js__ - alias __images__ - adds all image functionality, including static and animated _Picture_ entitys and the _Pattern_ Design object, to the core
 * __scrawlPath.js__ - alias __path__ - adds _Path_ (SVGTiny path data) entitys to the core
@@ -609,10 +604,12 @@ loadExtensions helper function
 	my.loadExtensionsConcatenator = function(items) {
 		items = my.safeObject(items);
 		var exts = [],
+			item,
 			required = [],
 			xt = my.xt,
 			pu = my.pushUnique,
 			depends = my.work.loadDependencies,
+			keys = Object.keys(my.work.loadAlias),
 			i, iz, j, jz;
 		if (xt(items.extensions)) {
 			exts = exts.concat([].concat(items.extensions));
@@ -620,15 +617,14 @@ loadExtensions helper function
 		if (xt(items.modules)) {
 			exts = exts.concat([].concat(items.modules));
 		}
-		// filters and multifilters are mutually exclusive, with multifilters preferred
-		if(exts.indexOf('filters') >= 0 && exts.indexOf('multifilters') >= 0){
-			my.removeItem(exts, 'filters');
-		}
 		for (i = 0, iz = exts.length; i < iz; i++) {
-			for (j = 0, jz = depends[exts[i]].length; j < jz; j++) {
-				pu(required, depends[exts[i]][j]);
+			item = exts[i];
+			if(my.contains(keys, item)){
+				for (j = 0, jz = depends[item].length; j < jz; j++) {
+					pu(required, depends[item][j]);
+				}
+				pu(required, exts[i]);
 			}
-			pu(required, exts[i]);
 		}
 		return required;
 	};
@@ -2946,25 +2942,6 @@ Where values are Numbers, handle can be treated like any other Vector
 		});
 		this.currentHandle.flag = false;
 		/**
-An object with the following attributes:
-
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
-@property maxDimensions
-@type Object
-@default null
-@private
-**/
-		this.maxDimensions = {
-			flag: true,
-			left: 0,
-			right: 0,
-			top: 0,
-			bottom: 0
-		};
-		/**
 The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object's start point
 @property pivot
 @type String
@@ -3051,13 +3028,6 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 		currentHandle: {
 			x: 0,
 			y: 0
-		},
-		maxDimensions: {
-			flag: true,
-			left: 0,
-			right: 0,
-			top: 0,
-			bottom: 0
 		},
 		pivot: null,
 		scale: 1,
@@ -3189,7 +3159,6 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 			this.setHandle(items);
 		}
 		if (xto(items.flipUpend, items.flipReverse, items.scale, items.width, items.height, items.roll)) {
-			this.maxDimensions.flag = true;
 			if (xto(items.scale, items.width, items.height)) {
 				this.currentHandle.flag = false;
 			}
@@ -3227,7 +3196,6 @@ Augments Base.setStart(), to allow users to set the start attributes using start
 			});
 		}
 		this.currentStart.flag = false;
-		this.maxDimensions.flag = true;
 		return this;
 	};
 	/**
@@ -3257,7 +3225,6 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 			});
 		}
 		this.currentHandle.flag = false;
-		this.maxDimensions.flag = true;
 		return this;
 	};
 	/**
@@ -3301,7 +3268,6 @@ Adds the value of each attribute supplied in the argument to existing values; on
 			if (items.height) {
 				this.setDeltaHeight(items);
 			}
-			this.maxDimensions.flag = true;
 			if (xto(items.scale, items.width, items.height)) {
 				this.currentHandle.flag = false;
 			}
@@ -4441,7 +4407,6 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 			this.current = base.name;
 			this.setDisplayOffsets();
 			this.setAccessibility(items);
-			this.filtersPadInit();
 			this.padStacksConstructor(items);
 			this.interactive = get(items.interactive, true);
 			if (this.interactive) {
@@ -4480,12 +4445,6 @@ Retrieve Pad's visible &lt;canvas&gt; element object
 	my.Pad.prototype.getElement = function() {
 		return my.canvas[this.display];
 	};
-	/**
-Pad constructor hook function - modified by filters extension
-@method filtersPadInit
-@private
-**/
-	my.Pad.prototype.filtersPadInit = function(items) {};
 	/**
 Pad constructor hook function - modified by stacks extension
 @method stacksPadInit
@@ -4602,8 +4561,6 @@ By default:
 * the initial base canvas has a compileOrder of 9999 and compiles last
 * the initial display canvas has compiled = false and will not compile
 
-(This function is replaced by the Filters or multifilters extension)
-
 @method compile
 @return This
 @chainable
@@ -4631,8 +4588,6 @@ Cells will show in ascending order of their showOrder attributes, if their show 
 By default, the initial base and display canvases have shown = false:
 * 'show' involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself
 * the last action is to copy the base cell onto the display cell
-
-(This function is replaced by the Filters or multifilters extension)
 
 @method show
 @return This
@@ -4875,8 +4830,6 @@ Cell supports the following 'virtual' attributes for this attribute:
 			this.coreCellInit(items);
 			this.animationCellInit(items);
 			this.collisionsCellInit(items);
-			this.filtersCellInit(items);
-			this.multifiltersCellInit(items);
 			return this;
 		}
 		return false;
@@ -5172,18 +5125,6 @@ Cell constructor hook function - modified by collisions extension
 **/
 	my.Cell.prototype.collisionsCellInit = function(items) {};
 	/**
-Cell constructor hook function - modified by filters extension
-@method filtersCellInit
-@private
-**/
-	my.Cell.prototype.filtersCellInit = function(items) {};
-	/**
-Cell constructor hook function - modified by multifilters extension
-@method multifiltersCellInit
-@private
-**/
-	my.Cell.prototype.multifiltersCellInit = function(items) {};
-	/**
 Cell constructor hook function - modified by animation extension
 @method animationCellInit
 @private
@@ -5281,9 +5222,6 @@ Note - setting the argument attribute __resolve__ to true will force a recalcula
 		if (xto(items.actualWidth, items.actualHeight, items.width, items.height)) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
-			// for(i = 0, iz = this.groups.length; i < iz; i++){
-			// 	my.group[this.groups[i]].setDirtyStarts()
-			// }
 		}
 		if (xto(items.actualWidth, items.actualHeight, items.pasteWidth, items.pasteHeight, items.width, items.height, items.handle, items.handleX, items.handleY, items.scale)) {
 			this.setDirtyHandles();
@@ -5541,11 +5479,6 @@ Note - setting the argument attribute __resolve__ to true will force a recalcula
 		if (xto(items.actualHeight, items.height)) {
 			this.setDeltaActualHeight(items, false);
 		}
-		// if (xto(items.actualHeight, items.height, items.actualWidth, items.width)){
-		// 	for(i = 0, iz = this.groups.length; i < iz; i++){
-		// 		my.group[this.groups[i]].setDirtyStarts()
-		// 	}
-		// }
 		if (xt(items.roll)) {
 			this.setDeltaRoll(items);
 		}
@@ -5929,7 +5862,6 @@ Clear the Cell's &lt;canvas&gt; element using JavaScript ctx.clearRect()
 	/**
 Prepare to draw entitys onto the Cell's &lt;canvas&gt; element, in line with the Cell's group Array
 
-(This function is replaced by the Filters or multifilters extension)
 @method compile
 @return This
 @chainable
@@ -6747,6 +6679,7 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 @default 0
 **/
 		this.regionRadius = get(items.regionRadius, 0);
+		this.multifiltersGroupInit(items);
 		my.group[this.name] = this;
 		pu(my.groupnames, this.name);
 		pu(my.cell[this.cell].groups, this.name);
@@ -6771,7 +6704,8 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 		regionRadius: 0
 	};
 	my.mergeInto(my.work.d.Group, my.work.d.Base);
-	/**
+	my.Group.prototype.multifiltersGroupInit = function(){};
+	/*
 set
 @method set
 @param {Object} items Object containing attribute key:value pairs
@@ -6831,12 +6765,29 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 		var entity,
 			entitys,
 			e = my.entity,
+			tempFilter, tempCellname, tempCell, work,
+			multifilterFlag = false,
 			i,
 			iz;
 		if (this.visibility) {
 			this.sortEntitys();
 			entitys = this.entitys;
 			cell = (my.xt(cell)) ? cell : my.cell[cellname];
+			if(this.multiFilter){
+				tempFilter = my.multifilter[this.multiFilter];
+				if(tempFilter && tempFilter.filters && tempFilter.filters.length){
+					multifilterFlag = true;
+					work = my.work;
+					tempCell = cell;
+					tempCellname = cellname;
+					cell = work.cvwrapper;
+					cellname = work.cvwrapper.name;
+					cell.set({
+						width: tempCell.actualWidth,
+						height: tempCell.actualHeight
+					});
+				}
+			}
 			for (i = 0, iz = entitys.length; i < iz; i++) {
 				entity = e[entitys[i]];
 				if (entity) {
@@ -6844,9 +6795,15 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 					entity.stamp(method, cellname, cell, mouse);
 				}
 			}
+			if(multifilterFlag){
+				cell = tempCell;
+				cellname = tempCellname;
+				this.stampMultifilter(my.context[cellname], cell);
+			}
 		}
 		return this;
 	};
+	my.Group.prototype.stampMultifilter = function() {};
 	/**
 Add entitys to the Group
 @method addEntitysToGroup
@@ -7256,7 +7213,6 @@ _Note: not all entitys support all of these operations_
 **/
 		this.method = get(items.method, my.work.d[this.type].method);
 		this.collisionsEntityConstructor(items);
-		this.filtersEntityInit(items);
 		this.multifiltersEntityInit(items);
 		return this;
 	};
@@ -7293,12 +7249,6 @@ Entity radius, in pixels - not supported by all entity objects
 		group: ''
 	};
 	my.mergeInto(my.work.d.Entity, my.work.d.Position);
-	/**
-Entity constructor hook function - modified by filters extension
-@method filtersEntityInit
-@private
-**/
-	my.Entity.prototype.filtersEntityInit = function(items) {};
 	/**
 Entity constructor hook function - modified by multifilters extension
 @method multifiltersEntityInit
@@ -7377,9 +7327,6 @@ Allows users to:
 		if (xt(items.order)) {
 			group[this.group].resort = true;
 		}
-		if (xt(items.lineWidth)) {
-			this.maxDimensions.flag = true;
-		}
 		return this;
 	};
 	/**
@@ -7402,9 +7349,6 @@ Allows users to amend a entity's Context object's values via the entity, in addi
 		items = my.safeObject(items);
 		if (my.xto(items.lineDashOffset, items.lineWidth, items.globalAlpha)) {
 			my.ctx[this.context].setDelta(items);
-			if (my.xt(items.lineWidth)) {
-				this.maxDimensions.flag = true;
-			}
 		}
 		this.collisionsEntitySetDelta(items);
 		return this;
@@ -7519,8 +7463,6 @@ Permitted methods include:
 @return This
 @chainable
 
-// I THINK THIS NEEDS TO BE OVERWRITTEN IN ITS ENTIRETY BY MULTIFILTERS? THOUGH THAT LEADS TO PROBLEMS FOR ENTITYS THAT OVERWRITE THIS FUNCTION?
-// HOWEVER, FOR NOW WE CAN TRY TO REDIRECT THE STAMPING ONTO THE MULTIFILTER HIDDEN CELL ...?
 **/
 	my.Entity.prototype.stamp = function(method, cellname, cell, mouse) {
 		var engine, ctx,
@@ -7540,26 +7482,23 @@ Permitted methods include:
 
 			if(this.multiFilter){
 				tempFilter = my.multifilter[this.multiFilter];
-				// if(tempFilter && tempFilter.definitions && tempFilter.definitions.length){
 				if(tempFilter && tempFilter.filters && tempFilter.filters.length){
 					multifilterFlag = true;
+					work = my.work;
+					ctx = my.ctx[this.name];
+					tempEngine = engine;
+					tempCell = cell;
+					tempCellname = cellname;
+					tempGCO = ctx.globalCompositeOperation;
+					ctx.globalCompositeOperation = 'source-over';
+					engine = work.cvx2;
+					cell = work.cvwrapper2;
+					cellname = work.cvwrapper2.name;
+					cell.set({
+						width: tempCell.actualWidth,
+						height: tempCell.actualHeight
+					});
 				}
-			}
-			if(multifilterFlag){
-				work = my.work;
-				ctx = my.ctx[this.name];
-				tempEngine = engine;
-				tempCell = cell;
-				tempCellname = cellname;
-				tempGCO = ctx.globalCompositeOperation;
-				ctx.globalCompositeOperation = 'source-over';
-				engine = work.cvx2;
-				cell = work.cvwrapper2;
-				cellname = work.cvwrapper2.name;
-				cell.set({
-					width: tempCell.actualWidth,
-					height: tempCell.actualHeight
-				});
 			}
 			if (sFlag || hFlag) {
 				if (sFlag) {
@@ -7572,15 +7511,11 @@ Permitted methods include:
 			}
 			if (this.pivot) {
 				this.setStampUsingPivot(cellname, mouse);
-				this.maxDimensions.flag = true;
 			}
 			else {
 				this.pathStamp();
 			}
 			this[method](engine, cellname, cell);
-			if(this.filters && this.filters.length){
-				this.stampFilter(engine, cellname, cell);
-			}
 			if(multifilterFlag){
 				engine = tempEngine;
 				cell = tempCell;
@@ -7604,13 +7539,6 @@ Entity.stamp hook function - modified by path extension
 @private
 **/
 	my.Entity.prototype.pathStamp = function() {};
-	/**
-Entity.stamp hook function - modified by filters extension
-@method stampFilter
-@private
-**/
-	my.Entity.prototype.stampFilter = function() {};
-	my.Entity.prototype.stampFilterDimensionsActions = {};
 	/**
 Entity.stamp hook function - modified by multifilters extension
 @method stampMultifilter

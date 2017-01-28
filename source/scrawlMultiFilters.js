@@ -21,15 +21,12 @@
 //---------------------------------------------------------------------------------
 
 
-// NOTE - setting up multifilters as an ALTERNATIVE to the filters extension - hence the separate library sections for it.
-// Core has already been coded up with the required code to integrate multifilters, and to impose the exclusion policy
-
 /**
 # scrawlMultiFilters
 
 ## Purpose and features
 
-The MultiFilters extension adds a set of filter algorithms to the scrawl-canvas library. These are separate from legacy filters, which will (eventually) be deprecated
+The MultiFilters extension adds a set of filter algorithms to the scrawl-canvas library.
 
 @module scrawlMultiFilters
 **/
@@ -43,108 +40,6 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 			Object.defineProperty(Uint8ClampedArray.prototype, 'slice', {
 				value: Array.prototype.slice
 			});
-		}
-
-		// detect and establish (if possible) filter web workers
-		my.work.worker = !!window.Worker;
-		if(my.work.worker && my.work.promise){
-			my.FilterWorkPool = function FilterWorkPool(){
-				this.file = my.work.currentPath + 'scrawlMultiFiltersWorkers' + ((my.work.currentPathMinified) ? '-min' : '') + '.js';
-				this.workers = {};
-				this.listeners = {};
-				this.availableWorkers = [];
-			};
-			my.FilterWorkPool.prototype = Object.create(Object.prototype);
-			my.FilterWorkPool.prototype.setMaxWorkers = function(item){
-				if(item && item.toFixed){
-					my.work.filterWorkPoolMax = item;
-				}
-				return this;
-			};
-			my.FilterWorkPool.prototype.currentWorkers = function(){
-				return Object.keys(this.workers).length;
-			};
-			my.FilterWorkPool.prototype.hasAvailableWorker = function(){
-				return (this.availableWorkers.length) ? true : false;
-			};
-			my.FilterWorkPool.prototype.create = function(items){
-				var that = this;
-				return new Promise(function(resolve, reject){
-					var uuid;
-					// first check
-					if(that.currentWorkers() < my.work.filterWorkPoolMax){
-						uuid = my.generateUuid();
-						that.makeNewWorker()
-						.then(function(res){
-							if(that.currentWorkers()  < my.work.filterWorkPoolMax){
-								that.workers[uuid] = res;
-								that.listeners[uuid] = false;
-								that.availableWorkers.push(uuid);
-								resolve(uuid);
-							}
-							else{
-								res.terminate();
-								reject(new Error('worker create error 2 - pool at capacity; new worker terminated'));
-							}
-						})
-						.catch(function(err){
-							reject(err);
-						})
-					}
-					else{
-						reject(new Error('worker create error 1 - pool at capacity; no worker created'));
-					}
-				});
-			};
-			my.FilterWorkPool.prototype.makeNewWorker = function(){
-				var that = this,
-					w;
-				return new Promise(function(resolve, reject){
-					w = new Worker(that.file + '?' + (Math.random() * 1000000));
-					w.addEventListener('message', function(e){
-						// resolve(e.data);
-						resolve();
-					}, false);
-					w.addEventListener('error', function(err){
-						console.log('listener error', err.message);
-						// reject(err.message);
-						reject();
-					}, false);
-					resolve(w);
-				});
-			};
-			my.FilterWorkPool.prototype.acquire = function(filter){
-				var that = this,
-					worker, wid;
-				return new Promise(function(resolve, reject){
-					if(that.availableWorkers.length){
-						wid = that.availableWorkers.shift();
-						that.listeners[wid] = filter;
-						resolve({id:wid, worker:that.workers[wid]});
-					}
-					else{
-						reject(new Error('worker acquire error - no workers currently available in the pool'));
-					}
-				});
-			};
-			my.FilterWorkPool.prototype.release = function(items){
-				var that = this;
-				return new Promise(function(resolve, reject){
-					reject(new Error('worker release - not yet coded up'));
-				});
-			};
-			my.FilterWorkPool.prototype.kill = function(items){
-				var that = this;
-				return new Promise(function(resolve, reject){
-					reject(new Error('worker kill - not yet coded up'));
-				});
-			};
-
-			my.work.filterWorkPool = new my.FilterWorkPool();
-			my.work.filterWorkPoolMax = 8;
-		}
-		else{
-			my.work.filterWorkPool = false;
 		}
 
 		/**
@@ -175,7 +70,7 @@ my.work.cvwrapper2 = my.cell.defaultHiddenCanvasElement;
 **/
 		my.pushUnique(my.work.sectionlist, 'multifilter');
 		my.pushUnique(my.work.nameslist, 'multifilternames');
-
+		my.work.multiFilterActiveFlag = false;
 
 		/**
 A __factory__ function to generate new Filter objects
@@ -221,6 +116,17 @@ MULTIFILTERNAME String, to be applied to this entity
 			my.mergeInto(my.work.d.Path, my.work.d.Entity);
 		}
 		/**
+Group constructor hook function - modified by multiFilter module
+
+Adds the multiFilter, filterOnStroke and filterLevel attributes to Group objects
+@method multifiltersGroupInit
+@private
+**/
+		my.Group.prototype.multifiltersGroupInit = function(items) {
+			items = my.safeObject(items);
+			this.multiFilter = (my.xt(items.multiFilter)) ? items.multiFilter : '';
+		};
+		/**
 Entity constructor hook function - modified by multiFilter module
 
 Adds the multiFilter, filterOnStroke and filterLevel attributes to Entity objects
@@ -231,6 +137,29 @@ Adds the multiFilter, filterOnStroke and filterLevel attributes to Entity object
 			items = my.safeObject(items);
 			this.multiFilter = (my.xt(items.multiFilter)) ? items.multiFilter : '';
 		};
+	/**
+Group.stamp hook function - modified by multifilters extension
+@method stampMultifilter
+@private
+**/
+	my.Group.prototype.stampMultifilter = function(engine, cell) {
+		var filter = my.multifilter[this.multiFilter],
+			work = my.work,
+			hostCanvas = work.cv,
+			hostCell = work.cvwrapper,
+			hostCtx = my.work.cvmodel,
+			hostEngine = my.work.cvx;
+
+		if(filter.stencil){
+			hostEngine.globalCompositeOperation = 'source-in';
+			hostCell.copyCellToSelf(cell);
+			hostEngine.globalCompositeOperation = 'source-over';
+		}
+
+		filter.apply(my.work.cv, my.work.cvx);
+		engine.setTransform(1, 0, 0, 1, 0, 0);
+		engine.drawImage(hostCanvas, 0, 0);
+	};
 	/**
 Entity.stamp hook function - modified by multifilters extension
 @method stampMultifilter
@@ -252,13 +181,11 @@ Entity.stamp hook function - modified by multifilters extension
 			hostEngine.globalCompositeOperation = 'source-over';
 		}
 
-		// then do filters stuff here
-		filter.apply();
-
-		// it's at this point we need to take into account the entity's own GCO
+		filter.apply(my.work.cv2, my.work.cvx2);
 		gco = engine.globalCompositeOperation;
+		engine.setTransform(1, 0, 0, 1, 0, 0);
 		engine.globalCompositeOperation = ctx.globalCompositeOperation;
-		cell.copyCellToSelf(hostCell);
+		engine.drawImage(hostCanvas, 0, 0);
 		engine.globalCompositeOperation = gco;
 	};
 
@@ -312,12 +239,13 @@ Entity.stamp hook function - modified by multifilters extension
 			this.weights = get(items.weights, []);
 			this.normalize = get(items.normalize, false);
 			this.radius = get(items.radius, 0);
+			this.step = get(items.step, 1);
 			this.wrap = get(items.wrap, false);
-			this.useWorker = false;
-			this.useWorkerId = false;
-			if(items.useWorker){
-				this.addWorker();
+			if(items.ranges){
+				this.setRanges(items.ranges);
 			}
+			this.cacheAction = get(items.cacheAction, false);
+			this.action = get(items.action, false);
 			return this;
 		};
 		my.Filter.prototype = Object.create(Object.prototype);
@@ -351,7 +279,11 @@ Entity.stamp hook function - modified by multifilters extension
 			weights: [],
 			normalize: false,
 			wrap: false,
+			step: 1,
 			radius: 0,
+			ranges: [],
+			action: false,
+			cacheAction: false
 		};
 
 
@@ -359,112 +291,31 @@ Entity.stamp hook function - modified by multifilters extension
 			var d = my.work.d.Filter,
 				xt = my.xt;
 			for (var i in items) {
-				if (xt(d[i])) {
+				if(i === 'ranges'){
+					this.setRanges(items[i]);
+				}
+				else if (xt(d[i])) {
 					this[i] = items[i];
 				}
 			}
 			return this;
 		};
-
-
-		my.Filter.prototype.addWorker = function() {
-			var pool, data, m, msg,
-				that = this,
-				title = this.species + ':' + this.name;
-			if(my.work.promise){
-				if(my.work.worker && my.work.filterWorkPool){
-					
-					pool = my.work.filterWorkPool;
-
-					data = JSON.parse(JSON.stringify(that));
-					m = my.multifilter[that.multiFilter];
-					if(m){
-						data.currentWidth = m.currentWidth;
-						data.currentHeight = m.currentHeight;
-						data.currentGrid = m.currentGrid;
-					}
-					
-					msg = {
-						id: my.generateUuid(),
-						action: 'provision',
-						data: data
-					}
-					
-					if(pool.hasAvailableWorker()){
-						// use an available worker
-						pool.acquire(that)
-						.then(function(res){
-							that.useWorker = res.worker;
-							that.useWorkerId = res.id;
-							msg.data.id = that.useWorkerId;
-							that.postMessage(msg);
-							return that;
-						})
-						.catch(function(err){
-							console.log(title + ' - scrawl.Filter.addWorker error 1 - failed to acquire a web worker - ' + err.message);
-							that.useWorker = false;
-							return that;
-						});
-					}
-					else if(pool.currentWorkers() <= my.work.filterWorkPoolMax){
-						// create a new Worker
-						pool.create()
-						.then(function(res){
-							return pool.acquire(that);
-						})
-						.then(function(res){
-							that.useWorker = res.worker;
-							that.useWorkerId = res.id;
-							msg.data.id = that.useWorkerId;
-							that.postMessage(msg);
-							return that;
-						})
-						.catch(function(err){
-							console.log(title + ' - scrawl.Filter.addWorker error 2 - failed to create a web worker - ' + err.message);
-							that.useWorker = false;
-							return that;
-						});
-					}
-					else{
-						// no worker available
-						console.log(title + ' - scrawl.Filter.addWorker error 3 - no available workers, pool at max');
-						that.useWorker = false;
-						return that;
+		my.Filter.prototype.setRanges = function(item) {
+			var result = [],
+				range, i, iz;
+			if(Array.isArray(item)){
+				for(var i = 0, iz = item.length; i < iz; i++){
+					range = item[i];
+					if(range.length === 6){
+						result.push(new Uint8ClampedArray(range));
 					}
 				}
 			}
-			else{
-				return that;
+			this.ranges = [];
+			if(result.length){
+				this.ranges = result;
 			}
-		};
-
-
-		my.Filter.prototype.postMessage = function(msg) {
-/*
-All messages sent to scrawlMultiFilterWorkers expected to be a stringified JSON object containing the following attributes:
-- id - a unique uuid message identifier
-- action - String
-- data - an Object containing the data payload
-- stream (optional) - the canvas image data for the Worker to manipulate
-*/
-			var title = this.species + ':' + this.name,
-				that = this;
-			if(this.useWorker){
-				return new Promise(function(resolve, reject){
-					if(msg.buffer){
-						// NEED THE MESSAGE EVENT LISTENER TO RESOLVE, ALSO NEED TO ADD AND REMOVE IT (OH HECK!)
-						// CURRENTLY ADDING IT WHEN WORKER IS INITIALLY CREATED - NOT GOOD ENOUGH!
-						// ABANDON PROMISES MAY BE THE WAY OUT IF DYNAMIC LISTENER DOESN'T WORK OUT???
-						that.useWorker.postMessage(msg, [msg.buffer]);
-					}
-					else{
-						that.useWorker.postMessage(msg);
-					}
-				});
-			}
-			else{
-				console.log(title + ' - postMessage error - no worker designated to receive message');
-			}
+			return this;
 		};
 
 
@@ -477,15 +328,10 @@ All messages sent to scrawlMultiFilterWorkers expected to be a stringified JSON 
 		my.Filter.prototype.update = function() {
 			var m = my.multifilter[this.multiFilter];
 			if(m){
-				if(this.useWorker){
-					this.updateWorker(m);
-				}
-				else{
-					this.width = m.currentWidth;
-					this.height = m.currentHeight;
-					this.area = m.currentArea;
-					this.cache = false;
-				}
+				this.width = m.currentWidth;
+				this.height = m.currentHeight;
+				this.area = m.currentArea;
+				this.cache = false;
 			}
 		};
 
@@ -510,41 +356,6 @@ All messages sent to scrawlMultiFilterWorkers expected to be a stringified JSON 
 		};
 
 
-		my.Filter.prototype.updateWorker = function(m) {
-			var msg = {
-				id: my.generateUuid(),
-				action: 'set',
-				data: {
-					width: m.currentWidth,
-					height: m.currentHeight,
-					area: m.currentArea,
-					cache: false,
-				}
-			};
-			this.postMessage(msg);
-		};
-
-
-		my.Filter.prototype.doWorker = function(img) {
-			var that = this;
-			return new Promise(function(resolve, reject){
-				that.postMessage(img)
-				.then(function(res){
-					console.log('main: ', res);
-					resolve(res);
-				})
-				.catch(function(err){
-					console.log('main error: ', err.message);
-					reject(err);
-				});
-			});
-		};
-
-		my.Filter.prototype.doLine = function(data) {
-			// stuff here
-			console.log(this.species + ':' + this.name + ' - doLine');
-		};
-
 
 		/**
 An object containing pre-defined filter functionality.
@@ -553,8 +364,9 @@ An object containing pre-defined filter functionality.
 			pixelate: function(){
 				var cache = this.cache,
 					rows, h, cols, w, ceil,
+					segment,
 					x, y,
-					multi, get, c,
+					multi, get, res, c,
 					i, j, x1, x2, y1, y2;
 
 				if(!cache){
@@ -571,7 +383,9 @@ An object containing pre-defined filter functionality.
 						y = this.offsetY || 0;
 						y = (y > h) ? 0 : y;
 
-						cache = [];
+						segment = this.segment = w * h;
+
+						cache = new Uint32Array((cols + 1) * (rows + 1) * segment);
 						c = 0;
 						get = multi.getIndexes;
 
@@ -581,8 +395,9 @@ An object containing pre-defined filter functionality.
 								x1 = (j * w) + x;
 								y2 = y1 + h;
 								x2 = x1 + w;
-								cache[c] = get.call(multi, x1, y1, x2, y2);
-								c++;
+								res = get.call(multi, x1, y1, x2, y2);
+								cache.set(res, c);
+								c += segment;
 							}
 						}
 						this.cache = cache;
@@ -628,8 +443,7 @@ An object containing pre-defined filter functionality.
 				var cache = this.cache,
 					multi, get, c, wrap,
 					w, cw, h, ch, x, y, r,
-					i, j, x1, x2, y1, y2, 
-					wt, weights;
+					i, j, x1, x2, y1, y2;
 
 				if(!cache){
 					multi = my.multifilter[this.multiFilter];
@@ -678,13 +492,6 @@ An object containing pre-defined filter functionality.
 							}
 						}
 						this.cache = cache;
-
-						wt = 1 / h;
-						weights = [];
-						for(i = 0; i < h; i++){
-							weights.push(wt);
-						}
-						this.weights = weights;
 					}
 				}
 			},
@@ -695,7 +502,6 @@ An object containing pre-defined filter functionality.
 			default: function(data){},
 			grayscale: function(data){
 				var len, posR, posG, posB, posA, gray;
-
 				for(posA = 3, len = data.length; posA < len; posA +=4){
 					if(data[posA]){
 						posR = posA - 3;
@@ -955,42 +761,43 @@ An object containing pre-defined filter functionality.
 			},
 			pixelate: function(data){
 				var cache = this.cache,
-					cachelen = cache.length,
+					segment = this.segment,
+					blocks = cache.length / segment,
 					red, green, blue, 
-					posR, posG, posB, posA,
-					alphas, counter, len,
-					k, c;
+					pos, alphas, counter, k, c;
 
-				for(c = 0; c < cachelen; c++){
-					alphas = cache[c];
-					len = alphas.length;
+				for(c = 0; c < blocks; c++){
+					pos = c * segment;
+					alphas = cache.slice(pos, pos + segment);
 					red = green = blue = counter = 0;
 
-					for(k = 0; k < len; k++){
-						posA = alphas[k];
-						if(data[posA]){
+					for(k = 0; k < segment; k++){
+						pos = alphas[k];
+						if(!pos){
+							break;
+						}
+						if(data[pos]){
 							counter++;
-							posR = posA - 3;
-							posG = posA - 2;
-							posB = posA - 1;
-							red += data[posR];
-							green += data[posG];
-							blue += data[posB];
+							pos -= 3;
+							red += data[pos++];
+							green += data[pos++];
+							blue += data[pos];
 						}
 					}
 					if(counter > 0){
 						red /= counter;
 						green /= counter;
 						blue /= counter;
-						for(k = 0; k < len; k++){
-							posA = alphas[k];
-							if(data[posA]){
-								posR = posA - 3;
-								posG = posA - 2;
-								posB = posA - 1;
-								data[posR] = red;
-								data[posG] = green;
-								data[posB] = blue;
+						for(k = 0; k < segment; k++){
+							pos = alphas[k];
+							if(!pos){
+								break;
+							}
+							if(data[pos]){
+								pos -= 3
+								data[pos++] = red;
+								data[pos++] = green;
+								data[pos] = blue;
 							}
 						}
 					}
@@ -1048,37 +855,33 @@ An object containing pre-defined filter functionality.
 					red, green, blue, 
 					posR, posG, posB, posA, localA,
 					alphas, len,
-					weights = this.weights,
-					norm = this.normalize || false,
-					wt, k, c, total, temp;
+					step = this.step || 1,
+					k, c, counter, temp;
 
-				if(weights.length){
-					cache = this.cache[0],
-					temp = data.slice();
-					for(posA = 3, c = 0; posA < datalen; posA +=4, c++){
-						if(data[posA]){
-							alphas = cache[c];
-							len = alphas.length;
-							red = green = blue = total = 0;
+				cache = this.cache[0],
+				temp = data.slice();
+				for(posA = 3, c = 0; posA < datalen; posA +=4, c++){
+					if(data[posA]){
+						alphas = cache[c];
+						len = alphas.length;
+						red = green = blue = counter = 0;
 
-							for(k = 0; k < len; k++){
-								localA = alphas[k];
-								if(weights[k] && temp[localA]){
-									wt = weights[k]
-									posR = localA - 3;
-									posG = localA - 2;
-									posB = localA - 1;
-									red += temp[posR] * wt;
-									green += temp[posG] * wt;
-									blue += temp[posB] * wt;
-									total += wt;
-								}
+						for(k = 0; k < len; k += step){
+							localA = alphas[k];
+							if(temp[localA]){
+								posR = localA - 3;
+								posG = localA - 2;
+								posB = localA - 1;
+								red += temp[posR];
+								green += temp[posG];
+								blue += temp[posB];
+								counter++;
 							}
-							if(norm && total){
-								red /= total;
-								green /= total;
-								blue /= total;
-							}
+						}
+						if(counter){
+							red /= counter;
+							green /= counter;
+							blue /= counter;
 							posR = posA - 3;
 							posG = posA - 2;
 							posB = posA - 1;
@@ -1087,39 +890,82 @@ An object containing pre-defined filter functionality.
 							data[posB] = blue;
 						}
 					}
+				}
 
-					cache = this.cache[1],
-					temp = data.slice();
-					for(posA = 3, c = 0; posA < datalen; posA +=4, c++){
-						if(data[posA]){
-							alphas = cache[c];
-							len = alphas.length;
-							red = green = blue = total = 0;
+				cache = this.cache[1],
+				temp = data.slice();
+				for(posA = 3, c = 0; posA < datalen; posA +=4, c++){
+					if(data[posA]){
+						alphas = cache[c];
+						len = alphas.length;
+						red = green = blue = counter = 0;
 
-							for(k = 0; k < len; k++){
-								localA = alphas[k];
-								if(weights[k] && temp[localA]){
-									wt = weights[k]
-									posR = localA - 3;
-									posG = localA - 2;
-									posB = localA - 1;
-									red += temp[posR] * wt;
-									green += temp[posG] * wt;
-									blue += temp[posB] * wt;
-									total += wt;
-								}
+						for(k = 0; k < len; k += step){
+							localA = alphas[k];
+							if(temp[localA]){
+								posR = localA - 3;
+								posG = localA - 2;
+								posB = localA - 1;
+								red += temp[posR];
+								green += temp[posG];
+								blue += temp[posB];
+								counter++;
 							}
-							if(norm && total){
-								red /= total;
-								green /= total;
-								blue /= total;
-							}
+						}
+						if(counter){
+							red /= counter;
+							green /= counter;
+							blue /= counter;
 							posR = posA - 3;
 							posG = posA - 2;
 							posB = posA - 1;
 							data[posR] = red;
 							data[posG] = green;
 							data[posB] = blue;
+						}
+					}
+				}
+			},
+			chroma: function(data){
+				var pos, posA, len,
+					ranges = this.ranges,
+					range, min, max, val,
+					i, iz, flag;
+
+				for(posA = 3, len = data.length; posA < len; posA +=4){
+					if(data[posA]){
+						flag = false;
+						for(i = 0, iz = ranges.length; i < iz; i++){
+							range = ranges[i];
+							min = range[2];
+							pos = posA - 1;
+							val = data[pos];
+							if(val >= min){
+								max = range[5];
+								if(val <= max){
+									min = range[1];
+									pos--;
+									val = data[pos];
+									if(val >= min){
+										max = range[4];
+										if(val <= max){
+											min = range[0];
+											pos--;
+											val = data[pos];
+											if(val >= min){
+												max = range[3];
+												if(val <= max){
+													flag = true;
+													break;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+						if(flag){
+							data[posA] = 0;
 						}
 					}
 				}
@@ -1230,18 +1076,15 @@ multifilter main function:
 @private
 @return always true
 **/
-		my.MultiFilter.prototype.apply = function() {
-			var canvas, cvx, img, def, filter, buff, data, width, height, j, jz;
+		my.MultiFilter.prototype.apply = function(canvas, cvx) {
+			// var canvas, cvx, img, def, filter, buff, data, width, height, j, jz;
+			var img, def, filter, buff, data, width, height, j, jz;
 
-			// if(this.definitions.length){
 			if(this.filters.length){
-				canvas = my.work.cv2;
-				cvx = my.work.cvx2;
-				img = cvx.getImageData(0, 0, canvas.width, canvas.height);
-				width = img.width;
-				height = img.height;
-				buff = img.data.buffer;
-				data = new Uint8ClampedArray(buff);
+				// canvas = my.work.cv2;
+				// cvx = my.work.cvx2;
+				width = canvas.width;
+				height = canvas.height;
 
 				if(width !== this.currentWidth || height !== this.currentHeight){
 					this.currentWidth = width;
@@ -1251,29 +1094,17 @@ multifilter main function:
 					this.updateFilters();
 				}
 
+				img = cvx.getImageData(0, 0, canvas.width, canvas.height);
+				buff = img.data.buffer;
+				data = new Uint8ClampedArray(buff);
+
 				for(j = 0, jz = this.filters.length; j < jz; j++){
 					filter = this.filters[j];
-					if(filter.useWorker){
-						filter.doWorker(data)
-						.then(function(res){
-							// data = res;
-							console.log('worker route');
-							cvx.putImageData(img, 0, 0);
-						})
-						.catch(function(err){
-							console.log('multiFilter worker apply error', err.message);
-						})
-					}
-					else{
-						filter.prepare()
-						filter.do(data);
-						console.log('default route');
-						cvx.putImageData(img, 0, 0);
-					}
+					filter.prepare()
+					filter.do(data);
 				}
-
+				cvx.putImageData(img, 0, 0);
 			}
-			return true;
 		};
 		/**
 Create a reference grid, for use by certain filters:

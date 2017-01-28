@@ -212,7 +212,6 @@ Augments Entity.set()
 				this.localRadius = this.setRadius(this.radius);
 				this.width = this.localRadius * 2;
 				this.height = this.width;
-				this.maxDimensions.flag = true;
 			}
 			if (xt(items.checkHitRadius)) {
 				this.localCheckHitRadius = this.setRadius(this.checkHitRadius);
@@ -256,7 +255,6 @@ Augments Entity.setDelta()
 				this.localRadius += r;
 				this.width = this.localRadius * 2;
 				this.height = this.width;
-				this.maxDimensions.flag = true;
 			}
 			if (xt(items.checkHitRadius)) {
 				r = this.setRadius(items.checkHitRadius);
@@ -637,58 +635,6 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				}
 			}
 			return this;
-		};
-
-		/**
-Calculate the box position of the entity
-
-Returns an object with the following attributes:
-
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
-
-@method getMaxDimensions
-@param {Object} cell object
-@param {Object} entity object
-@return dimensions object
-@private
-**/
-		my.Wheel.prototype.getMaxDimensions = function(cell) {
-			var rad = (this.localRadius * this.scale),
-				w = cell.actualWidth,
-				h = cell.actualHeight,
-				line = my.ctx[this.context].lineWidth || 0,
-				ceil = Math.ceil,
-				floor = Math.floor,
-				md = this.maxDimensions,
-				roll = this.roll,
-				t, l, b, r,
-				v = my.work.v;
-			v.set(this.currentHandle);
-			v.x = (this.flipReverse) ? -v.x : v.x;
-			v.y = (this.flipUpend) ? -v.y : v.y;
-			if (roll) {
-				v.rotate(roll).vectorAdd(this.currentStart);
-			}
-			else {
-				v.vectorAdd(this.currentStart);
-			}
-			t = v.y - line - rad;
-			t = (t < 0) ? 0 : t;
-			b = v.y + line + rad;
-			b = (b > h) ? h : b;
-			l = v.x - line - rad;
-			l = (l < 0) ? 0 : l;
-			r = v.x + line + rad;
-			r = (r > w) ? w : r;
-			md.top = floor(t);
-			md.bottom = ceil(b);
-			md.left = floor(l);
-			md.right = ceil(r);
-			md.flag = false;
-			return md;
 		};
 
 		return my;

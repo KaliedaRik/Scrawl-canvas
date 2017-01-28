@@ -7,25 +7,93 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
+	// define variables
 	var filter,
-
-		current_alpha = 1,
-		input_alpha = document.getElementById('alpha'),
-		event_alpha,
-
-		stopE;
+		events,
+		stopE,
+		current = {
+			globalAlpha: 1,
+			globalCompositeOperation: 'source-over',
+		},
+		matrix;
 
 	//set the initial imput values
-	input_alpha.value = '1';
+	document.getElementById('globalAlpha').value = '1';
+	document.getElementById('gco').value = 'source-over';
+	document.getElementById('matrix').value = 'nochange';
 
-	//define filter
-	filter = scrawl.makeSepiaFilter({
-		name: 'myfilter',
-		alpha: 1,
+	matrix = {
+		nochange: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 1,
+			blockHeight: 1,
+			offsetX: 0,
+			offsetY: 0,
+			weights: [1]
+		}),
+		edge: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 3,
+			blockHeight: 3,
+			offsetX: -1,
+			offsetY: -1,
+			weights: [1, 1, 0, 1, 0, -1, 0, -1, -1]
+		}),
+		sharp: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 3,
+			blockHeight: 3,
+			offsetX: -1,
+			offsetY: -1,
+			weights: [1, 0, 0, 0, 1, 0, 0, 0, -1]
+		}),
+		horizontalBlur: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 20,
+			blockHeight: 1,
+			offsetX: -9,
+			offsetY: 0,
+			normalize: true,
+			weights: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+		}),
+		verticalBlur: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 1,
+			blockHeight: 20,
+			offsetX: 0,
+			offsetY: -9,
+			normalize: true,
+			weights: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+		}),
+		gaussian: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix',
+			blockWidth: 5,
+			blockHeight: 5,
+			offsetX: -2,
+			offsetY: -2,
+			normalize: true,
+			weights: [0.003765, 0.015019, 0.023792, 0.015019, 0.003765, 0.015019, 0.059912, 0.094907, 0.059912, 0.015019, 0.023792, 0.094907, 0.150342, 0.094907, 0.023792, 0.015019, 0.059912, 0.094907, 0.059912, 0.015019, 0.003765, 0.015019, 0.023792, 0.015019, 0.003765]
+		}),
+	}
+
+	filter = scrawl.makeMultiFilter({
+		name: 'myFilter',
+		filters: matrix.nochange
 	});
 
-	//define entity
+	// define entitys
+	scrawl.makeWheel({
+		radius: '50%',
+		startX: 'center',
+		startY: 'center',
+		order: 0,
+	});
 	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
@@ -33,30 +101,42 @@ var mycode = function() {
 		pasteWidth: 360,
 		pasteHeight: 360,
 		copyX: 50,
-		pasteX: 20,
-		pasteY: 20,
-		filters: ['myfilter'],
-		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		startX: 'center',
+		startY: 'center',
+		handleX: 'center',
+		handleY: 'center',
+		globalAlpha: 1,
+		globalCompositeOperation: 'source-over',
+		order: 1,
+		multiFilter: 'myFilter',
 		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//event listeners
+	// define event listeners
 	stopE = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
 	};
 
-	event_alpha = function(e) {
+	events = function(e) {
 		stopE(e);
-		current_alpha = parseFloat(input_alpha.value);
-		filter.set({
-			alpha: current_alpha,
-		});
+		switch (e.target.id) {
+			case 'globalAlpha':
+				current.globalAlpha = e.target.value;
+				scrawl.entity.parrot.set(current);
+				break;
+			case 'gco':
+				current.globalCompositeOperation = e.target.value;
+				scrawl.entity.parrot.set(current);
+				break;
+			case 'matrix':
+				filter.set({filters: matrix[e.target.value]});
+				break;
+		}
 	};
-	input_alpha.addEventListener('input', event_alpha, false);
-	input_alpha.addEventListener('change', event_alpha, false);
+	scrawl.addNativeListener(['input', 'change'], events, '.controls');
 
-	//animation object
+	// define animation object
 	scrawl.makeAnimation({
 		fn: function() {
 
@@ -76,7 +156,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'filters', 'animation'],
+	extensions: ['images', 'multifilters', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

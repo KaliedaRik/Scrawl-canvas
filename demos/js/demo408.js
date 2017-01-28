@@ -7,120 +7,122 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
-	var filter,
-
-		current_alpha = 1,
-		input_alpha = document.getElementById('alpha'),
-		event_alpha,
-
-		current_roll = 0,
-		input_roll = document.getElementById('roll'),
-		event_roll,
-
-		current_radiusX = 3,
-		input_radiusX = document.getElementById('radiusX'),
-		event_radiusX,
-
-		current_radiusY = 3,
-		input_radiusY = document.getElementById('radiusY'),
-		event_radiusY,
-
-		current_skip = 1,
-		input_skip = document.getElementById('skip'),
-		event_skip,
-
+	// define variables
+	var colorRange,
+		filter,
+		parrot,
+		multiFilter,
+		events,
 		stopE;
 
 	//set the initial imput values
-	input_alpha.value = '1';
-	input_roll.value = '0';
-	input_radiusX.value = '3';
-	input_radiusY.value = '3';
-	input_skip.value = '1';
+	document.getElementById('globalAlpha').value = '1';
+	document.getElementById('gco').value = 'source-over';
+	document.getElementById('startRed').value = '130';
+	document.getElementById('startGreen').value = '0';
+	document.getElementById('startBlue').value = '0';
+	document.getElementById('endRed').value = '255';
+	document.getElementById('endGreen').value = '100';
+	document.getElementById('endBlue').value = '255';
 
-	//define filter
-	filter = scrawl.makeBlurFilter({
-		name: 'myfilter',
-		alpha: 1,
-		roll: 0,
-		radiusX: 3,
-		radiusY: 3,
-		includeInvisiblePoints: false,
+	// define multifilter
+	colorRange = [130, 0, 0, 255, 100, 255];
+	filter = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'chroma',
+		ranges: [colorRange]
 	});
 
-	//define entity
-	scrawl.makePicture({
+	multiFilter = scrawl.makeMultiFilter({
+		name: 'myFilter',
+		filters: filter
+	});
+
+	// define entitys
+	scrawl.makeWheel({
+		radius: '50%',
+		startX: 'center',
+		startY: 'center',
+		order: 0,
+	});
+	parrot = scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
 		pasteWidth: 360,
 		pasteHeight: 360,
 		copyX: 50,
-		pasteX: 20,
-		pasteY: 20,
-		filters: ['myfilter'],
-		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		startX: 'center',
+		startY: 'center',
+		handleX: 'center',
+		handleY: 'center',
+		globalAlpha: 1,
+		globalCompositeOperation: 'source-over',
+		order: 1,
+		multiFilter: 'myFilter',
 		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//event listeners
+	// define event listeners
 	stopE = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
 	};
 
-	event_alpha = function(e) {
+	events = function(e) {
 		stopE(e);
-		current_alpha = parseFloat(input_alpha.value);
-		filter.set({
-			alpha: current_alpha,
-		});
+		switch (e.target.id) {
+			case 'globalAlpha':
+				parrot.set({
+					globalAlpha: parseFloat(e.target.value)
+				});
+				break;
+			case 'gco':
+				parrot.set({
+					globalCompositeOperation: e.target.value
+				});
+				break;
+			case 'startRed':
+				colorRange[0] = parseInt(e.target.value, 10);
+				filter.set({
+					ranges: [colorRange]
+				});
+				break;
+			case 'startGreen':
+				colorRange[1] = parseInt(e.target.value, 10);
+				filter.set({
+					ranges: [colorRange]
+				});
+				break;
+			case 'startBlue':
+				colorRange[2] = parseInt(e.target.value, 10);
+				filter.set({
+					ranges: [colorRange]
+				});
+				break;
+			case 'endRed':
+				colorRange[3] = parseInt(e.target.value, 10);
+				filter.set({
+					ranges: [colorRange]
+				});
+				break;
+			case 'endGreen':
+				colorRange[4] = parseInt(e.target.value, 10);
+				filter.set({
+					ranges: [colorRange]
+				});
+				break;
+			case 'endBlue':
+				colorRange[5] = parseInt(e.target.value, 10);
+				filter.set({
+					ranges: [colorRange]
+				});
+				break;
+		}
 	};
-	input_alpha.addEventListener('input', event_alpha, false);
-	input_alpha.addEventListener('change', event_alpha, false);
+	scrawl.addNativeListener(['input', 'change'], events, '.controls');
 
-	event_roll = function(e) {
-		stopE(e);
-		current_roll = parseFloat(input_roll.value);
-		filter.set({
-			roll: current_roll,
-		});
-	};
-	input_roll.addEventListener('input', event_roll, false);
-	input_roll.addEventListener('change', event_roll, false);
-
-	event_radiusX = function(e) {
-		stopE(e);
-		current_radiusX = parseFloat(input_radiusX.value);
-		filter.set({
-			radiusX: current_radiusX,
-		});
-	};
-	input_radiusX.addEventListener('input', event_radiusX, false);
-	input_radiusX.addEventListener('change', event_radiusX, false);
-
-	event_radiusY = function(e) {
-		stopE(e);
-		current_radiusY = parseFloat(input_radiusY.value);
-		filter.set({
-			radiusY: current_radiusY,
-		});
-	};
-	input_radiusY.addEventListener('input', event_radiusY, false);
-	input_radiusY.addEventListener('change', event_radiusY, false);
-
-	event_skip = function(e) {
-		stopE(e);
-		current_skip = parseInt(input_skip.value, 10);
-		filter.set({
-			skip: current_skip,
-		});
-	};
-	input_skip.addEventListener('input', event_skip, false);
-	input_skip.addEventListener('change', event_skip, false);
-
-	//animation object
+	// define animation object
 	scrawl.makeAnimation({
 		fn: function() {
 
@@ -130,7 +132,7 @@ var mycode = function() {
 			testNow = Date.now();
 			testTime = testNow - testTicker;
 			testTicker = testNow;
-			testMessage.innerHTML = 'Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
+			testMessage.innerHTML = 'Range: [' + colorRange.toString() + ']. Milliseconds per screen refresh: ' + Math.ceil(testTime) + '; fps: ' + Math.floor(1000 / testTime);
 			//hide-end
 		},
 	});
@@ -140,7 +142,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'filters', 'animation'],
+	extensions: ['images', 'multifilters', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

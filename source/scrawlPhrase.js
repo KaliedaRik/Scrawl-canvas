@@ -870,30 +870,6 @@ Returns an object with coordinates __x__ and __y__
 			result.y = oY;
 			return result;
 		};
-		/**
-Calculate the box position of the entity
-
-Returns an object with the following attributes:
-
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
-
-@method getMaxDimensions
-@param {Object} cell object
-@param {Object} entity object
-@return dimensions object
-@private
-**/
-		my.Phrase.prototype.getMaxDimensions = function(cell) {
-			this.maxDimensions.top = 0;
-			this.maxDimensions.bottom = cell.actualHeight;
-			this.maxDimensions.left = 0;
-			this.maxDimensions.right = cell.actualWidth;
-			this.maxDimensions.flag = false;
-			return this.maxDimensions;
-		};
 
 		/**
 # Text

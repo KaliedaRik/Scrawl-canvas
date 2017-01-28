@@ -37,8 +37,9 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 406</h1>
-  <h2>Scrawl filters - sepia</h2>
-  <h3>Extensions: images, filters, animation</h3>
+  <h2>Scrawl multiFilters - matrix</h2>
+  <h3>Extensions: images, multifilters, animation</h3>
+  <p>The matrix filter accepts four attributes: width, height, offsetX and offsetY. The offsets are relative to the current pixel during the calculations, so for a 5 x 5 matrix centred on the current pixel, the offset values should be -2. The filter also requires a weights attribute; the number of items in the weights array must match the volume of the matrix (width * height).</p>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -46,9 +47,31 @@
 
   <table>
     <tr class="t0">
-      <td class="rowlabel">Alpha</td>
+      <td class="rowlabel">globalAlpha</td>
       <td>
-        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+        <input id="globalAlpha" class="controls" type="range" value="1" min="0" max="1" step="0.01" />
+      </td>
+      <td class="rowlabel">GCO</td>
+      <td>
+        <select class="controls" id="gco">
+          <option value="source-over">source-over</option>
+          <option value="source-atop">source-atop</option>
+          <option value="source-in">source-in</option>
+          <option value="source-out">source-out</option>
+        </select>
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">Matrix filter</td>
+      <td>
+        <select class="controls" id="matrix">
+          <option value="nochange">nochange</option>
+          <option value="edge">edge</option>
+          <option value="sharp">sharp</option>
+          <option value="horizontalBlur">horizontalBlur</option>
+          <option value="verticalBlur">verticalBlur</option>
+          <option value="gaussian">gaussian</option>
+        </select>
       </td>
       <td class="rowlabel">&nbsp;</td>
       <td>&nbsp;</td>

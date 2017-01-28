@@ -18,7 +18,7 @@
       border: 1px solid gray;
       font-size: 0.65em;
       text-align: center;
-      width: 12%;
+      width: 24%;
     }
     .rowlabel {
       font-weight: bold;
@@ -37,8 +37,8 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 414</h1>
-  <h2>Scrawl filters - leach</h2>
-  <h3>Extensions: images, filters, animation</h3>
+  <h2>Scrawl multiFilters - using a user-defined filter (with cache and attributes)</h2>
+  <h3>Extensions: images, multifilters, animation</h3>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -46,37 +46,26 @@
 
   <table>
     <tr class="t0">
-      <td class="rowlabel">Alpha</td>
+      <td class="rowlabel">globalAlpha</td>
       <td>
-        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+        <input id="globalAlpha" class="controls" type="range" value="1" min="0" max="1" step="0.01" />
       </td>
-      <td class="rowlabel">Minimum red</td>
+      <td class="rowlabel">GCO</td>
       <td>
-        <input id="minRed" type="range" value="0" min="0" max="255" step="1" />
-      </td>
-      <td class="rowlabel">Minimum green</td>
-      <td>
-        <input id="minGreen" type="range" value="0" min="0" max="255" step="1" />
-      </td>
-      <td class="rowlabel">Minimum blue</td>
-      <td>
-        <input id="minBlue" type="range" value="0" min="0" max="255" step="1" />
+        <select class="controls" id="gco">
+          <option value="source-over">source-over</option>
+          <option value="source-atop">source-atop</option>
+          <option value="source-in">source-in</option>
+          <option value="source-out">source-out</option>
+        </select>
       </td>
     </tr>
-    <tr class="t0">
+    <tr class="t1">
       <td class="rowlabel">&nbsp;</td>
       <td>&nbsp;</td>
-      <td class="rowlabel">Maximum red</td>
+      <td class="rowlabel">level</td>
       <td>
-        <input id="maxRed" type="range" value="50" min="0" max="255" step="1" />
-      </td>
-      <td class="rowlabel">Maximum green</td>
-      <td>
-        <input id="maxGreen" type="range" value="50" min="0" max="255" step="1" />
-      </td>
-      <td class="rowlabel">Maximum blue</td>
-      <td>
-        <input id="maxBlue" type="range" value="50" min="0" max="255" step="1" />
+        <input id="level" class="controls" type="range" value="10" min="1" max="25" step="1" />
       </td>
     </tr>
   </table>

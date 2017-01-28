@@ -37,8 +37,16 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 402</h1>
-  <h2>Scrawl filters - invert</h2>
-  <h3>Extensions: images, filters, animation</h3>
+  <h2>Scrawl multiFilters - filters which take a level argument</h2>
+  <h3>Extensions: images, multifilters, animation</h3>
+  <p>The 'default' filter does not apply any filter engines to the parrot Picture entity. It does, however, make the entity use the multiFilter stamp code rather than the normal code. The Wheel entity, which is stamped on the cell before the parrot, has no multiFilter set on it.</p>
+  <p>The other filters in this demo all accept an additional 'level' attribute:</p>
+
+  <ul>
+    <li>For the <b>brightness</b> filter, this ranges from 0+ with 0 = black, 1 = normal and 1+ = over-bright</li>
+    <li>For the <b>saturation</b> filter, this ranges from 0+ with 0 = mid-gray, 1 = normal and 1+ = over-saturated</li>
+    <li>For the <b>threshold</b> filter, this ranges from 0-1, where the level indicates at which point a darker pixel becomes black and a lighter one white</li>
+  </ul>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -46,12 +54,34 @@
 
   <table>
     <tr class="t0">
-      <td class="rowlabel">Alpha</td>
+      <td class="rowlabel">globalAlpha</td>
       <td>
-        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+        <input id="globalAlpha" class="controls" type="range" value="1" min="0" max="1" step="0.01" />
       </td>
-      <td class="rowlabel">&nbsp;</td>
-      <td>&nbsp;</td>
+      <td class="rowlabel">GCO</td>
+      <td>
+        <select class="controls" id="gco">
+          <option value="source-over">source-over</option>
+          <option value="source-atop">source-atop</option>
+          <option value="source-in">source-in</option>
+          <option value="source-out">source-out</option>
+        </select>
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">Filter</td>
+      <td>
+        <select class="controls" id="filter">
+          <option value="default">default</option>
+          <option value="brightness">brightness</option>
+          <option value="saturation">saturation</option>
+          <option value="threshold">threshold</option>
+        </select>
+      </td>
+      <td class="rowlabel">Level</td>
+      <td>
+        <input id="level" class="controls" type="range" value="1" min="0" max="2" step="0.02" />
+      </td>
     </tr>
   </table>
 

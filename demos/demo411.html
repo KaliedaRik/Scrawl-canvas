@@ -18,7 +18,7 @@
       border: 1px solid gray;
       font-size: 0.65em;
       text-align: center;
-      width: 12%;
+      width: 24%;
     }
     .rowlabel {
       font-weight: bold;
@@ -37,8 +37,8 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 411</h1>
-  <h2>Scrawl filters - channels</h2>
-  <h3>Extensions: images, filters, animation</h3>
+  <h2>Scrawl multiFilters - using entitys as stencils</h2>
+  <h3>Extensions: images, multifilters, animation</h3>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -46,22 +46,41 @@
 
   <table>
     <tr class="t0">
-      <td class="rowlabel">Alpha</td>
+      <td class="rowlabel">globalAlpha</td>
       <td>
-        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+        <input id="globalAlpha" class="controls" type="range" value="1" min="0" max="1" step="0.01" />
       </td>
-      <td class="rowlabel">Red</td>
+      <td class="rowlabel">GCO</td>
       <td>
-        <input id="red" type="range" value="2" min="0" max="4" step="0.04" />
+        <select class="controls" id="gco">
+          <option value="source-over">source-over</option>
+          <option value="source-atop">source-atop</option>
+          <option value="source-in">source-in</option>
+          <option value="source-out">source-out</option>
+        </select>
       </td>
-      <td class="rowlabel">Green</td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">Filter</td>
       <td>
-        <input id="green" type="range" value="1" min="0" max="4" step="0.04" />
+        <select class="controls" id="filter">
+          <option value="default">default</option>
+          <option value="grayscale">grayscale</option>
+          <option value="sepia">sepia</option>
+          <option value="invert">invert</option>
+          <option value="red">red</option>
+          <option value="green">green</option>
+          <option value="blue">blue</option>
+          <option value="notred">notred</option>
+          <option value="notgreen">notgreen</option>
+          <option value="notblue">notblue</option>
+          <option value="cyan">cyan</option>
+          <option value="magenta">magenta</option>
+          <option value="yellow">yellow</option>
+        </select>
       </td>
-      <td class="rowlabel">Blue</td>
-      <td>
-        <input id="blue" type="range" value="0" min="0" max="4" step="0.04" />
-      </td>
+      <td class="rowlabel">&nbsp;</td>
+      <td>&nbsp;</td>
     </tr>
   </table>
 

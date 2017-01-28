@@ -524,13 +524,6 @@ setLocal() helper function - position supplied by Path entity
 			this.setCorners(items);
 			this.setEngine(this);
 			this.filtersEntityInit(items);
-			this.maxDimensions = {
-				top: 0,
-				bottom: 0,
-				left: 0,
-				right: 0,
-				flag: true
-			};
 
 			this.redraw = true;
 
@@ -944,20 +937,6 @@ The current Frame drawing process often leads to moire interference patterns app
 @default 1.03
 **/
 			interferenceFactor: 1.03,
-			/**
-Maximum dimensions - used as part of entity filter and collision detection functionality
-@property maxDimensions
-@type Object
-@default {top:0, bottom:0, left:0, right:0, flag:true}
-@private
-**/
-			maxDimensions: {
-				top: 0,
-				bottom: 0,
-				left: 0,
-				right: 0,
-				flag: true
-			}
 		};
 		/**
 Attribute cascaded to appropriate FramePoint object path attribute
@@ -1743,7 +1722,6 @@ Draw Frame entity in its own local canvas, then copy over to destimation canvas
 							}
 						}
 					}
-					this.maxDimensions.flag = true;
 				}
 			}
 			return this;
@@ -2130,77 +2108,6 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 				}
 			}
 			return (result) ? items : false;
-		};
-		/**
-Calculate the box position of the entity
-
-Returns an object with the following attributes:
-
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell's top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell's top-left corner
-
-@method getMaxDimensions
-@param {Object} cell object
-@param {Object} entity object
-@return dimensions object
-@private
-**/
-		my.Frame.prototype.getMaxDimensions = function(cell) {
-			var tl, tr, br, bl, tlloc, trloc, brloc, blloc, t, l, b, r,
-				min = Math.min,
-				max = Math.max,
-				floor = Math.floor,
-				ceil = Math.ceil,
-				border, paste,
-				between = my.isBetween,
-				w, h, halfW, halfH;
-			tl = this.topLeft;
-			tr = this.topRight;
-			br = this.bottomRight;
-			bl = this.bottomLeft;
-			cell = (cell && cell.type === 'Cell') ? cell : my.cell[my.group[this.group].cell];
-			if (my.xta(tl, tr, br, bl)) {
-				tlloc = tl.local;
-				trloc = tr.local;
-				brloc = br.local;
-				blloc = bl.local;
-				border = (this.lineWidth / 2) + 1;
-				l = floor(min.apply(Math, [tlloc.x, trloc.x, brloc.x, blloc.x]) - border);
-				t = floor(min.apply(Math, [tlloc.y, trloc.y, brloc.y, blloc.y]) - border);
-				r = ceil(max.apply(Math, [tlloc.x, trloc.x, brloc.x, blloc.x]) + border);
-				b = ceil(max.apply(Math, [tlloc.y, trloc.y, brloc.y, blloc.y]) + border);
-			}
-			else {
-				paste = my.safeObject(cell.pasteData);
-				l = floor(paste.x || 0);
-				t = floor(paste.y || 0);
-				r = ceil(paste.x + paste.w || 1);
-				b = ceil(paste.y + paste.h || 1);
-			}
-			w = cell.actualWidth;
-			h = cell.actualHeight;
-			halfW = w / 2;
-			halfH = h / 2;
-			if (!between(t, 0, h, true)) {
-				t = (t > halfH) ? h : 0;
-			}
-			if (!between(b, 0, h, true)) {
-				b = (b > halfH) ? h : 0;
-			}
-			if (!between(l, 0, w, true)) {
-				l = (l > halfW) ? w : 0;
-			}
-			if (!between(r, 0, w, true)) {
-				r = (r > halfW) ? w : 0;
-			}
-			this.maxDimensions.top = t;
-			this.maxDimensions.bottom = b;
-			this.maxDimensions.left = l;
-			this.maxDimensions.right = r;
-			this.maxDimensions.flag = false;
-			return this.maxDimensions;
 		};
 
 		my.Frame.prototype.parseCollisionPoints = function() {

@@ -18,7 +18,7 @@
       border: 1px solid gray;
       font-size: 0.65em;
       text-align: center;
-      width: 12%;
+      width: 24%;
     }
     .rowlabel {
       font-weight: bold;
@@ -37,8 +37,9 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 407</h1>
-  <h2>Scrawl filters - tint</h2>
-  <h3>Extensions: images, filters, animation</h3>
+  <h2>Scrawl multiFilters - blur</h2>
+  <h3>Extensions: images, multifilters, animation</h3>
+  <p>The blur filter is effectively a combination of the previous demo's horizontal and vertical blur matrixes, combined in two passes.</p>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -46,53 +47,39 @@
 
   <table>
     <tr class="t0">
-      <td class="rowlabel">Alpha</td>
+      <td class="rowlabel">globalAlpha</td>
       <td>
-        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+        <input id="globalAlpha" class="controls" type="range" value="1" min="0" max="1" step="0.01" />
       </td>
-      <td class="rowlabel">Red-in-red</td>
+      <td class="rowlabel">GCO</td>
       <td>
-        <input id="redInRed" type="range" value="0" min="0" max="1" step="0.01" />
-      </td>
-      <td class="rowlabel">Green-in-red</td>
-      <td>
-        <input id="greenInRed" type="range" value="1" min="0" max="1" step="0.01" />
-      </td>
-      <td class="rowlabel">Blue-in-red</td>
-      <td>
-        <input id="blueInRed" type="range" value="0" min="0" max="1" step="0.01" />
+        <select class="controls" id="gco">
+          <option value="source-over">source-over</option>
+          <option value="source-atop">source-atop</option>
+          <option value="source-in">source-in</option>
+          <option value="source-out">source-out</option>
+        </select>
       </td>
     </tr>
     <tr class="t1">
-      <td class="rowlabel">&nbsp;</td>
-      <td>&nbsp;</td>
-      <td class="rowlabel">Red-in-green</td>
+      <td class="rowlabel">step</td>
       <td>
-        <input id="redInGreen" type="range" value="0" min="0" max="1" step="0.01" />
+        <select class="controls" id="step">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
       </td>
-      <td class="rowlabel">Green-in-green</td>
+      <td class="rowlabel">radius</td>
       <td>
-        <input id="greenInGreen" type="range" value="0" min="0" max="1" step="0.01" />
-      </td>
-      <td class="rowlabel">Blue-in-green</td>
-      <td>
-        <input id="blueInGreen" type="range" value="1" min="0" max="1" step="0.01" />
-      </td>
-    </tr>
-    <tr class="t0">
-      <td class="rowlabel">&nbsp;</td>
-      <td>&nbsp;</td>
-      <td class="rowlabel">Red-in-blue</td>
-      <td>
-        <input id="redInBlue" type="range" value="1" min="0" max="1" step="0.01" />
-      </td>
-      <td class="rowlabel">Green-in-blue</td>
-      <td>
-        <input id="greenInBlue" type="range" value="0" min="0" max="1" step="0.01" />
-      </td>
-      <td class="rowlabel">Blue-in-blue</td>
-      <td>
-        <input id="blueInBlue" type="range" value="0" min="0" max="1" step="0.01" />
+        <input id="radius" class="controls" type="range" value="3" min="0" max="50" step="1" />
       </td>
     </tr>
   </table>

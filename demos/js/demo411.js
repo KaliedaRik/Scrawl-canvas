@@ -7,43 +7,54 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
+	// define variables
 	var filter,
-
-		current_alpha = 1,
-		input_alpha = document.getElementById('alpha'),
-		event_alpha,
-
-		current_red = 2,
-		input_red = document.getElementById('red'),
-		event_red,
-
-		current_green = 1,
-		input_green = document.getElementById('green'),
-		event_green,
-
-		current_blue = 0,
-		input_blue = document.getElementById('blue'),
-		event_blue,
-
-		stopE;
+		filterDefinitions,
+		events,
+		stencil,
+		stopE,
+		current = {
+			globalAlpha: 1,
+			globalCompositeOperation: 'source-over',
+		},
+		currentFilter = 'default';
 
 	//set the initial imput values
-	input_alpha.value = '1';
-	input_red.value = '2';
-	input_green.value = '1';
-	input_blue.value = '0';
+	document.getElementById('globalAlpha').value = '1';
+	document.getElementById('gco').value = 'source-over';
+	document.getElementById('filter').value = 'default';
 
-	//define filter
-	filter = scrawl.makeChannelsFilter({
-		name: 'myfilter',
-		alpha: 1,
-		red: 2,
-		green: 1,
-		blue: 0,
+	// define multifilter
+	filterDefinitions = {
+		default: scrawl.makeFilter({multiFilter: 'myFilter', species: 'default'}),
+		grayscale: scrawl.makeFilter({multiFilter: 'myFilter', species: 'grayscale'}),
+		sepia: scrawl.makeFilter({multiFilter: 'myFilter', species: 'sepia'}),
+		invert: scrawl.makeFilter({multiFilter: 'myFilter', species: 'invert'}),
+		red: scrawl.makeFilter({multiFilter: 'myFilter', species: 'red'}),
+		green: scrawl.makeFilter({multiFilter: 'myFilter', species: 'green'}),
+		blue: scrawl.makeFilter({multiFilter: 'myFilter', species: 'blue'}),
+		notred: scrawl.makeFilter({multiFilter: 'myFilter', species: 'notred'}),
+		notgreen: scrawl.makeFilter({multiFilter: 'myFilter', species: 'notgreen'}),
+		notblue: scrawl.makeFilter({multiFilter: 'myFilter', species: 'notblue'}),
+		cyan: scrawl.makeFilter({multiFilter: 'myFilter', species: 'cyan'}),
+		magenta: scrawl.makeFilter({multiFilter: 'myFilter', species: 'magenta'}),
+		yellow: scrawl.makeFilter({multiFilter: 'myFilter', species: 'yellow'}),
+	};
+
+	scrawl.makeMultiFilter({
+		name: 'myFilter',
+		stencil: true,
+		filters: filterDefinitions[currentFilter]
 	});
 
-	//define entity
+	// define entitys
+	scrawl.makeWheel({
+		name: 'basewheel',
+		radius: '50%',
+		startX: 'center',
+		startY: 'center',
+		order: 0,
+	});
 	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
@@ -51,63 +62,54 @@ var mycode = function() {
 		pasteWidth: 360,
 		pasteHeight: 360,
 		copyX: 50,
-		pasteX: 20,
-		pasteY: 20,
-		filters: ['myfilter'],
-		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		startX: 'center',
+		startY: 'center',
+		handleX: 'center',
+		handleY: 'center',
+		order: 1,
 		url: 'img/carousel/cagedparrot.png',
 	});
+	stencil = scrawl.makeWheel({
+		pivot: 'basewheel',
+		radius: '30%',
+		lineWidth: 100,
+		method: 'draw',
+		globalAlpha: 1,
+		globalCompositeOperation: 'source-over',
+		multiFilter: 'myFilter',
+		order: 2,
+	});
 
-	//event listeners
+	// define event listeners
 	stopE = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
 	};
 
-	event_alpha = function(e) {
+	events = function(e) {
 		stopE(e);
-		current_alpha = parseFloat(input_alpha.value);
-		filter.set({
-			alpha: current_alpha,
-		});
+		switch (e.target.id) {
+			case 'globalAlpha':
+				current.globalAlpha = e.target.value;
+				stencil.set(current);
+				break;
+			case 'gco':
+				current.globalCompositeOperation = e.target.value;
+				stencil.set(current);
+				break;
+			case 'filter':
+				currentFilter = e.target.value;
+				scrawl.multifilter.myFilter.set({
+					filters: filterDefinitions[currentFilter]
+				});
+				break;
+		}
 	};
-	input_alpha.addEventListener('input', event_alpha, false);
-	input_alpha.addEventListener('change', event_alpha, false);
+	scrawl.addNativeListener(['input', 'change'], events, '.controls');
 
-	event_red = function(e) {
-		stopE(e);
-		current_red = parseFloat(input_red.value);
-		filter.set({
-			red: current_red,
-		});
-	};
-	input_red.addEventListener('input', event_red, false);
-	input_red.addEventListener('change', event_red, false);
-
-	event_green = function(e) {
-		stopE(e);
-		current_green = parseFloat(input_green.value);
-		filter.set({
-			green: current_green,
-		});
-	};
-	input_green.addEventListener('input', event_green, false);
-	input_green.addEventListener('change', event_green, false);
-
-	event_blue = function(e) {
-		stopE(e);
-		current_blue = parseFloat(input_blue.value);
-		filter.set({
-			blue: current_blue,
-		});
-	};
-	input_blue.addEventListener('input', event_blue, false);
-	input_blue.addEventListener('change', event_blue, false);
-
-	//animation object
+	// define animation object
 	scrawl.makeAnimation({
 		fn: function() {
-
 			scrawl.render();
 
 			//hide-start
@@ -124,7 +126,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'filters', 'animation'],
+	extensions: ['images', 'multifilters', 'wheel', 'block'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

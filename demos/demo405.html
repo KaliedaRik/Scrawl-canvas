@@ -37,8 +37,10 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 405</h1>
-  <h2>Scrawl filters - threshold</h2>
-  <h3>Extensions: images, filters, animation</h3>
+  <h2>Scrawl multiFilters - pixelate</h2>
+  <h3>Extensions: images, multifilters, animation</h3>
+  <p>The pixelate filter accepts four attributes: width, height, offsetX and offsetY. The offsets should not be larger than their respective dimension values, and all values should be positive integers.</p>
+  <p>This filter caches precalculated data in the multiFilter cache - MultiFilter.cache.pixelate - when updating the filter's attributes dynamically this cache needs to be set to false so the filter knows it needs recalculating.</p>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -46,13 +48,38 @@
 
   <table>
     <tr class="t0">
-      <td class="rowlabel">Alpha</td>
+      <td class="rowlabel">globalAlpha</td>
       <td>
-        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+        <input id="globalAlpha" class="controls" type="range" value="1" min="0" max="1" step="0.01" />
       </td>
-      <td class="rowlabel">Threshold</td>
+      <td class="rowlabel">GCO</td>
       <td>
-        <input id="threshold" type="range" value="0.5" min="0" max="1" step="0.01" />
+        <select class="controls" id="gco">
+          <option value="source-over">source-over</option>
+          <option value="source-atop">source-atop</option>
+          <option value="source-in">source-in</option>
+          <option value="source-out">source-out</option>
+        </select>
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">width</td>
+      <td>
+        <input id="width" class="controls" type="range" value="10" min="1" max="100" step="1" />
+      </td>
+      <td class="rowlabel">height</td>
+      <td>
+        <input id="height" class="controls" type="range" value="10" min="1" max="100" step="1" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">offsetX</td>
+      <td>
+        <input id="offsetX" class="controls" type="range" value="0" min="0" max="100" step="1" />
+      </td>
+      <td class="rowlabel">offsetY</td>
+      <td>
+        <input id="offsetY" class="controls" type="range" value="0" min="0" max="100" step="1" />
       </td>
     </tr>
   </table>

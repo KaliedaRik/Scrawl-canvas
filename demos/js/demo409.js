@@ -7,120 +7,122 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
-	var filter,
-
-		current_alpha = 1,
-		input_alpha = document.getElementById('alpha'),
-		event_alpha,
-
-		current_width = 10,
-		input_width = document.getElementById('width'),
-		event_width,
-
-		current_height = 10,
-		input_height = document.getElementById('height'),
-		event_height,
-
-		current_offsetX = 0,
-		input_offsetX = document.getElementById('offsetX'),
-		event_offsetX,
-
-		current_offsetY = 0,
-		input_offsetY = document.getElementById('offsetY'),
-		event_offsetY,
-
+	// define variables
+	var def,
+		blur1, blur2, blur3,
+		grayscale,
+		channels,
+		edge,
+		options,
+		parrot,
+		multiFilter,
+		events,
 		stopE;
 
 	//set the initial imput values
-	input_alpha.value = '1';
-	input_width.value = '10';
-	input_height.value = '10';
-	input_offsetX.value = '0';
-	input_offsetY.value = '0';
+	document.getElementById('globalAlpha').value = '1';
+	document.getElementById('gco').value = 'source-over';
+	document.getElementById('filters').value = '1';
 
-	//define filter
-	filter = scrawl.makePixelateFilter({
-		name: 'myfilter',
-		alpha: 1,
-		width: 10,
-		height: 10,
+	// define multifilter
+	def = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'default'
+	});
+	blur1 = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'blur',
+		radius: 2
+	});
+	blur2 = blur1.clone({
+		radius: 50,
+		step: 10
+	});
+	blur3 = blur1.clone({
+		radius: 3,
+		step: 2
+	});
+	grayscale = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'grayscale'
+	});
+	channels = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'channelstep',
+		red: 127,
+		green: 127,
+		blue: 127
+	});
+	edge = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'matrix',
+		blockWidth: 1,
+		blockHeight: 3,
 		offsetX: 0,
-		offsetY: 0,
+		offsetY: -1,
+		weights: [1, 0, -1]
+	});
+	options = [null, [def], [blur1, grayscale], [channels, edge], [blur2, blur3]];
+
+	multiFilter = scrawl.makeMultiFilter({
+		name: 'myFilter',
+		filters: options[1]
 	});
 
-	//define entity
-	scrawl.makePicture({
+	// define entitys
+	scrawl.makeWheel({
+		radius: '50%',
+		startX: 'center',
+		startY: 'center',
+		order: 0,
+	});
+	parrot = scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
 		copyHeight: 360,
 		pasteWidth: 360,
 		pasteHeight: 360,
 		copyX: 50,
-		pasteX: 20,
-		pasteY: 20,
-		filters: ['myfilter'],
-		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		startX: 'center',
+		startY: 'center',
+		handleX: 'center',
+		handleY: 'center',
+		globalAlpha: 1,
+		globalCompositeOperation: 'source-over',
+		order: 1,
+		multiFilter: 'myFilter',
 		url: 'img/carousel/cagedparrot.png',
 	});
 
-	//event listeners
+	// define event listeners
 	stopE = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
 	};
 
-	event_alpha = function(e) {
+	events = function(e) {
 		stopE(e);
-		current_alpha = parseFloat(input_alpha.value);
-		filter.set({
-			alpha: current_alpha,
-		});
+		switch (e.target.id) {
+			case 'globalAlpha':
+				parrot.set({
+					globalAlpha: parseFloat(e.target.value)
+				});
+				break;
+			case 'gco':
+				parrot.set({
+					globalCompositeOperation: e.target.value
+				});
+				break;
+			case 'filters':
+				multiFilter.set({
+					filters: options[parseInt(e.target.value, 10)]
+				});
+				break;
+		}
 	};
-	input_alpha.addEventListener('input', event_alpha, false);
-	input_alpha.addEventListener('change', event_alpha, false);
+	scrawl.addNativeListener(['input', 'change'], events, '.controls');
 
-	event_width = function(e) {
-		stopE(e);
-		current_width = parseFloat(input_width.value);
-		filter.set({
-			width: current_width,
-		});
-	};
-	input_width.addEventListener('input', event_width, false);
-	input_width.addEventListener('change', event_width, false);
-
-	event_height = function(e) {
-		stopE(e);
-		current_height = parseFloat(input_height.value);
-		filter.set({
-			height: current_height,
-		});
-	};
-	input_height.addEventListener('input', event_height, false);
-	input_height.addEventListener('change', event_height, false);
-
-	event_offsetX = function(e) {
-		stopE(e);
-		current_offsetX = parseFloat(input_offsetX.value);
-		filter.set({
-			offsetX: current_offsetX,
-		});
-	};
-	input_offsetX.addEventListener('input', event_offsetX, false);
-	input_offsetX.addEventListener('change', event_offsetX, false);
-
-	event_offsetY = function(e) {
-		stopE(e);
-		current_offsetY = parseFloat(input_offsetY.value);
-		filter.set({
-			offsetY: current_offsetY,
-		});
-	};
-	input_offsetY.addEventListener('input', event_offsetY, false);
-	input_offsetY.addEventListener('change', event_offsetY, false);
-
-	//animation object
+	// define animation object
 	scrawl.makeAnimation({
 		fn: function() {
 
@@ -140,7 +142,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'filters', 'animation'],
+	extensions: ['images', 'multifilters', 'wheel'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

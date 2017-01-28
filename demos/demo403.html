@@ -37,8 +37,16 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 403</h1>
-  <h2>Scrawl filters - brightness</h2>
-  <h3>Extensions: images, filters, animation</h3>
+  <h2>Scrawl multiFilters - filters which manipulate their color channels</h2>
+  <h3>Extensions: images, multifilters, animation</h3>
+  <p>The 'default' filter does not apply any filter engines to the parrot Picture entity. It does, however, make the entity use the multiFilter stamp code rather than the normal code. The Wheel entity, which is stamped on the cell before the parrot, has no multiFilter set on it.</p>
+  <p>The other filters in this demo all accept three additional attribute:</p>
+
+  <ul>
+    <li><b>red</b> affecting the level of the red channel</li>
+    <li><b>green</b> affecting the level of the green channel</li>
+    <li><b>blue</b> affecting the level of the blue channel</li>
+  </ul>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 
@@ -46,13 +54,42 @@
 
   <table>
     <tr class="t0">
-      <td class="rowlabel">Alpha</td>
+      <td class="rowlabel">globalAlpha</td>
       <td>
-        <input id="alpha" type="range" value="1" min="0" max="1" step="0.01" />
+        <input id="globalAlpha" class="controls" type="range" value="1" min="0" max="1" step="0.01" />
       </td>
-      <td class="rowlabel">Brightness</td>
+      <td class="rowlabel">GCO</td>
       <td>
-        <input id="brightness" type="range" value="1.5" min="0" max="3" step="0.01" />
+        <select class="controls" id="gco">
+          <option value="source-over">source-over</option>
+          <option value="source-atop">source-atop</option>
+          <option value="source-in">source-in</option>
+          <option value="source-out">source-out</option>
+        </select>
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">Filter</td>
+      <td>
+        <select class="controls" id="filter">
+          <option value="default">default</option>
+          <option value="channels">channels</option>
+          <option value="channelstep">channelstep</option>
+        </select>
+      </td>
+      <td class="rowlabel">red</td>
+      <td>
+        <input id="red" class="controls" type="range" value="1" min="0" max="2" step="0.02" />
+      </td>
+    </tr>
+    <tr class="t1">
+      <td class="rowlabel">green</td>
+      <td>
+        <input id="green" class="controls" type="range" value="1" min="0" max="2" step="0.02" />
+      </td>
+      <td class="rowlabel">blue</td>
+      <td>
+        <input id="blue" class="controls" type="range" value="1" min="0" max="2" step="0.02" />
       </td>
     </tr>
   </table>

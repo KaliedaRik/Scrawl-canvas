@@ -7,57 +7,75 @@ var mycode = function() {
 		testMessage = document.getElementById('testmessage');
 	//hide-end
 
-	//define variables
+	// define variables
 	var filter,
-		setExclude,
-
-		current_alpha = 1,
-		input_alpha = document.getElementById('alpha'),
-		event_alpha,
-
-		current_minRed = 0,
-		input_minRed = document.getElementById('minRed'),
-		event_minRed,
-
-		current_minGreen = 0,
-		input_minGreen = document.getElementById('minGreen'),
-		event_minGreen,
-
-		current_minBlue = 0,
-		input_minBlue = document.getElementById('minBlue'),
-		event_minBlue,
-
-		current_maxRed = 50,
-		input_maxRed = document.getElementById('maxRed'),
-		event_maxRed,
-
-		current_maxGreen = 50,
-		input_maxGreen = document.getElementById('maxGreen'),
-		event_maxGreen,
-
-		current_maxBlue = 50,
-		input_maxBlue = document.getElementById('maxBlue'),
-		event_maxBlue,
-
-		stopE;
+		events,
+		stopE,
+		current = {
+			globalAlpha: 1,
+			globalCompositeOperation: 'source-over',
+		},
+		currentFilter = 'default';
 
 	//set the initial imput values
-	input_alpha.value = '1';
-	input_minRed.value = '0';
-	input_minGreen.value = '0';
-	input_minBlue.value = '0';
-	input_maxRed.value = '50';
-	input_maxGreen.value = '50';
-	input_maxBlue.value = '50';
+	document.getElementById('globalAlpha').value = '1';
+	document.getElementById('gco').value = 'source-over';
+	document.getElementById('level').value = '10';
 
-	//define filter
-	filter = scrawl.makeLeachFilter({
-		name: 'myfilter',
-		alpha: 1,
-		exclude: [[0, 0, 0, 50, 50, 50]]
+	// define multifilter
+	filter = scrawl.makeFilter({
+		multiFilter: 'myFilter', 
+		species: 'default',
+		level: 10,
+		cacheAction: function(){
+			var cache = this.cache,
+				level = this.level,
+				rows, cols, multi, get, temp,
+				rowChecker, i;
+
+			if(!cache){
+				multi = scrawl.multifilter[this.multiFilter];
+				if(multi){
+					rows = multi.currentHeight - 1;
+					cols = multi.currentWidth - 1;
+					get = multi.getIndexes;
+					cache = [];
+
+					for(i = 0; i < rows; i++){
+						rowChecker = i % level;
+						if(rowChecker >= level / 2){
+							temp = get.call(multi, 0, i, cols, i + 1);
+							cache = cache.concat(temp);
+						}
+					}
+					this.cache = cache;
+				}
+			}
+		},
+		action: function(data){
+			var counter, len, posA,
+				cache = this.cache;
+			for(counter = 0, len = cache.length; counter < len; counter++){
+				posA = cache[counter];
+				if(data[posA]){
+					data[posA] = 0;
+				}
+			}
+		},
+	})
+
+	scrawl.makeMultiFilter({
+		name: 'myFilter',
+		filters: filter
 	});
 
-	//define entity
+	// define entitys
+	scrawl.makeWheel({
+		radius: '50%',
+		startX: 'center',
+		startY: 'center',
+		order: 0,
+	});
 	scrawl.makePicture({
 		name: 'parrot',
 		copyWidth: 360,
@@ -65,87 +83,44 @@ var mycode = function() {
 		pasteWidth: 360,
 		pasteHeight: 360,
 		copyX: 50,
-		pasteX: 20,
-		pasteY: 20,
-		filters: ['myfilter'],
-		// url: 'http://scrawl.rikweb.org.uk/img/carousel/cagedparrot.png',
+		startX: 'center',
+		startY: 'center',
+		handleX: 'center',
+		handleY: 'center',
+		globalAlpha: 1,
+		globalCompositeOperation: 'source-over',
+		order: 1,
+		multiFilter: 'myFilter',
 		url: 'img/carousel/cagedparrot.png',
 	});
 
-	setExclude = function() {
-		filter.set({
-			alpha: current_alpha,
-			exclude: [[current_minRed, current_minGreen, current_minBlue, current_maxRed, current_maxGreen, current_maxBlue]]
-		});
-		console.log(filter.exclude.length, filter.exclude[0].length, filter.exclude[0][0], filter.exclude[0][1], filter.exclude[0][2], filter.exclude[0][3], filter.exclude[0][4], filter.exclude[0][5]);
-	};
-
-	//event listeners
+	// define event listeners
 	stopE = function(e) {
 		e.preventDefault();
 		e.returnValue = false;
 	};
 
-	event_alpha = function(e) {
+	events = function(e) {
 		stopE(e);
-		current_alpha = parseFloat(input_alpha.value);
-		setExclude();
+		switch (e.target.id) {
+			case 'globalAlpha':
+				current.globalAlpha = e.target.value;
+				scrawl.entity.parrot.set(current);
+				break;
+			case 'gco':
+				current.globalCompositeOperation = e.target.value;
+				scrawl.entity.parrot.set(current);
+				break;
+			case 'level':
+				filter.set({level: parseInt(e.target.value, 10)}).update();
+				break;
+		}
 	};
-	input_alpha.addEventListener('input', event_alpha, false);
-	input_alpha.addEventListener('change', event_alpha, false);
+	scrawl.addNativeListener(['input', 'change'], events, '.controls');
 
-	event_minRed = function(e) {
-		stopE(e);
-		current_minRed = parseFloat(input_minRed.value);
-		setExclude();
-	};
-	input_minRed.addEventListener('input', event_minRed, false);
-	input_minRed.addEventListener('change', event_minRed, false);
-
-	event_minGreen = function(e) {
-		stopE(e);
-		current_minGreen = parseFloat(input_minGreen.value);
-		setExclude();
-	};
-	input_minGreen.addEventListener('input', event_minGreen, false);
-	input_minGreen.addEventListener('change', event_minGreen, false);
-
-	event_minBlue = function(e) {
-		stopE(e);
-		current_minBlue = parseFloat(input_minBlue.value);
-		setExclude();
-	};
-	input_minBlue.addEventListener('input', event_minBlue, false);
-	input_minBlue.addEventListener('change', event_minBlue, false);
-
-	event_maxRed = function(e) {
-		stopE(e);
-		current_maxRed = parseFloat(input_maxRed.value);
-		setExclude();
-	};
-	input_maxRed.addEventListener('input', event_maxRed, false);
-	input_maxRed.addEventListener('change', event_maxRed, false);
-
-	event_maxGreen = function(e) {
-		stopE(e);
-		current_maxGreen = parseFloat(input_maxGreen.value);
-		setExclude();
-	};
-	input_maxGreen.addEventListener('input', event_maxGreen, false);
-	input_maxGreen.addEventListener('change', event_maxGreen, false);
-
-	event_maxBlue = function(e) {
-		stopE(e);
-		current_maxBlue = parseFloat(input_maxBlue.value);
-		setExclude();
-	};
-	input_maxBlue.addEventListener('input', event_maxBlue, false);
-	input_maxBlue.addEventListener('change', event_maxBlue, false);
-
-	//animation object
+	// define animation object
 	scrawl.makeAnimation({
 		fn: function() {
-
 			scrawl.render();
 
 			//hide-start
@@ -162,7 +137,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'filters', 'animation'],
+	extensions: ['images', 'multifilters', 'wheel', 'block'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();
