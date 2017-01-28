@@ -6786,6 +6786,7 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 						width: tempCell.actualWidth,
 						height: tempCell.actualHeight
 					});
+					my.work.cvcontroller.mice = my.pad[my.cell[tempCellname].pad].mice;
 				}
 			}
 			for (i = 0, iz = entitys.length; i < iz; i++) {
@@ -7498,6 +7499,7 @@ Permitted methods include:
 						width: tempCell.actualWidth,
 						height: tempCell.actualHeight
 					});
+					my.work.cvcontroller.mice = my.pad[my.cell[tempCellname].pad].mice;
 				}
 			}
 			if (sFlag || hFlag) {

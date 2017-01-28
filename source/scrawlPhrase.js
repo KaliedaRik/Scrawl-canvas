@@ -521,15 +521,45 @@ Augments Entity.stamp()
 @chainable
 **/
 		my.Phrase.prototype.stamp = function(method, cellname, cell, mouse) {
-			var test;
+			var test, ctx, engine,
+				tempCellname, tempCell, tempEngine, tempGCO,
+				multifilterFlag = false, 
+				tempFilter, work;
 			if (this.visibility) {
 				test = (my.entity[this.path] && my.entity[this.path].type === 'Path');
 				if (this.pivot || !test || this.get('textAlongPath') === 'phrase') {
 					my.Entity.prototype.stamp.call(this, method, cellname, cell, mouse);
 				}
 				else {
+					if(this.multiFilter){
+						tempFilter = my.multifilter[this.multiFilter];
+						if(tempFilter && tempFilter.filters && tempFilter.filters.length){
+							multifilterFlag = true;
+							work = my.work;
+							ctx = my.ctx[this.name];
+							tempEngine = engine;
+							tempCell = cell;
+							tempCellname = cellname;
+							tempGCO = ctx.globalCompositeOperation;
+							ctx.globalCompositeOperation = 'source-over';
+							engine = work.cvx2;
+							cell = work.cvwrapper2;
+							cellname = work.cvwrapper2.name;
+							cell.set({
+								width: tempCell.actualWidth,
+								height: tempCell.actualHeight
+							});
+							my.work.cvcontroller.mice = my.pad[my.cell[tempCellname].pad].mice;
+						}
+					}
 					my.text[this.texts[0]].stampAlongPath(this, method, cellname, cell);
-					this.stampFilter(my.context[cellname], cellname, cell);
+					if(multifilterFlag){
+						engine = tempEngine;
+						cell = tempCell;
+						cellname = tempCellname;
+						ctx.globalCompositeOperation = tempGCO;
+						this.stampMultifilter(engine, cell);
+					}
 				}
 			}
 			return this;

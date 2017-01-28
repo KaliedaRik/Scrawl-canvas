@@ -20,9 +20,11 @@ var mycode = function() {
 		piccy,
 		framy,
 
-		current_entity,
+		currentEntity,
 		entitys,
-		current_filter,
+		filter,
+		currentFilter,
+		filterDefinitions,
 
 		input_entity = document.getElementById('entity'),
 		input_filter = document.getElementById('filter'),
@@ -41,81 +43,133 @@ var mycode = function() {
 		perspectiveZ: 800
 	});
 
-	// define filters
-	scrawl.makeGreyscaleFilter({
-		name: 'myGreyscale'
-	});
-	scrawl.makeInvertFilter({
-		name: 'myInvert'
-	});
-	scrawl.makeBrightnessFilter({
-		name: 'myBrightness',
-		brightness: 0.4
-	});
-	scrawl.makeSaturationFilter({
-		name: 'mySaturation',
-		saturation: 0.4
-	});
-	scrawl.makeThresholdFilter({
-		name: 'myThreshold',
-		threshold: 0.6
-	});
-	scrawl.makeChannelsFilter({
-		name: 'myChannels',
-		red: 1.3,
-		green: '120%',
-		blue: 0
-	});
-	scrawl.makeChannelStepFilter({
-		name: 'myChannelStep',
-		red: 64,
-		green: 64,
-		blue: 64
-	});
-	scrawl.makeTintFilter({
-		name: 'myTint',
-		greenInGreen: 0,
-		blueInGreen: 1
-	});
-	scrawl.makeSepiaFilter({
-		name: 'mySepia'
-	});
-	scrawl.makeMatrixFilter({
-		name: 'myMatrix',
-		data: [-2, -1, 0, -1, 0, 1, 0, 1, 2]
-	});
-	scrawl.makeSharpenFilter({
-		name: 'mySharpen'
-	});
-	scrawl.makePixelateFilter({
-		name: 'myPixelate',
-		width: 8,
-		height: 8
-	});
-	scrawl.makeBlurFilter({
-		name: 'myBlur',
-		radiusX: 12,
-		radiusY: 4,
-		roll: 45,
-		includeInvisiblePoints: true
-	});
-	scrawl.makeLeachFilter({
-		name: 'myLeach',
-		exclude: [[0, 40, 0, 200, 255, 100]]
-	});
-	scrawl.makeSeparateFilter({
-		name: 'mySeparate',
-		channel: 'yellow'
-	});
-	scrawl.makeNoiseFilter({
-		name: 'myNoise',
-		radiusX: 12,
-		radiusY: 4,
-		roll: 45,
-		noise: 1
+	// set up multiFilters
+	currentFilter = 'grayscale';
+	filterDefinitions = {
+		grayscale: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'grayscale'
+		}),
+		sepia: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'sepia'
+		}),
+		invert: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'invert'
+		}),
+		red: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'red'
+		}),
+		green: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'green'
+		}),
+		blue: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'blue'
+		}),
+		notred: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'notred'
+		}),
+		notgreen: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'notgreen'
+		}),
+		notblue: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'notblue'
+		}),
+		cyan: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'cyan'
+		}),
+		magenta: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'magenta'
+		}),
+		yellow: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'yellow'
+		}),
+		brightness: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'brightness', 
+			level: 2
+		}),
+		saturation: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'saturation', 
+			level: 2
+		}),
+		threshold: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'threshold', 
+			level: 127
+		}),
+		channels: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'channels', 
+			red: 0.8, 
+			green: 0.4, 
+			blue: 2
+		}),
+		channelstep: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'channelstep', 
+			red: 100, 
+			green: 100, 
+			blue: 100
+		}),
+		tint: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'tint', 
+			redInRed: 1, 
+			redInGreen: 0, 
+			redInBlue: 0.5, 
+			greenInRed: 0, 
+			greenInGreen: 0.5, 
+			greenInBlue: 0, 
+			blueInRed: 0.5, 
+			blueInGreen: 1.2, 
+			blueInBlue: 1
+		}),
+		pixelate: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'pixelate', 
+			blockWidth: 12, 
+			blockHeight: 12, 
+			offsetX: 0, 
+			offsetY: 0
+		}),
+		matrix: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'matrix', 
+			blockWidth: 3, 
+			blockHeight: 3, 
+			offsetX: -1, 
+			offsetY: -1, 
+			weights: [1, 1, 0, 1, 0, -1, 0, -1, -1]
+		}),
+		blur: scrawl.makeFilter({
+			multiFilter: 'myFilter', 
+			species: 'blur', 
+			radius: 3, 
+			step: 1
+		})
+	};
+	filter = scrawl.makeMultiFilter({
+		name: 'myFilter',
+		stencil: true,
+		filters: filterDefinitions[currentFilter]
 	});
 
-	current_filter = 'myGreyscale';
+	scrawl.makeGroup({
+		name: 'eGroup',
+		multiFilter: 'myFilter',
+	});
 
 	// define entitys
 	scrawl.makePicture({
@@ -133,25 +187,21 @@ var mycode = function() {
 		width: 100,
 		height: 100,
 		roll: 30,
-		method: 'draw',
 		handleX: 'center',
 		handleY: 'center',
 		pivot: 'mouse',
 		visibility: false,
-		order: 5,
-		filters: [current_filter]
+		group: 'eGroup'
 	});
 	wheely = scrawl.makeWheel({
 		radius: 70,
 		startAngle: 20,
 		endAngle: 340,
 		includeCenter: true,
-		method: 'draw',
 		pivot: 'mouse',
 		visibility: false,
 		roll: 90,
-		order: 2,
-		filters: [current_filter]
+		group: 'eGroup'
 	});
 	hollow = scrawl.makeWheel({
 		startAngle: 20,
@@ -160,12 +210,11 @@ var mycode = function() {
 		lineWidth: 20,
 		radius: 85,
 		filterOnStroke: true,
-		method: 'none',
 		pivot: 'mouse',
 		visibility: false,
 		roll: 145,
-		order: 2,
-		filters: [current_filter]
+		method: 'draw',
+		group: 'eGroup'
 	});
 	scrawl.makeQuadratic({
 		name: 'phrasepath',
@@ -177,7 +226,8 @@ var mycode = function() {
 		controlY: 40,
 		handleX: 'center',
 		pivot: 'mouse',
-		method: 'none'
+		method: 'none',
+		group: 'eGroup'
 	});
 	texty = scrawl.makePhrase({
 		method: 'draw',
@@ -187,9 +237,9 @@ var mycode = function() {
 		path: 'phrasepath',
 		pathPlace: 0,
 		textAlongPath: 'glyph',
+		method: 'fill',
 		visibility: false,
-		order: 2,
-		filters: [current_filter]
+		group: 'eGroup'
 	});
 	pathy = scrawl.makeRegularShape({
 		radius: 70,
@@ -197,11 +247,10 @@ var mycode = function() {
 		startControlX: 70,
 		startControlY: 0,
 		lineType: 'q',
-		method: 'draw',
 		pivot: 'mouse',
+		method: 'fill',
 		visibility: false,
-		order: 5,
-		filters: [current_filter]
+		group: 'eGroup'
 	});
 	shapy = scrawl.makeRegularShape({
 		radius: 70,
@@ -212,11 +261,10 @@ var mycode = function() {
 		endControlY: 10,
 		lineType: 'c',
 		shape: true,
-		method: 'draw',
 		pivot: 'mouse',
+		method: 'fill',
 		visibility: false,
-		order: 2,
-		filters: [current_filter]
+		group: 'eGroup'
 	});
 	scrawl.makeSpriteAnimation({
 		name: 'animatedCat',
@@ -278,13 +326,11 @@ var mycode = function() {
 		handleY: 'center',
 		width: 400,
 		height: 200,
-		method: 'none',
 		source: 'runningcat',
 		animation: 'animatedCat',
 		pivot: 'mouse',
 		visibility: false,
-		order: 17,
-		filters: [current_filter]
+		group: 'eGroup'
 	});
 	framy = scrawl.makeFrame({
 		handleX: 'center',
@@ -295,17 +341,14 @@ var mycode = function() {
 		yaw: 60,
 		source: 'swan',
 		pivot: 'mouse',
-		method: 'draw',
 		visibility: false,
 		lockFrameTo: 'myframe',
-		order: 5,
-		filters: [current_filter]
+		group: 'eGroup'
 	});
 
-	current_entity = blocky;
-	entitys = [blocky, wheely, hollow, texty, pathy, shapy, piccy, framy];
+	currentEntity = blocky;
 	input_entity.value = 'blocky';
-	input_filter.value = 'myGreyscale';
+	input_filter.value = 'grayscale';
 
 	// event listeners
 	stopE = function(e) {
@@ -317,41 +360,38 @@ var mycode = function() {
 		stopE(e);
 		switch (input_entity.value) {
 			case 'wheely':
-				current_entity = wheely;
+				currentEntity = wheely;
 				break;
 			case 'hollow':
-				current_entity = hollow;
+				currentEntity = hollow;
 				break;
 			case 'texty':
-				current_entity = texty;
+				currentEntity = texty;
 				break;
 			case 'pathy':
-				current_entity = pathy;
+				currentEntity = pathy;
 				break;
 			case 'shapy':
-				current_entity = shapy;
+				currentEntity = shapy;
 				break;
 			case 'piccy':
-				current_entity = piccy;
+				currentEntity = piccy;
 				break;
 			case 'framy':
-				current_entity = framy;
+				currentEntity = framy;
 				break;
 			default:
-				current_entity = blocky;
+				currentEntity = blocky;
 		}
 	};
 	input_entity.addEventListener('change', event_entity, false);
 
 	event_filter = function(e) {
 		stopE(e);
-		current_filter = input_filter.value;
-
-		for (var i = 0, iz = entitys.length; i < iz; i++) {
-			entitys[i].set({
-				filters: [current_filter],
-			});
-		}
+		currentFilter = input_filter.value;
+		filter.set({
+			filters: filterDefinitions[currentFilter]
+		})
 	};
 	input_filter.addEventListener('change', event_filter, false);
 
@@ -359,7 +399,7 @@ var mycode = function() {
 	scrawl.addListener(['down', 'enter'], function(e) {
 		if (e) {
 			e.preventDefault();
-			current_entity.set({
+			currentEntity.set({
 				mouseIndex: here.id,
 				visibility: true
 			});
@@ -368,7 +408,7 @@ var mycode = function() {
 	scrawl.addListener(['up', 'leave'], function(e) {
 		if (e) {
 			e.preventDefault();
-			current_entity.set({
+			currentEntity.set({
 				visibility: false
 			});
 		}
@@ -378,6 +418,7 @@ var mycode = function() {
 	scrawl.makeAnimation({
 		fn: function() {
 
+			// here = scrawl.stack.mystack.getMouse();
 			here = myPad.getMouse();
 			scrawl.render();
 
@@ -394,7 +435,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'animation', 'filters', 'block', 'wheel', 'phrase', 'path', 'shape', 'factories', 'stacks', 'frame'],
+	extensions: ['images', 'animation', 'multifilters', 'block', 'wheel', 'phrase', 'path', 'shape', 'factories', 'stacks', 'frame'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -17,8 +17,12 @@ var mycode = function() {
 		name: 'mygroup',
 	});
 
-	scrawl.makeGreyscaleFilter({
+	scrawl.makeMultiFilter({
 		name: 'gscale',
+		filters: scrawl.makeFilter({
+			multiFilter: 'gscale', 
+			species: 'grayscale'
+		})
 	});
 
 	//build entity
@@ -60,7 +64,7 @@ var mycode = function() {
 		startY: 100,
 		handleX: 'center',
 		handleY: 'center',
-		filters: ['gscale'],
+		multiFilter: 'gscale',
 		roll: 70,
 		method: 'fillDraw',
 		lineWidth: 2,
@@ -81,7 +85,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['wheel', 'images', 'filters'],
+	extensions: ['wheel', 'images', 'multifilters'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

@@ -523,7 +523,7 @@ setLocal() helper function - position supplied by Path entity
 			}
 			this.setCorners(items);
 			this.setEngine(this);
-			this.filtersEntityInit(items);
+			this.multifiltersEntityInit(items);
 
 			this.redraw = true;
 
@@ -1578,43 +1578,61 @@ Permitted methods include:
 			var dCell,
 				dName,
 				dCtx,
+				tempCellname, tempCell, tempEngine, tempGCO,
+				multifilterFlag = false, 
+				tempFilter, work,
 				dMethod;
+
 			if (this.visibility) {
 				dCell = (cell) ? cell : my.group[this.group].cell;
 				dName = dCell.name;
 				dCtx = my.context[dName];
 				dMethod = (method) ? method : this.method;
+
+				if(this.multiFilter){
+					tempFilter = my.multifilter[this.multiFilter];
+					if(tempFilter && tempFilter.filters && tempFilter.filters.length){
+						multifilterFlag = true;
+						work = my.work;
+						ctx = my.ctx[this.name];
+						tempEngine = dCtx;
+						tempCell = dCell;
+						tempCellname = dName;
+
+						tempGCO = ctx.globalCompositeOperation;
+						ctx.globalCompositeOperation = 'source-over';
+						engine = work.cvx2;
+						cell = work.cvwrapper2;
+						cellname = work.cvwrapper2.name;
+						cell.set({
+							width: tempCell.actualWidth,
+							height: tempCell.actualHeight
+						});
+						my.work.cvcontroller.mice = my.pad[my.cell[tempCellname].pad].mice;
+					}
+				}
+
 				this.redrawCanvas();
 				this[dMethod](dCtx, dName, dCell);
-				this.stampFilter(dCtx, dName, dCell);
+
+				if(multifilterFlag){
+					dCtx = tempEngine;
+					cell = tempCell;
+					cellname = tempCellname;
+					ctx.globalCompositeOperation = tempGCO;
+					this.stampMultifilter(dCtx, cell);
+				}
 			}
 			return this;
 		};
 		/**
 Entity constructor hook function - modified by filters module
-@method filtersEntityInit
+@method multifiltersEntityInit
 @private
 **/
-		my.Frame.prototype.filtersEntityInit = function(items) {
-			my.Entity.prototype.filtersEntityInit.call(this, items);
+		my.Frame.prototype.multifiltersEntityInit = function(items) {
+			my.Entity.prototype.multifiltersEntityInit.call(this, items);
 		};
-		/**
-Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
-@method stampFilter
-@private
-**/
-		my.Frame.prototype.stampFilter = function(engine, cellname, cell) {
-			my.Entity.prototype.stampFilter.call(this, engine, cellname, cell);
-		};
-		/**
-Entity.stamp hook helper function
-@method stampFilterDefault
-@private
-**/
-		my.Frame.prototype.stampFilterDefault = function(entity, engine, cellname, cell) {
-			return my.Entity.prototype.stampFilterDefault.call(this, entity, engine, cellname, cell);
-		};
-		my.Frame.prototype.stampFilterDimensionsActions = my.Entity.prototype.stampFilterDimensionsActions;
 		/**
 Draw Frame entity in its own local canvas, then copy over to destimation canvas
 @method redrawCanvas
@@ -1631,6 +1649,15 @@ Draw Frame entity in its own local canvas, then copy over to destimation canvas
 				redraw, cornerCheck;
 
 			src = my.xtGet(my.asset[this.source], my.canvas[this.source], false);
+
+			if(!my.work.cv3){
+				my.work.cvcontroller.addNewCell({
+					name: 'defaultHiddenCanvasElementFrame'
+				});
+				my.work.cv3 = my.canvas.defaultHiddenCanvasElementFrame;
+				my.work.cvx3 = my.context.defaultHiddenCanvasElementFrame;
+			}
+
 			if (src) {
 
 				redraw = this.redraw;
@@ -1638,7 +1665,6 @@ Draw Frame entity in its own local canvas, then copy over to destimation canvas
 				if (redraw || cornerCheck) {
 
 					xta = my.xta;
-					// this.checkCorners();
 					tl = this.topLeft;
 					tr = this.topRight;
 					br = this.bottomRight;
@@ -1672,8 +1698,8 @@ Draw Frame entity in its own local canvas, then copy over to destimation canvas
 							dim = max.apply(Math, [width, height]);
 							maxDim = ceil(dim);
 							minDim = floor(dim);
-							cv = my.work.cv;
-							cvx = my.work.cvx;
+							cv = my.work.cv3;
+							cvx = my.work.cvx3;
 							getPos = this.getPosition;
 							iFac = this.interferenceFactor;
 							cell = this.cell;

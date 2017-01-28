@@ -12,19 +12,26 @@
 
 <body>
   <h1><a href="index.html">Scrawl.js</a> - demonstration 102</h1>
-  <h2>Applying filters at the entity, cell and pad levels</h2>
-  <h3>Extensions: images, filters, wheel</h3>
+  <h2>Drag/mousewheel-based timeline animation</h2>
+  <h3>Extensions: stacks, phrase, images, block, path, factories, animation, filters, shape, frame</h3>
 
-  <p>Click on canvas to change the circles' filterLevel attributes.</p>
+  <p>Either click-and-drag across the scene, or use the mouse wheel while hovering over scene, to move the animation along its timeline.</p>
+  <div id="myStack" class="scrawlstack">
+    <canvas id="myCanvas" width="800" height="400"></canvas>
+  </div>
 
-  <img src="img/flower01.jpg" id="flower" class="demo102" />
-  <canvas id="mycanvas" width="400" height="400"></canvas>
+  <img src="img/canal1-800.png" id="walkCanal1" class="demo121" />
+  <img src="img/canalFactory-800.png" id="walkCanalFactory" class="demo121" />
+  <img src="img/canalFish-800.png" id="walkCanalFish" class="demo121" />
+  <img src="img/canalFlats-800.png" id="walkCanalFlats" class="demo121" />
+  <img src="img/canalFlower-800.png" id="walkCanalFlower" class="demo121" />
+  <img src="img/canalMill-800.png" id="walkCanalMill" class="demo121" />
+  <img src="img/walk_train-800.png" id="walkTrain" class="demo121" />
 
   <p id="testmessage"></p>
 
   <script src="../source/scrawlCore.js"></script>
   <script id="testscript" src="js/demo102.js"></script>
-
 </body>
 
 </html>
