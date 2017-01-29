@@ -31,6 +31,49 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+to 170129
+	- refactor filters code
+		- was massively inefficient
+		- FIX CAUSES BREAKING CHANGES
+			- next release will have to be 7.0.0
+		- removed all existing filter code, including the Filters extension
+		- attempt to rewrite code using Web Workers abandoned
+			- asynchronous fix does not site well with current structure/functionality of library
+		- added a new extension - MultiFilter
+			- includes Filter and MultiFilter constructors
+				- MultiFilters stored in scrawl library
+				- Filters are stored locally in MultiFilter objects
+			- just a single filter object; all inbuilt filters are a 'species' of this filter
+			- MultiFilters operate on the cell image
+				- removes all code associated with locating an entity on the cell
+			- MultiFilters can be applied either to the entity, or at the group level
+				- ability for a filter to be applied direct by Pad or Cell removed
+					- better ways to handle that sort of thing at entity or group level
+			- MultiFilters allow users to define and apply their own filter code
+			- MultiFilters work on assumption they will will work on one or more Filters
+			- most filter types (species) ported over
+				- grayscale, sepia, invert, brightness, saturation, tint, channels, channelstep, matrix, pixelate
+			- new simple filters added for
+				- red, green, blue, notred, notgreen, notblue, cyan, magenta, yellow
+			- blur filter abandons matrix algorithm in favour of 2-pass blurring
+			- 'leach' filter renamed 'chroma'
+			- noise and sharpen filters abandoned
+				- noise can be replicated by user if necessary
+				- sharpen can be undertaken by matrix, or by combining other filters
+		- demos 401-414 rewritten to test MultiFilters
+		- demos 415-416 removed - no longer required
+		- demos 093, 101, 103, 104, 112 rewritten to use MultiFilters
+		- demo 121 moved to 102, rewritten to use MultiFilters
+	- tested code in Firefox, Edge - all demos perform as expected
+		- tested rewritten demos in Chrome, IE11 - all perform as expected
+		- the speed gain in IE and Edge is phenomenal!
+	- code branch merged back into develop on 170129
+		- will not merge to master/release yet
+			- going to look at areas for additional performance efficiencies
+
+170114
+	- release v6.0.1
+
 to 170113
 	- refactor stacks (and frames) for DOM efficiency gains
 		- translate and rotation now have dirty flags
