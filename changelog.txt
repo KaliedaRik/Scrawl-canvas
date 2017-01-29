@@ -34,6 +34,9 @@ CHANGE LOG
 170129
 	- refactoring color extension
 		- codebase too large
+		- tested against demos: 
+			- 016, 035, 044, 046, 050, 052, 057, 080, 
+			- 090, 099, 106, 113, 210, 213, 504
 	- minor efficiency updates to Context object and cell engine manipulation
 
 to 170129
