@@ -16,7 +16,9 @@ var mycode = function() {
 		kill = [],
 		counter = 0,
 		filterEntitys,
-		newRing;
+		newRing,
+		choke = 120,
+		time = Date.now();
 
 	//add canvas to web page
 	scrawl.addCanvasToPage({
@@ -28,16 +30,20 @@ var mycode = function() {
 	canvas = scrawl.canvas.myCanvas;
 	pad = scrawl.pad.myCanvas;
 
-	//define filters
-	scrawl.makeSaturationFilter({
+	scrawl.makeMultiFilter({
 		name: 'sat',
-		saturation: 3
+		stencil: true,
+		filters: scrawl.makeFilter({
+			multiFilter: 'sat', 
+			species: 'blue',
+		})
 	});
 
 	//define groups
 	group = scrawl.makeGroup({
 		name: 'ripples',
-		order: 1
+		order: 1,
+		multiFilter: 'sat'
 	});
 
 	//define entitys
@@ -59,14 +65,12 @@ var mycode = function() {
 			name: 'drop' + counter,
 			start: here,
 			radius: 1,
-			method: 'none',
+			method: 'draw',
 			handleX: 10,
 			handleY: 10,
 			lineWidth: 1,
 			group: 'ripples',
 			order: counter,
-			filters: ['sat'],
-			filterOnStroke: true
 		});
 	};
 	scrawl.addListener('up', newRing, canvas);
@@ -76,6 +80,11 @@ var mycode = function() {
 		if (e) {
 			e.stopPropagation();
 			e.preventDefault();
+		}
+		var now = Date.now();
+		if(choke + time < now){
+			newRing();
+			time = now;
 		}
 	}, canvas);
 
@@ -90,7 +99,7 @@ var mycode = function() {
 			});
 			for (var i = 0, z = group.entitys.length; i < z; i++) {
 				currentEntity = scrawl.entity[group.entitys[i]];
-				if (currentEntity.radius > 120) {
+				if (currentEntity.getRadius() > 200) {
 					kill.push(currentEntity.name);
 				}
 			}
@@ -113,7 +122,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['images', 'wheel', 'animation', 'filters'],
+	extensions: ['images', 'wheel', 'animation', 'multifilters'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

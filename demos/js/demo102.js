@@ -52,9 +52,12 @@ var mycode = function() {
 		shown: false
 	});
 
-	scrawl.makeGreyscaleFilter({
+	scrawl.makeMultiFilter({
 		name: 'demo5_filter',
-		alpha: 0
+		filters: scrawl.makeFilter({
+			multiFilter: 'demo5_filter', 
+			species: 'cyan'
+		})
 	});
 
 	counter = scrawl.makePhrase({
@@ -191,20 +194,24 @@ var mycode = function() {
 		pasteHeight: '100%',
 		pasteX: '0%',
 		pasteY: '0%',
-		filters: ['demo5_filter'],
+		// filters: ['demo5_filter'],
+		// multiFilter: 'demo5_filter',
 		order: 2,
 		globalCompositeOperation: 'source-over',
 		globalAlpha: 1
 	}).clone({
 		name: 'demo5_canalFactory',
 		source: 'walkCanalFactory',
-		filters: [],
+		// filters: [],
+		// multiFilter: '',
+		multiFilter: 'demo5_filter',
 		globalCompositeOperation: 'destination-over',
 		order: 7
 	}).clone({
 		name: 'demo5_canalFlats',
 		group: 'demo5_canalCell',
 		source: 'walkCanalFlats',
+		multiFilter: '',
 		globalCompositeOperation: 'source-over',
 		order: 0
 	});
@@ -562,7 +569,7 @@ var mycode = function() {
 			engine: 'easeOut'
 		}]
 	}).clone({
-		targets: 'demo5_filter',
+		targets: 'demo5_canalFlower',
 		time: '72%',
 		duration: '10%',
 		definitions: [{
@@ -756,6 +763,19 @@ var mycode = function() {
 		}
 	}).clone({
 		targets: 'demo5_canalFactory',
+		time: '82.5%',
+		action: function() {
+			this.updateTargets({
+				multiFilter: ''
+			})
+		},
+		revert: function() {
+			this.updateTargets({
+				multiFilter: 'demo5_filter'
+			})
+		}
+	}).clone({
+		targets: 'demo5_canalFactory',
 		time: '87%',
 		action: function() {
 			this.updateTargets({
@@ -856,7 +876,7 @@ var mycode = function() {
 scrawl.loadExtensions({
 	path: '../source/',
 	minified: false,
-	extensions: ['stacks', 'phrase', 'images', 'block', 'path', 'factories', 'animation', 'filters', 'shape', 'frame'],
+	extensions: ['stacks', 'phrase', 'images', 'block', 'path', 'factories', 'animation', 'multifilters', 'shape', 'frame'],
 	callback: function() {
 		window.addEventListener('load', function() {
 			scrawl.init();

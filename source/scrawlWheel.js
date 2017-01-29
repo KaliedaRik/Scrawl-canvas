@@ -210,8 +210,8 @@ Augments Entity.set()
 			if (xt(items.radius)) {
 				this.radius = items.radius;
 				this.localRadius = this.setRadius(this.radius);
-				this.width = this.localRadius * 2;
-				this.height = this.width;
+				// this.width = this.localRadius * 2;
+				// this.height = this.width;
 			}
 			if (xt(items.checkHitRadius)) {
 				this.localCheckHitRadius = this.setRadius(this.checkHitRadius);
@@ -236,6 +236,15 @@ set helper function
 			return 0;
 		};
 		/**
+get the current radius value, in pixels
+@method getRadius
+@return Number - local radius value
+@private
+**/
+		my.Wheel.prototype.getRadius = function(item) {
+			return this.localRadius;
+		};
+		/**
 Augments Entity.setDelta()
 @method setDelta
 @param {Object} items Object consisting of key:value attributes
@@ -253,8 +262,8 @@ Augments Entity.setDelta()
 					this.radius = my.addPercentages(this.radius, items.radius);
 				}
 				this.localRadius += r;
-				this.width = this.localRadius * 2;
-				this.height = this.width;
+				// this.width = this.localRadius * 2;
+				// this.height = this.width;
 			}
 			if (xt(items.checkHitRadius)) {
 				r = this.setRadius(items.checkHitRadius);
