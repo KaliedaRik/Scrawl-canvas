@@ -458,9 +458,8 @@ Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/colo
 				g,
 				b,
 				a,
-				temp,
-				internal = true;
-			items = (my.isa(items, 'str')) ? items : '';
+				temp;
+			items = (items.substring) ? items : '';
 			if (items.length > 0) {
 				items.toLowerCase();
 				r = 0;
@@ -499,908 +498,174 @@ Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/colo
 					b = temp[2];
 					a = temp[3];
 				}
+				else if(items === 'transparent'){
+					r = g = b = a = 0;
+				}
 				else {
 					temp = this.colorLibrary[items];
 					if (temp) {
-						internal = false;
-						temp.call(this);
+						r = parseInt(temp[0] + temp[1], 16);
+						g = parseInt(temp[2] + temp[3], 16);
+						b = parseInt(temp[4] + temp[5], 16);
+						a = 1;
 					}
 				}
-				if (internal) {
-					this.r = r;
-					this.g = g;
-					this.b = b;
-					this.a = a;
-				}
+				this.r = r;
+				this.g = g;
+				this.b = b;
+				this.a = a;
 				this.checkValues();
 			}
 			return this;
 		};
 		my.Color.prototype.colorLibrary = {
 			// color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/color_value
-			black: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			}, // #000000 	 
-			silver: function() {
-				this.r = parseInt('c0', 16);
-				this.g = parseInt('c0', 16);
-				this.b = parseInt('c0', 16);
-				this.a = 1;
-			}, // #c0c0c0 	 
-			gray: function() {
-				this.r = 127;
-				this.g = 127;
-				this.b = 127;
-				this.a = 1;
-			}, // #808080 	 
-			white: function() {
-				this.r = 255;
-				this.g = 255;
-				this.b = 255;
-				this.a = 1;
-			}, // #ffffff 	 
-			maroon: function() {
-				this.r = 127;
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			}, // #800000 	 
-			red: function() {
-				this.r = 255;
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			}, // #ff0000 	 
-			purple: function() {
-				this.r = 127;
-				this.g = 0;
-				this.b = 127;
-				this.a = 1;
-			}, // #800080 	 
-			fuchsia: function() {
-				this.r = 255;
-				this.g = 0;
-				this.b = 255;
-				this.a = 1;
-			}, // #ff00ff 	 
-			green: function() {
-				this.r = 0;
-				this.g = 127;
-				this.b = 0;
-				this.a = 1;
-			}, // #008000 	 
-			lime: function() {
-				this.r = 0;
-				this.g = 255;
-				this.b = 0;
-				this.a = 1;
-			}, // #00ff00 	 
-			olive: function() {
-				this.r = 127;
-				this.g = 127;
-				this.b = 0;
-				this.a = 1;
-			}, // #808000 	 
-			yellow: function() {
-				this.r = 255;
-				this.g = 255;
-				this.b = 0;
-				this.a = 1;
-			}, // #ffff00 	 
-			navy: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = 127;
-				this.a = 1;
-			}, // #000080 	 
-			blue: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = 255;
-				this.a = 1;
-			}, // #0000ff 	 
-			teal: function() {
-				this.r = 0;
-				this.g = 127;
-				this.b = 127;
-				this.a = 1;
-			}, // #008080 	 
-			aqua: function() {
-				this.r = 0;
-				this.g = 255;
-				this.b = 255;
-				this.a = 1;
-			}, // #00ffff 	 
-			orange: function() {
-				this.r = 255;
-				this.g = parseInt('a5', 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #ffa500 	 
-			aliceblue: function() {
-				this.r = parseInt('f0', 16);
-				this.g = parseInt('f8', 16);
-				this.b = 255;
-				this.a = 1;
-			}, // #f0f8ff 	 
-			antiquewhite: function() {
-				this.r = parseInt('fa', 16);
-				this.g = parseInt('eb', 16);
-				this.b = parseInt('d7', 16);
-				this.a = 1;
-			}, // #faebd7 	 
-			aquamarine: function() {
-				this.r = parseInt('7f', 16);
-				this.g = 255;
-				this.b = parseInt('d4', 16);
-				this.a = 1;
-			}, // #7fffd4 	 
-			azure: function() {
-				this.r = parseInt('f0', 16);
-				this.g = 255;
-				this.b = 255;
-				this.a = 1;
-			}, // #f0ffff 	 
-			beige: function() {
-				this.r = parseInt('f5', 16);
-				this.g = parseInt('f5', 16);
-				this.b = parseInt('dc', 16);
-				this.a = 1;
-			}, // #f5f5dc 	 
-			bisque: function() {
-				this.r = 255;
-				this.g = parseInt('e4', 16);
-				this.b = parseInt('c4', 16);
-				this.a = 1;
-			}, // #ffe4c4 	 
-			blanchedalmond: function() {
-				this.r = 255;
-				this.g = parseInt('e4', 16);
-				this.b = parseInt('c4', 16);
-				this.a = 1;
-			}, // #ffe4c4 	 
-			blueviolet: function() {
-				this.r = parseInt('8a', 16);
-				this.g = parseInt('2b', 16);
-				this.b = parseInt('e2', 16);
-				this.a = 1;
-			}, // #8a2be2 	 
-			brown: function() {
-				this.r = parseInt('a5', 16);
-				this.g = parseInt('2a', 16);
-				this.b = parseInt('2a', 16);
-				this.a = 1;
-			}, // #a52a2a 	 
-			burlywood: function() {
-				this.r = parseInt('de', 16);
-				this.g = parseInt('b8', 16);
-				this.b = parseInt('87', 16);
-				this.a = 1;
-			}, // #deb887 	 
-			cadetblue: function() {
-				this.r = parseInt('5f', 16);
-				this.g = parseInt('9e', 16);
-				this.b = parseInt('a0', 16);
-				this.a = 1;
-			}, // #5f9ea0 	 
-			chartreuse: function() {
-				this.r = parseInt('7f', 16);
-				this.g = 255;
-				this.b = 0;
-				this.a = 1;
-			}, // #7fff00 	 
-			chocolate: function() {
-				this.r = parseInt('d2', 16);
-				this.g = parseInt('69', 16);
-				this.b = parseInt('1e', 16);
-				this.a = 1;
-			}, // #d2691e 	 
-			coral: function() {
-				this.r = 255;
-				this.g = parseInt('7f', 16);
-				this.b = parseInt('50', 16);
-				this.a = 1;
-			}, // #ff7f50 	 
-			cornflowerblue: function() {
-				this.r = parseInt('64', 16);
-				this.g = parseInt('95', 16);
-				this.b = parseInt('ed', 16);
-				this.a = 1;
-			}, // #6495ed 	 
-			cornsilk: function() {
-				this.r = 255;
-				this.g = parseInt('f8', 16);
-				this.b = parseInt('dc', 16);
-				this.a = 1;
-			}, // #fff8dc 	 
-			crimson: function() {
-				this.r = parseInt('dc', 16);
-				this.g = parseInt('14', 16);
-				this.b = parseInt('3c', 16);
-				this.a = 1;
-			}, // #dc143c 	 
-			darkblue: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = parseInt('8b', 16);
-				this.a = 1;
-			}, // #00008b 	 
-			darkcyan: function() {
-				this.r = 0;
-				this.g = parseInt('8b', 16);
-				this.b = parseInt('8b', 16);
-				this.a = 1;
-			}, // #008b8b 	 
-			darkgoldenrod: function() {
-				this.r = parseInt('b8', 16);
-				this.g = parseInt('86', 16);
-				this.b = parseInt('0b', 16);
-				this.a = 1;
-			}, // #b8860b 	 
-			darkgray: function() {
-				this.r = parseInt('a9', 16);
-				this.g = parseInt('a9', 16);
-				this.b = parseInt('a9', 16);
-				this.a = 1;
-			}, // #a9a9a9 	 
-			darkgreen: function() {
-				this.r = 0;
-				this.g = parseInt('64', 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #006400 	 
-			darkgrey: function() {
-				this.r = parseInt('a9', 16);
-				this.g = parseInt('a9', 16);
-				this.b = parseInt('a9', 16);
-				this.a = 1;
-			}, // #a9a9a9 	 
-			darkkhaki: function() {
-				this.r = parseInt('bd', 16);
-				this.g = parseInt('b7', 16);
-				this.b = parseInt('6b', 16);
-				this.a = 1;
-			}, // #bdb76b 	 
-			darkmagenta: function() {
-				this.r = parseInt('8b', 16);
-				this.g = 0;
-				this.b = parseInt('8b', 16);
-				this.a = 1;
-			}, // #8b008b 	 
-			darkolivegreen: function() {
-				this.r = parseInt('55', 16);
-				this.g = parseInt('6b', 16);
-				this.b = parseInt('2f', 16);
-				this.a = 1;
-			}, // #556b2f 	 
-			darkorange: function() {
-				this.r = 255;
-				this.g = parseInt('8c', 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #ff8c00 	 
-			darkorchid: function() {
-				this.r = parseInt('99', 16);
-				this.g = parseInt('32', 16);
-				this.b = parseInt('cc', 16);
-				this.a = 1;
-			}, // #9932cc 	 
-			darkred: function() {
-				this.r = parseInt('8b', 16);
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			}, // #8b0000 	 
-			darksalmon: function() {
-				this.r = parseInt('e9', 16);
-				this.g = parseInt('96', 16);
-				this.b = parseInt('7a', 16);
-				this.a = 1;
-			}, // #e9967a 	 
-			darkseagreen: function() {
-				this.r = parseInt('8f', 16);
-				this.g = parseInt('bc', 16);
-				this.b = parseInt('8f', 16);
-				this.a = 1;
-			}, // #8fbc8f 	 
-			darkslateblue: function() {
-				this.r = parseInt('48', 16);
-				this.g = parseInt('3d', 16);
-				this.b = parseInt('8b', 16);
-				this.a = 1;
-			}, // #483d8b 	 
-			darkslategray: function() {
-				this.r = parseInt('2f', 16);
-				this.g = parseInt('4f', 16);
-				this.b = parseInt('4f', 16);
-				this.a = 1;
-			}, // #2f4f4f 	 
-			darkslategrey: function() {
-				this.r = parseInt('2f', 16);
-				this.g = parseInt('4f', 16);
-				this.b = parseInt('4f', 16);
-				this.a = 1;
-			}, // #2f4f4f 	 
-			darkturquoise: function() {
-				this.r = 0;
-				this.g = parseInt('ce', 16);
-				this.b = parseInt('d1', 16);
-				this.a = 1;
-			}, // #00ced1 	 
-			darkviolet: function() {
-				this.r = parseInt('94', 16);
-				this.g = 0;
-				this.b = parseInt('d3', 16);
-				this.a = 1;
-			}, // #9400d3 	 
-			deeppink: function() {
-				this.r = 255;
-				this.g = parseInt('14', 16);
-				this.b = parseInt('93', 16);
-				this.a = 1;
-			}, // #ff1493 	 
-			deepskyblue: function() {
-				this.r = 0;
-				this.g = parseInt('bf', 16);
-				this.b = 255;
-				this.a = 1;
-			}, // #00bfff 	 
-			dimgray: function() {
-				this.r = parseInt('69', 16);
-				this.g = parseInt('69', 16);
-				this.b = parseInt('69', 16);
-				this.a = 1;
-			}, // #696969 	 
-			dimgrey: function() {
-				this.r = parseInt('69', 16);
-				this.g = parseInt('69', 16);
-				this.b = parseInt('69', 16);
-				this.a = 1;
-			}, // #696969 	 
-			dodgerblue: function() {
-				this.r = parseInt('1e', 16);
-				this.g = parseInt('90', 16);
-				this.b = 255;
-				this.a = 1;
-			}, // #1e90ff 	 
-			firebrick: function() {
-				this.r = parseInt('b2', 16);
-				this.g = parseInt('22', 16);
-				this.b = parseInt('22', 16);
-				this.a = 1;
-			}, // #b22222 	 
-			floralwhite: function() {
-				this.r = 255;
-				this.g = parseInt('fa', 16);
-				this.b = parseInt('f0', 16);
-				this.a = 1;
-			}, // #fffaf0 	 
-			forestgreen: function() {
-				this.r = parseInt('22', 16);
-				this.g = parseInt('8b', 16);
-				this.b = parseInt('22', 16);
-				this.a = 1;
-			}, // #228b22 	 
-			gainsboro: function() {
-				this.r = parseInt('dc', 16);
-				this.g = parseInt('dc', 16);
-				this.b = parseInt('dc', 16);
-				this.a = 1;
-			}, // #dcdcdc 	 
-			ghostwhite: function() {
-				this.r = parseInt('f8', 16);
-				this.g = parseInt('f8', 16);
-				this.b = 255;
-				this.a = 1;
-			}, // #f8f8ff 	 
-			gold: function() {
-				this.r = 255;
-				this.g = parseInt('d7', 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #ffd700 	 
-			goldenrod: function() {
-				this.r = parseInt('da', 16);
-				this.g = parseInt('a5', 16);
-				this.b = parseInt('20', 16);
-				this.a = 1;
-			}, // #daa520 	 
-			greenyellow: function() {
-				this.r = parseInt('ad', 16);
-				this.g = 255;
-				this.b = parseInt('2f', 16);
-				this.a = 1;
-			}, // #adff2f 	 
-			grey: function() {
-				this.r = 127;
-				this.g = 127;
-				this.b = 127;
-				this.a = 1;
-			}, // #808080 	 
-			honeydew: function() {
-				this.r = parseInt('f0', 16);
-				this.g = 255;
-				this.b = parseInt('f0', 16);
-				this.a = 1;
-			}, // #f0fff0 	 
-			hotpink: function() {
-				this.r = 255;
-				this.g = parseInt('69', 16);
-				this.b = parseInt('b4', 16);
-				this.a = 1;
-			}, // #ff69b4 	 
-			indianred: function() {
-				this.r = parseInt('cd', 16);
-				this.g = parseInt('5c', 16);
-				this.b = parseInt('5c', 16);
-				this.a = 1;
-			}, // #cd5c5c 	 
-			indigo: function() {
-				this.r = parseInt('4b', 16);
-				this.g = 0;
-				this.b = parseInt('82', 16);
-				this.a = 1;
-			}, // #4b0082 	 
-			ivory: function() {
-				this.r = 255;
-				this.g = 255;
-				this.b = parseInt('f0', 16);
-				this.a = 1;
-			}, // #fffff0 	 
-			khaki: function() {
-				this.r = parseInt('f0', 16);
-				this.g = parseInt('e6', 16);
-				this.b = parseInt('8c', 16);
-				this.a = 1;
-			}, // #f0e68c 	 
-			lavender: function() {
-				this.r = parseInt('e6', 16);
-				this.g = parseInt('e6', 16);
-				this.b = parseInt('fa', 16);
-				this.a = 1;
-			}, // #e6e6fa 	 
-			lavenderblush: function() {
-				this.r = 255;
-				this.g = parseInt('f0', 16);
-				this.b = parseInt('f5', 16);
-				this.a = 1;
-			}, // #fff0f5 	 
-			lawngreen: function() {
-				this.r = parseInt('7c', 16);
-				this.g = parseInt('fc', 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #7cfc00 	 
-			lemonchiffon: function() {
-				this.r = 255;
-				this.g = parseInt('fa', 16);
-				this.b = parseInt('cd', 16);
-				this.a = 1;
-			}, // #fffacd 	 
-			lightblue: function() {
-				this.r = parseInt('ad', 16);
-				this.g = parseInt('d8', 16);
-				this.b = parseInt('e6', 16);
-				this.a = 1;
-			}, // #add8e6 	 
-			lightcoral: function() {
-				this.r = parseInt('f0', 16);
-				this.g = 127;
-				this.b = 127;
-				this.a = 1;
-			}, // #f08080 	 
-			lightcyan: function() {
-				this.r = parseInt('e0', 16);
-				this.g = 255;
-				this.b = 255;
-				this.a = 1;
-			}, // #e0ffff 	 
-			lightgoldenrodyellow: function() {
-				this.r = parseInt('fa', 16);
-				this.g = parseInt('fa', 16);
-				this.b = parseInt('d2', 16);
-				this.a = 1;
-			}, // #fafad2 	 
-			lightgray: function() {
-				this.r = parseInt('d3', 16);
-				this.g = parseInt('d3', 16);
-				this.b = parseInt('d3', 16);
-				this.a = 1;
-			}, // #d3d3d3 	 
-			lightgreen: function() {
-				this.r = parseInt('90', 16);
-				this.g = parseInt('ee', 16);
-				this.b = parseInt('90', 16);
-				this.a = 1;
-			}, // #90ee90 	 
-			lightgrey: function() {
-				this.r = parseInt('d3', 16);
-				this.g = parseInt('d3', 16);
-				this.b = parseInt('d3', 16);
-				this.a = 1;
-			}, // #d3d3d3 	 
-			lightpink: function() {
-				this.r = 255;
-				this.g = parseInt('b6', 16);
-				this.b = parseInt('c1', 16);
-				this.a = 1;
-			}, // #ffb6c1 	 
-			lightsalmon: function() {
-				this.r = 255;
-				this.g = parseInt('a0', 16);
-				this.b = parseInt('7a', 16);
-				this.a = 1;
-			}, // #ffa07a 	 
-			lightseagreen: function() {
-				this.r = parseInt('20', 16);
-				this.g = parseInt('b2', 16);
-				this.b = parseInt('aa', 16);
-				this.a = 1;
-			}, // #20b2aa 	 
-			lightskyblue: function() {
-				this.r = parseInt('87', 16);
-				this.g = parseInt('ce', 16);
-				this.b = parseInt('fa', 16);
-				this.a = 1;
-			}, // #87cefa 	 
-			lightslategray: function() {
-				this.r = parseInt('77', 16);
-				this.g = parseInt('88', 16);
-				this.b = parseInt('99', 16);
-				this.a = 1;
-			}, // #778899 	 
-			lightslategrey: function() {
-				this.r = parseInt('77', 16);
-				this.g = parseInt('88', 16);
-				this.b = parseInt('99', 16);
-				this.a = 1;
-			}, // #778899 	 
-			lightsteelblue: function() {
-				this.r = parseInt('b0', 16);
-				this.g = parseInt('c4', 16);
-				this.b = parseInt('de', 16);
-				this.a = 1;
-			}, // #b0c4de 	 
-			lightyellow: function() {
-				this.r = 255;
-				this.g = 255;
-				this.b = parseInt('e0', 16);
-				this.a = 1;
-			}, // #ffffe0 	 
-			limegreen: function() {
-				this.r = parseInt('32', 16);
-				this.g = parseInt('cd', 16);
-				this.b = parseInt('32', 16);
-				this.a = 1;
-			}, // #32cd32 	 
-			linen: function() {
-				this.r = parseInt('fa', 16);
-				this.g = parseInt('f0', 16);
-				this.b = parseInt('e6', 16);
-				this.a = 1;
-			}, // #faf0e6 	 
-			mediumaquamarine: function() {
-				this.r = parseInt('66', 16);
-				this.g = parseInt('cd', 16);
-				this.b = parseInt('aa', 16);
-				this.a = 1;
-			}, // #66cdaa 	 
-			mediumblue: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = parseInt('cd', 16);
-				this.a = 1;
-			}, // #0000cd 	 
-			mediumorchid: function() {
-				this.r = parseInt('ba', 16);
-				this.g = parseInt('55', 16);
-				this.b = parseInt('d3', 16);
-				this.a = 1;
-			}, // #ba55d3 	 
-			mediumpurple: function() {
-				this.r = parseInt('93', 16);
-				this.g = parseInt('70', 16);
-				this.b = parseInt('db', 16);
-				this.a = 1;
-			}, // #9370db 	 
-			mediumseagreen: function() {
-				this.r = parseInt('3c', 16);
-				this.g = parseInt('b3', 16);
-				this.b = parseInt('71', 16);
-				this.a = 1;
-			}, // #3cb371 	 
-			mediumslateblue: function() {
-				this.r = parseInt('7b', 16);
-				this.g = parseInt('68', 16);
-				this.b = parseInt('ee', 16);
-				this.a = 1;
-			}, // #7b68ee 	 
-			mediumspringgreen: function() {
-				this.r = 0;
-				this.g = parseInt('fa', 16);
-				this.b = parseInt('9a', 16);
-				this.a = 1;
-			}, // #00fa9a 	 
-			mediumturquoise: function() {
-				this.r = parseInt('48', 16);
-				this.g = parseInt('d1', 16);
-				this.b = parseInt('cc', 16);
-				this.a = 1;
-			}, // #48d1cc 	 
-			mediumvioletred: function() {
-				this.r = parseInt('c7', 16);
-				this.g = parseInt('15', 16);
-				this.b = parseInt('85', 16);
-				this.a = 1;
-			}, // #c71585 	 
-			midnightblue: function() {
-				this.r = parseInt('19', 16);
-				this.g = parseInt('19', 16);
-				this.b = parseInt('70', 16);
-				this.a = 1;
-			}, // #191970 	 
-			mintcream: function() {
-				this.r = parseInt('f5', 16);
-				this.g = 255;
-				this.b = parseInt('fa', 16);
-				this.a = 1;
-			}, // #f5fffa 	 
-			mistyrose: function() {
-				this.r = 255;
-				this.g = parseInt('e4', 16);
-				this.b = parseInt('e1', 16);
-				this.a = 1;
-			}, // #ffe4e1 	 
-			moccasin: function() {
-				this.r = 255;
-				this.g = parseInt('e4', 16);
-				this.b = parseInt('b5', 16);
-				this.a = 1;
-			}, // #ffe4b5 	 
-			navajowhite: function() {
-				this.r = 255;
-				this.g = parseInt('de', 16);
-				this.b = parseInt('ad', 16);
-				this.a = 1;
-			}, // #ffdead 	 
-			oldlace: function() {
-				this.r = parseInt('fd', 16);
-				this.g = parseInt('f5', 16);
-				this.b = parseInt('e6', 16);
-				this.a = 1;
-			}, // #fdf5e6 	 
-			olivedrab: function() {
-				this.r = parseInt('6b', 16);
-				this.g = parseInt('8e', 16);
-				this.b = parseInt('23', 16);
-				this.a = 1;
-			}, // #6b8e23 	 
-			orangered: function() {
-				this.r = 255;
-				this.g = parseInt('45', 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #ff4500 	 
-			orchid: function() {
-				this.r = parseInt('da', 16);
-				this.g = parseInt('70', 16);
-				this.b = parseInt('d6', 16);
-				this.a = 1;
-			}, // #da70d6 	 
-			palegoldenrod: function() {
-				this.r = parseInt('ee', 16);
-				this.g = parseInt('e8', 16);
-				this.b = parseInt('aa', 16);
-				this.a = 1;
-			}, // #eee8aa 	 
-			palegreen: function() {
-				this.r = parseInt('98', 16);
-				this.g = parseInt('fb', 16);
-				this.b = parseInt('98', 16);
-				this.a = 1;
-			}, // #98fb98 	 
-			paleturquoise: function() {
-				this.r = parseInt('af', 16);
-				this.g = parseInt('ee', 16);
-				this.b = parseInt('ee', 16);
-				this.a = 1;
-			}, // #afeeee 	 
-			palevioletred: function() {
-				this.r = parseInt('db', 16);
-				this.g = parseInt('70', 16);
-				this.b = parseInt('93', 16);
-				this.a = 1;
-			}, // #db7093 	 
-			papayawhip: function() {
-				this.r = 255;
-				this.g = parseInt('ef', 16);
-				this.b = parseInt('d5', 16);
-				this.a = 1;
-			}, // #ffefd5 	 
-			peachpuff: function() {
-				this.r = 255;
-				this.g = parseInt('da', 16);
-				this.b = parseInt('b9', 16);
-				this.a = 1;
-			}, // #ffdab9 	 
-			peru: function() {
-				this.r = parseInt('cd', 16);
-				this.g = parseInt('85', 16);
-				this.b = parseInt('3f', 16);
-				this.a = 1;
-			}, // #cd853f 	 
-			pink: function() {
-				this.r = 255;
-				this.g = parseInt('c0', 16);
-				this.b = parseInt('cb', 16);
-				this.a = 1;
-			}, // #ffc0cb 	 
-			plum: function() {
-				this.r = parseInt('dd', 16);
-				this.g = parseInt('a0', 16);
-				this.b = parseInt('dd', 16);
-				this.a = 1;
-			}, // #dda0dd 	 
-			powderblue: function() {
-				this.r = parseInt('b0', 16);
-				this.g = parseInt('e0', 16);
-				this.b = parseInt('e6', 16);
-				this.a = 1;
-			}, // #b0e0e6 	 
-			rosybrown: function() {
-				this.r = parseInt('bc', 16);
-				this.g = parseInt('8f', 16);
-				this.b = parseInt('8f', 16);
-				this.a = 1;
-			}, // #bc8f8f 	 
-			royalblue: function() {
-				this.r = parseInt('41', 16);
-				this.g = parseInt('69', 16);
-				this.b = parseInt('e1', 16);
-				this.a = 1;
-			}, // #4169e1 	 
-			saddlebrown: function() {
-				this.r = parseInt('8b', 16);
-				this.g = parseInt('45', 16);
-				this.b = parseInt('13', 16);
-				this.a = 1;
-			}, // #8b4513 	 
-			salmon: function() {
-				this.r = parseInt('fa', 16);
-				this.g = 127;
-				this.b = parseInt('72', 16);
-				this.a = 1;
-			}, // #fa8072 	 
-			sandybrown: function() {
-				this.r = parseInt('f4', 16);
-				this.g = parseInt('a4', 16);
-				this.b = parseInt('60', 16);
-				this.a = 1;
-			}, // #f4a460 	 
-			seagreen: function() {
-				this.r = parseInt('2e', 16);
-				this.g = parseInt('8b', 16);
-				this.b = parseInt('57', 16);
-				this.a = 1;
-			}, // #2e8b57 	 
-			seashell: function() {
-				this.r = 255;
-				this.g = parseInt('f5', 16);
-				this.b = parseInt('ee', 16);
-				this.a = 1;
-			}, // #fff5ee 	 
-			sienna: function() {
-				this.r = parseInt('a0', 16);
-				this.g = parseInt('52', 16);
-				this.b = parseInt('2d', 16);
-				this.a = 1;
-			}, // #a0522d 	 
-			skyblue: function() {
-				this.r = parseInt('87', 16);
-				this.g = parseInt('ce', 16);
-				this.b = parseInt('eb', 16);
-				this.a = 1;
-			}, // #87ceeb 	 
-			slateblue: function() {
-				this.r = parseInt('6a', 16);
-				this.g = parseInt('5a', 16);
-				this.b = parseInt('cd', 16);
-				this.a = 1;
-			}, // #6a5acd 	 
-			slategray: function() {
-				this.r = parseInt('70', 16);
-				this.g = 127;
-				this.b = parseInt('90', 16);
-				this.a = 1;
-			}, // #708090 	 
-			slategrey: function() {
-				this.r = parseInt('70', 16);
-				this.g = 127;
-				this.b = parseInt('90', 16);
-				this.a = 1;
-			}, // #708090 	 
-			snow: function() {
-				this.r = 255;
-				this.g = parseInt('fa', 16);
-				this.b = parseInt('fa', 16);
-				this.a = 1;
-			}, // #fffafa 	 
-			springgreen: function() {
-				this.r = 0;
-				this.g = 255;
-				this.b = parseInt('7f', 16);
-				this.a = 1;
-			}, // #00ff7f 	 
-			steelblue: function() {
-				this.r = parseInt('46', 16);
-				this.g = parseInt('82', 16);
-				this.b = parseInt('b4', 16);
-				this.a = 1;
-			}, // #4682b4 	 
-			tan: function() {
-				this.r = parseInt('d2', 16);
-				this.g = parseInt('b4', 16);
-				this.b = parseInt('8c', 16);
-				this.a = 1;
-			}, // #d2b48c 	 
-			thistle: function() {
-				this.r = parseInt('d8', 16);
-				this.g = parseInt('bf', 16);
-				this.b = parseInt('d8', 16);
-				this.a = 1;
-			}, // #d8bfd8 	 
-			tomato: function() {
-				this.r = 255;
-				this.g = parseInt('63', 16);
-				this.b = parseInt('47', 16);
-				this.a = 1;
-			}, // #ff6347 
-			transparent: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			},
-			turquoise: function() {
-				this.r = parseInt('40', 16);
-				this.g = parseInt('e0', 16);
-				this.b = parseInt('d0', 16);
-				this.a = 1;
-			}, // #40e0d0 	 
-			violet: function() {
-				this.r = parseInt('ee', 16);
-				this.g = parseInt('82', 16);
-				this.b = parseInt('ee', 16);
-				this.a = 1;
-			}, // #ee82ee 	 
-			wheat: function() {
-				this.r = parseInt('f5', 16);
-				this.g = parseInt('de', 16);
-				this.b = parseInt('b3', 16);
-				this.a = 1;
-			}, // #f5deb3 	 
-			whitesmoke: function() {
-				this.r = parseInt('f5', 16);
-				this.g = parseInt('f5', 16);
-				this.b = parseInt('f5', 16);
-				this.a = 1;
-			}, // #f5f5f5 	 
-			yellowgreen: function() {
-				this.r = parseInt('9a', 16);
-				this.g = parseInt('cd', 16);
-				this.b = parseInt('32', 16);
-				this.a = 1;
-			}, // #9acd32 	 
-			rebeccapurple: function() {
-				this.r = parseInt('66', 16);
-				this.g = parseInt('33', 16);
-				this.b = parseInt('99', 16);
-				this.a = 1;
-			} // #663399			
-		};
+			aliceblue: 'f0f8ff',
+			antiquewhite: 'faebd7',
+			aqua: '00ffff',
+			aquamarine: '7fffd4',
+			azure: 'f0ffff',
+			beige: 'f5f5dc',
+			bisque: 'ffe4c4',
+			black: '000000',
+			blanchedalmond: 'ffe4c4',
+			blue: '0000ff',
+			blueviolet: '8a2be2',
+			brown: 'a52a2a',
+			burlywood: 'deb887',
+			cadetblue: '5f9ea0',
+			chartreuse: '7fff00',
+			chocolate: 'd2691e',
+			coral: 'ff7f50',
+			cornflowerblue: '6495ed',
+			cornsilk: 'fff8dc',
+			crimson: 'dc143c',
+			darkblue: '00008b',
+			darkcyan: '008b8b',
+			darkgoldenrod: 'b8860b',
+			darkgray: 'a9a9a9',
+			darkgreen: '006400',
+			darkgrey: 'a9a9a9',
+			darkkhaki: 'bdb76b',
+			darkmagenta: '8b008b',
+			darkolivegreen: '556b2f',
+			darkorange: 'ff8c00',
+			darkorchid: '9932cc',
+			darkred: '8b0000',
+			darksalmon: 'e9967a',
+			darkseagreen: '8fbc8f',
+			darkslateblue: '483d8b',
+			darkslategray: '2f4f4f',
+			darkslategrey: '2f4f4f',
+			darkturquoise: '00ced1',
+			darkviolet: '9400d3',
+			deeppink: 'ff1493',
+			deepskyblue: '00bfff',
+			dimgray: '696969',
+			dimgrey: '696969',
+			dodgerblue: '1e90ff',
+			firebrick: 'b22222', 
+			floralwhite: 'fffaf0', 
+			forestgreen: '228b22', 
+			fuchsia: 'ff00ff',
+			gainsboro: 'dcdcdc',
+			ghostwhite: 'f8f8ff',
+			gold: 'ffd700',
+			goldenrod: 'daa520',
+			gray: '808080',
+			green: '008000',
+			greenyellow: 'adff2f',
+			grey: '808080',
+			honeydew: 'f0fff0',
+			hotpink: 'ff69b4',
+			indianred: 'cd5c5c',
+			indigo: '4b0082',
+			ivory: 'fffff0',
+			khaki: 'f0e68c',
+			lavender: 'e6e6fa',
+			lavenderblush: 'fff0f5',
+			lawngreen: '7cfc00',
+			lemonchiffon: 'fffacd',
+			lightblue: 'add8e6',
+			lightcoral: 'f08080',
+			lightcyan: 'e0ffff',
+			lightgoldenrodyellow: 'fafad2',
+			lightgray: 'd3d3d3',
+			lightgreen: '90ee90',
+			lightgrey: 'd3d3d3',
+			lightpink: 'ffb6c1',
+			lightsalmon: 'ffa07a',
+			lightseagreen: '20b2aa',
+			lightskyblue: '87cefa',
+			lightslategray: '778899',
+			lightslategrey: '778899',
+			lightsteelblue: 'b0c4de',
+			lightyellow: 'ffffe0',
+			lime: '00ff00',
+			limegreen: '32cd32',
+			linen: 'faf0e6',
+			maroon: '800000',
+			mediumaquamarine: '66cdaa',
+			mediumblue: '0000cd',
+			mediumorchid: 'ba55d3',
+			mediumpurple: '9370db',
+			mediumseagreen: '3cb371',
+			mediumslateblue: '7b68ee',
+			mediumspringgreen: '00fa9a',
+			mediumturquoise: '48d1cc',
+			mediumvioletred: 'c71585',
+			midnightblue: '191970',
+			mintcream: 'f5fffa',
+			mistyrose: 'ffe4e1',
+			moccasin: 'ffe4b5',
+			navajowhite: 'ffdead',
+			navy: '000080',
+			oldlace: 'fdf5e6',
+			olive: '808000',
+			olivedrab: '6b8e23',
+			orange: 'ffa500',
+			orangered: 'ff4500',
+			orchid: 'da70d6',
+			palegoldenrod: 'eee8aa',
+			palegreen: '98fb98',
+			paleturquoise: 'afeeee',
+			palevioletred: 'db7093',
+			papayawhip: 'ffefd5',
+			peachpuff: 'ffdab9',
+			peru: 'cd853f',
+			pink: 'ffc0cb',
+			plum: 'dda0dd',
+			powderblue: 'b0e0e6',
+			purple: '800080',
+			rebeccapurple: '663399',
+			red: 'ff0000',
+			rosybrown: 'bc8f8f',
+			royalblue: '4169e1',
+			saddlebrown: '8b4513',
+			salmon: 'fa8072',
+			sandybrown: 'f4a460',
+			seagreen: '2e8b57',
+			seashell: 'fff5ee',
+			sienna: 'a0522d',
+			silver: 'c0c0c0',
+			skyblue: '87ceeb',
+			slateblue: '6a5acd',
+			slategray: '708090',
+			slategrey: '708090',
+			snow: 'fffafa',
+			springgreen: '00ff7f',
+			steelblue: '4682b4',
+			tan: 'd2b48c',
+			teal: '008080',
+			thistle: 'd8bfd8',
+			tomato: 'ff6347',
+			turquoise: '40e0d0',
+			violet: 'ee82ee',
+			wheat: 'f5deb3',
+			white: 'ffffff',
+			whitesmoke: 'f5f5f5',
+			yellow: 'ffff00',
+			yellowgreen: '9acd32'		};
 		/**
 Convert a decimal Number to its hexidecimal String value
 @method toHex

@@ -126,7 +126,7 @@ var mycode = function() {
 	};
 
 	addBunnies = function() {
-		for (var i = 0; i < 10; i++) {
+		for (var i = 0; i < 20; i++) {
 			bunny.clone({
 				startX: Math.floor((Math.random() * 560) + 20),
 				startY: Math.floor((Math.random() * 560) + 20),
@@ -136,7 +136,7 @@ var mycode = function() {
 				group: 'mygroup',
 			});
 		}
-		totalBunnies += 10;
+		totalBunnies += 20;
 	};
 
 	//initialize scene

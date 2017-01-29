@@ -5742,18 +5742,16 @@ Set the Cell's &lt;canvas&gt; context engine to the specification supplied by th
 	};
 	my.Cell.prototype.setEngineActions = {
 		fillStyle: function(item, e, s, entity, cell) {
-			var design, fillStyle;
-			if (my.xt(my.design[item])) {
-				design = my.design[item];
-				if (my.contains(s, design.type)) {
+			var d = my.design,
+				design;
+			e.fillStyle = item;
+			if (!(typeof d[item] == 'undefined')) {
+				design = d[item];
+				if (s.indexOf(design.type) >= 0) {
 					design.update(entity, cell);
 				}
-				fillStyle = design.getData();
+				e.fillStyle = design.getData();
 			}
-			else {
-				fillStyle = item;
-			}
-			e.fillStyle = fillStyle;
 		},
 		font: function(item, e) {
 			e.font = item;
@@ -5768,14 +5766,12 @@ Set the Cell's &lt;canvas&gt; context engine to the specification supplied by th
 			e.lineCap = item;
 		},
 		lineDash: function(item, e) {
-			e.mozDash = item;
 			e.lineDash = item;
 			if (e.setLineDash) {
 				e.setLineDash(item);
 			}
 		},
 		lineDashOffset: function(item, e) {
-			e.mozDashOffset = item;
 			e.lineDashOffset = item;
 		},
 		lineJoin: function(item, e) {
@@ -5797,18 +5793,16 @@ Set the Cell's &lt;canvas&gt; context engine to the specification supplied by th
 			e.shadowOffsetY = item;
 		},
 		strokeStyle: function(item, e, s, entity, cell) {
-			var design, strokeStyle;
-			if (my.xt(my.design[item])) {
-				design = my.design[item];
-				if (my.contains(s, design.type)) {
+			var d = my.design,
+				design;
+			e.strokeStyle = item;
+			if (!(typeof d[item] == 'undefined')) {
+				design = d[item];
+				if (s.indexOf(design.type) >= 0) {
 					design.update(entity, cell);
 				}
-				strokeStyle = design.getData();
+				e.strokeStyle = design.getData();
 			}
-			else {
-				strokeStyle = item;
-			}
-			e.strokeStyle = strokeStyle;
 		},
 		miterLimit: function(item, e) {
 			e.miterLimit = item;
@@ -5819,10 +5813,7 @@ Set the Cell's &lt;canvas&gt; context engine to the specification supplied by th
 		textBaseline: function(item, e) {
 			e.textBaseline = item;
 		},
-		winding: function(item, e) {
-			e.mozFillRule = item;
-			e.msFillRule = item;
-		}
+		winding: function(){}
 	};
 	/**
 groupSort
@@ -6481,30 +6472,28 @@ Adds the value of each attribute supplied in the argument to existing values; on
 @private
 **/
 	my.Context.prototype.setDelta = function(items) {
-		var xt = my.xt,
-			d = my.work.d.Context;
 		items = my.safeObject(items);
-		if (xt(items.lineDashOffset)) {
-			if (!xt(this.lineDashOffset)) {
-				this.lineDashOffset = d.lineDashOffset + items.lineDashOffset;
+		if(!(typeof items.lineDashOffset == 'undefined')){
+			if(typeof this.lineDashOffset == 'undefined'){
+				this.lineDashOffset = 0;
 			}
 			this.lineDashOffset += items.lineDashOffset;
 		}
-		if (xt(items.lineWidth)) {
-			if (!xt(this.lineWidth)) {
-				this.lineWidth = d.lineWidth + items.lineWidth;
+		if(!(typeof items.lineWidth == 'undefined')){
+			if(typeof this.lineWidth == 'undefined'){
+				this.lineWidth = 1;
 			}
 			this.lineWidth += items.lineWidth;
 			if (this.lineWidth < 0) {
 				this.lineWidth = 0;
 			}
 		}
-		if (xt(items.globalAlpha)) {
-			if (!xt(this.globalAlpha)) {
-				this.globalAlpha = d.globalAlpha + items.globalAlpha;
+		if(!(typeof items.globalAlpha == 'undefined')){
+			if(typeof this.globalAlpha == 'undefined'){
+				this.globalAlpha = 1;
 			}
 			this.globalAlpha += items.globalAlpha;
-			if (!my.isBetween(this.globalAlpha, 0, 1, true)) {
+			if (this.globalAlpha < 0 || this.globalAlpha > 1) {
 				this.globalAlpha = (this.globalAlpha > 0.5) ? 1 : 0;
 			}
 		}
@@ -6522,9 +6511,11 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 **/
 	my.Context.prototype.getContextFromEngine = function(ctx) {
 		var keys = my.work.contextKeys,
+			key,
 			get = my.xtGet;
 		for (var i = 0, iz = keys.length; i < iz; i++) {
-			this[keys[i]] = ctx[keys[i]];
+			key = keys[i];
+			this[key] = ctx[key];
 		}
 		this.winding = get(ctx.mozFillRule, ctx.msFillRule, 'nonzero');
 		this.lineDash = (my.xt(ctx.lineDash)) ? ctx.lineDash : [];
@@ -6539,64 +6530,85 @@ Interrogates a &lt;canvas&gt; element's context engine and returns an object of 
 		var d = my.work.d.Context,
 			xt = my.xt,
 			keys = my.work.contextKeys,
+			key,
 			i, iz,
 			result = {};
 		for (i = 0, iz = keys.length; i < iz; i++) {
-			if (keys[i] === 'lineDash' && this.lineDash && this.lineDash.length > 0) {
+			key = keys[i];
+			if (key === 'lineDash' && this.lineDash && this.lineDash.length > 0) {
 				result.lineDash = this.lineDash;
 			}
-			else if (xt(this[keys[i]]) && this[keys[i]] != d[keys[i]]) {
-				result[keys[i]] = this[keys[i]];
+			else if (xt(this[key]) && this[key] != d[key]) {
+				result[key] = this[key];
 			}
 		}
 		return result;
 	};
 	/**
-Interrogates a &lt;canvas&gt; element's context engine and populates its own attributes with returned values
+Compares an entity's context engine values (held in this context object) to those held for the relevant cell's context engine
 
 (Only for use by Context objects)
 @method getChanges
-@param {Object} ctx &lt;canvas&gt; element context engine Object
-@return This
-@chainable
+@param {Object} entity - a reference to the entity object
+@param {Object} ctx - a reference to a &lt;canvas&gt; element context engine Object
+@return a results object containing changes to be made to the canvas context engine
 @private
 **/
 	my.Context.prototype.getChanges = function(entity, ctx) {
 		var c = ctx.getNonDefaultAttributes(),
 			ca = Object.keys(c),
+			cKey,
 			e = this.getNonDefaultAttributes(),
 			ea = Object.keys(e),
-			d, color,
+			eKey,
 			df = my.work.d.Context,
 			result = {},
 			contains = my.contains,
+			test = ['fillStyle', 'strokeStyle', 'shadowColor'],
 			i, iz;
 		for (i = 0, iz = ca.length; i < iz; i++) {
-			if (!contains(ea, ca[i])) {
-				result[ca[i]] = df[ca[i]];
+			cKey = ca[i];
+			if (!contains(ea, cKey)) {
+				result[cKey] = df[cKey];
 			}
 		}
 		for (i = 0, iz = ea.length; i < iz; i++) {
-			if (ea[i] === 'lineWidth' && entity.scaleOutline) {
+			eKey = ea[i];
+			if (eKey === 'lineWidth' && entity.scaleOutline) {
 				if (e.lineWidth * entity.scale !== c.lineWidth) {
 					result.lineWidth = e.lineWidth * entity.scale;
 				}
 			}
-			else if (e[ea[i]] != c[ea[i]]) {
-				result[ea[i]] = e[ea[i]];
+			else if (e[eKey] != c[eKey]) {
+				result[eKey] = e[eKey];
 			}
-			else if (contains(['fillStyle', 'strokeStyle', 'shadowColor'], ea[i])) {
-				d = my.design[e[ea[i]]];
-				if (d && d.type === 'Color') {
-					color = d.getData();
-					if (color !== c[ea[i]]) {
-						result[ea[i]] = color;
-					}
-				}
-				else if (ea[i] != 'shadowColor' && d && d.autoUpdate) {
-					result[ea[i]] = e[ea[i]];
-				}
+			else if (contains(test, eKey)) {
+				// because we can store design names in these attributes, not their actual values
+				// and the names will not change but the values can
+				result = this.getDesignChanges(eKey, e, c, result);
 			}
+		}
+		return result;
+	};
+	/**
+getChanges helper
+
+@method getDesignChanges
+@param {Object} ctx &lt;canvas&gt; element context engine Object
+@return a results object containing changes to be made to the canvas context engine
+@private
+**/
+	my.Context.prototype.getDesignChanges = function(eKey, e, c, result) {
+		var d, color;
+		d = my.design[e[eKey]];
+		if (d && d.type === 'Color') {
+			color = d.getData();
+			if (color !== c[eKey]) {
+				result[eKey] = color;
+			}
+		}
+		else if (eKey != 'shadowColor' && d && d.autoUpdate) {
+			result[eKey] = e[eKey];
 		}
 		return result;
 	};

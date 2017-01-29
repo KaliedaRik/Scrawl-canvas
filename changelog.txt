@@ -31,6 +31,11 @@ Currently known bugs
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+170129
+	- refactoring color extension
+		- codebase too large
+	- minor efficiency updates to Context object and cell engine manipulation
+
 to 170129
 	- refactor filters code
 		- was massively inefficient
@@ -70,6 +75,11 @@ to 170129
 	- code branch merged back into develop on 170129
 		- will not merge to master/release yet
 			- going to look at areas for additional performance efficiencies
+	TODO:
+		- write up inline documentation for MultiFilters extension
+		- adapt website tour code to use multifilters
+		- update website tutorial page for new filter functionality
+		- update learn examples on CodePen to use multifilters
 
 170114
 	- release v6.0.1
