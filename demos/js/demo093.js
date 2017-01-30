@@ -34,7 +34,7 @@ var mycode = function() {
 		name: 'sat',
 		stencil: true,
 		filters: scrawl.makeFilter({
-			multiFilter: 'sat', 
+			multiFilter: 'sat',
 			species: 'blue',
 		})
 	});
@@ -82,7 +82,7 @@ var mycode = function() {
 			e.preventDefault();
 		}
 		var now = Date.now();
-		if(choke + time < now){
+		if (choke + time < now) {
 			newRing();
 			time = now;
 		}

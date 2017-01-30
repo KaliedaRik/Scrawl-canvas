@@ -1579,7 +1579,7 @@ Permitted methods include:
 				dName,
 				dCtx,
 				tempCellname, tempCell, tempEngine, tempGCO,
-				multifilterFlag = false, 
+				multifilterFlag = false,
 				tempFilter, work,
 				dMethod;
 
@@ -1589,9 +1589,9 @@ Permitted methods include:
 				dCtx = my.context[dName];
 				dMethod = (method) ? method : this.method;
 
-				if(this.multiFilter){
+				if (this.multiFilter) {
 					tempFilter = my.multifilter[this.multiFilter];
-					if(tempFilter && tempFilter.filters && tempFilter.filters.length){
+					if (tempFilter && tempFilter.filters && tempFilter.filters.length) {
 						multifilterFlag = true;
 						work = my.work;
 						ctx = my.ctx[this.name];
@@ -1615,7 +1615,7 @@ Permitted methods include:
 				this.redrawCanvas();
 				this[dMethod](dCtx, dName, dCell);
 
-				if(multifilterFlag){
+				if (multifilterFlag) {
 					dCtx = tempEngine;
 					cell = tempCell;
 					cellname = tempCellname;
@@ -1650,7 +1650,7 @@ Draw Frame entity in its own local canvas, then copy over to destimation canvas
 
 			src = my.xtGet(my.asset[this.source], my.canvas[this.source], false);
 
-			if(!my.work.cv3){
+			if (!my.work.cv3) {
 				my.work.cvcontroller.addNewCell({
 					name: 'defaultHiddenCanvasElementFrame'
 				});

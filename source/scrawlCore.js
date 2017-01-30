@@ -619,7 +619,7 @@ loadExtensions helper function
 		}
 		for (i = 0, iz = exts.length; i < iz; i++) {
 			item = exts[i];
-			if(my.contains(keys, item)){
+			if (my.contains(keys, item)) {
 				for (j = 0, jz = depends[item].length; j < jz; j++) {
 					pu(required, depends[item][j]);
 				}
@@ -5813,7 +5813,7 @@ Set the Cell's &lt;canvas&gt; context engine to the specification supplied by th
 		textBaseline: function(item, e) {
 			e.textBaseline = item;
 		},
-		winding: function(){}
+		winding: function() {}
 	};
 	/**
 groupSort
@@ -6473,14 +6473,14 @@ Adds the value of each attribute supplied in the argument to existing values; on
 **/
 	my.Context.prototype.setDelta = function(items) {
 		items = my.safeObject(items);
-		if(!(typeof items.lineDashOffset == 'undefined')){
-			if(typeof this.lineDashOffset == 'undefined'){
+		if (!(typeof items.lineDashOffset == 'undefined')) {
+			if (typeof this.lineDashOffset == 'undefined') {
 				this.lineDashOffset = 0;
 			}
 			this.lineDashOffset += items.lineDashOffset;
 		}
-		if(!(typeof items.lineWidth == 'undefined')){
-			if(typeof this.lineWidth == 'undefined'){
+		if (!(typeof items.lineWidth == 'undefined')) {
+			if (typeof this.lineWidth == 'undefined') {
 				this.lineWidth = 1;
 			}
 			this.lineWidth += items.lineWidth;
@@ -6488,8 +6488,8 @@ Adds the value of each attribute supplied in the argument to existing values; on
 				this.lineWidth = 0;
 			}
 		}
-		if(!(typeof items.globalAlpha == 'undefined')){
-			if(typeof this.globalAlpha == 'undefined'){
+		if (!(typeof items.globalAlpha == 'undefined')) {
+			if (typeof this.globalAlpha == 'undefined') {
 				this.globalAlpha = 1;
 			}
 			this.globalAlpha += items.globalAlpha;
@@ -6716,7 +6716,7 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 		regionRadius: 0
 	};
 	my.mergeInto(my.work.d.Group, my.work.d.Base);
-	my.Group.prototype.multifiltersGroupInit = function(){};
+	my.Group.prototype.multifiltersGroupInit = function() {};
 	/*
 set
 @method set
@@ -6785,9 +6785,9 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 			this.sortEntitys();
 			entitys = this.entitys;
 			cell = (my.xt(cell)) ? cell : my.cell[cellname];
-			if(this.multiFilter){
+			if (this.multiFilter) {
 				tempFilter = my.multifilter[this.multiFilter];
-				if(tempFilter && tempFilter.filters && tempFilter.filters.length){
+				if (tempFilter && tempFilter.filters && tempFilter.filters.length) {
 					multifilterFlag = true;
 					work = my.work;
 					tempCell = cell;
@@ -6808,7 +6808,7 @@ Tell the Group to ask its constituent entitys to draw themselves on a &lt;canvas
 					entity.stamp(method, cellname, cell, mouse);
 				}
 			}
-			if(multifilterFlag){
+			if (multifilterFlag) {
 				cell = tempCell;
 				cellname = tempCellname;
 				this.stampMultifilter(my.context[cellname], cell);
@@ -7482,7 +7482,7 @@ Permitted methods include:
 			tempCellname, tempCell, tempEngine, tempGCO,
 			sFlag = !this.currentStart.flag,
 			hFlag = !this.currentHandle.flag,
-			multifilterFlag = false, 
+			multifilterFlag = false,
 			tempFilter, work;
 
 		if (this.visibility) {
@@ -7493,9 +7493,9 @@ Permitted methods include:
 			engine = my.context[cellname];
 			method = method || this.method;
 
-			if(this.multiFilter){
+			if (this.multiFilter) {
 				tempFilter = my.multifilter[this.multiFilter];
-				if(tempFilter && tempFilter.filters && tempFilter.filters.length){
+				if (tempFilter && tempFilter.filters && tempFilter.filters.length) {
 					multifilterFlag = true;
 					work = my.work;
 					ctx = my.ctx[this.name];
@@ -7530,7 +7530,7 @@ Permitted methods include:
 				this.pathStamp();
 			}
 			this[method](engine, cellname, cell);
-			if(multifilterFlag){
+			if (multifilterFlag) {
 				engine = tempEngine;
 				cell = tempCell;
 				cellname = tempCellname;

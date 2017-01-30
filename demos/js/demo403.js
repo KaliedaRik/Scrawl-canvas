@@ -29,21 +29,21 @@ var mycode = function() {
 	// define multifilter
 	filterDefinitions = {
 		default: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'default',
 			red: 1,
 			green: 1,
 			blue: 1
 		}),
 		channels: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'channels',
 			red: 1,
 			green: 1,
 			blue: 1
 		}),
 		channelstep: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'channelstep',
 			red: 1,
 			green: 1,
@@ -105,27 +105,39 @@ var mycode = function() {
 				});
 				break;
 			case 'red':
-				if(currentFilter === 'channels'){
-					filterDefinitions[currentFilter].set({red: parseFloat(e.target.value)});
+				if (currentFilter === 'channels') {
+					filterDefinitions[currentFilter].set({
+						red: parseFloat(e.target.value)
+					});
 				}
-				else{
-					filterDefinitions[currentFilter].set({red: parseFloat(e.target.value) * 64});
+				else {
+					filterDefinitions[currentFilter].set({
+						red: parseFloat(e.target.value) * 64
+					});
 				}
 				break;
 			case 'green':
-				if(currentFilter === 'channels'){
-					filterDefinitions[currentFilter].set({green: parseFloat(e.target.value)});
+				if (currentFilter === 'channels') {
+					filterDefinitions[currentFilter].set({
+						green: parseFloat(e.target.value)
+					});
 				}
-				else{
-					filterDefinitions[currentFilter].set({green: parseFloat(e.target.value) * 64});
+				else {
+					filterDefinitions[currentFilter].set({
+						green: parseFloat(e.target.value) * 64
+					});
 				}
 				break;
 			case 'blue':
-				if(currentFilter === 'channels'){
-					filterDefinitions[currentFilter].set({blue: parseFloat(e.target.value)});
+				if (currentFilter === 'channels') {
+					filterDefinitions[currentFilter].set({
+						blue: parseFloat(e.target.value)
+					});
 				}
-				else{
-					filterDefinitions[currentFilter].set({blue: parseFloat(e.target.value) * 64});
+				else {
+					filterDefinitions[currentFilter].set({
+						blue: parseFloat(e.target.value) * 64
+					});
 				}
 				break;
 		}

@@ -23,7 +23,7 @@ var mycode = function() {
 
 	// define multifilter
 	filter = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'blur',
 		radius: 3,
 		step: 1,

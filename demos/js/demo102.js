@@ -55,7 +55,7 @@ var mycode = function() {
 	scrawl.makeMultiFilter({
 		name: 'demo5_filter',
 		filters: scrawl.makeFilter({
-			multiFilter: 'demo5_filter', 
+			multiFilter: 'demo5_filter',
 			species: 'cyan'
 		})
 	});

@@ -32,8 +32,8 @@ var mycode = function() {
 
 	// define multifilter
 	filter = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
-		species: 'brightness', 
+		multiFilter: 'myFilter',
+		species: 'brightness',
 		level: 1
 	});
 	multi = scrawl.makeMultiFilter({
@@ -134,8 +134,8 @@ var mycode = function() {
 					scale: -0.08,
 				});
 			}
-		groupA.updateStart();
-		groupB.updateStart();
+			groupA.updateStart();
+			groupB.updateStart();
 		}
 	};
 

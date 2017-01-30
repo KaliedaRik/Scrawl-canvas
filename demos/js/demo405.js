@@ -26,7 +26,7 @@ var mycode = function() {
 	document.getElementById('offsetY').value = '0';
 
 	pixels = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'pixelate',
 		blockWidth: 20,
 		blockHeight: 20,
@@ -82,19 +82,27 @@ var mycode = function() {
 				scrawl.entity.parrot.set(current);
 				break;
 			case 'width':
-				pixels.set({blockWidth: parseInt(e.target.value, 10)});
+				pixels.set({
+					blockWidth: parseInt(e.target.value, 10)
+				});
 				multi.updateFilters();
 				break;
 			case 'height':
-				pixels.set({blockHeight: parseInt(e.target.value, 10)});
+				pixels.set({
+					blockHeight: parseInt(e.target.value, 10)
+				});
 				multi.updateFilters();
 				break;
 			case 'offsetX':
-				pixels.set({offsetX: parseInt(e.target.value, 10)});
+				pixels.set({
+					offsetX: parseInt(e.target.value, 10)
+				});
 				multi.updateFilters();
 				break;
 			case 'offsetY':
-				pixels.set({offsetY: parseInt(e.target.value, 10)});
+				pixels.set({
+					offsetY: parseInt(e.target.value, 10)
+				});
 				multi.updateFilters();
 				break;
 		}

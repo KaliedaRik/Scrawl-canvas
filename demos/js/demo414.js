@@ -24,26 +24,26 @@ var mycode = function() {
 
 	// define multifilter
 	filter = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'default',
 		level: 10,
-		cacheAction: function(){
+		cacheAction: function() {
 			var cache = this.cache,
 				level = this.level,
 				rows, cols, multi, get, temp,
 				rowChecker, i;
 
-			if(!cache){
+			if (!cache) {
 				multi = scrawl.multifilter[this.multiFilter];
-				if(multi){
+				if (multi) {
 					rows = multi.currentHeight - 1;
 					cols = multi.currentWidth - 1;
 					get = multi.getIndexes;
 					cache = [];
 
-					for(i = 0; i < rows; i++){
+					for (i = 0; i < rows; i++) {
 						rowChecker = i % level;
-						if(rowChecker >= level / 2){
+						if (rowChecker >= level / 2) {
 							temp = get.call(multi, 0, i, cols, i + 1);
 							cache = cache.concat(temp);
 						}
@@ -52,12 +52,12 @@ var mycode = function() {
 				}
 			}
 		},
-		action: function(data){
+		action: function(data) {
 			var counter, len, posA,
 				cache = this.cache;
-			for(counter = 0, len = cache.length; counter < len; counter++){
+			for (counter = 0, len = cache.length; counter < len; counter++) {
 				posA = cache[counter];
-				if(data[posA]){
+				if (data[posA]) {
 					data[posA] = 0;
 				}
 			}
@@ -112,7 +112,9 @@ var mycode = function() {
 				scrawl.entity.parrot.set(current);
 				break;
 			case 'level':
-				filter.set({level: parseInt(e.target.value, 10)}).update();
+				filter.set({
+					level: parseInt(e.target.value, 10)
+				}).update();
 				break;
 		}
 	};

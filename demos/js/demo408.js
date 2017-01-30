@@ -28,7 +28,7 @@ var mycode = function() {
 	// define multifilter
 	colorRange = [130, 0, 0, 255, 100, 255];
 	filter = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'chroma',
 		ranges: [colorRange]
 	});

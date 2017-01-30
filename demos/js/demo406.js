@@ -24,7 +24,7 @@ var mycode = function() {
 
 	matrix = {
 		nochange: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'matrix',
 			blockWidth: 1,
 			blockHeight: 1,
@@ -33,7 +33,7 @@ var mycode = function() {
 			weights: [1]
 		}),
 		edge: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'matrix',
 			blockWidth: 3,
 			blockHeight: 3,
@@ -42,7 +42,7 @@ var mycode = function() {
 			weights: [1, 1, 0, 1, 0, -1, 0, -1, -1]
 		}),
 		sharp: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'matrix',
 			blockWidth: 3,
 			blockHeight: 3,
@@ -51,7 +51,7 @@ var mycode = function() {
 			weights: [1, 0, 0, 0, 1, 0, 0, 0, -1]
 		}),
 		horizontalBlur: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'matrix',
 			blockWidth: 20,
 			blockHeight: 1,
@@ -61,7 +61,7 @@ var mycode = function() {
 			weights: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
 		}),
 		verticalBlur: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'matrix',
 			blockWidth: 1,
 			blockHeight: 20,
@@ -71,7 +71,7 @@ var mycode = function() {
 			weights: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
 		}),
 		gaussian: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'matrix',
 			blockWidth: 5,
 			blockHeight: 5,
@@ -130,7 +130,9 @@ var mycode = function() {
 				scrawl.entity.parrot.set(current);
 				break;
 			case 'matrix':
-				filter.set({filters: matrix[e.target.value]});
+				filter.set({
+					filters: matrix[e.target.value]
+				});
 				break;
 		}
 	};

@@ -16,7 +16,7 @@ var mycode = function() {
 	scrawl.makeMultiFilter({
 		name: 'sepia',
 		filters: scrawl.makeFilter({
-			multiFilter: 'sepia', 
+			multiFilter: 'sepia',
 			species: 'sepia'
 		})
 	});

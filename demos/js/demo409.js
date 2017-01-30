@@ -26,11 +26,11 @@ var mycode = function() {
 
 	// define multifilter
 	def = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'default'
 	});
 	blur1 = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'blur',
 		radius: 2
 	});
@@ -43,18 +43,18 @@ var mycode = function() {
 		step: 2
 	});
 	grayscale = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'grayscale'
 	});
 	channels = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'channelstep',
 		red: 127,
 		green: 127,
 		blue: 127
 	});
 	edge = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'matrix',
 		blockWidth: 1,
 		blockHeight: 3,

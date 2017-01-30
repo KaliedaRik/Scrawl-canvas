@@ -20,7 +20,7 @@ var mycode = function() {
 	scrawl.makeMultiFilter({
 		name: 'gscale',
 		filters: scrawl.makeFilter({
-			multiFilter: 'gscale', 
+			multiFilter: 'gscale',
 			species: 'grayscale'
 		})
 	});

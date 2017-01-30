@@ -23,12 +23,12 @@ var mycode = function() {
 
 	// define multifilter
 	filter = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'default',
-		action: function(data){
+		action: function(data) {
 			var len, posR, posG, posB, posA;
-			for(var posA = 3, len = data.length; posA < len; posA += 4){
-				if(data[posA]){
+			for (var posA = 3, len = data.length; posA < len; posA += 4) {
+				if (data[posA]) {
 					posR = posA - 3;
 					posG = posA - 2;
 					posB = posA - 1;

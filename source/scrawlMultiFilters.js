@@ -137,60 +137,60 @@ Adds the multiFilter, filterOnStroke and filterLevel attributes to Entity object
 			items = my.safeObject(items);
 			this.multiFilter = (my.xt(items.multiFilter)) ? items.multiFilter : '';
 		};
-	/**
+		/**
 Group.stamp hook function - modified by multifilters extension
 @method stampMultifilter
 @private
 **/
-	my.Group.prototype.stampMultifilter = function(engine, cell) {
-		var filter = my.multifilter[this.multiFilter],
-			work = my.work,
-			hostCanvas = work.cv,
-			hostCell = work.cvwrapper,
-			hostCtx = my.work.cvmodel,
-			hostEngine = my.work.cvx;
+		my.Group.prototype.stampMultifilter = function(engine, cell) {
+			var filter = my.multifilter[this.multiFilter],
+				work = my.work,
+				hostCanvas = work.cv,
+				hostCell = work.cvwrapper,
+				hostCtx = my.work.cvmodel,
+				hostEngine = my.work.cvx;
 
-		if(filter.stencil){
-			hostEngine.globalCompositeOperation = 'source-in';
-			hostCell.copyCellToSelf(cell);
-			hostEngine.globalCompositeOperation = 'source-over';
-		}
+			if (filter.stencil) {
+				hostEngine.globalCompositeOperation = 'source-in';
+				hostCell.copyCellToSelf(cell);
+				hostEngine.globalCompositeOperation = 'source-over';
+			}
 
-		filter.apply(my.work.cv, my.work.cvx);
-		engine.setTransform(1, 0, 0, 1, 0, 0);
-		engine.drawImage(hostCanvas, 0, 0);
-	};
-	/**
+			filter.apply(my.work.cv, my.work.cvx);
+			engine.setTransform(1, 0, 0, 1, 0, 0);
+			engine.drawImage(hostCanvas, 0, 0);
+		};
+		/**
 Entity.stamp hook function - modified by multifilters extension
 @method stampMultifilter
 @private
 **/
-	my.Entity.prototype.stampMultifilter = function(engine, cell) {
-		var filter = my.multifilter[this.multiFilter],
-			work = my.work,
-			hostCanvas = work.cv2,
-			hostCell = work.cvwrapper2,
-			hostCtx = my.work.cvmodel2,
-			hostEngine = my.work.cvx2,
-			gco,
-			ctx = my.ctx[this.name];
+		my.Entity.prototype.stampMultifilter = function(engine, cell) {
+			var filter = my.multifilter[this.multiFilter],
+				work = my.work,
+				hostCanvas = work.cv2,
+				hostCell = work.cvwrapper2,
+				hostCtx = my.work.cvmodel2,
+				hostEngine = my.work.cvx2,
+				gco,
+				ctx = my.ctx[this.name];
 
-		if(filter.stencil){
-			hostEngine.globalCompositeOperation = 'source-in';
-			hostCell.copyCellToSelf(cell);
-			hostEngine.globalCompositeOperation = 'source-over';
-		}
+			if (filter.stencil) {
+				hostEngine.globalCompositeOperation = 'source-in';
+				hostCell.copyCellToSelf(cell);
+				hostEngine.globalCompositeOperation = 'source-over';
+			}
 
-		filter.apply(my.work.cv2, my.work.cvx2);
-		gco = engine.globalCompositeOperation;
-		engine.setTransform(1, 0, 0, 1, 0, 0);
-		engine.globalCompositeOperation = ctx.globalCompositeOperation;
-		engine.drawImage(hostCanvas, 0, 0);
-		engine.globalCompositeOperation = gco;
-	};
+			filter.apply(my.work.cv2, my.work.cvx2);
+			gco = engine.globalCompositeOperation;
+			engine.setTransform(1, 0, 0, 1, 0, 0);
+			engine.globalCompositeOperation = ctx.globalCompositeOperation;
+			engine.drawImage(hostCanvas, 0, 0);
+			engine.globalCompositeOperation = gco;
+		};
 
-// THIS IS WHERE THE NEW MULTIFILTER CODE WILL START!
-// ==================================================
+		// THIS IS WHERE THE NEW MULTIFILTER CODE WILL START!
+		// ==================================================
 
 
 		/**
@@ -241,7 +241,7 @@ Entity.stamp hook function - modified by multifilters extension
 			this.radius = get(items.radius, 0);
 			this.step = get(items.step, 1);
 			this.wrap = get(items.wrap, false);
-			if(items.ranges){
+			if (items.ranges) {
 				this.setRanges(items.ranges);
 			}
 			this.cacheAction = get(items.cacheAction, false);
@@ -291,7 +291,7 @@ Entity.stamp hook function - modified by multifilters extension
 			var d = my.work.d.Filter,
 				xt = my.xt;
 			for (var i in items) {
-				if(i === 'ranges'){
+				if (i === 'ranges') {
 					this.setRanges(items[i]);
 				}
 				else if (xt(d[i])) {
@@ -303,16 +303,16 @@ Entity.stamp hook function - modified by multifilters extension
 		my.Filter.prototype.setRanges = function(item) {
 			var result = [],
 				range, i, iz;
-			if(Array.isArray(item)){
-				for(var i = 0, iz = item.length; i < iz; i++){
+			if (Array.isArray(item)) {
+				for (var i = 0, iz = item.length; i < iz; i++) {
 					range = item[i];
-					if(range.length === 6){
+					if (range.length === 6) {
 						result.push(new Uint8ClampedArray(range));
 					}
 				}
 			}
 			this.ranges = [];
-			if(result.length){
+			if (result.length) {
 				this.ranges = result;
 			}
 			return this;
@@ -327,7 +327,7 @@ Entity.stamp hook function - modified by multifilters extension
 
 		my.Filter.prototype.update = function() {
 			var m = my.multifilter[this.multiFilter];
-			if(m){
+			if (m) {
 				this.width = m.currentWidth;
 				this.height = m.currentHeight;
 				this.area = m.currentArea;
@@ -337,20 +337,20 @@ Entity.stamp hook function - modified by multifilters extension
 
 
 		my.Filter.prototype.prepare = function() {
-			if(this.checkCache[this.species]){
+			if (this.checkCache[this.species]) {
 				this.checkCache[this.species].call(this);
 			}
-			if(this.cacheAction){
+			if (this.cacheAction) {
 				this.cacheAction();
 			}
 		};
 
 
 		my.Filter.prototype.do = function(data) {
-			if(this.defs[this.species]){
+			if (this.defs[this.species]) {
 				this.defs[this.species].call(this, data);
 			}
-			if(this.action){
+			if (this.action) {
 				this.action(data);
 			}
 		};
@@ -361,7 +361,7 @@ Entity.stamp hook function - modified by multifilters extension
 An object containing pre-defined filter functionality.
 **/
 		my.Filter.prototype.checkCache = {
-			pixelate: function(){
+			pixelate: function() {
 				var cache = this.cache,
 					rows, h, cols, w, ceil,
 					segment,
@@ -369,9 +369,9 @@ An object containing pre-defined filter functionality.
 					multi, get, res, c,
 					i, j, x1, x2, y1, y2;
 
-				if(!cache){
+				if (!cache) {
 					multi = my.multifilter[this.multiFilter];
-					if(multi){
+					if (multi) {
 						w = this.blockWidth || 1;
 						h = this.blockHeight || 1;
 						ceil = Math.ceil;
@@ -389,8 +389,8 @@ An object containing pre-defined filter functionality.
 						c = 0;
 						get = multi.getIndexes;
 
-						for(i = -1; i < rows; i++){
-							for(j = -1; j < cols; j++){
+						for (i = -1; i < rows; i++) {
+							for (j = -1; j < cols; j++) {
 								y1 = (i * h) + y;
 								x1 = (j * w) + x;
 								y2 = y1 + h;
@@ -404,15 +404,15 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			matrix: function(){
+			matrix: function() {
 				var cache = this.cache,
 					multi, get, c, wrap,
 					w, cw, h, ch, x, y,
 					i, j, x1, x2, y1, y2;
 
-				if(!cache){
+				if (!cache) {
 					multi = my.multifilter[this.multiFilter];
-					if(multi){
+					if (multi) {
 						w = this.blockWidth || 1;
 						h = this.blockHeight || 1;
 						x = this.offsetX || 0;
@@ -425,8 +425,8 @@ An object containing pre-defined filter functionality.
 						c = 0;
 						get = (wrap) ? multi.getWrappedIndexes : multi.getIndexes;
 
-						for(i = 0; i < ch; i++){
-							for(j = 0; j < cw; j++){
+						for (i = 0; i < ch; i++) {
+							for (j = 0; j < cw; j++) {
 								y1 = i + y;
 								x1 = j + x;
 								y2 = y1 + h;
@@ -439,15 +439,15 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			blur: function(){
+			blur: function() {
 				var cache = this.cache,
 					multi, get, c, wrap,
 					w, cw, h, ch, x, y, r,
 					i, j, x1, x2, y1, y2;
 
-				if(!cache){
+				if (!cache) {
 					multi = my.multifilter[this.multiFilter];
-					if(multi){
+					if (multi) {
 						r = this.radius || 0;
 						wrap = this.wrap || false;
 						cw = multi.currentWidth;
@@ -464,8 +464,8 @@ An object containing pre-defined filter functionality.
 						h = 1;
 						x = -r;
 						y = 0;
-						for(i = 0; i < ch; i++){
-							for(j = 0; j < cw; j++){
+						for (i = 0; i < ch; i++) {
+							for (j = 0; j < cw; j++) {
 								y1 = i + y;
 								x1 = j + x;
 								y2 = y1 + h;
@@ -481,8 +481,8 @@ An object containing pre-defined filter functionality.
 						h = (r * 2) + 1;
 						x = 0;
 						y = -r;
-						for(i = 0; i < ch; i++){
-							for(j = 0; j < cw; j++){
+						for (i = 0; i < ch; i++) {
+							for (j = 0; j < cw; j++) {
 								y1 = i + y;
 								x1 = j + x;
 								y2 = y1 + h;
@@ -499,11 +499,11 @@ An object containing pre-defined filter functionality.
 
 
 		my.Filter.prototype.defs = {
-			default: function(data){},
-			grayscale: function(data){
+			default: function(data) {},
+			grayscale: function(data) {
 				var len, posR, posG, posB, posA, gray;
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -514,12 +514,12 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			sepia: function(data){
+			sepia: function(data) {
 				var len, posR, posG, posB, posA,
 					r, g, b, red, green, blue;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -535,11 +535,11 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			invert: function(data){
+			invert: function(data) {
 				var len, posR, posG, posB, posA;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -549,11 +549,11 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			red: function(data){
+			red: function(data) {
 				var len, posG, posB, posA;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posG = posA - 2;
 						posB = posA - 1;
 						data[posG] = 0;
@@ -561,11 +561,11 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			green: function(data){
+			green: function(data) {
 				var len, posR, posB, posA;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posB = posA - 1;
 						data[posR] = 0;
@@ -573,11 +573,11 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			blue: function(data){
+			blue: function(data) {
 				var len, posR, posG, posA;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						data[posR] = 0;
@@ -585,32 +585,32 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			notred: function(data){
+			notred: function(data) {
 				var len, posR;
 
-				for(posR = 0, len = data.length; posR < len; posR +=4){
+				for (posR = 0, len = data.length; posR < len; posR += 4) {
 					data[posR] = 0;
 				}
 			},
-			notgreen: function(data){
+			notgreen: function(data) {
 				var len, posG;
 
-				for(posG = 1, len = data.length; posG < len; posG +=4){
+				for (posG = 1, len = data.length; posG < len; posG += 4) {
 					data[posG] = 0;
 				}
 			},
-			notblue: function(data){
+			notblue: function(data) {
 				var len, posB;
 
-				for(posB = 2, len = data.length; posB < len; posB +=4){
+				for (posB = 2, len = data.length; posB < len; posB += 4) {
 					data[posB] = 0;
 				}
 			},
-			cyan: function(data){
+			cyan: function(data) {
 				var len, posR, posG, posB, posA, gray;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -621,11 +621,11 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			magenta: function(data){
+			magenta: function(data) {
 				var len, posR, posG, posB, posA, gray;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -636,11 +636,11 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			yellow: function(data){
+			yellow: function(data) {
 				var len, posR, posG, posB, posA, gray;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -651,12 +651,12 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			brightness: function(data){
+			brightness: function(data) {
 				var len, posR, posG, posB, posA,
 					level = this.level || 0;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -666,12 +666,12 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			saturation: function(data){
+			saturation: function(data) {
 				var len, posR, posG, posB, posA,
 					level = this.level || 0;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -681,12 +681,12 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			threshold: function(data){
+			threshold: function(data) {
 				var len, posR, posG, posB, posA, gray,
 					level = this.level || 0;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -698,14 +698,14 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			channels: function(data){
+			channels: function(data) {
 				var len, posR, posG, posB, posA,
 					red = this.red || 0,
 					green = this.green || 0,
 					blue = this.blue || 0;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -715,15 +715,15 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			channelstep: function(data){
+			channelstep: function(data) {
 				var len, posR, posG, posB, posA,
 					red = this.red || 1,
 					green = this.green || 1,
 					blue = this.blue || 1,
 					floor = Math.floor;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -733,7 +733,7 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			tint: function(data){
+			tint: function(data) {
 				var len, posR, posG, posB, posA, r, g, b,
 					redInRed = this.redInRed || 0,
 					redInGreen = this.redInGreen || 0,
@@ -745,8 +745,8 @@ An object containing pre-defined filter functionality.
 					blueInGreen = this.blueInGreen || 0,
 					blueInBlue = this.blueInBlue || 0;
 
-				for(posA = 3, len = data.length; posA < len; posA += 4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
@@ -754,29 +754,29 @@ An object containing pre-defined filter functionality.
 						g = data[posG];
 						b = data[posB];
 						data[posR] = (r * redInRed) + (g * greenInRed) + (b * blueInRed);
-						data[posG] = (r *redInGreen) + (g * greenInGreen) + (b * blueInGreen);
+						data[posG] = (r * redInGreen) + (g * greenInGreen) + (b * blueInGreen);
 						data[posB] = (r * redInBlue) + (g * greenInBlue) + (b * blueInBlue);
 					}
 				}
 			},
-			pixelate: function(data){
+			pixelate: function(data) {
 				var cache = this.cache,
 					segment = this.segment,
 					blocks = cache.length / segment,
-					red, green, blue, 
+					red, green, blue,
 					pos, alphas, counter, k, c;
 
-				for(c = 0; c < blocks; c++){
+				for (c = 0; c < blocks; c++) {
 					pos = c * segment;
 					alphas = cache.slice(pos, pos + segment);
 					red = green = blue = counter = 0;
 
-					for(k = 0; k < segment; k++){
+					for (k = 0; k < segment; k++) {
 						pos = alphas[k];
-						if(!pos){
+						if (!pos) {
 							break;
 						}
-						if(data[pos]){
+						if (data[pos]) {
 							counter++;
 							pos -= 3;
 							red += data[pos++];
@@ -784,16 +784,16 @@ An object containing pre-defined filter functionality.
 							blue += data[pos];
 						}
 					}
-					if(counter > 0){
+					if (counter > 0) {
 						red /= counter;
 						green /= counter;
 						blue /= counter;
-						for(k = 0; k < segment; k++){
+						for (k = 0; k < segment; k++) {
 							pos = alphas[k];
-							if(!pos){
+							if (!pos) {
 								break;
 							}
-							if(data[pos]){
+							if (data[pos]) {
 								pos -= 3
 								data[pos++] = red;
 								data[pos++] = green;
@@ -803,27 +803,27 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			matrix: function(data){
+			matrix: function(data) {
 				var cache = this.cache,
 					datalen = data.length,
-					red, green, blue, 
+					red, green, blue,
 					posR, posG, posB, posA, localA,
 					alphas, len,
 					weights = this.weights,
 					norm = this.normalize || false,
 					wt, k, c, total, temp;
 
-				if(weights.length){
+				if (weights.length) {
 					temp = data.slice();
-					for(posA = 3, c = 0; posA < datalen; posA +=4, c++){
-						if(data[posA]){
+					for (posA = 3, c = 0; posA < datalen; posA += 4, c++) {
+						if (data[posA]) {
 							alphas = cache[c];
 							len = alphas.length;
 							red = green = blue = total = 0;
 
-							for(k = 0; k < len; k++){
+							for (k = 0; k < len; k++) {
 								localA = alphas[k];
-								if(weights[k] && temp[localA]){
+								if (weights[k] && temp[localA]) {
 									wt = weights[k]
 									posR = localA - 3;
 									posG = localA - 2;
@@ -834,7 +834,7 @@ An object containing pre-defined filter functionality.
 									total += wt;
 								}
 							}
-							if(norm && total){
+							if (norm && total) {
 								red /= total;
 								green /= total;
 								blue /= total;
@@ -849,10 +849,10 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			blur: function(data){
+			blur: function(data) {
 				var cache,
 					datalen = data.length,
-					red, green, blue, 
+					red, green, blue,
 					posR, posG, posB, posA, localA,
 					alphas, len,
 					step = this.step || 1,
@@ -860,15 +860,15 @@ An object containing pre-defined filter functionality.
 
 				cache = this.cache[0],
 				temp = data.slice();
-				for(posA = 3, c = 0; posA < datalen; posA +=4, c++){
-					if(data[posA]){
+				for (posA = 3, c = 0; posA < datalen; posA += 4, c++) {
+					if (data[posA]) {
 						alphas = cache[c];
 						len = alphas.length;
 						red = green = blue = counter = 0;
 
-						for(k = 0; k < len; k += step){
+						for (k = 0; k < len; k += step) {
 							localA = alphas[k];
-							if(temp[localA]){
+							if (temp[localA]) {
 								posR = localA - 3;
 								posG = localA - 2;
 								posB = localA - 1;
@@ -878,7 +878,7 @@ An object containing pre-defined filter functionality.
 								counter++;
 							}
 						}
-						if(counter){
+						if (counter) {
 							red /= counter;
 							green /= counter;
 							blue /= counter;
@@ -894,15 +894,15 @@ An object containing pre-defined filter functionality.
 
 				cache = this.cache[1],
 				temp = data.slice();
-				for(posA = 3, c = 0; posA < datalen; posA +=4, c++){
-					if(data[posA]){
+				for (posA = 3, c = 0; posA < datalen; posA += 4, c++) {
+					if (data[posA]) {
 						alphas = cache[c];
 						len = alphas.length;
 						red = green = blue = counter = 0;
 
-						for(k = 0; k < len; k += step){
+						for (k = 0; k < len; k += step) {
 							localA = alphas[k];
-							if(temp[localA]){
+							if (temp[localA]) {
 								posR = localA - 3;
 								posG = localA - 2;
 								posB = localA - 1;
@@ -912,7 +912,7 @@ An object containing pre-defined filter functionality.
 								counter++;
 							}
 						}
-						if(counter){
+						if (counter) {
 							red /= counter;
 							green /= counter;
 							blue /= counter;
@@ -926,35 +926,35 @@ An object containing pre-defined filter functionality.
 					}
 				}
 			},
-			chroma: function(data){
+			chroma: function(data) {
 				var pos, posA, len,
 					ranges = this.ranges,
 					range, min, max, val,
 					i, iz, flag;
 
-				for(posA = 3, len = data.length; posA < len; posA +=4){
-					if(data[posA]){
+				for (posA = 3, len = data.length; posA < len; posA += 4) {
+					if (data[posA]) {
 						flag = false;
-						for(i = 0, iz = ranges.length; i < iz; i++){
+						for (i = 0, iz = ranges.length; i < iz; i++) {
 							range = ranges[i];
 							min = range[2];
 							pos = posA - 1;
 							val = data[pos];
-							if(val >= min){
+							if (val >= min) {
 								max = range[5];
-								if(val <= max){
+								if (val <= max) {
 									min = range[1];
 									pos--;
 									val = data[pos];
-									if(val >= min){
+									if (val >= min) {
 										max = range[4];
-										if(val <= max){
+										if (val <= max) {
 											min = range[0];
 											pos--;
 											val = data[pos];
-											if(val >= min){
+											if (val >= min) {
 												max = range[3];
-												if(val <= max){
+												if (val <= max) {
 													flag = true;
 													break;
 												}
@@ -964,7 +964,7 @@ An object containing pre-defined filter functionality.
 								}
 							}
 						}
-						if(flag){
+						if (flag) {
 							data[posA] = 0;
 						}
 					}
@@ -1080,13 +1080,13 @@ multifilter main function:
 			// var canvas, cvx, img, def, filter, buff, data, width, height, j, jz;
 			var img, def, filter, buff, data, width, height, j, jz;
 
-			if(this.filters.length){
+			if (this.filters.length) {
 				// canvas = my.work.cv2;
 				// cvx = my.work.cvx2;
 				width = canvas.width;
 				height = canvas.height;
 
-				if(width !== this.currentWidth || height !== this.currentHeight){
+				if (width !== this.currentWidth || height !== this.currentHeight) {
 					this.currentWidth = width;
 					this.currentHeight = height;
 					this.currentArea = width * height;
@@ -1098,7 +1098,7 @@ multifilter main function:
 				buff = img.data.buffer;
 				data = new Uint8ClampedArray(buff);
 
-				for(j = 0, jz = this.filters.length; j < jz; j++){
+				for (j = 0, jz = this.filters.length; j < jz; j++) {
 					filter = this.filters[j];
 					filter.prepare()
 					filter.do(data);
@@ -1117,12 +1117,12 @@ Create a reference grid, for use by certain filters:
 			var counter = 3,
 				height = this.currentHeight,
 				width = this.currentWidth,
-				grid = [], 
+				grid = [],
 				row, i, j;
 
-			for(i = 0; i < height; i++){
+			for (i = 0; i < height; i++) {
 				row = [];
-				for(j = 0; j < width; j++){
+				for (j = 0; j < width; j++) {
 					row[j] = counter;
 					counter += 4;
 				}
@@ -1155,7 +1155,7 @@ Force filters to update:
 @return always true
 **/
 		my.MultiFilter.prototype.updateFilters = function() {
-			for(var i = 0, iz = this.filters.length; i < iz; i++){
+			for (var i = 0, iz = this.filters.length; i < iz; i++) {
 				this.filters[i].update();
 			}
 			return true;
@@ -1174,12 +1174,12 @@ Extract data from the current grid
 				grid = this.currentGrid,
 				i, j, temp, lw, lh, r, c;
 
-			if(row1 > row2){
+			if (row1 > row2) {
 				temp = row1;
 				row1 = row2;
 				row2 = temp;
 			}
-			if(col1 > col2){
+			if (col1 > col2) {
 				temp = col1;
 				col1 = col2;
 				col2 = temp;
@@ -1189,7 +1189,7 @@ Extract data from the current grid
 			row2 = (row2 >= h) ? h - 1 : row2;
 			col2 = (col2 >= w) ? w - 1 : col2;
 
-			if(row2 < 0 || col2 < 0 || row1 >= h || col1 >= w){
+			if (row2 < 0 || col2 < 0 || row1 >= h || col1 >= w) {
 				return [];
 			}
 
@@ -1197,8 +1197,8 @@ Extract data from the current grid
 			lh = row2 - row1;
 			result = [];
 
-			for(i = 0; i < lh; i++){
-				for(j = 0; j < lw; j++){
+			for (i = 0; i < lh; i++) {
+				for (j = 0; j < lw; j++) {
 					r = row1 + i;
 					c = col1 + j;
 					temp = (i * lw) + j;
@@ -1222,18 +1222,18 @@ Extract data from the current grid
 				grid = this.currentGrid,
 				i, j, temp, lw, lh, r, c;
 
-			if(row1 > row2){
+			if (row1 > row2) {
 				temp = row1;
 				row1 = row2;
 				row2 = temp;
 			}
-			if(col1 > col2){
+			if (col1 > col2) {
 				temp = col1;
 				col1 = col2;
 				col2 = temp;
 			}
 
-			if(row2 < 0 || col2 < 0 || row1 >= h || col1 >= w){
+			if (row2 < 0 || col2 < 0 || row1 >= h || col1 >= w) {
 				return [];
 			}
 
@@ -1241,14 +1241,14 @@ Extract data from the current grid
 			lh = row2 - row1;
 			result = [];
 
-			for(i = 0; i < lh; i++){
-				for(j = 0; j < lw; j++){
+			for (i = 0; i < lh; i++) {
+				for (j = 0; j < lw; j++) {
 					r = row1 + i;
 					c = col1 + j;
-					if(r < 0 || r >= h){
+					if (r < 0 || r >= h) {
 						r = (r < 0) ? r + h : r - h;
 					}
-					if(c < 0 || c >= w){
+					if (c < 0 || c >= w) {
 						c = (c < 0) ? c + w : c - w;
 					}
 					temp = (i * lw) + j;

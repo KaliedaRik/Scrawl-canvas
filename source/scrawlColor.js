@@ -498,7 +498,7 @@ Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/colo
 					b = temp[2];
 					a = temp[3];
 				}
-				else if(items === 'transparent'){
+				else if (items === 'transparent') {
 					r = g = b = a = 0;
 				}
 				else {
@@ -564,9 +564,9 @@ Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/colo
 			dimgray: '696969',
 			dimgrey: '696969',
 			dodgerblue: '1e90ff',
-			firebrick: 'b22222', 
-			floralwhite: 'fffaf0', 
-			forestgreen: '228b22', 
+			firebrick: 'b22222',
+			floralwhite: 'fffaf0',
+			forestgreen: '228b22',
 			fuchsia: 'ff00ff',
 			gainsboro: 'dcdcdc',
 			ghostwhite: 'f8f8ff',
@@ -665,7 +665,8 @@ Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/colo
 			white: 'ffffff',
 			whitesmoke: 'f5f5f5',
 			yellow: 'ffff00',
-			yellowgreen: '9acd32'		};
+			yellowgreen: '9acd32'
+		};
 		/**
 Convert a decimal Number to its hexidecimal String value
 @method toHex

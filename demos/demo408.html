@@ -39,9 +39,11 @@
   <h1><a href="index.html">Scrawl.js</a> - demonstration 408</h1>
   <h2>Scrawl multiFilters - chroma key (green screen effect)</h2>
   <h3>Extensions: images, multifilters, animation</h3>
-  <p>The chroma key filter produces a green screen effect, rendering pixels which fall between two color values as transparent. More than one range of colors can be defined in the filter. The <b>ranges</b> attribute takes an Array value, with each color range defined as an array within that array.</p>
+  <p>The chroma key filter produces a green screen effect, rendering pixels which fall between two color values as transparent. More than one range of colors can be defined in the filter. The <b>ranges</b> attribute takes an Array value, with each color range
+    defined as an array within that array.</p>
 
-  <p>The color range array takes the form [startRed, startGreen, startBlue, endRed, endGreen, endBlue], with each value being an integer between 0 and 255. Start values for each color must be below end values - for speed, the filter does not check that values have been ordered correctly. In this demo, the start values of a single color range have been set to 0, while end values can be controlled by the range selectors.</p>
+  <p>The color range array takes the form [startRed, startGreen, startBlue, endRed, endGreen, endBlue], with each value being an integer between 0 and 255. Start values for each color must be below end values - for speed, the filter does not check that values
+    have been ordered correctly. In this demo, the start values of a single color range have been set to 0, while end values can be controlled by the range selectors.</p>
 
   <canvas width="400" height="400" id="mycanvas"></canvas>
 

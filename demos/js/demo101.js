@@ -47,116 +47,116 @@ var mycode = function() {
 	currentFilter = 'grayscale';
 	filterDefinitions = {
 		grayscale: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'grayscale'
 		}),
 		sepia: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'sepia'
 		}),
 		invert: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'invert'
 		}),
 		red: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'red'
 		}),
 		green: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'green'
 		}),
 		blue: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'blue'
 		}),
 		notred: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'notred'
 		}),
 		notgreen: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'notgreen'
 		}),
 		notblue: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'notblue'
 		}),
 		cyan: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'cyan'
 		}),
 		magenta: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'magenta'
 		}),
 		yellow: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'yellow'
 		}),
 		brightness: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
-			species: 'brightness', 
+			multiFilter: 'myFilter',
+			species: 'brightness',
 			level: 2
 		}),
 		saturation: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
-			species: 'saturation', 
+			multiFilter: 'myFilter',
+			species: 'saturation',
 			level: 2
 		}),
 		threshold: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
-			species: 'threshold', 
+			multiFilter: 'myFilter',
+			species: 'threshold',
 			level: 127
 		}),
 		channels: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
-			species: 'channels', 
-			red: 0.8, 
-			green: 0.4, 
+			multiFilter: 'myFilter',
+			species: 'channels',
+			red: 0.8,
+			green: 0.4,
 			blue: 2
 		}),
 		channelstep: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
-			species: 'channelstep', 
-			red: 100, 
-			green: 100, 
+			multiFilter: 'myFilter',
+			species: 'channelstep',
+			red: 100,
+			green: 100,
 			blue: 100
 		}),
 		tint: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
-			species: 'tint', 
-			redInRed: 1, 
-			redInGreen: 0, 
-			redInBlue: 0.5, 
-			greenInRed: 0, 
-			greenInGreen: 0.5, 
-			greenInBlue: 0, 
-			blueInRed: 0.5, 
-			blueInGreen: 1.2, 
+			multiFilter: 'myFilter',
+			species: 'tint',
+			redInRed: 1,
+			redInGreen: 0,
+			redInBlue: 0.5,
+			greenInRed: 0,
+			greenInGreen: 0.5,
+			greenInBlue: 0,
+			blueInRed: 0.5,
+			blueInGreen: 1.2,
 			blueInBlue: 1
 		}),
 		pixelate: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
-			species: 'pixelate', 
-			blockWidth: 12, 
-			blockHeight: 12, 
-			offsetX: 0, 
+			multiFilter: 'myFilter',
+			species: 'pixelate',
+			blockWidth: 12,
+			blockHeight: 12,
+			offsetX: 0,
 			offsetY: 0
 		}),
 		matrix: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
-			species: 'matrix', 
-			blockWidth: 3, 
-			blockHeight: 3, 
-			offsetX: -1, 
-			offsetY: -1, 
+			multiFilter: 'myFilter',
+			species: 'matrix',
+			blockWidth: 3,
+			blockHeight: 3,
+			offsetX: -1,
+			offsetY: -1,
 			weights: [1, 1, 0, 1, 0, -1, 0, -1, -1]
 		}),
 		blur: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
-			species: 'blur', 
-			radius: 3, 
+			multiFilter: 'myFilter',
+			species: 'blur',
+			radius: 3,
 			step: 1
 		})
 	};

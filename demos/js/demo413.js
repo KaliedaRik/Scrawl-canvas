@@ -23,24 +23,24 @@ var mycode = function() {
 
 	// define multifilter
 	filter = scrawl.makeFilter({
-		multiFilter: 'myFilter', 
+		multiFilter: 'myFilter',
 		species: 'default',
-		cacheAction: function(){
+		cacheAction: function() {
 			var cache = this.cache,
 				rows, cols, multi, get, temp,
 				rowChecker, i;
 
-			if(!cache){
+			if (!cache) {
 				multi = scrawl.multifilter[this.multiFilter];
-				if(multi){
+				if (multi) {
 					rows = multi.currentHeight - 1;
 					cols = multi.currentWidth - 1;
 					get = multi.getIndexes;
 					cache = [];
 
-					for(i = 0; i < rows; i++){
+					for (i = 0; i < rows; i++) {
 						rowChecker = i % 10;
-						if(rowChecker > 4){
+						if (rowChecker > 4) {
 							temp = get.call(multi, 0, i, cols, i + 1);
 							cache = cache.concat(temp);
 						}
@@ -49,12 +49,12 @@ var mycode = function() {
 				}
 			}
 		},
-		action: function(data){
+		action: function(data) {
 			var counter, len, posA,
 				cache = this.cache;
-			for(counter = 0, len = cache.length; counter < len; counter++){
+			for (counter = 0, len = cache.length; counter < len; counter++) {
 				posA = cache[counter];
-				if(data[posA]){
+				if (data[posA]) {
 					data[posA] = 0;
 				}
 			}

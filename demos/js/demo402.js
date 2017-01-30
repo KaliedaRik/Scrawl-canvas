@@ -28,22 +28,22 @@ var mycode = function() {
 	// define multifilter
 	filterDefinitions = {
 		default: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'default',
 			level: 1
 		}),
 		brightness: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'brightness',
 			level: 1
 		}),
 		saturation: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'saturation',
 			level: 1
 		}),
 		threshold: scrawl.makeFilter({
-			multiFilter: 'myFilter', 
+			multiFilter: 'myFilter',
 			species: 'threshold',
 			level: 127
 		}),
@@ -104,10 +104,12 @@ var mycode = function() {
 				break;
 			case 'level':
 				currentLevel = parseFloat(e.target.value);
-				if(currentFilter === 'threshold'){
+				if (currentFilter === 'threshold') {
 					currentLevel *= 127;
 				}
-				filterDefinitions[currentFilter].set({level: currentLevel});
+				filterDefinitions[currentFilter].set({
+					level: currentLevel
+				});
 				break;
 		}
 	};

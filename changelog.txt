@@ -37,7 +37,48 @@ CHANGE LOG
 		- tested against demos: 
 			- 016, 035, 044, 046, 050, 052, 057, 080, 
 			- 090, 099, 106, 113, 210, 213, 504
+				- all pass
 	- minor efficiency updates to Context object and cell engine manipulation
+	- bunny tests (no of bunnies that can be animated at 20fps) ...
+		- Chrome:   031a - 2660, 032a - 3850, 033a -  4600
+		- IE11:     031a - 1820, 032a - 4550, 033a -  7900
+		- Edge:     031a - 1780, 032a - 4700, 033a -  8500
+		- Firefox:  031a - 2460, 032a - 8300, 033a - 17300
+	- starfield tests (no of stars that can be animated at ~ 20fps) ...
+		- Edge:     220 - 100(10fps), 221 -  300(19fps), 119 - 1400(20fps)
+		- IE11:     220 - 100(13fps), 221 -  300(20fps), 119 - 1300(20fps)
+		- Firefox:  220 - 100(18fps), 221 -  400(22fps), 119 - 3000(20fps)
+		- Chrome:   220 - 300(15fps), 221 - 1200(20fps), 119 - 3400(20fps)
+	- changes merged into develop branch
+		- min.js filesize changes (approx 26.5kb smaller)
+			file                          before   after     Diff
+			                              (6.0.1)  (7.0.0a)
+			scrawlFilters/MultiFilters    24.60    11.70     -12.9
+			scrawlColor                   17.40    06.67     -10.7
+			scrawlBlock                   04.62    03.41     -01.2
+			scrawlWheel                   06.72    06.06     -00.6
+			scrawlFrame                   20.10    19.30     -00.8
+			scrawlPath                    23.50    23.20     -00.3
+			scrawlShape                   08.61    08.34     -00.2
+			scrawlAnimation               27.90    27.80     -00.1
+			scrawlImageLoad               08.93    08.77     -00.1
+			scrawlImages                  39.20    39.10     -00.1
+			scrawlPhysics                 09.15    09.00     -00.1
+			scrawlStacks                  49.10    49.00     -00.1
+			scrawlCollisions              10.30    10.30      00.0
+			scrawlPathFactories           08.01    08.01      00.0
+			scrawlQuaternion              05.53    05.47      00.0
+			scrawlSaveLoad                08.15    08.15      00.0
+			scrawlPhrase                  12.40    12.50     +00.1
+			scrawlCore                    79.90    80.40     +00.5
+	TODO:
+		- fully test across all browsers
+			- try also to test against devices
+		- write up inline documentation for MultiFilters extension
+		- adapt website tour code to use multifilters
+		- update website tutorial page for new filter functionality
+		- update learn examples on CodePen to use multifilters
+		- update website for release of v7.0.0
 
 to 170129
 	- refactor filters code
@@ -78,11 +119,6 @@ to 170129
 	- code branch merged back into develop on 170129
 		- will not merge to master/release yet
 			- going to look at areas for additional performance efficiencies
-	TODO:
-		- write up inline documentation for MultiFilters extension
-		- adapt website tour code to use multifilters
-		- update website tutorial page for new filter functionality
-		- update learn examples on CodePen to use multifilters
 
 170114
 	- release v6.0.1
