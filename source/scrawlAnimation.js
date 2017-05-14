@@ -1029,7 +1029,9 @@ Locate a target object
 @final
 **/
 		my.Ticker.prototype.type = 'Ticker';
-		my.Ticker.prototype.classname = 'animationnames';
+		// my.Ticker.prototype.classname = 'animationnames';
+		my.Ticker.prototype.lib = 'animation';
+		my.Ticker.prototype.libName = 'animationnames';
 		my.work.d.Ticker = {
 			/**
 Animation order
@@ -1704,7 +1706,9 @@ To access the Action functions directly, assign it to a variable, or call it fro
 @final
 **/
 		my.Action.prototype.type = 'Action';
-		my.Action.prototype.classname = 'tweennames';
+		// my.Action.prototype.classname = 'tweennames';
+		my.Action.prototype.lib = 'tween';
+		my.Action.prototype.libName = 'tweennames';
 		my.work.d.Action = {
 			/**
 Ticker name
@@ -2210,7 +2214,9 @@ Update target attributes
 @final
 **/
 		my.Tween.prototype.type = 'Tween';
-		my.Tween.prototype.classname = 'tweennames';
+		// my.Tween.prototype.classname = 'tweennames';
+		my.Tween.prototype.lib = 'tween';
+		my.Tween.prototype.libName = 'tweennames';
 		my.work.d.Tween = {
 			/**
 Ticker name

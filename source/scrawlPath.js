@@ -714,7 +714,9 @@ Additional factory functions to instantiate Path objects are available in the __
 @final
 **/
 		my.Path.prototype.type = 'Path';
-		my.Path.prototype.classname = 'entitynames';
+		// my.Path.prototype.classname = 'entitynames';
+		my.Path.prototype.lib = 'entity';
+		my.Path.prototype.libName = 'entitynames';
 		my.work.d.Path = {
 			/**
 POINTNAME of the Point object that commences the drawing operation
@@ -1486,7 +1488,9 @@ Path creation factories will all create Point objects automatically as part of t
 @final
 **/
 		my.Point.prototype.type = 'Point';
-		my.Point.prototype.classname = 'pointnames';
+		// my.Point.prototype.classname = 'pointnames';
+		my.Point.prototype.lib = 'point';
+		my.Point.prototype.libName = 'pointnames';
 		my.work.d.Point = {
 			/**
 SPRITENAME String of point object's parent entity
@@ -1841,7 +1845,9 @@ Set Point.fixed attribute
 @final
 **/
 		my.Link.prototype.type = 'Link';
-		my.Link.prototype.classname = 'linknames';
+		// my.Link.prototype.classname = 'linknames';
+		my.Link.prototype.lib = 'link';
+		my.Link.prototype.libName = 'linknames';
 		my.work.d.Link = {
 			/**
 Type of link - permitted values include: 'line', 'quadratic', 'bezier'

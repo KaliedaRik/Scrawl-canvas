@@ -125,7 +125,9 @@ Circle radius - can be an absolute Numbewr value, or a percentage String value (
 @final
 **/
 		my.Wheel.prototype.type = 'Wheel';
-		my.Wheel.prototype.classname = 'entitynames';
+		// my.Wheel.prototype.classname = 'entitynames';
+		my.Wheel.prototype.lib = 'entity';
+		my.Wheel.prototype.libName = 'entitynames';
 		my.work.d.Wheel = {
 			/**
 Angle of the path's start point, from due east, in degrees

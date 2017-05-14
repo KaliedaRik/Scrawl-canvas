@@ -1015,7 +1015,9 @@ An object containing pre-defined filter functionality.
 @final
 **/
 		my.MultiFilter.prototype.type = 'MultiFilter';
-		my.MultiFilter.prototype.classname = 'multifilternames';
+		// my.MultiFilter.prototype.classname = 'multifilternames';
+		my.MultiFilter.prototype.lib = 'multifilter';
+		my.MultiFilter.prototype.libName = 'multifilternames';
 		my.work.d.MultiFilter = {
 			/**
 Whether to treat the entity or cell being filtered as a stencil (true) in which case the background behind the stencil is filtered, or just filter the entity itself (the default setting)

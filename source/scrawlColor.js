@@ -96,7 +96,9 @@ A __factory__ function to generate new Color objects
 @final
 **/
 		my.Color.prototype.type = 'Color';
-		my.Color.prototype.classname = 'designnames';
+		// my.Color.prototype.classname = 'designnames';
+		my.Color.prototype.lib = 'design';
+		my.Color.prototype.libName = 'designnames';
 		my.work.d.Color = {
 			/**
 Red channel value: 0 - 255

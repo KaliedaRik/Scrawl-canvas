@@ -223,7 +223,9 @@ Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axi
 			lockY: false
 		};
 		my.mergeInto(my.work.d.FramePoint, my.work.d.Base);
-		my.FramePoint.prototype.classname = 'framepointnames';
+		// my.FramePoint.prototype.classname = 'framepointnames';
+		my.FramePoint.prototype.lib = 'framepoint';
+		my.FramePoint.prototype.libName = 'framepointnames';
 		/**
 @method get
 @param {String} item Name of attribute to return
@@ -537,7 +539,9 @@ setLocal() helper function - position supplied by Path entity
 @final
 **/
 		my.Frame.prototype.type = 'Frame';
-		my.Frame.prototype.classname = 'entitynames';
+		// my.Frame.prototype.classname = 'entitynames';
+		my.Frame.prototype.lib = 'entity';
+		my.Frame.prototype.libName = 'entitynames';
 		my.work.d.Frame = {
 			/**
 Current coordinate for top left corner

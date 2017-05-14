@@ -2724,7 +2724,9 @@ Stamp helper hook function - amended by stacks module
 @final
 **/
 		my.Stack.prototype.type = 'Stack';
-		my.Stack.prototype.classname = 'stacknames';
+		// my.Stack.prototype.classname = 'stacknames';
+		my.Stack.prototype.lib = 'stack';
+		my.Stack.prototype.libName = 'stacknames';
 		my.work.d.Stack = {
 			/**
 An Object (in fact, a Vector) containing perspective details for the stack element. 
@@ -3199,7 +3201,9 @@ Get dimensions of Stack
 @final
 **/
 		my.Element.prototype.type = 'Element';
-		my.Element.prototype.classname = 'elementnames';
+		// my.Element.prototype.classname = 'elementnames';
+		my.Element.prototype.lib = 'element';
+		my.Element.prototype.libName = 'elementnames';
 		my.work.d.Element = {
 			/**
 Element's default height
@@ -3270,7 +3274,9 @@ Return the DOM element wrapped by this object
 @final
 **/
 		my.ElementGroup.prototype.type = 'ElementGroup';
-		my.ElementGroup.prototype.classname = 'groupnames';
+		// my.ElementGroup.prototype.classname = 'groupnames';
+		my.ElementGroup.prototype.lib = 'group';
+		my.ElementGroup.prototype.libName = 'groupnames';
 		my.work.d.ElementGroup = {
 			/**
 Array of SPRITENAME Strings of entitys that complement this ElementGroup

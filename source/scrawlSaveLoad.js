@@ -66,7 +66,8 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 					a = JSON.parse(item[i]);
 					if (my.xt(a.type)) {
 						type = a.type.toLowerCase();
-						if (my.contains(my[a.classname], a.name)) {
+						// if (my.contains(my[a.classname], a.name)) {
+						if (my.contains(my[a.libname], a.name)) {
 							//update
 							b = my[type][a.name].parse();
 							c = my.work.d[a.type];
@@ -177,7 +178,9 @@ Turn the object into a JSON String
 			var keys = Object.keys(my.work.d[this.type]),
 				result = {};
 			result.type = this.type;
-			result.classname = this.classname;
+			// result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i < z; i++) {
 				if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
@@ -197,7 +200,9 @@ Turn the object into a JSON String
 				result = {},
 				blacklist = [];
 			result.type = this.type;
-			result.classname = this.classname;
+			// result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i < z; i++) {
 				if (my.contains(['start', 'delta', 'handle'], keys[i])) {
@@ -222,7 +227,9 @@ Turn the object into a JSON String
 				result = {},
 				temp;
 			result.type = this.type;
-			result.classname = this.classname;
+			// result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i < z; i++) {
 				if (my.contains(['start', 'delta', 'handle', 'perspective', 'translate'], keys[i])) {
@@ -278,7 +285,9 @@ Turn the object into a JSON String
 				blacklist = ['localWidth', 'localHeight', 'mouse', 'displayOffsetX', 'displayOffsetY'],
 				i, iz, j, jz;
 			result.type = this.type;
-			result.classname = this.classname;
+			// result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			result.parentElement = my.canvas[this.name].parentElement.id;
 			for (i = 0, iz = keys.length; i < iz; i++) {
@@ -346,7 +355,9 @@ Turn the object into a JSON String
 				blacklist = ['copyData', 'pasteData', 'actualWidth', 'actualHeight'],
 				i, iz, j, jz;
 			result.type = this.type;
-			result.classname = this.classname;
+			// result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (i = 0, iz = keys.length; i < iz; i++) {
 				if (my.contains(['start', 'delta', 'handle', 'copy', 'copyDelta'], keys[i])) {
@@ -428,7 +439,9 @@ Automatically removes the entitys attribute from the result; when loading, exist
 				designs = [],
 				i, iz;
 			result.type = this.type;
-			result.classname = this.classname;
+			// result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (i = 0, iz = keys.length; i < iz; i++) {
 				if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
@@ -471,7 +484,9 @@ Retains the entitys attribute Array; does not include any other objects in the r
 			var keys = Object.keys(my.work.d[this.type]),
 				result = {};
 			result.type = this.type;
-			result.classname = this.classname;
+			// result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i < z; i++) {
 				if (my.xt(this[keys[i]]) && this[keys[i]] !== my.work.d[this.type][keys[i]]) {
@@ -497,7 +512,9 @@ Turn the object into a JSON String
 				vectorslist = ['start', 'delta', 'handle', 'copy'],
 				blacklist = ['collisionVectors', 'dataSet', 'pointList', 'firstPoint', 'linkList', 'linkDurations', 'perimeterLength', 'style', 'variant', 'weight', 'size', 'metrics', 'family', 'texts', 'copyData', 'pasteData', 'localHeight', 'localWidth'];
 			result.type = this.type;
-			result.classname = this.classname;
+			// result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			if (!noexternalobjects) {
 				if (ctx && ctx.fillStyle && my.contains(my.designnames, ctx.fillStyle)) {

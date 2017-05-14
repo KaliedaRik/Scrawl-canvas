@@ -255,7 +255,9 @@ A __factory__ function to generate new Force objects
 @final
 **/
 		my.Particle.prototype.type = 'Particle';
-		my.Particle.prototype.classname = 'entitynames';
+		// my.Particle.prototype.classname = 'entitynames';
+		my.Particle.prototype.lib = 'entity';
+		my.Particle.prototype.libName = 'entitynames';
 		my.Particle.prototype.order = 0; //included to allow normal entitys to sort themselves properly
 		my.work.d.Particle = {
 			/**
@@ -842,7 +844,9 @@ Dummy function - required to allow Particles to be processed alongside Entity ob
 @final
 **/
 		my.Spring.prototype.type = 'Spring';
-		my.Spring.prototype.classname = 'springnames';
+		// my.Spring.prototype.classname = 'springnames';
+		my.Spring.prototype.lib = 'spring';
+		my.Spring.prototype.libName = 'springnames';
 		my.work.d.Spring = {
 			/**
 First Particle PARTICLENAME
@@ -982,7 +986,9 @@ Two forces are pre-defined by scrawl-canvas:
 @final
 **/
 		my.Force.prototype.type = 'Force';
-		my.Force.prototype.classname = 'forcenames';
+		// my.Force.prototype.classname = 'forcenames';
+		my.Force.prototype.lib = 'force';
+		my.Force.prototype.libName = 'forcenames';
 		my.work.d.Force = {
 			/**
 Anonymous function for calculating a force on a Particle

@@ -107,7 +107,9 @@ A __factory__ function to generate new Block entitys
 @final
 **/
 		my.Block.prototype.type = 'Block';
-		my.Block.prototype.classname = 'entitynames';
+		// my.Block.prototype.classname = 'entitynames';
+		my.Block.prototype.lib = 'entity';
+		my.Block.prototype.libName = 'entitynames';
 		my.work.d.Block = {
 			/**
 Block display - width, in pixels

@@ -375,7 +375,9 @@ Patterns are not restricted to images. A pattern can also be sourced from anothe
 @final
 **/
 		my.Pattern.prototype.type = 'Pattern';
-		my.Pattern.prototype.classname = 'designnames';
+		// my.Pattern.prototype.classname = 'designnames';
+		my.Pattern.prototype.lib = 'design';
+		my.Pattern.prototype.libName = 'designnames';
 		my.work.d.Pattern = {
 			/**
 Drawing parameter
@@ -598,7 +600,9 @@ Alias for Pattern.makeDesign()
 @final
 **/
 		my.Picture.prototype.type = 'Picture';
-		my.Picture.prototype.classname = 'entitynames';
+		// my.Picture.prototype.classname = 'entitynames';
+		my.Picture.prototype.lib = 'entity';
+		my.Picture.prototype.libName = 'entitynames';
 		my.work.d.Picture = {
 			/**
 IMAGENAME String - source image for this entity

@@ -1017,18 +1017,18 @@ Generate unique names for new Scrawl objects
 @return Unique generated name
 @private
 **/
-	my.makeName = function(item) {
-		var name,
-			nameArray;
-		item = my.safeObject(item);
-		if (my.contains(my.work.nameslist, item.target)) {
-			name = my.xtGetTrue(item.name, item.type, 'default');
-			name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, '_');
-			nameArray = name.split('___');
-			return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '___' + Math.floor(Math.random() * 100000000) : nameArray[0];
-		}
-		return false;
-	};
+	// my.makeName = function(item) {
+	// 	var name,
+	// 		nameArray;
+	// 	item = my.safeObject(item);
+	// 	if (my.contains(my.work.nameslist, item.target)) {
+	// 		name = my.xtGetTrue(item.name, item.type, 'default');
+	// 		name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, '_');
+	// 		nameArray = name.split('___');
+	// 		return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '___' + Math.floor(Math.random() * 100000000) : nameArray[0];
+	// 	}
+	// 	return false;
+	// };
 	/**
 A __general__ function to reset display offsets for all pads, stacks and elements
 
@@ -2315,11 +2315,15 @@ Unique identifier for each object; default: computer-generated String based on O
 @property name
 @type String
 **/
-		this.name = my.makeName({
-			name: items.name,
-			type: this.type,
-			target: this.classname
-		});
+		// this.name = my.makeName({
+		// 	name: items.name,
+		// 	type: this.type,
+		// 	target: this.classname
+		// });
+		this.makeName(items.name);
+		delete items.name;
+		my[this.lib][this.name] = this;
+		my.pushUnique(my[this.libName], this.name);
 		return this;
 	};
 	my.Base.prototype = Object.create(Object.prototype);
@@ -2330,7 +2334,9 @@ Unique identifier for each object; default: computer-generated String based on O
 @final
 **/
 	my.Base.prototype.type = 'Base';
-	my.Base.prototype.classname = 'objectnames';
+	// my.Base.prototype.classname = 'objectnames';
+	my.Base.prototype.lib = 'object';
+	my.Base.prototype.libName = 'objectnames';
 	my.work.d.Base = {
 		/**
 Comment, for accessibility
@@ -2353,6 +2359,38 @@ Creation timestamp
 @default ''
 **/
 		timestamp: ''
+	};
+	/**
+Generate unique names for new Scrawl objects
+@method makeName
+@param {String} [suggestedName] String of the suggested name
+@return always true
+@private
+**/
+	// my.makeName = function(item) {
+	// 	var name,
+	// 		nameArray;
+	// 	item = my.safeObject(item);
+	// 	if (my.contains(my.work.nameslist, item.target)) {
+	// 		name = my.xtGetTrue(item.name, item.type, 'default');
+	// 		name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, '_');
+	// 		nameArray = name.split('___');
+	// 		return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '___' + Math.floor(Math.random() * 100000000) : nameArray[0];
+	// 	}
+	// 	return false;
+	// };
+	my.Base.prototype.makeName = function(suggestedName) {
+		// console.log('BASE.MAKENAME called', suggestedName);
+		var name, nameArray;
+		if(my.work.nameslist.indexOf(this.libName) >= 0){
+			name = my.xtGetTrue(suggestedName, this.type, 'default');
+			name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, '_');
+			nameArray = name.split('___');
+			this.name = (my[this.libName].indexOf(nameArray[0]) >= 0) ? nameArray[0] + '___' + Math.floor(Math.random() * 100000000) : nameArray[0];
+		}
+		else{
+			this.name = 'unclassifiedScrawlObject___' + Math.floor(Math.random() * 100000000);
+		}
 	};
 	/**
 Retrieve an attribute value. If the attribute value has not been set, then the default value for that attribute will be returned.
@@ -2607,7 +2645,9 @@ False if device does not support the canvas dashed line functionality; true othe
 @final
 **/
 	my.Device.prototype.type = 'Device';
-	my.Device.prototype.classname = 'objectnames';
+	// my.Device.prototype.classname = 'objectnames';
+	my.Device.prototype.lib = 'object';
+	my.Device.prototype.libName = 'objectnames';
 	my.work.d.Device = {
 		width: null,
 		height: null,
@@ -3011,7 +3051,9 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 @final
 **/
 	my.Position.prototype.type = 'Position';
-	my.Position.prototype.classname = 'objectnames';
+	// my.Position.prototype.classname = 'objectnames';
+	my.Position.prototype.lib = 'object';
+	my.Position.prototype.libName = 'objectnames';
 	my.work.d.Position = {
 		start: {
 			x: 0,
@@ -3762,7 +3804,9 @@ mice.ui0, mice.ui1 etc - refers to pointer and touch events
 @final
 **/
 	my.PageElement.prototype.type = 'PageElement';
-	my.PageElement.prototype.classname = 'objectnames';
+	// my.PageElement.prototype.classname = 'objectnames';
+	my.PageElement.prototype.lib = 'object';
+	my.PageElement.prototype.libName = 'objectnames';
 	my.work.d.PageElement = {
 		width: 300,
 		height: 150,
@@ -4428,7 +4472,9 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 @final
 **/
 	my.Pad.prototype.type = 'Pad';
-	my.Pad.prototype.classname = 'padnames';
+	// my.Pad.prototype.classname = 'padnames';
+	my.Pad.prototype.lib = 'pad';
+	my.Pad.prototype.libName = 'padnames';
 	my.work.d.Pad = {
 		cells: [],
 		display: '',
@@ -4842,7 +4888,9 @@ Cell supports the following 'virtual' attributes for this attribute:
 @final
 **/
 	my.Cell.prototype.type = 'Cell';
-	my.Cell.prototype.classname = 'cellnames';
+	// my.Cell.prototype.classname = 'cellnames';
+	my.Cell.prototype.lib = 'cell';
+	my.Cell.prototype.libName = 'cellnames';
 	my.work.d.Cell = {
 		/**
 PADNAME of the Pad object to which this Cell belongs
@@ -6271,7 +6319,9 @@ Default values are:
 @final
 **/
 	my.Context.prototype.type = 'Context';
-	my.Context.prototype.classname = 'ctxnames';
+	// my.Context.prototype.classname = 'ctxnames';
+	my.Context.prototype.lib = 'ctx';
+	my.Context.prototype.libName = 'ctxnames';
 	my.work.d.Context = {
 		/**
 Color, gradient or pattern used to fill a entity. Can be:
@@ -6705,7 +6755,9 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 @final
 **/
 	my.Group.prototype.type = 'Group';
-	my.Group.prototype.classname = 'groupnames';
+	// my.Group.prototype.classname = 'groupnames';
+	my.Group.prototype.lib = 'group';
+	my.Group.prototype.libName = 'groupnames';
 	my.work.d.Group = {
 		entitys: [],
 		cell: '',
@@ -7237,7 +7289,9 @@ _Note: not all entitys support all of these operations_
 @final
 **/
 	my.Entity.prototype.type = 'Entity';
-	my.Entity.prototype.classname = 'entitynames';
+	// my.Entity.prototype.classname = 'entitynames';
+	my.Entity.prototype.lib = 'entity';
+	my.Entity.prototype.libName = 'entitynames';
 	my.work.d.Entity = {
 		order: 0,
 		visibility: true,
@@ -7943,7 +7997,9 @@ Drawing flag - when set to 'entity' (or true), will use entity-based coordinates
 @final
 **/
 	my.Design.prototype.type = 'Design';
-	my.Design.prototype.classname = 'designnames';
+	// my.Design.prototype.classname = 'designnames';
+	my.Design.prototype.lib = 'design';
+	my.Design.prototype.libName = 'designnames';
 	my.work.d.Design = {
 		/**
 Array of JavaScript Objects representing color stop data
@@ -8358,7 +8414,9 @@ Remove this gradient from the scrawl library
 @final
 **/
 	my.Gradient.prototype.type = 'Gradient';
-	my.Gradient.prototype.classname = 'designnames';
+	// my.Gradient.prototype.classname = 'designnames';
+	my.Gradient.prototype.lib = 'design';
+	my.Gradient.prototype.libName = 'designnames';
 	my.work.d.Gradient = {};
 	my.mergeInto(my.work.d.Gradient, my.work.d.Design);
 
@@ -8399,7 +8457,9 @@ Remove this gradient from the scrawl library
 @final
 **/
 	my.RadialGradient.prototype.type = 'RadialGradient';
-	my.RadialGradient.prototype.classname = 'designnames';
+	// my.RadialGradient.prototype.classname = 'designnames';
+	my.RadialGradient.prototype.lib = 'design';
+	my.RadialGradient.prototype.libName = 'designnames';
 	my.work.d.RadialGradient = {
 		/**
 Start circle radius, in pixels or percentage of entity/cell width
@@ -8581,7 +8641,9 @@ _This attribute is not retained by the Animation object_
 @final
 **/
 	my.Animation.prototype.type = 'Animation';
-	my.Animation.prototype.classname = 'animationnames';
+	// my.Animation.prototype.classname = 'animationnames';
+	my.Animation.prototype.lib = 'animation';
+	my.Animation.prototype.libName = 'animationnames';
 	my.work.d.Animation = {
 		/**
 Anonymous function for an animation routine
