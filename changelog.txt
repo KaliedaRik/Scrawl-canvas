@@ -12,41 +12,58 @@ Scrawl roadmap
 ------------------------------------------------------------------------------------
 
 	- for v7.0.0
-		- 1. replace object.classname > object.lib, .libname
+		- 1. refactor scrawlFilters extension code
+			- scrawlFilters extension removed from codebase
+			- scrawlMultiFilters extension added to codebase
+			- work completed and merged into develop branch
+		- 2. refactor scrawlColor extension code
+			- work completed and merged into develop branch
+		- 3. replace object.classname > object.lib, .libname
 			- they're not classes - rename them
-		- 2. object name changes: Design > Styles; design > styles; dsn > sty
+		- 4. object name changes: Design > Styles; design > styles; dsn > sty
 			- to make link to fillStyle, strokeStyle more obvious
-		- 3. introduce vectorPool; scrawl.requestVector() .releaseVector()
+		- 5. introduce vectorPool; scrawl.requestVector() .releaseVector()
 			- creating vectors on the fly can slow things down
-		- 4. remove scrawl.work.d; rewrite .get functionality; new getters object
+		- 6. remove scrawl.work.d; rewrite .get functionality; new getters object
 			- current get functionality too slow
-		- 5. refactor .set functionality; new setters and deltaSetters objects
+		- 7. refactor .set functionality; new setters and deltaSetters objects
 			- so we have a common approach to getters and setters
-		- 6. animation extension delta refactor; .delta; .setDelta(); .updateByDelta()
+		- 8. animation extension delta refactor; .delta; .setDelta(); .updateByDelta()
 			- the current system is not clear/simple enough
+		- (as each task completes, test and merge back into develop!)
 
 	- for v8.0.0
 		- refactor constructors and clone functionality
+			- SIGNIFICANT WORK which requires careful planning
+				- impacts on everything!
+				- previous attempt quickly got very complicated and hard to track
 			- aims:
 				- simplify creation and cloning maintainability
 				- currently all new objects need to climb to base to get their names
 				- needs to tie in with set/get, to prevent unnecessary work
 				- SIGNIFICANT WORK
 		- refactor context > state
+			- SIGNIFICANT WORK which requires careful planning
+				- impacts on everything!
+				- previous attempt was not fully thought out
 			- aims:
 				- replace context/ctx with state
 				- Cells to have direct link to Canvas
 				- cells and entitys to include 'state' object
 				- entitys to control state comparisons, not cells
 				- canvasPool
-				- SIGNIFICANT WORK
+		- refactor save/load
+			- constructor/clone work is going to trash the saveload extension
+			- think of the new system more as an api rather than just a couple of functions
+		- revisit user accessibility 
+			- advances over past 4 years offer no excuse for neglecting this issue!
+		- touch/pointer events on mobile/handheld devices
+			- more important than ever to get this right!
 
 	- other topics that I want|need to look at (in no particular order) ...
 		- improving the code base (always)
-		- user accessibility issues
-		- touch/pointer events on mobile/handheld devices
-		- improve save/load operations - to allow realtime updates of a shared canvas over the net
 		- physics engine - rigid body interactions
+		- overhaul the 'stack' and related code; simplify it!
 
 	
 Currently known bugs
@@ -102,6 +119,8 @@ CHANGE LOG
 				- canvasPool
 				- SIGNIFICANT WORK
 	- taking work forward on new branch from develop - 'v7_roadmap'
+		- but not deleting abandoned 'efficiencies' branch 
+			- a lot of work can hopefully be copy/pasted over
 
 170513 (abandoned)
 	- review of past work, to decide what needs to be done, reverted, etc ...
