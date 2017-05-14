@@ -8,18 +8,46 @@
 *
 ***********************************************************************************/
 
-Currently working on ...
+Scrawl roadmap
 ------------------------------------------------------------------------------------
-- bugtracking following release of v6.0.1
 
-Topics that I want|need to look at (in no particular order) ...
-------------------------------------------------------------------------------------
-- improving the code base (always)
-- refactor filters
-- user accessibility issues
-- touch/pointer events on mobile/handheld devices
-- improve save/load operations - to allow realtime updates of a shared canvas over the net
-- physics engine - rigid body interactions
+	- for v7.0.0
+		- 1. replace object.classname > object.lib, .libname
+			- they're not classes - rename them
+		- 2. object name changes: Design > Styles; design > styles; dsn > sty
+			- to make link to fillStyle, strokeStyle more obvious
+		- 3. introduce vectorPool; scrawl.requestVector() .releaseVector()
+			- creating vectors on the fly can slow things down
+		- 4. remove scrawl.work.d; rewrite .get functionality; new getters object
+			- current get functionality too slow
+		- 5. refactor .set functionality; new setters and deltaSetters objects
+			- so we have a common approach to getters and setters
+		- 6. animation extension delta refactor; .delta; .setDelta(); .updateByDelta()
+			- the current system is not clear/simple enough
+
+	- for v8.0.0
+		- refactor constructors and clone functionality
+			- aims:
+				- simplify creation and cloning maintainability
+				- currently all new objects need to climb to base to get their names
+				- needs to tie in with set/get, to prevent unnecessary work
+				- SIGNIFICANT WORK
+		- refactor context > state
+			- aims:
+				- replace context/ctx with state
+				- Cells to have direct link to Canvas
+				- cells and entitys to include 'state' object
+				- entitys to control state comparisons, not cells
+				- canvasPool
+				- SIGNIFICANT WORK
+
+	- other topics that I want|need to look at (in no particular order) ...
+		- improving the code base (always)
+		- user accessibility issues
+		- touch/pointer events on mobile/handheld devices
+		- improve save/load operations - to allow realtime updates of a shared canvas over the net
+		- physics engine - rigid body interactions
+
 	
 Currently known bugs
 ------------------------------------------------------------------------------------
@@ -29,8 +57,289 @@ Currently known bugs
 - Text along path
 	- The text does not yet take into account any path handle offsets
 
+
 CHANGE LOG
 ------------------------------------------------------------------------------------
+170514
+	- REVIEW
+		- not happy with the way things are going
+			- too many changes being tackled at once!
+		- new plan
+			- 1. copy files in current branch
+			- 2. go back to develop branch
+			- 3. test demos - because I really want the multifilters stuff released
+			- 4. identify 'quick win' efficiencies, and the order they can be added in
+			- 5. do work, test, release as v7.0.0
+			- 6. draw up a road map for more complex efficiencies
+				- to be released later this year as v8.0.0
+	- steps 1-3 completed. all demos pass in:
+		- Firefox
+	- step 4 review of abandoned work:
+		- replace object.classname > object.lib, .libname
+			- they're not classes - rename them
+		- object name changes: Design > Styling; design > styling; dsn > sty
+			- to make link to fillStyle, strokeStyle more obvious
+		- introduce vectorPool; scrawl.requestVector() .releaseVector()
+			- creating vectors on the fly can slow things down
+		- remove scrawl.work.d; rewrite .get functionality; new getters object
+			- current get functionality too slow
+		- refactor .set functionality; new setters and deltaSetters objects
+			- so we have a common approach to getters and setters
+		- animation extension delta refactor; .delta; .setDelta(); .updateByDelta()
+			- the current system is not clear/simple enough
+		- refactor constructors and clone functionality
+			- aims:
+				- simplify creation and cloning maintainability
+				- currently all new objects need to climb to base to get their names
+				- needs to tie in with set/get, to prevent unnecessary work
+				- SIGNIFICANT WORK
+		- refactor context > state
+			- aims:
+				- replace context/ctx with state
+				- Cells to have direct link to Canvas
+				- cells and entitys to include 'state' object
+				- entitys to control state comparisons, not cells
+				- canvasPool
+				- SIGNIFICANT WORK
+	- taking work forward on new branch from develop - 'v7_roadmap'
+
+170513 (abandoned)
+	- review of past work, to decide what needs to be done, reverted, etc ...
+	- demo review:
+		- passing
+			- canvas: 001-003, 066
+			- render cycle: 007, 076-078
+			- block: 005, 
+			- wheel: 010-011
+			- phrase: 015 (but is it centred?), 070
+			- animation/tween: 041, 045, 096-100, 119 (3,800!), 122
+			- collision: 013, 064, 069, 121
+			- gradients/color: 039, 044, 048, 081, 085, 091, 095, 118
+		- failing
+			- complex/all: 035, 050, 058-062, 102, 109
+			- animation/tween: 051-057, 113
+			- collision: 063, 065, 071-075, 079
+			- path/shape/factories: 004, 006, 008-009, 012, 014, 016, 020-030, 034, 036, 
+				038, 046, 067, 080, 083, 086, 088, 090, 105-108, 110
+			- image stuff: 017-019, 031-033a, 037, 040, 047, 049, 068, 082, 084, 087, 089,
+				092-094, 101, 103-104, 111-112, 116-117, 401-414
+			- frame: 114-115
+			- stacks: 201-221
+			- physics: 301-305
+			- saveLoad: 501-504
+	- key tasks going forward:
+		- 1. efficiencies, structural changes and renames too good to give up
+		- 2. don't worry about collisions for now
+		- 3. fix images
+		- 4. fix path/shape/factory
+		- 5. retest and decide what needs to be done next
+
+to 170512
+	- took a break from coding - burnout
+
+to 170312 (abandoned)
+	- Animation extension seems fine ... related demos already passing
+	- Color extension seems fine ... related demos already passing
+	- Collisions extension fixed
+
+to 170303 (abandoned)
+	- scrawl.context, scrawl.ctx, scrawl.Context, scrawl.makeContext - REMOVED
+		- replaced by scrawl.State, scrawl.makeState
+		- State object can include a link to the DOM canvas element 2d context engine (for Cells)
+	- scrawl.canvas - REMOVED
+		- link to DOM canvas element now stored in Cell.canvas attribute
+	- Cell and Entity objects now include a .state attribute
+		- state comparison (for display cycle) now controlled by entitys, not cells
+	- new scrawl.getCanvas, .getState, .getEngine functions
+		- replacing direct retrieval via library - scrawl.canvas.CANVASID etc
+	- Cell and Entity stamp/display functionality rewritten to use state
+		- entity stamp functionality refactored
+			- now only the cell object is passed between various functions
+	- .init functions for Cell and Entity rewritten
+	- .clone functionality (partially) recoded
+	- entity checkHit functionality (partially) recoded
+	- Block functionality rewritten to adhere to new create/clone/display model
+		- testing - passing on demos 
+			- 005, 121
+	- Wheel functionality rewritten to adhere to new create/clone/display model
+		- testing - passing on demos 
+			- 010, 011, 041, 044, 045, 048 (mouse on desktop), 064, 066, 069
+			- 091, 097, 098, 099, 119, 122
+	- Phrase functionality rewritten to adhere to new create/clone/display model
+		- in particular, significant simplification of Text object
+		- TODO: recode text-along-a-path so it is part of Phrase, not Text
+		- testing - passing on demos 
+			- 001, 002, 003, 007, 015, 070, 076, 077, 078, 
+			- 081 (display check only), 085 (display check only),
+			- 095, 100, 118
+	- NEXT WORK:
+		- 1. Animation, Collisions, Color - to bring current branch to same stage of previous branch
+		- 2. Shape, Path, PathFactories
+		- 3. Image, ImageLoad
+		- 4. Frame
+		- 5. MultiFilters
+		- 6. Quaternion, Physics
+		- 7. Stacks
+		- 8. Documentation (including website)
+		- 9. release v7.0.0 (with SaveLoad just a shell that adds/does nothing)
+		- 10. SaveLoad - complete rewrite!
+
+to 170226 (abandoned)
+	- converting collisions extension code
+		- demo 013 working (cell fields collision detection)
+		- demo 074 working (group collision detection between block and phrase)
+			- (no longer need to 'shrink out of trouble')
+		- demo 064 working (wheel checkHit) - moved to phrase from core
+		- demo 069 working (block checkHit) - moved to block from core
+	- converting color extension code
+		- demo 044 working
+		- demo 099 working
+	- ADDED new canvasPool
+		- built along similar lines to vectorPool
+		- to replace (eventually) the default pad
+		- current functionality for code needing basic canvas/context for calculations
+			- nothing to do with display cycle (yet)
+			- mainly collision detection
+				- where block/phrase/wheel use canvas API .isPointInPath()
+			- also for phrase getMeasurements stuff
+		- pool supplies object with 3 attributes
+			- canvas - html CanvasElement
+			- context - canvas's 2d context object
+			- state - simple object replicating context values
+				- a bit like current Scrawl Context
+		- want to expand this so it handles all the hidden canvases used in various places
+			- especially in image/picture, and frame, extensions
+	- RECONSIDERING CELLS AND CONTEXTS (and Pads)
+		- what is there is too complicated?
+			- really want to change the name of scrawl.ctx to scrawl.state
+			- current scrawl.ctx includes comparison objects from cells and entitys
+			- also storing cell canvases in scrawl.canvas
+				- and their 2d context objects in scrawl.context
+			- could we instead store these in a canvasPool object direct on cell object?
+				- can't think of any circumstance in which cells would share canvas or context
+			- Scrawl Context objects include names as well as ctx attributes
+				- entitys need to compare to, and force updates on, cell/canvas contexts
+				- current functionality for this is in cells/contexts
+					- scope for simplifying program flow?
+						- currently do a lot of work getting cells and their context
+						- passing cellnames and 2d contexts to many stamp-related functions
+						- could instead just ask for (or be passed in stamp call) the cell canvas object?
+							- which would include canvas, 2d context, and state objects
+		- don't need an entire background Pad object
+			- think we only use the cells from the background pad, not the pad itself
+			- still makes sense to reference pad cells by name
+				- thus definitely not getting rid of scrawl.cell
+		- canvas elements work with no need to be attached to DOM or DOM fragment!
+		- really, really want to be rid of Pad.current attribute
+			- serves no useful purpose
+			- currently a mix between calls to Pad.base and Pad.current
+				- can't think of a demo where Pad.base !== Pad.current
+		- should the display canvas be part of Pad, rather than its own separate cell?
+			- clearly different from other cells - part of the DOM!
+			- not needing to worry about display/base dimensions in Cell may == less confusion?
+			- are there any demos where we don't copy base to display at the end of the show function?
+			- ... or where we don't clear display at the start?
+			- don't think we ever interrogate display context/ctx objects?
+				- only ever copy base to display
+				- all other cell copying goes cell > base
+				- any display effects can be (are?) composed on base, not display
+				- code is explicit on this - display.copyCellToSelf(base, true);
+					- that 'true' is meaningless in that function call
+					- display must take into account base globalAlpha/GCO
+					- display is at the mercy of base about which bits to copy into itself
+		- lots to think about ... proceed with caution!
+
+170223 (abandoned)
+	- testing (on demo119) shows that arrayPool and objectPool actually slow things down
+		- live and learn
+		- all code related to arrayPool and objectPool reverted
+		- vectorPool retained
+
+to 170222 (abandoned)
+	- converting animation extension code
+	- bugfixing tween code
+	- additional passing demos: 096, 097, 098, 100, 119
+
+170219 (abandoned)
+	- bugfixing demos and code
+		- Phrase font construction
+		- entity adding to group if args includes order attribute
+	- passing demos:
+		- 001, 002, 003, 005, 007, 010, 011, 015, 039, 041, 045
+		- 048, 066, 070, 076, 077, 078, 081, 085, 091, 121, 122
+
+to 170218 (abandoned)
+	- MAJOR object name change
+		- Design > Styling
+			- design > styling
+			- dsn > sty
+		- name was confusing - new name reflects 'fillStyle', 'strokeStyle'
+		- updated in core, animation so far, but not in other extensions (eg images)
+	- introduced 'pools' concept
+		- to cut down on code generation of objects, arrays, Vectors
+			- worried about overhead of creating/trashing arrays, objects on-the-fly in code
+			- also want to clean up various Vectors set up in scrawl.work
+				- diminish confusion, don't want to worry if Vector already used in function
+		- scrawl.requestTHING(arguments to populate thing with)
+		- scrawl.releaseTHING(thing to be released back to the pool)
+		- all code in core, block, wheel, phrase updated to make use of poolTHINGs
+			- working!
+	- documentation
+		- need concept model data for:
+			- various prototype inheritance chains
+			- construction
+			- cloning
+			- get/set/setDelta
+	- MAJOR change in animation extension
+		- code relating to delta changes ripped out and replaced by much simpler functionality
+			- objects can be given a .delta attribute
+				- key:value object, with small values to be applied to main attributes via .setDelta
+			- call to update by delta object triggered by object's .updateByDelta() function
+		- breaks many 'bouncing around canvas' demos eg 041
+			- demo041 fixed with new functionality (moves by percentage values)
+			- new demo122 derived from 041 - moves by pixel values
+	- scrawl object.classname attribute replaced by object.lib and .libname attributes
+		- because confusing - had nothing to do with 'classes'
+
+to 170213 (abandoned)
+	- bugfix and test refactor to date
+		- demo tests passing:
+			- block/wheel/phrase - 001, 002, 003, 005, 007, 010, 011, 015, 
+				048, 066, 070, 076, 077, 078, 121
+			- gradients - 039, 048, 081, 085
+
+to 170211 (abandoned)
+	- refactoring
+		- refactoring all setters
+			- setters and deltaSetters objects introduced
+		- refactoring all constructors and clone functionality
+			- want to stop sending everything up to base just to get a name
+			- going up the chain probably triggers multiple set operations
+			- clone functionality too closely tied to constructors so had to be rewritten
+		- work completed for
+			- core
+			- block
+			- wheel
+			- phrase
+			
+to 170204 (abandoned)
+	- refactoring
+		- removed scrawl.work.d and rewritten .get functionality
+			- getters object introduced
+			- breaks the 5xx load/save functionality (which is a good thing)
+		- running various tests in browsers to see where other code bottlenecks may lie ...
+			- suspect setters may be a major bottleneck
+	- bunny tests (no of bunnies that can be animated at 20fps) ...
+		- Chrome:   031a - 2740, 032a - 3850, 033a -  4600
+		- IE11:     031a - 2160, 032a - 4550, 033a -  7700
+		- Edge:     031a - 2220, 032a - 4800, 033a -  8600
+		- Firefox:  031a - 4680, 032a - 8200, 033a - 18100
+	- starfield tests (no of stars that can be animated at ~ 20fps) ...
+		- Edge:     220 - 100(11fps), 221 -  400(16fps), 119 - 1700(19fps)
+		- IE11:     220 - 100(14fps), 221 -  400(17fps), 119 - 1700(18fps)
+		- Firefox:  220 - 100(18fps), 221 -  500(17fps), 119 - 3000(19fps)
+		- Chrome:   220 - 300(15fps), 221 - 1400(18fps), 119 - 3900(19fps)
+
 170129
 	- refactoring color extension
 		- codebase too large
