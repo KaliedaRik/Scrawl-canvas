@@ -1011,25 +1011,6 @@ A __utility__ function for variable type checking
 		return false;
 	};
 	/**
-Generate unique names for new Scrawl objects
-@method makeName
-@param {Object} [item] Object with attributes: name, type, target
-@return Unique generated name
-@private
-**/
-	// my.makeName = function(item) {
-	// 	var name,
-	// 		nameArray;
-	// 	item = my.safeObject(item);
-	// 	if (my.contains(my.work.nameslist, item.target)) {
-	// 		name = my.xtGetTrue(item.name, item.type, 'default');
-	// 		name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, '_');
-	// 		nameArray = name.split('___');
-	// 		return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '___' + Math.floor(Math.random() * 100000000) : nameArray[0];
-	// 	}
-	// 	return false;
-	// };
-	/**
 A __general__ function to reset display offsets for all pads, stacks and elements
 
 The argument is an optional String - permitted values include 'stack', 'pad', 'element'; default: 'all'
@@ -2315,13 +2296,8 @@ Unique identifier for each object; default: computer-generated String based on O
 @property name
 @type String
 **/
-		// this.name = my.makeName({
-		// 	name: items.name,
-		// 	type: this.type,
-		// 	target: this.classname
-		// });
 		this.makeName(items.name);
-		delete items.name;
+		console.log(items);
 		my[this.lib][this.name] = this;
 		my.pushUnique(my[this.libName], this.name);
 		return this;
@@ -2367,20 +2343,7 @@ Generate unique names for new Scrawl objects
 @return always true
 @private
 **/
-	// my.makeName = function(item) {
-	// 	var name,
-	// 		nameArray;
-	// 	item = my.safeObject(item);
-	// 	if (my.contains(my.work.nameslist, item.target)) {
-	// 		name = my.xtGetTrue(item.name, item.type, 'default');
-	// 		name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, '_');
-	// 		nameArray = name.split('___');
-	// 		return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + '___' + Math.floor(Math.random() * 100000000) : nameArray[0];
-	// 	}
-	// 	return false;
-	// };
 	my.Base.prototype.makeName = function(suggestedName) {
-		// console.log('BASE.MAKENAME called', suggestedName);
 		var name, nameArray;
 		if(my.work.nameslist.indexOf(this.libName) >= 0){
 			name = my.xtGetTrue(suggestedName, this.type, 'default');

@@ -92,7 +92,8 @@ A __factory__ function to generate new Frame entitys
 		my.FramePoint = function FramePoint(items) {
 			var get = my.xtGet,
 			vec = my.makeVector;
-			my.Base.call(this, items);
+			this.makeName(items.name);
+			my.pushUnique(my[this.libName], this.name);
 			items = my.safeObject(items);
 			this.host = get(items.host, false);
 			this.data = get(items.data, false);

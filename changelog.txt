@@ -135,6 +135,12 @@ Core demos for testing
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+170515
+	- bugfixing yesterday's failed demos
+		- all tests now working in Firefox
+		- bunny tests (Firefox): 2960, 9950, 17200 (31a, 32a, 33a)
+		- star tests (Firefox): 3400, 18, 400 (119-stars@>20fps, 220-fpsFor100stars, 221-stars@>20fps)
+
 170514
 	- REVIEW
 		- not happy with the way things are going
