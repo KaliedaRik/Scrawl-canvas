@@ -230,7 +230,6 @@ var mycode = function() {
 		group: 'eGroup'
 	});
 	texty = scrawl.makePhrase({
-		method: 'draw',
 		textAlign: 'center',
 		font: '70pt bold Arial, sans-serif',
 		text: 'Hello!',

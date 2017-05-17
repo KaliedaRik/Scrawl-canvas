@@ -128,6 +128,7 @@ Core demos for testing
 - 303 Physics collisions
 - 305 Forces and Springs
 - 409 combining filters
+- 410 group filters
 - 411 stencils
 - 414 user-defined filter
 - 501-504 load/save
@@ -135,11 +136,32 @@ Core demos for testing
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+170516
+	- testing
+		- passing in Chrome
+		- bunny tests (Chrome): 
+			- (31a, 32a, 33a)
+			- 2860, 3400, 4400 
+		- star tests (Chrome): 
+			- (119-stars@>20fps, 220-fpsFor100stars, 221-stars@>20fps)
+			- 3700, 60, 1200 
+		- passing in IE11 (with expected exceptions) - tests not yet done
+		- bunny tests (IE11): 
+			- (31a, 32a, 33a)
+			- 2860, 3400, 4400 
+		- star tests (IE11): 
+			- (119-stars@>20fps, 220-fpsFor100stars, 221-stars@>20fps)
+			- 3700, 60, 1200 
+
 170515
 	- bugfixing yesterday's failed demos
 		- all tests now working in Firefox
-		- bunny tests (Firefox): 2960, 9950, 17200 (31a, 32a, 33a)
-		- star tests (Firefox): 3400, 18, 400 (119-stars@>20fps, 220-fpsFor100stars, 221-stars@>20fps)
+		- bunny tests (Firefox): 
+			- (31a, 32a, 33a)
+			- 2960, 9950, 17200 
+		- star tests (Firefox): 
+			- (119-stars@>20fps, 220-fpsFor100stars, 221-stars@>20fps)
+			- 3400, 18, 400 
 
 170514
 	- REVIEW
