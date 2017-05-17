@@ -29,7 +29,7 @@
 The Images module adds support for displaying images on canvas elements
 
 * Defines the Picture entity, which can be used to display file images (including animated entity sheets), other &lt;canvas&gt; elements, and &lt;video&gt; elements (experimental)
-* Defines the Pattern design, which uses images for entity fillStyle and strokeStyle attributes
+* Defines the Pattern styles, which uses images for entity fillStyle and strokeStyle attributes
 
 @module scrawlImages
 **/
@@ -340,7 +340,7 @@ Patterns are not restricted to images. A pattern can also be sourced from anothe
 
 ## Access
 
-* scrawl.design.PATTERNNAME - for the Pattern design object
+* scrawl.styles.PATTERNNAME - for the Pattern styles object
 
 @class Pattern
 @constructor
@@ -361,9 +361,9 @@ Patterns are not restricted to images. A pattern can also be sourced from anothe
 				my.Base.prototype.set.call(this, items);
 				this.repeat = items.repeat || 'repeat';
 				this.sourceType = this.getSourceType();
-				my.design[this.name] = this;
-				my.pushUnique(my.designnames, this.name);
-				this.makeDesign();
+				my.styles[this.name] = this;
+				my.pushUnique(my.stylesnames, this.name);
+				this.makeStyles();
 			}
 			return this;
 		};
@@ -375,9 +375,9 @@ Patterns are not restricted to images. A pattern can also be sourced from anothe
 @final
 **/
 		my.Pattern.prototype.type = 'Pattern';
-		// my.Pattern.prototype.classname = 'designnames';
-		my.Pattern.prototype.lib = 'design';
-		my.Pattern.prototype.libName = 'designnames';
+		// my.Pattern.prototype.classname = 'stylesnames';
+		my.Pattern.prototype.lib = 'styles';
+		my.Pattern.prototype.libName = 'stylesnames';
 		my.work.d.Pattern = {
 			/**
 Drawing parameter
@@ -448,7 +448,7 @@ Augments Base.set()
 		my.Pattern.prototype.set = function(items) {
 			my.Base.prototype.set.call(this, items);
 			this.sourceType = this.getSourceType();
-			this.makeDesign();
+			this.makeStyles();
 			return this;
 		};
 		/**
@@ -460,18 +460,18 @@ Returns &lt;canvas&gt; element's contenxt engine's pattern object, or 'rgba(0,0,
 		my.Pattern.prototype.getData = function(entity, cell) {
 			if (!this.sourceType) {
 				this.sourceType = this.getSourceType();
-				this.makeDesign(entity, cell);
+				this.makeStyles(entity, cell);
 			}
-			return (my.xt(my.dsn[this.name])) ? my.dsn[this.name] : 'rgba(0,0,0,0)';
+			return (my.xt(my.sty[this.name])) ? my.sty[this.name] : 'rgba(0,0,0,0)';
 		};
 		/**
 Builds &lt;canvas&gt; element's contenxt engine's pattern object
-@method makeDesign
+@method makeStyles
 @return This
 @chainable
 @private
 **/
-		my.Pattern.prototype.makeDesign = function(entity, cell) {
+		my.Pattern.prototype.makeStyles = function(entity, cell) {
 			var temp,
 				engine;
 			cell = my.xtGet(cell, this.cell);
@@ -482,21 +482,21 @@ Builds &lt;canvas&gt; element's contenxt engine's pattern object
 						if (scrawl.xt(my.asset[this.source])) {
 							temp = my.video[this.source].api;
 							if (temp.readyState > 1) {
-								my.dsn[this.name] = engine.createPattern(my.asset[this.source], this.repeat);
+								my.sty[this.name] = engine.createPattern(my.asset[this.source], this.repeat);
 							}
 							else {
-								my.dsn[this.name] = undefined;
+								my.sty[this.name] = undefined;
 							}
 						}
 						break;
 					case 'cell':
 						if (scrawl.xt(my.canvas[this.source])) {
-							my.dsn[this.name] = engine.createPattern(my.canvas[this.source], this.repeat);
+							my.sty[this.name] = engine.createPattern(my.canvas[this.source], this.repeat);
 						}
 						break;
 					case 'image':
 						if (scrawl.xt(my.asset[this.source])) {
-							my.dsn[this.name] = engine.createPattern(my.asset[this.source], this.repeat);
+							my.sty[this.name] = engine.createPattern(my.asset[this.source], this.repeat);
 						}
 						break;
 				}
@@ -509,19 +509,19 @@ Remove this pattern from the scrawl-canvas library
 @return Always true
 **/
 		my.Pattern.prototype.remove = function() {
-			delete my.dsn[this.name];
-			delete my.design[this.name];
-			my.removeItem(my.designnames, this.name);
+			delete my.sty[this.name];
+			delete my.styles[this.name];
+			my.removeItem(my.stylesnames, this.name);
 			return true;
 		};
 		/**
-Alias for Pattern.makeDesign()
+Alias for Pattern.makeStyles()
 @method update
 @return This
 @chainable
 **/
 		my.Pattern.prototype.update = function(entity, cell) {
-			return this.makeDesign(entity, cell);
+			return this.makeStyles(entity, cell);
 		};
 
 		/**

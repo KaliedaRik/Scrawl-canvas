@@ -22,7 +22,7 @@ var mycode = function() {
 		name: 'blocks',
 	});
 
-	//designs
+	//styless
 	scrawl.makeColor({
 		name: 'mycolor',
 	});
@@ -119,7 +119,7 @@ var mycode = function() {
 	colorTween = scrawl.makeTween({
 		name: 'tween1',
 		duration: 3000,
-		targets: scrawl.design.mycolor,
+		targets: scrawl.styles.mycolor,
 		reverseOnCycleEnd: true,
 		cycles: 2,
 		definitions: [
@@ -140,7 +140,7 @@ var mycode = function() {
 	gradientTween = scrawl.makeTween({
 		name: 'tween2',
 		duration: 3000,
-		targets: scrawl.design.mygradient,
+		targets: scrawl.styles.mygradient,
 		reverseOnCycleEnd: true,
 		cycles: 2,
 		definitions: [

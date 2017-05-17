@@ -51,7 +51,7 @@ The core module is the only essential file in Scrawl. It must always be directly
 
 * Defines Group objects, used to group entitys together for display and interaction purposes
 
-* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions
+* Defines Styles objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Styles objects (Pattern, Color) are defined in separate extensions
 
 ## Loading the module
 
@@ -97,8 +97,8 @@ Core creates the following sections in the library:
 * scrawl.__ctx__ - Contains CONTEXTNAME:Object pairs linking to each instantiated Scrawl Context object (used by Cell and Entity objects)
 * scrawl.__imageData__ - Contains key:value pairs linking to JavaScript image data objects
 * scrawl.__group__ - Contains GROUPNAME:Object pairs linking to each instantiated Group object
-* scrawl.__design__ - Contains DESIGNNAME:Object pairs for each instantiated design object (Gradient, RadialGradient, Pattern, Color)
-* scrawl.__dsn__ - Contains DESIGNNAME:precompiled gradient/pattern context object pairs (Gradient, RadialGradient, Pattern)
+* scrawl.__styles__ - Contains DESIGNNAME:Object pairs for each instantiated styles object (Gradient, RadialGradient, Pattern, Color)
+* scrawl.__sty__ - Contains DESIGNNAME:precompiled gradient/pattern context object pairs (Gradient, RadialGradient, Pattern)
 * scrawl.__entity__ - Contains SPRITENAME:Object pairs for each instantiated entity object (Block, Phrase, Picture, Wheel, Path, Shape, Particle)
 
 @class window.scrawl
@@ -119,14 +119,14 @@ Array of array object keys used to define the sections of the Scrawl library
 @private
 **/
 	my.work = {};
-	my.work.nameslist = ['padnames', 'cellnames', 'ctxnames', 'groupnames', 'designnames', 'entitynames', 'animationnames'];
+	my.work.nameslist = ['padnames', 'cellnames', 'ctxnames', 'groupnames', 'stylesnames', 'entitynames', 'animationnames'];
 	/**
 Array of objects which define the sections of the Scrawl library
 @property sectionlist
 @type {Array}
 @private
 **/
-	my.work.sectionlist = ['pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'design', 'dsn', 'entity', 'animation'];
+	my.work.sectionlist = ['pad', 'cell', 'canvas', 'context', 'ctx', 'imageData', 'group', 'styles', 'sty', 'entity', 'animation'];
 	/**
 For converting between degrees and radians
 @property radian
@@ -438,10 +438,10 @@ Scrawl currently supports the following extensions:
 * __scrawlAnimation.js__ - alias __animation__ - adds animation and tween functionality to the core
 * __scrawlBlock.js__ - alias __block__ - adds _Block_ (square and rectangle) entitys to the core
 * __scrawlCollisions.js__ - alias __collisions__ - adds entity collision detection functionality to the core
-* __scrawlColor.js__ - alias __color__ - adds the _Color_ Design object to the core
+* __scrawlColor.js__ - alias __color__ - adds the _Color_ Styles object to the core
 * __scrawlMultiFilters.js__ - alias __multifilters__ - adds filter functionality to the core
 * __scrawlFrame.js__ - alias __frame__ - enhanced Picture entity
-* __scrawlImages.js__ - alias __images__ - adds all image functionality, including static and animated _Picture_ entitys and the _Pattern_ Design object, to the core
+* __scrawlImages.js__ - alias __images__ - adds all image functionality, including static and animated _Picture_ entitys and the _Pattern_ Styles object, to the core
 * __scrawlPath.js__ - alias __path__ - adds _Path_ (SVGTiny path data) entitys to the core
 * __scrawlPathFactories.js__ - alias __factories__ - adds user-friendly Path and Shape factory functions (for lines, quadratic and bezier curves, ellipses, round-corner rectangles, regular shapes such as stars, triangles, etc) to the core
 * __scrawlPhrase.js__ - alias __phrase__ - adds _Phrase_ (single and multiline text) entitys to the core
@@ -1245,7 +1245,7 @@ The touchleave event is deprecated, but necessary for scrawl functionality
 		/**
 A custom __event listener__ function
 
-The touchfollow event is entirely custom, designed to allow elements to subscribe to an event that started in a different element
+The touchfollow event is entirely custom, stylesed to allow elements to subscribe to an event that started in a different element
 
 @method triggerTouchFollow
 @private
@@ -2297,7 +2297,7 @@ Unique identifier for each object; default: computer-generated String based on O
 @type String
 **/
 		this.makeName(items.name);
-		console.log(items);
+		console.log(this.lib, this.name, items);
 		my[this.lib][this.name] = this;
 		my.pushUnique(my[this.libName], this.name);
 		return this;
@@ -5753,15 +5753,15 @@ Set the Cell's &lt;canvas&gt; context engine to the specification supplied by th
 	};
 	my.Cell.prototype.setEngineActions = {
 		fillStyle: function(item, e, s, entity, cell) {
-			var d = my.design,
-				design;
+			var d = my.styles,
+				styles;
 			e.fillStyle = item;
 			if (!(typeof d[item] == 'undefined')) {
-				design = d[item];
-				if (s.indexOf(design.type) >= 0) {
-					design.update(entity, cell);
+				styles = d[item];
+				if (s.indexOf(styles.type) >= 0) {
+					styles.update(entity, cell);
 				}
-				e.fillStyle = design.getData();
+				e.fillStyle = styles.getData();
 			}
 		},
 		font: function(item, e) {
@@ -5804,15 +5804,15 @@ Set the Cell's &lt;canvas&gt; context engine to the specification supplied by th
 			e.shadowOffsetY = item;
 		},
 		strokeStyle: function(item, e, s, entity, cell) {
-			var d = my.design,
-				design;
+			var d = my.styles,
+				styles;
 			e.strokeStyle = item;
 			if (!(typeof d[item] == 'undefined')) {
-				design = d[item];
-				if (s.indexOf(design.type) >= 0) {
-					design.update(entity, cell);
+				styles = d[item];
+				if (s.indexOf(styles.type) >= 0) {
+					styles.update(entity, cell);
 				}
-				e.strokeStyle = design.getData();
+				e.strokeStyle = styles.getData();
 			}
 		},
 		miterLimit: function(item, e) {
@@ -6596,9 +6596,9 @@ Compares an entity's context engine values (held in this context object) to thos
 				result[eKey] = e[eKey];
 			}
 			else if (contains(test, eKey)) {
-				// because we can store design names in these attributes, not their actual values
+				// because we can store styles names in these attributes, not their actual values
 				// and the names will not change but the values can
-				result = this.getDesignChanges(eKey, e, c, result);
+				result = this.getStylesChanges(eKey, e, c, result);
 			}
 		}
 		return result;
@@ -6606,14 +6606,14 @@ Compares an entity's context engine values (held in this context object) to thos
 	/**
 getChanges helper
 
-@method getDesignChanges
+@method getStylesChanges
 @param {Object} ctx &lt;canvas&gt; element context engine Object
 @return a results object containing changes to be made to the canvas context engine
 @private
 **/
-	my.Context.prototype.getDesignChanges = function(eKey, e, c, result) {
+	my.Context.prototype.getStylesChanges = function(eKey, e, c, result) {
 		var d, color;
-		d = my.design[e[eKey]];
+		d = my.styles[e[eKey]];
 		if (d && d.type === 'Color') {
 			color = d.getData();
 			if (color !== c[eKey]) {
@@ -7926,7 +7926,7 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 	};
 
 	/**
-# Design
+# Styles
 
 ## Instantiation
 
@@ -7936,12 +7936,12 @@ Either the 'tests' attribute should contain a Vector, or an array of vectors, or
 
 * Defines gradients and radial gradients used with entity objects' strokeStyle and fillStyle attributes
 
-@class Design
+@class Styles
 @constructor
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-	my.Design = function(items) {
+	my.Styles = function(items) {
 		my.Base.call(this, items);
 		/**
 Drawing flag - when set to 'entity' (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to 'cell' (or false - default), will use Cell-based coordinates
@@ -7952,18 +7952,18 @@ Drawing flag - when set to 'entity' (or true), will use entity-based coordinates
 		this.lockTo = my.xtGet(items.lockTo, my.work.d[this.type].lockTo);
 		return this;
 	};
-	my.Design.prototype = Object.create(my.Base.prototype);
+	my.Styles.prototype = Object.create(my.Base.prototype);
 	/**
 @property type
 @type String
-@default 'Design'
+@default 'Styles'
 @final
 **/
-	my.Design.prototype.type = 'Design';
-	// my.Design.prototype.classname = 'designnames';
-	my.Design.prototype.lib = 'design';
-	my.Design.prototype.libName = 'designnames';
-	my.work.d.Design = {
+	my.Styles.prototype.type = 'Styles';
+	// my.Styles.prototype.classname = 'stylesnames';
+	my.Styles.prototype.lib = 'styles';
+	my.Styles.prototype.libName = 'stylesnames';
+	my.work.d.Styles = {
 		/**
 Array of JavaScript Objects representing color stop data
 
@@ -8026,7 +8026,7 @@ Vertical end coordinate, in pixels, from the top-left corner of the gradient's &
 **/
 		endY: 0
 	};
-	my.mergeInto(my.work.d.Design, my.work.d.Base);
+	my.mergeInto(my.work.d.Styles, my.work.d.Base);
 	/**
 Update values to Number attributes
 
@@ -8037,7 +8037,7 @@ Will also accept an object containing start and end attributes, each of which ca
 @return This
 @chainable
 **/
-	my.Design.prototype.set = function(items) {
+	my.Styles.prototype.set = function(items) {
 		var temp, x, y,
 			xt = my.xt,
 			xto = my.xto,
@@ -8056,7 +8056,7 @@ Will also accept an object containing start and end attributes, each of which ca
 			this.endY = get(temp.y, temp.endY, items.endY, this.endY);
 			this.endRadius = get(temp.r, temp.endRadius, items.endRadius, this.endRadius);
 		}
-		if (items.shift && xt(my.work.d.Design.shift)) {
+		if (items.shift && xt(my.work.d.Styles.shift)) {
 			this.shift = items.shift;
 		}
 		if (xt(items.autoUpdate)) {
@@ -8074,7 +8074,7 @@ Add values to Number attributes
 @return This
 @chainable
 **/
-	my.Design.prototype.setDelta = function(items) {
+	my.Styles.prototype.setDelta = function(items) {
 		var temp,
 			perc = my.addPercentages;
 		items = my.safeObject(items);
@@ -8102,7 +8102,7 @@ Add values to Number attributes
 			temp = this.get('endRadius');
 			this.endRadius = temp + items.endRadius;
 		}
-		if (items.shift && my.xt(my.work.d.Design.shift)) {
+		if (items.shift && my.xt(my.work.d.Styles.shift)) {
 			temp = this.get('shift');
 			this.shift = temp + items.shift;
 		}
@@ -8118,7 +8118,7 @@ _This function is replaced by the animation extension_
 @return This
 @chainable
 **/
-	my.Design.prototype.update = function(entity, cell) {
+	my.Styles.prototype.update = function(entity, cell) {
 		this.makeGradient(entity, cell);
 		this.applyStops();
 		return this;
@@ -8129,11 +8129,11 @@ Returns &lt;canvas&gt; element's contenxt engine's gradient object, or 'rgba(0,0
 @return JavaScript Gradient object, or String
 @private
 **/
-	my.Design.prototype.getData = function() {
-		return (my.xt(my.dsn[this.name])) ? my.dsn[this.name] : 'rgba(0,0,0,0)';
+	my.Styles.prototype.getData = function() {
+		return (my.xt(my.sty[this.name])) ? my.sty[this.name] : 'rgba(0,0,0,0)';
 	};
 	/**
-Design.update() helper function - builds &lt;canvas&gt; element's contenxt engine's gradient object
+Styles.update() helper function - builds &lt;canvas&gt; element's contenxt engine's gradient object
 @method makeGradient
 @param {String} [entity] SPRITENAME String
 @param {String} [cell] CELLNAME String
@@ -8141,7 +8141,7 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 @chainable
 @private
 **/
-	my.Design.prototype.makeGradient = function(entity, cell) {
+	my.Styles.prototype.makeGradient = function(entity, cell) {
 		var ctx,
 			c = my.cell,
 			conv,
@@ -8306,24 +8306,24 @@ Design.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 				g = ctx.createRadialGradient(fsx, fsy, sr, fex, fey, er);
 			}
 		}
-		my.dsn[this.name] = g;
+		my.sty[this.name] = g;
 		return this;
 	};
 	/**
-Design.update() helper function - applies color attribute objects to the gradient
+Styles.update() helper function - applies color attribute objects to the gradient
 @method applyStops
 @return This
 @private
 @chainable
 **/
-	my.Design.prototype.applyStops = function() {
+	my.Styles.prototype.applyStops = function() {
 		var color = this.get('color'),
 			i,
 			iz,
-			dsn = my.dsn[this.name];
-		if (dsn) {
+			sty = my.sty[this.name];
+		if (sty) {
 			for (i = 0, iz = color.length; i < iz; i++) {
-				dsn.addColorStop(color[i].stop, color[i].color);
+				sty.addColorStop(color[i].stop, color[i].color);
 			}
 		}
 		return this;
@@ -8333,10 +8333,10 @@ Remove this gradient from the scrawl library
 @method remove
 @return Always true
 **/
-	my.Design.prototype.remove = function() {
-		delete my.dsn[this.name];
-		delete my.design[this.name];
-		my.removeItem(my.designnames, this.name);
+	my.Styles.prototype.remove = function() {
+		delete my.sty[this.name];
+		delete my.styles[this.name];
+		my.removeItem(my.stylesnames, this.name);
 		return true;
 	};
 
@@ -8354,22 +8354,22 @@ Remove this gradient from the scrawl library
 
 ## Access
 
-* scrawl.design.GRADIENTNAME - for the Gradient object
+* scrawl.styles.GRADIENTNAME - for the Gradient object
 
 @class Gradient
 @constructor
-@extends Design
+@extends Styles
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 	my.Gradient = function(items) {
 		items = my.safeObject(items);
-		my.Design.call(this, items);
+		my.Styles.call(this, items);
 		my.Base.prototype.set.call(this, items);
-		my.design[this.name] = this;
-		my.pushUnique(my.designnames, this.name);
+		my.styles[this.name] = this;
+		my.pushUnique(my.stylesnames, this.name);
 		return this;
 	};
-	my.Gradient.prototype = Object.create(my.Design.prototype);
+	my.Gradient.prototype = Object.create(my.Styles.prototype);
 	/**
 @property type
 @type String
@@ -8377,11 +8377,11 @@ Remove this gradient from the scrawl library
 @final
 **/
 	my.Gradient.prototype.type = 'Gradient';
-	// my.Gradient.prototype.classname = 'designnames';
-	my.Gradient.prototype.lib = 'design';
-	my.Gradient.prototype.libName = 'designnames';
+	// my.Gradient.prototype.classname = 'stylesnames';
+	my.Gradient.prototype.lib = 'styles';
+	my.Gradient.prototype.libName = 'stylesnames';
 	my.work.d.Gradient = {};
-	my.mergeInto(my.work.d.Gradient, my.work.d.Design);
+	my.mergeInto(my.work.d.Gradient, my.work.d.Styles);
 
 	/**
 # RadialGradient
@@ -8397,22 +8397,22 @@ Remove this gradient from the scrawl library
 
 ## Access
 
-* scrawl.design.RADIALGRADIENTNAME - for the RadialGradient object
+* scrawl.styles.RADIALGRADIENTNAME - for the RadialGradient object
 
 @class RadialGradient
 @constructor
-@extends Design
+@extends Styles
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 	my.RadialGradient = function(items) {
 		items = my.safeObject(items);
-		my.Design.call(this, items);
+		my.Styles.call(this, items);
 		my.Base.prototype.set.call(this, items);
-		my.design[this.name] = this;
-		my.pushUnique(my.designnames, this.name);
+		my.styles[this.name] = this;
+		my.pushUnique(my.stylesnames, this.name);
 		return this;
 	};
-	my.RadialGradient.prototype = Object.create(my.Design.prototype);
+	my.RadialGradient.prototype = Object.create(my.Styles.prototype);
 	/**
 @property type
 @type String
@@ -8420,9 +8420,9 @@ Remove this gradient from the scrawl library
 @final
 **/
 	my.RadialGradient.prototype.type = 'RadialGradient';
-	// my.RadialGradient.prototype.classname = 'designnames';
-	my.RadialGradient.prototype.lib = 'design';
-	my.RadialGradient.prototype.libName = 'designnames';
+	// my.RadialGradient.prototype.classname = 'stylesnames';
+	my.RadialGradient.prototype.lib = 'styles';
+	my.RadialGradient.prototype.libName = 'stylesnames';
 	my.work.d.RadialGradient = {
 		/**
 Start circle radius, in pixels or percentage of entity/cell width
@@ -8439,7 +8439,7 @@ End circle radius, in pixels or percentage of entity/cell width
 **/
 		endRadius: 0
 	};
-	my.mergeInto(my.work.d.RadialGradient, my.work.d.Design);
+	my.mergeInto(my.work.d.RadialGradient, my.work.d.Styles);
 
 	my.work.v = my.makeVector({
 		name: 'scrawl.v'

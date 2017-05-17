@@ -233,7 +233,7 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 ## Purpose
 
 * Wraps DOM &lt;img&gt; elements imported into the scrawl-canvas library
-* Used by __Picture__ entitys and __Pattern__ designs
+* Used by __Picture__ entitys and __Pattern__ styless
 
 ## Access
 
@@ -401,9 +401,9 @@ Import an image using the supplied url string
 				el = document.createElement('img');
 				el.id = this.name;
 				el.onload = function() {
-					var entity, design, i, iz, temp,
-						d = my.design,
-						dnames = my.designnames,
+					var entity, styles, i, iz, temp,
+						d = my.styles,
+						dnames = my.stylesnames,
 						e = my.entity,
 						enames = my.entitynames;
 					that.width = el.width;
@@ -421,11 +421,11 @@ Import an image using the supplied url string
 						}
 					}
 					for (i = 0, iz = dnames.length; i < iz; i++) {
-						design = d[dnames[i]];
-						if (design.type === 'Pattern') {
-							if (design.source === that.name) {
-								design.sourceType = 'image';
-								design.makeDesign();
+						styles = d[dnames[i]];
+						if (styles.type === 'Pattern') {
+							if (styles.source === that.name) {
+								styles.sourceType = 'image';
+								styles.makeStyles();
 							}
 						}
 					}
@@ -837,7 +837,7 @@ getData helper object
 ## Purpose
 
 * Wraps DOM &lt;video&gt; elements imported into the scrawl-canvas library
-* Used by __Picture__ entitys and __Pattern__ designs
+* Used by __Picture__ entitys and __Pattern__ styless
 
 ## Access
 

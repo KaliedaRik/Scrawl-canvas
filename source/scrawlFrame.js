@@ -1315,7 +1315,7 @@ Augments Base.clone()
 @private
 **/
 		my.Frame.prototype.setEngine = function(items) {
-			var design, strokeStyle,
+			var styles, strokeStyle,
 				e = this.engine;
 			if (items.lineWidth) {
 				e.lineWidth = items.lineWidth;
@@ -1359,12 +1359,12 @@ Augments Base.clone()
 				e.shadowColor = items.shadowColor;
 			}
 			if (items.strokeStyle) {
-				design = my.design[items.strokeStyle];
-				if (my.xt(design)) {
-					if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], design.type)) {
-						design.update(this.name, my.group[this.group].cell);
+				styles = my.styles[items.strokeStyle];
+				if (my.xt(styles)) {
+					if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], styles.type)) {
+						styles.update(this.name, my.group[this.group].cell);
 					}
-					strokeStyle = design.getData();
+					strokeStyle = styles.getData();
 				}
 				else {
 					strokeStyle = items.strokeStyle;
@@ -1381,7 +1381,7 @@ Augments Base.clone()
 @private
 **/
 		my.Frame.prototype.setDestinationEngine = function(ctx, cellname, cell) {
-			var design, strokeStyle,
+			var styles, strokeStyle,
 				record = my.ctx[cellname];
 			if (record.lineWidth != this.lineWidth) {
 				ctx.lineWidth = this.lineWidth;
@@ -1429,12 +1429,12 @@ Augments Base.clone()
 				record.shadowColor = this.shadowColor;
 			}
 			if (record.strokeStyle != this.strokeStyle) {
-				if (my.xt(my.design[this.strokeStyle])) {
-					design = my.design[this.strokeStyle];
-					if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], design.type)) {
-						design.update(this.name, my.group[this.group].cell);
+				if (my.xt(my.styles[this.strokeStyle])) {
+					styles = my.styles[this.strokeStyle];
+					if (my.contains(['Gradient', 'RadialGradient', 'Pattern'], styles.type)) {
+						styles.update(this.name, my.group[this.group].cell);
 					}
-					strokeStyle = design.getData();
+					strokeStyle = styles.getData();
 				}
 				else {
 					strokeStyle = this.strokeStyle;

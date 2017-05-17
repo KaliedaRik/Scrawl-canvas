@@ -66,7 +66,7 @@ A __factory__ function to generate new Color objects
 
 ## Access
 
-* scrawl.design.COLORNAME - for the Color design object
+* scrawl.styles.COLORNAME - for the Color styles object
 
 @class Color
 @constructor
@@ -84,8 +84,8 @@ A __factory__ function to generate new Color objects
 				this.generateRandomColor(items);
 			}
 			this.checkValues();
-			my.design[this.name] = this;
-			my.pushUnique(my.designnames, this.name);
+			my.styles[this.name] = this;
+			my.pushUnique(my.stylesnames, this.name);
 			return this;
 		};
 		my.Color.prototype = Object.create(my.Base.prototype);
@@ -96,9 +96,9 @@ A __factory__ function to generate new Color objects
 @final
 **/
 		my.Color.prototype.type = 'Color';
-		// my.Color.prototype.classname = 'designnames';
-		my.Color.prototype.lib = 'design';
-		my.Color.prototype.libName = 'designnames';
+		// my.Color.prototype.classname = 'stylesnames';
+		my.Color.prototype.lib = 'styles';
+		my.Color.prototype.libName = 'stylesnames';
 		my.work.d.Color = {
 			/**
 Red channel value: 0 - 255
@@ -693,9 +693,9 @@ Delete this Color object from the scrawl-canvas library
 @return Always true
 **/
 		my.Color.prototype.remove = function() {
-			delete my.dsn[this.name];
-			delete my.design[this.name];
-			my.removeItem(my.designnames, this.name);
+			delete my.sty[this.name];
+			delete my.styles[this.name];
+			my.removeItem(my.stylesnames, this.name);
 			return true;
 		};
 

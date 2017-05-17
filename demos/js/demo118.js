@@ -35,7 +35,7 @@ var mycode = function() {
 		fillStyle: 'linearGradient'
 	});
 
-	scrawl.design.linearGradient.set({
+	scrawl.styles.linearGradient.set({
 		startX: -100,
 		endX: 500,
 		autoUpdate: true,
@@ -88,7 +88,7 @@ var mycode = function() {
 		stop: 0.9999
 	});
 
-	scrawl.design.linearGradient.set({
+	scrawl.styles.linearGradient.set({
 		color: myNewColors,
 		shift: 0.00035
 	});

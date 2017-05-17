@@ -115,7 +115,7 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 		/**
 A __save__ function
 
-Argument should be a String literal: 'pads', 'cells', 'groups', 'entitys', 'designs', 'spriteanimations', 'springs'
+Argument should be a String literal: 'pads', 'cells', 'groups', 'entitys', 'styless', 'spriteanimations', 'springs'
 
 _Note: this function does not check for duplicate objects_
 @method save
@@ -146,9 +146,9 @@ _Note: this function does not check for duplicate objects_
 						results = results.concat(my.entity[my.entitynames[i]].toString());
 					}
 					break;
-				case 'designs':
-					for (i = 0, iz = my.designnames.length; i < iz; i++) {
-						results = results.concat(my.design[my.designnames[i]].toString());
+				case 'styless':
+					for (i = 0, iz = my.stylesnames.length; i < iz; i++) {
+						results = results.concat(my.styles[my.stylesnames[i]].toString());
 					}
 					break;
 				case 'spriteanimations':
@@ -271,7 +271,7 @@ Turn the object into a JSON String
 		/**
 Turn the object into a JSON String
 @method Pad.toString
-@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, designs and groups
+@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, styless and groups
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Pad.prototype.toString = function(noexternalobjects) {
@@ -281,7 +281,7 @@ Turn the object into a JSON String
 				groups = [],
 				entitys = [],
 				ctx,
-				designs = [],
+				styless = [],
 				blacklist = ['localWidth', 'localHeight', 'mouse', 'displayOffsetX', 'displayOffsetY'],
 				i, iz, j, jz;
 			result.type = this.type;
@@ -319,18 +319,18 @@ Turn the object into a JSON String
 				}
 				for (i = 0, iz = entitys.length; i < iz; i++) {
 					ctx = my.ctx[my.entity[entitys[i]].context];
-					if (my.contains(my.designnames, ctx.fillStyle)) {
-						my.pushUnique(designs, ctx.fillStyle);
+					if (my.contains(my.stylesnames, ctx.fillStyle)) {
+						my.pushUnique(styless, ctx.fillStyle);
 					}
-					if (my.contains(my.designnames, ctx.strokeStyle)) {
-						my.pushUnique(designs, ctx.strokeStyle);
+					if (my.contains(my.stylesnames, ctx.strokeStyle)) {
+						my.pushUnique(styless, ctx.strokeStyle);
 					}
-					if (my.contains(my.designnames, ctx.shadowColor)) {
-						my.pushUnique(designs, ctx.shadowColor);
+					if (my.contains(my.stylesnames, ctx.shadowColor)) {
+						my.pushUnique(styless, ctx.shadowColor);
 					}
 				}
-				for (i = 0, iz = designs.length; i < iz; i++) {
-					resarray.push(my.design[designs[i]].toString());
+				for (i = 0, iz = styless.length; i < iz; i++) {
+					resarray.push(my.styles[styless[i]].toString());
 				}
 				for (i = 0, iz = entitys.length; i < iz; i++) {
 					resarray.push(my.entity[entitys[i]].toString(true));
@@ -342,7 +342,7 @@ Turn the object into a JSON String
 		/**
 Turn the object into a JSON String
 @method Cell.toString
-@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, designs and groups
+@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, styless and groups
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Cell.prototype.toString = function(noexternalobjects) {
@@ -351,7 +351,7 @@ Turn the object into a JSON String
 				resarray = [],
 				entitys = [],
 				ctx,
-				designs = [],
+				styless = [],
 				blacklist = ['copyData', 'pasteData', 'actualWidth', 'actualHeight'],
 				i, iz, j, jz;
 			result.type = this.type;
@@ -385,18 +385,18 @@ Turn the object into a JSON String
 				}
 				for (i = 0, iz = entitys.length; i < iz; i++) {
 					ctx = my.ctx[my.entity[entitys[i]].context];
-					if (my.contains(my.designnames, ctx.fillStyle)) {
-						my.pushUnique(designs, ctx.fillStyle);
+					if (my.contains(my.stylesnames, ctx.fillStyle)) {
+						my.pushUnique(styless, ctx.fillStyle);
 					}
-					if (my.contains(my.designnames, ctx.strokeStyle)) {
-						my.pushUnique(designs, ctx.strokeStyle);
+					if (my.contains(my.stylesnames, ctx.strokeStyle)) {
+						my.pushUnique(styless, ctx.strokeStyle);
 					}
-					if (my.contains(my.designnames, ctx.shadowColor)) {
-						my.pushUnique(designs, ctx.shadowColor);
+					if (my.contains(my.stylesnames, ctx.shadowColor)) {
+						my.pushUnique(styless, ctx.shadowColor);
 					}
 				}
-				for (i = 0, iz = designs.length; i < iz; i++) {
-					resarray.push(my.design[designs[i]].toString());
+				for (i = 0, iz = styless.length; i < iz; i++) {
+					resarray.push(my.styles[styless[i]].toString());
 				}
 				for (i = 0, iz = entitys.length; i < iz; i++) {
 					resarray.push(my.entity[entitys[i]].toString(true));
@@ -436,7 +436,7 @@ Automatically removes the entitys attribute from the result; when loading, exist
 				result = {},
 				resarray = [],
 				ctx,
-				designs = [],
+				styless = [],
 				i, iz;
 			result.type = this.type;
 			// result.classname = this.classname;
@@ -453,18 +453,18 @@ Automatically removes the entitys attribute from the result; when loading, exist
 			if (!noentitys) {
 				for (i = 0, iz = this.entitys.length; i < iz; i++) {
 					ctx = my.ctx[my.entity[this.entitys[i]].context];
-					if (my.contains(my.designnames, ctx.fillStyle)) {
-						my.pushUnique(designs, ctx.fillStyle);
+					if (my.contains(my.stylesnames, ctx.fillStyle)) {
+						my.pushUnique(styless, ctx.fillStyle);
 					}
-					if (my.contains(my.designnames, ctx.strokeStyle)) {
-						my.pushUnique(designs, ctx.strokeStyle);
+					if (my.contains(my.stylesnames, ctx.strokeStyle)) {
+						my.pushUnique(styless, ctx.strokeStyle);
 					}
-					if (my.contains(my.designnames, ctx.shadowColor)) {
-						my.pushUnique(designs, ctx.shadowColor);
+					if (my.contains(my.stylesnames, ctx.shadowColor)) {
+						my.pushUnique(styless, ctx.shadowColor);
 					}
 				}
-				for (i = 0, iz = designs.length; i < iz; i++) {
-					resarray.push(my.design[designs[i]].toString());
+				for (i = 0, iz = styless.length; i < iz; i++) {
+					resarray.push(my.styles[styless[i]].toString());
 				}
 				for (i = 0, iz = this.entitys.length; i < iz; i++) {
 					resarray.push(my.entity[this.entitys[i]].toString(true));
@@ -507,7 +507,7 @@ Turn the object into a JSON String
 				result = {},
 				ctx = my.ctx[this.context],
 				ctxArray,
-				designs = [],
+				styless = [],
 				resarray = [],
 				vectorslist = ['start', 'delta', 'handle', 'copy'],
 				blacklist = ['collisionVectors', 'dataSet', 'pointList', 'firstPoint', 'linkList', 'linkDurations', 'perimeterLength', 'style', 'variant', 'weight', 'size', 'metrics', 'family', 'texts', 'copyData', 'pasteData', 'localHeight', 'localWidth'];
@@ -517,17 +517,17 @@ Turn the object into a JSON String
 			result.libname = this.libname;
 			result.name = this.name;
 			if (!noexternalobjects) {
-				if (ctx && ctx.fillStyle && my.contains(my.designnames, ctx.fillStyle)) {
-					my.pushUnique(designs, ctx.fillStyle);
+				if (ctx && ctx.fillStyle && my.contains(my.stylesnames, ctx.fillStyle)) {
+					my.pushUnique(styless, ctx.fillStyle);
 				}
-				if (ctx && ctx.strokeStyle && my.contains(my.designnames, ctx.strokeStyle)) {
-					my.pushUnique(designs, ctx.strokeStyle);
+				if (ctx && ctx.strokeStyle && my.contains(my.stylesnames, ctx.strokeStyle)) {
+					my.pushUnique(styless, ctx.strokeStyle);
 				}
-				if (ctx && ctx.shadowColor && my.contains(my.designnames, ctx.shadowColor)) {
-					my.pushUnique(designs, ctx.shadowColor);
+				if (ctx && ctx.shadowColor && my.contains(my.stylesnames, ctx.shadowColor)) {
+					my.pushUnique(styless, ctx.shadowColor);
 				}
-				for (var k = 0, kz = designs.length; k < kz; k++) {
-					resarray.push(my.design[designs[k]].toString());
+				for (var k = 0, kz = styless.length; k < kz; k++) {
+					resarray.push(my.styles[styless[k]].toString());
 				}
 			}
 			for (var i = 0, iz = keys.length; i < iz; i++) {

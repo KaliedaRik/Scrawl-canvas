@@ -20,6 +20,7 @@ Scrawl roadmap
 			- work completed and merged into develop branch
 		- 3. replace object.classname > object.lib, .libname
 			- they're not classes - rename them
+			- work completed and merged into develop branch
 		- 4. object name changes: Design > Styles; design > styles; dsn > sty
 			- to make link to fillStyle, strokeStyle more obvious
 		- 5. introduce vectorPool; scrawl.requestVector() .releaseVector()
@@ -136,32 +137,30 @@ Core demos for testing
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
-170516
-	- testing
-		- passing in Chrome
-		- bunny tests (Chrome): 
-			- (31a, 32a, 33a)
-			- 2860, 3400, 4400 
-		- star tests (Chrome): 
-			- (119-stars@>20fps, 220-fpsFor100stars, 221-stars@>20fps)
-			- 3700, 60, 1200 
-		- passing in IE11 (with expected exceptions) - tests not yet done
-		- bunny tests (IE11): 
-			- (31a, 32a, 33a)
-			- 2860, 3400, 4400 
-		- star tests (IE11): 
-			- (119-stars@>20fps, 220-fpsFor100stars, 221-stars@>20fps)
-			- 3700, 60, 1200 
+to 170517
+	-testing                  Firefox     Chrome      IE11        Edge
+		31a bunnies@20fps      2960       2800        1840        1720
+		32a bunnies@20fps      9950       3400        4350        4500
+		33a bunnies@20fps     17200       4400        8100        8400
+		119 stars@>20fps       3400       3700        1400        1400
+		220 fpsFor100stars       18         60          13          11
+		221-stars@>20fps        400       1200         300         300
+	- 3. replace object.classname > object.lib, .libname
+		- work completed and tested
+		- branch v7_roadmap merged into develop
+	- 4. object name changes: Design > Styles; design > styles; dsn > sty
+		- starting work in branch v7_roadmap
+		- Design > Styles - done across all extensions
+		- design > styles - done across all extensions
+		- dsn > sty - done across all extensions
+		- tested across various demos
+			- all tested demos passing
+			- 2 demos required code updates as they referenced scrawl.design directly
+				- which means all demos need checking
 
 170515
 	- bugfixing yesterday's failed demos
 		- all tests now working in Firefox
-		- bunny tests (Firefox): 
-			- (31a, 32a, 33a)
-			- 2960, 9950, 17200 
-		- star tests (Firefox): 
-			- (119-stars@>20fps, 220-fpsFor100stars, 221-stars@>20fps)
-			- 3400, 18, 400 
 
 170514
 	- REVIEW

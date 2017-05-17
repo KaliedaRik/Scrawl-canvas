@@ -62,8 +62,8 @@ scrawlAnimation extension adaptions to the Scrawl library object
 
 * PageElement.tweenLock - default: false;
 
-* Design.roll - default: 0;
-* Design.autoUpdate - default: false;
+* Styles.roll - default: 0;
+* Styles.autoUpdate - default: false;
 
 @class window.scrawl_Animation
 **/
@@ -858,30 +858,30 @@ A value for shifting the color stops (was __roll__ in versions prior to v4.0)
 @type Number
 @default 0
 **/
-		my.work.d.Design.shift = 0;
+		my.work.d.Styles.shift = 0;
 		/**
 A flag to indicate that stop color shifts should be automatically applied
 @property autoUpdate
 @type Boolean
 @default false
 **/
-		my.work.d.Design.autoUpdate = false;
-		my.mergeInto(my.work.d.Gradient, my.work.d.Design);
-		my.mergeInto(my.work.d.RadialGradient, my.work.d.Design);
+		my.work.d.Styles.autoUpdate = false;
+		my.mergeInto(my.work.d.Gradient, my.work.d.Styles);
+		my.mergeInto(my.work.d.RadialGradient, my.work.d.Styles);
 		if (my.xt(my.work.d.Pattern)) {
-			my.mergeInto(my.work.d.Pattern, my.work.d.Design);
+			my.mergeInto(my.work.d.Pattern, my.work.d.Styles);
 		}
 		/**
 Creates the gradient
 
 _This function replaces the one in the core module_
-@method Design.update
+@method Styles.update
 @param {String} [entity] SPRITENAME String
 @param {String} [cell] CELLNAME String
 @return This
 @chainable
 **/
-		my.Design.prototype.update = function(entity, cell) {
+		my.Styles.prototype.update = function(entity, cell) {
 			this.makeGradient(entity, cell);
 			this.sortStops();
 			this.applyStops();
@@ -889,11 +889,11 @@ _This function replaces the one in the core module_
 		};
 		/**
 Gradient builder helper function - sorts color attribute Objects by their stop attribute values, after adding the roll value to them
-@method Design.sortStops
+@method Styles.sortStops
 @return Nothing
 @private
 **/
-		my.Design.prototype.sortStops = function() {
+		my.Styles.prototype.sortStops = function() {
 			var color,
 				shift,
 				i,
@@ -952,7 +952,7 @@ Locate a target object
 @return target Object; false if not found
 **/
 		my.locateTarget = function(item) {
-			var sections = ['entity', 'cell', 'pad', 'stack', 'element', 'point', 'group', 'design', 'animation', 'tween', 'anim', 'filter', 'image', 'force', 'spring', 'physics'],
+			var sections = ['entity', 'cell', 'pad', 'stack', 'element', 'point', 'group', 'styles', 'animation', 'tween', 'anim', 'filter', 'image', 'force', 'spring', 'physics'],
 				section, name, j, jz,
 				contains = my.contains,
 				xt = my.xt;
@@ -1721,7 +1721,7 @@ If an Action object is associated with a ticker, it will fire (or revert) at the
 			/**
 Array of Objects on which this Action will perform its action and revert functions; if the array includes Strings, the constructor, set and clone functions will search for the Objects in the Scrawl library, checking sections (if they currently exist) in the following order: 
 
-* entity, cell, pad, stack, element, point, group, design, animation, tween, anim, filter, image, force, spring, physics
+* entity, cell, pad, stack, element, point, group, styles, animation, tween, anim, filter, image, force, spring, physics
 
 This attribute can also accept a single Object or String as its value in the 
 
@@ -2229,7 +2229,7 @@ If a Tween object is associated with a ticker, it will fire (or revert) at the a
 			/**
 Array of Objects on which this Tween will perform its action and revert functions; if the array includes Strings, the constructor, set and clone functions will search for the Objects in the Scrawl library, checking sections (if they currently exist) in the following order: 
 
-* entity, cell, pad, stack, element, point, group, design, animation, tween, anim, filter, image, force, spring, physics
+* entity, cell, pad, stack, element, point, group, styles, animation, tween, anim, filter, image, force, spring, physics
 
 This attribute can also accept a single Object or String as its value in the 
 
