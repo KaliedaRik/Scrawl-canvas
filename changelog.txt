@@ -137,6 +137,15 @@ Core demos for testing
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+170518
+	- 4. object name changes: Design > Styles; design > styles; dsn > sty
+		- updated the website tutorials page for name changes
+		- tested all demos in Edge 
+			- to see if any other demo code broke
+			- all passed as expected
+		- work completed and tested
+		- branch v7_roadmap merged into develop
+
 to 170517
 	-testing                  Firefox     Chrome      IE11        Edge
 		31a bunnies@20fps      2960       2800        1840        1720
