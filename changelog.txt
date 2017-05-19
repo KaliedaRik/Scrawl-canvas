@@ -137,7 +137,7 @@ Core demos for testing
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
-170518
+to 170518
 	- 4. object name changes: Design > Styles; design > styles; dsn > sty
 		- updated the website tutorials page for name changes
 		- tested all demos in Edge 
@@ -145,6 +145,13 @@ CHANGE LOG
 			- all passed as expected
 		- work completed and tested
 		- branch v7_roadmap merged into develop
+	- 5. introduce vectorPool; scrawl.requestVector() .releaseVector()
+		- added vectorPool; scrawl.requestVector() .releaseVector()
+		- removed scrawl.correctCoordinates
+		- fixed .correctCoordinates to use vectorPool
+		- testing getEntityAt(), getAllEntitysAt(), pickupEntity()
+			- mouse drag/drop appears to be working fine
+			- multi-entity collision detection with point appears to be good
 
 to 170517
 	-testing                  Firefox     Chrome      IE11        Edge

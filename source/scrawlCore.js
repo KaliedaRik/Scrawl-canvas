@@ -1580,36 +1580,6 @@ A __utility__ function for performing bucket sorts on scrawl string arrays eg Gr
 		return [].concat.apply([], f);
 	};
 	/**
-General helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions
-
-@method correctCoordinates
-@param {Object} coords An object containing x and y attributes
-@param {String} [cell] CELLNAME String
-@return Amended coordinate object; false on error
-**/
-	my.correctCoordinates = function(coords, cell) {
-		var vector,
-			pad,
-			w, h,
-			get = my.xtGet;
-		coords = my.safeObject(coords);
-		vector = my.makeVector(coords);
-		if (my.xta(coords.x, coords.y)) {
-			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.work.currentPad].base];
-			pad = my.pad[cell.pad];
-			w = get(pad.localWidth, pad.width, 300);
-			h = get(pad.localHeight, pad.height, 150);
-			if (w !== cell.actualWidth) {
-				vector.x /= (w / cell.actualWidth);
-			}
-			if (h !== cell.actualHeight) {
-				vector.y /= (h / cell.actualHeight);
-			}
-			return vector;
-		}
-		return false;
-	};
-	/**
 A __general__ function which passes on requests to Pads to generate new &lt;canvas&gt; elements and associated objects - see Pad.addNewCell() for more details
 @method addNewCell
 @param {Object} data Initial attribute values for new object
@@ -2270,6 +2240,54 @@ Rotate a Vector object by a Quaternion rotation
 		}
 		return this;
 	};
+	/**
+Vector pool
+
+request a vector from the pool using scrawl.requestVector(args)
+release a vector back to the pool using scrawl.releaseVector(vector)
+
+@property vectorPool
+@type {Array}
+@private
+**/
+	my.vectorPool = [];
+	/**
+A __general__ function to retrieve a pool vector
+
+The arguments, if included, should be the x and y values to which the vector will be set
+
+@method requestVector
+@param {Number} x - vector x value
+@param {Number} y - vector y value
+@param {Number} z - vector z value
+@return pool vector
+**/
+	my.requestVector = function(x, y, z){
+		if(!my.vectorPool.length){
+			my.vectorPool.push(new my.Vector({
+				name: 'pool'
+			}));
+		}
+		var v = my.vectorPool.shift();
+		v.x = x || 0;
+		v.y = y || 0;
+		v.z = z || 0;
+		return v
+	};
+	/**
+A __general__ function to release a pool vector back to the pool
+
+The argument object should be the vector to be released
+
+@method requestVector
+@param {Object} items - Scrawl Vector object
+@return not defined
+**/
+	my.releaseVector = function(v){
+		if(v && v.type === 'Vector'){
+			my.vectorPool.push(v);
+		}
+	};
 
 	/**
 # Base 
@@ -2297,7 +2315,6 @@ Unique identifier for each object; default: computer-generated String based on O
 @type String
 **/
 		this.makeName(items.name);
-		console.log(this.lib, this.name, items);
 		my[this.lib][this.name] = this;
 		my.pushUnique(my[this.libName], this.name);
 		return this;
@@ -3642,15 +3659,15 @@ setStampUsingPivot helper object
 			current.y = (!obj.lockY) ? vector.y : current.y;
 		},
 		mouse: function(obj, ignore, cell, mouse) {
-			var pad,
+			var pad, correctedMouse,
 				current = obj.currentStart;
 			if (!my.xt(mouse)) {
 				cell = my.cell[cell];
 				pad = my.pad[cell.pad];
 				mouse = pad.mice[obj.mouseIndex];
 			}
-			mouse = obj.correctCoordinates(mouse, cell);
-			if (mouse) {
+			correctedMouse = obj.correctCoordinates(mouse, cell);
+			if (correctedMouse) {
 				if (obj.oldX == null && obj.oldY == null) { //jshint ignore:line
 					obj.oldX = current.x;
 					obj.oldY = current.y;
@@ -3660,6 +3677,7 @@ setStampUsingPivot helper object
 				obj.oldX = mouse.x;
 				obj.oldY = mouse.y;
 			}
+			my.releaseVector(correctedMouse);
 		},
 		stack: function() {}
 	};
@@ -3677,8 +3695,8 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 			w, h,
 			get = my.xtGet;
 		coords = my.safeObject(coords);
-		vector = my.work.v.set(coords);
 		if (scrawl.xta(coords.x, coords.y)) {
+			vector = my.requestVector(coords.x, coords.y, coords.z);
 			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.work.currentPad].base];
 			pad = my.pad[cell.pad];
 			w = get(pad.localWidth, pad.width, 300);
@@ -7014,16 +7032,19 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getEntityAt = function(items) {
 		var entity,
-			v1 = my.work.colv1,
-			v2 = my.work.colv2,
+			result = false,
+			req = my.requestVector,
+			rel = my.releaseVector,
+			v1 = req(),
+			v2 = req(),
 			entitys = this.entitys,
 			e = my.entity,
 			rad = this.regionRadius,
 			coordinate,
 			i;
 		items = my.safeObject(items);
-		coordinate = v1.set(items); //coordinate = my.work.colv1
-		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.work.v
+		v1.set(items);
+		coordinate = my.Position.prototype.correctCoordinates.call(this, v1, this.cell);
 		this.sortEntitys();
 		for (i = entitys.length - 1; i >= 0; i--) {
 			entity = e[entitys[i]];
@@ -7034,10 +7055,14 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 				}
 			}
 			if (entity.checkHit(coordinate)) {
-				return entity;
+				result = entity;
+				break;
 			}
 		}
-		return false;
+		rel(v1);
+		rel(v2);
+		rel(coordinate);
+		return result;
 	};
 	/**
 Check all entitys in the Group to see which one(s) are associated with a particular mouse index
@@ -7069,8 +7094,10 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getAllEntitysAt = function(items) {
 		var entity,
-			v1 = my.work.colv1,
-			v2 = my.work.colv2,
+			req = my.requestVector,
+			rel = my.releaseVector,
+			v1 = req(),
+			v2 = req(),
 			coordinate,
 			results,
 			entitys = this.entitys,
@@ -7078,9 +7105,9 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 			rad = this.regionRadius,
 			i;
 		items = my.safeObject(items);
-		coordinate = v1.set(items); //coordinate = my.work.colv1
+		v1.set(items);
 		results = [];
-		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.work.v
+		coordinate = my.Position.prototype.correctCoordinates(v1, this.cell);
 		this.sortEntitys();
 		for (i = entitys.length - 1; i >= 0; i--) {
 			entity = e[entitys[i]];
@@ -7094,6 +7121,9 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 				results.push(entity);
 			}
 		}
+		rel(v1);
+		rel(v2);
+		rel(coordinate);
 		return (results.length > 0) ? results : false;
 	};
 	/**
@@ -7826,12 +7856,12 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 @chainable
 **/
 	my.Entity.prototype.pickupEntity = function(items) {
-		var cell,
+		var cell, v,
 			coordinate;
 		items = my.safeObject(items);
-		coordinate = my.work.v.set(items);
+		v = my.requestVector(items.x, items.y);
 		cell = my.cell[my.group[this.group].cell];
-		coordinate = this.correctCoordinates(coordinate, cell);
+		coordinate = this.correctCoordinates(v, cell);
 		this.oldX = coordinate.x || 0;
 		this.oldY = coordinate.y || 0;
 		this.oldPivot = this.pivot;
@@ -7840,6 +7870,8 @@ Set entity's pivot to 'mouse'; set handles to supplied Vector value; set order t
 		this.currentPivotIndex = false;
 		this.order += 9999;
 		my.group[this.group].resort = true;
+		my.releaseVector(v);
+		my.releaseVector(coordinate);
 		return this;
 	};
 	/**
