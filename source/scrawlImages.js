@@ -1316,7 +1316,7 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 				index,
 				cd,
 				pd = this.pasteData,
-				v1 = my.work.workimg.v1,
+				v1 = my.requestVector(),
 				between = my.isBetween,
 				channel;
 			items = my.safeObject(items);
@@ -1339,8 +1339,10 @@ Argument needs to have __x__ and __y__ data (pixel coordinates) and, optionally,
 				array = data.data;
 				channel = items.channel || this.get('imageDataChannel');
 				channel = (my.contains(['red', 'green', 'blue', 'color', 'alpha'], channel)) ? channel : 'alpha';
+				my.releaseVector(v1);
 				return this.getImageDataValueActions[channel](array, index);
 			}
+			my.releaseVector(v1);
 			return false;
 		};
 		/**

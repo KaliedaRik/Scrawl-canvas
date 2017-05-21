@@ -444,11 +444,12 @@ Retrieve rotational component of this quaternion
 		/**
 Retrieve axis component of this quaternion
 @method getAxis
-@return Normalized Vector (scrawl.v Vector)
+@return Normalized Pool Vector (not released!)
 **/
 		my.Quaternion.prototype.getAxis = function() {
 			var magnitude,
-				v = my.work.v;
+				// v = my.work.v;
+				v = my.requestVector();
 			v.set(this.v);
 			magnitude = this.getMagnitude();
 			return (magnitude !== 0) ? v.scalarDivide(magnitude) : v;

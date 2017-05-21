@@ -97,15 +97,7 @@ A __factory__ function to generate new Video objects
 		my.makeVideo = function(items) {
 			return new my.Video(items);
 		};
-		/**
-Work vector, for calculations
-@property scrawl.work.workimg
-@type {Vector}
-@private
-**/
-		my.work.workimg = {
-			v1: my.makeVector(),
-		};
+
 		my.pushUnique(my.work.sectionlist, 'image');
 		my.pushUnique(my.work.nameslist, 'imagenames');
 		my.pushUnique(my.work.sectionlist, 'video');

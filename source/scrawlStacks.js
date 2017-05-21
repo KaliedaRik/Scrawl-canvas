@@ -2454,9 +2454,11 @@ Set element's pivot to 'mouse'; set handles to supplied Vector value; set order 
 @chainable
 **/
 		my.PageElement.prototype.pickupEntity = function(items) {
-			var coordinate;
+			var coordinate,
+				v = my.requestVector();
 			items = my.safeObject(items);
-			coordinate = my.work.v.set(items);
+			// coordinate = my.work.v.set(items);
+			coordinate = v.set(items);
 			this.oldX = coordinate.x || 0;
 			this.oldY = coordinate.y || 0;
 			this.oldPivot = this.pivot;
@@ -2464,6 +2466,7 @@ Set element's pivot to 'mouse'; set handles to supplied Vector value; set order 
 			this.pivot = 'mouse';
 			this.order += 9999;
 			my.group[this.group].resort = true;
+			my.releaseVector(v);
 			return this;
 		};
 		/**
@@ -3851,13 +3854,15 @@ This has the effect of turning a set of disparate eelements into a single, coord
 					handleX: 0,
 					handleY: 0
 				},
-				v = my.work.v,
+				// v = my.work.v,
+				v,
 				elements = this.elements;
 			item = (item.substring) ? item : false;
 			if (item) {
 				p = my.stack[item] || my.pad[item] || my.element[item] || my.entity[item] || my.point[item] || false;
 				if (p) {
 					pStart = (p.type === 'Point') ? p.local : p.start;
+					v = my.requestVector();
 					for (i = 0, iz = elements.length; i < iz; i++) {
 						element = my.stack[elements[i]] || my.pad[elements[i]] || my.element[elements[i]] || false;
 						if (element) {
@@ -3869,6 +3874,7 @@ This has the effect of turning a set of disparate eelements into a single, coord
 							element.set(arg);
 						}
 					}
+					my.releaseVector(v);
 				}
 			}
 			return this;

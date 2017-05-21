@@ -83,11 +83,11 @@ Change in time since last update, measured in seconds
 		};
 		/**
 Object containing a set of vectors, for physics calculations
-@property scrawl.work.workphys
+@property scrawl.physicsvectors
 @type {Object}
 @private
 **/
-		my.work.workphys = {
+		my.physicsvectors = {
 			v1: my.makeVector(),
 			v2: my.makeVector(),
 			v3: my.makeVector(),
@@ -575,7 +575,8 @@ Calculation cycle engine
 **/
 		my.Particle.prototype.updateEuler = function() {
 			var dtime = my.physics.deltaTime,
-				v1 = my.work.workphys.v1,
+				// v1 = my.work.workphys.v1,
+				v1 = my.physicsvectors.v1,
 				vel = this.currentVelocity,
 				v = this.velocity;
 			vel.set(v);
@@ -599,7 +600,8 @@ Calculation cycle engine
 				v3,
 				w = this.currentVelocity,
 				v = this.velocity,
-				wp = my.work.workphys,
+				// wp = my.work.workphys,
+				wp = my.physicsvectors,
 				dtime = my.physics.deltaTime;
 			w.set(v);
 			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime);
@@ -626,7 +628,8 @@ Calculation cycle engine
 				v5,
 				v = this.velocity,
 				w = this.currentVelocity,
-				wp = my.work.workphys,
+				// wp = my.work.workphys,
+				wp = my.physicsvectors,
 				dtime = my.physics.deltaTime;
 			w.set(v);
 			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime).scalarDivide(2);
@@ -655,7 +658,8 @@ Calculation cycle engine - linear particle collisions
 				relVelocity,
 				impactScalar,
 				impact,
-				wp = my.work.workphys,
+				// wp = my.work.workphys,
+				wp = my.physicsvectors,
 				v = this.velocity,
 				m = this.mass;
 			normal = wp.v1.set(this.place).vectorSubtract(b.place).normalize();
@@ -823,7 +827,8 @@ Dummy function - required to allow Particles to be processed alongside Entity ob
 					this.restLength = items.restLength;
 				}
 				else {
-					r = my.work.workphys.v1.set(b2.place);
+					// r = my.work.workphys.v1.set(b2.place);
+					r = my.physicsvectors.v1.set(b2.place);
 					r.vectorSubtract(b1.place);
 					this.restLength = r.getMagnitude();
 				}
@@ -921,7 +926,8 @@ Calculate the force exerted by the spring for this calculation cycle iteration
 				r,
 				r_norm,
 				r_norm2,
-				wp = my.work.workphys,
+				// wp = my.work.workphys,
+				wp = my.physicsvectors,
 				e = my.entity,
 				eStart = e[this.start],
 				eEnd = e[this.end];

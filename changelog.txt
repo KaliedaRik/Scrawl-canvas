@@ -134,9 +134,30 @@ Core demos for testing
 - 414 user-defined filter
 - 501-504 load/save
 
-
 CHANGE LOG
 ------------------------------------------------------------------------------------
+to 170520
+	- 9. fix for entity-locked gradients + scaling bug
+		- done - demos 081, 085 working ok
+			- only %string values scale (in line with overall scrawl philosophy)
+			- UPDATED: 085 (html + js) - to include %radius values
+		- not merged into develop; will merge alongside 5
+	- 5. introduce vectorPool; scrawl.requestVector() .releaseVector()
+		- added vectorPool; scrawl.requestVector() .releaseVector()
+		- removed scrawl.correctCoordinates
+		- fixed .correctCoordinates to use vectorPool
+		- testing getEntityAt(), getAllEntitysAt(), pickupEntity()
+			- mouse drag/drop appears to be working fine
+			- multi-entity collision detection with point appears to be good
+		- scrawl.work.v, .colv1, .colv2 vectors replaced with pool vectors
+		- scrawl.work.workwheel vectors replaced with pool vectors
+		- scrawl.work.workimg vectors replaced with pool vectors
+		- scrawl.workcols vectors replaced with pool vectors
+		- scrawl.work.worklink object renamed to my.linkvectors
+			- unnecessary attributes removed 
+			- pool vectors used where necessary
+		- scrawl.work.workphys object renamed to my.physicsvectors
+
 to 170518
 	- 4. object name changes: Design > Styles; design > styles; dsn > sty
 		- updated the website tutorials page for name changes
@@ -145,13 +166,6 @@ to 170518
 			- all passed as expected
 		- work completed and tested
 		- branch v7_roadmap merged into develop
-	- 5. introduce vectorPool; scrawl.requestVector() .releaseVector()
-		- added vectorPool; scrawl.requestVector() .releaseVector()
-		- removed scrawl.correctCoordinates
-		- fixed .correctCoordinates to use vectorPool
-		- testing getEntityAt(), getAllEntitysAt(), pickupEntity()
-			- mouse drag/drop appears to be working fine
-			- multi-entity collision detection with point appears to be good
 
 to 170517
 	-testing                  Firefox     Chrome      IE11        Edge

@@ -62,15 +62,6 @@ A __factory__ function to generate new Wheel entitys
 			return new my.Wheel(items);
 		};
 		/**
-Work vector, for wheel-specific calculations
-@property scrawl.work.workwheel
-@type {Vector}
-@private
-**/
-		my.work.workwheel = {
-			v1: my.makeVector(),
-		};
-		/**
 # Wheel
 
 ## Instantiation
@@ -306,7 +297,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				result,
 				testRadius,
 				cvx = my.work.cvx,
-				v1 = my.work.workwheel.v1,
+				v1,
 				handle,
 				start,
 				scale,
@@ -327,6 +318,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				scale = this.scale;
 				reverse = this.flipReverse;
 				upend = this.flipUpend;
+				v1 = my.requestVector();
 				for (i = 0, iz = tests.length; i < iz; i += 2) {
 					v1.x = tests[i];
 					v1.y = tests[i + 1];
@@ -341,6 +333,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 						break;
 					}
 				}
+				my.releaseVector(v1);
 			}
 			else {
 				this.buildPath(cvx);
@@ -569,82 +562,81 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				i,
 				iz,
 				j,
-				v1, v2;
-			if (my.xt(my.workcols)) {
-				v1 = my.workcols.v1;
-				v2 = my.workcols.v2;
-				this.collisionVectors.length = 0;
-				v1.x = this.localRadius;
-				v1.y = 0;
-				p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
-				for (i = 0, iz = p.length; i < iz; i++) {
-					if (p[i].toFixed && p[i] > 1) {
-						v2.set(v1);
-						r = 360 / Math.floor(p[i]);
-						for (j = 0; j < p[i]; j++) {
-							v2.rotate(r);
-							this.collisionVectors.push(v2.x);
-							this.collisionVectors.push(v2.y);
-						}
-					}
-					else if (p[i].substring) {
-						v2.set(v1);
-						switch (p[i]) {
-							case 'start':
-								this.collisionVectors.push(0);
-								this.collisionVectors.push(0);
-								break;
-							case 'N':
-								v2.rotate(-90);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case 'NE':
-								v2.rotate(-45);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case 'E':
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case 'SE':
-								v2.rotate(45);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case 'S':
-								v2.rotate(90);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case 'SW':
-								v2.rotate(135);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case 'W':
-								v2.rotate(180);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case 'NW':
-								v2.rotate(-135);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case 'center':
-								this.collisionVectors.push(0);
-								this.collisionVectors.push(0);
-								break;
-						}
-					}
-					else if (my.isa_vector(p[i])) {
-						this.collisionVectors.push(p[i].x);
-						this.collisionVectors.push(p[i].y);
+				v1 = my.requestVector(),
+				v2 = my.requestVector();
+			this.collisionVectors.length = 0;
+			v1.x = this.localRadius;
+			v1.y = 0;
+			p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
+			for (i = 0, iz = p.length; i < iz; i++) {
+				if (p[i].toFixed && p[i] > 1) {
+					v2.set(v1);
+					r = 360 / Math.floor(p[i]);
+					for (j = 0; j < p[i]; j++) {
+						v2.rotate(r);
+						this.collisionVectors.push(v2.x);
+						this.collisionVectors.push(v2.y);
 					}
 				}
+				else if (p[i].substring) {
+					v2.set(v1);
+					switch (p[i]) {
+						case 'start':
+							this.collisionVectors.push(0);
+							this.collisionVectors.push(0);
+							break;
+						case 'N':
+							v2.rotate(-90);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case 'NE':
+							v2.rotate(-45);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case 'E':
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case 'SE':
+							v2.rotate(45);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case 'S':
+							v2.rotate(90);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case 'SW':
+							v2.rotate(135);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case 'W':
+							v2.rotate(180);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case 'NW':
+							v2.rotate(-135);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case 'center':
+							this.collisionVectors.push(0);
+							this.collisionVectors.push(0);
+							break;
+					}
+				}
+				else if (my.isa_vector(p[i])) {
+					this.collisionVectors.push(p[i].x);
+					this.collisionVectors.push(p[i].y);
+				}
 			}
+			my.releaseVector(v1);
+			my.releaseVector(v2);
 			return this;
 		};
 

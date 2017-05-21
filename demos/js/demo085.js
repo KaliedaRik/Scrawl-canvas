@@ -59,10 +59,14 @@ var mycode = function() {
 	document.getElementById('entitygrad_endX_rel').value = 0;
 	document.getElementById('entitygrad_endY_rel').value = 0;
 	document.getElementById('flip').value = 'normal';
-	document.getElementById('cellgrad_startRad').value = 0;
-	document.getElementById('cellgrad_endRad').value = 400;
-	document.getElementById('entitygrad_startRad').value = 0;
-	document.getElementById('entitygrad_endRad').value = 80;
+	document.getElementById('cellgrad_startRad_abs').value = 0;
+	document.getElementById('cellgrad_endRad_abs').value = 400;
+	document.getElementById('entitygrad_startRad_abs').value = 0;
+	document.getElementById('entitygrad_endRad_abs').value = 80;
+	document.getElementById('cellgrad_startRad_rel').value = 0;
+	document.getElementById('cellgrad_endRad_rel').value = 80;
+	document.getElementById('entitygrad_startRad_rel').value = 0;
+	document.getElementById('entitygrad_endRad_rel').value = 80;
 
 
 	//code here
@@ -305,17 +309,29 @@ var mycode = function() {
 				entityBlockItems.flipReverse = scrawl.contains(['reverse', 'both'], temp) ? true : false;
 				entityBlockItems.flipUpend = scrawl.contains(['upend', 'both'], temp) ? true : false;
 				break;
-			case 'cellgrad_startRad':
+			case 'cellgrad_startRad_abs':
 				cellGradItems.startRadius = Math.round(e.target.value);
 				break;
-			case 'cellgrad_endRad':
+			case 'cellgrad_endRad_abs':
 				cellGradItems.endRadius = Math.round(e.target.value);
 				break;
-			case 'entitygrad_startRad':
+			case 'entitygrad_startRad_abs':
 				entityGradItems.startRadius = Math.round(e.target.value);
 				break;
-			case 'entitygrad_endRad':
+			case 'entitygrad_endRad_abs':
 				entityGradItems.endRadius = Math.round(e.target.value);
+				break;
+			case 'cellgrad_startRad_rel':
+				cellGradItems.startRadius = e.target.value + '%';
+				break;
+			case 'cellgrad_endRad_rel':
+				cellGradItems.endRadius = e.target.value + '%';
+				break;
+			case 'entitygrad_startRad_rel':
+				entityGradItems.startRadius = e.target.value + '%';
+				break;
+			case 'entitygrad_endRad_rel':
+				entityGradItems.endRadius = e.target.value + '%';
 				break;
 		}
 		if (Object.keys(cellBlockItems).length) {

@@ -159,27 +159,6 @@ An Object containing OBJECTTYPE:Object pairs which in turn contain default attri
 **/
 	my.work.d = {};
 	/**
-Work vector, for calculations
-@property v
-@type {Vector}
-@private
-**/
-	my.work.v = null;
-	/**
-Work vector, for calculations
-@property colv1
-@type {Vector}
-@private
-**/
-	my.work.colv1 = null;
-	/**
-Work vector, for calculations
-@property colv2
-@type {Vector}
-@private
-**/
-	my.work.colv2 = null;
-	/**
 Default empty object - passed to various functions, to prevent them generating superfluous objects
 @property o
 @type {Object}
@@ -6998,28 +6977,26 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 			entitys = this.entitys,
 			e = my.entity,
 			entityVector,
-			v = my.work.v,
+			v,
 			i,
 			iz,
-			arg = {
-				pivot: 0,
-				handleX: 0,
-				handleY: 0
-			};
+			arg;
 		item = (item.substring) ? item : false;
 		if (item) {
 			pivot = e[item] || my.point[item] || false;
 			if (pivot) {
+				arg = {};
+				v = my.requestVector();
 				pivotVector = (pivot.type === 'Point') ? pivot.local : pivot.start;
 				for (i = 0, iz = entitys.length; i < iz; i++) {
 					entity = e[entitys[i]];
-					entityVector = v.set(entity.start);
-					entityVector.vectorSubtract(pivotVector);
+					v.set(entity.start).vectorSubtract(pivotVector);
 					arg.pivot = item;
-					arg.handleX = -entityVector.x;
-					arg.handleY = -entityVector.y;
+					arg.handleX = -v.x;
+					arg.handleY = -v.y;
 					entity.set(arg);
 				}
+				my.releaseVector(v);
 			}
 		}
 		return this;
@@ -7661,11 +7638,13 @@ Entity.getStart
 @method getStart
 **/
 	my.Entity.prototype.getStart = function() {
-		var start = my.work.v.set(this.currentStart).vectorAdd(this.currentHandle);
-		return {
-			x: start.x,
-			y: start.y
-		};
+		var start = my.requestVector(),
+			result = {};
+		start.set(this.currentStart).vectorAdd(this.currentHandle);
+		result.x = start.x;
+		result.y = start.y;
+		my.releaseVector(start);
+		return result;
 	};
 	/**
 Stamp helper function - perform a 'clear' method draw
@@ -8197,7 +8176,8 @@ Styles.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 			w,
 			h,
 			r,
-			v = my.work.v;
+			s,
+			v;
 		entity = my.entity[entity] || false;
 		if (xt(cell)) {
 			cell = (c[cell]) ? c[cell] : c[this.get('cell')];
@@ -8308,20 +8288,20 @@ Styles.update() helper function - builds &lt;canvas&gt; element's contenxt engin
 				r = -entity.roll;
 			}
 			if (entity.roll) {
-				v.set({
+				v = my.requestVector();
+				s = {
 					x: fsx,
-					y: fsy,
-					z: 0
-				}).rotate(r);
+					y: fsy
+				};
+				v.set(s).rotate(r);
 				fsx = v.x;
 				fsy = v.y;
-				v.set({
-					x: fex,
-					y: fey,
-					z: 0
-				}).rotate(r);
+				s.x = fex;
+				s.y = fey;
+				v.set(s).rotate(r);
 				fex = v.x;
 				fey = v.y;
+				my.releaseVector(v);
 			}
 			if (this.type === 'Gradient') {
 				g = ctx.createLinearGradient(fsx, fsy, fex, fey);
@@ -8472,16 +8452,6 @@ End circle radius, in pixels or percentage of entity/cell width
 		endRadius: 0
 	};
 	my.mergeInto(my.work.d.RadialGradient, my.work.d.Styles);
-
-	my.work.v = my.makeVector({
-		name: 'scrawl.v'
-	});
-	my.work.colv1 = my.makeVector({
-		name: 'scrawl.colv1'
-	});
-	my.work.colv2 = my.makeVector({
-		name: 'scrawl.colv2'
-	});
 
 	/**
 A __factory__ function to generate new Animation objects

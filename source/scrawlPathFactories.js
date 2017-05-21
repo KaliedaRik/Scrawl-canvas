@@ -578,10 +578,11 @@ Percentage String values are relative to the entity's cell's dimensions
 				conv = my.Position.prototype.numberConvert,
 				get = my.xtGet,
 				cont = my.contains,
-				wv1 = my.work.worklink.v1,
-				wv2 = my.work.worklink.v2,
-				wc1 = my.work.worklink.control1,
-				wc2 = my.work.worklink.control2,
+				// wv1 = my.work.worklink.v1,
+				// wv2 = my.work.worklink.v2,
+				// wc1 = my.work.worklink.control1,
+				// wc2 = my.work.worklink.control2,
+				wv1, wv2, wc1, wc2,
 				sides, angle;
 			items = my.safeObject(items);
 			cell = my.Entity.prototype.getEntityCell(items);
@@ -604,6 +605,10 @@ Percentage String values are relative to the entity's cell's dimensions
 				turn = (sides && sides.toFixed && sides > 1) ? 360 / sides : ((angle && angle.toFixed && angle > 0) ? angle : 4);
 				currentAngle = 0;
 				count = 0;
+				wv1 = my.requestVector();
+				wv2 = my.requestVector();
+				wc1 = my.requestVector();
+				wc2 = my.requestVector();
 				wv1.x = wv2.x = radius;
 				wv1.y = wv2.y = 0;
 				wc1.x = c1x;
@@ -656,36 +661,40 @@ Percentage String values are relative to the entity's cell's dimensions
 				} while (test !== '0' && count < 1000);
 				data += 'z';
 				items.data = data;
+				my.releaseVector(wv1);
+				my.releaseVector(wv2);
+				my.releaseVector(wc1);
+				my.releaseVector(wc2);
 				return (items.shape) ? my.makeShape(items) : my.makePath(items);
 			}
 			return false;
 		};
 
-		if (!my.xt(my.work.worklink)) {
-			my.work.worklink = {
-				start: my.makeVector({
-					name: 'scrawl.worklink.start'
-				}),
-				end: my.makeVector({
-					name: 'scrawl.worklink.end'
-				}),
-				control1: my.makeVector({
-					name: 'scrawl.worklink.control1'
-				}),
-				control2: my.makeVector({
-					name: 'scrawl.worklink.control2'
-				}),
-				v1: my.makeVector({
-					name: 'scrawl.worklink.v1'
-				}),
-				v2: my.makeVector({
-					name: 'scrawl.worklink.v2'
-				}),
-				v3: my.makeVector({
-					name: 'scrawl.worklink.v3'
-				}),
-			};
-		}
+		// if (!my.xt(my.work.worklink)) {
+		// 	my.work.worklink = {
+		// 		start: my.makeVector({
+		// 			name: 'scrawl.worklink.start'
+		// 		}),
+		// 		end: my.makeVector({
+		// 			name: 'scrawl.worklink.end'
+		// 		}),
+		// 		control1: my.makeVector({
+		// 			name: 'scrawl.worklink.control1'
+		// 		}),
+		// 		control2: my.makeVector({
+		// 			name: 'scrawl.worklink.control2'
+		// 		}),
+		// 		v1: my.makeVector({
+		// 			name: 'scrawl.worklink.v1'
+		// 		}),
+		// 		v2: my.makeVector({
+		// 			name: 'scrawl.worklink.v2'
+		// 		}),
+		// 		v3: my.makeVector({
+		// 			name: 'scrawl.worklink.v3'
+		// 		}),
+		// 	};
+		// }
 
 		return my;
 	}(scrawl));

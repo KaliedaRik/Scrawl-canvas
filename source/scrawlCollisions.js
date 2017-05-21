@@ -53,26 +53,6 @@ scrawlCollisions extension adaptions to the scrawl-canvas library object
 **/
 
 		/**
-Collision vectors, for use in collision detection calculations
-
-_Note: at some point in the future, this object needs to be moved into the scrawl.work object, for consistency_
-@property scrawl.workcols
-@type Object 
-@value Object containing three vectors - v1, v2, v3
-@private
-**/
-		my.workcols = {
-			v1: my.makeVector({
-				name: 'scrawl.workcols.v1'
-			}),
-			v2: my.makeVector({
-				name: 'scrawl.workcols.v2'
-			}),
-			v3: my.makeVector({
-				name: 'scrawl.workcols.v3'
-			}),
-		};
-		/**
 A __general__ function which asks Cell objects to generate field collision tables
 @method scrawl.buildFields
 @param {Array} [items] Array of CELLNAME Strings - can also be a String
@@ -314,8 +294,7 @@ Check all entitys in the Group to see if they are colliding with the supplied en
 				entity = my.entity,
 				entitys = this.entitys,
 				regionRadius = this.regionRadius,
-				v1 = my.workcols.v1,
-				v2 = my.workcols.v2,
+				v1, v2,
 				ts1,
 				ts2,
 				tresult,
@@ -333,6 +312,8 @@ Check all entitys in the Group to see if they are colliding with the supplied en
 				awaycp[awayTemp.name] = awayTemp.getCollisionPoints();
 			}
 			if (my.contains(types, homeTemp.type)) {
+				v1 = my.requestVector();
+				v2 = my.requestVector();
 				hits.length = 0;
 				for (i = 0, iz = entitys.length; i < iz; i++) {
 					awayTemp = entity[entitys[i]];
@@ -359,6 +340,8 @@ Check all entitys in the Group to see if they are colliding with the supplied en
 						}
 					}
 				}
+				my.releaseVector(v1);
+				my.releaseVector(v2);
 				return (hits.length > 0) ? hits : false;
 			}
 			return false;
@@ -379,8 +362,8 @@ Check all entitys in the Group against each other to see if they are in collisio
 				entity = my.entity,
 				entitys = this.entitys,
 				regionRadius = this.regionRadius,
-				v1 = my.workcols.v1,
-				v2 = my.workcols.v2,
+				v1 = my.requestVector(),
+				v2 = my.requestVector(),
 				ts1,
 				ts2,
 				tresult,
@@ -421,6 +404,8 @@ Check all entitys in the Group against each other to see if they are in collisio
 					}
 				}
 			}
+			my.releaseVector(v1);
+			my.releaseVector(v2);
 			return hits;
 		};
 		/**
@@ -441,8 +426,7 @@ Check all entitys in this Group against all entitys in the argument Group, to se
 				entity = my.entity,
 				homeentitys = this.entitys,
 				awayentitys,
-				v1 = my.workcols.v1,
-				v2 = my.workcols.v2,
+				v1, v2,
 				regionRadius = this.regionRadius,
 				arg = {
 					tests: []
@@ -452,6 +436,8 @@ Check all entitys in this Group against all entitys in the argument Group, to se
 				cp = {},
 				tresult;
 			if (xt(g)) {
+				v1 = my.requestVector();
+				v2 = my.requestVector();
 				if (g.substring) {
 					if (my.group[g]) {
 						g = my.group[g];
@@ -503,6 +489,8 @@ Check all entitys in this Group against all entitys in the argument Group, to se
 						}
 					}
 				}
+				my.releaseVector(v1);
+				my.releaseVector(v2);
 				return hits;
 			}
 			return false;
@@ -761,7 +749,8 @@ Calculate the current positions of this entity's collision Vectors, taking into 
 		my.Entity.prototype.getCollisionPoints = function() {
 			var i,
 				iz,
-				v = my.work.v,
+				// v = my.work.v,
+				v = my.requestVector(),
 				collisionVectors = this.collisionVectors,
 				collisionArray = this.collisionArray,
 				reverse = this.flipReverse,
@@ -790,6 +779,7 @@ Calculate the current positions of this entity's collision Vectors, taking into 
 					collisionArray.push(v.y);
 				}
 			}
+			my.releaseVector(v);
 			return collisionArray;
 		};
 		/**
@@ -809,7 +799,8 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				w,
 				h,
 				xt = my.xt,
-				v = my.work.v,
+				// v = my.work.v,
+				v = my.requestVector(),
 				collisionVectors = this.collisionVectors,
 				collisionPoints = this.collisionPoints,
 				handle = this.currentHandle;
@@ -880,6 +871,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 					collisionVectors.push(collisionPoints[i].y);
 				}
 			}
+			my.releaseVector(v);
 			return this;
 		};
 		/**
