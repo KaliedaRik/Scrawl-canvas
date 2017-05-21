@@ -157,6 +157,9 @@ to 170520
 			- unnecessary attributes removed 
 			- pool vectors used where necessary
 		- scrawl.work.workphys object renamed to my.physicsvectors
+	- Testing:
+		- all essential demos passing in Firefox.
+	- merged changes for steps 9 and 5 into develop branch.
 
 to 170518
 	- 4. object name changes: Design > Styles; design > styles; dsn > sty
