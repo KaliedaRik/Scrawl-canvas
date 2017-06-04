@@ -12,26 +12,30 @@ Scrawl roadmap
 ------------------------------------------------------------------------------------
 
 	- for v7.0.0
-		- 1. refactor scrawlFilters extension code
+		- 1. refactor scrawlFilters extension code - DONE
 			- scrawlFilters extension removed from codebase
 			- scrawlMultiFilters extension added to codebase
 			- work completed and merged into develop branch
-		- 2. refactor scrawlColor extension code
+		- 2. refactor scrawlColor extension code - DONE
 			- work completed and merged into develop branch
-		- 3. replace object.classname > object.lib, .libname
+		- 3. replace object.classname > object.lib, .libname - DONE
 			- they're not classes - rename them
 			- work completed and merged into develop branch
-		- 4. object name changes: Design > Styles; design > styles; dsn > sty
+		- 4. object name changes: Design > Styles; design > styles; dsn > sty - DONE
 			- to make link to fillStyle, strokeStyle more obvious
-		- 5. introduce vectorPool; scrawl.requestVector() .releaseVector()
+		- 5. introduce vectorPool; scrawl.requestVector() .releaseVector() - DONE
 			- creating vectors on the fly can slow things down
-		- 6. remove scrawl.work.d; rewrite .get functionality; new getters object
+		- 6a. replace scrawl.work.d with prototype objects to hold default values - DONE
+		- 6b. rewrite .get functionality; new getters object
 			- current get functionality too slow
+			- MOVED to v8
 		- 7. refactor .set functionality; new setters and deltaSetters objects
 			- so we have a common approach to getters and setters
+			- MOVED to v8 (if decide to go ahead with this)
 		- 8. animation extension delta refactor; .delta; .setDelta(); .updateByDelta()
 			- the current system is not clear/simple enough
-		- 9. fix for entity-locked gradients + scaling bug
+			- MOVED to v8
+		- 9. fix for entity-locked gradients + scaling bug - DONE
 			- bug fixed as part of abandoned work: replicate
 		- (as each task completes, test and merge back into develop!)
 
@@ -45,6 +49,11 @@ Scrawl roadmap
 				- currently all new objects need to climb to base to get their names
 				- needs to tie in with set/get, to prevent unnecessary work
 				- SIGNIFICANT WORK
+		- refactor getters and setters
+			- aims:
+				- simplify(?) getters and setters for (hopeful) efficiency gains
+				- should tie in with construct/clone refactor
+				- moved back from v7 branch to v8
 		- refactor context > state
 			- SIGNIFICANT WORK which requires careful planning
 				- impacts on everything!
@@ -55,21 +64,36 @@ Scrawl roadmap
 				- cells and entitys to include 'state' object
 				- entitys to control state comparisons, not cells
 				- canvasPool
+		- refactor animation delta
+			- aims:
+				- the current delta system is horrid - needs replacing
+				- no more shrinking entitys to get out of bounce traps!
+				- moved back from v7 branch to v8
 		- refactor scrawlPhrases
 			- integrate the current Text objects into Phrase objects 
 				- for simplicity, efficiency and maintainability
 		- refactor save/load
 			- constructor/clone work is going to trash the saveload extension
 			- think of the new system more as an api rather than just a couple of functions
+			- shared whiteboards updating in real-time!
 		- revisit user accessibility 
 			- advances over past 4 years offer no excuse for neglecting this issue!
 		- touch/pointer events on mobile/handheld devices
 			- more important than ever to get this right!
+		- overhaul the 'stack' and related code
+			- simplify it!
+				- code base is really messy and not intuitive enough
+			- investigate ways to virtualise stack portions of DOM
+				- DOM updates are slow - want to make demos 220/221 superfast
+				- virtual stacks could just be reinserted into host DOM when dirtied
+				- (a bit like react, but better?)
+			- the Frame code is not good enough - too messy, too much replication
+		- think of a 'wow' factor/addition to star in the upgrade
+			- eg developing Frames to make a real-time 3d-simulated flag demo
 
 	- other topics that I want|need to look at (in no particular order) ...
 		- improving the code base (always)
 		- physics engine - rigid body interactions
-		- overhaul the 'stack' and related code; simplify it!
 
 	
 Currently known bugs
@@ -136,6 +160,15 @@ Core demos for testing
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+Current TODO list:
+	- fully test develop branch across all browsers
+	- bugfix all failing demos in develop branch
+	- prepare for release v7.0.0
+		- update website to use v7 code
+		- update tutorials copy and website demos
+		- update codepen lessons and demos
+	- release v7.0.0 before end June 2017
+
 170604
 	- latest work is degrading performance significantly
 		- do we need it?
@@ -165,9 +198,18 @@ CHANGE LOG
 				119 stars@>20fps       3300       3800        1300        1400
 				220 fpsFor100stars       19       (200+)        13          11
 				221-stars@>20fps        400+      1200+        300         300
-		- replace scrawl.work.d with scrawl[type].prototype.defs
+		- replace scrawl.work.d with scrawl[type].prototype.defs etc
+		- demo testing
+			- all core tests pass in Firefox 
+		- stress testing        Firefox     Chrome        IE11        Edge
+			31a bunnies@20fps      4420       2720        2000        2020
+			32a bunnies@20fps      9500       3750        4450        4650
+			33a bunnies@20fps     16900       4400        7700        8700
+			119 stars@>20fps       3500       4000        1400        1500
+			220 fpsFor100stars       19       (200+)        13          11
+			221-stars@>20fps        400+      1200+        300         300
+		- merged above changes into develop
 
-		
 to 170603
 	- copied over abandoned code to core and collisions
 		- these are the improvements to the context code
