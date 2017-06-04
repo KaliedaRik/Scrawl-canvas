@@ -119,7 +119,6 @@ A __factory__ function to generate new Phrase entitys
 @final
 **/
 		my.Phrase.prototype.type = 'Phrase';
-		// my.Phrase.prototype.classname = 'entitynames';
 		my.Phrase.prototype.lib = 'entity';
 		my.Phrase.prototype.libName = 'entitynames';
 		my.work.d.Phrase = {
@@ -951,7 +950,6 @@ Returns an object with coordinates __x__ and __y__
 @final
 **/
 		my.Text.prototype.type = 'Text';
-		// my.Text.prototype.classname = 'textnames';
 		my.Text.prototype.lib = 'text';
 		my.Text.prototype.libName = 'textnames';
 		my.work.d.Text = {

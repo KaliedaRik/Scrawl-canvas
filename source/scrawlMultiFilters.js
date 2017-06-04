@@ -189,10 +189,6 @@ Entity.stamp hook function - modified by multifilters extension
 			engine.globalCompositeOperation = gco;
 		};
 
-		// THIS IS WHERE THE NEW MULTIFILTER CODE WILL START!
-		// ==================================================
-
-
 		/**
 # Filter
 
@@ -347,8 +343,6 @@ Entity.stamp hook function - modified by multifilters extension
 
 
 		my.Filter.prototype.do = function(data) {
-			// if (this.defs[this.species]) {
-			// 	this.defs[this.species].call(this, data);
 			if (this.f[this.species]) {
 				this.f[this.species].call(this, data);
 			}
@@ -500,7 +494,6 @@ An object containing pre-defined filter functionality.
 		};
 
 
-		// my.Filter.prototype.defs = {
 		my.Filter.prototype.f = {
 			default: function(data) {},
 			grayscale: function(data) {
@@ -1018,7 +1011,6 @@ An object containing pre-defined filter functionality.
 @final
 **/
 		my.MultiFilter.prototype.type = 'MultiFilter';
-		// my.MultiFilter.prototype.classname = 'multifilternames';
 		my.MultiFilter.prototype.lib = 'multifilter';
 		my.MultiFilter.prototype.libName = 'multifilternames';
 		my.work.d.MultiFilter = {
@@ -1082,12 +1074,9 @@ multifilter main function:
 @return always true
 **/
 		my.MultiFilter.prototype.apply = function(canvas, cvx) {
-			// var canvas, cvx, img, def, filter, buff, data, width, height, j, jz;
 			var img, def, filter, buff, data, width, height, j, jz;
 
 			if (this.filters.length) {
-				// canvas = my.work.cv2;
-				// cvx = my.work.cvx2;
 				width = canvas.width;
 				height = canvas.height;
 
@@ -1263,15 +1252,7 @@ Extract data from the current grid
 
 			return result;
 		};
-
-
-
-
-
-
-		// REMEMBER - CODE BELOW HERE REQUIRED TO COMPLETE THE EXTENSION
-		// =============================================================
-
+		
 		return my;
 	}(scrawl));
 }

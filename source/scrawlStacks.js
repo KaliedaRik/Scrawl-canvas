@@ -379,7 +379,6 @@ The argument object should include the following attributes:
 						parentElement: stackParent
 					});
 				}
-				//items.stack = myStk.name;
 				items.group = myStk.name;
 				items.parentElement = myStk.name;
 			}
@@ -507,7 +506,6 @@ A __display__ function to ask Pads to undertake a complete clear-compile-show di
 		my.render = function(pads, mouse) {
 			var i,
 				iz,
-				// p,
 				padnames,
 				pad = my.pad;
 			my.renderElements();
@@ -2457,7 +2455,6 @@ Set element's pivot to 'mouse'; set handles to supplied Vector value; set order 
 			var coordinate,
 				v = my.requestVector();
 			items = my.safeObject(items);
-			// coordinate = my.work.v.set(items);
 			coordinate = v.set(items);
 			this.oldX = coordinate.x || 0;
 			this.oldY = coordinate.y || 0;
@@ -2727,7 +2724,6 @@ Stamp helper hook function - amended by stacks module
 @final
 **/
 		my.Stack.prototype.type = 'Stack';
-		// my.Stack.prototype.classname = 'stacknames';
 		my.Stack.prototype.lib = 'stack';
 		my.Stack.prototype.libName = 'stacknames';
 		my.work.d.Stack = {
@@ -3204,7 +3200,6 @@ Get dimensions of Stack
 @final
 **/
 		my.Element.prototype.type = 'Element';
-		// my.Element.prototype.classname = 'elementnames';
 		my.Element.prototype.lib = 'element';
 		my.Element.prototype.libName = 'elementnames';
 		my.work.d.Element = {
@@ -3277,7 +3272,6 @@ Return the DOM element wrapped by this object
 @final
 **/
 		my.ElementGroup.prototype.type = 'ElementGroup';
-		// my.ElementGroup.prototype.classname = 'groupnames';
 		my.ElementGroup.prototype.lib = 'group';
 		my.ElementGroup.prototype.libName = 'groupnames';
 		my.work.d.ElementGroup = {
@@ -3854,7 +3848,6 @@ This has the effect of turning a set of disparate eelements into a single, coord
 					handleX: 0,
 					handleY: 0
 				},
-				// v = my.work.v,
 				v,
 				elements = this.elements;
 			item = (item.substring) ? item : false;

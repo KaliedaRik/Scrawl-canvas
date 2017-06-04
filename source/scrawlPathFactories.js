@@ -578,10 +578,6 @@ Percentage String values are relative to the entity's cell's dimensions
 				conv = my.Position.prototype.numberConvert,
 				get = my.xtGet,
 				cont = my.contains,
-				// wv1 = my.work.worklink.v1,
-				// wv2 = my.work.worklink.v2,
-				// wc1 = my.work.worklink.control1,
-				// wc2 = my.work.worklink.control2,
 				wv1, wv2, wc1, wc2,
 				sides, angle;
 			items = my.safeObject(items);

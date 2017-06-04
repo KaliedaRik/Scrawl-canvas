@@ -152,13 +152,6 @@ Flag - Web Workers are supported by browser
 **/
 	my.work.worker = null;
 	/**
-An Object containing OBJECTTYPE:Object pairs which in turn contain default attribute values for each Scrawl object constructor
-@property d
-@type {Object}
-@private
-**/
-	my.work.d = {};
-	/**
 Default empty object - passed to various functions, to prevent them generating superfluous objects
 @property o
 @type {Object}
@@ -1844,7 +1837,7 @@ Vector name - not guaranteed to be unique
 @final
 **/
 	my.Vector.prototype.type = 'Vector';
-	my.work.d.Vector = {
+	my.Vector.prototype.defs = {
 		x: 0,
 		y: 0,
 		z: 0,
@@ -2306,10 +2299,9 @@ Unique identifier for each object; default: computer-generated String based on O
 @final
 **/
 	my.Base.prototype.type = 'Base';
-	// my.Base.prototype.classname = 'objectnames';
 	my.Base.prototype.lib = 'object';
 	my.Base.prototype.libName = 'objectnames';
-	my.work.d.Base = {
+	my.Base.prototype.defs = {
 		/**
 Comment, for accessibility
 @property comment
@@ -2365,7 +2357,15 @@ Retrieve an attribute value. If the attribute value has not been set, then the d
     box.get('favouriteAnimal');     //returns undefined
 **/
 	my.Base.prototype.get = function(item) {
-		return my.xtGet(this[item], my.work.d[this.type][item]);
+		var undef, i, d;
+		d = this.defs[item];
+		if (typeof d !== 'undefined') {
+			i = this[item];
+			return (typeof i !== 'undefined') ? i : d;
+		}
+		else {
+			return undef;
+		}
 	};
 	/**
 Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.
@@ -2389,7 +2389,7 @@ An attribute value will only be set if the object already has a default value fo
     box.get('favouriteAnimal');     //returns undefined
 **/
 	my.Base.prototype.set = function(items) {
-		var d = my.work.d[this.type],
+		var d = this.defs,
 			xt = my.xt;
 		for (var i in items) {
 			if (xt(d[i])) {
@@ -2604,10 +2604,9 @@ False if device does not support the canvas dashed line functionality; true othe
 @final
 **/
 	my.Device.prototype.type = 'Device';
-	// my.Device.prototype.classname = 'objectnames';
 	my.Device.prototype.lib = 'object';
 	my.Device.prototype.libName = 'objectnames';
-	my.work.d.Device = {
+	my.Device.prototype.defs = {
 		width: null,
 		height: null,
 		offsetX: null,
@@ -2625,7 +2624,7 @@ False if device does not support the canvas dashed line functionality; true othe
 		videoAutoplay: false,
 		videoForceFullScreen: false
 	};
-	my.mergeInto(my.work.d.Device, my.work.d.Base);
+	my.mergeInto(my.Device.prototype.defs, my.Base.prototype.defs);
 
 	/**
 Feature detection
@@ -2891,7 +2890,7 @@ Certain Scrawl extensions will add functionality to this object, for instance sc
 **/
 	my.Position = function(items) {
 		var so = my.safeObject,
-			d = my.work.d[this.type],
+			d = this.defs,
 			get = my.xtGet,
 			vec = my.makeVector;
 		my.Base.call(this, items);
@@ -3010,10 +3009,9 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 @final
 **/
 	my.Position.prototype.type = 'Position';
-	// my.Position.prototype.classname = 'objectnames';
 	my.Position.prototype.lib = 'object';
 	my.Position.prototype.libName = 'objectnames';
-	my.work.d.Position = {
+	my.Position.prototype.defs = {
 		start: {
 			x: 0,
 			y: 0
@@ -3081,7 +3079,7 @@ A flag to determine whether the object will calculate its position along a Shape
 @default true
 **/
 	};
-	my.mergeInto(my.work.d.Position, my.work.d.Base);
+	my.mergeInto(my.Position.prototype.defs, my.Base.prototype.defs);
 	/**
 Position constructor hook function - modified by animation extension
 @method animationPositionInit
@@ -3711,7 +3709,7 @@ The core implementation of this object is a stub that supplies Pad objects with 
 **/
 	my.PageElement = function(items) {
 		var get = my.xtGet,
-		d = my.work.d[this.type];
+		d = this.defs
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		/**
@@ -3764,10 +3762,9 @@ mice.ui0, mice.ui1 etc - refers to pointer and touch events
 @final
 **/
 	my.PageElement.prototype.type = 'PageElement';
-	// my.PageElement.prototype.classname = 'objectnames';
 	my.PageElement.prototype.lib = 'object';
 	my.PageElement.prototype.libName = 'objectnames';
-	my.work.d.PageElement = {
+	my.PageElement.prototype.defs = {
 		width: 300,
 		height: 150,
 		/**
@@ -3822,7 +3819,7 @@ Element CSS position styling attribute
 **/
 		position: 'static'
 	};
-	my.mergeInto(my.work.d.PageElement, my.work.d.Base);
+	my.mergeInto(my.PageElement.prototype.defs, my.Base.prototype.defs);
 	/**
 PageElement constructor hook function - modified by stacks extension
 @method stacksPageElementConstructor
@@ -3842,7 +3839,7 @@ Augments Base.get() to retrieve DOM element width and height values
 		var element = this.getElement(),
 			stat_pageElementGet = ['width', 'height', 'position'],
 			get = my.xtGet,
-			d = my.work.d[this.type];
+			d = this.defs;
 		if (my.contains(stat_pageElementGet, item)) {
 			switch (item) {
 				case 'width':
@@ -4339,7 +4336,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			base,
 			canvas,
 			get = my.xtGet,
-			d = my.work.d.Pad,
+			d = this.defs,
 			pu = my.pushUnique,
 			makeCell = my.makeCell;
 		items = my.safeObject(items);
@@ -4432,16 +4429,15 @@ Pad's currently active &lt;canvas&gt; element - CELLNAME
 @final
 **/
 	my.Pad.prototype.type = 'Pad';
-	// my.Pad.prototype.classname = 'padnames';
 	my.Pad.prototype.lib = 'pad';
 	my.Pad.prototype.libName = 'padnames';
-	my.work.d.Pad = {
+	my.Pad.prototype.defs = {
 		cells: [],
 		display: '',
 		base: '',
 		current: ''
 	};
-	my.mergeInto(my.work.d.Pad, my.work.d.PageElement);
+	my.mergeInto(my.Pad.prototype.defs, my.PageElement.prototype.defs);
 	/**
 Retrieve Pad's visible &lt;canvas&gt; element object
 @method getElement
@@ -4848,10 +4844,9 @@ Cell supports the following 'virtual' attributes for this attribute:
 @final
 **/
 	my.Cell.prototype.type = 'Cell';
-	// my.Cell.prototype.classname = 'cellnames';
 	my.Cell.prototype.lib = 'cell';
 	my.Cell.prototype.libName = 'cellnames';
-	my.work.d.Cell = {
+	my.Cell.prototype.defs = {
 		/**
 PADNAME of the Pad object to which this Cell belongs
 @property pad
@@ -5040,7 +5035,7 @@ Display cycle attribute - order in which the cell will show itself (if show attr
 **/
 		showOrder: 0
 	};
-	my.mergeInto(my.work.d.Cell, my.work.d.Position);
+	my.mergeInto(my.Cell.prototype.defs, my.Position.prototype.defs);
 	/**
 Cell constructor hook function - core module
 @method coreCellInit
@@ -5049,7 +5044,7 @@ Cell constructor hook function - core module
 	my.Cell.prototype.coreCellInit = function(items) {
 		var temp,
 			context,
-			d = my.work.d.Cell,
+			d = this.defs,
 			xt = my.xt,
 			xto = my.xto,
 			get = my.xtGet,
@@ -6279,10 +6274,9 @@ Default values are:
 @final
 **/
 	my.Context.prototype.type = 'Context';
-	// my.Context.prototype.classname = 'ctxnames';
 	my.Context.prototype.lib = 'ctx';
 	my.Context.prototype.libName = 'ctxnames';
-	my.work.d.Context = {
+	my.Context.prototype.defs = {
 		/**
 Color, gradient or pattern used to fill a entity. Can be:
 
@@ -6469,13 +6463,12 @@ Text baseline value for single-line Phrase entitys set to follow a Path entity p
 **/
 		textBaseline: 'alphabetic'
 	};
-	// my.work.contextKeys = Object.keys(my.work.d.Context);
-	my.Context.prototype.allKeys = Object.keys(my.work.d.Context);
+	my.Context.prototype.allKeys = Object.keys(this.defs);
 	my.Context.prototype.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
 	my.Context.prototype.lineKeys = ['lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'];
 	my.Context.prototype.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];
 	my.Context.prototype.textKeys = ['font', 'textAlign', 'textBaseline'];
-	my.mergeInto(my.work.d.Context, my.work.d.Base);
+	my.mergeInto(my.Context.prototype.defs, my.Base.prototype.defs);
 	/**
 Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function - lineDashOffset, lineWidth, globalAlpha
 
@@ -6554,7 +6547,7 @@ Compares an entity's context engine values (held in this context object) to thos
 			textKeys = this.textKeys,
 			k, d, color, scaled, i, iz, j, jz,
 			ldFlag, currentE, currentC, 
-			dx = my.work.d.Context,
+			dx = this.defs,
 			result = {};
 
 		if(entity.substring){
@@ -6729,10 +6722,9 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 @final
 **/
 	my.Group.prototype.type = 'Group';
-	// my.Group.prototype.classname = 'groupnames';
 	my.Group.prototype.lib = 'group';
 	my.Group.prototype.libName = 'groupnames';
-	my.work.d.Group = {
+	my.Group.prototype.defs = {
 		entitys: [],
 		cell: '',
 		order: 0,
@@ -6741,7 +6733,7 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 		resort: false,
 		regionRadius: 0
 	};
-	my.mergeInto(my.work.d.Group, my.work.d.Base);
+	my.mergeInto(my.Group.prototype.defs, my.Base.prototype.defs);
 	my.Group.prototype.multifiltersGroupInit = function() {};
 	/*
 set
@@ -7260,7 +7252,7 @@ _Note: not all entitys support all of these operations_
 @type String
 @default 'fill'
 **/
-		this.method = get(items.method, my.work.d[this.type].method);
+		this.method = get(items.method, this.defs.method);
 		this.collisionsEntityConstructor(items);
 		this.multifiltersEntityInit(items);
 		return this;
@@ -7273,10 +7265,9 @@ _Note: not all entitys support all of these operations_
 @final
 **/
 	my.Entity.prototype.type = 'Entity';
-	// my.Entity.prototype.classname = 'entitynames';
 	my.Entity.prototype.lib = 'entity';
 	my.Entity.prototype.libName = 'entitynames';
-	my.work.d.Entity = {
+	my.Entity.prototype.defs = {
 		order: 0,
 		visibility: true,
 		method: 'fill',
@@ -7299,7 +7290,7 @@ Entity radius, in pixels - not supported by all entity objects
 		context: '',
 		group: ''
 	};
-	my.mergeInto(my.work.d.Entity, my.work.d.Position);
+	my.mergeInto(my.Entity.prototype.defs, my.Position.prototype.defs);
 	/**
 Entity constructor hook function - modified by multifilters extension
 @method multifiltersEntityInit
@@ -7342,11 +7333,9 @@ Allows users to retrieve a entity's Context object's values via the entity
 **/
 	my.Entity.prototype.get = function(item) {
 		var xt = my.xt,
-			d = my.work.d;
-		if (xt(d.Base[item])) {
-			return my.Base.prototype.get.call(this, item);
-		}
-		if (xt(d.Context[item])) {
+			cdef = my.Context.prototype.defs,
+			d = this.defs;
+		if(cdef[item]){
 			return my.ctx[this.context].get(item);
 		}
 		return my.Position.prototype.get.call(this, item);
@@ -7985,10 +7974,9 @@ Drawing flag - when set to 'entity' (or true), will use entity-based coordinates
 @final
 **/
 	my.Styles.prototype.type = 'Styles';
-	// my.Styles.prototype.classname = 'stylesnames';
 	my.Styles.prototype.lib = 'styles';
 	my.Styles.prototype.libName = 'stylesnames';
-	my.work.d.Styles = {
+	my.Styles.prototype.defs = {
 		/**
 Array of JavaScript Objects representing color stop data
 
@@ -8051,7 +8039,7 @@ Vertical end coordinate, in pixels, from the top-left corner of the gradient's &
 **/
 		endY: 0
 	};
-	my.mergeInto(my.work.d.Styles, my.work.d.Base);
+	my.mergeInto(my.Styles.prototype.defs, my.Base.prototype.defs);
 	/**
 Update values to Number attributes
 
@@ -8081,7 +8069,7 @@ Will also accept an object containing start and end attributes, each of which ca
 			this.endY = get(temp.y, temp.endY, items.endY, this.endY);
 			this.endRadius = get(temp.r, temp.endRadius, items.endRadius, this.endRadius);
 		}
-		if (items.shift && xt(my.work.d.Styles.shift)) {
+		if (items.shift && xt(this.defs.shift)) {
 			this.shift = items.shift;
 		}
 		if (xt(items.autoUpdate)) {
@@ -8127,7 +8115,7 @@ Add values to Number attributes
 			temp = this.get('endRadius');
 			this.endRadius = temp + items.endRadius;
 		}
-		if (items.shift && my.xt(my.work.d.Styles.shift)) {
+		if (items.shift && my.xt(this.defs.shift)) {
 			temp = this.get('shift');
 			this.shift = temp + items.shift;
 		}
@@ -8403,11 +8391,10 @@ Remove this gradient from the scrawl library
 @final
 **/
 	my.Gradient.prototype.type = 'Gradient';
-	// my.Gradient.prototype.classname = 'stylesnames';
 	my.Gradient.prototype.lib = 'styles';
 	my.Gradient.prototype.libName = 'stylesnames';
-	my.work.d.Gradient = {};
-	my.mergeInto(my.work.d.Gradient, my.work.d.Styles);
+	my.Gradient.prototype.defs = {};
+	my.mergeInto(my.Gradient.prototype.defs, my.Styles.prototype.defs);
 
 	/**
 # RadialGradient
@@ -8446,10 +8433,9 @@ Remove this gradient from the scrawl library
 @final
 **/
 	my.RadialGradient.prototype.type = 'RadialGradient';
-	// my.RadialGradient.prototype.classname = 'stylesnames';
 	my.RadialGradient.prototype.lib = 'styles';
 	my.RadialGradient.prototype.libName = 'stylesnames';
-	my.work.d.RadialGradient = {
+	my.RadialGradient.prototype.defs = {
 		/**
 Start circle radius, in pixels or percentage of entity/cell width
 @property startRadius
@@ -8465,7 +8451,7 @@ End circle radius, in pixels or percentage of entity/cell width
 **/
 		endRadius: 0
 	};
-	my.mergeInto(my.work.d.RadialGradient, my.work.d.Styles);
+	my.mergeInto(my.RadialGradient.prototype.defs, my.Styles.prototype.defs);
 
 	/**
 A __factory__ function to generate new Animation objects
@@ -8620,10 +8606,9 @@ _This attribute is not retained by the Animation object_
 @final
 **/
 	my.Animation.prototype.type = 'Animation';
-	// my.Animation.prototype.classname = 'animationnames';
 	my.Animation.prototype.lib = 'animation';
 	my.Animation.prototype.libName = 'animationnames';
-	my.work.d.Animation = {
+	my.Animation.prototype.defs = {
 		/**
 Anonymous function for an animation routine
 @property fn
@@ -8639,7 +8624,7 @@ Lower order animations are run during each frame before higher order ones
 **/
 		order: 0,
 	};
-	my.mergeInto(my.work.d.Animation, my.work.d.Base);
+	my.mergeInto(my.Animation.prototype.defs, my.Base.prototype.defs);
 	/**
 Run an animation
 @method run

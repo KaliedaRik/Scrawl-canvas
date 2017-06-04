@@ -287,7 +287,6 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 @final
 **/
 		my.Image.prototype.type = 'Image';
-		// my.Image.prototype.classname = 'imagenames';
 		my.Image.prototype.lib = 'image';
 		my.Image.prototype.libName = 'imagenames';
 		my.work.d.Image = {
@@ -633,7 +632,6 @@ SpriteAnimation attributes can also be set and retrieved directly using Picture.
 @final
 **/
 		my.SpriteAnimation.prototype.type = 'SpriteAnimation';
-		// my.SpriteAnimation.prototype.classname = 'spriteanimationnames';
 		my.SpriteAnimation.prototype.lib = 'spriteanimation';
 		my.SpriteAnimation.prototype.libName = 'spriteanimationnames';
 		my.work.d.SpriteAnimation = {
@@ -872,7 +870,6 @@ getData helper object
     @final
     **/
 		my.Video.prototype.type = 'Video';
-		// my.Video.prototype.classname = 'videonames';
 		my.Video.prototype.lib = 'video';
 		my.Video.prototype.libName = 'videonames';
 		my.work.d.Video = {

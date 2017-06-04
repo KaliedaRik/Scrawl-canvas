@@ -157,7 +157,15 @@ CHANGE LOG
 			- limited testing - works 
 		- renamed Filter.prototype.defs > Filter.prototype.f
 			- limited testing - works 
-	- merge above changes into develop
+		- merged above changes into develop
+		- testing               Firefox     Chrome        IE11        Edge
+			31a bunnies@20fps      4220       2740        1660        1620
+			32a bunnies@20fps      9800       3800        4700        4700
+			33a bunnies@20fps     17400       4600        7800        8800
+			119 stars@>20fps       3300       3800        1300        1400
+			220 fpsFor100stars       19       (200+)        13          11
+			221-stars@>20fps        400+      1200+        300         300
+		- replace scrawl.work.d with scrawl[type].prototype.defs
 
 		
 to 170603

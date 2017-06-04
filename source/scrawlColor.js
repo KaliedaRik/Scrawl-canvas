@@ -96,7 +96,6 @@ A __factory__ function to generate new Color objects
 @final
 **/
 		my.Color.prototype.type = 'Color';
-		// my.Color.prototype.classname = 'stylesnames';
 		my.Color.prototype.lib = 'styles';
 		my.Color.prototype.libName = 'stylesnames';
 		my.work.d.Color = {

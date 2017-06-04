@@ -104,7 +104,6 @@ Additional factory functions to instantiate Shape objects are available in the _
 @final
 **/
 		my.Shape.prototype.type = 'Shape';
-		// my.Shape.prototype.classname = 'entitynames';
 		my.Shape.prototype.lib = 'entity';
 		my.Shape.prototype.libName = 'entitynames';
 		my.work.d.Shape = {

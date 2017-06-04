@@ -68,42 +68,42 @@ scrawlAnimation extension adaptions to the Scrawl library object
 @class window.scrawl_Animation
 **/
 
-		my.work.d.Position.delta = {
+		my.Position.prototype.defs.delta = {
 			x: 0,
 			y: 0,
 			z: 0
 		};
-		my.work.d.Position.deltaPathPlace = 0;
-		my.work.d.Position.pathSpeedConstant = true;
-		my.work.d.Position.tweenLock = false;
-		my.mergeInto(my.work.d.Cell, my.work.d.Position);
-		my.mergeInto(my.work.d.Entity, my.work.d.Position);
-		if (my.xt(my.work.d.Block)) {
-			my.mergeInto(my.work.d.Block, my.work.d.Entity);
+		my.Position.prototype.defs.deltaPathPlace = 0;
+		my.Position.prototype.defs.pathSpeedConstant = true;
+		my.Position.prototype.defs.tweenLock = false;
+		my.mergeInto(my.Cell.prototype.defs, my.Position.prototype.defs);
+		my.mergeInto(my.Entity.prototype.defs, my.Position.prototype.defs);
+		if (my.xt(my.Block.prototype.defs)) {
+			my.mergeInto(my.Block.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Shape)) {
-			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
+		if (my.xt(my.Shape.prototype.defs)) {
+			my.mergeInto(my.Shape.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Wheel)) {
-			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
+		if (my.xt(my.Wheel.prototype.defs)) {
+			my.mergeInto(my.Wheel.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Picture)) {
-			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
+		if (my.xt(my.Picture.prototype.defs)) {
+			my.mergeInto(my.Picture.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Phrase)) {
-			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
+		if (my.xt(my.Phrase.prototype.defs)) {
+			my.mergeInto(my.Phrase.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Path)) {
-			my.mergeInto(my.work.d.Path, my.work.d.Entity);
+		if (my.xt(my.Path.prototype.defs)) {
+			my.mergeInto(my.Path.prototype.defs, my.Entity.prototype.defs);
 		}
 
-		my.work.d.PageElement.tweenLock = false;
-		my.mergeInto(my.work.d.Pad, my.work.d.PageElement);
-		if (my.xt(my.work.d.Stack)) {
-			my.mergeInto(my.work.d.Stack, my.work.d.PageElement);
+		my.PageElement.prototype.defs.tweenLock = false;
+		my.mergeInto(my.Pad.prototype.defs, my.PageElement.prototype.defs);
+		if (my.xt(my.Stack.prototype.defs)) {
+			my.mergeInto(my.Stack.prototype.defs, my.PageElement.prototype.defs);
 		}
-		if (my.xt(my.work.d.Element)) {
-			my.mergeInto(my.work.d.Element, my.work.d.PageElement);
+		if (my.xt(my.Element.prototype.defs)) {
+			my.mergeInto(my.Element.prototype.defs, my.PageElement.prototype.defs);
 		}
 
 		my.pushUnique(my.work.sectionlist, 'tween');
@@ -175,7 +175,7 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 			var temp = my.safeObject(items.delta),
 				vec = my.makeVector,
 				get = my.xtGet,
-				d = my.work.d[this.type];
+				d = this.defs;
 			this.delta = vec({
 				name: this.type + '.' + this.name + '.delta',
 				x: get(items.deltaX, temp.x, 0),
@@ -407,14 +407,14 @@ reverse helper object
 				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
 			}
 		};
-		my.work.d.Cell.copyDelta = {
+		my.Cell.prototype.defs.copyDelta = {
 			x: 0,
 			y: 0,
 		};
-		my.work.d.Cell.copyMinWidth = 0;
-		my.work.d.Cell.copyMaxWidth = 0;
-		my.work.d.Cell.copyMinHeight = 0;
-		my.work.d.Cell.copyMaxHeight = 0;
+		my.Cell.prototype.defs.copyMinWidth = 0;
+		my.Cell.prototype.defs.copyMaxWidth = 0;
+		my.Cell.prototype.defs.copyMinHeight = 0;
+		my.Cell.prototype.defs.copyMaxHeight = 0;
 		/**
 Cell constructor hook function
 
@@ -858,18 +858,18 @@ A value for shifting the color stops (was __roll__ in versions prior to v4.0)
 @type Number
 @default 0
 **/
-		my.work.d.Styles.shift = 0;
+		my.Styles.prototype.defs.shift = 0;
 		/**
 A flag to indicate that stop color shifts should be automatically applied
 @property autoUpdate
 @type Boolean
 @default false
 **/
-		my.work.d.Styles.autoUpdate = false;
-		my.mergeInto(my.work.d.Gradient, my.work.d.Styles);
-		my.mergeInto(my.work.d.RadialGradient, my.work.d.Styles);
-		if (my.xt(my.work.d.Pattern)) {
-			my.mergeInto(my.work.d.Pattern, my.work.d.Styles);
+		my.Styles.prototype.defs.autoUpdate = false;
+		my.mergeInto(my.Gradient.prototype.defs, my.Styles.prototype.defs);
+		my.mergeInto(my.RadialGradient.prototype.defs, my.Styles.prototype.defs);
+		if (my.xt(my.Pattern.prototype.defs)) {
+			my.mergeInto(my.Pattern.prototype.defs, my.Styles.prototype.defs);
 		}
 		/**
 Creates the gradient
@@ -1029,10 +1029,9 @@ Locate a target object
 @final
 **/
 		my.Ticker.prototype.type = 'Ticker';
-		// my.Ticker.prototype.classname = 'animationnames';
 		my.Ticker.prototype.lib = 'animation';
 		my.Ticker.prototype.libName = 'animationnames';
-		my.work.d.Ticker = {
+		my.Ticker.prototype.defs = {
 			/**
 Animation order
 
@@ -1096,7 +1095,7 @@ If the eventChoke attribute is set to 0 (default), no tickerupdate events are fi
 **/
 			eventChoke: 0
 		};
-		my.mergeInto(my.work.d.Ticker, my.work.d.Base);
+		my.mergeInto(my.Ticker.prototype.defs, my.Base.prototype.defs);
 		/**
 Make a new tickerupdate customEvent object
 @method makeTickerUpdateEvent
@@ -1706,10 +1705,9 @@ To access the Action functions directly, assign it to a variable, or call it fro
 @final
 **/
 		my.Action.prototype.type = 'Action';
-		// my.Action.prototype.classname = 'tweennames';
 		my.Action.prototype.lib = 'tween';
 		my.Action.prototype.libName = 'tweennames';
-		my.work.d.Action = {
+		my.Action.prototype.defs = {
 			/**
 Ticker name
 If an Action object is associated with a ticker, it will fire (or revert) at the appropriate point in the course of the ticker's run.
@@ -1773,7 +1771,7 @@ Sort order - for Actions that share the same time value on a given Ticker. Witho
 **/
 			order: 0
 		};
-		my.mergeInto(my.work.d.Action, my.work.d.Base);
+		my.mergeInto(my.Action.prototype.defs, my.Base.prototype.defs);
 		/**
 Get the effective (millisecond number) time when action will trigger
 @method calculateEffectiveTime
@@ -2056,7 +2054,6 @@ Remove Objects from targets attribute - will not remove an object with no name a
 					obj = item;
 				}
 				else {
-					// obj = this.locateTarget(item);
 					obj = my.locateTarget(item);
 				}
 				if (obj) {
@@ -2214,10 +2211,9 @@ Update target attributes
 @final
 **/
 		my.Tween.prototype.type = 'Tween';
-		// my.Tween.prototype.classname = 'tweennames';
 		my.Tween.prototype.lib = 'tween';
 		my.Tween.prototype.libName = 'tweennames';
-		my.work.d.Tween = {
+		my.Tween.prototype.defs = {
 			/**
 Ticker name
 If a Tween object is associated with a ticker, it will fire (or revert) at the appropriate point in the course of the ticker's run.
@@ -2296,7 +2292,7 @@ Sort order - for Actions that share the same time value on a given Ticker. Witho
 **/
 			order: 0
 		};
-		my.mergeInto(my.work.d.Tween, my.work.d.Base);
+		my.mergeInto(my.Tween.prototype.defs, my.Base.prototype.defs);
 		/**
 retrieve the completion time for the action
 @method getEndTime

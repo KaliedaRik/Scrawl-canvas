@@ -116,7 +116,6 @@ Circle radius - can be an absolute Numbewr value, or a percentage String value (
 @final
 **/
 		my.Wheel.prototype.type = 'Wheel';
-		// my.Wheel.prototype.classname = 'entitynames';
 		my.Wheel.prototype.lib = 'entity';
 		my.Wheel.prototype.libName = 'entitynames';
 		my.work.d.Wheel = {
@@ -203,8 +202,6 @@ Augments Entity.set()
 			if (xt(items.radius)) {
 				this.radius = items.radius;
 				this.localRadius = this.setRadius(this.radius);
-				// this.width = this.localRadius * 2;
-				// this.height = this.width;
 			}
 			if (xt(items.checkHitRadius)) {
 				this.localCheckHitRadius = this.setRadius(this.checkHitRadius);
@@ -255,8 +252,6 @@ Augments Entity.setDelta()
 					this.radius = my.addPercentages(this.radius, items.radius);
 				}
 				this.localRadius += r;
-				// this.width = this.localRadius * 2;
-				// this.height = this.width;
 			}
 			if (xt(items.checkHitRadius)) {
 				r = this.setRadius(items.checkHitRadius);

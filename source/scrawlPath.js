@@ -299,7 +299,6 @@ A __factory__ function to generate new Path entitys
 			v = 0;
 			myPivot = get(my.point[items.pivot], my.entity[items.pivot], false);
 			if (myPivot) {
-				// temp = get(myPivot.local, myPivot.place, myPivot.start, false);
 				temp = get(myPivot.local, myPivot.place, myPivot.currentStart, false);
 				temp = so(temp);
 				items.startX = get(temp.x, 0);
@@ -705,7 +704,6 @@ Additional factory functions to instantiate Path objects are available in the __
 @final
 **/
 		my.Path.prototype.type = 'Path';
-		// my.Path.prototype.classname = 'entitynames';
 		my.Path.prototype.lib = 'entity';
 		my.Path.prototype.libName = 'entitynames';
 		my.work.d.Path = {
@@ -1493,7 +1491,6 @@ Path creation factories will all create Point objects automatically as part of t
 @final
 **/
 		my.Point.prototype.type = 'Point';
-		// my.Point.prototype.classname = 'pointnames';
 		my.Point.prototype.lib = 'point';
 		my.Point.prototype.libName = 'pointnames';
 		my.work.d.Point = {
@@ -1719,21 +1716,12 @@ Return object has the following attributes:
 					startLink: null
 				},
 				vec = (xt(v) && v.type === 'Vector') ? v : my.linkvectors.here,
-				// vec,
-				// vecFlag = false,
 				entity = my.entity,
 				point = my.point,
 				local = this.local;
 			s = entity[this.entity];
 			scale = s.scale;
 			if (xt(local) && local.type === 'Vector') {
-				// if(xt(v) && v.type === 'Vector'){
-				// 	vec = v;
-				// }
-				// else{
-				// 	vec = my.requestVector();
-				// 	vecFlag = true;
-				// }
 				if (this.fixed.substring && (entity[this.fixed] || point[this.fixed])) {
 					myPivot = entity[this.fixed] || point[this.fixed];
 					if (myPivot.type === 'Point') {
@@ -1745,7 +1733,6 @@ Return object has the following attributes:
 							vec.set(myPivot.get('place'));
 						}
 						else {
-							// vec.set(myPivot.start);
 							vec.set(myPivot.currentStart);
 						}
 					}
@@ -1763,9 +1750,6 @@ Return object has the following attributes:
 				result.name = this.name;
 				result.current = vec;
 				result.startLink = this.startLink;
-				// if(vecFlag){
-				// 	my.releaseVector(vec);
-				// }
 				return result;
 			}
 			return false;
@@ -1862,7 +1846,6 @@ Set Point.fixed attribute
 @final
 **/
 		my.Link.prototype.type = 'Link';
-		// my.Link.prototype.classname = 'linknames';
 		my.Link.prototype.lib = 'link';
 		my.Link.prototype.libName = 'linknames';
 		my.work.d.Link = {
@@ -2012,7 +1995,6 @@ Result Object contains the following attributes:
 **/
 		my.Link.prototype.getPointCoordinates = function() {
 			var vector,
-				// worklink = my.work.worklink,
 				worklink = my.linkvectors,
 				start = worklink.start,
 				end = worklink.end,
@@ -2035,7 +2017,6 @@ Result Object contains the following attributes:
 			c2.x = vector.x || 0;
 			c2.y = vector.y || 0;
 			c2.z = vector.z || 0;
-			// return my.work.worklink;
 			return my.linkvectors;
 		};
 		/**
@@ -2058,10 +2039,8 @@ Position calculation helper function
 					y: 0,
 					z: 0
 				},
-				// work = my.work.worklink,
 				work = my.linkvectors,
 				pol = this.pointOnLine,
-				// vec = work.v1.zero();
 				vec = work.here.zero();
 			val = (my.xt(val) && val.toFixed) ? val : 1;
 			this.getPointCoordinates();
@@ -2116,8 +2095,6 @@ Position calculation helper function
 				i,
 				iz,
 				pcl = this.positionsCumulativeLength,
-				// v1 = my.work.worklink.v1,
-				// v2 = my.work.worklink.v2;
 				v1, v2;
 			val = (my.xt(val) && val.toFixed) ? val : 1;
 			precision = my.entity[this.entity].get('precision');
@@ -2126,7 +2103,6 @@ Position calculation helper function
 			for (i = 1; i <= precision; i++) {
 				if (distance <= pcl[i]) {
 					v1 = my.requestVector();
-					// v2 = my.requestVector();
 					v2 = my.linkvectors.here;
 					v1.x = this.positionsX[i - 1];
 					v1.y = this.positionsY[i - 1];
@@ -2136,7 +2112,6 @@ Position calculation helper function
 					dPos = (distance - pcl[i - 1]) / this.positionsLength[i];
 					v2.scalarMultiply(dPos).vectorAdd(v1);
 					my.releaseVector(v1);
-					// return v2.scalarMultiply(dPos).vectorAdd(v1);
 					return v2;
 				}
 			}
@@ -2187,8 +2162,6 @@ Returns length of Link, in pixels
 				entity = my.entity[this.entity],
 				temp,
 				j,
-				// v2 = my.work.worklink.v2,
-				// v3 = my.work.worklink.v3;
 				v2, v3,
 				vFlag = false;
 			if (this.action === 'add') {
@@ -2222,7 +2195,6 @@ Returns length of Link, in pixels
 					this.positionsY[j] = v2.y;
 					this.positionsLength[j] = dist;
 					this.positionsCumulativeLength[j] = cumLen;
-					// my.releaseVector(here);
 				}
 				this.length = this.positionsCumulativeLength[precision];
 				entity.roll = temp;
@@ -2295,7 +2267,6 @@ sketch helper object
 			},
 			line: function(ctx, item) {
 				var p = my.point,
-					// myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
 					myEnd = p[item.endPoint].getCurrentCoordinates(my.linkvectors.end);
 				ctx.lineTo(
 					myEnd.x,
@@ -2305,8 +2276,6 @@ sketch helper object
 			},
 			quadratic: function(ctx, item) {
 				var p = my.point,
-					// myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.work.worklink.control1),
-					// myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
 					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.linkvectors.control1),
 					myEnd = p[item.endPoint].getCurrentCoordinates(my.linkvectors.end);
 				ctx.quadraticCurveTo(
@@ -2319,9 +2288,6 @@ sketch helper object
 			},
 			bezier: function(ctx, item) {
 				var p = my.point,
-					// myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.work.worklink.control1),
-					// myCon2 = p[item.controlPoint2].getCurrentCoordinates(my.work.worklink.control2),
-					// myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
 					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.linkvectors.control1),
 					myCon2 = p[item.controlPoint2].getCurrentCoordinates(my.linkvectors.control2),
 					myEnd = p[item.endPoint].getCurrentCoordinates(my.linkvectors.end);

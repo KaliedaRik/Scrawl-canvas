@@ -224,7 +224,6 @@ Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axi
 			lockY: false
 		};
 		my.mergeInto(my.work.d.FramePoint, my.work.d.Base);
-		// my.FramePoint.prototype.classname = 'framepointnames';
 		my.FramePoint.prototype.lib = 'framepoint';
 		my.FramePoint.prototype.libName = 'framepointnames';
 		/**
@@ -476,7 +475,6 @@ setLocal() helper function - position supplied by Path entity
 			this.referencePoint = vec();
 
 			this.source = get(items.source, false);
-			// this.sourceType = false;
 			this.copy = {
 				x: get(items.copyX, 0),
 				y: get(items.copyY, 0),
@@ -540,7 +538,6 @@ setLocal() helper function - position supplied by Path entity
 @final
 **/
 		my.Frame.prototype.type = 'Frame';
-		// my.Frame.prototype.classname = 'entitynames';
 		my.Frame.prototype.lib = 'entity';
 		my.Frame.prototype.libName = 'entitynames';
 		my.work.d.Frame = {
@@ -806,7 +803,6 @@ ASSETNAME or CANVASNAME of source asset used to fill frame
 @default false
 **/
 			source: false,
-			// sourceType: false,
 			/**
 Every Frame entity includes its own personal &lt;canvas&gt; element, which is not part of the DOM and which can only be accessed through this attribute
 @property cell
