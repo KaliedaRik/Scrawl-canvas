@@ -146,6 +146,19 @@ CHANGE LOG
 		- 2. review cell/context code for efficiencies
 			- if that has improvementds, keep it
 		- 3. go ahead with release of v7.0.0
+	- new branch v7_roadmap_2
+		- re-imported Context object .getChanges() code into new branch
+			- limited testing - works 
+				- big improvements for Firefox
+				- not seeing efficiency gains for IE/Edge
+					- they appeared after replacing work.d with prototype defaults?
+						- give it a go after merging current fixes
+		- fixed minor bug where using scrawl. instead of my. in various places
+			- limited testing - works 
+		- renamed Filter.prototype.defs > Filter.prototype.f
+			- limited testing - works 
+	- merge above changes into develop
+
 		
 to 170603
 	- copied over abandoned code to core and collisions

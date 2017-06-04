@@ -3674,7 +3674,7 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 			w, h,
 			get = my.xtGet;
 		coords = my.safeObject(coords);
-		if (scrawl.xta(coords.x, coords.y)) {
+		if (my.xta(coords.x, coords.y)) {
 			vector = my.requestVector(coords.x, coords.y, coords.z);
 			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.work.currentPad].base];
 			pad = my.pad[cell.pad];
@@ -5736,7 +5736,7 @@ Set the Cell's &lt;canvas&gt; context engine to the specification supplied by th
 			cellContext = ctx[this.context];
 			entityContext = ctx[entity.context];
 			changes = entityContext.getChanges(entity, cellContext);
-			if (Object.keys(changes).length > 0) {
+			if (Object.keys(changes).length) {
 				cellEngine = my.context[this.name];
 				eName = entity.name;
 				cName = this.name;
@@ -6469,7 +6469,12 @@ Text baseline value for single-line Phrase entitys set to follow a Path entity p
 **/
 		textBaseline: 'alphabetic'
 	};
-	my.work.contextKeys = Object.keys(my.work.d.Context);
+	// my.work.contextKeys = Object.keys(my.work.d.Context);
+	my.Context.prototype.allKeys = Object.keys(my.work.d.Context);
+	my.Context.prototype.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
+	my.Context.prototype.lineKeys = ['lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'];
+	my.Context.prototype.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];
+	my.Context.prototype.textKeys = ['font', 'textAlign', 'textBaseline'];
 	my.mergeInto(my.work.d.Context, my.work.d.Base);
 	/**
 Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function - lineDashOffset, lineWidth, globalAlpha
@@ -6520,7 +6525,7 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 @private
 **/
 	my.Context.prototype.getContextFromEngine = function(ctx) {
-		var keys = my.work.contextKeys,
+		var keys = this.allKeys,
 			key,
 			get = my.xtGet;
 		for (var i = 0, iz = keys.length; i < iz; i++) {
@@ -6533,28 +6538,6 @@ Interrogates a &lt;canvas&gt; element's context engine and populates its own att
 		return this;
 	};
 	/**
-Interrogates a &lt;canvas&gt; element's context engine and returns an object of non-default attributes
-@private
-**/
-	my.Context.prototype.getNonDefaultAttributes = function() {
-		var d = my.work.d.Context,
-			xt = my.xt,
-			keys = my.work.contextKeys,
-			key,
-			i, iz,
-			result = {};
-		for (i = 0, iz = keys.length; i < iz; i++) {
-			key = keys[i];
-			if (key === 'lineDash' && this.lineDash && this.lineDash.length > 0) {
-				result.lineDash = this.lineDash;
-			}
-			else if (xt(this[key]) && this[key] != d[key]) {
-				result[key] = this[key];
-			}
-		}
-		return result;
-	};
-	/**
 Compares an entity's context engine values (held in this context object) to those held for the relevant cell's context engine
 
 (Only for use by Context objects)
@@ -6565,60 +6548,91 @@ Compares an entity's context engine values (held in this context object) to thos
 @private
 **/
 	my.Context.prototype.getChanges = function(entity, ctx) {
-		var c = ctx.getNonDefaultAttributes(),
-			ca = Object.keys(c),
-			cKey,
-			e = this.getNonDefaultAttributes(),
-			ea = Object.keys(e),
-			eKey,
-			df = my.work.d.Context,
-			result = {},
-			contains = my.contains,
-			test = ['fillStyle', 'strokeStyle', 'shadowColor'],
-			i, iz;
-		for (i = 0, iz = ca.length; i < iz; i++) {
-			cKey = ca[i];
-			if (!contains(ea, cKey)) {
-				result[cKey] = df[cKey];
+		var mainKeys = this.mainKeys,
+			lineKeys = this.lineKeys,
+			styleKeys = this.styleKeys,
+			textKeys = this.textKeys,
+			k, d, color, scaled, i, iz, j, jz,
+			ldFlag, currentE, currentC, 
+			dx = my.work.d.Context,
+			result = {};
+
+		if(entity.substring){
+			entity = my.entity[entity];
+		}
+		for(i = 0, iz = mainKeys.length; i < iz; i++){
+			k = mainKeys[i];
+			currentE = (typeof this[k] != 'undefined') ? this[k] : dx[k];
+			currentC = (typeof ctx[k] != 'undefined') ? ctx[k] : dx[k];
+			if(currentC !== currentE){
+				result[k] = currentE
 			}
 		}
-		for (i = 0, iz = ea.length; i < iz; i++) {
-			eKey = ea[i];
-			if (eKey === 'lineWidth' && entity.scaleOutline) {
-				if (e.lineWidth * entity.scale !== c.lineWidth) {
-					result.lineWidth = e.lineWidth * entity.scale;
+		if(this.lineWidth || ctx.lineWidth){
+			for(i = 0, iz = lineKeys.length; i < iz; i++){
+				k = lineKeys[i];
+				currentE = (typeof this[k] != 'undefined') ? this[k] : dx[k];
+				currentC = (typeof ctx[k] != 'undefined') ? ctx[k] : dx[k];
+				if (k == 'lineDash'){
+					if (currentE.length || currentC.length) {
+						if(currentE.length != currentC.length){
+							result.lineDash = currentE;
+						}
+						else{
+							ldFlag = false;
+							for(j = 0, jz = currentE.length; j < jz; j++){
+								if(currentE[j] != currentC[j]){
+									ldFlag = true;
+									break;
+								}
+							}
+							if(ldFlag){
+								result.lineDash = currentE;
+							}
+						}
+					}
+				}
+				else if (k == 'lineWidth' && entity.scaleOutline) {
+					scaled = (currentE || 1) * (entity.scale || 1);
+					if (scaled != currentC) {
+						result.lineWidth = scaled;
+					}
+				}
+				else if(currentC !== currentE){
+					result[k] = currentE
 				}
 			}
-			else if (e[eKey] != c[eKey]) {
-				result[eKey] = e[eKey];
+		}
+		for(i = 0, iz = styleKeys.length; i < iz; i++){
+			k = styleKeys[i];
+			currentE = (typeof this[k] != 'undefined') ? this[k] : dx[k];
+			currentC = (typeof ctx[k] != 'undefined') ? ctx[k] : dx[k];
+			if(currentC !== currentE){
+				result[k] = currentE
 			}
-			else if (contains(test, eKey)) {
-				// because we can store styles names in these attributes, not their actual values
-				// and the names will not change but the values can
-				result = this.getStylesChanges(eKey, e, c, result);
+			else{
+				d = my.styles[currentE];
+				if(d){
+					if (currentC === currentE) {
+						if (d.autoUpdate || d.lockTo !== 'cell') {
+							result[k] = currentE;
+						}
+					}
+					else if(currentC !== currentE){
+						result[k] = currentE
+					}
+				}
 			}
 		}
-		return result;
-	};
-	/**
-getChanges helper
-
-@method getStylesChanges
-@param {Object} ctx &lt;canvas&gt; element context engine Object
-@return a results object containing changes to be made to the canvas context engine
-@private
-**/
-	my.Context.prototype.getStylesChanges = function(eKey, e, c, result) {
-		var d, color;
-		d = my.styles[e[eKey]];
-		if (d && d.type === 'Color') {
-			color = d.getData();
-			if (color !== c[eKey]) {
-				result[eKey] = color;
+		if(entity.type === 'Phrase'){
+			for(i = 0, iz = textKeys.length; i < iz; i++){
+				k = textKeys[i];
+				currentE = (typeof this[k] != 'undefined') ? this[k] : dx[k];
+				currentC = (typeof ctx[k] != 'undefined') ? ctx[k] : dx[k];
+				if(currentC !== currentE){
+					result[k] = currentE
+				}
 			}
-		}
-		else if (eKey != 'shadowColor' && d && d.autoUpdate) {
-			result[eKey] = e[eKey];
 		}
 		return result;
 	};

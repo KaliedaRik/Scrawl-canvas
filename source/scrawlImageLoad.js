@@ -570,9 +570,9 @@ Update the copyData of entitys that use this image as their source
 @return Always true
 **/
 		my.Image.prototype.updateDependentEntitys = function() {
-			var e = scrawl.entity,
+			var e = my.entity,
 				ent,
-				eNames = scrawl.entitynames,
+				eNames = my.entitynames,
 				i, iz;
 			for (i = 0, iz = eNames.length; i < iz; i++) {
 				ent = e[eNames[i]];

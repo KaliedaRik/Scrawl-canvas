@@ -40,38 +40,6 @@ if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(wi
 
 		/**
 Object containing a set of vectors, for link calculations
-@property scrawl.work.worklink
-@type {Object}
-@private
-**/
-		// my.work.worklink = {
-		// 	start: my.makeVector({
-		// 		name: 'scrawl.worklink.start'
-		// 	}),
-		// 	end: my.makeVector({
-		// 		name: 'scrawl.worklink.end'
-		// 	}),
-		// 	control1: my.makeVector({
-		// 		name: 'scrawl.worklink.control1'
-		// 	}),
-		// 	control2: my.makeVector({
-		// 		name: 'scrawl.worklink.control2'
-		// 	}),
-		// 	v1: my.makeVector({
-		// 		name: 'scrawl.worklink.v1'
-		// 	}),
-		// 	v2: my.makeVector({
-		// 		name: 'scrawl.worklink.v2'
-		// 	}),
-		// 	v3: my.makeVector({
-		// 		name: 'scrawl.worklink.v3'
-		// 	}),
-		// 	point: my.makeVector({
-		// 		name: 'scrawl.worklink.point'
-		// 	})
-		// };
-		/**
-Object containing a set of vectors, for link calculations
 @property scrawl.linkvectors
 @type {Object}
 @private

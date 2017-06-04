@@ -479,7 +479,7 @@ Builds &lt;canvas&gt; element's contenxt engine's pattern object
 			if (my.xt(engine)) {
 				switch (this.sourceType) {
 					case 'video':
-						if (scrawl.xt(my.asset[this.source])) {
+						if (my.xt(my.asset[this.source])) {
 							temp = my.video[this.source].api;
 							if (temp.readyState > 1) {
 								my.sty[this.name] = engine.createPattern(my.asset[this.source], this.repeat);
@@ -490,12 +490,12 @@ Builds &lt;canvas&gt; element's contenxt engine's pattern object
 						}
 						break;
 					case 'cell':
-						if (scrawl.xt(my.canvas[this.source])) {
+						if (my.xt(my.canvas[this.source])) {
 							my.sty[this.name] = engine.createPattern(my.canvas[this.source], this.repeat);
 						}
 						break;
 					case 'image':
-						if (scrawl.xt(my.asset[this.source])) {
+						if (my.xt(my.asset[this.source])) {
 							my.sty[this.name] = engine.createPattern(my.asset[this.source], this.repeat);
 						}
 						break;

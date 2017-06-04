@@ -1400,7 +1400,7 @@ Change the supplied attributes for each subscribed tween and action
 				subs.reverse();
 			}
 			for (var i = 0, iz = subs.length; i < iz; i++) {
-				scrawl.tween[subs[i]].set(items);
+				my.tween[subs[i]].set(items);
 			}
 			return this;
 		};
@@ -1416,7 +1416,7 @@ Bulk-change the playing direction for all subscribed tweens and actions
 			var subs = [].concat(this.subscribers),
 				sub;
 			for (var i = 0, iz = subs.length; i < iz; i++) {
-				sub = scrawl.tween[subs[i]];
+				sub = my.tween[subs[i]];
 				sub.reversed = !sub.reversed;
 			}
 			return this;

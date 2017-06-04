@@ -670,32 +670,6 @@ Percentage String values are relative to the entity's cell's dimensions
 			return false;
 		};
 
-		// if (!my.xt(my.work.worklink)) {
-		// 	my.work.worklink = {
-		// 		start: my.makeVector({
-		// 			name: 'scrawl.worklink.start'
-		// 		}),
-		// 		end: my.makeVector({
-		// 			name: 'scrawl.worklink.end'
-		// 		}),
-		// 		control1: my.makeVector({
-		// 			name: 'scrawl.worklink.control1'
-		// 		}),
-		// 		control2: my.makeVector({
-		// 			name: 'scrawl.worklink.control2'
-		// 		}),
-		// 		v1: my.makeVector({
-		// 			name: 'scrawl.worklink.v1'
-		// 		}),
-		// 		v2: my.makeVector({
-		// 			name: 'scrawl.worklink.v2'
-		// 		}),
-		// 		v3: my.makeVector({
-		// 			name: 'scrawl.worklink.v3'
-		// 		}),
-		// 	};
-		// }
-
 		return my;
 	}(scrawl));
 }

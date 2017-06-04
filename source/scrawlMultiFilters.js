@@ -347,8 +347,10 @@ Entity.stamp hook function - modified by multifilters extension
 
 
 		my.Filter.prototype.do = function(data) {
-			if (this.defs[this.species]) {
-				this.defs[this.species].call(this, data);
+			// if (this.defs[this.species]) {
+			// 	this.defs[this.species].call(this, data);
+			if (this.f[this.species]) {
+				this.f[this.species].call(this, data);
 			}
 			if (this.action) {
 				this.action(data);
@@ -498,7 +500,8 @@ An object containing pre-defined filter functionality.
 		};
 
 
-		my.Filter.prototype.defs = {
+		// my.Filter.prototype.defs = {
+		my.Filter.prototype.f = {
 			default: function(data) {},
 			grayscale: function(data) {
 				var len, posR, posG, posB, posA, gray;
