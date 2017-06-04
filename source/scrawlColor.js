@@ -461,7 +461,7 @@ Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/colo
 				a,
 				temp;
 			items = (items.substring) ? items : '';
-			if (items.length > 0) {
+			if (items.length) {
 				items.toLowerCase();
 				r = 0;
 				g = 0;

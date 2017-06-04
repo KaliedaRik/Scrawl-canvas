@@ -105,7 +105,7 @@ A __general__ function to undertake a round of calculations for Spring objects
 				spring,
 				springnames = my.springnames,
 				temp;
-			if (springnames.length > 0) {
+			if (springnames.length) {
 				spring = my.spring;
 				items = (Array.isArray(items)) ? items : springnames;
 				for (i = 0, iz = items.length; i < iz; i++) {

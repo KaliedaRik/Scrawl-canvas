@@ -162,7 +162,7 @@ A __private__ function that searches the DOM for elements with class="scrawlstac
 				element = my.element;
 			s = document.getElementsByClassName("scrawlstack");
 			stacks = [];
-			if (s.length > 0) {
+			if (s.length) {
 				for (i = 0, iz = s.length; i < iz; i++) {
 					stacks.push(s[i]);
 				}
@@ -220,7 +220,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 				el;
 			s = document.getElementsByTagName("canvas");
 			el = [];
-			if (s.length > 0) {
+			if (s.length) {
 				for (i = 0, iz = s.length; i < iz; i++) {
 					el.push(s[i]);
 				}
@@ -300,7 +300,7 @@ A __private__ function that searches the DOM for elements with class="scrawl sta
 				makeElement = my.makeElement;
 			s = document.getElementsByClassName("scrawl");
 			el = [];
-			if (s.length > 0) {
+			if (s.length) {
 				for (i = 0, iz = s.length; i < iz; i++) {
 					el.push(s[i]);
 				}

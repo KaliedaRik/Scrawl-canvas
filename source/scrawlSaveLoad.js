@@ -407,7 +407,7 @@ Turn the object into a JSON String; doesn't include name and type attributes
 			var result = {};
 			for (var i = 0, z = my.Context.prototype.allKeys.length; i < z; i++) {
 				if (my.Context.prototype.allKeys[i] === 'lineDash') {
-					if (my.xt(this.lineDash) && this.lineDash.length > 0) {
+					if (my.xt(this.lineDash) && this.lineDash.length) {
 						result.lineDash = this.lineDash;
 					}
 				}

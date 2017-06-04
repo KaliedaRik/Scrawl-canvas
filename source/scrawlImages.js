@@ -251,7 +251,7 @@ If no name attribute is supplied in the argument object, the new Picture entity 
 				cell,
 				engine;
 			items = my.safeObject(items);
-			if (this.entitys.length > 0) {
+			if (this.entitys.length) {
 				cell = my.cell[this.cell];
 				engine = my.context[this.cell];
 				image = my.prepareConvert(cell, engine, this);

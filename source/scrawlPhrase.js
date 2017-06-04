@@ -330,7 +330,7 @@ Helper function - creates Text objects for each line of text in a multiline Phra
 			items.phrase = this.name;
 			for (j = 0, jz = textArray.length; j < jz; j++) {
 				items.text = textArray[j];
-				if (items.text.length > 0) {
+				if (items.text.length) {
 					new T(items);
 				}
 			}

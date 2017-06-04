@@ -120,7 +120,7 @@ A __general__ function to generate Image wrapper objects for &lt;img&gt;, &lt;vi
 			kill = my.xtGet(kill, true);
 			if (classtag) {
 				s = document.getElementsByClassName(classtag);
-				if (s.length > 0) {
+				if (s.length) {
 					for (i = s.length; i > 0; i--) {
 						if (s[i - 1].width && s[i - 1].height) {
 							mi({

@@ -342,7 +342,7 @@ Check all entitys in the Group to see if they are colliding with the supplied en
 				}
 				my.releaseVector(v1);
 				my.releaseVector(v2);
-				return (hits.length > 0) ? hits : false;
+				return (hits.length) ? hits : false;
 			}
 			return false;
 		};

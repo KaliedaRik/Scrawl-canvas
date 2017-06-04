@@ -894,7 +894,7 @@ A __utility__ function that checks an argument list of values and returns the fi
 		var slice,
 			i,
 			iz;
-		if (arguments.length > 0) {
+		if (arguments.length) {
 			for (i = 0, iz = arguments.length; i < iz; i++) {
 				if (typeof arguments[i] !== 'undefined') {
 					return arguments[i];
@@ -915,7 +915,7 @@ False: 0, -0, '', undefined, null, false, NaN
 		var slice,
 			i,
 			iz;
-		if (arguments.length > 0) {
+		if (arguments.length) {
 			for (i = 0, iz = arguments.length; i < iz; i++) {
 				if (arguments[i]) {
 					return arguments[i];
@@ -941,10 +941,10 @@ A __utility__ function for variable type checking
 			i,
 			iz;
 		slice = arguments;
-		if (Array.isArray(arguments[0])) {
-			slice = arguments[0];
-		}
-		if (slice.length > 0) {
+		// if (Array.isArray(arguments[0])) {
+		// 	slice = arguments[0];
+		// }
+		if (slice.length) {
 			for (i = 0, iz = slice.length; i < iz; i++) {
 				if (typeof slice[i] === 'undefined') {
 					return false;
@@ -970,10 +970,10 @@ A __utility__ function for variable type checking
 			i,
 			iz;
 		slice = arguments;
-		if (Array.isArray(arguments[0])) {
-			slice = arguments[0];
-		}
-		if (slice.length > 0) {
+		// if (Array.isArray(arguments[0])) {
+		// 	slice = arguments[0];
+		// }
+		if (slice.length) {
 			for (i = 0, iz = slice.length; i < iz; i++) {
 				if (typeof slice[i] !== 'undefined') {
 					return true;
@@ -1019,7 +1019,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 			i,
 			iz;
 		elements = document.getElementsByTagName("canvas");
-		if (elements.length > 0) {
+		if (elements.length) {
 			for (i = 0, iz = elements.length; i < iz; i++) {
 				pad = my.makePad({
 					canvasElement: elements[i]
@@ -7107,7 +7107,7 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 		rel(v1);
 		rel(v2);
 		rel(coordinate);
-		return (results.length > 0) ? results : false;
+		return (results.length) ? results : false;
 	};
 	/**
 Augments Group.set()
@@ -7963,7 +7963,7 @@ Drawing flag - when set to 'entity' (or true), will use entity-based coordinates
 @type String - or alternatively Boolean
 @default 'cell'
 **/
-		this.lockTo = my.xtGet(items.lockTo, my.work.d[this.type].lockTo);
+		this.lockTo = my.xtGet(items.lockTo, my[this.type].prototype.defs.lockTo);
 		return this;
 	};
 	my.Styles.prototype = Object.create(my.Base.prototype);
