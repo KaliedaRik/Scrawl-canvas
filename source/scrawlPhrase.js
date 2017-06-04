@@ -99,7 +99,7 @@ A __factory__ function to generate new Phrase entitys
 			my.Position.prototype.set.call(this, items);
 			this.registerInLibrary();
 			this.texts = [];
-			this.lineHeight = my.xtGet(items.lineHeight, my.work.d.Phrase.lineHeight);
+			this.lineHeight = my.xtGet(items.lineHeight, this.defs.lineHeight);
 			if (items.font) {
 				this.checkFont(items.font);
 			}
@@ -121,7 +121,7 @@ A __factory__ function to generate new Phrase entitys
 		my.Phrase.prototype.type = 'Phrase';
 		my.Phrase.prototype.lib = 'entity';
 		my.Phrase.prototype.libName = 'entitynames';
-		my.work.d.Phrase = {
+		my.Phrase.prototype.defs = {
 			/**
 Text string to be displayed - for multiline text, insert __\n__ where the text line breaks
 @property text
@@ -223,7 +223,7 @@ Users should never interfere with Text objects, as they are destroyed and recrea
 **/
 			texts: [],
 		};
-		my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
+		my.mergeInto(my.Phrase.prototype.defs, my.Entity.prototype.defs);
 		/**
 Augments Entity.set()
 
@@ -373,7 +373,7 @@ Helper function - creates font-related attributes from entity's Context object's
 				size,
 				metrics,
 				family,
-				d = my.work.d.Phrase,
+				d = this.defs,
 				get = my.xtGet;
 			myFont = my.ctx[this.context].font;
 			style = get(this.style, d.style);
@@ -489,7 +489,7 @@ Helper function - creates entity's Context object's phrase attribute from other 
 				metrics,
 				family,
 				get = my.xtGet,
-				d = my.work.d.Phrase;
+				d = this.defs;
 			myFont = '';
 			style = get(this.style, d.style);
 			variant = get(this.variant, d.variant);
@@ -924,7 +924,7 @@ Returns an object with coordinates __x__ and __y__
 		my.Text = function Text(items) {
 			var get = my.xtGet,
 			pu = my.pushUnique,
-			d = my.work.d.Text,
+			d = this.defs,
 			e;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
@@ -952,7 +952,7 @@ Returns an object with coordinates __x__ and __y__
 		my.Text.prototype.type = 'Text';
 		my.Text.prototype.lib = 'text';
 		my.Text.prototype.libName = 'textnames';
-		my.work.d.Text = {
+		my.Text.prototype.defs = {
 			/**
 Text to be displayed
 @property text
@@ -1026,7 +1026,7 @@ Glyph widths array
 **/
 			glyphWidths: [],
 		};
-		my.mergeInto(my.work.d.Text, my.work.d.Base);
+		my.mergeInto(my.Text.prototype.defs, my.Base.prototype.defs);
 		/**
 Stamp function - stamp phrases, words or individual glyphs (letters and spaces) along a Shape entity path
 

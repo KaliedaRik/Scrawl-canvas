@@ -96,24 +96,24 @@ MULTIFILTERNAME String, to be applied to this entity
 @type String
 @default ''
 **/
-		my.work.d.Entity.multiFilter = '';
-		if (my.xt(my.work.d.Block)) {
-			my.mergeInto(my.work.d.Block, my.work.d.Entity);
+		my.Entity.prototype.defs.multiFilter = '';
+		if (my.xt(my.Block)) {
+			my.mergeInto(my.Block.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Shape)) {
-			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
+		if (my.xt(my.Shape)) {
+			my.mergeInto(my.Shape.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Wheel)) {
-			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
+		if (my.xt(my.Wheel)) {
+			my.mergeInto(my.Wheel.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Picture)) {
-			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
+		if (my.xt(my.Picture)) {
+			my.mergeInto(my.Picture.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Phrase)) {
-			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
+		if (my.xt(my.Phrase)) {
+			my.mergeInto(my.Phrase.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Path)) {
-			my.mergeInto(my.work.d.Path, my.work.d.Entity);
+		if (my.xt(my.Path)) {
+			my.mergeInto(my.Path.prototype.defs, my.Entity.prototype.defs);
 		}
 		/**
 Group constructor hook function - modified by multiFilter module
@@ -252,7 +252,7 @@ Entity.stamp hook function - modified by multifilters extension
 @final
 **/
 		my.Filter.prototype.type = 'Filter';
-		my.work.d.Filter = {
+		my.Filter.prototype.defs = {
 			multiFilter: '',
 			species: '',
 			level: 0,
@@ -284,7 +284,7 @@ Entity.stamp hook function - modified by multifilters extension
 
 
 		my.Filter.prototype.set = function(items) {
-			var d = my.work.d.Filter,
+			var d = this.defs,
 				xt = my.xt;
 			for (var i in items) {
 				if (i === 'ranges') {
@@ -1013,7 +1013,7 @@ An object containing pre-defined filter functionality.
 		my.MultiFilter.prototype.type = 'MultiFilter';
 		my.MultiFilter.prototype.lib = 'multifilter';
 		my.MultiFilter.prototype.libName = 'multifilternames';
-		my.work.d.MultiFilter = {
+		my.MultiFilter.prototype.defs = {
 			/**
 Whether to treat the entity or cell being filtered as a stencil (true) in which case the background behind the stencil is filtered, or just filter the entity itself (the default setting)
 @property stencil
@@ -1061,7 +1061,7 @@ An Array of filter definition Objects - each type of filter definition object mu
 **/
 			filters: []
 		};
-		my.mergeInto(my.work.d.MultiFilter, my.work.d.Base);
+		my.mergeInto(my.MultiFilter.prototype.defs, my.Base.prototype.defs);
 		/**
 multifilter main function:
 - prepare data from my.canvas.defaultHiddenCanvasElement

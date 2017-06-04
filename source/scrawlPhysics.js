@@ -215,7 +215,7 @@ A __factory__ function to generate new Force objects
 **/
 		my.Particle = function(items) {
 			var vec = my.makeVector,
-				d = my.work.d.Particle,
+				d = this.defs,
 				r,
 				get = my.xtGet;
 			my.Base.call(this, items);
@@ -258,7 +258,7 @@ A __factory__ function to generate new Force objects
 		my.Particle.prototype.lib = 'entity';
 		my.Particle.prototype.libName = 'entitynames';
 		my.Particle.prototype.order = 0; //included to allow normal entitys to sort themselves properly
-		my.work.d.Particle = {
+		my.Particle.prototype.defs = {
 			/**
 Current group
 @property group
@@ -387,7 +387,7 @@ Load Vector - recreated at the start of every calculation cycle iteration
 **/
 			load: my.makeVector(),
 		};
-		my.mergeInto(my.work.d.Particle, my.work.d.Scrawl);
+		my.mergeInto(my.Particle.prototype.defs, my.Base.prototype.defs);
 		/**
 Particle.getStartValues
 @method getStartValues
@@ -845,7 +845,7 @@ Dummy function - required to allow Particles to be processed alongside Entity ob
 		my.Spring.prototype.type = 'Spring';
 		my.Spring.prototype.lib = 'spring';
 		my.Spring.prototype.libName = 'springnames';
-		my.work.d.Spring = {
+		my.Spring.prototype.defs = {
 			/**
 First Particle PARTICLENAME
 @property start
@@ -906,7 +906,7 @@ Recalculated as part of each  calculation cycle iteration
 				z: 0
 			},
 		};
-		my.mergeInto(my.work.d.Spring, my.work.d.Scrawl);
+		my.mergeInto(my.Spring.prototype.defs, my.Base.prototype.defs);
 		/**
 Calculate the force exerted by the spring for this calculation cycle iteration
 @method update
@@ -986,7 +986,7 @@ Two forces are pre-defined by scrawl-canvas:
 		my.Force.prototype.type = 'Force';
 		my.Force.prototype.lib = 'force';
 		my.Force.prototype.libName = 'forcenames';
-		my.work.d.Force = {
+		my.Force.prototype.defs = {
 			/**
 Anonymous function for calculating a force on a Particle
 
@@ -1009,7 +1009,7 @@ Functions need to be in the form:
 **/
 			fn: function() {},
 		};
-		my.mergeInto(my.work.d.Force, my.work.d.Scrawl);
+		my.mergeInto(my.Force.prototype.defs, my.Base.prototype.defs);
 		/**
 Calculate the force for this calculation cycle iteration
 @method run

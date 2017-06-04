@@ -79,7 +79,7 @@ False if device does not support the video element; true otherwise
 @type Boolean
 @default false
 **/
-		my.work.d.Device.video = false;
+		my.Device.prototype.defs.video = false;
 		/**
 video autoplay support
 
@@ -88,7 +88,7 @@ False if device does not support video autoplay element; true otherwise
 @type Boolean
 @default false
 **/
-		my.work.d.Device.videoAutoplay = false;
+		my.Device.prototype.defs.videoAutoplay = false;
 		/**
 video fullscreen restraint
 
@@ -97,7 +97,7 @@ False if device does not force videos to play in fullscreen mode; true otherwise
 @type Boolean
 @default false
 **/
-		my.work.d.Device.videoForceFullScreen = false;
+		my.Device.prototype.defs.videoForceFullScreen = false;
 		/**
 video as canvas source
 
@@ -106,7 +106,7 @@ False if device does not permit video elements to be used as sources for canvas 
 @type Boolean
 @default false
 **/
-		my.work.d.Device.videoAsCanvasSource = false;
+		my.Device.prototype.defs.videoAsCanvasSource = false;
 
 		/**
 Check if device supports various video functionalities
@@ -377,7 +377,7 @@ Patterns are not restricted to images. A pattern can also be sourced from anothe
 		my.Pattern.prototype.type = 'Pattern';
 		my.Pattern.prototype.lib = 'styles';
 		my.Pattern.prototype.libName = 'stylesnames';
-		my.work.d.Pattern = {
+		my.Pattern.prototype.defs = {
 			/**
 Drawing parameter
 @property repeat
@@ -417,7 +417,7 @@ Used only with __scrawl.makePattern()__ and __Pattern.clone()__ operations. This
 **/
 			callback: false,
 		};
-		my.mergeInto(my.work.d.Pattern, my.work.d.Base);
+		my.mergeInto(my.Pattern.prototype.defs, my.Base.prototype.defs);
 		/**
 Constructor/set helper
 @method getSourceType
@@ -601,7 +601,7 @@ Alias for Pattern.makeStyles()
 		my.Picture.prototype.type = 'Picture';
 		my.Picture.prototype.lib = 'entity';
 		my.Picture.prototype.libName = 'entitynames';
-		my.work.d.Picture = {
+		my.Picture.prototype.defs = {
 			/**
 IMAGENAME String - source image for this entity
 @property source
@@ -722,7 +722,7 @@ Used only with __scrawl.makePicture()__ and __Picture.clone()__ operations. This
 **/
 			callback: false,
 		};
-		my.mergeInto(my.work.d.Picture, my.work.d.Entity);
+		my.mergeInto(my.Picture.prototype.defs, my.Entity.prototype.defs);
 		/**
 Augments Entity.get()
 @method get

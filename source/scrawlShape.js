@@ -106,7 +106,7 @@ Additional factory functions to instantiate Shape objects are available in the _
 		my.Shape.prototype.type = 'Shape';
 		my.Shape.prototype.lib = 'entity';
 		my.Shape.prototype.libName = 'entitynames';
-		my.work.d.Shape = {
+		my.Shape.prototype.defs = {
 			/**
 Interpreted path data - calculated by scrawl-canvas from the data attribute
 @property dataSet
@@ -139,7 +139,7 @@ Winding value
 **/
 			winding: 'nonzero'
 		};
-		my.mergeInto(my.work.d.Shape, my.work.d.Entity);
+		my.mergeInto(my.Shape.prototype.defs, my.Entity.prototype.defs);
 		/**
 Augments Entity.set()
 @method set

@@ -83,7 +83,7 @@ Argument object can be in the following form, where all values (which default to
 @final
 **/
 		my.Quaternion.prototype.type = 'Quaternion';
-		my.work.d.Quaternion = {
+		my.Quaternion.prototype.defs = {
 			/**
 Quaternion name
 @property name

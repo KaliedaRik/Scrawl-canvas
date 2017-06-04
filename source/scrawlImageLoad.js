@@ -289,7 +289,7 @@ A __general__ function to generate a Video wrapper object for a &lt;video&gt; el
 		my.Image.prototype.type = 'Image';
 		my.Image.prototype.lib = 'image';
 		my.Image.prototype.libName = 'imagenames';
-		my.work.d.Image = {
+		my.Image.prototype.defs = {
 			/**
 DOM image actual width, in pixels
 @property width
@@ -345,7 +345,7 @@ _This attribute is not retained by the object_
 @default undefined
 **/
 		};
-		my.mergeInto(my.work.d.Image, my.work.d.Base);
+		my.mergeInto(my.Image.prototype.defs, my.Base.prototype.defs);
 		/**
 Adds a DOM &lt;img&gt; element to the library
 
@@ -634,7 +634,7 @@ SpriteAnimation attributes can also be set and retrieved directly using Picture.
 		my.SpriteAnimation.prototype.type = 'SpriteAnimation';
 		my.SpriteAnimation.prototype.lib = 'spriteanimation';
 		my.SpriteAnimation.prototype.libName = 'spriteanimationnames';
-		my.work.d.SpriteAnimation = {
+		my.SpriteAnimation.prototype.defs = {
 			/**
 An Array of animation frame data Objects, to be used for producing an animation sequence. Each Object in the Array has the following form:
 
@@ -704,8 +704,8 @@ Array of keys used with SpriteAnimation object
 @type {Array}
 @private
 **/
-		my.work.animKeys = Object.keys(my.work.d.SpriteAnimation);
-		my.mergeInto(my.work.d.SpriteAnimation, my.work.d.Scrawl);
+		my.work.animKeys = Object.keys(my.SpriteAnimation.prototype.defs);
+		my.mergeInto(my.SpriteAnimation.prototype.defs, my.Base.prototype.defs);
 		/**
 Set attribute values - will also set the __currentFrame__ attribute to the appropriate value when the running __attribute__ is changed
 
@@ -872,7 +872,7 @@ getData helper object
 		my.Video.prototype.type = 'Video';
 		my.Video.prototype.lib = 'video';
 		my.Video.prototype.libName = 'videonames';
-		my.work.d.Video = {
+		my.Video.prototype.defs = {
 			/**
     DOM image actual width, in pixels
     @property width
@@ -904,7 +904,7 @@ _This attribute is not retained by the object_
 @default undefined
 **/
 		};
-		my.mergeInto(my.work.d.Video, my.work.d.Base);
+		my.mergeInto(my.Video.prototype.defs, my.Base.prototype.defs);
 		/**
 Adds a DOM &lt;video&gt; element to the library
 

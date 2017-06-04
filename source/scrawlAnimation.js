@@ -78,31 +78,31 @@ scrawlAnimation extension adaptions to the Scrawl library object
 		my.Position.prototype.defs.tweenLock = false;
 		my.mergeInto(my.Cell.prototype.defs, my.Position.prototype.defs);
 		my.mergeInto(my.Entity.prototype.defs, my.Position.prototype.defs);
-		if (my.xt(my.Block.prototype.defs)) {
+		if (my.xt(my.Block)) {
 			my.mergeInto(my.Block.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.Shape.prototype.defs)) {
+		if (my.xt(my.Shape)) {
 			my.mergeInto(my.Shape.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.Wheel.prototype.defs)) {
+		if (my.xt(my.Wheel)) {
 			my.mergeInto(my.Wheel.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.Picture.prototype.defs)) {
+		if (my.xt(my.Picture)) {
 			my.mergeInto(my.Picture.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.Phrase.prototype.defs)) {
+		if (my.xt(my.Phrase)) {
 			my.mergeInto(my.Phrase.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.Path.prototype.defs)) {
+		if (my.xt(my.Path)) {
 			my.mergeInto(my.Path.prototype.defs, my.Entity.prototype.defs);
 		}
 
 		my.PageElement.prototype.defs.tweenLock = false;
 		my.mergeInto(my.Pad.prototype.defs, my.PageElement.prototype.defs);
-		if (my.xt(my.Stack.prototype.defs)) {
+		if (my.xt(my.Stack)) {
 			my.mergeInto(my.Stack.prototype.defs, my.PageElement.prototype.defs);
 		}
-		if (my.xt(my.Element.prototype.defs)) {
+		if (my.xt(my.Element)) {
 			my.mergeInto(my.Element.prototype.defs, my.PageElement.prototype.defs);
 		}
 
@@ -868,7 +868,7 @@ A flag to indicate that stop color shifts should be automatically applied
 		my.Styles.prototype.defs.autoUpdate = false;
 		my.mergeInto(my.Gradient.prototype.defs, my.Styles.prototype.defs);
 		my.mergeInto(my.RadialGradient.prototype.defs, my.Styles.prototype.defs);
-		if (my.xt(my.Pattern.prototype.defs)) {
+		if (my.xt(my.Pattern)) {
 			my.mergeInto(my.Pattern.prototype.defs, my.Styles.prototype.defs);
 		}
 		/**

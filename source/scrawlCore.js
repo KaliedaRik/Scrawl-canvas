@@ -6463,7 +6463,7 @@ Text baseline value for single-line Phrase entitys set to follow a Path entity p
 **/
 		textBaseline: 'alphabetic'
 	};
-	my.Context.prototype.allKeys = Object.keys(this.defs);
+	my.Context.prototype.allKeys = Object.keys(my.Context.prototype.defs);
 	my.Context.prototype.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
 	my.Context.prototype.lineKeys = ['lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'];
 	my.Context.prototype.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];

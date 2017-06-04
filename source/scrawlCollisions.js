@@ -112,7 +112,7 @@ Cell constructor hook function - modified by collisions module
 			}
 		};
 
-		my.work.d.Cell.fieldLabel = '';
+		my.Cell.prototype.defs.fieldLabel = '';
 		/**
 Builds a collision map image from entitys, for use in entity field collision detection functions
 @method Cell.buildField
@@ -524,28 +524,28 @@ An Array of Arrays is returned, with each constituent array consisting of the th
 			return hits;
 		};
 
-		my.work.d.Entity.fieldChannel = 'anycolor';
-		my.work.d.Entity.fieldTest = 0;
-		my.work.d.Entity.collisionVectors = [];
-		my.work.d.Entity.collisionPoints = [];
-		my.work.d.Entity.collisionArray = [];
-		if (my.xt(my.work.d.Block)) {
-			my.mergeInto(my.work.d.Block, my.work.d.Entity);
+		my.Entity.prototype.defs.fieldChannel = 'anycolor';
+		my.Entity.prototype.defs.fieldTest = 0;
+		my.Entity.prototype.defs.collisionVectors = [];
+		my.Entity.prototype.defs.collisionPoints = [];
+		my.Entity.prototype.defs.collisionArray = [];
+		if (my.xt(my.Block)) {
+			my.mergeInto(my.Block.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Shape)) {
-			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
+		if (my.xt(my.Shape)) {
+			my.mergeInto(my.Shape.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Wheel)) {
-			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
+		if (my.xt(my.Wheel)) {
+			my.mergeInto(my.Wheel.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Picture)) {
-			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
+		if (my.xt(my.Picture)) {
+			my.mergeInto(my.Picture.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Phrase)) {
-			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
+		if (my.xt(my.Phrase)) {
+			my.mergeInto(my.Phrase.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Path)) {
-			my.mergeInto(my.work.d.Path, my.work.d.Entity);
+		if (my.xt(my.Path)) {
+			my.mergeInto(my.Path.prototype.defs, my.Entity.prototype.defs);
 		}
 		/**
 Recalculate the current collision point positions for all entitys in the group

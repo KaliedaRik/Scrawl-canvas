@@ -84,7 +84,7 @@ A __factory__ function to generate new Wheel entitys
 **/
 		my.Wheel = function Wheel(items) {
 			var get = my.xtGet,
-			d = my.work.d.Wheel;
+			d = this.defs;
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
@@ -118,7 +118,7 @@ Circle radius - can be an absolute Numbewr value, or a percentage String value (
 		my.Wheel.prototype.type = 'Wheel';
 		my.Wheel.prototype.lib = 'entity';
 		my.Wheel.prototype.libName = 'entitynames';
-		my.work.d.Wheel = {
+		my.Wheel.prototype.defs = {
 			/**
 Angle of the path's start point, from due east, in degrees
 @property startAngle
@@ -187,7 +187,7 @@ Collision calculation value - collision radius, from start vector
 **/
 			localCheckHitRadius: 0
 		};
-		my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
+		my.mergeInto(my.Wheel.prototype.defs, my.Entity.prototype.defs);
 
 		/**
 Augments Entity.set()

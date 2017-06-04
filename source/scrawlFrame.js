@@ -121,7 +121,7 @@ A __factory__ function to generate new Frame entitys
 @final
 **/
 		my.FramePoint.prototype.type = 'FramePoint';
-		my.work.d.FramePoint = {
+		my.FramePoint.prototype.defs = {
 			/**
 Frame emtity to which this frame corner belongs
 @property host
@@ -223,7 +223,7 @@ Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axi
 **/
 			lockY: false
 		};
-		my.mergeInto(my.work.d.FramePoint, my.work.d.Base);
+		my.mergeInto(my.FramePoint.prototype.defs, my.Base.prototype.defs);
 		my.FramePoint.prototype.lib = 'framepoint';
 		my.FramePoint.prototype.libName = 'framepointnames';
 		/**
@@ -540,7 +540,7 @@ setLocal() helper function - position supplied by Path entity
 		my.Frame.prototype.type = 'Frame';
 		my.Frame.prototype.lib = 'entity';
 		my.Frame.prototype.libName = 'entitynames';
-		my.work.d.Frame = {
+		my.Frame.prototype.defs = {
 			/**
 Current coordinate for top left corner
 @property topLeft
@@ -1107,7 +1107,7 @@ Attribute cascaded to appropriate FramePoint object lockY attribute
 @type Boolean
 @default false
 **/
-		my.mergeInto(my.work.d.Frame, my.work.d.Base);
+		my.mergeInto(my.Frame.prototype.defs, my.Base.prototype.defs);
 		/**
 Frame.registerInLibrary hook function - modified by collisions extension
 @method collisionsEntityRegisterInLibrary
