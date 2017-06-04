@@ -136,6 +136,63 @@ Core demos for testing
 
 CHANGE LOG
 ------------------------------------------------------------------------------------
+170604
+	- latest work is degrading performance significantly
+		- do we need it?
+			- possibly not
+			- test stuff out.
+		- 1. abandon steps 6, 7 and 8
+			- easily done - just revert back to develop branch and make new branch
+		- 2. review cell/context code for efficiencies
+			- if that has improvementds, keep it
+		- 3. go ahead with release of v7.0.0
+		
+to 170603
+	- copied over abandoned code to core and collisions
+		- these are the improvements to the context code
+			- to detect which changes need to be applied to the cell's engine
+	- fixed parallax scrolling
+	- fixing demos:
+		- 029, 052, 061, 067, 080
+	- 6. remove scrawl.work.d; rewrite .get functionality; new getters object
+	- 7. refactor .set functionality; new setters and deltaSetters objects
+		- completed for: 
+			- core, animation, block, color, wheel, shape, phrase (+text),
+			- path (+ point, link)
+				- collisions needs fixing - see demo 072
+		- not required for: 
+			- collisions, factories
+
+to 170528
+	- 6. remove scrawl.work.d; rewrite .get functionality; new getters object
+	- 7. refactor .set functionality; new setters and deltaSetters objects
+		- started replacing set() and get() functionality
+		- also replacing the setDelta() functionality
+			- core, block, animation done (but not properly tested)
+	- 8. animation extension delta refactor; .delta; .setDelta(); .updateByDelta()
+		- because I hate the existing system ...
+		- doing work alongside get/set/setDelta work
+			- hopefully most work confined to animation, path, collisions, stacks
+			- will break a number of demos
+			- the abandoned work had much better results for preset delta changes
+	- running selected demos 001-020 in Firefox:
+		- currently passing:
+			- 001-003, 005-007, 009-012, 014-020
+		- failing:
+			- 004, 008 (pathSpeedConstant issue)
+			- 013 (needs rewriting for delta)
+		- rewrittn demos:
+			- (previously) 085
+			- 012, 031, 031a
+
+to 170525
+	- 6. remove scrawl.work.d; rewrite .get functionality; new getters object
+	- 7. refactor .set functionality; new setters and deltaSetters objects
+		- scrawl.work.d replaced by scrawl[type].prototype.defs
+			- or this.defs (as appropriate)
+			- demo 414 fails (multiFilter)
+				- .defs defined twice - changed filter definitions to .f
+
 to 170520
 	- 9. fix for entity-locked gradients + scaling bug
 		- done - demos 081, 085 working ok
