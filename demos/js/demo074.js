@@ -21,7 +21,6 @@ var mycode = function() {
 		myEntity,
 		coord,
 		hits,
-		moveEntitys,
 		checkBounds,
 		checkCollisions;
 
@@ -95,27 +94,6 @@ var mycode = function() {
 	allEntitys.addEntitysToGroup(groupB.entitys);
 
 	//animation functions
-	moveEntitys = function() {
-		for (var i = 0, iz = allEntitys.entitys.length; i < iz; i++) {
-			myEntity = scrawl.entity[allEntitys.entitys[i]];
-			if (myEntity.scale < 0.2) {
-				myEntity.set({
-					scale: 0.2,
-				});
-			}
-			myEntity.setDelta({
-				scale: (myEntity.scale < 1) ? 0.005 : 0,
-			});
-		}
-		groupA.updateEntitysBy({
-			roll: 1,
-		});
-		groupB.updateEntitysBy({
-			roll: -1,
-		});
-		allEntitys.updateStart();
-	};
-
 	checkBounds = function() {
 		hits = allEntitys.getFieldEntityHits();
 		for (var i = 0, z = hits.length; i < z; i++) {
@@ -124,29 +102,23 @@ var mycode = function() {
 			myEntity.revertStart();
 			if (!scrawl.isBetween(coord.x, minX, maxX, true)) {
 				myEntity.reverse('deltaX');
-				myEntity.setDelta({
-					scale: -0.08,
-				});
 			}
 			if (!scrawl.isBetween(coord.y, minY, maxY, true)) {
 				myEntity.reverse('deltaY');
-				myEntity.setDelta({
-					scale: -0.08,
-				});
 			}
-			allEntitys.updateStart();
+			myEntity.updateStart();
 		}
 	};
 
 	checkCollisions = function() {
 		hits = groupB.getBetweenGroupEntityHits(groupA);
 		for (var i = 0, z = hits.length; i < z; i++) {
+			for (var j = 0; j < 2; j++) {
+				scrawl.entity[hits[i][j]].revertStart();
+			}
 			scrawl.entity[hits[i][0]].exchange(scrawl.entity[hits[i][1]], 'delta');
 			for (var j = 0; j < 2; j++) {
-				myEntity = scrawl.entity[hits[i][j]];
-				myEntity.setDelta({
-					scale: -0.08,
-				});
+				scrawl.entity[hits[i][j]].updateStart();
 			}
 		}
 	};
@@ -156,7 +128,7 @@ var mycode = function() {
 		fn: function() {
 			checkBounds();
 			checkCollisions();
-			moveEntitys();
+			allEntitys.updateStart();
 			scrawl.render();
 
 			//hide-start

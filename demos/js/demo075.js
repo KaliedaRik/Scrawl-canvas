@@ -18,7 +18,7 @@ var mycode = function() {
 		myEntity,
 		coord,
 		hits,
-		moveEntitys,
+		// moveEntitys,
 		checkBounds,
 		checkCollisions;
 
@@ -58,25 +58,27 @@ var mycode = function() {
 			handleY: 'center',
 			method: 'drawFill',
 			group: 'myGroup',
+			roll: i * 10,
 			collisionPoints: 'edges',
 			checkHitUsingImageData: true,
-		}).getImageData();
+		// }).getImageData();
+		});
 	}
 
 	//animation functions
-	moveEntitys = function() {
-		for (var i = 0, z = myGroup.entitys.length; i < z; i++) {
-			myEntity = scrawl.entity[myGroup.entitys[i]];
-			if (myEntity.scale < 0.2) {
-				myEntity.scale = 0.2;
-			}
-			myEntity.setDelta({
-				scale: (myEntity.scale < 1) ? 0.005 : 0,
-				roll: (i / 10) + 0.4,
-			});
-		}
-		myGroup.updateStart();
-	};
+	// moveEntitys = function() {
+	// 	// for (var i = 0, z = myGroup.entitys.length; i < z; i++) {
+	// 	// 	myEntity = scrawl.entity[myGroup.entitys[i]];
+	// 	// 	if (myEntity.scale < 0.2) {
+	// 	// 		myEntity.scale = 0.2;
+	// 	// 	}
+	// 	// 	myEntity.setDelta({
+	// 	// 		scale: (myEntity.scale < 1) ? 0.005 : 0,
+	// 	// 		roll: (i / 10) + 0.4,
+	// 	// 	});
+	// 	// }
+	// 	myGroup.updateStart();
+	// };
 
 	checkBounds = function() {
 		hits = myGroup.getFieldEntityHits();
@@ -86,31 +88,54 @@ var mycode = function() {
 			myEntity.revertStart();
 			if (!scrawl.isBetween(coord.x, minX, maxX, true)) {
 				myEntity.reverse('deltaX');
-				myEntity.setDelta({
-					scale: -0.08,
-				});
 			}
 			if (!scrawl.isBetween(coord.y, minY, maxY, true)) {
 				myEntity.reverse('deltaY');
-				myEntity.setDelta({
-					scale: -0.08,
-				});
 			}
 			myEntity.updateStart();
 		}
+		// hits = myGroup.getFieldEntityHits();
+		// for (var i = 0, z = hits.length; i < z; i++) {
+		// 	myEntity = scrawl.entity[hits[i][0]];
+		// 	coord = hits[i][1];
+		// 	myEntity.revertStart();
+		// 	if (!scrawl.isBetween(coord.x, minX, maxX, true)) {
+		// 		myEntity.reverse('deltaX');
+		// 		myEntity.setDelta({
+		// 			scale: -0.08,
+		// 		});
+		// 	}
+		// 	if (!scrawl.isBetween(coord.y, minY, maxY, true)) {
+		// 		myEntity.reverse('deltaY');
+		// 		myEntity.setDelta({
+		// 			scale: -0.08,
+		// 		});
+		// 	}
+		// 	myEntity.updateStart();
+		// }
 	};
 
 	checkCollisions = function() {
 		hits = myGroup.getInGroupEntityHits();
 		for (var i = 0, z = hits.length; i < z; i++) {
+			for (var j = 0; j < 2; j++) {
+				scrawl.entity[hits[i][j]].revertStart();
+			}
 			scrawl.entity[hits[i][0]].exchange(scrawl.entity[hits[i][1]], 'delta');
 			for (var j = 0; j < 2; j++) {
-				myEntity = scrawl.entity[hits[i][j]];
-				myEntity.setDelta({
-					scale: -0.08,
-				});
+				scrawl.entity[hits[i][j]].updateStart();
 			}
 		}
+		// hits = myGroup.getInGroupEntityHits();
+		// for (var i = 0, z = hits.length; i < z; i++) {
+		// 	scrawl.entity[hits[i][0]].exchange(scrawl.entity[hits[i][1]], 'delta');
+		// 	for (var j = 0; j < 2; j++) {
+		// 		myEntity = scrawl.entity[hits[i][j]];
+		// 		myEntity.setDelta({
+		// 			scale: -0.08,
+		// 		});
+		// 	}
+		// }
 	};
 
 	//animation object
@@ -118,7 +143,8 @@ var mycode = function() {
 		fn: function() {
 			checkBounds();
 			checkCollisions();
-			moveEntitys();
+			// moveEntitys();
+			myGroup.updateStart();
 			scrawl.render();
 
 			//hide-start

@@ -18,7 +18,6 @@ var mycode = function() {
 		myEntity,
 		coord,
 		hits,
-		moveEntitys,
 		checkBounds,
 		checkCollisions;
 
@@ -47,8 +46,8 @@ var mycode = function() {
 			name: 'T' + i,
 			startX: (100 * i) + 100,
 			startY: 100,
-			deltaX: (Math.random() * 8) - 4,
-			deltaY: (Math.random() * 4) - 2,
+			deltaX: (Math.random() * 4) - 2,
+			deltaY: (Math.random() * 2) - 1,
 			angle: 120,
 			roll: 15 * i,
 			radius: 40,
@@ -61,8 +60,8 @@ var mycode = function() {
 			name: 'W' + i,
 			startX: (100 * i) + 150,
 			startY: 250,
-			deltaX: (Math.random() * 8) - 4,
-			deltaY: (Math.random() * 4) - 2,
+			deltaX: (Math.random() * 4) - 2,
+			deltaY: (Math.random() * 2) - 1,
 			radius: 40,
 			fillStyle: myColors[i],
 			method: 'fillDraw',
@@ -72,22 +71,6 @@ var mycode = function() {
 	}
 
 	//animation functions
-	moveEntitys = function() {
-		for (var i = 0, z = myGroup.entitys.length; i < z; i++) {
-			myEntity = scrawl.entity[myGroup.entitys[i]];
-			if (myEntity.scale < 0.2) {
-				myEntity.scale = 0.2;
-			}
-			myEntity.setDelta({
-				scale: (myEntity.scale < 1) ? 0.005 : 0,
-			});
-		}
-		myGroup.updateEntitysBy({
-			roll: 1,
-		});
-		myGroup.updateStart();
-	};
-
 	checkBounds = function() {
 		hits = myGroup.getFieldEntityHits();
 		for (var i = 0, z = hits.length; i < z; i++) {
@@ -96,15 +79,9 @@ var mycode = function() {
 			myEntity.revertStart();
 			if (!scrawl.isBetween(coord.x, minX, maxX, true)) {
 				myEntity.reverse('deltaX');
-				myEntity.setDelta({
-					scale: -0.08,
-				});
 			}
 			if (!scrawl.isBetween(coord.y, minY, maxY, true)) {
 				myEntity.reverse('deltaY');
-				myEntity.setDelta({
-					scale: -0.08,
-				});
 			}
 			myEntity.updateStart();
 		}
@@ -113,12 +90,12 @@ var mycode = function() {
 	checkCollisions = function() {
 		hits = myGroup.getInGroupEntityHits();
 		for (var i = 0, z = hits.length; i < z; i++) {
+			for (var j = 0; j < 2; j++) {
+				scrawl.entity[hits[i][j]].revertStart();
+			}
 			scrawl.entity[hits[i][0]].exchange(scrawl.entity[hits[i][1]], 'delta');
 			for (var j = 0; j < 2; j++) {
-				myEntity = scrawl.entity[hits[i][j]];
-				myEntity.setDelta({
-					scale: -0.08,
-				});
+				scrawl.entity[hits[i][j]].updateStart();
 			}
 		}
 	};
@@ -128,7 +105,7 @@ var mycode = function() {
 		fn: function() {
 			checkBounds();
 			checkCollisions();
-			moveEntitys();
+			myGroup.updateStart();
 			scrawl.render();
 
 			//hide-start

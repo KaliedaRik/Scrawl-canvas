@@ -169,6 +169,14 @@ Current TODO list:
 		- update codepen lessons and demos
 	- release v7.0.0 before end June 2017
 
+170605
+	- testing in Edge
+		- tested: 001 - 075
+		- demos rewritten: 013, 072, 073, 074, 075
+			- to get rid of the shrink-out-of-trouble thingy
+			- also stopped the 70s spinning - too complex
+			- 075 - in-group collision detection not working
+
 170604
 	- latest work is degrading performance significantly
 		- do we need it?

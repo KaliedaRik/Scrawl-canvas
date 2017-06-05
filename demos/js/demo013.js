@@ -66,23 +66,24 @@ var mycode = function() {
 
 	//animation function
 	moveEntitys = function() {
-		myEntity.updateStart();
 		result = myEntity.checkField();
 		if (typeof result !== 'boolean') {
+			myEntity.setDelta({
+				roll: -myRoll,
+			});
+			myEntity.revertStart();
 			if (!scrawl.isBetween(result.x, minX, maxX, true)) {
 				myEntity.reverse('deltaX');
 			}
 			if (!scrawl.isBetween(result.y, minY, maxY, true)) {
 				myEntity.reverse('deltaY');
 			}
-			myEntity.setDelta({
-				scale: -0.08
-			});
+			myEntity.updateStart();
 		}
 		myEntity.setDelta({
 			roll: myRoll,
-			scale: (myEntity.scale < 1) ? 0.005 : 0,
 		});
+		myEntity.updateStart();
 	};
 
 	//animation object
