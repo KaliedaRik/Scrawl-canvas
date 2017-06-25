@@ -17,8 +17,7 @@ var mycode = function() {
 		maxY = 365,
 		myEntity,
 		coord,
-		hits,
-		// moveEntitys,
+		hits, i, z,
 		checkBounds,
 		checkCollisions;
 
@@ -45,7 +44,7 @@ var mycode = function() {
 	scrawl.buildFields();
 
 	//define entitys
-	for (var i = 0, z = entityList.length; i < z; i++) {
+	for (i = 0, z = entityList.length; i < z; i++) {
 		scrawl.makePicture({
 			name: entityList[i],
 			source: 'button' + entityList[i],
@@ -61,28 +60,14 @@ var mycode = function() {
 			roll: i * 10,
 			collisionPoints: 'edges',
 			checkHitUsingImageData: true,
-		// }).getImageData();
-		});
+		}).getImageData();
+		// });
 	}
 
 	//animation functions
-	// moveEntitys = function() {
-	// 	// for (var i = 0, z = myGroup.entitys.length; i < z; i++) {
-	// 	// 	myEntity = scrawl.entity[myGroup.entitys[i]];
-	// 	// 	if (myEntity.scale < 0.2) {
-	// 	// 		myEntity.scale = 0.2;
-	// 	// 	}
-	// 	// 	myEntity.setDelta({
-	// 	// 		scale: (myEntity.scale < 1) ? 0.005 : 0,
-	// 	// 		roll: (i / 10) + 0.4,
-	// 	// 	});
-	// 	// }
-	// 	myGroup.updateStart();
-	// };
-
 	checkBounds = function() {
 		hits = myGroup.getFieldEntityHits();
-		for (var i = 0, z = hits.length; i < z; i++) {
+		for (i = 0, z = hits.length; i < z; i++) {
 			myEntity = scrawl.entity[hits[i][0]];
 			coord = hits[i][1];
 			myEntity.revertStart();
@@ -94,56 +79,28 @@ var mycode = function() {
 			}
 			myEntity.updateStart();
 		}
-		// hits = myGroup.getFieldEntityHits();
-		// for (var i = 0, z = hits.length; i < z; i++) {
-		// 	myEntity = scrawl.entity[hits[i][0]];
-		// 	coord = hits[i][1];
-		// 	myEntity.revertStart();
-		// 	if (!scrawl.isBetween(coord.x, minX, maxX, true)) {
-		// 		myEntity.reverse('deltaX');
-		// 		myEntity.setDelta({
-		// 			scale: -0.08,
-		// 		});
-		// 	}
-		// 	if (!scrawl.isBetween(coord.y, minY, maxY, true)) {
-		// 		myEntity.reverse('deltaY');
-		// 		myEntity.setDelta({
-		// 			scale: -0.08,
-		// 		});
-		// 	}
-		// 	myEntity.updateStart();
-		// }
 	};
 
 	checkCollisions = function() {
+		var e0, e1,
+			ent = scrawl.entity;
 		hits = myGroup.getInGroupEntityHits();
-		for (var i = 0, z = hits.length; i < z; i++) {
-			for (var j = 0; j < 2; j++) {
-				scrawl.entity[hits[i][j]].revertStart();
-			}
-			scrawl.entity[hits[i][0]].exchange(scrawl.entity[hits[i][1]], 'delta');
-			for (var j = 0; j < 2; j++) {
-				scrawl.entity[hits[i][j]].updateStart();
-			}
+		for (i = 0, z = hits.length; i < z; i++) {
+			e0 = ent[hits[i][0]];
+			e1 = ent[hits[i][1]];
+			e0.revertStart();
+			e1.revertStart();
+			e0.exchange(e1, 'delta');
+			e0.updateStart();
+			e1.updateStart();
 		}
-		// hits = myGroup.getInGroupEntityHits();
-		// for (var i = 0, z = hits.length; i < z; i++) {
-		// 	scrawl.entity[hits[i][0]].exchange(scrawl.entity[hits[i][1]], 'delta');
-		// 	for (var j = 0; j < 2; j++) {
-		// 		myEntity = scrawl.entity[hits[i][j]];
-		// 		myEntity.setDelta({
-		// 			scale: -0.08,
-		// 		});
-		// 	}
-		// }
 	};
 
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			checkBounds();
 			checkCollisions();
-			// moveEntitys();
+			checkBounds();
 			myGroup.updateStart();
 			scrawl.render();
 
