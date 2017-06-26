@@ -167,7 +167,16 @@ Current TODO list:
 		- update website to use v7 code
 		- update tutorials copy and website demos
 		- update codepen lessons and demos
-	- release v7.0.0 before end June 2017
+	- release v7.0.0 before end July 2017
+
+to 170626
+	- chased down bug issue in demo 075 - needs to be addressed
+	- testing in Edge:
+		- tested: 001 - 504
+		- demos rewritten: 013, 072, 073, 074, 075
+
+to 170624
+	- no work - burnout recovery
 
 170605
 	- testing in Edge

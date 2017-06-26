@@ -17,7 +17,7 @@ var mycode = function() {
 		maxY = 365,
 		myEntity,
 		coord,
-		hits, i, z,
+		hits,
 		checkBounds,
 		checkCollisions;
 
@@ -44,7 +44,7 @@ var mycode = function() {
 	scrawl.buildFields();
 
 	//define entitys
-	for (i = 0, z = entityList.length; i < z; i++) {
+	for (var i = 0, z = entityList.length; i < z; i++) {
 		scrawl.makePicture({
 			name: entityList[i],
 			source: 'button' + entityList[i],
@@ -52,22 +52,21 @@ var mycode = function() {
 			startY: (i * 30) + 40,
 			deltaX: (Math.random() * 4) - 2,
 			deltaY: (Math.random() * 2) - 1,
+			roll: (Math.random() * 90),
 			strokeStyle: '#d0d0d0',
 			handleX: 'center',
 			handleY: 'center',
 			method: 'drawFill',
 			group: 'myGroup',
-			roll: i * 10,
 			collisionPoints: 'edges',
 			checkHitUsingImageData: true,
-		}).getImageData();
-		// });
+		});
 	}
 
 	//animation functions
 	checkBounds = function() {
 		hits = myGroup.getFieldEntityHits();
-		for (i = 0, z = hits.length; i < z; i++) {
+		for (var i = 0, z = hits.length; i < z; i++) {
 			myEntity = scrawl.entity[hits[i][0]];
 			coord = hits[i][1];
 			myEntity.revertStart();
@@ -82,25 +81,27 @@ var mycode = function() {
 	};
 
 	checkCollisions = function() {
-		var e0, e1,
-			ent = scrawl.entity;
 		hits = myGroup.getInGroupEntityHits();
-		for (i = 0, z = hits.length; i < z; i++) {
-			e0 = ent[hits[i][0]];
-			e1 = ent[hits[i][1]];
-			e0.revertStart();
-			e1.revertStart();
-			e0.exchange(e1, 'delta');
-			e0.updateStart();
-			e1.updateStart();
+		for (var i = 0, z = hits.length; i < z; i++) {
+			for (var j = 0; j < 2; j++) {
+				myEntity = scrawl.entity[hits[i][j]];
+				myEntity.revertStart();
+			}
+			scrawl.entity[hits[i][0]].exchange(scrawl.entity[hits[i][1]], 'delta');
+			for (var j = 0; j < 2; j++) {
+				myEntity = scrawl.entity[hits[i][j]];
+				myEntity.updateStart();
+			}
 		}
 	};
 
 	//animation object
 	scrawl.makeAnimation({
 		fn: function() {
-			checkCollisions();
 			checkBounds();
+			checkCollisions();
+			// this is a bugfix to make collision detection work as expected!
+			myGroup.updateEntitysBy({scale: 0});
 			myGroup.updateStart();
 			scrawl.render();
 
