@@ -1,8 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>source\scrawlMultiFilters.js - scrawl-canvas</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="scrawl-canvas"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 7.0.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Action.html">Action</a></li>
+            
+                <li><a href="../classes/Animation.html">Animation</a></li>
+            
+                <li><a href="../classes/Base.html">Base</a></li>
+            
+                <li><a href="../classes/Block.html">Block</a></li>
+            
+                <li><a href="../classes/Cell.html">Cell</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/Context.html">Context</a></li>
+            
+                <li><a href="../classes/Device.html">Device</a></li>
+            
+                <li><a href="../classes/Element.html">Element</a></li>
+            
+                <li><a href="../classes/ElementGroup.html">ElementGroup</a></li>
+            
+                <li><a href="../classes/Entity.html">Entity</a></li>
+            
+                <li><a href="../classes/Filter.html">Filter</a></li>
+            
+                <li><a href="../classes/Force.html">Force</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FramePoint.html">FramePoint</a></li>
+            
+                <li><a href="../classes/Gradient.html">Gradient</a></li>
+            
+                <li><a href="../classes/Group.html">Group</a></li>
+            
+                <li><a href="../classes/Image.html">Image</a></li>
+            
+                <li><a href="../classes/Link.html">Link</a></li>
+            
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
+            
+                <li><a href="../classes/Pad.html">Pad</a></li>
+            
+                <li><a href="../classes/PageElement.html">PageElement</a></li>
+            
+                <li><a href="../classes/Particle.html">Particle</a></li>
+            
+                <li><a href="../classes/Path.html">Path</a></li>
+            
+                <li><a href="../classes/Pattern.html">Pattern</a></li>
+            
+                <li><a href="../classes/Phrase.html">Phrase</a></li>
+            
+                <li><a href="../classes/Picture.html">Picture</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Position.html">Position</a></li>
+            
+                <li><a href="../classes/Quaternion.html">Quaternion</a></li>
+            
+                <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
+            
+                <li><a href="../classes/Shape.html">Shape</a></li>
+            
+                <li><a href="../classes/Spring.html">Spring</a></li>
+            
+                <li><a href="../classes/SpriteAnimation.html">SpriteAnimation</a></li>
+            
+                <li><a href="../classes/Stack.html">Stack</a></li>
+            
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Ticker.html">Ticker</a></li>
+            
+                <li><a href="../classes/Tween.html">Tween</a></li>
+            
+                <li><a href="../classes/Vector.html">Vector</a></li>
+            
+                <li><a href="../classes/Video.html">Video</a></li>
+            
+                <li><a href="../classes/Wheel.html">Wheel</a></li>
+            
+                <li><a href="../classes/window.scrawl.html">window.scrawl</a></li>
+            
+                <li><a href="../classes/window.scrawl_Animation.html">window.scrawl_Animation</a></li>
+            
+                <li><a href="../classes/window.scrawl_Block.html">window.scrawl_Block</a></li>
+            
+                <li><a href="../classes/window.scrawl_Collisions.html">window.scrawl_Collisions</a></li>
+            
+                <li><a href="../classes/window.scrawl_Color.html">window.scrawl_Color</a></li>
+            
+                <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
+            
+                <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
+            
+                <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
+            
+                <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
+            
+                <li><a href="../classes/window.scrawl_Phrase.html">window.scrawl_Phrase</a></li>
+            
+                <li><a href="../classes/window.scrawl_Physics.html">window.scrawl_Physics</a></li>
+            
+                <li><a href="../classes/window.scrawl_SaveLoad.html">window.scrawl_SaveLoad</a></li>
+            
+                <li><a href="../classes/window.scrawl_Shape.html">window.scrawl_Shape</a></li>
+            
+                <li><a href="../classes/window.scrawl_Stacks.html">window.scrawl_Stacks</a></li>
+            
+                <li><a href="../classes/window.scrawl_Wheel.html">window.scrawl_Wheel</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/scrawlAnimation.html">scrawlAnimation</a></li>
+            
+                <li><a href="../modules/scrawlBlock.html">scrawlBlock</a></li>
+            
+                <li><a href="../modules/scrawlCollisions.html">scrawlCollisions</a></li>
+            
+                <li><a href="../modules/scrawlColor.html">scrawlColor</a></li>
+            
+                <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
+            
+                <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
+            
+                <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
+            
+                <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
+            
+                <li><a href="../modules/scrawlPathFactories.html">scrawlPathFactories</a></li>
+            
+                <li><a href="../modules/scrawlPhrase.html">scrawlPhrase</a></li>
+            
+                <li><a href="../modules/scrawlPhysics.html">scrawlPhysics</a></li>
+            
+                <li><a href="../modules/scrawlSaveLoad.html">scrawlSaveLoad</a></li>
+            
+                <li><a href="../modules/scrawlShape.html">scrawlShape</a></li>
+            
+                <li><a href="../modules/scrawlStacks.html">scrawlStacks</a></li>
+            
+                <li><a href="../modules/scrawlWheel.html">scrawlWheel</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: source\scrawlMultiFilters.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
 //---------------------------------------------------------------------------------
 // The MIT License (MIT)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
+// of this software and associated documentation files (the &quot;Software&quot;), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
@@ -11,7 +245,7 @@
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 // 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -31,13 +265,13 @@ The MultiFilters extension adds a set of filter algorithms to the scrawl-canvas 
 @module scrawlMultiFilters
 **/
 
-if (window.scrawl && window.scrawl.work.extensions && !window.scrawl.contains(window.scrawl.work.extensions, 'multifilters')) {
+if (window.scrawl &amp;&amp; window.scrawl.work.extensions &amp;&amp; !window.scrawl.contains(window.scrawl.work.extensions, &#x27;multifilters&#x27;)) {
 	var scrawl = (function(my) {
-		'use strict';
+		&#x27;use strict&#x27;;
 
 		// polyfill
 		if (!Uint8ClampedArray.prototype.slice) {
-			Object.defineProperty(Uint8ClampedArray.prototype, 'slice', {
+			Object.defineProperty(Uint8ClampedArray.prototype, &#x27;slice&#x27;, {
 				value: Array.prototype.slice
 			});
 		}
@@ -68,8 +302,8 @@ my.work.cvwrapper2 = my.cell.defaultHiddenCanvasElement;
 
 @class window.scrawl_MultiFilters
 **/
-		my.pushUnique(my.work.sectionlist, 'multifilter');
-		my.pushUnique(my.work.nameslist, 'multifilternames');
+		my.pushUnique(my.work.sectionlist, &#x27;multifilter&#x27;);
+		my.pushUnique(my.work.nameslist, &#x27;multifilternames&#x27;);
 		my.work.multiFilterActiveFlag = false;
 
 		/**
@@ -94,9 +328,9 @@ A __factory__ function to generate new Multifilter objects
 MULTIFILTERNAME String, to be applied to this entity
 @property Entity.multiFilter
 @type String
-@default ''
+@default &#x27;&#x27;
 **/
-		my.Entity.prototype.defs.multiFilter = '';
+		my.Entity.prototype.defs.multiFilter = &#x27;&#x27;;
 		if (my.xt(my.Block)) {
 			my.mergeInto(my.Block.prototype.defs, my.Entity.prototype.defs);
 		}
@@ -124,7 +358,7 @@ Adds the multiFilter, filterOnStroke and filterLevel attributes to Group objects
 **/
 		my.Group.prototype.multifiltersGroupInit = function(items) {
 			items = my.safeObject(items);
-			this.multiFilter = (my.xt(items.multiFilter)) ? items.multiFilter : '';
+			this.multiFilter = (my.xt(items.multiFilter)) ? items.multiFilter : &#x27;&#x27;;
 		};
 		/**
 Entity constructor hook function - modified by multiFilter module
@@ -135,7 +369,7 @@ Adds the multiFilter, filterOnStroke and filterLevel attributes to Entity object
 **/
 		my.Entity.prototype.multifiltersEntityInit = function(items) {
 			items = my.safeObject(items);
-			this.multiFilter = (my.xt(items.multiFilter)) ? items.multiFilter : '';
+			this.multiFilter = (my.xt(items.multiFilter)) ? items.multiFilter : &#x27;&#x27;;
 		};
 		/**
 Group.stamp hook function - modified by multifilters extension
@@ -151,9 +385,9 @@ Group.stamp hook function - modified by multifilters extension
 				hostEngine = my.work.cvx;
 
 			if (filter.stencil) {
-				hostEngine.globalCompositeOperation = 'source-in';
+				hostEngine.globalCompositeOperation = &#x27;source-in&#x27;;
 				hostCell.copyCellToSelf(cell);
-				hostEngine.globalCompositeOperation = 'source-over';
+				hostEngine.globalCompositeOperation = &#x27;source-over&#x27;;
 			}
 
 			filter.apply(my.work.cv, my.work.cvx);
@@ -176,9 +410,9 @@ Entity.stamp hook function - modified by multifilters extension
 				ctx = my.ctx[this.name];
 
 			if (filter.stencil) {
-				hostEngine.globalCompositeOperation = 'source-in';
+				hostEngine.globalCompositeOperation = &#x27;source-in&#x27;;
 				hostCell.copyCellToSelf(cell);
-				hostEngine.globalCompositeOperation = 'source-over';
+				hostEngine.globalCompositeOperation = &#x27;source-over&#x27;;
 			}
 
 			filter.apply(my.work.cv2, my.work.cvx2);
@@ -212,9 +446,9 @@ Entity.stamp hook function - modified by multifilters extension
 		my.Filter = function Filter(items) {
 			var get = my.xtGet;
 			items = my.safeObject(items);
-			this.name = get(items.name, 'generic');
-			this.multiFilter = get(items.multiFilter, '');
-			this.species = get(items.species, 'undefined');
+			this.name = get(items.name, &#x27;generic&#x27;);
+			this.multiFilter = get(items.multiFilter, &#x27;&#x27;);
+			this.species = get(items.species, &#x27;undefined&#x27;);
 			this.level = get(items.level, 0);
 			this.red = get(items.red, 0);
 			this.green = get(items.green, 0);
@@ -248,13 +482,13 @@ Entity.stamp hook function - modified by multifilters extension
 		/**
 @property type
 @type String
-@default 'Filter'
+@default &#x27;Filter&#x27;
 @final
 **/
-		my.Filter.prototype.type = 'Filter';
+		my.Filter.prototype.type = &#x27;Filter&#x27;;
 		my.Filter.prototype.defs = {
-			multiFilter: '',
-			species: '',
+			multiFilter: &#x27;&#x27;,
+			species: &#x27;&#x27;,
 			level: 0,
 			red: 0,
 			green: 0,
@@ -287,7 +521,7 @@ Entity.stamp hook function - modified by multifilters extension
 			var d = this.defs,
 				xt = my.xt;
 			for (var i in items) {
-				if (i === 'ranges') {
+				if (i === &#x27;ranges&#x27;) {
 					this.setRanges(items[i]);
 				}
 				else if (xt(d[i])) {
@@ -300,7 +534,7 @@ Entity.stamp hook function - modified by multifilters extension
 			var result = [],
 				range, i, iz;
 			if (Array.isArray(item)) {
-				for (var i = 0, iz = item.length; i < iz; i++) {
+				for (var i = 0, iz = item.length; i &lt; iz; i++) {
 					range = item[i];
 					if (range.length === 6) {
 						result.push(new Uint8ClampedArray(range));
@@ -375,9 +609,9 @@ An object containing pre-defined filter functionality.
 						rows = ceil(multi.currentHeight / h);
 
 						x = this.offsetX || 0;
-						x = (x > w) ? 0 : x;
+						x = (x &gt; w) ? 0 : x;
 						y = this.offsetY || 0;
-						y = (y > h) ? 0 : y;
+						y = (y &gt; h) ? 0 : y;
 
 						segment = this.segment = w * h;
 
@@ -385,8 +619,8 @@ An object containing pre-defined filter functionality.
 						c = 0;
 						get = multi.getIndexes;
 
-						for (i = -1; i < rows; i++) {
-							for (j = -1; j < cols; j++) {
+						for (i = -1; i &lt; rows; i++) {
+							for (j = -1; j &lt; cols; j++) {
 								y1 = (i * h) + y;
 								x1 = (j * w) + x;
 								y2 = y1 + h;
@@ -421,8 +655,8 @@ An object containing pre-defined filter functionality.
 						c = 0;
 						get = (wrap) ? multi.getWrappedIndexes : multi.getIndexes;
 
-						for (i = 0; i < ch; i++) {
-							for (j = 0; j < cw; j++) {
+						for (i = 0; i &lt; ch; i++) {
+							for (j = 0; j &lt; cw; j++) {
 								y1 = i + y;
 								x1 = j + x;
 								y2 = y1 + h;
@@ -460,8 +694,8 @@ An object containing pre-defined filter functionality.
 						h = 1;
 						x = -r;
 						y = 0;
-						for (i = 0; i < ch; i++) {
-							for (j = 0; j < cw; j++) {
+						for (i = 0; i &lt; ch; i++) {
+							for (j = 0; j &lt; cw; j++) {
 								y1 = i + y;
 								x1 = j + x;
 								y2 = y1 + h;
@@ -477,8 +711,8 @@ An object containing pre-defined filter functionality.
 						h = (r * 2) + 1;
 						x = 0;
 						y = -r;
-						for (i = 0; i < ch; i++) {
-							for (j = 0; j < cw; j++) {
+						for (i = 0; i &lt; ch; i++) {
+							for (j = 0; j &lt; cw; j++) {
 								y1 = i + y;
 								x1 = j + x;
 								y2 = y1 + h;
@@ -498,7 +732,7 @@ An object containing pre-defined filter functionality.
 			default: function(data) {},
 			grayscale: function(data) {
 				var len, posR, posG, posB, posA, gray;
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -514,7 +748,7 @@ An object containing pre-defined filter functionality.
 				var len, posR, posG, posB, posA,
 					r, g, b, red, green, blue;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -534,7 +768,7 @@ An object containing pre-defined filter functionality.
 			invert: function(data) {
 				var len, posR, posG, posB, posA;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -548,7 +782,7 @@ An object containing pre-defined filter functionality.
 			red: function(data) {
 				var len, posG, posB, posA;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posG = posA - 2;
 						posB = posA - 1;
@@ -560,7 +794,7 @@ An object containing pre-defined filter functionality.
 			green: function(data) {
 				var len, posR, posB, posA;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posB = posA - 1;
@@ -572,7 +806,7 @@ An object containing pre-defined filter functionality.
 			blue: function(data) {
 				var len, posR, posG, posA;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -584,28 +818,28 @@ An object containing pre-defined filter functionality.
 			notred: function(data) {
 				var len, posR;
 
-				for (posR = 0, len = data.length; posR < len; posR += 4) {
+				for (posR = 0, len = data.length; posR &lt; len; posR += 4) {
 					data[posR] = 0;
 				}
 			},
 			notgreen: function(data) {
 				var len, posG;
 
-				for (posG = 1, len = data.length; posG < len; posG += 4) {
+				for (posG = 1, len = data.length; posG &lt; len; posG += 4) {
 					data[posG] = 0;
 				}
 			},
 			notblue: function(data) {
 				var len, posB;
 
-				for (posB = 2, len = data.length; posB < len; posB += 4) {
+				for (posB = 2, len = data.length; posB &lt; len; posB += 4) {
 					data[posB] = 0;
 				}
 			},
 			cyan: function(data) {
 				var len, posR, posG, posB, posA, gray;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -620,7 +854,7 @@ An object containing pre-defined filter functionality.
 			magenta: function(data) {
 				var len, posR, posG, posB, posA, gray;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -635,7 +869,7 @@ An object containing pre-defined filter functionality.
 			yellow: function(data) {
 				var len, posR, posG, posB, posA, gray;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -651,7 +885,7 @@ An object containing pre-defined filter functionality.
 				var len, posR, posG, posB, posA,
 					level = this.level || 0;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -666,7 +900,7 @@ An object containing pre-defined filter functionality.
 				var len, posR, posG, posB, posA,
 					level = this.level || 0;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -681,13 +915,13 @@ An object containing pre-defined filter functionality.
 				var len, posR, posG, posB, posA, gray,
 					level = this.level || 0;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
 						posB = posA - 1;
 						gray = (0.2126 * data[posR]) + (0.7152 * data[posG]) + (0.0722 * data[posB]);
-						gray = (gray > level) ? 255 : 0;
+						gray = (gray &gt; level) ? 255 : 0;
 						data[posR] = gray;
 						data[posG] = gray;
 						data[posB] = gray;
@@ -700,7 +934,7 @@ An object containing pre-defined filter functionality.
 					green = this.green || 0,
 					blue = this.blue || 0;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -718,7 +952,7 @@ An object containing pre-defined filter functionality.
 					blue = this.blue || 1,
 					floor = Math.floor;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -741,7 +975,7 @@ An object containing pre-defined filter functionality.
 					blueInGreen = this.blueInGreen || 0,
 					blueInBlue = this.blueInBlue || 0;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						posR = posA - 3;
 						posG = posA - 2;
@@ -762,12 +996,12 @@ An object containing pre-defined filter functionality.
 					red, green, blue,
 					pos, alphas, counter, k, c;
 
-				for (c = 0; c < blocks; c++) {
+				for (c = 0; c &lt; blocks; c++) {
 					pos = c * segment;
 					alphas = cache.slice(pos, pos + segment);
 					red = green = blue = counter = 0;
 
-					for (k = 0; k < segment; k++) {
+					for (k = 0; k &lt; segment; k++) {
 						pos = alphas[k];
 						if (!pos) {
 							break;
@@ -780,11 +1014,11 @@ An object containing pre-defined filter functionality.
 							blue += data[pos];
 						}
 					}
-					if (counter > 0) {
+					if (counter &gt; 0) {
 						red /= counter;
 						green /= counter;
 						blue /= counter;
-						for (k = 0; k < segment; k++) {
+						for (k = 0; k &lt; segment; k++) {
 							pos = alphas[k];
 							if (!pos) {
 								break;
@@ -811,15 +1045,15 @@ An object containing pre-defined filter functionality.
 
 				if (weights.length) {
 					temp = data.slice();
-					for (posA = 3, c = 0; posA < datalen; posA += 4, c++) {
+					for (posA = 3, c = 0; posA &lt; datalen; posA += 4, c++) {
 						if (data[posA]) {
 							alphas = cache[c];
 							len = alphas.length;
 							red = green = blue = total = 0;
 
-							for (k = 0; k < len; k++) {
+							for (k = 0; k &lt; len; k++) {
 								localA = alphas[k];
-								if (weights[k] && temp[localA]) {
+								if (weights[k] &amp;&amp; temp[localA]) {
 									wt = weights[k]
 									posR = localA - 3;
 									posG = localA - 2;
@@ -830,7 +1064,7 @@ An object containing pre-defined filter functionality.
 									total += wt;
 								}
 							}
-							if (norm && total) {
+							if (norm &amp;&amp; total) {
 								red /= total;
 								green /= total;
 								blue /= total;
@@ -856,13 +1090,13 @@ An object containing pre-defined filter functionality.
 
 				cache = this.cache[0],
 				temp = data.slice();
-				for (posA = 3, c = 0; posA < datalen; posA += 4, c++) {
+				for (posA = 3, c = 0; posA &lt; datalen; posA += 4, c++) {
 					if (data[posA]) {
 						alphas = cache[c];
 						len = alphas.length;
 						red = green = blue = counter = 0;
 
-						for (k = 0; k < len; k += step) {
+						for (k = 0; k &lt; len; k += step) {
 							localA = alphas[k];
 							if (temp[localA]) {
 								posR = localA - 3;
@@ -890,13 +1124,13 @@ An object containing pre-defined filter functionality.
 
 				cache = this.cache[1],
 				temp = data.slice();
-				for (posA = 3, c = 0; posA < datalen; posA += 4, c++) {
+				for (posA = 3, c = 0; posA &lt; datalen; posA += 4, c++) {
 					if (data[posA]) {
 						alphas = cache[c];
 						len = alphas.length;
 						red = green = blue = counter = 0;
 
-						for (k = 0; k < len; k += step) {
+						for (k = 0; k &lt; len; k += step) {
 							localA = alphas[k];
 							if (temp[localA]) {
 								posR = localA - 3;
@@ -928,29 +1162,29 @@ An object containing pre-defined filter functionality.
 					range, min, max, val,
 					i, iz, flag;
 
-				for (posA = 3, len = data.length; posA < len; posA += 4) {
+				for (posA = 3, len = data.length; posA &lt; len; posA += 4) {
 					if (data[posA]) {
 						flag = false;
-						for (i = 0, iz = ranges.length; i < iz; i++) {
+						for (i = 0, iz = ranges.length; i &lt; iz; i++) {
 							range = ranges[i];
 							min = range[2];
 							pos = posA - 1;
 							val = data[pos];
-							if (val >= min) {
+							if (val &gt;= min) {
 								max = range[5];
-								if (val <= max) {
+								if (val &lt;= max) {
 									min = range[1];
 									pos--;
 									val = data[pos];
-									if (val >= min) {
+									if (val &gt;= min) {
 										max = range[4];
-										if (val <= max) {
+										if (val &lt;= max) {
 											min = range[0];
 											pos--;
 											val = data[pos];
-											if (val >= min) {
+											if (val &gt;= min) {
 												max = range[3];
-												if (val <= max) {
+												if (val &lt;= max) {
 													flag = true;
 													break;
 												}
@@ -1007,12 +1241,12 @@ An object containing pre-defined filter functionality.
 		/**
 @property type
 @type String
-@default 'MultiFilter'
+@default &#x27;MultiFilter&#x27;
 @final
 **/
-		my.MultiFilter.prototype.type = 'MultiFilter';
-		my.MultiFilter.prototype.lib = 'multifilter';
-		my.MultiFilter.prototype.libName = 'multifilternames';
+		my.MultiFilter.prototype.type = &#x27;MultiFilter&#x27;;
+		my.MultiFilter.prototype.lib = &#x27;multifilter&#x27;;
+		my.MultiFilter.prototype.libName = &#x27;multifilternames&#x27;;
 		my.MultiFilter.prototype.defs = {
 			/**
 Whether to treat the entity or cell being filtered as a stencil (true) in which case the background behind the stencil is filtered, or just filter the entity itself (the default setting)
@@ -1054,7 +1288,7 @@ Latest canvas area
 **/
 			currentArea: 0,
 			/**
-An Array of filter definition Objects - each type of filter definition object must include a __filter__ String attribute (eg: 'grayscale'), alongside any specific attributes required by that particular filter. Filters are processed in array order, first to last.
+An Array of filter definition Objects - each type of filter definition object must include a __filter__ String attribute (eg: &#x27;grayscale&#x27;), alongside any specific attributes required by that particular filter. Filters are processed in array order, first to last.
 @property filters
 @type Array
 @default []
@@ -1092,7 +1326,7 @@ multifilter main function:
 				buff = img.data.buffer;
 				data = new Uint8ClampedArray(buff);
 
-				for (j = 0, jz = this.filters.length; j < jz; j++) {
+				for (j = 0, jz = this.filters.length; j &lt; jz; j++) {
 					filter = this.filters[j];
 					filter.prepare()
 					filter.do(data);
@@ -1114,9 +1348,9 @@ Create a reference grid, for use by certain filters:
 				grid = [],
 				row, i, j;
 
-			for (i = 0; i < height; i++) {
+			for (i = 0; i &lt; height; i++) {
 				row = [];
-				for (j = 0; j < width; j++) {
+				for (j = 0; j &lt; width; j++) {
 					row[j] = counter;
 					counter += 4;
 				}
@@ -1149,7 +1383,7 @@ Force filters to update:
 @return always true
 **/
 		my.MultiFilter.prototype.updateFilters = function() {
-			for (var i = 0, iz = this.filters.length; i < iz; i++) {
+			for (var i = 0, iz = this.filters.length; i &lt; iz; i++) {
 				this.filters[i].update();
 			}
 			return true;
@@ -1168,22 +1402,22 @@ Extract data from the current grid
 				grid = this.currentGrid,
 				i, j, temp, lw, lh, r, c;
 
-			if (row1 > row2) {
+			if (row1 &gt; row2) {
 				temp = row1;
 				row1 = row2;
 				row2 = temp;
 			}
-			if (col1 > col2) {
+			if (col1 &gt; col2) {
 				temp = col1;
 				col1 = col2;
 				col2 = temp;
 			}
-			row1 = (row1 < 0) ? 0 : row1;
-			col1 = (col1 < 0) ? 0 : col1;
-			row2 = (row2 >= h) ? h - 1 : row2;
-			col2 = (col2 >= w) ? w - 1 : col2;
+			row1 = (row1 &lt; 0) ? 0 : row1;
+			col1 = (col1 &lt; 0) ? 0 : col1;
+			row2 = (row2 &gt;= h) ? h - 1 : row2;
+			col2 = (col2 &gt;= w) ? w - 1 : col2;
 
-			if (row2 < 0 || col2 < 0 || row1 >= h || col1 >= w) {
+			if (row2 &lt; 0 || col2 &lt; 0 || row1 &gt;= h || col1 &gt;= w) {
 				return [];
 			}
 
@@ -1191,8 +1425,8 @@ Extract data from the current grid
 			lh = row2 - row1;
 			result = [];
 
-			for (i = 0; i < lh; i++) {
-				for (j = 0; j < lw; j++) {
+			for (i = 0; i &lt; lh; i++) {
+				for (j = 0; j &lt; lw; j++) {
 					r = row1 + i;
 					c = col1 + j;
 					temp = (i * lw) + j;
@@ -1216,18 +1450,18 @@ Extract data from the current grid
 				grid = this.currentGrid,
 				i, j, temp, lw, lh, r, c;
 
-			if (row1 > row2) {
+			if (row1 &gt; row2) {
 				temp = row1;
 				row1 = row2;
 				row2 = temp;
 			}
-			if (col1 > col2) {
+			if (col1 &gt; col2) {
 				temp = col1;
 				col1 = col2;
 				col2 = temp;
 			}
 
-			if (row2 < 0 || col2 < 0 || row1 >= h || col1 >= w) {
+			if (row2 &lt; 0 || col2 &lt; 0 || row1 &gt;= h || col1 &gt;= w) {
 				return [];
 			}
 
@@ -1235,15 +1469,15 @@ Extract data from the current grid
 			lh = row2 - row1;
 			result = [];
 
-			for (i = 0; i < lh; i++) {
-				for (j = 0; j < lw; j++) {
+			for (i = 0; i &lt; lh; i++) {
+				for (j = 0; j &lt; lw; j++) {
 					r = row1 + i;
 					c = col1 + j;
-					if (r < 0 || r >= h) {
-						r = (r < 0) ? r + h : r - h;
+					if (r &lt; 0 || r &gt;= h) {
+						r = (r &lt; 0) ? r + h : r - h;
 					}
-					if (c < 0 || c >= w) {
-						c = (c < 0) ? c + w : c - w;
+					if (c &lt; 0 || c &gt;= w) {
+						c = (c &lt; 0) ? c + w : c - w;
 					}
 					temp = (i * lw) + j;
 					result[temp] = grid[r][c];
@@ -1256,3 +1490,23 @@ Extract data from the current grid
 		return my;
 	}(scrawl));
 }
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

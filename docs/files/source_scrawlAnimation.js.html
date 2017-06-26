@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -322,48 +296,48 @@ scrawlAnimation extension adaptions to the Scrawl library object
 
 * PageElement.tweenLock - default: false;
 
-* Design.roll - default: 0;
-* Design.autoUpdate - default: false;
+* Styles.roll - default: 0;
+* Styles.autoUpdate - default: false;
 
 @class window.scrawl_Animation
 **/
 
-		my.work.d.Position.delta = {
+		my.Position.prototype.defs.delta = {
 			x: 0,
 			y: 0,
 			z: 0
 		};
-		my.work.d.Position.deltaPathPlace = 0;
-		my.work.d.Position.pathSpeedConstant = true;
-		my.work.d.Position.tweenLock = false;
-		my.mergeInto(my.work.d.Cell, my.work.d.Position);
-		my.mergeInto(my.work.d.Entity, my.work.d.Position);
-		if (my.xt(my.work.d.Block)) {
-			my.mergeInto(my.work.d.Block, my.work.d.Entity);
+		my.Position.prototype.defs.deltaPathPlace = 0;
+		my.Position.prototype.defs.pathSpeedConstant = true;
+		my.Position.prototype.defs.tweenLock = false;
+		my.mergeInto(my.Cell.prototype.defs, my.Position.prototype.defs);
+		my.mergeInto(my.Entity.prototype.defs, my.Position.prototype.defs);
+		if (my.xt(my.Block)) {
+			my.mergeInto(my.Block.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Shape)) {
-			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
+		if (my.xt(my.Shape)) {
+			my.mergeInto(my.Shape.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Wheel)) {
-			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
+		if (my.xt(my.Wheel)) {
+			my.mergeInto(my.Wheel.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Picture)) {
-			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
+		if (my.xt(my.Picture)) {
+			my.mergeInto(my.Picture.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Phrase)) {
-			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
+		if (my.xt(my.Phrase)) {
+			my.mergeInto(my.Phrase.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Path)) {
-			my.mergeInto(my.work.d.Path, my.work.d.Entity);
+		if (my.xt(my.Path)) {
+			my.mergeInto(my.Path.prototype.defs, my.Entity.prototype.defs);
 		}
 
-		my.work.d.PageElement.tweenLock = false;
-		my.mergeInto(my.work.d.Pad, my.work.d.PageElement);
-		if (my.xt(my.work.d.Stack)) {
-			my.mergeInto(my.work.d.Stack, my.work.d.PageElement);
+		my.PageElement.prototype.defs.tweenLock = false;
+		my.mergeInto(my.Pad.prototype.defs, my.PageElement.prototype.defs);
+		if (my.xt(my.Stack)) {
+			my.mergeInto(my.Stack.prototype.defs, my.PageElement.prototype.defs);
 		}
-		if (my.xt(my.work.d.Element)) {
-			my.mergeInto(my.work.d.Element, my.work.d.PageElement);
+		if (my.xt(my.Element)) {
+			my.mergeInto(my.Element.prototype.defs, my.PageElement.prototype.defs);
 		}
 
 		my.pushUnique(my.work.sectionlist, &#x27;tween&#x27;);
@@ -435,7 +409,7 @@ Adds a __delta__ (deltaX, deltaY) Vector to the object, used to give an object a
 			var temp = my.safeObject(items.delta),
 				vec = my.makeVector,
 				get = my.xtGet,
-				d = my.work.d[this.type];
+				d = this.defs;
 			this.delta = vec({
 				name: this.type + &#x27;.&#x27; + this.name + &#x27;.delta&#x27;,
 				x: get(items.deltaX, temp.x, 0),
@@ -667,14 +641,14 @@ reverse helper object
 				delta.y = (delta.y.toFixed) ? -delta.y : perc(delta.y);
 			}
 		};
-		my.work.d.Cell.copyDelta = {
+		my.Cell.prototype.defs.copyDelta = {
 			x: 0,
 			y: 0,
 		};
-		my.work.d.Cell.copyMinWidth = 0;
-		my.work.d.Cell.copyMaxWidth = 0;
-		my.work.d.Cell.copyMinHeight = 0;
-		my.work.d.Cell.copyMaxHeight = 0;
+		my.Cell.prototype.defs.copyMinWidth = 0;
+		my.Cell.prototype.defs.copyMaxWidth = 0;
+		my.Cell.prototype.defs.copyMinHeight = 0;
+		my.Cell.prototype.defs.copyMaxHeight = 0;
 		/**
 Cell constructor hook function
 
@@ -1118,30 +1092,30 @@ A value for shifting the color stops (was __roll__ in versions prior to v4.0)
 @type Number
 @default 0
 **/
-		my.work.d.Design.shift = 0;
+		my.Styles.prototype.defs.shift = 0;
 		/**
 A flag to indicate that stop color shifts should be automatically applied
 @property autoUpdate
 @type Boolean
 @default false
 **/
-		my.work.d.Design.autoUpdate = false;
-		my.mergeInto(my.work.d.Gradient, my.work.d.Design);
-		my.mergeInto(my.work.d.RadialGradient, my.work.d.Design);
-		if (my.xt(my.work.d.Pattern)) {
-			my.mergeInto(my.work.d.Pattern, my.work.d.Design);
+		my.Styles.prototype.defs.autoUpdate = false;
+		my.mergeInto(my.Gradient.prototype.defs, my.Styles.prototype.defs);
+		my.mergeInto(my.RadialGradient.prototype.defs, my.Styles.prototype.defs);
+		if (my.xt(my.Pattern)) {
+			my.mergeInto(my.Pattern.prototype.defs, my.Styles.prototype.defs);
 		}
 		/**
 Creates the gradient
 
 _This function replaces the one in the core module_
-@method Design.update
+@method Styles.update
 @param {String} [entity] SPRITENAME String
 @param {String} [cell] CELLNAME String
 @return This
 @chainable
 **/
-		my.Design.prototype.update = function(entity, cell) {
+		my.Styles.prototype.update = function(entity, cell) {
 			this.makeGradient(entity, cell);
 			this.sortStops();
 			this.applyStops();
@@ -1149,11 +1123,11 @@ _This function replaces the one in the core module_
 		};
 		/**
 Gradient builder helper function - sorts color attribute Objects by their stop attribute values, after adding the roll value to them
-@method Design.sortStops
+@method Styles.sortStops
 @return Nothing
 @private
 **/
-		my.Design.prototype.sortStops = function() {
+		my.Styles.prototype.sortStops = function() {
 			var color,
 				shift,
 				i,
@@ -1187,14 +1161,6 @@ A __factory__ function to generate new Ticker objects
 			return new my.Ticker(items);
 		};
 		/**
-Alias for makeTween()
-@method newTween
-@deprecated
-**/
-		my.newTween = function(items) {
-			return my.makeTween(items);
-		};
-		/**
 A __factory__ function to generate new Tween objects
 @method makeTween
 @param {Object} items Key:value Object argument for setting attributes
@@ -1202,14 +1168,6 @@ A __factory__ function to generate new Tween objects
 **/
 		my.makeTween = function(items) {
 			return new my.Tween(items);
-		};
-		/**
-Alias for makeAction()
-@method newAction
-@deprecated
-**/
-		my.newAction = function(items) {
-			return my.makeAction(items);
 		};
 		/**
 A __factory__ function to generate new Action objects
@@ -1228,7 +1186,7 @@ Locate a target object
 @return target Object; false if not found
 **/
 		my.locateTarget = function(item) {
-			var sections = [&#x27;entity&#x27;, &#x27;cell&#x27;, &#x27;pad&#x27;, &#x27;stack&#x27;, &#x27;element&#x27;, &#x27;point&#x27;, &#x27;group&#x27;, &#x27;design&#x27;, &#x27;animation&#x27;, &#x27;tween&#x27;, &#x27;anim&#x27;, &#x27;filter&#x27;, &#x27;image&#x27;, &#x27;force&#x27;, &#x27;spring&#x27;, &#x27;physics&#x27;],
+			var sections = [&#x27;entity&#x27;, &#x27;cell&#x27;, &#x27;pad&#x27;, &#x27;stack&#x27;, &#x27;element&#x27;, &#x27;point&#x27;, &#x27;group&#x27;, &#x27;styles&#x27;, &#x27;animation&#x27;, &#x27;tween&#x27;, &#x27;anim&#x27;, &#x27;filter&#x27;, &#x27;image&#x27;, &#x27;force&#x27;, &#x27;spring&#x27;, &#x27;physics&#x27;],
 				section, name, j, jz,
 				contains = my.contains,
 				xt = my.xt;
@@ -1305,8 +1263,9 @@ Locate a target object
 @final
 **/
 		my.Ticker.prototype.type = &#x27;Ticker&#x27;;
-		my.Ticker.prototype.classname = &#x27;animationnames&#x27;;
-		my.work.d.Ticker = {
+		my.Ticker.prototype.lib = &#x27;animation&#x27;;
+		my.Ticker.prototype.libName = &#x27;animationnames&#x27;;
+		my.Ticker.prototype.defs = {
 			/**
 Animation order
 
@@ -1370,7 +1329,7 @@ If the eventChoke attribute is set to 0 (default), no tickerupdate events are fi
 **/
 			eventChoke: 0
 		};
-		my.mergeInto(my.work.d.Ticker, my.work.d.Base);
+		my.mergeInto(my.Ticker.prototype.defs, my.Base.prototype.defs);
 		/**
 Make a new tickerupdate customEvent object
 @method makeTickerUpdateEvent
@@ -1674,7 +1633,7 @@ Change the supplied attributes for each subscribed tween and action
 				subs.reverse();
 			}
 			for (var i = 0, iz = subs.length; i &lt; iz; i++) {
-				scrawl.tween[subs[i]].set(items);
+				my.tween[subs[i]].set(items);
 			}
 			return this;
 		};
@@ -1690,7 +1649,7 @@ Bulk-change the playing direction for all subscribed tweens and actions
 			var subs = [].concat(this.subscribers),
 				sub;
 			for (var i = 0, iz = subs.length; i &lt; iz; i++) {
-				sub = scrawl.tween[subs[i]];
+				sub = my.tween[subs[i]];
 				sub.reversed = !sub.reversed;
 			}
 			return this;
@@ -1980,8 +1939,9 @@ To access the Action functions directly, assign it to a variable, or call it fro
 @final
 **/
 		my.Action.prototype.type = &#x27;Action&#x27;;
-		my.Action.prototype.classname = &#x27;tweennames&#x27;;
-		my.work.d.Action = {
+		my.Action.prototype.lib = &#x27;tween&#x27;;
+		my.Action.prototype.libName = &#x27;tweennames&#x27;;
+		my.Action.prototype.defs = {
 			/**
 Ticker name
 If an Action object is associated with a ticker, it will fire (or revert) at the appropriate point in the course of the ticker&#x27;s run.
@@ -1993,7 +1953,7 @@ If an Action object is associated with a ticker, it will fire (or revert) at the
 			/**
 Array of Objects on which this Action will perform its action and revert functions; if the array includes Strings, the constructor, set and clone functions will search for the Objects in the Scrawl library, checking sections (if they currently exist) in the following order: 
 
-* entity, cell, pad, stack, element, point, group, design, animation, tween, anim, filter, image, force, spring, physics
+* entity, cell, pad, stack, element, point, group, styles, animation, tween, anim, filter, image, force, spring, physics
 
 This attribute can also accept a single Object or String as its value in the 
 
@@ -2045,7 +2005,7 @@ Sort order - for Actions that share the same time value on a given Ticker. Witho
 **/
 			order: 0
 		};
-		my.mergeInto(my.work.d.Action, my.work.d.Base);
+		my.mergeInto(my.Action.prototype.defs, my.Base.prototype.defs);
 		/**
 Get the effective (millisecond number) time when action will trigger
 @method calculateEffectiveTime
@@ -2328,7 +2288,6 @@ Remove Objects from targets attribute - will not remove an object with no name a
 					obj = item;
 				}
 				else {
-					// obj = this.locateTarget(item);
 					obj = my.locateTarget(item);
 				}
 				if (obj) {
@@ -2486,8 +2445,9 @@ Update target attributes
 @final
 **/
 		my.Tween.prototype.type = &#x27;Tween&#x27;;
-		my.Tween.prototype.classname = &#x27;tweennames&#x27;;
-		my.work.d.Tween = {
+		my.Tween.prototype.lib = &#x27;tween&#x27;;
+		my.Tween.prototype.libName = &#x27;tweennames&#x27;;
+		my.Tween.prototype.defs = {
 			/**
 Ticker name
 If a Tween object is associated with a ticker, it will fire (or revert) at the appropriate point in the course of the ticker&#x27;s run.
@@ -2499,7 +2459,7 @@ If a Tween object is associated with a ticker, it will fire (or revert) at the a
 			/**
 Array of Objects on which this Tween will perform its action and revert functions; if the array includes Strings, the constructor, set and clone functions will search for the Objects in the Scrawl library, checking sections (if they currently exist) in the following order: 
 
-* entity, cell, pad, stack, element, point, group, design, animation, tween, anim, filter, image, force, spring, physics
+* entity, cell, pad, stack, element, point, group, styles, animation, tween, anim, filter, image, force, spring, physics
 
 This attribute can also accept a single Object or String as its value in the 
 
@@ -2566,7 +2526,7 @@ Sort order - for Actions that share the same time value on a given Ticker. Witho
 **/
 			order: 0
 		};
-		my.mergeInto(my.work.d.Tween, my.work.d.Base);
+		my.mergeInto(my.Tween.prototype.defs, my.Base.prototype.defs);
 		/**
 retrieve the completion time for the action
 @method getEndTime

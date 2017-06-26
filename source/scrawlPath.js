@@ -1270,10 +1270,10 @@ Calculate coordinates of point at given distance along the Shape entity's path
 							return result;
 						}
 						else {
-							if(local){
+							if (local) {
 								temp = link.getLocalSteadyPositionOnLink(linkVal);
 							}
-							else{
+							else {
 								temp = link.getSteadyPositionOnLink(linkVal);
 							}
 							result.x = temp.x;
@@ -1293,16 +1293,16 @@ Calculate coordinates of point at given distance along the Shape entity's path
 							here = (local) ? link.getLocalPositionOnLink(linkVal) : link.getPositionOnLink(linkVal);
 							result.x = here.x;
 							result.y = here.y;
-							if(angle < -0.00001 || angle > 0.00001){
+							if (angle < -0.00001 || angle > 0.00001) {
 								result.r = angle;
 							}
 							return result;
 						}
 						else {
-							if(local){
+							if (local) {
 								temp = link.getLocalPositionOnLink(linkVal);
 							}
-							else{
+							else {
 								temp = link.getPositionOnLink(linkVal);
 							}
 							result.x = temp.x;
@@ -2199,7 +2199,7 @@ Returns length of Link, in pixels
 				this.length = this.positionsCumulativeLength[precision];
 				entity.roll = temp;
 			}
-			if(vFlag){
+			if (vFlag) {
 				my.releaseVector(v2);
 				my.releaseVector(v3);
 			}

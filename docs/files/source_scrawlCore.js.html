@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -283,7 +257,7 @@
 /**
 # scrawlCore
 
-## Version 6.0.1 - 14 January 2017
+## Version 7.0.0 - 26 June 2017
 
 Developed by Rik Roots - &lt;rik.roots@gmail.com&gt;, &lt;rik@rikweb.org.uk&gt;
 
@@ -311,7 +285,7 @@ The core module is the only essential file in Scrawl. It must always be directly
 
 * Defines Group objects, used to group entitys together for display and interaction purposes
 
-* Defines Design objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Design objects (Pattern, Color) are defined in separate extensions
+* Defines Styles objects - Gradient and RadialGradient - which can be used by Entity objects for their _fill_ and _stroke_ styles; additional Styles objects (Pattern, Color) are defined in separate extensions
 
 ## Loading the module
 
@@ -357,8 +331,8 @@ Core creates the following sections in the library:
 * scrawl.__ctx__ - Contains CONTEXTNAME:Object pairs linking to each instantiated Scrawl Context object (used by Cell and Entity objects)
 * scrawl.__imageData__ - Contains key:value pairs linking to JavaScript image data objects
 * scrawl.__group__ - Contains GROUPNAME:Object pairs linking to each instantiated Group object
-* scrawl.__design__ - Contains DESIGNNAME:Object pairs for each instantiated design object (Gradient, RadialGradient, Pattern, Color)
-* scrawl.__dsn__ - Contains DESIGNNAME:precompiled gradient/pattern context object pairs (Gradient, RadialGradient, Pattern)
+* scrawl.__styles__ - Contains DESIGNNAME:Object pairs for each instantiated styles object (Gradient, RadialGradient, Pattern, Color)
+* scrawl.__sty__ - Contains DESIGNNAME:precompiled gradient/pattern context object pairs (Gradient, RadialGradient, Pattern)
 * scrawl.__entity__ - Contains SPRITENAME:Object pairs for each instantiated entity object (Block, Phrase, Picture, Wheel, Path, Shape, Particle)
 
 @class window.scrawl
@@ -368,10 +342,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 6.0.1
+@default 7.0.0
 @final
 **/
-	my.version = &#x27;6.0.1&#x27;;
+	my.version = &#x27;7.0.0&#x27;;
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -379,14 +353,14 @@ Array of array object keys used to define the sections of the Scrawl library
 @private
 **/
 	my.work = {};
-	my.work.nameslist = [&#x27;padnames&#x27;, &#x27;cellnames&#x27;, &#x27;ctxnames&#x27;, &#x27;groupnames&#x27;, &#x27;designnames&#x27;, &#x27;entitynames&#x27;, &#x27;animationnames&#x27;];
+	my.work.nameslist = [&#x27;padnames&#x27;, &#x27;cellnames&#x27;, &#x27;ctxnames&#x27;, &#x27;groupnames&#x27;, &#x27;stylesnames&#x27;, &#x27;entitynames&#x27;, &#x27;animationnames&#x27;];
 	/**
 Array of objects which define the sections of the Scrawl library
 @property sectionlist
 @type {Array}
 @private
 **/
-	my.work.sectionlist = [&#x27;pad&#x27;, &#x27;cell&#x27;, &#x27;canvas&#x27;, &#x27;context&#x27;, &#x27;ctx&#x27;, &#x27;imageData&#x27;, &#x27;group&#x27;, &#x27;design&#x27;, &#x27;dsn&#x27;, &#x27;entity&#x27;, &#x27;animation&#x27;];
+	my.work.sectionlist = [&#x27;pad&#x27;, &#x27;cell&#x27;, &#x27;canvas&#x27;, &#x27;context&#x27;, &#x27;ctx&#x27;, &#x27;imageData&#x27;, &#x27;group&#x27;, &#x27;styles&#x27;, &#x27;sty&#x27;, &#x27;entity&#x27;, &#x27;animation&#x27;];
 	/**
 For converting between degrees and radians
 @property radian
@@ -404,33 +378,13 @@ Flag - Promise API is supported by browser
 **/
 	my.work.promise = null;
 	/**
-An Object containing OBJECTTYPE:Object pairs which in turn contain default attribute values for each Scrawl object constructor
-@property d
-@type {Object}
-@private
+Flag - Web Workers are supported by browser
+@property worker
+@type {Boolean}
+@default null
+@final
 **/
-	my.work.d = {};
-	/**
-Work vector, for calculations
-@property v
-@type {Vector}
-@private
-**/
-	my.work.v = null;
-	/**
-Work vector, for calculations
-@property colv1
-@type {Vector}
-@private
-**/
-	my.work.colv1 = null;
-	/**
-Work vector, for calculations
-@property colv2
-@type {Vector}
-@private
-**/
-	my.work.colv2 = null;
+	my.work.worker = null;
 	/**
 Default empty object - passed to various functions, to prevent them generating superfluous objects
 @property o
@@ -469,7 +423,7 @@ Key:value pairs of extension alias:filename Strings, used by scrawl.loadExtensio
 		collisions: &#x27;scrawlCollisions&#x27;,
 		factories: &#x27;scrawlPathFactories&#x27;,
 		color: &#x27;scrawlColor&#x27;,
-		filters: &#x27;scrawlFilters&#x27;,
+		multifilters: &#x27;scrawlMultiFilters&#x27;,
 		physics: &#x27;scrawlPhysics&#x27;,
 		saveload: &#x27;scrawlSaveLoad&#x27;,
 		stacks: &#x27;scrawlStacks&#x27;,
@@ -516,7 +470,7 @@ Key:value pairs of extension alias:Array, used by scrawl.loadExtensions()
 		collisions: [],
 		factories: [],
 		color: [],
-		filters: [],
+		multifilters: [],
 		physics: [&#x27;quaternion&#x27;],
 		saveload: [],
 		stacks: [&#x27;quaternion&#x27;],
@@ -539,7 +493,6 @@ A __general__ function that initializes (or resets) the Scrawl library and popul
 			my.createDefaultPad();
 			my.setDisplayOffsets(&#x27;all&#x27;);
 			my.physicsInit();
-			my.filtersInit();
 			my.animationInit();
 		}
 		return my;
@@ -561,12 +514,6 @@ scrawl.init hook function - modified by physics extension
 **/
 	my.physicsInit = function() {};
 	/**
-scrawl.init hook function - modified by filters extension
-@method filtersInit
-@private
-**/
-	my.filtersInit = function() {};
-	/**
 scrawl.init hook function - modified by stacks extension
 @method pageInit
 @private
@@ -583,10 +530,14 @@ scrawl.init hook function - modified by stacks extension
 			my.removeItem(my.padnames, name);
 			my.removeItem(my.work.activeListeners, name);
 			my.work.f.appendChild(my.canvas[name]);
-			my.work.cv = my.canvas[cellname];
-			my.work.cvx = my.context[cellname];
-			my.work.cvmodel = my.ctx[cellname];
-			my.work.cvwrapper = my.cell[cellname];
+			my.work.cv = my.canvas[name];
+			my.work.cvx = my.context[name];
+			my.work.cvmodel = my.ctx[name];
+			my.work.cvwrapper = my.cell[name];
+			my.work.cv2 = my.canvas[cellname];
+			my.work.cvx2 = my.context[cellname];
+			my.work.cvmodel2 = my.ctx[cellname];
+			my.work.cvwrapper2 = my.cell[cellname];
 			my.work.cvcontroller = my.pad[name];
 		}
 	};
@@ -610,7 +561,7 @@ A __general__ function that resets the Scrawl library to empty arrays and object
 	/**
 A __general__ function for loading img, css and js files
 
-Copied and pasted (a terrible example - don&#x27;t do this!) from https://davidwalsh.name/javascript-loader
+Copied and pasted from https://davidwalsh.name/javascript-loader
 
 All assets are added to the body tag in the DOM
 
@@ -674,6 +625,17 @@ A __general__ function that checks to see if the Promise API is supported by the
 		}
 	};
 	/**
+Random uuid generator - http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+@method generateUuid
+@return random (v4) id
+**/
+	my.generateUuid = function() {
+		function s4() {
+			return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+		}
+		return s4() + s4() + &#x27;-&#x27; + s4() + &#x27;-&#x27; + s4() + &#x27;-&#x27; + s4() + &#x27;-&#x27; + s4() + s4() + s4();
+	};
+	/**
 A __general__ function that loads supporting extensions and integrates them into the core
 
 Extension names are supplied as an array of Strings, each of which should be an _alias_ string, as follows:
@@ -682,10 +644,10 @@ Scrawl currently supports the following extensions:
 * __scrawlAnimation.js__ - alias __animation__ - adds animation and tween functionality to the core
 * __scrawlBlock.js__ - alias __block__ - adds _Block_ (square and rectangle) entitys to the core
 * __scrawlCollisions.js__ - alias __collisions__ - adds entity collision detection functionality to the core
-* __scrawlColor.js__ - alias __color__ - adds the _Color_ Design object to the core
-* __scrawlFilters.js__ - alias __filters__ - adds image filter functionality to the core
+* __scrawlColor.js__ - alias __color__ - adds the _Color_ Styles object to the core
+* __scrawlMultiFilters.js__ - alias __multifilters__ - adds filter functionality to the core
 * __scrawlFrame.js__ - alias __frame__ - enhanced Picture entity
-* __scrawlImages.js__ - alias __images__ - adds all image functionality, including static and animated _Picture_ entitys and the _Pattern_ Design object, to the core
+* __scrawlImages.js__ - alias __images__ - adds all image functionality, including static and animated _Picture_ entitys and the _Pattern_ Styles object, to the core
 * __scrawlPath.js__ - alias __path__ - adds _Path_ (SVGTiny path data) entitys to the core
 * __scrawlPathFactories.js__ - alias __factories__ - adds user-friendly Path and Shape factory functions (for lines, quadratic and bezier curves, ellipses, round-corner rectangles, regular shapes such as stars, triangles, etc) to the core
 * __scrawlPhrase.js__ - alias __phrase__ - adds _Phrase_ (single and multiline text) entitys to the core
@@ -746,6 +708,9 @@ The argument object can include the following attributes:
 @chainable
 **/
 	my.loadExtensions = function(items) {
+		items = my.safeObject(items);
+		my.work.currentPath = items.path || &#x27;&#x27;;
+		my.work.currentPathMinified = my.xtGet(items.minified, true);
 		if (my.checkForPromise()) {
 			return my.loadExtensionsUsingPromise(items);
 		}
@@ -764,10 +729,10 @@ loadExtensions helper function
 	my.loadExtensionsUsingVanilla = function(items) {
 		var path, callback, error, mini, tail, loaded, required, startTime, timeout, i, iz, getExtensions, done;
 		items = my.safeObject(items);
-		path = items.path || &#x27;&#x27;;
+		path = my.work.currentPath;
 		callback = (my.isa_fn(items.callback)) ? items.callback : function() {};
 		error = (my.isa_fn(items.error)) ? items.error : function() {};
-		mini = my.xtGet(items.minified, true);
+		mini = my.work.currentPathMinified;
 		tail = (mini) ? &#x27;-min.js&#x27; : &#x27;.js&#x27;;
 		loaded = [];
 		startTime = Date.now();
@@ -820,11 +785,11 @@ loadExtensions helper function - uses the new Promise api, if it is available
 		items = my.safeObject(items);
 		var loader, path, file, alias, callback, error, mini, tail, required, request, i, iz;
 		loader = my.simpleLoader;
-		path = items.path || &#x27;&#x27;;
+		path = my.work.currentPath;
 		alias = my.work.loadAlias;
 		callback = (my.isa_fn(items.callback)) ? items.callback : function() {};
 		error = (my.isa_fn(items.error)) ? items.error : function() {};
-		mini = my.xtGet(items.minified, true);
+		mini = my.work.currentPathMinified;
 		tail = (mini) ? &#x27;-min.js&#x27; : &#x27;.js&#x27;;
 		required = my.loadExtensionsConcatenator(items);
 		request = [];
@@ -845,10 +810,12 @@ loadExtensions helper function
 	my.loadExtensionsConcatenator = function(items) {
 		items = my.safeObject(items);
 		var exts = [],
+			item,
 			required = [],
 			xt = my.xt,
 			pu = my.pushUnique,
 			depends = my.work.loadDependencies,
+			keys = Object.keys(my.work.loadAlias),
 			i, iz, j, jz;
 		if (xt(items.extensions)) {
 			exts = exts.concat([].concat(items.extensions));
@@ -857,10 +824,13 @@ loadExtensions helper function
 			exts = exts.concat([].concat(items.modules));
 		}
 		for (i = 0, iz = exts.length; i &lt; iz; i++) {
-			for (j = 0, jz = depends[exts[i]].length; j &lt; jz; j++) {
-				pu(required, depends[exts[i]][j]);
+			item = exts[i];
+			if (my.contains(keys, item)) {
+				for (j = 0, jz = depends[item].length; j &lt; jz; j++) {
+					pu(required, depends[item][j]);
+				}
+				pu(required, exts[i]);
 			}
-			pu(required, exts[i]);
 		}
 		return required;
 	};
@@ -1158,7 +1128,7 @@ A __utility__ function that checks an argument list of values and returns the fi
 		var slice,
 			i,
 			iz;
-		if (arguments.length &gt; 0) {
+		if (arguments.length) {
 			for (i = 0, iz = arguments.length; i &lt; iz; i++) {
 				if (typeof arguments[i] !== &#x27;undefined&#x27;) {
 					return arguments[i];
@@ -1179,7 +1149,7 @@ False: 0, -0, &#x27;&#x27;, undefined, null, false, NaN
 		var slice,
 			i,
 			iz;
-		if (arguments.length &gt; 0) {
+		if (arguments.length) {
 			for (i = 0, iz = arguments.length; i &lt; iz; i++) {
 				if (arguments[i]) {
 					return arguments[i];
@@ -1205,10 +1175,10 @@ A __utility__ function for variable type checking
 			i,
 			iz;
 		slice = arguments;
-		if (Array.isArray(arguments[0])) {
-			slice = arguments[0];
-		}
-		if (slice.length &gt; 0) {
+		// if (Array.isArray(arguments[0])) {
+		// 	slice = arguments[0];
+		// }
+		if (slice.length) {
 			for (i = 0, iz = slice.length; i &lt; iz; i++) {
 				if (typeof slice[i] === &#x27;undefined&#x27;) {
 					return false;
@@ -1234,34 +1204,15 @@ A __utility__ function for variable type checking
 			i,
 			iz;
 		slice = arguments;
-		if (Array.isArray(arguments[0])) {
-			slice = arguments[0];
-		}
-		if (slice.length &gt; 0) {
+		// if (Array.isArray(arguments[0])) {
+		// 	slice = arguments[0];
+		// }
+		if (slice.length) {
 			for (i = 0, iz = slice.length; i &lt; iz; i++) {
 				if (typeof slice[i] !== &#x27;undefined&#x27;) {
 					return true;
 				}
 			}
-		}
-		return false;
-	};
-	/**
-Generate unique names for new Scrawl objects
-@method makeName
-@param {Object} [item] Object with attributes: name, type, target
-@return Unique generated name
-@private
-**/
-	my.makeName = function(item) {
-		var name,
-			nameArray;
-		item = my.safeObject(item);
-		if (my.contains(my.work.nameslist, item.target)) {
-			name = my.xtGetTrue(item.name, item.type, &#x27;default&#x27;);
-			name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, &#x27;_&#x27;);
-			nameArray = name.split(&#x27;___&#x27;);
-			return (my.contains(my[item.target], nameArray[0])) ? nameArray[0] + &#x27;___&#x27; + Math.floor(Math.random() * 100000000) : nameArray[0];
 		}
 		return false;
 	};
@@ -1302,7 +1253,7 @@ A __private__ function that searches the DOM for canvas elements and generates P
 			i,
 			iz;
 		elements = document.getElementsByTagName(&quot;canvas&quot;);
-		if (elements.length &gt; 0) {
+		if (elements.length) {
 			for (i = 0, iz = elements.length; i &lt; iz; i++) {
 				pad = my.makePad({
 					canvasElement: elements[i]
@@ -1500,7 +1451,7 @@ The touchleave event is deprecated, but necessary for scrawl functionality
 		/**
 A custom __event listener__ function
 
-The touchfollow event is entirely custom, designed to allow elements to subscribe to an event that started in a different element
+The touchfollow event is entirely custom, stylesed to allow elements to subscribe to an event that started in a different element
 
 @method triggerTouchFollow
 @private
@@ -1835,36 +1786,6 @@ A __utility__ function for performing bucket sorts on scrawl string arrays eg Gr
 		return [].concat.apply([], f);
 	};
 	/**
-General helper function - correct mouse coordinates if pad dimensions not equal to base cell dimensions
-
-@method correctCoordinates
-@param {Object} coords An object containing x and y attributes
-@param {String} [cell] CELLNAME String
-@return Amended coordinate object; false on error
-**/
-	my.correctCoordinates = function(coords, cell) {
-		var vector,
-			pad,
-			w, h,
-			get = my.xtGet;
-		coords = my.safeObject(coords);
-		vector = my.makeVector(coords);
-		if (my.xta(coords.x, coords.y)) {
-			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.work.currentPad].base];
-			pad = my.pad[cell.pad];
-			w = get(pad.localWidth, pad.width, 300);
-			h = get(pad.localHeight, pad.height, 150);
-			if (w !== cell.actualWidth) {
-				vector.x /= (w / cell.actualWidth);
-			}
-			if (h !== cell.actualHeight) {
-				vector.y /= (h / cell.actualHeight);
-			}
-			return vector;
-		}
-		return false;
-	};
-	/**
 A __general__ function which passes on requests to Pads to generate new &amp;lt;canvas&amp;gt; elements and associated objects - see Pad.addNewCell() for more details
 @method addNewCell
 @param {Object} data Initial attribute values for new object
@@ -2024,65 +1945,6 @@ scrawl.deleteEntity hook function - modified by path extension
 **/
 	my.pathDeleteEntity = function(items) {};
 	/**
-Alias for makeVector()
-@method newVector
-@deprecated
-**/
-	my.newVector = function(items) {
-		return my.makeVector(items);
-	};
-	/**
-Alias for makePad()
-@method newPad
-@private
-@deprecated
-**/
-	my.newPad = function(items) {
-		return my.makePad(items);
-	};
-	/**
-Alias for makeCell()
-@method newCell
-@private
-@deprecated
-**/
-	my.newCell = function(items) {
-		return my.makeCell(items);
-	};
-	/**
-Alias for makeContext()
-@method newContext
-@private
-@deprecated
-**/
-	my.newContext = function(items) {
-		return my.makeContext(items);
-	};
-	/**
-Alias for makeGroup()
-@method newGroup
-@deprecated
-**/
-	my.newGroup = function(items) {
-		return my.makeGroup(items);
-	};
-	/**
-Alias for makeGradient()
-@method newGradient
-@deprecated
-**/
-	my.newGradient = function(items) {
-		return my.makeGradient(items);
-	};
-	/**
-Alias for makeRadialGradient()
-@method newRadialGradient
-@deprecated
-**/
-	my.newRadialGradient = function(items) {
-		return my.makeRadialGradient(items);
-	};
-	/**
 A __factory__ function to generate new Vector objects
 @method makeVector
 @param {Object} items Key:value Object argument for setting attributes
@@ -2209,7 +2071,7 @@ Vector name - not guaranteed to be unique
 @final
 **/
 	my.Vector.prototype.type = &#x27;Vector&#x27;;
-	my.work.d.Vector = {
+	my.Vector.prototype.defs = {
 		x: 0,
 		y: 0,
 		z: 0,
@@ -2584,6 +2446,54 @@ Rotate a Vector object by a Quaternion rotation
 		}
 		return this;
 	};
+	/**
+Vector pool
+
+request a vector from the pool using scrawl.requestVector(args)
+release a vector back to the pool using scrawl.releaseVector(vector)
+
+@property vectorPool
+@type {Array}
+@private
+**/
+	my.vectorPool = [];
+	/**
+A __general__ function to retrieve a pool vector
+
+The arguments, if included, should be the x and y values to which the vector will be set
+
+@method requestVector
+@param {Number} x - vector x value
+@param {Number} y - vector y value
+@param {Number} z - vector z value
+@return pool vector
+**/
+	my.requestVector = function(x, y, z) {
+		if (!my.vectorPool.length) {
+			my.vectorPool.push(new my.Vector({
+				name: &#x27;pool&#x27;
+			}));
+		}
+		var v = my.vectorPool.shift();
+		v.x = x || 0;
+		v.y = y || 0;
+		v.z = z || 0;
+		return v
+	};
+	/**
+A __general__ function to release a pool vector back to the pool
+
+The argument object should be the vector to be released
+
+@method requestVector
+@param {Object} items - Scrawl Vector object
+@return not defined
+**/
+	my.releaseVector = function(v) {
+		if (v &amp;&amp; v.type === &#x27;Vector&#x27;) {
+			my.vectorPool.push(v);
+		}
+	};
 
 	/**
 # Base 
@@ -2610,11 +2520,9 @@ Unique identifier for each object; default: computer-generated String based on O
 @property name
 @type String
 **/
-		this.name = my.makeName({
-			name: items.name,
-			type: this.type,
-			target: this.classname
-		});
+		this.makeName(items.name);
+		my[this.lib][this.name] = this;
+		my.pushUnique(my[this.libName], this.name);
 		return this;
 	};
 	my.Base.prototype = Object.create(Object.prototype);
@@ -2625,8 +2533,9 @@ Unique identifier for each object; default: computer-generated String based on O
 @final
 **/
 	my.Base.prototype.type = &#x27;Base&#x27;;
-	my.Base.prototype.classname = &#x27;objectnames&#x27;;
-	my.work.d.Base = {
+	my.Base.prototype.lib = &#x27;object&#x27;;
+	my.Base.prototype.libName = &#x27;objectnames&#x27;;
+	my.Base.prototype.defs = {
 		/**
 Comment, for accessibility
 @property comment
@@ -2650,6 +2559,25 @@ Creation timestamp
 		timestamp: &#x27;&#x27;
 	};
 	/**
+Generate unique names for new Scrawl objects
+@method makeName
+@param {String} [suggestedName] String of the suggested name
+@return always true
+@private
+**/
+	my.Base.prototype.makeName = function(suggestedName) {
+		var name, nameArray;
+		if (my.work.nameslist.indexOf(this.libName) &gt;= 0) {
+			name = my.xtGetTrue(suggestedName, this.type, &#x27;default&#x27;);
+			name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, &#x27;_&#x27;);
+			nameArray = name.split(&#x27;___&#x27;);
+			this.name = (my[this.libName].indexOf(nameArray[0]) &gt;= 0) ? nameArray[0] + &#x27;___&#x27; + Math.floor(Math.random() * 100000000) : nameArray[0];
+		}
+		else {
+			this.name = &#x27;unclassifiedScrawlObject___&#x27; + Math.floor(Math.random() * 100000000);
+		}
+	};
+	/**
 Retrieve an attribute value. If the attribute value has not been set, then the default value for that attribute will be returned.
 @method get
 @param {String} item Attribute key
@@ -2663,7 +2591,15 @@ Retrieve an attribute value. If the attribute value has not been set, then the d
     box.get(&#x27;favouriteAnimal&#x27;);     //returns undefined
 **/
 	my.Base.prototype.get = function(item) {
-		return my.xtGet(this[item], my.work.d[this.type][item]);
+		var undef, i, d;
+		d = this.defs[item];
+		if (typeof d !== &#x27;undefined&#x27;) {
+			i = this[item];
+			return (typeof i !== &#x27;undefined&#x27;) ? i : d;
+		}
+		else {
+			return undef;
+		}
 	};
 	/**
 Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.
@@ -2687,7 +2623,7 @@ An attribute value will only be set if the object already has a default value fo
     box.get(&#x27;favouriteAnimal&#x27;);     //returns undefined
 **/
 	my.Base.prototype.set = function(items) {
-		var d = my.work.d[this.type],
+		var d = this.defs,
 			xt = my.xt;
 		for (var i in items) {
 			if (xt(d[i])) {
@@ -2902,8 +2838,9 @@ False if device does not support the canvas dashed line functionality; true othe
 @final
 **/
 	my.Device.prototype.type = &#x27;Device&#x27;;
-	my.Device.prototype.classname = &#x27;objectnames&#x27;;
-	my.work.d.Device = {
+	my.Device.prototype.lib = &#x27;object&#x27;;
+	my.Device.prototype.libName = &#x27;objectnames&#x27;;
+	my.Device.prototype.defs = {
 		width: null,
 		height: null,
 		offsetX: null,
@@ -2921,7 +2858,7 @@ False if device does not support the canvas dashed line functionality; true othe
 		videoAutoplay: false,
 		videoForceFullScreen: false
 	};
-	my.mergeInto(my.work.d.Device, my.work.d.Base);
+	my.mergeInto(my.Device.prototype.defs, my.Base.prototype.defs);
 
 	/**
 Feature detection
@@ -3187,7 +3124,7 @@ Certain Scrawl extensions will add functionality to this object, for instance sc
 **/
 	my.Position = function(items) {
 		var so = my.safeObject,
-			d = my.work.d[this.type],
+			d = this.defs,
 			get = my.xtGet,
 			vec = my.makeVector;
 		my.Base.call(this, items);
@@ -3236,25 +3173,6 @@ Where values are Numbers, handle can be treated like any other Vector
 			name: this.type + &#x27;.&#x27; + this.name + &#x27;.current.handle&#x27;
 		});
 		this.currentHandle.flag = false;
-		/**
-An object with the following attributes:
-
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-@property maxDimensions
-@type Object
-@default null
-@private
-**/
-		this.maxDimensions = {
-			flag: true,
-			left: 0,
-			right: 0,
-			top: 0,
-			bottom: 0
-		};
 		/**
 The ENTITYNAME or POINTNAME of a entity or Point object to be used for setting this object&#x27;s start point
 @property pivot
@@ -3325,8 +3243,9 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 @final
 **/
 	my.Position.prototype.type = &#x27;Position&#x27;;
-	my.Position.prototype.classname = &#x27;objectnames&#x27;;
-	my.work.d.Position = {
+	my.Position.prototype.lib = &#x27;object&#x27;;
+	my.Position.prototype.libName = &#x27;objectnames&#x27;;
+	my.Position.prototype.defs = {
 		start: {
 			x: 0,
 			y: 0
@@ -3342,13 +3261,6 @@ The Pad.mice object can hold details of multiple touch events - when an entity i
 		currentHandle: {
 			x: 0,
 			y: 0
-		},
-		maxDimensions: {
-			flag: true,
-			left: 0,
-			right: 0,
-			top: 0,
-			bottom: 0
 		},
 		pivot: null,
 		scale: 1,
@@ -3401,7 +3313,7 @@ A flag to determine whether the object will calculate its position along a Shape
 @default true
 **/
 	};
-	my.mergeInto(my.work.d.Position, my.work.d.Base);
+	my.mergeInto(my.Position.prototype.defs, my.Base.prototype.defs);
 	/**
 Position constructor hook function - modified by animation extension
 @method animationPositionInit
@@ -3480,7 +3392,6 @@ Augments Base.set(), to allow users to set the start and handle attributes using
 			this.setHandle(items);
 		}
 		if (xto(items.flipUpend, items.flipReverse, items.scale, items.width, items.height, items.roll)) {
-			this.maxDimensions.flag = true;
 			if (xto(items.scale, items.width, items.height)) {
 				this.currentHandle.flag = false;
 			}
@@ -3518,7 +3429,6 @@ Augments Base.setStart(), to allow users to set the start attributes using start
 			});
 		}
 		this.currentStart.flag = false;
-		this.maxDimensions.flag = true;
 		return this;
 	};
 	/**
@@ -3548,7 +3458,6 @@ Augments Base.setHandle(), to allow users to set the handle attributes using han
 			});
 		}
 		this.currentHandle.flag = false;
-		this.maxDimensions.flag = true;
 		return this;
 	};
 	/**
@@ -3592,7 +3501,6 @@ Adds the value of each attribute supplied in the argument to existing values; on
 			if (items.height) {
 				this.setDeltaHeight(items);
 			}
-			this.maxDimensions.flag = true;
 			if (xto(items.scale, items.width, items.height)) {
 				this.currentHandle.flag = false;
 			}
@@ -3962,15 +3870,15 @@ setStampUsingPivot helper object
 			current.y = (!obj.lockY) ? vector.y : current.y;
 		},
 		mouse: function(obj, ignore, cell, mouse) {
-			var pad,
+			var pad, correctedMouse,
 				current = obj.currentStart;
 			if (!my.xt(mouse)) {
 				cell = my.cell[cell];
 				pad = my.pad[cell.pad];
 				mouse = pad.mice[obj.mouseIndex];
 			}
-			mouse = obj.correctCoordinates(mouse, cell);
-			if (mouse) {
+			correctedMouse = obj.correctCoordinates(mouse, cell);
+			if (correctedMouse) {
 				if (obj.oldX == null &amp;&amp; obj.oldY == null) { //jshint ignore:line
 					obj.oldX = current.x;
 					obj.oldY = current.y;
@@ -3980,6 +3888,7 @@ setStampUsingPivot helper object
 				obj.oldX = mouse.x;
 				obj.oldY = mouse.y;
 			}
+			my.releaseVector(correctedMouse);
 		},
 		stack: function() {}
 	};
@@ -3997,8 +3906,8 @@ Stamp helper function - correct mouse coordinates if pad dimensions not equal to
 			w, h,
 			get = my.xtGet;
 		coords = my.safeObject(coords);
-		vector = my.work.v.set(coords);
-		if (scrawl.xta(coords.x, coords.y)) {
+		if (my.xta(coords.x, coords.y)) {
+			vector = my.requestVector(coords.x, coords.y, coords.z);
 			cell = (my.cell[cell]) ? my.cell[cell] : my.cell[my.pad[my.work.currentPad].base];
 			pad = my.pad[cell.pad];
 			w = get(pad.localWidth, pad.width, 300);
@@ -4034,7 +3943,7 @@ The core implementation of this object is a stub that supplies Pad objects with 
 **/
 	my.PageElement = function(items) {
 		var get = my.xtGet,
-		d = my.work.d[this.type];
+		d = this.defs
 		items = my.safeObject(items);
 		my.Base.call(this, items);
 		/**
@@ -4087,8 +3996,9 @@ mice.ui0, mice.ui1 etc - refers to pointer and touch events
 @final
 **/
 	my.PageElement.prototype.type = &#x27;PageElement&#x27;;
-	my.PageElement.prototype.classname = &#x27;objectnames&#x27;;
-	my.work.d.PageElement = {
+	my.PageElement.prototype.lib = &#x27;object&#x27;;
+	my.PageElement.prototype.libName = &#x27;objectnames&#x27;;
+	my.PageElement.prototype.defs = {
 		width: 300,
 		height: 150,
 		/**
@@ -4143,7 +4053,7 @@ Element CSS position styling attribute
 **/
 		position: &#x27;static&#x27;
 	};
-	my.mergeInto(my.work.d.PageElement, my.work.d.Base);
+	my.mergeInto(my.PageElement.prototype.defs, my.Base.prototype.defs);
 	/**
 PageElement constructor hook function - modified by stacks extension
 @method stacksPageElementConstructor
@@ -4163,7 +4073,7 @@ Augments Base.get() to retrieve DOM element width and height values
 		var element = this.getElement(),
 			stat_pageElementGet = [&#x27;width&#x27;, &#x27;height&#x27;, &#x27;position&#x27;],
 			get = my.xtGet,
-			d = my.work.d[this.type];
+			d = this.defs;
 		if (my.contains(stat_pageElementGet, item)) {
 			switch (item) {
 				case &#x27;width&#x27;:
@@ -4660,7 +4570,7 @@ Because the Pad constructor calls the Cell constructor as part of the constructi
 			base,
 			canvas,
 			get = my.xtGet,
-			d = my.work.d.Pad,
+			d = this.defs,
 			pu = my.pushUnique,
 			makeCell = my.makeCell;
 		items = my.safeObject(items);
@@ -4732,7 +4642,6 @@ Pad&#x27;s currently active &amp;lt;canvas&amp;gt; element - CELLNAME
 			this.current = base.name;
 			this.setDisplayOffsets();
 			this.setAccessibility(items);
-			this.filtersPadInit();
 			this.padStacksConstructor(items);
 			this.interactive = get(items.interactive, true);
 			if (this.interactive) {
@@ -4754,14 +4663,15 @@ Pad&#x27;s currently active &amp;lt;canvas&amp;gt; element - CELLNAME
 @final
 **/
 	my.Pad.prototype.type = &#x27;Pad&#x27;;
-	my.Pad.prototype.classname = &#x27;padnames&#x27;;
-	my.work.d.Pad = {
+	my.Pad.prototype.lib = &#x27;pad&#x27;;
+	my.Pad.prototype.libName = &#x27;padnames&#x27;;
+	my.Pad.prototype.defs = {
 		cells: [],
 		display: &#x27;&#x27;,
 		base: &#x27;&#x27;,
 		current: &#x27;&#x27;
 	};
-	my.mergeInto(my.work.d.Pad, my.work.d.PageElement);
+	my.mergeInto(my.Pad.prototype.defs, my.PageElement.prototype.defs);
 	/**
 Retrieve Pad&#x27;s visible &amp;lt;canvas&amp;gt; element object
 @method getElement
@@ -4771,12 +4681,6 @@ Retrieve Pad&#x27;s visible &amp;lt;canvas&amp;gt; element object
 	my.Pad.prototype.getElement = function() {
 		return my.canvas[this.display];
 	};
-	/**
-Pad constructor hook function - modified by filters extension
-@method filtersPadInit
-@private
-**/
-	my.Pad.prototype.filtersPadInit = function(items) {};
 	/**
 Pad constructor hook function - modified by stacks extension
 @method stacksPadInit
@@ -4893,8 +4797,6 @@ By default:
 * the initial base canvas has a compileOrder of 9999 and compiles last
 * the initial display canvas has compiled = false and will not compile
 
-(This function is replaced by the Filters extension)
-
 @method compile
 @return This
 @chainable
@@ -4922,8 +4824,6 @@ Cells will show in ascending order of their showOrder attributes, if their show 
 By default, the initial base and display canvases have shown = false:
 * &#x27;show&#x27; involves a cell copying itself onto the base cell; it makes no sense for the base cell to copy onto itself
 * the last action is to copy the base cell onto the display cell
-
-(This function is replaced by the Filters extension)
 
 @method show
 @return This
@@ -5166,7 +5066,6 @@ Cell supports the following &#x27;virtual&#x27; attributes for this attribute:
 			this.coreCellInit(items);
 			this.animationCellInit(items);
 			this.collisionsCellInit(items);
-			this.filtersCellInit(items);
 			return this;
 		}
 		return false;
@@ -5179,8 +5078,9 @@ Cell supports the following &#x27;virtual&#x27; attributes for this attribute:
 @final
 **/
 	my.Cell.prototype.type = &#x27;Cell&#x27;;
-	my.Cell.prototype.classname = &#x27;cellnames&#x27;;
-	my.work.d.Cell = {
+	my.Cell.prototype.lib = &#x27;cell&#x27;;
+	my.Cell.prototype.libName = &#x27;cellnames&#x27;;
+	my.Cell.prototype.defs = {
 		/**
 PADNAME of the Pad object to which this Cell belongs
 @property pad
@@ -5369,7 +5269,7 @@ Display cycle attribute - order in which the cell will show itself (if show attr
 **/
 		showOrder: 0
 	};
-	my.mergeInto(my.work.d.Cell, my.work.d.Position);
+	my.mergeInto(my.Cell.prototype.defs, my.Position.prototype.defs);
 	/**
 Cell constructor hook function - core module
 @method coreCellInit
@@ -5378,7 +5278,7 @@ Cell constructor hook function - core module
 	my.Cell.prototype.coreCellInit = function(items) {
 		var temp,
 			context,
-			d = my.work.d.Cell,
+			d = this.defs,
 			xt = my.xt,
 			xto = my.xto,
 			get = my.xtGet,
@@ -5461,12 +5361,6 @@ Cell constructor hook function - modified by collisions extension
 @private
 **/
 	my.Cell.prototype.collisionsCellInit = function(items) {};
-	/**
-Cell constructor hook function - modified by filters extension
-@method filtersCellInit
-@private
-**/
-	my.Cell.prototype.filtersCellInit = function(items) {};
 	/**
 Cell constructor hook function - modified by animation extension
 @method animationCellInit
@@ -5565,9 +5459,6 @@ Note - setting the argument attribute __resolve__ to true will force a recalcula
 		if (xto(items.actualWidth, items.actualHeight, items.width, items.height)) {
 			this.setDimensions(items);
 			my.ctx[this.context].getContextFromEngine(my.context[this.name]);
-			// for(i = 0, iz = this.groups.length; i &lt; iz; i++){
-			// 	my.group[this.groups[i]].setDirtyStarts()
-			// }
 		}
 		if (xto(items.actualWidth, items.actualHeight, items.pasteWidth, items.pasteHeight, items.width, items.height, items.handle, items.handleX, items.handleY, items.scale)) {
 			this.setDirtyHandles();
@@ -5825,11 +5716,6 @@ Note - setting the argument attribute __resolve__ to true will force a recalcula
 		if (xto(items.actualHeight, items.height)) {
 			this.setDeltaActualHeight(items, false);
 		}
-		// if (xto(items.actualHeight, items.height, items.actualWidth, items.width)){
-		// 	for(i = 0, iz = this.groups.length; i &lt; iz; i++){
-		// 		my.group[this.groups[i]].setDirtyStarts()
-		// 	}
-		// }
 		if (xt(items.roll)) {
 			this.setDeltaRoll(items);
 		}
@@ -6079,7 +5965,7 @@ Set the Cell&#x27;s &amp;lt;canvas&amp;gt; context engine to the specification s
 			cellContext = ctx[this.context];
 			entityContext = ctx[entity.context];
 			changes = entityContext.getChanges(entity, cellContext);
-			if (Object.keys(changes).length &gt; 0) {
+			if (Object.keys(changes).length) {
 				cellEngine = my.context[this.name];
 				eName = entity.name;
 				cName = this.name;
@@ -6093,18 +5979,16 @@ Set the Cell&#x27;s &amp;lt;canvas&amp;gt; context engine to the specification s
 	};
 	my.Cell.prototype.setEngineActions = {
 		fillStyle: function(item, e, s, entity, cell) {
-			var design, fillStyle;
-			if (my.xt(my.design[item])) {
-				design = my.design[item];
-				if (my.contains(s, design.type)) {
-					design.update(entity, cell);
+			var d = my.styles,
+				styles;
+			e.fillStyle = item;
+			if (!(typeof d[item] == &#x27;undefined&#x27;)) {
+				styles = d[item];
+				if (s.indexOf(styles.type) &gt;= 0) {
+					styles.update(entity, cell);
 				}
-				fillStyle = design.getData();
+				e.fillStyle = styles.getData();
 			}
-			else {
-				fillStyle = item;
-			}
-			e.fillStyle = fillStyle;
 		},
 		font: function(item, e) {
 			e.font = item;
@@ -6119,14 +6003,12 @@ Set the Cell&#x27;s &amp;lt;canvas&amp;gt; context engine to the specification s
 			e.lineCap = item;
 		},
 		lineDash: function(item, e) {
-			e.mozDash = item;
 			e.lineDash = item;
 			if (e.setLineDash) {
 				e.setLineDash(item);
 			}
 		},
 		lineDashOffset: function(item, e) {
-			e.mozDashOffset = item;
 			e.lineDashOffset = item;
 		},
 		lineJoin: function(item, e) {
@@ -6148,18 +6030,16 @@ Set the Cell&#x27;s &amp;lt;canvas&amp;gt; context engine to the specification s
 			e.shadowOffsetY = item;
 		},
 		strokeStyle: function(item, e, s, entity, cell) {
-			var design, strokeStyle;
-			if (my.xt(my.design[item])) {
-				design = my.design[item];
-				if (my.contains(s, design.type)) {
-					design.update(entity, cell);
+			var d = my.styles,
+				styles;
+			e.strokeStyle = item;
+			if (!(typeof d[item] == &#x27;undefined&#x27;)) {
+				styles = d[item];
+				if (s.indexOf(styles.type) &gt;= 0) {
+					styles.update(entity, cell);
 				}
-				strokeStyle = design.getData();
+				e.strokeStyle = styles.getData();
 			}
-			else {
-				strokeStyle = item;
-			}
-			e.strokeStyle = strokeStyle;
 		},
 		miterLimit: function(item, e) {
 			e.miterLimit = item;
@@ -6170,10 +6050,7 @@ Set the Cell&#x27;s &amp;lt;canvas&amp;gt; context engine to the specification s
 		textBaseline: function(item, e) {
 			e.textBaseline = item;
 		},
-		winding: function(item, e) {
-			e.mozFillRule = item;
-			e.msFillRule = item;
-		}
+		winding: function() {}
 	};
 	/**
 groupSort
@@ -6213,7 +6090,6 @@ Clear the Cell&#x27;s &amp;lt;canvas&amp;gt; element using JavaScript ctx.clearR
 	/**
 Prepare to draw entitys onto the Cell&#x27;s &amp;lt;canvas&amp;gt; element, in line with the Cell&#x27;s group Array
 
-(This function is replaced by the Filters extension)
 @method compile
 @return This
 @chainable
@@ -6632,8 +6508,9 @@ Default values are:
 @final
 **/
 	my.Context.prototype.type = &#x27;Context&#x27;;
-	my.Context.prototype.classname = &#x27;ctxnames&#x27;;
-	my.work.d.Context = {
+	my.Context.prototype.lib = &#x27;ctx&#x27;;
+	my.Context.prototype.libName = &#x27;ctxnames&#x27;;
+	my.Context.prototype.defs = {
 		/**
 Color, gradient or pattern used to fill a entity. Can be:
 
@@ -6820,8 +6697,12 @@ Text baseline value for single-line Phrase entitys set to follow a Path entity p
 **/
 		textBaseline: &#x27;alphabetic&#x27;
 	};
-	my.work.contextKeys = Object.keys(my.work.d.Context);
-	my.mergeInto(my.work.d.Context, my.work.d.Base);
+	my.Context.prototype.allKeys = Object.keys(my.Context.prototype.defs);
+	my.Context.prototype.mainKeys = [&#x27;globalAlpha&#x27;, &#x27;globalCompositeOperation&#x27;, &#x27;shadowOffsetX&#x27;, &#x27;shadowOffsetY&#x27;, &#x27;shadowBlur&#x27;];
+	my.Context.prototype.lineKeys = [&#x27;lineWidth&#x27;, &#x27;lineCap&#x27;, &#x27;lineJoin&#x27;, &#x27;lineDash&#x27;, &#x27;lineDashOffset&#x27;, &#x27;miterLimit&#x27;];
+	my.Context.prototype.styleKeys = [&#x27;fillStyle&#x27;, &#x27;strokeStyle&#x27;, &#x27;shadowColor&#x27;];
+	my.Context.prototype.textKeys = [&#x27;font&#x27;, &#x27;textAlign&#x27;, &#x27;textBaseline&#x27;];
+	my.mergeInto(my.Context.prototype.defs, my.Base.prototype.defs);
 	/**
 Adds the value of each attribute supplied in the argument to existing values; only Number attributes can be amended using this function - lineDashOffset, lineWidth, globalAlpha
 
@@ -6833,30 +6714,28 @@ Adds the value of each attribute supplied in the argument to existing values; on
 @private
 **/
 	my.Context.prototype.setDelta = function(items) {
-		var xt = my.xt,
-			d = my.work.d.Context;
 		items = my.safeObject(items);
-		if (xt(items.lineDashOffset)) {
-			if (!xt(this.lineDashOffset)) {
-				this.lineDashOffset = d.lineDashOffset + items.lineDashOffset;
+		if (!(typeof items.lineDashOffset == &#x27;undefined&#x27;)) {
+			if (typeof this.lineDashOffset == &#x27;undefined&#x27;) {
+				this.lineDashOffset = 0;
 			}
 			this.lineDashOffset += items.lineDashOffset;
 		}
-		if (xt(items.lineWidth)) {
-			if (!xt(this.lineWidth)) {
-				this.lineWidth = d.lineWidth + items.lineWidth;
+		if (!(typeof items.lineWidth == &#x27;undefined&#x27;)) {
+			if (typeof this.lineWidth == &#x27;undefined&#x27;) {
+				this.lineWidth = 1;
 			}
 			this.lineWidth += items.lineWidth;
 			if (this.lineWidth &lt; 0) {
 				this.lineWidth = 0;
 			}
 		}
-		if (xt(items.globalAlpha)) {
-			if (!xt(this.globalAlpha)) {
-				this.globalAlpha = d.globalAlpha + items.globalAlpha;
+		if (!(typeof items.globalAlpha == &#x27;undefined&#x27;)) {
+			if (typeof this.globalAlpha == &#x27;undefined&#x27;) {
+				this.globalAlpha = 1;
 			}
 			this.globalAlpha += items.globalAlpha;
-			if (!my.isBetween(this.globalAlpha, 0, 1, true)) {
+			if (this.globalAlpha &lt; 0 || this.globalAlpha &gt; 1) {
 				this.globalAlpha = (this.globalAlpha &gt; 0.5) ? 1 : 0;
 			}
 		}
@@ -6873,10 +6752,12 @@ Interrogates a &amp;lt;canvas&amp;gt; element&#x27;s context engine and populate
 @private
 **/
 	my.Context.prototype.getContextFromEngine = function(ctx) {
-		var keys = my.work.contextKeys,
+		var keys = this.allKeys,
+			key,
 			get = my.xtGet;
 		for (var i = 0, iz = keys.length; i &lt; iz; i++) {
-			this[keys[i]] = ctx[keys[i]];
+			key = keys[i];
+			this[key] = ctx[key];
 		}
 		this.winding = get(ctx.mozFillRule, ctx.msFillRule, &#x27;nonzero&#x27;);
 		this.lineDash = (my.xt(ctx.lineDash)) ? ctx.lineDash : [];
@@ -6884,69 +6765,99 @@ Interrogates a &amp;lt;canvas&amp;gt; element&#x27;s context engine and populate
 		return this;
 	};
 	/**
-Interrogates a &amp;lt;canvas&amp;gt; element&#x27;s context engine and returns an object of non-default attributes
-@private
-**/
-	my.Context.prototype.getNonDefaultAttributes = function() {
-		var d = my.work.d.Context,
-			xt = my.xt,
-			keys = my.work.contextKeys,
-			i, iz,
-			result = {};
-		for (i = 0, iz = keys.length; i &lt; iz; i++) {
-			if (keys[i] === &#x27;lineDash&#x27; &amp;&amp; this.lineDash &amp;&amp; this.lineDash.length &gt; 0) {
-				result.lineDash = this.lineDash;
-			}
-			else if (xt(this[keys[i]]) &amp;&amp; this[keys[i]] != d[keys[i]]) {
-				result[keys[i]] = this[keys[i]];
-			}
-		}
-		return result;
-	};
-	/**
-Interrogates a &amp;lt;canvas&amp;gt; element&#x27;s context engine and populates its own attributes with returned values
+Compares an entity&#x27;s context engine values (held in this context object) to those held for the relevant cell&#x27;s context engine
 
 (Only for use by Context objects)
 @method getChanges
-@param {Object} ctx &amp;lt;canvas&amp;gt; element context engine Object
-@return This
-@chainable
+@param {Object} entity - a reference to the entity object
+@param {Object} ctx - a reference to a &amp;lt;canvas&amp;gt; element context engine Object
+@return a results object containing changes to be made to the canvas context engine
 @private
 **/
 	my.Context.prototype.getChanges = function(entity, ctx) {
-		var c = ctx.getNonDefaultAttributes(),
-			ca = Object.keys(c),
-			e = this.getNonDefaultAttributes(),
-			ea = Object.keys(e),
-			d, color,
-			df = my.work.d.Context,
-			result = {},
-			contains = my.contains,
-			i, iz;
-		for (i = 0, iz = ca.length; i &lt; iz; i++) {
-			if (!contains(ea, ca[i])) {
-				result[ca[i]] = df[ca[i]];
+		var mainKeys = this.mainKeys,
+			lineKeys = this.lineKeys,
+			styleKeys = this.styleKeys,
+			textKeys = this.textKeys,
+			k, d, color, scaled, i, iz, j, jz,
+			ldFlag, currentE, currentC,
+			dx = this.defs,
+			result = {};
+
+		if (entity.substring) {
+			entity = my.entity[entity];
+		}
+		for (i = 0, iz = mainKeys.length; i &lt; iz; i++) {
+			k = mainKeys[i];
+			currentE = (typeof this[k] != &#x27;undefined&#x27;) ? this[k] : dx[k];
+			currentC = (typeof ctx[k] != &#x27;undefined&#x27;) ? ctx[k] : dx[k];
+			if (currentC !== currentE) {
+				result[k] = currentE
 			}
 		}
-		for (i = 0, iz = ea.length; i &lt; iz; i++) {
-			if (ea[i] === &#x27;lineWidth&#x27; &amp;&amp; entity.scaleOutline) {
-				if (e.lineWidth * entity.scale !== c.lineWidth) {
-					result.lineWidth = e.lineWidth * entity.scale;
-				}
-			}
-			else if (e[ea[i]] != c[ea[i]]) {
-				result[ea[i]] = e[ea[i]];
-			}
-			else if (contains([&#x27;fillStyle&#x27;, &#x27;strokeStyle&#x27;, &#x27;shadowColor&#x27;], ea[i])) {
-				d = my.design[e[ea[i]]];
-				if (d &amp;&amp; d.type === &#x27;Color&#x27;) {
-					color = d.getData();
-					if (color !== c[ea[i]]) {
-						result[ea[i]] = color;
+		if (this.lineWidth || ctx.lineWidth) {
+			for (i = 0, iz = lineKeys.length; i &lt; iz; i++) {
+				k = lineKeys[i];
+				currentE = (typeof this[k] != &#x27;undefined&#x27;) ? this[k] : dx[k];
+				currentC = (typeof ctx[k] != &#x27;undefined&#x27;) ? ctx[k] : dx[k];
+				if (k == &#x27;lineDash&#x27;) {
+					if (currentE.length || currentC.length) {
+						if (currentE.length != currentC.length) {
+							result.lineDash = currentE;
+						}
+						else {
+							ldFlag = false;
+							for (j = 0, jz = currentE.length; j &lt; jz; j++) {
+								if (currentE[j] != currentC[j]) {
+									ldFlag = true;
+									break;
+								}
+							}
+							if (ldFlag) {
+								result.lineDash = currentE;
+							}
+						}
 					}
 				}
-				else if (ea[i] != &#x27;shadowColor&#x27; &amp;&amp; d &amp;&amp; d.autoUpdate) {
-					result[ea[i]] = e[ea[i]];
+				else if (k == &#x27;lineWidth&#x27; &amp;&amp; entity.scaleOutline) {
+					scaled = (currentE || 1) * (entity.scale || 1);
+					if (scaled != currentC) {
+						result.lineWidth = scaled;
+					}
+				}
+				else if (currentC !== currentE) {
+					result[k] = currentE
+				}
+			}
+		}
+		for (i = 0, iz = styleKeys.length; i &lt; iz; i++) {
+			k = styleKeys[i];
+			currentE = (typeof this[k] != &#x27;undefined&#x27;) ? this[k] : dx[k];
+			currentC = (typeof ctx[k] != &#x27;undefined&#x27;) ? ctx[k] : dx[k];
+			if (currentC !== currentE) {
+				result[k] = currentE
+			}
+			else {
+				d = my.styles[currentE];
+				if (d) {
+					if (currentC === currentE) {
+						if (d.autoUpdate || d.lockTo !== &#x27;cell&#x27;) {
+							result[k] = currentE;
+						}
+					}
+					else if (currentC !== currentE) {
+						result[k] = currentE
+					}
+				}
+			}
+		}
+		if (entity.type === &#x27;Phrase&#x27;) {
+			for (i = 0, iz = textKeys.length; i &lt; iz; i++) {
+				k = textKeys[i];
+				currentE = (typeof this[k] != &#x27;undefined&#x27;) ? this[k] : dx[k];
+				currentC = (typeof ctx[k] != &#x27;undefined&#x27;) ? ctx[k] : dx[k];
+				if (currentC !== currentE) {
+					result[k] = currentE
 				}
 			}
 		}
@@ -7031,6 +6942,7 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 @default 0
 **/
 		this.regionRadius = get(items.regionRadius, 0);
+		this.multifiltersGroupInit(items);
 		my.group[this.name] = this;
 		pu(my.groupnames, this.name);
 		pu(my.cell[this.cell].groups, this.name);
@@ -7044,8 +6956,9 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 @final
 **/
 	my.Group.prototype.type = &#x27;Group&#x27;;
-	my.Group.prototype.classname = &#x27;groupnames&#x27;;
-	my.work.d.Group = {
+	my.Group.prototype.lib = &#x27;group&#x27;;
+	my.Group.prototype.libName = &#x27;groupnames&#x27;;
+	my.Group.prototype.defs = {
 		entitys: [],
 		cell: &#x27;&#x27;,
 		order: 0,
@@ -7054,8 +6967,9 @@ Collision checking radius, in pixels - as a first step in a collision check, the
 		resort: false,
 		regionRadius: 0
 	};
-	my.mergeInto(my.work.d.Group, my.work.d.Base);
-	/**
+	my.mergeInto(my.Group.prototype.defs, my.Base.prototype.defs);
+	my.Group.prototype.multifiltersGroupInit = function() {};
+	/*
 set
 @method set
 @param {Object} items Object containing attribute key:value pairs
@@ -7115,12 +7029,30 @@ Tell the Group to ask its constituent entitys to draw themselves on a &amp;lt;ca
 		var entity,
 			entitys,
 			e = my.entity,
+			tempFilter, tempCellname, tempCell, work,
+			multifilterFlag = false,
 			i,
 			iz;
 		if (this.visibility) {
 			this.sortEntitys();
 			entitys = this.entitys;
 			cell = (my.xt(cell)) ? cell : my.cell[cellname];
+			if (this.multiFilter) {
+				tempFilter = my.multifilter[this.multiFilter];
+				if (tempFilter &amp;&amp; tempFilter.filters &amp;&amp; tempFilter.filters.length) {
+					multifilterFlag = true;
+					work = my.work;
+					tempCell = cell;
+					tempCellname = cellname;
+					cell = work.cvwrapper;
+					cellname = work.cvwrapper.name;
+					cell.set({
+						width: tempCell.actualWidth,
+						height: tempCell.actualHeight
+					});
+					my.work.cvcontroller.mice = my.pad[my.cell[tempCellname].pad].mice;
+				}
+			}
 			for (i = 0, iz = entitys.length; i &lt; iz; i++) {
 				entity = e[entitys[i]];
 				if (entity) {
@@ -7128,9 +7060,15 @@ Tell the Group to ask its constituent entitys to draw themselves on a &amp;lt;ca
 					entity.stamp(method, cellname, cell, mouse);
 				}
 			}
+			if (multifilterFlag) {
+				cell = tempCell;
+				cellname = tempCellname;
+				this.stampMultifilter(my.context[cellname], cell);
+			}
 		}
 		return this;
 	};
+	my.Group.prototype.stampMultifilter = function() {};
 	/**
 Add entitys to the Group
 @method addEntitysToGroup
@@ -7279,28 +7217,26 @@ This has the effect of turning a set of disparate entitys into a single, coordin
 			entitys = this.entitys,
 			e = my.entity,
 			entityVector,
-			v = my.work.v,
+			v,
 			i,
 			iz,
-			arg = {
-				pivot: 0,
-				handleX: 0,
-				handleY: 0
-			};
+			arg;
 		item = (item.substring) ? item : false;
 		if (item) {
 			pivot = e[item] || my.point[item] || false;
 			if (pivot) {
+				arg = {};
+				v = my.requestVector();
 				pivotVector = (pivot.type === &#x27;Point&#x27;) ? pivot.local : pivot.start;
 				for (i = 0, iz = entitys.length; i &lt; iz; i++) {
 					entity = e[entitys[i]];
-					entityVector = v.set(entity.start);
-					entityVector.vectorSubtract(pivotVector);
+					v.set(entity.start).vectorSubtract(pivotVector);
 					arg.pivot = item;
-					arg.handleX = -entityVector.x;
-					arg.handleY = -entityVector.y;
+					arg.handleX = -v.x;
+					arg.handleY = -v.y;
 					entity.set(arg);
 				}
+				my.releaseVector(v);
 			}
 		}
 		return this;
@@ -7313,16 +7249,19 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getEntityAt = function(items) {
 		var entity,
-			v1 = my.work.colv1,
-			v2 = my.work.colv2,
+			result = false,
+			req = my.requestVector,
+			rel = my.releaseVector,
+			v1 = req(),
+			v2 = req(),
 			entitys = this.entitys,
 			e = my.entity,
 			rad = this.regionRadius,
 			coordinate,
 			i;
 		items = my.safeObject(items);
-		coordinate = v1.set(items); //coordinate = my.work.colv1
-		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.work.v
+		v1.set(items);
+		coordinate = my.Position.prototype.correctCoordinates.call(this, v1, this.cell);
 		this.sortEntitys();
 		for (i = entitys.length - 1; i &gt;= 0; i--) {
 			entity = e[entitys[i]];
@@ -7333,10 +7272,14 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 				}
 			}
 			if (entity.checkHit(coordinate)) {
-				return entity;
+				result = entity;
+				break;
 			}
 		}
-		return false;
+		rel(v1);
+		rel(v2);
+		rel(coordinate);
+		return result;
 	};
 	/**
 Check all entitys in the Group to see which one(s) are associated with a particular mouse index
@@ -7368,8 +7311,10 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 **/
 	my.Group.prototype.getAllEntitysAt = function(items) {
 		var entity,
-			v1 = my.work.colv1,
-			v2 = my.work.colv2,
+			req = my.requestVector,
+			rel = my.releaseVector,
+			v1 = req(),
+			v2 = req(),
 			coordinate,
 			results,
 			entitys = this.entitys,
@@ -7377,9 +7322,9 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 			rad = this.regionRadius,
 			i;
 		items = my.safeObject(items);
-		coordinate = v1.set(items); //coordinate = my.work.colv1
+		v1.set(items);
 		results = [];
-		coordinate = my.Position.prototype.correctCoordinates(coordinate, this.cell); //coordinate = my.work.v
+		coordinate = my.Position.prototype.correctCoordinates(v1, this.cell);
 		this.sortEntitys();
 		for (i = entitys.length - 1; i &gt;= 0; i--) {
 			entity = e[entitys[i]];
@@ -7393,7 +7338,10 @@ Check all entitys in the Group to see if they are colliding with the supplied co
 				results.push(entity);
 			}
 		}
-		return (results.length &gt; 0) ? results : false;
+		rel(v1);
+		rel(v2);
+		rel(coordinate);
+		return (results.length) ? results : false;
 	};
 	/**
 Augments Group.set()
@@ -7538,9 +7486,9 @@ _Note: not all entitys support all of these operations_
 @type String
 @default &#x27;fill&#x27;
 **/
-		this.method = get(items.method, my.work.d[this.type].method);
+		this.method = get(items.method, this.defs.method);
 		this.collisionsEntityConstructor(items);
-		this.filtersEntityInit(items);
+		this.multifiltersEntityInit(items);
 		return this;
 	};
 	my.Entity.prototype = Object.create(my.Position.prototype);
@@ -7551,8 +7499,9 @@ _Note: not all entitys support all of these operations_
 @final
 **/
 	my.Entity.prototype.type = &#x27;Entity&#x27;;
-	my.Entity.prototype.classname = &#x27;entitynames&#x27;;
-	my.work.d.Entity = {
+	my.Entity.prototype.lib = &#x27;entity&#x27;;
+	my.Entity.prototype.libName = &#x27;entitynames&#x27;;
+	my.Entity.prototype.defs = {
 		order: 0,
 		visibility: true,
 		method: &#x27;fill&#x27;,
@@ -7575,13 +7524,13 @@ Entity radius, in pixels - not supported by all entity objects
 		context: &#x27;&#x27;,
 		group: &#x27;&#x27;
 	};
-	my.mergeInto(my.work.d.Entity, my.work.d.Position);
+	my.mergeInto(my.Entity.prototype.defs, my.Position.prototype.defs);
 	/**
-Entity constructor hook function - modified by filters extension
-@method filtersEntityInit
+Entity constructor hook function - modified by multifilters extension
+@method multifiltersEntityInit
 @private
 **/
-	my.Entity.prototype.filtersEntityInit = function(items) {};
+	my.Entity.prototype.multifiltersEntityInit = function(items) {};
 	/**
 Entity constructor hook function - modified by collisions extension
 @method collisionsEntityConstructor
@@ -7618,11 +7567,9 @@ Allows users to retrieve a entity&#x27;s Context object&#x27;s values via the en
 **/
 	my.Entity.prototype.get = function(item) {
 		var xt = my.xt,
-			d = my.work.d;
-		if (xt(d.Base[item])) {
-			return my.Base.prototype.get.call(this, item);
-		}
-		if (xt(d.Context[item])) {
+			cdef = my.Context.prototype.defs,
+			d = this.defs;
+		if (cdef[item]) {
 			return my.ctx[this.context].get(item);
 		}
 		return my.Position.prototype.get.call(this, item);
@@ -7654,9 +7601,6 @@ Allows users to:
 		if (xt(items.order)) {
 			group[this.group].resort = true;
 		}
-		if (xt(items.lineWidth)) {
-			this.maxDimensions.flag = true;
-		}
 		return this;
 	};
 	/**
@@ -7679,9 +7623,6 @@ Allows users to amend a entity&#x27;s Context object&#x27;s values via the entit
 		items = my.safeObject(items);
 		if (my.xto(items.lineDashOffset, items.lineWidth, items.globalAlpha)) {
 			my.ctx[this.context].setDelta(items);
-			if (my.xt(items.lineWidth)) {
-				this.maxDimensions.flag = true;
-			}
 		}
 		this.collisionsEntitySetDelta(items);
 		return this;
@@ -7795,17 +7736,16 @@ Permitted methods include:
 @param {Vector} [mouse] coordinates to be used for any entity currently pivoted to a mouse/touch event
 @return This
 @chainable
+
 **/
 	my.Entity.prototype.stamp = function(method, cellname, cell, mouse) {
-		var engine,
-			cellCtx,
-			eCtx,
-			here,
-			sCanvas,
-			sEngine,
+		var engine, ctx,
+			tempCellname, tempCell, tempEngine, tempGCO,
 			sFlag = !this.currentStart.flag,
 			hFlag = !this.currentHandle.flag,
-			data;
+			multifilterFlag = false,
+			tempFilter, work;
+
 		if (this.visibility) {
 			if (!cell) {
 				cell = my.cell[cellname] || my.cell[my.group[this.group].cell];
@@ -7813,6 +7753,28 @@ Permitted methods include:
 			}
 			engine = my.context[cellname];
 			method = method || this.method;
+
+			if (this.multiFilter) {
+				tempFilter = my.multifilter[this.multiFilter];
+				if (tempFilter &amp;&amp; tempFilter.filters &amp;&amp; tempFilter.filters.length) {
+					multifilterFlag = true;
+					work = my.work;
+					ctx = my.ctx[this.name];
+					tempEngine = engine;
+					tempCell = cell;
+					tempCellname = cellname;
+					tempGCO = ctx.globalCompositeOperation;
+					ctx.globalCompositeOperation = &#x27;source-over&#x27;;
+					engine = work.cvx2;
+					cell = work.cvwrapper2;
+					cellname = work.cvwrapper2.name;
+					cell.set({
+						width: tempCell.actualWidth,
+						height: tempCell.actualHeight
+					});
+					my.work.cvcontroller.mice = my.pad[my.cell[tempCellname].pad].mice;
+				}
+			}
 			if (sFlag || hFlag) {
 				if (sFlag) {
 					this.updateCurrentStart(cell);
@@ -7824,13 +7786,18 @@ Permitted methods include:
 			}
 			if (this.pivot) {
 				this.setStampUsingPivot(cellname, mouse);
-				this.maxDimensions.flag = true;
 			}
 			else {
 				this.pathStamp();
 			}
 			this[method](engine, cellname, cell);
-			this.stampFilter(engine, cellname, cell);
+			if (multifilterFlag) {
+				engine = tempEngine;
+				cell = tempCell;
+				cellname = tempCellname;
+				ctx.globalCompositeOperation = tempGCO;
+				this.stampMultifilter(engine, cell);
+			}
 		}
 		return this;
 	};
@@ -7848,12 +7815,11 @@ Entity.stamp hook function - modified by path extension
 **/
 	my.Entity.prototype.pathStamp = function() {};
 	/**
-Entity.stamp hook function - modified by filters extension
-@method stampFilter
+Entity.stamp hook function - modified by multifilters extension
+@method stampMultifilter
 @private
 **/
-	my.Entity.prototype.stampFilter = function() {};
-	my.Entity.prototype.stampFilterDimensionsActions = {};
+	my.Entity.prototype.stampMultifilter = function() {};
 	/**
 Stamp helper function - rotate and position canvas ready for drawing entity
 @method rotateCell
@@ -7909,11 +7875,13 @@ Entity.getStart
 @method getStart
 **/
 	my.Entity.prototype.getStart = function() {
-		var start = my.work.v.set(this.currentStart).vectorAdd(this.currentHandle);
-		return {
-			x: start.x,
-			y: start.y
-		};
+		var start = my.requestVector(),
+			result = {};
+		start.set(this.currentStart).vectorAdd(this.currentHandle);
+		result.x = start.x;
+		result.y = start.y;
+		my.releaseVector(start);
+		return result;
 	};
 	/**
 Stamp helper function - perform a &#x27;clear&#x27; method draw
@@ -8104,12 +8072,12 @@ Set entity&#x27;s pivot to &#x27;mouse&#x27;; set handles to supplied Vector val
 @chainable
 **/
 	my.Entity.prototype.pickupEntity = function(items) {
-		var cell,
+		var cell, v,
 			coordinate;
 		items = my.safeObject(items);
-		coordinate = my.work.v.set(items);
+		v = my.requestVector(items.x, items.y);
 		cell = my.cell[my.group[this.group].cell];
-		coordinate = this.correctCoordinates(coordinate, cell);
+		coordinate = this.correctCoordinates(v, cell);
 		this.oldX = coordinate.x || 0;
 		this.oldY = coordinate.y || 0;
 		this.oldPivot = this.pivot;
@@ -8118,6 +8086,8 @@ Set entity&#x27;s pivot to &#x27;mouse&#x27;; set handles to supplied Vector val
 		this.currentPivotIndex = false;
 		this.order += 9999;
 		my.group[this.group].resort = true;
+		my.releaseVector(v);
+		my.releaseVector(coordinate);
 		return this;
 	};
 	/**
@@ -8204,7 +8174,7 @@ Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of v
 	};
 
 	/**
-# Design
+# Styles
 
 ## Instantiation
 
@@ -8214,12 +8184,12 @@ Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of v
 
 * Defines gradients and radial gradients used with entity objects&#x27; strokeStyle and fillStyle attributes
 
-@class Design
+@class Styles
 @constructor
 @extends Base
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
-	my.Design = function(items) {
+	my.Styles = function(items) {
 		my.Base.call(this, items);
 		/**
 Drawing flag - when set to &#x27;entity&#x27; (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to &#x27;cell&#x27; (or false - default), will use Cell-based coordinates
@@ -8227,19 +8197,20 @@ Drawing flag - when set to &#x27;entity&#x27; (or true), will use entity-based c
 @type String - or alternatively Boolean
 @default &#x27;cell&#x27;
 **/
-		this.lockTo = my.xtGet(items.lockTo, my.work.d[this.type].lockTo);
+		this.lockTo = my.xtGet(items.lockTo, my[this.type].prototype.defs.lockTo);
 		return this;
 	};
-	my.Design.prototype = Object.create(my.Base.prototype);
+	my.Styles.prototype = Object.create(my.Base.prototype);
 	/**
 @property type
 @type String
-@default &#x27;Design&#x27;
+@default &#x27;Styles&#x27;
 @final
 **/
-	my.Design.prototype.type = &#x27;Design&#x27;;
-	my.Design.prototype.classname = &#x27;designnames&#x27;;
-	my.work.d.Design = {
+	my.Styles.prototype.type = &#x27;Styles&#x27;;
+	my.Styles.prototype.lib = &#x27;styles&#x27;;
+	my.Styles.prototype.libName = &#x27;stylesnames&#x27;;
+	my.Styles.prototype.defs = {
 		/**
 Array of JavaScript Objects representing color stop data
 
@@ -8302,7 +8273,7 @@ Vertical end coordinate, in pixels, from the top-left corner of the gradient&#x2
 **/
 		endY: 0
 	};
-	my.mergeInto(my.work.d.Design, my.work.d.Base);
+	my.mergeInto(my.Styles.prototype.defs, my.Base.prototype.defs);
 	/**
 Update values to Number attributes
 
@@ -8313,7 +8284,7 @@ Will also accept an object containing start and end attributes, each of which ca
 @return This
 @chainable
 **/
-	my.Design.prototype.set = function(items) {
+	my.Styles.prototype.set = function(items) {
 		var temp, x, y,
 			xt = my.xt,
 			xto = my.xto,
@@ -8332,7 +8303,7 @@ Will also accept an object containing start and end attributes, each of which ca
 			this.endY = get(temp.y, temp.endY, items.endY, this.endY);
 			this.endRadius = get(temp.r, temp.endRadius, items.endRadius, this.endRadius);
 		}
-		if (items.shift &amp;&amp; xt(my.work.d.Design.shift)) {
+		if (items.shift &amp;&amp; xt(this.defs.shift)) {
 			this.shift = items.shift;
 		}
 		if (xt(items.autoUpdate)) {
@@ -8350,7 +8321,7 @@ Add values to Number attributes
 @return This
 @chainable
 **/
-	my.Design.prototype.setDelta = function(items) {
+	my.Styles.prototype.setDelta = function(items) {
 		var temp,
 			perc = my.addPercentages;
 		items = my.safeObject(items);
@@ -8378,7 +8349,7 @@ Add values to Number attributes
 			temp = this.get(&#x27;endRadius&#x27;);
 			this.endRadius = temp + items.endRadius;
 		}
-		if (items.shift &amp;&amp; my.xt(my.work.d.Design.shift)) {
+		if (items.shift &amp;&amp; my.xt(this.defs.shift)) {
 			temp = this.get(&#x27;shift&#x27;);
 			this.shift = temp + items.shift;
 		}
@@ -8394,7 +8365,7 @@ _This function is replaced by the animation extension_
 @return This
 @chainable
 **/
-	my.Design.prototype.update = function(entity, cell) {
+	my.Styles.prototype.update = function(entity, cell) {
 		this.makeGradient(entity, cell);
 		this.applyStops();
 		return this;
@@ -8405,11 +8376,11 @@ Returns &amp;lt;canvas&amp;gt; element&#x27;s contenxt engine&#x27;s gradient ob
 @return JavaScript Gradient object, or String
 @private
 **/
-	my.Design.prototype.getData = function() {
-		return (my.xt(my.dsn[this.name])) ? my.dsn[this.name] : &#x27;rgba(0,0,0,0)&#x27;;
+	my.Styles.prototype.getData = function() {
+		return (my.xt(my.sty[this.name])) ? my.sty[this.name] : &#x27;rgba(0,0,0,0)&#x27;;
 	};
 	/**
-Design.update() helper function - builds &amp;lt;canvas&amp;gt; element&#x27;s contenxt engine&#x27;s gradient object
+Styles.update() helper function - builds &amp;lt;canvas&amp;gt; element&#x27;s contenxt engine&#x27;s gradient object
 @method makeGradient
 @param {String} [entity] SPRITENAME String
 @param {String} [cell] CELLNAME String
@@ -8417,7 +8388,7 @@ Design.update() helper function - builds &amp;lt;canvas&amp;gt; element&#x27;s c
 @chainable
 @private
 **/
-	my.Design.prototype.makeGradient = function(entity, cell) {
+	my.Styles.prototype.makeGradient = function(entity, cell) {
 		var ctx,
 			c = my.cell,
 			conv,
@@ -8441,7 +8412,8 @@ Design.update() helper function - builds &amp;lt;canvas&amp;gt; element&#x27;s c
 			w,
 			h,
 			r,
-			v = my.work.v;
+			s,
+			v;
 		entity = my.entity[entity] || false;
 		if (xt(cell)) {
 			cell = (c[cell]) ? c[cell] : c[this.get(&#x27;cell&#x27;)];
@@ -8552,20 +8524,20 @@ Design.update() helper function - builds &amp;lt;canvas&amp;gt; element&#x27;s c
 				r = -entity.roll;
 			}
 			if (entity.roll) {
-				v.set({
+				v = my.requestVector();
+				s = {
 					x: fsx,
-					y: fsy,
-					z: 0
-				}).rotate(r);
+					y: fsy
+				};
+				v.set(s).rotate(r);
 				fsx = v.x;
 				fsy = v.y;
-				v.set({
-					x: fex,
-					y: fey,
-					z: 0
-				}).rotate(r);
+				s.x = fex;
+				s.y = fey;
+				v.set(s).rotate(r);
 				fex = v.x;
 				fey = v.y;
+				my.releaseVector(v);
 			}
 			if (this.type === &#x27;Gradient&#x27;) {
 				g = ctx.createLinearGradient(fsx, fsy, fex, fey);
@@ -8582,24 +8554,24 @@ Design.update() helper function - builds &amp;lt;canvas&amp;gt; element&#x27;s c
 				g = ctx.createRadialGradient(fsx, fsy, sr, fex, fey, er);
 			}
 		}
-		my.dsn[this.name] = g;
+		my.sty[this.name] = g;
 		return this;
 	};
 	/**
-Design.update() helper function - applies color attribute objects to the gradient
+Styles.update() helper function - applies color attribute objects to the gradient
 @method applyStops
 @return This
 @private
 @chainable
 **/
-	my.Design.prototype.applyStops = function() {
+	my.Styles.prototype.applyStops = function() {
 		var color = this.get(&#x27;color&#x27;),
 			i,
 			iz,
-			dsn = my.dsn[this.name];
-		if (dsn) {
+			sty = my.sty[this.name];
+		if (sty) {
 			for (i = 0, iz = color.length; i &lt; iz; i++) {
-				dsn.addColorStop(color[i].stop, color[i].color);
+				sty.addColorStop(color[i].stop, color[i].color);
 			}
 		}
 		return this;
@@ -8609,10 +8581,10 @@ Remove this gradient from the scrawl library
 @method remove
 @return Always true
 **/
-	my.Design.prototype.remove = function() {
-		delete my.dsn[this.name];
-		delete my.design[this.name];
-		my.removeItem(my.designnames, this.name);
+	my.Styles.prototype.remove = function() {
+		delete my.sty[this.name];
+		delete my.styles[this.name];
+		my.removeItem(my.stylesnames, this.name);
 		return true;
 	};
 
@@ -8630,22 +8602,22 @@ Remove this gradient from the scrawl library
 
 ## Access
 
-* scrawl.design.GRADIENTNAME - for the Gradient object
+* scrawl.styles.GRADIENTNAME - for the Gradient object
 
 @class Gradient
 @constructor
-@extends Design
+@extends Styles
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 	my.Gradient = function(items) {
 		items = my.safeObject(items);
-		my.Design.call(this, items);
+		my.Styles.call(this, items);
 		my.Base.prototype.set.call(this, items);
-		my.design[this.name] = this;
-		my.pushUnique(my.designnames, this.name);
+		my.styles[this.name] = this;
+		my.pushUnique(my.stylesnames, this.name);
 		return this;
 	};
-	my.Gradient.prototype = Object.create(my.Design.prototype);
+	my.Gradient.prototype = Object.create(my.Styles.prototype);
 	/**
 @property type
 @type String
@@ -8653,9 +8625,10 @@ Remove this gradient from the scrawl library
 @final
 **/
 	my.Gradient.prototype.type = &#x27;Gradient&#x27;;
-	my.Gradient.prototype.classname = &#x27;designnames&#x27;;
-	my.work.d.Gradient = {};
-	my.mergeInto(my.work.d.Gradient, my.work.d.Design);
+	my.Gradient.prototype.lib = &#x27;styles&#x27;;
+	my.Gradient.prototype.libName = &#x27;stylesnames&#x27;;
+	my.Gradient.prototype.defs = {};
+	my.mergeInto(my.Gradient.prototype.defs, my.Styles.prototype.defs);
 
 	/**
 # RadialGradient
@@ -8671,22 +8644,22 @@ Remove this gradient from the scrawl library
 
 ## Access
 
-* scrawl.design.RADIALGRADIENTNAME - for the RadialGradient object
+* scrawl.styles.RADIALGRADIENTNAME - for the RadialGradient object
 
 @class RadialGradient
 @constructor
-@extends Design
+@extends Styles
 @param {Object} [items] Key:value Object argument for setting attributes
 **/
 	my.RadialGradient = function(items) {
 		items = my.safeObject(items);
-		my.Design.call(this, items);
+		my.Styles.call(this, items);
 		my.Base.prototype.set.call(this, items);
-		my.design[this.name] = this;
-		my.pushUnique(my.designnames, this.name);
+		my.styles[this.name] = this;
+		my.pushUnique(my.stylesnames, this.name);
 		return this;
 	};
-	my.RadialGradient.prototype = Object.create(my.Design.prototype);
+	my.RadialGradient.prototype = Object.create(my.Styles.prototype);
 	/**
 @property type
 @type String
@@ -8694,8 +8667,9 @@ Remove this gradient from the scrawl library
 @final
 **/
 	my.RadialGradient.prototype.type = &#x27;RadialGradient&#x27;;
-	my.RadialGradient.prototype.classname = &#x27;designnames&#x27;;
-	my.work.d.RadialGradient = {
+	my.RadialGradient.prototype.lib = &#x27;styles&#x27;;
+	my.RadialGradient.prototype.libName = &#x27;stylesnames&#x27;;
+	my.RadialGradient.prototype.defs = {
 		/**
 Start circle radius, in pixels or percentage of entity/cell width
 @property startRadius
@@ -8711,17 +8685,7 @@ End circle radius, in pixels or percentage of entity/cell width
 **/
 		endRadius: 0
 	};
-	my.mergeInto(my.work.d.RadialGradient, my.work.d.Design);
-
-	my.work.v = my.makeVector({
-		name: &#x27;scrawl.v&#x27;
-	});
-	my.work.colv1 = my.makeVector({
-		name: &#x27;scrawl.colv1&#x27;
-	});
-	my.work.colv2 = my.makeVector({
-		name: &#x27;scrawl.colv2&#x27;
-	});
+	my.mergeInto(my.RadialGradient.prototype.defs, my.Styles.prototype.defs);
 
 	/**
 A __factory__ function to generate new Animation objects
@@ -8876,8 +8840,9 @@ _This attribute is not retained by the Animation object_
 @final
 **/
 	my.Animation.prototype.type = &#x27;Animation&#x27;;
-	my.Animation.prototype.classname = &#x27;animationnames&#x27;;
-	my.work.d.Animation = {
+	my.Animation.prototype.lib = &#x27;animation&#x27;;
+	my.Animation.prototype.libName = &#x27;animationnames&#x27;;
+	my.Animation.prototype.defs = {
 		/**
 Anonymous function for an animation routine
 @property fn
@@ -8893,7 +8858,7 @@ Lower order animations are run during each frame before higher order ones
 **/
 		order: 0,
 	};
-	my.mergeInto(my.work.d.Animation, my.work.d.Base);
+	my.mergeInto(my.Animation.prototype.defs, my.Base.prototype.defs);
 	/**
 Run an animation
 @method run

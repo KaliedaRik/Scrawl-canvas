@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -304,14 +278,6 @@ scrawlWheel extension adaptions to the scrawl-canvas library object
 **/
 
 		/**
-Alias for makeWheel()
-@method newWheel
-@deprecated
-**/
-		my.newWheel = function(items) {
-			return my.makeWheel(items);
-		};
-		/**
 A __factory__ function to generate new Wheel entitys
 @method makeWheel
 @param {Object} items Key:value Object argument for setting attributes
@@ -328,15 +294,6 @@ A __factory__ function to generate new Wheel entitys
 **/
 		my.makeWheel = function(items) {
 			return new my.Wheel(items);
-		};
-		/**
-Work vector, for wheel-specific calculations
-@property scrawl.work.workwheel
-@type {Vector}
-@private
-**/
-		my.work.workwheel = {
-			v1: my.makeVector(),
 		};
 		/**
 # Wheel
@@ -361,7 +318,7 @@ Work vector, for wheel-specific calculations
 **/
 		my.Wheel = function Wheel(items) {
 			var get = my.xtGet,
-			d = my.work.d.Wheel;
+			d = this.defs;
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
@@ -393,8 +350,9 @@ Circle radius - can be an absolute Numbewr value, or a percentage String value (
 @final
 **/
 		my.Wheel.prototype.type = &#x27;Wheel&#x27;;
-		my.Wheel.prototype.classname = &#x27;entitynames&#x27;;
-		my.work.d.Wheel = {
+		my.Wheel.prototype.lib = &#x27;entity&#x27;;
+		my.Wheel.prototype.libName = &#x27;entitynames&#x27;;
+		my.Wheel.prototype.defs = {
 			/**
 Angle of the path&#x27;s start point, from due east, in degrees
 @property startAngle
@@ -463,7 +421,7 @@ Collision calculation value - collision radius, from start vector
 **/
 			localCheckHitRadius: 0
 		};
-		my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
+		my.mergeInto(my.Wheel.prototype.defs, my.Entity.prototype.defs);
 
 		/**
 Augments Entity.set()
@@ -478,9 +436,6 @@ Augments Entity.set()
 			if (xt(items.radius)) {
 				this.radius = items.radius;
 				this.localRadius = this.setRadius(this.radius);
-				this.width = this.localRadius * 2;
-				this.height = this.width;
-				this.maxDimensions.flag = true;
 			}
 			if (xt(items.checkHitRadius)) {
 				this.localCheckHitRadius = this.setRadius(this.checkHitRadius);
@@ -505,6 +460,15 @@ set helper function
 			return 0;
 		};
 		/**
+get the current radius value, in pixels
+@method getRadius
+@return Number - local radius value
+@private
+**/
+		my.Wheel.prototype.getRadius = function(item) {
+			return this.localRadius;
+		};
+		/**
 Augments Entity.setDelta()
 @method setDelta
 @param {Object} items Object consisting of key:value attributes
@@ -522,9 +486,6 @@ Augments Entity.setDelta()
 					this.radius = my.addPercentages(this.radius, items.radius);
 				}
 				this.localRadius += r;
-				this.width = this.localRadius * 2;
-				this.height = this.width;
-				this.maxDimensions.flag = true;
 			}
 			if (xt(items.checkHitRadius)) {
 				r = this.setRadius(items.checkHitRadius);
@@ -565,7 +526,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				result,
 				testRadius,
 				cvx = my.work.cvx,
-				v1 = my.work.workwheel.v1,
+				v1,
 				handle,
 				start,
 				scale,
@@ -586,6 +547,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 				scale = this.scale;
 				reverse = this.flipReverse;
 				upend = this.flipUpend;
+				v1 = my.requestVector();
 				for (i = 0, iz = tests.length; i &lt; iz; i += 2) {
 					v1.x = tests[i];
 					v1.y = tests[i + 1];
@@ -600,6 +562,7 @@ If the __checkHitUsingRadius__ attribute is true, collisions will be detected us
 						break;
 					}
 				}
+				my.releaseVector(v1);
 			}
 			else {
 				this.buildPath(cvx);
@@ -828,135 +791,82 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				i,
 				iz,
 				j,
-				v1, v2;
-			if (my.xt(my.workcols)) {
-				v1 = my.workcols.v1;
-				v2 = my.workcols.v2;
-				this.collisionVectors.length = 0;
-				v1.x = this.localRadius;
-				v1.y = 0;
-				p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
-				for (i = 0, iz = p.length; i &lt; iz; i++) {
-					if (p[i].toFixed &amp;&amp; p[i] &gt; 1) {
-						v2.set(v1);
-						r = 360 / Math.floor(p[i]);
-						for (j = 0; j &lt; p[i]; j++) {
-							v2.rotate(r);
-							this.collisionVectors.push(v2.x);
-							this.collisionVectors.push(v2.y);
-						}
-					}
-					else if (p[i].substring) {
-						v2.set(v1);
-						switch (p[i]) {
-							case &#x27;start&#x27;:
-								this.collisionVectors.push(0);
-								this.collisionVectors.push(0);
-								break;
-							case &#x27;N&#x27;:
-								v2.rotate(-90);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case &#x27;NE&#x27;:
-								v2.rotate(-45);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case &#x27;E&#x27;:
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case &#x27;SE&#x27;:
-								v2.rotate(45);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case &#x27;S&#x27;:
-								v2.rotate(90);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case &#x27;SW&#x27;:
-								v2.rotate(135);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case &#x27;W&#x27;:
-								v2.rotate(180);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case &#x27;NW&#x27;:
-								v2.rotate(-135);
-								this.collisionVectors.push(v2.x);
-								this.collisionVectors.push(v2.y);
-								break;
-							case &#x27;center&#x27;:
-								this.collisionVectors.push(0);
-								this.collisionVectors.push(0);
-								break;
-						}
-					}
-					else if (my.isa_vector(p[i])) {
-						this.collisionVectors.push(p[i].x);
-						this.collisionVectors.push(p[i].y);
+				v1 = my.requestVector(),
+				v2 = my.requestVector();
+			this.collisionVectors.length = 0;
+			v1.x = this.localRadius;
+			v1.y = 0;
+			p = (my.xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
+			for (i = 0, iz = p.length; i &lt; iz; i++) {
+				if (p[i].toFixed &amp;&amp; p[i] &gt; 1) {
+					v2.set(v1);
+					r = 360 / Math.floor(p[i]);
+					for (j = 0; j &lt; p[i]; j++) {
+						v2.rotate(r);
+						this.collisionVectors.push(v2.x);
+						this.collisionVectors.push(v2.y);
 					}
 				}
+				else if (p[i].substring) {
+					v2.set(v1);
+					switch (p[i]) {
+						case &#x27;start&#x27;:
+							this.collisionVectors.push(0);
+							this.collisionVectors.push(0);
+							break;
+						case &#x27;N&#x27;:
+							v2.rotate(-90);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case &#x27;NE&#x27;:
+							v2.rotate(-45);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case &#x27;E&#x27;:
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case &#x27;SE&#x27;:
+							v2.rotate(45);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case &#x27;S&#x27;:
+							v2.rotate(90);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case &#x27;SW&#x27;:
+							v2.rotate(135);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case &#x27;W&#x27;:
+							v2.rotate(180);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case &#x27;NW&#x27;:
+							v2.rotate(-135);
+							this.collisionVectors.push(v2.x);
+							this.collisionVectors.push(v2.y);
+							break;
+						case &#x27;center&#x27;:
+							this.collisionVectors.push(0);
+							this.collisionVectors.push(0);
+							break;
+					}
+				}
+				else if (my.isa_vector(p[i])) {
+					this.collisionVectors.push(p[i].x);
+					this.collisionVectors.push(p[i].y);
+				}
 			}
+			my.releaseVector(v1);
+			my.releaseVector(v2);
 			return this;
-		};
-
-		/**
-Calculate the box position of the entity
-
-Returns an object with the following attributes:
-
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-
-@method getMaxDimensions
-@param {Object} cell object
-@param {Object} entity object
-@return dimensions object
-@private
-**/
-		my.Wheel.prototype.getMaxDimensions = function(cell) {
-			var rad = (this.localRadius * this.scale),
-				w = cell.actualWidth,
-				h = cell.actualHeight,
-				line = my.ctx[this.context].lineWidth || 0,
-				ceil = Math.ceil,
-				floor = Math.floor,
-				md = this.maxDimensions,
-				roll = this.roll,
-				t, l, b, r,
-				v = my.work.v;
-			v.set(this.currentHandle);
-			v.x = (this.flipReverse) ? -v.x : v.x;
-			v.y = (this.flipUpend) ? -v.y : v.y;
-			if (roll) {
-				v.rotate(roll).vectorAdd(this.currentStart);
-			}
-			else {
-				v.vectorAdd(this.currentStart);
-			}
-			t = v.y - line - rad;
-			t = (t &lt; 0) ? 0 : t;
-			b = v.y + line + rad;
-			b = (b &gt; h) ? h : b;
-			l = v.x - line - rad;
-			l = (l &lt; 0) ? 0 : l;
-			r = v.x + line + rad;
-			r = (r &gt; w) ? w : r;
-			md.top = floor(t);
-			md.bottom = ceil(b);
-			md.left = floor(l);
-			md.right = ceil(r);
-			md.flag = false;
-			return md;
 		};
 
 		return my;

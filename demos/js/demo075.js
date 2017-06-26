@@ -101,7 +101,9 @@ var mycode = function() {
 			checkBounds();
 			checkCollisions();
 			// this is a bugfix to make collision detection work as expected!
-			myGroup.updateEntitysBy({scale: 0});
+			myGroup.updateEntitysBy({
+				scale: 0
+			});
 			myGroup.updateStart();
 			scrawl.render();
 

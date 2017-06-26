@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -300,34 +274,25 @@ if (window.scrawl &amp;&amp; window.scrawl.work.extensions &amp;&amp; !window.sc
 
 		/**
 Object containing a set of vectors, for link calculations
-@property scrawl.work.worklink
+@property scrawl.linkvectors
 @type {Object}
 @private
 **/
-		my.work.worklink = {
+		my.linkvectors = {
 			start: my.makeVector({
-				name: &#x27;scrawl.worklink.start&#x27;
+				name: &#x27;scrawl.linkvectors.start&#x27;
 			}),
 			end: my.makeVector({
-				name: &#x27;scrawl.worklink.end&#x27;
+				name: &#x27;scrawl.linkvectors.end&#x27;
 			}),
 			control1: my.makeVector({
-				name: &#x27;scrawl.worklink.control1&#x27;
+				name: &#x27;scrawl.linkvectors.control1&#x27;
 			}),
 			control2: my.makeVector({
-				name: &#x27;scrawl.worklink.control2&#x27;
+				name: &#x27;scrawl.linkvectors.control2&#x27;
 			}),
-			v1: my.makeVector({
-				name: &#x27;scrawl.worklink.v1&#x27;
-			}),
-			v2: my.makeVector({
-				name: &#x27;scrawl.worklink.v2&#x27;
-			}),
-			v3: my.makeVector({
-				name: &#x27;scrawl.worklink.v3&#x27;
-			}),
-			point: my.makeVector({
-				name: &#x27;scrawl.worklink.point&#x27;
+			here: my.makeVector({
+				name: &#x27;scrawl.linkvectors.here&#x27;
 			})
 		};
 
@@ -401,26 +366,26 @@ Clone a Scrawl.js object, optionally altering attribute values in the cloned obj
 			delete b.context; //required for successful cloning of entitys
 			return (this.type === &#x27;Path&#x27;) ? my.makePath(b) : new my[this.type](b);
 		};
-		my.work.d.Position.pathPlace = 0;
-		my.work.d.Position.pathRoll = 0;
-		my.work.d.Position.addPathRoll = false;
-		my.work.d.Position.path = &#x27;&#x27;;
-		my.mergeInto(my.work.d.Cell, my.work.d.Position);
-		my.mergeInto(my.work.d.Entity, my.work.d.Position);
-		if (my.xt(my.work.d.Block)) {
-			my.mergeInto(my.work.d.Block, my.work.d.Entity);
+		my.Position.prototype.defs.pathPlace = 0;
+		my.Position.prototype.defs.pathRoll = 0;
+		my.Position.prototype.defs.addPathRoll = false;
+		my.Position.prototype.defs.path = &#x27;&#x27;;
+		my.mergeInto(my.Cell.prototype.defs, my.Position.prototype.defs);
+		my.mergeInto(my.Entity.prototype.defs, my.Position.prototype.defs);
+		if (my.xt(my.Block)) {
+			my.mergeInto(my.Block.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Shape)) {
-			my.mergeInto(my.work.d.Shape, my.work.d.Entity);
+		if (my.xt(my.Shape)) {
+			my.mergeInto(my.Shape.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Wheel)) {
-			my.mergeInto(my.work.d.Wheel, my.work.d.Entity);
+		if (my.xt(my.Wheel)) {
+			my.mergeInto(my.Wheel.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Picture)) {
-			my.mergeInto(my.work.d.Picture, my.work.d.Entity);
+		if (my.xt(my.Picture)) {
+			my.mergeInto(my.Picture.prototype.defs, my.Entity.prototype.defs);
 		}
-		if (my.xt(my.work.d.Phrase)) {
-			my.mergeInto(my.work.d.Phrase, my.work.d.Entity);
+		if (my.xt(my.Phrase)) {
+			my.mergeInto(my.Phrase.prototype.defs, my.Entity.prototype.defs);
 		}
 		/**
 Position constructor hook function - modified by path module
@@ -429,7 +394,7 @@ Position constructor hook function - modified by path module
 **/
 		my.Position.prototype.pathPositionInit = function(items) {
 			var get = my.xtGet,
-			d = my.work.d[this.type];
+			d = this.defs;
 			this.path = get(items.path, d.path);
 			this.pathRoll = get(items.pathRoll, d.pathRoll);
 			this.addPathRoll = get(items.addPathRoll, d.addPathRoll);
@@ -479,26 +444,7 @@ Entity.stamp hook function - modified by path module
 				current.x = start.x = (!this.lockX) ? here.x : current.x;
 				current.y = start.y = (!this.lockY) ? here.y : current.y;
 				this.pathRoll = here.r || 0;
-				this.maxDimensions.flag = true;
 			}
-		};
-		/**
-Alias for makePoint()
-@method newPoint
-@deprecated
-@private
-**/
-		my.newPoint = function(items) {
-			return my.makePoint(items);
-		};
-		/**
-Alias for makeLink()
-@method newLink
-@deprecated
-@private
-**/
-		my.newLink = function(items) {
-			return my.makeLink(items);
 		};
 		/**
 A __factory__ function to generate new Point objects
@@ -587,7 +533,6 @@ A __factory__ function to generate new Path entitys
 			v = 0;
 			myPivot = get(my.point[items.pivot], my.entity[items.pivot], false);
 			if (myPivot) {
-				// temp = get(myPivot.local, myPivot.place, myPivot.start, false);
 				temp = get(myPivot.local, myPivot.place, myPivot.currentStart, false);
 				temp = so(temp);
 				items.startX = get(temp.x, 0);
@@ -993,8 +938,9 @@ Additional factory functions to instantiate Path objects are available in the __
 @final
 **/
 		my.Path.prototype.type = &#x27;Path&#x27;;
-		my.Path.prototype.classname = &#x27;entitynames&#x27;;
-		my.work.d.Path = {
+		my.Path.prototype.lib = &#x27;entity&#x27;;
+		my.Path.prototype.libName = &#x27;entitynames&#x27;;
+		my.Path.prototype.defs = {
 			/**
 POINTNAME of the Point object that commences the drawing operation
 
@@ -1106,7 +1052,7 @@ Set the iterations required for calculating path length and positioning data - h
 **/
 			precision: 10,
 		};
-		my.mergeInto(my.work.d.Path, my.work.d.Entity);
+		my.mergeInto(my.Path.prototype.defs, my.Entity.prototype.defs);
 		/**
 Helper function - define the entity&#x27;s path on the &amp;lt;canvas&amp;gt; element&#x27;s context engine
 @method prepareShape
@@ -1552,14 +1498,21 @@ Calculate coordinates of point at given distance along the Shape entity&#x27;s p
 							here = (local) ? link.getLocalSteadyPositionOnLink(linkVal) : link.getSteadyPositionOnLink(linkVal);
 							result.x = here.x;
 							result.y = here.y;
-							result.r = angle;
-							if (between(result.r, -0.00001, 0.00001)) {
-								result.r = 0;
+							if (angle &lt; -0.00001 || angle &gt; 0.00001) {
+								result.r = angle;
 							}
 							return result;
 						}
 						else {
-							return (local) ? link.getLocalSteadyPositionOnLink(linkVal) : link.getSteadyPositionOnLink(linkVal);
+							if (local) {
+								temp = link.getLocalSteadyPositionOnLink(linkVal);
+							}
+							else {
+								temp = link.getSteadyPositionOnLink(linkVal);
+							}
+							result.x = temp.x;
+							result.y = temp.y;
+							return result;
 						}
 					}
 					else {
@@ -1574,14 +1527,21 @@ Calculate coordinates of point at given distance along the Shape entity&#x27;s p
 							here = (local) ? link.getLocalPositionOnLink(linkVal) : link.getPositionOnLink(linkVal);
 							result.x = here.x;
 							result.y = here.y;
-							result.r = angle;
-							if (between(result.r, -0.00001, 0.00001)) {
-								result.r = 0;
+							if (angle &lt; -0.00001 || angle &gt; 0.00001) {
+								result.r = angle;
 							}
 							return result;
 						}
 						else {
-							return (local) ? link.getLocalPositionOnLink(linkVal) : link.getPositionOnLink(linkVal);
+							if (local) {
+								temp = link.getLocalPositionOnLink(linkVal);
+							}
+							else {
+								temp = link.getPositionOnLink(linkVal);
+							}
+							result.x = temp.x;
+							result.y = temp.y;
+							return result;
 						}
 					}
 				}
@@ -1658,7 +1618,7 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				currentPos,
 				xt = my.xt,
 				vec = my.isa_vector;
-			if (xt(my.work.d.Path.fieldChannel)) {
+			if (xt(this.defs.fieldChannel)) {
 				p = (xt(items)) ? this.parseCollisionPoints(items) : this.collisionPoints;
 				this.collisionVectors.length = 0;
 				currentPos = 0;
@@ -1696,30 +1656,6 @@ Parses the collisionPoints array to generate coordinate Vectors representing the
 				}
 			}
 			return this;
-		};
-		/**
-Calculate the box position of the entity
-
-Returns an object with the following attributes:
-
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-
-@method getMaxDimensions
-@param {Object} cell object
-@param {Object} entity object
-@return dimensions object
-@private
-**/
-		my.Path.prototype.getMaxDimensions = function(cell) {
-			this.maxDimensions.top = 0;
-			this.maxDimensions.bottom = cell.actualHeight;
-			this.maxDimensions.left = 0;
-			this.maxDimensions.right = cell.actualWidth;
-			this.maxDimensions.flag = false;
-			return this.maxDimensions;
 		};
 
 		/**
@@ -1789,8 +1725,9 @@ Path creation factories will all create Point objects automatically as part of t
 @final
 **/
 		my.Point.prototype.type = &#x27;Point&#x27;;
-		my.Point.prototype.classname = &#x27;pointnames&#x27;;
-		my.work.d.Point = {
+		my.Point.prototype.lib = &#x27;point&#x27;;
+		my.Point.prototype.libName = &#x27;pointnames&#x27;;
+		my.Point.prototype.defs = {
 			/**
 SPRITENAME String of point object&#x27;s parent entity
 @property entity
@@ -1847,7 +1784,7 @@ Fixed attribute is used to fix the Point to a specific Cell coordinate Vector (t
 **/
 			fixed: false,
 		};
-		my.mergeInto(my.work.d.Point, my.work.d.Base);
+		my.mergeInto(my.Point.prototype.defs, my.Base.prototype.defs);
 		/**
 Augments Base.set(), to allow users to set the local attributes using startX, startY, currentX, currentY, distance, angle
 @method set
@@ -2012,7 +1949,7 @@ Return object has the following attributes:
 					current: null,
 					startLink: null
 				},
-				vec = (xt(v) &amp;&amp; v.type === &#x27;Vector&#x27;) ? v : my.work.worklink.point,
+				vec = (xt(v) &amp;&amp; v.type === &#x27;Vector&#x27;) ? v : my.linkvectors.here,
 				entity = my.entity,
 				point = my.point,
 				local = this.local;
@@ -2030,7 +1967,6 @@ Return object has the following attributes:
 							vec.set(myPivot.get(&#x27;place&#x27;));
 						}
 						else {
-							// vec.set(myPivot.start);
 							vec.set(myPivot.currentStart);
 						}
 					}
@@ -2115,7 +2051,7 @@ Set Point.fixed attribute
 **/
 		my.Link = function(items) {
 			var get = my.xtGet,
-			d = my.work.d.Link,
+			d = this.defs,
 			pu = my.pushUnique;
 			items = my.safeObject(items);
 			my.Base.call(this, items);
@@ -2144,8 +2080,9 @@ Set Point.fixed attribute
 @final
 **/
 		my.Link.prototype.type = &#x27;Link&#x27;;
-		my.Link.prototype.classname = &#x27;linknames&#x27;;
-		my.work.d.Link = {
+		my.Link.prototype.lib = &#x27;link&#x27;;
+		my.Link.prototype.libName = &#x27;linknames&#x27;;
+		my.Link.prototype.defs = {
 			/**
 Type of link - permitted values include: &#x27;line&#x27;, &#x27;quadratic&#x27;, &#x27;bezier&#x27;
 @property species
@@ -2236,7 +2173,7 @@ Positions Arrays along the length of the Link&#x27;s path - these values will be
 **/
 			positionsCumulativeLength: []
 		};
-		my.mergeInto(my.work.d.Link, my.work.d.Base);
+		my.mergeInto(my.Link.prototype.defs, my.Base.prototype.defs);
 		/**
 Augments Base.set()
 @method set
@@ -2292,7 +2229,7 @@ Result Object contains the following attributes:
 **/
 		my.Link.prototype.getPointCoordinates = function() {
 			var vector,
-				worklink = my.work.worklink,
+				worklink = my.linkvectors,
 				start = worklink.start,
 				end = worklink.end,
 				c1 = worklink.control1,
@@ -2314,13 +2251,13 @@ Result Object contains the following attributes:
 			c2.x = vector.x || 0;
 			c2.y = vector.y || 0;
 			c2.z = vector.z || 0;
-			return my.work.worklink;
+			return my.linkvectors;
 		};
 		/**
 Position calculation helper function
 @method getLocalPositionOnLink
 @param {Number} [val] - distance along link, where 0 = start and 1 = end
-@return coordinate Vector
+@return coordinate Vector - pool vector NOT released
 @private
 **/
 		my.Link.prototype.getLocalPositionOnLink = function(val) {
@@ -2336,9 +2273,9 @@ Position calculation helper function
 					y: 0,
 					z: 0
 				},
-				work = my.work.worklink,
+				work = my.linkvectors,
 				pol = this.pointOnLine,
-				vec = work.v1.zero();
+				vec = work.here.zero();
 			val = (my.xt(val) &amp;&amp; val.toFixed) ? val : 1;
 			this.getPointCoordinates();
 			switch (this.species) {
@@ -2392,21 +2329,24 @@ Position calculation helper function
 				i,
 				iz,
 				pcl = this.positionsCumulativeLength,
-				v1 = my.work.worklink.v1,
-				v2 = my.work.worklink.v2;
+				v1, v2;
 			val = (my.xt(val) &amp;&amp; val.toFixed) ? val : 1;
 			precision = my.entity[this.entity].get(&#x27;precision&#x27;);
 			distance = this.length * val;
 			distance = (distance &gt; pcl[precision]) ? pcl[precision] : ((distance &lt; 0) ? 0 : distance);
 			for (i = 1; i &lt;= precision; i++) {
 				if (distance &lt;= pcl[i]) {
+					v1 = my.requestVector();
+					v2 = my.linkvectors.here;
 					v1.x = this.positionsX[i - 1];
 					v1.y = this.positionsY[i - 1];
 					v2.x = this.positionsX[i];
 					v2.y = this.positionsY[i];
 					v2.vectorSubtract(v1);
 					dPos = (distance - pcl[i - 1]) / this.positionsLength[i];
-					return v2.scalarMultiply(dPos).vectorAdd(v1);
+					v2.scalarMultiply(dPos).vectorAdd(v1);
+					my.releaseVector(v1);
+					return v2;
 				}
 			}
 			return false;
@@ -2456,13 +2396,16 @@ Returns length of Link, in pixels
 				entity = my.entity[this.entity],
 				temp,
 				j,
-				v2 = my.work.worklink.v2,
-				v3 = my.work.worklink.v3;
+				v2, v3,
+				vFlag = false;
 			if (this.action === &#x27;add&#x27;) {
 				pts = this.getPointCoordinates();
 				precision = (my.xt(val) &amp;&amp; val.toFixed &amp;&amp; val &gt; 0) ? val : entity.get(&#x27;precision&#x27;);
 				step = 1 / precision;
 				cumLen = 0;
+				v2 = my.requestVector();
+				v3 = my.requestVector();
+				vFlag = true;
 				v2.set(pts.start);
 				temp = entity.roll;
 				this.positionsX.length = 0;
@@ -2476,7 +2419,7 @@ Returns length of Link, in pixels
 				entity.roll = 0;
 				for (j = 1; j &lt;= precision; j++) {
 					pos = step * ((j - 1) + 1);
-					here = this.getPositionOnLink(pos); //my.work.worklink.v1
+					here = this.getPositionOnLink(pos); //my.linkvectors.here
 					here.vectorSubtract(entity.currentStart);
 					v3.set(here);
 					dist = here.vectorSubtract(v2).getMagnitude();
@@ -2489,6 +2432,10 @@ Returns length of Link, in pixels
 				}
 				this.length = this.positionsCumulativeLength[precision];
 				entity.roll = temp;
+			}
+			if (vFlag) {
+				my.releaseVector(v2);
+				my.releaseVector(v3);
 			}
 			return this;
 		};
@@ -2554,7 +2501,7 @@ sketch helper object
 			},
 			line: function(ctx, item) {
 				var p = my.point,
-					myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.linkvectors.end);
 				ctx.lineTo(
 					myEnd.x,
 					myEnd.y
@@ -2563,8 +2510,8 @@ sketch helper object
 			},
 			quadratic: function(ctx, item) {
 				var p = my.point,
-					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.work.worklink.control1),
-					myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
+					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.linkvectors.control1),
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.linkvectors.end);
 				ctx.quadraticCurveTo(
 					myCon1.x,
 					myCon1.y,
@@ -2575,9 +2522,9 @@ sketch helper object
 			},
 			bezier: function(ctx, item) {
 				var p = my.point,
-					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.work.worklink.control1),
-					myCon2 = p[item.controlPoint2].getCurrentCoordinates(my.work.worklink.control2),
-					myEnd = p[item.endPoint].getCurrentCoordinates(my.work.worklink.end);
+					myCon1 = p[item.controlPoint1].getCurrentCoordinates(my.linkvectors.control1),
+					myCon2 = p[item.controlPoint2].getCurrentCoordinates(my.linkvectors.control2),
+					myEnd = p[item.endPoint].getCurrentCoordinates(my.linkvectors.end);
 				ctx.bezierCurveTo(
 					myCon1.x,
 					myCon1.y,

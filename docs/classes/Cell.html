@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -266,7 +240,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlCore.js.html#l4859"><code>source\scrawlCore.js:4859</code></a>
+            Defined in: <a href="../files/source_scrawlCore.js.html#l4785"><code>source\scrawlCore.js:4785</code></a>
         </div>
     
 
@@ -355,7 +329,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4859"><code>source\scrawlCore.js:4859</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4785"><code>source\scrawlCore.js:4785</code></a>
         
         </p>
 
@@ -533,13 +507,6 @@
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_filtersCellInit">filtersCellInit</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item method inherited">
                                 <a href="#method_get">get</a>
 
@@ -577,6 +544,13 @@
                         
                             <li class="index-item method private">
                                 <a href="#method_groupSort">groupSort</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_makeName">makeName</a>
 
                                 
                                 
@@ -1089,13 +1063,6 @@
                                 
                             </li>
                         
-                            <li class="index-item property private inherited">
-                                <a href="#property_maxDimensions">maxDimensions</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item property inherited">
                                 <a href="#property_mouseIndex">mouseIndex</a>
 
@@ -1284,7 +1251,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5257"><code>source\scrawlCore.js:5257</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5177"><code>source\scrawlCore.js:5177</code></a>
         
         </p>
 
@@ -1341,7 +1308,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5210"><code>source\scrawlCore.js:5210</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5130"><code>source\scrawlCore.js:5130</code></a>
         
         </p>
 
@@ -1398,7 +1365,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5520"><code>source\scrawlCore.js:5520</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5437"><code>source\scrawlCore.js:5437</code></a>
         
         </p>
 
@@ -1452,7 +1419,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3477"><code>source\scrawlCore.js:3477</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3411"><code>source\scrawlCore.js:3411</code></a>
         
         </p>
 
@@ -1506,7 +1473,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3197"><code>source\scrawlCore.js:3197</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3135"><code>source\scrawlCore.js:3135</code></a>
         
         </p>
 
@@ -1560,7 +1527,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3145"><code>source\scrawlCore.js:3145</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3083"><code>source\scrawlCore.js:3083</code></a>
         
         </p>
 
@@ -1614,7 +1581,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3294"><code>source\scrawlCore.js:3294</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3229"><code>source\scrawlCore.js:3229</code></a>
         
         </p>
 
@@ -1675,7 +1642,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5930"><code>source\scrawlCore.js:5930</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5833"><code>source\scrawlCore.js:5833</code></a>
         
         </p>
 
@@ -1750,7 +1717,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6200"><code>source\scrawlCore.js:6200</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6102"><code>source\scrawlCore.js:6102</code></a>
         
         </p>
 
@@ -1833,7 +1800,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3446"><code>source\scrawlCore.js:3446</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3380"><code>source\scrawlCore.js:3380</code></a>
         
         </p>
 
@@ -1926,7 +1893,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5198"><code>source\scrawlCore.js:5198</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5124"><code>source\scrawlCore.js:5124</code></a>
         
         </p>
 
@@ -1987,7 +1954,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5953"><code>source\scrawlCore.js:5953</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5856"><code>source\scrawlCore.js:5856</code></a>
         
         </p>
 
@@ -1999,7 +1966,6 @@
 
     <div class="description">
         <p>Prepare to draw entitys onto the Cell&#39;s &lt;canvas&gt; element, in line with the Cell&#39;s group Array</p>
-<p>(This function is replaced by the Filters extension)</p>
 
     </div>
 
@@ -2073,7 +2039,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6160"><code>source\scrawlCore.js:6160</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6062"><code>source\scrawlCore.js:6062</code></a>
         
         </p>
 
@@ -2166,7 +2132,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5113"><code>source\scrawlCore.js:5113</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5039"><code>source\scrawlCore.js:5039</code></a>
         
         </p>
 
@@ -2238,7 +2204,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3726"><code>source\scrawlCore.js:3726</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3661"><code>source\scrawlCore.js:3661</code></a>
         
         </p>
 
@@ -2314,63 +2280,6 @@
 </div>
 
                 
-                    <div id="method_filtersCellInit" class="method item private">
-    <h3 class="name"><code>filtersCellInit</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l5204"><code>source\scrawlCore.js:5204</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Cell constructor hook function - modified by filters extension</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="method_get" class="method item">
     <h3 class="name"><code>get</code></h3>
 
@@ -2417,7 +2326,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5216"><code>source\scrawlCore.js:5216</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5136"><code>source\scrawlCore.js:5136</code></a>
         
         </p>
 
@@ -2522,7 +2431,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6304"><code>source\scrawlCore.js:6304</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6206"><code>source\scrawlCore.js:6206</code></a>
         
         </p>
 
@@ -2634,7 +2543,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3485"><code>source\scrawlCore.js:3485</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3419"><code>source\scrawlCore.js:3419</code></a>
         
         </p>
 
@@ -2728,7 +2637,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3181"><code>source\scrawlCore.js:3181</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3119"><code>source\scrawlCore.js:3119</code></a>
         
         </p>
 
@@ -2796,7 +2705,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3189"><code>source\scrawlCore.js:3189</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3127"><code>source\scrawlCore.js:3127</code></a>
         
         </p>
 
@@ -2869,7 +2778,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5918"><code>source\scrawlCore.js:5918</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5821"><code>source\scrawlCore.js:5821</code></a>
         
         </p>
 
@@ -2894,6 +2803,111 @@
                 
                     
                     <p>nothing</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeName" class="method item private inherited">
+    <h3 class="name"><code>makeName</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[suggestedName]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_makeName">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2327"><code>source\scrawlCore.js:2327</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Generate unique names for new Scrawl objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[suggestedName]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>String of the suggested name</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>always true</p>
 
                 
             </div>
@@ -2955,7 +2969,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2486"><code>source\scrawlCore.js:2486</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2448"><code>source\scrawlCore.js:2448</code></a>
         
         </p>
 
@@ -3063,7 +3077,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2478"><code>source\scrawlCore.js:2478</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2440"><code>source\scrawlCore.js:2440</code></a>
         
         </p>
 
@@ -3129,7 +3143,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3151"><code>source\scrawlCore.js:3151</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3089"><code>source\scrawlCore.js:3089</code></a>
         
         </p>
 
@@ -3183,7 +3197,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3440"><code>source\scrawlCore.js:3440</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3374"><code>source\scrawlCore.js:3374</code></a>
         
         </p>
 
@@ -3240,7 +3254,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6020"><code>source\scrawlCore.js:6020</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5922"><code>source\scrawlCore.js:5922</code></a>
         
         </p>
 
@@ -3313,7 +3327,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5999"><code>source\scrawlCore.js:5999</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5901"><code>source\scrawlCore.js:5901</code></a>
         
         </p>
 
@@ -3410,7 +3424,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6294"><code>source\scrawlCore.js:6294</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6196"><code>source\scrawlCore.js:6196</code></a>
         
         </p>
 
@@ -3485,7 +3499,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6217"><code>source\scrawlCore.js:6217</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6119"><code>source\scrawlCore.js:6119</code></a>
         
         </p>
 
@@ -3570,7 +3584,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5974"><code>source\scrawlCore.js:5974</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5876"><code>source\scrawlCore.js:5876</code></a>
         
         </p>
 
@@ -3667,7 +3681,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6284"><code>source\scrawlCore.js:6284</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6186"><code>source\scrawlCore.js:6186</code></a>
         
         </p>
 
@@ -3750,7 +3764,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5265"><code>source\scrawlCore.js:5265</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5185"><code>source\scrawlCore.js:5185</code></a>
         
         </p>
 
@@ -3864,7 +3878,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5374"><code>source\scrawlCore.js:5374</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5291"><code>source\scrawlCore.js:5291</code></a>
         
         </p>
 
@@ -3993,7 +4007,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5394"><code>source\scrawlCore.js:5394</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5311"><code>source\scrawlCore.js:5311</code></a>
         
         </p>
 
@@ -4104,7 +4118,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6026"><code>source\scrawlCore.js:6026</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5928"><code>source\scrawlCore.js:5928</code></a>
         
         </p>
 
@@ -4181,7 +4195,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5450"><code>source\scrawlCore.js:5450</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5367"><code>source\scrawlCore.js:5367</code></a>
         
         </p>
 
@@ -4310,7 +4324,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5501"><code>source\scrawlCore.js:5501</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5418"><code>source\scrawlCore.js:5418</code></a>
         
         </p>
 
@@ -4439,7 +4453,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5464"><code>source\scrawlCore.js:5464</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5381"><code>source\scrawlCore.js:5381</code></a>
         
         </p>
 
@@ -4562,7 +4576,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5526"><code>source\scrawlCore.js:5526</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5443"><code>source\scrawlCore.js:5443</code></a>
         
         </p>
 
@@ -4677,7 +4691,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5623"><code>source\scrawlCore.js:5623</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5535"><code>source\scrawlCore.js:5535</code></a>
         
         </p>
 
@@ -4807,7 +4821,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5647"><code>source\scrawlCore.js:5647</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5559"><code>source\scrawlCore.js:5559</code></a>
         
         </p>
 
@@ -4937,7 +4951,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5775"><code>source\scrawlCore.js:5775</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5687"><code>source\scrawlCore.js:5687</code></a>
         
         </p>
 
@@ -5067,7 +5081,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5693"><code>source\scrawlCore.js:5693</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5605"><code>source\scrawlCore.js:5605</code></a>
         
         </p>
 
@@ -5197,7 +5211,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5730"><code>source\scrawlCore.js:5730</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5642"><code>source\scrawlCore.js:5642</code></a>
         
         </p>
 
@@ -5321,7 +5335,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5595"><code>source\scrawlCore.js:5595</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5507"><code>source\scrawlCore.js:5507</code></a>
         
         </p>
 
@@ -5426,7 +5440,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3365"><code>source\scrawlCore.js:3365</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3299"><code>source\scrawlCore.js:3299</code></a>
         
         </p>
 
@@ -5530,7 +5544,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3426"><code>source\scrawlCore.js:3426</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3360"><code>source\scrawlCore.js:3360</code></a>
         
         </p>
 
@@ -5643,7 +5657,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5745"><code>source\scrawlCore.js:5745</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5657"><code>source\scrawlCore.js:5657</code></a>
         
         </p>
 
@@ -5773,7 +5787,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5671"><code>source\scrawlCore.js:5671</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5583"><code>source\scrawlCore.js:5583</code></a>
         
         </p>
 
@@ -5903,7 +5917,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5708"><code>source\scrawlCore.js:5708</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5620"><code>source\scrawlCore.js:5620</code></a>
         
         </p>
 
@@ -6027,7 +6041,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5609"><code>source\scrawlCore.js:5609</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5521"><code>source\scrawlCore.js:5521</code></a>
         
         </p>
 
@@ -6132,7 +6146,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3388"><code>source\scrawlCore.js:3388</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3322"><code>source\scrawlCore.js:3322</code></a>
         
         </p>
 
@@ -6236,7 +6250,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3342"><code>source\scrawlCore.js:3342</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3276"><code>source\scrawlCore.js:3276</code></a>
         
         </p>
 
@@ -6340,7 +6354,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3412"><code>source\scrawlCore.js:3412</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3346"><code>source\scrawlCore.js:3346</code></a>
         
         </p>
 
@@ -6447,7 +6461,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6256"><code>source\scrawlCore.js:6256</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6158"><code>source\scrawlCore.js:6158</code></a>
         
         </p>
 
@@ -6548,7 +6562,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5354"><code>source\scrawlCore.js:5354</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5271"><code>source\scrawlCore.js:5271</code></a>
         
         </p>
 
@@ -6623,7 +6637,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5334"><code>source\scrawlCore.js:5334</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5251"><code>source\scrawlCore.js:5251</code></a>
         
         </p>
 
@@ -6706,7 +6720,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5801"><code>source\scrawlCore.js:5801</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5713"><code>source\scrawlCore.js:5713</code></a>
         
         </p>
 
@@ -6810,7 +6824,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3264"><code>source\scrawlCore.js:3264</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3200"><code>source\scrawlCore.js:3200</code></a>
         
         </p>
 
@@ -6905,7 +6919,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6101"><code>source\scrawlCore.js:6101</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6003"><code>source\scrawlCore.js:6003</code></a>
         
         </p>
 
@@ -6982,7 +6996,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5414"><code>source\scrawlCore.js:5414</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5331"><code>source\scrawlCore.js:5331</code></a>
         
         </p>
 
@@ -7111,7 +7125,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5478"><code>source\scrawlCore.js:5478</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5395"><code>source\scrawlCore.js:5395</code></a>
         
         </p>
 
@@ -7240,7 +7254,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5432"><code>source\scrawlCore.js:5432</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5349"><code>source\scrawlCore.js:5349</code></a>
         
         </p>
 
@@ -7349,7 +7363,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6070"><code>source\scrawlCore.js:6070</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5972"><code>source\scrawlCore.js:5972</code></a>
         
         </p>
 
@@ -7419,7 +7433,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3635"><code>source\scrawlCore.js:3635</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3569"><code>source\scrawlCore.js:3569</code></a>
         
         </p>
 
@@ -7525,7 +7539,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3234"><code>source\scrawlCore.js:3234</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3171"><code>source\scrawlCore.js:3171</code></a>
         
         </p>
 
@@ -7624,7 +7638,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6236"><code>source\scrawlCore.js:6236</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6138"><code>source\scrawlCore.js:6138</code></a>
         
         </p>
 
@@ -7696,7 +7710,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3561"><code>source\scrawlCore.js:3561</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3495"><code>source\scrawlCore.js:3495</code></a>
         
         </p>
 
@@ -7778,7 +7792,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3608"><code>source\scrawlCore.js:3608</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3542"><code>source\scrawlCore.js:3542</code></a>
         
         </p>
 
@@ -7868,7 +7882,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4999"><code>source\scrawlCore.js:4999</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4925"><code>source\scrawlCore.js:4925</code></a>
         
         </p>
 
@@ -7916,7 +7930,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4990"><code>source\scrawlCore.js:4990</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4916"><code>source\scrawlCore.js:4916</code></a>
         
         </p>
 
@@ -7964,7 +7978,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5043"><code>source\scrawlCore.js:5043</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4969"><code>source\scrawlCore.js:4969</code></a>
         
         </p>
 
@@ -8012,7 +8026,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5076"><code>source\scrawlCore.js:5076</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5002"><code>source\scrawlCore.js:5002</code></a>
         
         </p>
 
@@ -8056,7 +8070,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2370"><code>source\scrawlCore.js:2370</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2305"><code>source\scrawlCore.js:2305</code></a>
         
         </p>
 
@@ -8103,7 +8117,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5083"><code>source\scrawlCore.js:5083</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5009"><code>source\scrawlCore.js:5009</code></a>
         
         </p>
 
@@ -8150,7 +8164,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5097"><code>source\scrawlCore.js:5097</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5023"><code>source\scrawlCore.js:5023</code></a>
         
         </p>
 
@@ -8199,7 +8213,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5052"><code>source\scrawlCore.js:5052</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4978"><code>source\scrawlCore.js:4978</code></a>
         
         </p>
 
@@ -8247,7 +8261,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4931"><code>source\scrawlCore.js:4931</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4857"><code>source\scrawlCore.js:4857</code></a>
         
         </p>
 
@@ -8299,7 +8313,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4960"><code>source\scrawlCore.js:4960</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4886"><code>source\scrawlCore.js:4886</code></a>
         
         </p>
 
@@ -8346,7 +8360,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4953"><code>source\scrawlCore.js:4953</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4879"><code>source\scrawlCore.js:4879</code></a>
         
         </p>
 
@@ -8393,7 +8407,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4946"><code>source\scrawlCore.js:4946</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4872"><code>source\scrawlCore.js:4872</code></a>
         
         </p>
 
@@ -8437,7 +8451,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3129"><code>source\scrawlCore.js:3129</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3067"><code>source\scrawlCore.js:3067</code></a>
         
         </p>
 
@@ -8485,7 +8499,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5008"><code>source\scrawlCore.js:5008</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4934"><code>source\scrawlCore.js:4934</code></a>
         
         </p>
 
@@ -8528,7 +8542,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3019"><code>source\scrawlCore.js:3019</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2963"><code>source\scrawlCore.js:2963</code></a>
         
         </p>
 
@@ -8572,7 +8586,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3026"><code>source\scrawlCore.js:3026</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2970"><code>source\scrawlCore.js:2970</code></a>
         
         </p>
 
@@ -8619,7 +8633,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5014"><code>source\scrawlCore.js:5014</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4940"><code>source\scrawlCore.js:4940</code></a>
         
         </p>
 
@@ -8666,7 +8680,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5021"><code>source\scrawlCore.js:5021</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4947"><code>source\scrawlCore.js:4947</code></a>
         
         </p>
 
@@ -8728,7 +8742,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5062"><code>source\scrawlCore.js:5062</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4988"><code>source\scrawlCore.js:4988</code></a>
         
         </p>
 
@@ -8772,7 +8786,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2956"><code>source\scrawlCore.js:2956</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2919"><code>source\scrawlCore.js:2919</code></a>
         
         </p>
 
@@ -8820,7 +8834,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3108"><code>source\scrawlCore.js:3108</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3046"><code>source\scrawlCore.js:3046</code></a>
         
         </p>
 
@@ -8864,7 +8878,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3033"><code>source\scrawlCore.js:3033</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2977"><code>source\scrawlCore.js:2977</code></a>
         
         </p>
 
@@ -8908,7 +8922,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3040"><code>source\scrawlCore.js:3040</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2984"><code>source\scrawlCore.js:2984</code></a>
         
         </p>
 
@@ -8924,58 +8938,6 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
 
     
         <p><strong>Default:</strong> false</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_maxDimensions" class="property item private inherited">
-    <h3 class="name"><code>maxDimensions</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Position.html#property_maxDimensions">Position</a>:
-            
-        
-        
-        <a href="../files/source_scrawlCore.js.html#l2979"><code>source\scrawlCore.js:2979</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p><p>An object with the following attributes:</p></p>
-<ul>
-<li><strong>left</strong> - x coordinate of top-left corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
-<li><strong>top</strong> - y coordinate of top-left corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
-<li><strong>bottom</strong> - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
-<li><strong>left</strong> - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#39;s top-left corner</li>
-</ul>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> null</p>
     
 
     
@@ -9004,7 +8966,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3047"><code>source\scrawlCore.js:3047</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2991"><code>source\scrawlCore.js:2991</code></a>
         
         </p>
 
@@ -9049,7 +9011,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2348"><code>source\scrawlCore.js:2348</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2284"><code>source\scrawlCore.js:2284</code></a>
         
         </p>
 
@@ -9094,7 +9056,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4924"><code>source\scrawlCore.js:4924</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4850"><code>source\scrawlCore.js:4850</code></a>
         
         </p>
 
@@ -9143,7 +9105,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4968"><code>source\scrawlCore.js:4968</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4894"><code>source\scrawlCore.js:4894</code></a>
         
         </p>
 
@@ -9190,7 +9152,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4983"><code>source\scrawlCore.js:4983</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4909"><code>source\scrawlCore.js:4909</code></a>
         
         </p>
 
@@ -9237,7 +9199,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4976"><code>source\scrawlCore.js:4976</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4902"><code>source\scrawlCore.js:4902</code></a>
         
         </p>
 
@@ -9281,7 +9243,7 @@ A change value which can be applied to the object&#39;s pathPlace attribute</p>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3115"><code>source\scrawlCore.js:3115</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3053"><code>source\scrawlCore.js:3053</code></a>
         
         </p>
 
@@ -9326,7 +9288,7 @@ The ENTITYNAME of a Shape entity whose path is used to calculate this object&#39
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3122"><code>source\scrawlCore.js:3122</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3060"><code>source\scrawlCore.js:3060</code></a>
         
         </p>
 
@@ -9371,7 +9333,7 @@ A value between 0 and 1 to represent the distance along a Path object&#39;s path
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3136"><code>source\scrawlCore.js:3136</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3074"><code>source\scrawlCore.js:3074</code></a>
         
         </p>
 
@@ -9416,7 +9378,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2998"><code>source\scrawlCore.js:2998</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2942"><code>source\scrawlCore.js:2942</code></a>
         
         </p>
 
@@ -9463,7 +9425,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5069"><code>source\scrawlCore.js:5069</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4995"><code>source\scrawlCore.js:4995</code></a>
         
         </p>
 
@@ -9507,7 +9469,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3012"><code>source\scrawlCore.js:3012</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2956"><code>source\scrawlCore.js:2956</code></a>
         
         </p>
 
@@ -9551,7 +9513,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3005"><code>source\scrawlCore.js:3005</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2949"><code>source\scrawlCore.js:2949</code></a>
         
         </p>
 
@@ -9598,7 +9560,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5090"><code>source\scrawlCore.js:5090</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5016"><code>source\scrawlCore.js:5016</code></a>
         
         </p>
 
@@ -9645,7 +9607,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l5104"><code>source\scrawlCore.js:5104</code></a>
+        <a href="../files/source_scrawlCore.js.html#l5030"><code>source\scrawlCore.js:5030</code></a>
         
         </p>
 
@@ -9692,7 +9654,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4895"><code>source\scrawlCore.js:4895</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4821"><code>source\scrawlCore.js:4821</code></a>
         
         </p>
 
@@ -9739,7 +9701,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2384"><code>source\scrawlCore.js:2384</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2319"><code>source\scrawlCore.js:2319</code></a>
         
         </p>
 
@@ -9783,7 +9745,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2377"><code>source\scrawlCore.js:2377</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2312"><code>source\scrawlCore.js:2312</code></a>
         
         </p>
 
@@ -9832,7 +9794,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l4915"><code>source\scrawlCore.js:4915</code></a>
+        <a href="../files/source_scrawlCore.js.html#l4840"><code>source\scrawlCore.js:4840</code></a>
         
         </p>
 
@@ -9875,7 +9837,7 @@ A flag to determine whether the object will calculate its position along a Shape
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l3101"><code>source\scrawlCore.js:3101</code></a>
+        <a href="../files/source_scrawlCore.js.html#l3039"><code>source\scrawlCore.js:3039</code></a>
         
         </p>
 

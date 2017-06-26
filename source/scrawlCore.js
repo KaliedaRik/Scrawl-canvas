@@ -23,7 +23,7 @@
 /**
 # scrawlCore
 
-## Version 6.0.1 - 14 January 2017
+## Version 7.0.0 - 26 June 2017
 
 Developed by Rik Roots - <rik.roots@gmail.com>, <rik@rikweb.org.uk>
 
@@ -108,10 +108,10 @@ Core creates the following sections in the library:
 Scrawl.js version number
 @property version
 @type {String}
-@default 6.0.1
+@default 7.0.0
 @final
 **/
-	my.version = '6.0.1';
+	my.version = '7.0.0';
 	/**
 Array of array object keys used to define the sections of the Scrawl library
 @property nameslist
@@ -2234,8 +2234,8 @@ The arguments, if included, should be the x and y values to which the vector wil
 @param {Number} z - vector z value
 @return pool vector
 **/
-	my.requestVector = function(x, y, z){
-		if(!my.vectorPool.length){
+	my.requestVector = function(x, y, z) {
+		if (!my.vectorPool.length) {
 			my.vectorPool.push(new my.Vector({
 				name: 'pool'
 			}));
@@ -2255,8 +2255,8 @@ The argument object should be the vector to be released
 @param {Object} items - Scrawl Vector object
 @return not defined
 **/
-	my.releaseVector = function(v){
-		if(v && v.type === 'Vector'){
+	my.releaseVector = function(v) {
+		if (v && v.type === 'Vector') {
 			my.vectorPool.push(v);
 		}
 	};
@@ -2333,13 +2333,13 @@ Generate unique names for new Scrawl objects
 **/
 	my.Base.prototype.makeName = function(suggestedName) {
 		var name, nameArray;
-		if(my.work.nameslist.indexOf(this.libName) >= 0){
+		if (my.work.nameslist.indexOf(this.libName) >= 0) {
 			name = my.xtGetTrue(suggestedName, this.type, 'default');
 			name = name.replace(/[\.\/ \+\*\[\{\(\)~\-#\\\^\$\|\?]/g, '_');
 			nameArray = name.split('___');
 			this.name = (my[this.libName].indexOf(nameArray[0]) >= 0) ? nameArray[0] + '___' + Math.floor(Math.random() * 100000000) : nameArray[0];
 		}
-		else{
+		else {
 			this.name = 'unclassifiedScrawlObject___' + Math.floor(Math.random() * 100000000);
 		}
 	};
@@ -6546,40 +6546,40 @@ Compares an entity's context engine values (held in this context object) to thos
 			styleKeys = this.styleKeys,
 			textKeys = this.textKeys,
 			k, d, color, scaled, i, iz, j, jz,
-			ldFlag, currentE, currentC, 
+			ldFlag, currentE, currentC,
 			dx = this.defs,
 			result = {};
 
-		if(entity.substring){
+		if (entity.substring) {
 			entity = my.entity[entity];
 		}
-		for(i = 0, iz = mainKeys.length; i < iz; i++){
+		for (i = 0, iz = mainKeys.length; i < iz; i++) {
 			k = mainKeys[i];
 			currentE = (typeof this[k] != 'undefined') ? this[k] : dx[k];
 			currentC = (typeof ctx[k] != 'undefined') ? ctx[k] : dx[k];
-			if(currentC !== currentE){
+			if (currentC !== currentE) {
 				result[k] = currentE
 			}
 		}
-		if(this.lineWidth || ctx.lineWidth){
-			for(i = 0, iz = lineKeys.length; i < iz; i++){
+		if (this.lineWidth || ctx.lineWidth) {
+			for (i = 0, iz = lineKeys.length; i < iz; i++) {
 				k = lineKeys[i];
 				currentE = (typeof this[k] != 'undefined') ? this[k] : dx[k];
 				currentC = (typeof ctx[k] != 'undefined') ? ctx[k] : dx[k];
-				if (k == 'lineDash'){
+				if (k == 'lineDash') {
 					if (currentE.length || currentC.length) {
-						if(currentE.length != currentC.length){
+						if (currentE.length != currentC.length) {
 							result.lineDash = currentE;
 						}
-						else{
+						else {
 							ldFlag = false;
-							for(j = 0, jz = currentE.length; j < jz; j++){
-								if(currentE[j] != currentC[j]){
+							for (j = 0, jz = currentE.length; j < jz; j++) {
+								if (currentE[j] != currentC[j]) {
 									ldFlag = true;
 									break;
 								}
 							}
-							if(ldFlag){
+							if (ldFlag) {
 								result.lineDash = currentE;
 							}
 						}
@@ -6591,38 +6591,38 @@ Compares an entity's context engine values (held in this context object) to thos
 						result.lineWidth = scaled;
 					}
 				}
-				else if(currentC !== currentE){
+				else if (currentC !== currentE) {
 					result[k] = currentE
 				}
 			}
 		}
-		for(i = 0, iz = styleKeys.length; i < iz; i++){
+		for (i = 0, iz = styleKeys.length; i < iz; i++) {
 			k = styleKeys[i];
 			currentE = (typeof this[k] != 'undefined') ? this[k] : dx[k];
 			currentC = (typeof ctx[k] != 'undefined') ? ctx[k] : dx[k];
-			if(currentC !== currentE){
+			if (currentC !== currentE) {
 				result[k] = currentE
 			}
-			else{
+			else {
 				d = my.styles[currentE];
-				if(d){
+				if (d) {
 					if (currentC === currentE) {
 						if (d.autoUpdate || d.lockTo !== 'cell') {
 							result[k] = currentE;
 						}
 					}
-					else if(currentC !== currentE){
+					else if (currentC !== currentE) {
 						result[k] = currentE
 					}
 				}
 			}
 		}
-		if(entity.type === 'Phrase'){
-			for(i = 0, iz = textKeys.length; i < iz; i++){
+		if (entity.type === 'Phrase') {
+			for (i = 0, iz = textKeys.length; i < iz; i++) {
 				k = textKeys[i];
 				currentE = (typeof this[k] != 'undefined') ? this[k] : dx[k];
 				currentC = (typeof ctx[k] != 'undefined') ? ctx[k] : dx[k];
-				if(currentC !== currentE){
+				if (currentC !== currentE) {
 					result[k] = currentE
 				}
 			}
@@ -7335,7 +7335,7 @@ Allows users to retrieve a entity's Context object's values via the entity
 		var xt = my.xt,
 			cdef = my.Context.prototype.defs,
 			d = this.defs;
-		if(cdef[item]){
+		if (cdef[item]) {
 			return my.ctx[this.context].get(item);
 		}
 		return my.Position.prototype.get.call(this, item);

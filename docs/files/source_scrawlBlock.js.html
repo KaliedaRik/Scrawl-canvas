@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -305,14 +279,6 @@ scrawlBlock extension adaptions to the scrawl-canvas library object
 **/
 
 		/**
-Alias for makeBlock()
-@method newBlock
-@deprecated
-**/
-		my.newBlock = function(items) {
-			return new my.Block(items);
-		};
-		/**
 A __factory__ function to generate new Block entitys
 @method makeBlock
 @param {Object} items Key:value Object argument for setting attributes
@@ -356,7 +322,7 @@ A __factory__ function to generate new Block entitys
 **/
 		my.Block = function Block(items) {
 			var get = my.xtGet,
-			d = my.work.d.Block;
+			d = this.defs;
 			items = my.safeObject(items);
 			my.Entity.call(this, items);
 			my.Position.prototype.set.call(this, items);
@@ -375,8 +341,9 @@ A __factory__ function to generate new Block entitys
 @final
 **/
 		my.Block.prototype.type = &#x27;Block&#x27;;
-		my.Block.prototype.classname = &#x27;entitynames&#x27;;
-		my.work.d.Block = {
+		my.Block.prototype.lib = &#x27;entity&#x27;;
+		my.Block.prototype.libName = &#x27;entitynames&#x27;;
+		my.Block.prototype.defs = {
 			/**
 Block display - width, in pixels
 @property localWidth
@@ -394,7 +361,7 @@ Block display - height, in pixels
 **/
 			localHeight: 0,
 		};
-		my.mergeInto(my.work.d.Block, my.work.d.Entity);
+		my.mergeInto(my.Block.prototype.defs, my.Entity.prototype.defs);
 		/**
 Augments Entity.set()
 @method set
@@ -618,114 +585,6 @@ Stamp helper function - perform a &#x27;none&#x27; method draw
 **/
 		my.Block.prototype.none = function(ctx, cellname, cell) {
 			return this;
-		};
-		/**
-Calculate the box position of the entity
-
-Returns an object with the following attributes:
-
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-
-@method getMaxDimensions
-@param {Object} cell object
-@param {Object} entity object
-@return dimensions object
-@private
-**/
-		my.Block.prototype.getMaxDimensions = function(cell) {
-			var cw = cell.actualWidth,
-				ch = cell.actualHeight,
-				halfW = cw / 2,
-				halfH = ch / 2,
-				cx = this.currentStart.x,
-				cy = this.currentStart.y,
-				lw = this.localWidth,
-				lh = this.localHeight,
-				fr = this.flipReverse,
-				fu = this.flipUpend,
-				xtl, xtr, xbr, xbl, ytl, ytr, ybr, ybl,
-				x = (fr) ? cw - cx : cx,
-				y = (fu) ? ch - cy : cy,
-				w = (fr) ? -lw : lw,
-				h = (fu) ? -lh : lh,
-				o = this.currentHandle,
-				hx = (fr) ? -o.x : o.x,
-				hy = (fu) ? -o.y : o.y,
-				line = my.ctx[this.context].lineWidth || 0,
-				max, min, ax, ay, ref,
-				ceil = Math.ceil,
-				floor = Math.floor,
-				t, l, b, r,
-				roll = this.roll,
-				v = my.work.v,
-				between = my.isBetween;
-			l = (fr) ? x + hx + w : x + hx;
-			r = (fr) ? x + hx : x + hx + w;
-			t = (fu) ? y + hy + h : y + hy;
-			b = (fu) ? y + hy : y + hy + h;
-			if (roll) {
-				min = Math.min;
-				max = Math.max;
-				ref = {
-					x: x,
-					y: y
-				};
-				v.set({
-					x: l,
-					y: t
-				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-				xtl = v.x;
-				ytl = v.y;
-				v.set({
-					x: r,
-					y: t
-				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-				xtr = v.x;
-				ytr = v.y;
-				v.set({
-					x: r,
-					y: b
-				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-				xbl = v.x;
-				ybl = v.y;
-				v.set({
-					x: l,
-					y: b
-				}).vectorSubtract(ref).rotate(roll).vectorAdd(ref);
-				xbr = v.x;
-				ybr = v.y;
-				ax = [xtl, xtr, xbr, xbl];
-				ay = [ytl, ytr, ybr, ybl];
-				t = min.apply(Math, ay);
-				l = min.apply(Math, ax);
-				b = max.apply(Math, ay);
-				r = max.apply(Math, ax);
-			}
-			t = floor(t - line);
-			l = floor(l - line);
-			b = ceil(b + line);
-			r = ceil(r + line);
-			if (!between(t, 0, ch, true)) {
-				t = (t &gt; halfH) ? ch : 0;
-			}
-			if (!between(b, 0, ch, true)) {
-				b = (b &gt; halfH) ? ch : 0;
-			}
-			if (!between(l, 0, cw, true)) {
-				l = (l &gt; halfW) ? cw : 0;
-			}
-			if (!between(r, 0, cw, true)) {
-				r = (r &gt; halfW) ? cw : 0;
-			}
-			this.maxDimensions.top = t;
-			this.maxDimensions.bottom = b;
-			this.maxDimensions.left = l;
-			this.maxDimensions.right = r;
-			this.maxDimensions.flag = false;
-			return this.maxDimensions;
 		};
 
 		return my;

@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -262,7 +236,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlPath.js.html#l74"><code>source\scrawlPath.js:74</code></a>
+            Defined in: <a href="../files/source_scrawlPath.js.html#l65"><code>source\scrawlPath.js:65</code></a>
         </div>
     
 
@@ -349,28 +323,10 @@
                                 
                             </li>
                         
-                            <li class="index-item method private deprecated">
-                                <a href="#method_newLink">newLink</a>
-
-                                
-                                
-                                    <span class="flag deprecated">deprecated</span>
-                                
-                            </li>
-                        
                             <li class="index-item method private">
                                 <a href="#method_newPathObject">newPathObject</a>
 
                                 
-                                
-                            </li>
-                        
-                            <li class="index-item method private deprecated">
-                                <a href="#method_newPoint">newPoint</a>
-
-                                
-                                
-                                    <span class="flag deprecated">deprecated</span>
                                 
                             </li>
                         
@@ -420,7 +376,7 @@
                     <ul class="index-list properties">
                         
                             <li class="index-item property private">
-                                <a href="#property_scrawl.work.worklink">scrawl.work.worklink</a>
+                                <a href="#property_scrawl.linkvectors">scrawl.linkvectors</a>
 
                                 
                                 
@@ -488,7 +444,7 @@
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l119"><code>source\scrawlPath.js:119</code></a>
+        <a href="../files/source_scrawlPath.js.html#l110"><code>source\scrawlPath.js:110</code></a>
         
         </p>
 
@@ -613,7 +569,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l253"><code>source\scrawlPath.js:253</code></a>
+        <a href="../files/source_scrawlPath.js.html#l225"><code>source\scrawlPath.js:225</code></a>
         
         </p>
 
@@ -718,7 +674,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l275"><code>source\scrawlPath.js:275</code></a>
+        <a href="../files/source_scrawlPath.js.html#l247"><code>source\scrawlPath.js:247</code></a>
         
         </p>
 
@@ -839,7 +795,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l243"><code>source\scrawlPath.js:243</code></a>
+        <a href="../files/source_scrawlPath.js.html#l215"><code>source\scrawlPath.js:215</code></a>
         
         </p>
 
@@ -898,65 +854,6 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_newLink" class="method item private deprecated">
-    <h3 class="name"><code>newLink</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-        <span class="flag deprecated">deprecated</span>
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlPath.js.html#l234"><code>source\scrawlPath.js:234</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Alias for makeLink()</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="method_newPathObject" class="method item private">
     <h3 class="name"><code>newPathObject</code></h3>
 
@@ -1005,7 +902,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l263"><code>source\scrawlPath.js:263</code></a>
+        <a href="../files/source_scrawlPath.js.html#l235"><code>source\scrawlPath.js:235</code></a>
         
         </p>
 
@@ -1065,65 +962,6 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_newPoint" class="method item private deprecated">
-    <h3 class="name"><code>newPoint</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-        <span class="flag deprecated">deprecated</span>
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlPath.js.html#l225"><code>source\scrawlPath.js:225</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Alias for makePoint()</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="method_pathDeleteEntity" class="method item private">
     <h3 class="name"><code>pathDeleteEntity</code></h3>
 
@@ -1158,7 +996,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l94"><code>source\scrawlPath.js:94</code></a>
+        <a href="../files/source_scrawlPath.js.html#l85"><code>source\scrawlPath.js:85</code></a>
         
         </p>
 
@@ -1215,7 +1053,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l165"><code>source\scrawlPath.js:165</code></a>
+        <a href="../files/source_scrawlPath.js.html#l156"><code>source\scrawlPath.js:156</code></a>
         
         </p>
 
@@ -1272,7 +1110,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l178"><code>source\scrawlPath.js:178</code></a>
+        <a href="../files/source_scrawlPath.js.html#l169"><code>source\scrawlPath.js:169</code></a>
         
         </p>
 
@@ -1329,7 +1167,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l188"><code>source\scrawlPath.js:188</code></a>
+        <a href="../files/source_scrawlPath.js.html#l179"><code>source\scrawlPath.js:179</code></a>
         
         </p>
 
@@ -1386,7 +1224,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlPath.js.html#l205"><code>source\scrawlPath.js:205</code></a>
+        <a href="../files/source_scrawlPath.js.html#l196"><code>source\scrawlPath.js:196</code></a>
         
         </p>
 
@@ -1417,8 +1255,8 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_scrawl.work.worklink" class="property item private">
-    <h3 class="name"><code>scrawl.work.worklink</code></h3>
+                    <div id="property_scrawl.linkvectors" class="property item private">
+    <h3 class="name"><code>scrawl.linkvectors</code></h3>
     <span class="type">Object</span>
 
     

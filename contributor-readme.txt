@@ -1,4 +1,4 @@
-# For Developers who want to make Scrawl.js even better
+# For Developers who want to make Scrawl-canvas even better
 (These instructions are as much for my benefit as for yours)
 
 I'm assuming that you have 'node' already installed on your local machine, alongside 'git', 'grunt' and 'git flow'. 
@@ -64,7 +64,7 @@ When developing a new feature, write a new demo to test the feature. Demos can b
 
 A default demo template can be found at demos/demo000.html - if in doubt about which number to give the demo, ask. Remember to (manually) add a link to the demo from the demo/index.html page.
 
-The development environment includes the express server (grunt-express) and a watch listener (grunt-contrib-watch) to allow real-time testing of code in a browser. Demo pages are served to localhost:8080. Any changes in a demo file, or a Scrawl.js source file, should be reflected in the browser as soon as the file is saved.
+The development environment includes the express server (grunt-express) and a watch listener (grunt-contrib-watch) to allow real-time testing of code in a browser. Demo pages are served to localhost:8080. Any changes in a demo file, or a Scrawl-canvas source file, should be reflected in the browser as soon as the file is saved.
 
 To start the server:
 

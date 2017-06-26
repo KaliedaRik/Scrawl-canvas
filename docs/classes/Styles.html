@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>TintFilter - scrawl-canvas</title>
+    <title>Styles - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -254,25 +228,25 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>TintFilter Class</h1>
+                        <h1>Styles Class</h1>
 <div class="box meta">
     
 
     
         <div class="extends">
-            Extends <a href="../classes/Filter.html" class="crosslink">Filter</a>
+            Extends <a href="../classes/Base.html" class="crosslink">Base</a>
         </div>
     
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlFilters.js.html#l1501"><code>source\scrawlFilters.js:1501</code></a>
+            Defined in: <a href="../files/source_scrawlCore.js.html#l7942"><code>source\scrawlCore.js:7942</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/scrawlFilters.html">scrawlFilters</a>
+            Module: <a href="../modules/scrawlCore.html">scrawlCore</a>
         
     
 
@@ -282,18 +256,14 @@
 
 
 <div class="box intro">
-    <h1 id="tintfilter">TintFilter</h1>
+    <h1 id="styles">Styles</h1>
 <h2 id="instantiation">Instantiation</h2>
 <ul>
-<li>scrawl.makeTintFilter()</li>
+<li>This object should never be instantiated by users</li>
 </ul>
 <h2 id="purpose">Purpose</h2>
 <ul>
-<li>Adds a tint filter effect to an Entity or cell</li>
-</ul>
-<h2 id="access">Access</h2>
-<ul>
-<li>scrawl.filter.FILTERNAME - for the TintFilter object</li>
+<li>Defines gradients and radial gradients used with entity objects&#39; strokeStyle and fillStyle attributes</li>
 </ul>
 
 </div>
@@ -301,8 +271,8 @@
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_TintFilter" class="method item">
-    <h3 class="name"><code>TintFilter</code></h3>
+        <div id="method_Styles" class="method item">
+    <h3 class="name"><code>Styles</code></h3>
 
     
         <div class="args">
@@ -343,7 +313,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1501"><code>source\scrawlFilters.js:1501</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7942"><code>source\scrawlCore.js:7942</code></a>
         
         </p>
 
@@ -416,8 +386,8 @@
 
                     <ul class="index-list methods extends">
                         
-                            <li class="index-item method inherited">
-                                <a href="#method_add">add</a>
+                            <li class="index-item method private">
+                                <a href="#method_applyStops">applyStops</a>
 
                                 
                                 
@@ -431,21 +401,28 @@
                             </li>
                         
                             <li class="index-item method inherited">
-                                <a href="#method_cloneImageData">cloneImageData</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
                                 <a href="#method_get">get</a>
 
                                 
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_getData">getData</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_makeGradient">makeGradient</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private inherited">
-                                <a href="#method_getAlpha">getAlpha</a>
+                                <a href="#method_makeName">makeName</a>
 
                                 
                                 
@@ -465,8 +442,29 @@
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_remove">remove</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method inherited">
                                 <a href="#method_set">set</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setDelta">setDelta</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_update">update</a>
 
                                 
                                 
@@ -482,29 +480,22 @@
 
                     <ul class="index-list properties extends">
                         
-                            <li class="index-item property inherited">
-                                <a href="#property_alpha">alpha</a>
+                            <li class="index-item property">
+                                <a href="#property_autoUpdate">autoUpdate</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_blueInBlue">blueInBlue</a>
+                                <a href="#property_cell">cell</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_blueInGreen">blueInGreen</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_blueInRed">blueInRed</a>
+                                <a href="#property_color">color</a>
 
                                 
                                 
@@ -517,29 +508,22 @@
                                 
                             </li>
                         
-                            <li class="index-item property inherited">
-                                <a href="#property_composite">composite</a>
+                            <li class="index-item property">
+                                <a href="#property_endX">endX</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_greenInBlue">greenInBlue</a>
+                                <a href="#property_endY">endY</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_greenInGreen">greenInGreen</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_greenInRed">greenInRed</a>
+                                <a href="#property_lockTo">lockTo</a>
 
                                 
                                 
@@ -553,21 +537,14 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_redInBlue">redInBlue</a>
+                                <a href="#property_startX">startX</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_redInGreen">redInGreen</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_redInRed">redInRed</a>
+                                <a href="#property_startY">startY</a>
 
                                 
                                 
@@ -608,21 +585,11 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
+                    <div id="method_applyStops" class="method item private">
+    <h3 class="name"><code>applyStops</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>data</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -634,27 +601,31 @@
     
 
     
-
+        <span class="flag private">private</span>
     
 
     
 
+    
+
+    
+        <span class="flag chainable">chainable</span>
     
 
     
 
     <div class="meta">
         
-            <p>Inherited from
-            <a href="../classes/Filter.html#method_add">
-                Filter
-            </a>
             
-            but overwritten in
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1604"><code>source\scrawlFilters.js:1604</code></a>
+        <a href="../files/source_scrawlCore.js.html#l8326"><code>source\scrawlCore.js:8326</code></a>
         
         </p>
 
@@ -665,36 +636,10 @@
     </div>
 
     <div class="description">
-        <p>Add function - takes data, calculates its channels and combines it with data</p>
+        <p>Styles.update() helper function - applies color attribute objects to the gradient</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">data</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -704,7 +649,7 @@
             <div class="returns-description">
                 
                     
-                    <p>amended image data object</p>
+                    <p>This</p>
 
                 
             </div>
@@ -760,7 +705,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2439"><code>source\scrawlCore.js:2439</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2401"><code>source\scrawlCore.js:2401</code></a>
         
         </p>
 
@@ -838,110 +783,6 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_cloneImageData" class="method item inherited">
-    <h3 class="name"><code>cloneImageData</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>original</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_cloneImageData">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l834"><code>source\scrawlFilters.js:834</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>cloneImageData function</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">original</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>cloned image data object; false on error</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_get" class="method item inherited">
     <h3 class="name"><code>get</code></h3>
 
@@ -985,7 +826,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2392"><code>source\scrawlCore.js:2392</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2346"><code>source\scrawlCore.js:2346</code></a>
         
         </p>
 
@@ -1058,8 +899,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_getAlpha" class="method item private inherited">
-    <h3 class="name"><code>getAlpha</code></h3>
+                    <div id="method_getData" class="method item private">
+    <h3 class="name"><code>getData</code></h3>
 
     
         <span class="paren">()</span>
@@ -1088,12 +929,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_getAlpha">Filter</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l858"><code>source\scrawlFilters.js:858</code></a>
+        <a href="../files/source_scrawlCore.js.html#l8139"><code>source\scrawlCore.js:8139</code></a>
         
         </p>
 
@@ -1104,7 +948,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>getAlpha function</p>
+        <p>Returns &lt;canvas&gt; element&#39;s contenxt engine&#39;s gradient object, or &#39;rgba(0,0,0,0)&#39; on failure</p>
 
     </div>
 
@@ -1117,7 +961,245 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>numerical strength value, between 0 and 1</p>
+                    <p>JavaScript Gradient object, or String</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeGradient" class="method item private">
+    <h3 class="name"><code>makeGradient</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[entity]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cell]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l8148"><code>source\scrawlCore.js:8148</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Styles.update() helper function - builds &lt;canvas&gt; element&#39;s contenxt engine&#39;s gradient object</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[entity]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>SPRITENAME String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeName" class="method item private inherited">
+    <h3 class="name"><code>makeName</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[suggestedName]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_makeName">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2327"><code>source\scrawlCore.js:2327</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Generate unique names for new Scrawl objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[suggestedName]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>String of the suggested name</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>always true</p>
 
                 
             </div>
@@ -1179,7 +1261,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2486"><code>source\scrawlCore.js:2486</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2448"><code>source\scrawlCore.js:2448</code></a>
         
         </p>
 
@@ -1287,7 +1369,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2478"><code>source\scrawlCore.js:2478</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2440"><code>source\scrawlCore.js:2440</code></a>
         
         </p>
 
@@ -1322,7 +1404,78 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_set" class="method item inherited">
+                    <div id="method_remove" class="method item">
+    <h3 class="name"><code>remove</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l8345"><code>source\scrawlCore.js:8345</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Remove this gradient from the scrawl library</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Always true</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_set" class="method item">
     <h3 class="name"><code>set</code></h3>
 
     
@@ -1361,13 +1514,16 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     <div class="meta">
         
+            <p>Inherited from
+            <a href="../classes/Base.html#method_set">
+                Base
+            </a>
             
-                <p>Inherited from
-                <a href="../classes/Base.html#method_set">Base</a>:
+            but overwritten in
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2408"><code>source\scrawlCore.js:2408</code></a>
+        <a href="../files/source_scrawlCore.js.html#l8043"><code>source\scrawlCore.js:8043</code></a>
         
         </p>
 
@@ -1378,8 +1534,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.</p>
-<p>An attribute value will only be set if the object already has a default value for that attribute. This restricts the ability of coders to add attributes to Scrawl objects.</p>
+        <p>Update values to Number attributes</p>
+<p>Will also accept an object containing start and end attributes, each of which can include x, y, startX, startY, r, startRadius and/or endRadius attributes</p>
 
     </div>
 
@@ -1398,7 +1554,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                     
 
                     <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
+                        <p>Object consisting of key:value attributes</p>
 
                     </div>
 
@@ -1424,24 +1580,244 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-        <div class="example">
-            <h4>Example:</h4>
+</div>
 
-            <div class="example-content">
-                <pre class="code prettyprint"><code>var box = scrawl.makeBlock({
-    width: 50,
-    height: 50
-    });
-box.set({
-    height: 100,
-    favouriteAnimal: &#39;cat&#39;
-    });
-box.get(&#39;width&#39;);               //returns 50
-box.get(&#39;height&#39;);              //returns 100
-box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
+                
+                    <div id="method_setDelta" class="method item">
+    <h3 class="name"><code>setDelta</code></h3>
 
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l8083"><code>source\scrawlCore.js:8083</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Add values to Number attributes</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Object consisting of key:value attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_update" class="method item">
+    <h3 class="name"><code>update</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[entity]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[cell]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l8124"><code>source\scrawlCore.js:8124</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Creates the gradient</p>
+<p><em>This function is replaced by the animation extension</em></p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[entity]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>SPRITENAME String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[cell]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>CELLNAME String</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>This</p>
+
+                
+            </div>
+        </div>
+    
+
     
 </div>
 
@@ -1454,54 +1830,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_alpha" class="property item inherited">
-    <h3 class="name"><code>alpha</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_alpha">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l804"><code>source\scrawlFilters.js:804</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Filter alpha</p>
-<p>values between 0 (transparent) and 1 (current alpha values); or &#39;0%&#39; and &#39;100%&#39;</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> 1</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_blueInBlue" class="property item">
-    <h3 class="name"><code>blueInBlue</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_autoUpdate" class="property item">
+    <h3 class="name"><code>autoUpdate</code></h3>
+    <span class="type">Boolean</span>
 
     
 
@@ -1522,7 +1853,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1596"><code>source\scrawlFilters.js:1596</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7999"><code>source\scrawlCore.js:7999</code></a>
         
         </p>
 
@@ -1532,11 +1863,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Drawing flag - when set to true, force the gradient to update each drawing cycle - only required in the simplest scenes where fillStyle and strokeStyle do not change between entities</p>
+
     </div>
 
     
-        <p><strong>Default:</strong> 1</p>
+        <p><strong>Default:</strong> false</p>
     
 
     
@@ -1545,9 +1877,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_blueInGreen" class="property item">
-    <h3 class="name"><code>blueInGreen</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_cell" class="property item">
+    <h3 class="name"><code>cell</code></h3>
+    <span class="type">String</span>
 
     
 
@@ -1568,7 +1900,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1578"><code>source\scrawlFilters.js:1578</code></a>
+        <a href="../files/source_scrawlCore.js.html#l8006"><code>source\scrawlCore.js:8006</code></a>
         
         </p>
 
@@ -1578,11 +1910,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>CELLNAME String of &lt;canvas&gt; element context engine on which the gradient has been set</p>
+
     </div>
 
     
-        <p><strong>Default:</strong> 0</p>
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
     
 
     
@@ -1591,9 +1924,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_blueInRed" class="property item">
-    <h3 class="name"><code>blueInRed</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_color" class="property item">
+    <h3 class="name"><code>color</code></h3>
+    <span class="type">Array of JavaScript objects</span>
 
     
 
@@ -1614,7 +1947,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1560"><code>source\scrawlFilters.js:1560</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7980"><code>source\scrawlCore.js:7980</code></a>
         
         </p>
 
@@ -1624,11 +1957,17 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Array of JavaScript Objects representing color stop data</p>
+<p>Objects take the form {color:String, stop:Number} where:</p>
+<ul>
+<li><strong>color</strong> attribute can be any legitimate CSS color string</li>
+<li>__stop can be any number between O and 0.999999 (not 1)</li>
+</ul>
+
     </div>
 
     
-        <p><strong>Default:</strong> 0</p>
+        <p><strong>Default:</strong> [{color: &#x27;black&#x27;, stop: 0},{color: &#x27;white&#x27;, stop: 0.999999}]</p>
     
 
     
@@ -1657,7 +1996,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2370"><code>source\scrawlCore.js:2370</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2305"><code>source\scrawlCore.js:2305</code></a>
         
         </p>
 
@@ -1681,54 +2020,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_composite" class="property item inherited">
-    <h3 class="name"><code>composite</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_composite">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l813"><code>source\scrawlFilters.js:813</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Filter composite operation</p>
-<p>Only the final filter in an array of filters will determine the composite operation to be used on the cell</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> &#x27;source-over&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_greenInBlue" class="property item">
-    <h3 class="name"><code>greenInBlue</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_endX" class="property item">
+    <h3 class="name"><code>endX</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -1749,7 +2043,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1590"><code>source\scrawlFilters.js:1590</code></a>
+        <a href="../files/source_scrawlCore.js.html#l8027"><code>source\scrawlCore.js:8027</code></a>
         
         </p>
 
@@ -1759,7 +2053,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Horizontal end coordinate, in pixels, from the top-left corner of the gradient&#39;s &lt;canvas&gt; element</p>
+
     </div>
 
     
@@ -1772,9 +2067,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_greenInGreen" class="property item">
-    <h3 class="name"><code>greenInGreen</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_endY" class="property item">
+    <h3 class="name"><code>endY</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -1795,7 +2090,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1572"><code>source\scrawlFilters.js:1572</code></a>
+        <a href="../files/source_scrawlCore.js.html#l8034"><code>source\scrawlCore.js:8034</code></a>
         
         </p>
 
@@ -1805,11 +2100,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Vertical end coordinate, in pixels, from the top-left corner of the gradient&#39;s &lt;canvas&gt; element</p>
+
     </div>
 
     
-        <p><strong>Default:</strong> 1</p>
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -1818,9 +2114,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_greenInRed" class="property item">
-    <h3 class="name"><code>greenInRed</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_lockTo" class="property item">
+    <h3 class="name"><code>lockTo</code></h3>
+    <span class="type">String - or alternatively Boolean</span>
 
     
 
@@ -1841,7 +2137,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1554"><code>source\scrawlFilters.js:1554</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7960"><code>source\scrawlCore.js:7960</code></a>
         
         </p>
 
@@ -1851,11 +2147,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Drawing flag - when set to &#39;entity&#39; (or true), will use entity-based coordinates to calculate the start and end points of the gradient; when set to &#39;cell&#39; (or false - default), will use Cell-based coordinates</p>
+
     </div>
 
     
-        <p><strong>Default:</strong> 0</p>
+        <p><strong>Default:</strong> &#x27;cell&#x27;</p>
     
 
     
@@ -1884,7 +2181,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2348"><code>source\scrawlCore.js:2348</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2284"><code>source\scrawlCore.js:2284</code></a>
         
         </p>
 
@@ -1906,9 +2203,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_redInBlue" class="property item">
-    <h3 class="name"><code>redInBlue</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_startX" class="property item">
+    <h3 class="name"><code>startX</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -1929,7 +2226,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1584"><code>source\scrawlFilters.js:1584</code></a>
+        <a href="../files/source_scrawlCore.js.html#l8013"><code>source\scrawlCore.js:8013</code></a>
         
         </p>
 
@@ -1939,7 +2236,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Horizontal start coordinate, in pixels, from the top-left corner of the gradient&#39;s &lt;canvas&gt; element</p>
+
     </div>
 
     
@@ -1952,9 +2250,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_redInGreen" class="property item">
-    <h3 class="name"><code>redInGreen</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_startY" class="property item">
+    <h3 class="name"><code>startY</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -1975,7 +2273,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1566"><code>source\scrawlFilters.js:1566</code></a>
+        <a href="../files/source_scrawlCore.js.html#l8020"><code>source\scrawlCore.js:8020</code></a>
         
         </p>
 
@@ -1985,57 +2283,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        
+        <p>Vertical start coordinate, in pixels, from the top-left corner of the gradient&#39;s &lt;canvas&gt; element</p>
+
     </div>
 
     
         <p><strong>Default:</strong> 0</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_redInRed" class="property item">
-    <h3 class="name"><code>redInRed</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l1548"><code>source\scrawlFilters.js:1548</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <p><strong>Default:</strong> 1</p>
     
 
     
@@ -2064,7 +2317,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2384"><code>source\scrawlCore.js:2384</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2319"><code>source\scrawlCore.js:2319</code></a>
         
         </p>
 
@@ -2108,7 +2361,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2377"><code>source\scrawlCore.js:2377</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2312"><code>source\scrawlCore.js:2312</code></a>
         
         </p>
 
@@ -2157,7 +2410,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1539"><code>source\scrawlFilters.js:1539</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7970"><code>source\scrawlCore.js:7970</code></a>
         
         </p>
 
@@ -2171,7 +2424,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;Filter&#x27;</p>
+        <p><strong>Default:</strong> &#x27;Styles&#x27;</p>
     
 
     

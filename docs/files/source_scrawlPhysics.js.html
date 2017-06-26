@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -343,11 +317,11 @@ Change in time since last update, measured in seconds
 		};
 		/**
 Object containing a set of vectors, for physics calculations
-@property scrawl.work.workphys
+@property scrawl.physicsvectors
 @type {Object}
 @private
 **/
-		my.work.workphys = {
+		my.physicsvectors = {
 			v1: my.makeVector(),
 			v2: my.makeVector(),
 			v3: my.makeVector(),
@@ -365,7 +339,7 @@ A __general__ function to undertake a round of calculations for Spring objects
 				spring,
 				springnames = my.springnames,
 				temp;
-			if (springnames.length &gt; 0) {
+			if (springnames.length) {
 				spring = my.spring;
 				items = (Array.isArray(items)) ? items : springnames;
 				for (i = 0, iz = items.length; i &lt; iz; i++) {
@@ -426,30 +400,6 @@ Initiates two forces:
 			});
 		};
 		/**
-Alias for makeParticle()
-@method newParticle
-@deprecated
-**/
-		my.newParticle = function(items) {
-			return my.makeParticle(items);
-		};
-		/**
-Alias for makeSpring()
-@method newSpring
-@deprecated
-**/
-		my.newSpring = function(items) {
-			return my.makeSpring(items);
-		};
-		/**
-Alias for makeForce()
-@method newForce
-@deprecated
-**/
-		my.newForce = function(items) {
-			return my.makeForce(items);
-		};
-		/**
 A __factory__ function to generate new Particle objects
 @method makeParticle
 @param {Object} items Key:value Object argument for setting attributes
@@ -499,7 +449,7 @@ A __factory__ function to generate new Force objects
 **/
 		my.Particle = function(items) {
 			var vec = my.makeVector,
-				d = my.work.d.Particle,
+				d = this.defs,
 				r,
 				get = my.xtGet;
 			my.Base.call(this, items);
@@ -539,9 +489,10 @@ A __factory__ function to generate new Force objects
 @final
 **/
 		my.Particle.prototype.type = &#x27;Particle&#x27;;
-		my.Particle.prototype.classname = &#x27;entitynames&#x27;;
+		my.Particle.prototype.lib = &#x27;entity&#x27;;
+		my.Particle.prototype.libName = &#x27;entitynames&#x27;;
 		my.Particle.prototype.order = 0; //included to allow normal entitys to sort themselves properly
-		my.work.d.Particle = {
+		my.Particle.prototype.defs = {
 			/**
 Current group
 @property group
@@ -670,7 +621,7 @@ Load Vector - recreated at the start of every calculation cycle iteration
 **/
 			load: my.makeVector(),
 		};
-		my.mergeInto(my.work.d.Particle, my.work.d.Scrawl);
+		my.mergeInto(my.Particle.prototype.defs, my.Base.prototype.defs);
 		/**
 Particle.getStartValues
 @method getStartValues
@@ -857,7 +808,7 @@ Calculation cycle engine
 **/
 		my.Particle.prototype.updateEuler = function() {
 			var dtime = my.physics.deltaTime,
-				v1 = my.work.workphys.v1,
+				v1 = my.physicsvectors.v1,
 				vel = this.currentVelocity,
 				v = this.velocity;
 			vel.set(v);
@@ -881,7 +832,7 @@ Calculation cycle engine
 				v3,
 				w = this.currentVelocity,
 				v = this.velocity,
-				wp = my.work.workphys,
+				wp = my.physicsvectors,
 				dtime = my.physics.deltaTime;
 			w.set(v);
 			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime);
@@ -908,7 +859,7 @@ Calculation cycle engine
 				v5,
 				v = this.velocity,
 				w = this.currentVelocity,
-				wp = my.work.workphys,
+				wp = my.physicsvectors,
 				dtime = my.physics.deltaTime;
 			w.set(v);
 			v1 = wp.v1.set(this.load).scalarDivide(this.mass).scalarMultiply(dtime).scalarDivide(2);
@@ -937,7 +888,7 @@ Calculation cycle engine - linear particle collisions
 				relVelocity,
 				impactScalar,
 				impact,
-				wp = my.work.workphys,
+				wp = my.physicsvectors,
 				v = this.velocity,
 				m = this.mass;
 			normal = wp.v1.set(this.place).vectorSubtract(b.place).normalize();
@@ -1105,7 +1056,7 @@ Dummy function - required to allow Particles to be processed alongside Entity ob
 					this.restLength = items.restLength;
 				}
 				else {
-					r = my.work.workphys.v1.set(b2.place);
+					r = my.physicsvectors.v1.set(b2.place);
 					r.vectorSubtract(b1.place);
 					this.restLength = r.getMagnitude();
 				}
@@ -1126,8 +1077,9 @@ Dummy function - required to allow Particles to be processed alongside Entity ob
 @final
 **/
 		my.Spring.prototype.type = &#x27;Spring&#x27;;
-		my.Spring.prototype.classname = &#x27;springnames&#x27;;
-		my.work.d.Spring = {
+		my.Spring.prototype.lib = &#x27;spring&#x27;;
+		my.Spring.prototype.libName = &#x27;springnames&#x27;;
+		my.Spring.prototype.defs = {
 			/**
 First Particle PARTICLENAME
 @property start
@@ -1188,7 +1140,7 @@ Recalculated as part of each  calculation cycle iteration
 				z: 0
 			},
 		};
-		my.mergeInto(my.work.d.Spring, my.work.d.Scrawl);
+		my.mergeInto(my.Spring.prototype.defs, my.Base.prototype.defs);
 		/**
 Calculate the force exerted by the spring for this calculation cycle iteration
 @method update
@@ -1201,7 +1153,7 @@ Calculate the force exerted by the spring for this calculation cycle iteration
 				r,
 				r_norm,
 				r_norm2,
-				wp = my.work.workphys,
+				wp = my.physicsvectors,
 				e = my.entity,
 				eStart = e[this.start],
 				eEnd = e[this.end];
@@ -1266,8 +1218,9 @@ Two forces are pre-defined by scrawl-canvas:
 @final
 **/
 		my.Force.prototype.type = &#x27;Force&#x27;;
-		my.Force.prototype.classname = &#x27;forcenames&#x27;;
-		my.work.d.Force = {
+		my.Force.prototype.lib = &#x27;force&#x27;;
+		my.Force.prototype.libName = &#x27;forcenames&#x27;;
+		my.Force.prototype.defs = {
 			/**
 Anonymous function for calculating a force on a Particle
 
@@ -1290,7 +1243,7 @@ Functions need to be in the form:
 **/
 			fn: function() {},
 		};
-		my.mergeInto(my.work.d.Force, my.work.d.Scrawl);
+		my.mergeInto(my.Force.prototype.defs, my.Base.prototype.defs);
 		/**
 Calculate the force for this calculation cycle iteration
 @method run

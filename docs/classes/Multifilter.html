@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>ThresholdFilter - scrawl-canvas</title>
+    <title>Multifilter - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -254,25 +228,25 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>ThresholdFilter Class</h1>
+                        <h1>Multifilter Class</h1>
 <div class="box meta">
     
 
     
         <div class="extends">
-            Extends <a href="../classes/Filter.html" class="crosslink">Filter</a>
+            Extends <a href="../classes/Base.html" class="crosslink">Base</a>
         </div>
     
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlFilters.js.html#l1187"><code>source\scrawlFilters.js:1187</code></a>
+            Defined in: <a href="../files/source_scrawlMultiFilters.js.html#l972"><code>source\scrawlMultiFilters.js:972</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/scrawlFilters.html">scrawlFilters</a>
+            Module: <a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a>
         
     
 
@@ -282,18 +256,18 @@
 
 
 <div class="box intro">
-    <h1 id="thresholdfilter">ThresholdFilter</h1>
+    <h1 id="multifilter">Multifilter</h1>
 <h2 id="instantiation">Instantiation</h2>
 <ul>
-<li>scrawl.makeThresholdFilter()</li>
+<li>scrawl.makeMultifilter()</li>
 </ul>
 <h2 id="purpose">Purpose</h2>
 <ul>
-<li>Adds a threshold filter effect to an Entity or cell</li>
+<li>Adds a filter effect to an Entity or cell</li>
 </ul>
 <h2 id="access">Access</h2>
 <ul>
-<li>scrawl.filter.FILTERNAME - for the ThresholdFilter object</li>
+<li>scrawl.multifilter.MULTIFILTERNAME - for the Multifilter object</li>
 </ul>
 
 </div>
@@ -301,8 +275,8 @@
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_ThresholdFilter" class="method item">
-    <h3 class="name"><code>ThresholdFilter</code></h3>
+        <div id="method_Multifilter" class="method item">
+    <h3 class="name"><code>Multifilter</code></h3>
 
     
         <div class="args">
@@ -343,7 +317,7 @@
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1187"><code>source\scrawlFilters.js:1187</code></a>
+        <a href="../files/source_scrawlMultiFilters.js.html#l972"><code>source\scrawlMultiFilters.js:972</code></a>
         
         </p>
 
@@ -416,8 +390,8 @@
 
                     <ul class="index-list methods extends">
                         
-                            <li class="index-item method inherited">
-                                <a href="#method_add">add</a>
+                            <li class="index-item method private">
+                                <a href="#method_apply">apply</a>
 
                                 
                                 
@@ -431,21 +405,28 @@
                             </li>
                         
                             <li class="index-item method inherited">
-                                <a href="#method_cloneImageData">cloneImageData</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
                                 <a href="#method_get">get</a>
 
                                 
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_getIndexes">getIndexes</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_getWrappedIndexes">getWrappedIndexes</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method private inherited">
-                                <a href="#method_getAlpha">getAlpha</a>
+                                <a href="#method_makeName">makeName</a>
 
                                 
                                 
@@ -465,8 +446,22 @@
                                 
                             </li>
                         
+                            <li class="index-item method private">
+                                <a href="#method_prepareGrid">prepareGrid</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method inherited">
                                 <a href="#method_set">set</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_updateFilters">updateFilters</a>
 
                                 
                                 
@@ -483,21 +478,42 @@
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property inherited">
-                                <a href="#property_alpha">alpha</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property inherited">
                                 <a href="#property_comment">comment</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property inherited">
-                                <a href="#property_composite">composite</a>
+                            <li class="index-item property private">
+                                <a href="#property_currentArea">currentArea</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_currentGrid">currentGrid</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_currentHeight">currentHeight</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_currentWidth">currentWidth</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_filters">filters</a>
 
                                 
                                 
@@ -511,7 +527,7 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_threshold">threshold</a>
+                                <a href="#property_stencil">stencil</a>
 
                                 
                                 
@@ -552,21 +568,11 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
+                    <div id="method_apply" class="method item private">
+    <h3 class="name"><code>apply</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>data</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -577,6 +583,8 @@
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -589,16 +597,16 @@
 
     <div class="meta">
         
-            <p>Inherited from
-            <a href="../classes/Filter.html#method_add">
-                Filter
-            </a>
             
-            but overwritten in
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1235"><code>source\scrawlFilters.js:1235</code></a>
+        <a href="../files/source_scrawlMultiFilters.js.html#l1065"><code>source\scrawlMultiFilters.js:1065</code></a>
         
         </p>
 
@@ -609,36 +617,16 @@
     </div>
 
     <div class="description">
-        <p>Add function - takes data, calculates its threshold and combines it with data</p>
+        <p>multifilter main function:</p>
+<ul>
+<li>prepare data from my.canvas.defaultHiddenCanvasElement</li>
+<li>sort filters (if required)</li>
+<li>iterate through filters, applying algorithms to data</li>
+<li>recreate filtered data in my.canvas.defaultHiddenCanvasElement</li>
+</ul>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">data</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -648,7 +636,7 @@
             <div class="returns-description">
                 
                     
-                    <p>amended image data object</p>
+                    <p>always true</p>
 
                 
             </div>
@@ -704,7 +692,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2439"><code>source\scrawlCore.js:2439</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2401"><code>source\scrawlCore.js:2401</code></a>
         
         </p>
 
@@ -782,110 +770,6 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
 </div>
 
                 
-                    <div id="method_cloneImageData" class="method item inherited">
-    <h3 class="name"><code>cloneImageData</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>original</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_cloneImageData">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l834"><code>source\scrawlFilters.js:834</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>cloneImageData function</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">original</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <ul>
-<li>canvas getImageData object</li>
-</ul>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>cloned image data object; false on error</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_get" class="method item inherited">
     <h3 class="name"><code>get</code></h3>
 
@@ -929,7 +813,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2392"><code>source\scrawlCore.js:2392</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2346"><code>source\scrawlCore.js:2346</code></a>
         
         </p>
 
@@ -1002,8 +886,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_getAlpha" class="method item private inherited">
-    <h3 class="name"><code>getAlpha</code></h3>
+                    <div id="method_getIndexes" class="method item private">
+    <h3 class="name"><code>getIndexes</code></h3>
 
     
         <span class="paren">()</span>
@@ -1032,12 +916,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Filter.html#method_getAlpha">Filter</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l858"><code>source\scrawlFilters.js:858</code></a>
+        <a href="../files/source_scrawlMultiFilters.js.html#l1157"><code>source\scrawlMultiFilters.js:1157</code></a>
         
         </p>
 
@@ -1048,7 +935,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>getAlpha function</p>
+        <p>Extract data from the current grid</p>
 
     </div>
 
@@ -1061,7 +948,185 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>numerical strength value, between 0 and 1</p>
+                    <p>Array of Numbers</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getWrappedIndexes" class="method item private">
+    <h3 class="name"><code>getWrappedIndexes</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l1205"><code>source\scrawlMultiFilters.js:1205</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Extract data from the current grid</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Array of Numbers</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeName" class="method item private inherited">
+    <h3 class="name"><code>makeName</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[suggestedName]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_makeName">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2327"><code>source\scrawlCore.js:2327</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Generate unique names for new Scrawl objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[suggestedName]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>String of the suggested name</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>always true</p>
 
                 
             </div>
@@ -1123,7 +1188,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2486"><code>source\scrawlCore.js:2486</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2448"><code>source\scrawlCore.js:2448</code></a>
         
         </p>
 
@@ -1231,7 +1296,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2478"><code>source\scrawlCore.js:2478</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2440"><code>source\scrawlCore.js:2440</code></a>
         
         </p>
 
@@ -1266,21 +1331,84 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_set" class="method item inherited">
+                    <div id="method_prepareGrid" class="method item private">
+    <h3 class="name"><code>prepareGrid</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l1103"><code>source\scrawlMultiFilters.js:1103</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Create a reference grid, for use by certain filters:</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>always true</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_set" class="method item">
     <h3 class="name"><code>set</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>items</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -1298,20 +1426,21 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-        <span class="flag chainable">chainable</span>
-    
 
     
 
     <div class="meta">
         
+            <p>Inherited from
+            <a href="../classes/Base.html#method_set">
+                Base
+            </a>
             
-                <p>Inherited from
-                <a href="../classes/Base.html#method_set">Base</a>:
+            but overwritten in
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2408"><code>source\scrawlCore.js:2408</code></a>
+        <a href="../files/source_scrawlMultiFilters.js.html#l1129"><code>source\scrawlMultiFilters.js:1129</code></a>
         
         </p>
 
@@ -1322,35 +1451,10 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.</p>
-<p>An attribute value will only be set if the object already has a default value for that attribute. This restricts the ability of coders to add attributes to Scrawl objects.</p>
+        <p>Augments Base.set</p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">items</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Object containing attribute key:value pairs</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -1360,7 +1464,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             <div class="returns-description">
                 
                     
-                    <p>This</p>
+                    <p>this</p>
 
                 
             </div>
@@ -1368,24 +1472,78 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
-        <div class="example">
-            <h4>Example:</h4>
+</div>
 
-            <div class="example-content">
-                <pre class="code prettyprint"><code>var box = scrawl.makeBlock({
-    width: 50,
-    height: 50
-    });
-box.set({
-    height: 100,
-    favouriteAnimal: &#39;cat&#39;
-    });
-box.get(&#39;width&#39;);               //returns 50
-box.get(&#39;height&#39;);              //returns 100
-box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
+                
+                    <div id="method_updateFilters" class="method item private">
+    <h3 class="name"><code>updateFilters</code></h3>
 
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l1144"><code>source\scrawlMultiFilters.js:1144</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Force filters to update:</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>always true</p>
+
+                
             </div>
         </div>
+    
+
     
 </div>
 
@@ -1396,51 +1554,6 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
-
-                
-                    <div id="property_alpha" class="property item inherited">
-    <h3 class="name"><code>alpha</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_alpha">Filter</a>:
-            
-        
-        
-        <a href="../files/source_scrawlFilters.js.html#l804"><code>source\scrawlFilters.js:804</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Filter alpha</p>
-<p>values between 0 (transparent) and 1 (current alpha values); or &#39;0%&#39; and &#39;100%&#39;</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> 1</p>
-    
-
-    
-
-    
-</div>
 
                 
                     <div id="property_comment" class="property item inherited">
@@ -1463,7 +1576,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2370"><code>source\scrawlCore.js:2370</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2305"><code>source\scrawlCore.js:2305</code></a>
         
         </p>
 
@@ -1487,9 +1600,205 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_composite" class="property item inherited">
-    <h3 class="name"><code>composite</code></h3>
-    <span class="type">String</span>
+                    <div id="property_currentArea" class="property item private">
+    <h3 class="name"><code>currentArea</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l1048"><code>source\scrawlMultiFilters.js:1048</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Latest canvas area</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_currentGrid" class="property item private">
+    <h3 class="name"><code>currentGrid</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l1024"><code>source\scrawlMultiFilters.js:1024</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>An array of arrays representing the index values for all alpha channel pixels in the canvas</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> []</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_currentHeight" class="property item private">
+    <h3 class="name"><code>currentHeight</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l1040"><code>source\scrawlMultiFilters.js:1040</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Latest canvas height</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_currentWidth" class="property item private">
+    <h3 class="name"><code>currentWidth</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l1032"><code>source\scrawlMultiFilters.js:1032</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Latest canvas width</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_filters" class="property item">
+    <h3 class="name"><code>filters</code></h3>
+    <span class="type">Array</span>
 
     
 
@@ -1502,12 +1811,15 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/Filter.html#property_composite">Filter</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l813"><code>source\scrawlFilters.js:813</code></a>
+        <a href="../files/source_scrawlMultiFilters.js.html#l1056"><code>source\scrawlMultiFilters.js:1056</code></a>
         
         </p>
 
@@ -1517,13 +1829,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Filter composite operation</p>
-<p>Only the final filter in an array of filters will determine the composite operation to be used on the cell</p>
+        <p>An Array of filter definition Objects - each type of filter definition object must include a <strong>filter</strong> String attribute (eg: &#39;grayscale&#39;), alongside any specific attributes required by that particular filter. Filters are processed in array order, first to last.</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;source-over&#x27;</p>
+        <p><strong>Default:</strong> []</p>
     
 
     
@@ -1552,7 +1863,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2348"><code>source\scrawlCore.js:2348</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2284"><code>source\scrawlCore.js:2284</code></a>
         
         </p>
 
@@ -1574,9 +1885,9 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="property_threshold" class="property item">
-    <h3 class="name"><code>threshold</code></h3>
-    <span class="type">Number - or alternatively percentage String</span>
+                    <div id="property_stencil" class="property item">
+    <h3 class="name"><code>stencil</code></h3>
+    <span class="type">Boolean</span>
 
     
 
@@ -1597,7 +1908,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1225"><code>source\scrawlFilters.js:1225</code></a>
+        <a href="../files/source_scrawlMultiFilters.js.html#l1017"><code>source\scrawlMultiFilters.js:1017</code></a>
         
         </p>
 
@@ -1607,12 +1918,12 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>Percentage value of threshold effect: as a Number, between 0 (all black) and 1 (all white); as a String, between &#39;0%&#39; and &#39;100%&#39; (default: 0.5).</p>
+        <p>Whether to treat the entity or cell being filtered as a stencil (true) in which case the background behind the stencil is filtered, or just filter the entity itself (the default setting)</p>
 
     </div>
 
     
-        <p><strong>Default:</strong> 1</p>
+        <p><strong>Default:</strong> false</p>
     
 
     
@@ -1641,7 +1952,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2384"><code>source\scrawlCore.js:2384</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2319"><code>source\scrawlCore.js:2319</code></a>
         
         </p>
 
@@ -1685,7 +1996,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2377"><code>source\scrawlCore.js:2377</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2312"><code>source\scrawlCore.js:2312</code></a>
         
         </p>
 
@@ -1734,7 +2045,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlFilters.js.html#l1216"><code>source\scrawlFilters.js:1216</code></a>
+        <a href="../files/source_scrawlMultiFilters.js.html#l1007"><code>source\scrawlMultiFilters.js:1007</code></a>
         
         </p>
 
@@ -1748,7 +2059,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;Filter&#x27;</p>
+        <p><strong>Default:</strong> &#x27;MultiFilter&#x27;</p>
     
 
     

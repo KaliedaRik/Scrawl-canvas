@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -326,10 +300,10 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 					a = JSON.parse(item[i]);
 					if (my.xt(a.type)) {
 						type = a.type.toLowerCase();
-						if (my.contains(my[a.classname], a.name)) {
+						if (my.contains(my[a.libname], a.name)) {
 							//update
 							b = my[type][a.name].parse();
-							c = my.work.d[a.type];
+							c = my[a.type].prototype.defs;
 							k = Object.keys(b);
 							for (var j = 0, w = k.length; j &lt; w; j++) {
 								if (!my.xt(a[k])) {
@@ -374,7 +348,7 @@ Argument should be a JSON String, or an Array of JSON Strings, of objects to be 
 		/**
 A __save__ function
 
-Argument should be a String literal: &#x27;pads&#x27;, &#x27;cells&#x27;, &#x27;groups&#x27;, &#x27;entitys&#x27;, &#x27;designs&#x27;, &#x27;spriteanimations&#x27;, &#x27;springs&#x27;
+Argument should be a String literal: &#x27;pads&#x27;, &#x27;cells&#x27;, &#x27;groups&#x27;, &#x27;entitys&#x27;, &#x27;styless&#x27;, &#x27;spriteanimations&#x27;, &#x27;springs&#x27;
 
 _Note: this function does not check for duplicate objects_
 @method save
@@ -405,9 +379,9 @@ _Note: this function does not check for duplicate objects_
 						results = results.concat(my.entity[my.entitynames[i]].toString());
 					}
 					break;
-				case &#x27;designs&#x27;:
-					for (i = 0, iz = my.designnames.length; i &lt; iz; i++) {
-						results = results.concat(my.design[my.designnames[i]].toString());
+				case &#x27;styless&#x27;:
+					for (i = 0, iz = my.stylesnames.length; i &lt; iz; i++) {
+						results = results.concat(my.styles[my.stylesnames[i]].toString());
 					}
 					break;
 				case &#x27;spriteanimations&#x27;:
@@ -434,13 +408,14 @@ Turn the object into a JSON String
 @return JSON string of non-default value attributes
 **/
 		my.Base.prototype.toString = function() {
-			var keys = Object.keys(my.work.d[this.type]),
+			var keys = Object.keys(my[this.type].prototype.defs),
 				result = {};
 			result.type = this.type;
-			result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i &lt; z; i++) {
-				if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my.work.d[this.type][keys[i]]) {
+				if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my[this.type].prototype.defs[keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -453,19 +428,20 @@ Turn the object into a JSON String
 @return JSON string of non-default value attributes
 **/
 		my.Position.prototype.toString = function() {
-			var keys = Object.keys(my.work.d[this.type]),
+			var keys = Object.keys(my[this.type].prototype.defs),
 				result = {},
 				blacklist = [];
 			result.type = this.type;
-			result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i &lt; z; i++) {
 				if (my.contains([&#x27;start&#x27;, &#x27;delta&#x27;, &#x27;handle&#x27;], keys[i])) {
-					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my[this.type].prototype.defs[keys[i]])) {
 						result[keys[i]] = this[keys[i]];
 					}
 				}
-				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my.work.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my[this.type].prototype.defs[keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -478,15 +454,16 @@ Turn the object into a JSON String
 @return JSON string of non-default value attributes
 **/
 		my.PageElement.prototype.toString = function() {
-			var keys = Object.keys(my.work.d[this.type]),
+			var keys = Object.keys(my[this.type].prototype.defs),
 				result = {},
 				temp;
 			result.type = this.type;
-			result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i &lt; z; i++) {
 				if (my.contains([&#x27;start&#x27;, &#x27;delta&#x27;, &#x27;handle&#x27;, &#x27;perspective&#x27;, &#x27;translate&#x27;], keys[i])) {
-					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my[this.type].prototype.defs[keys[i]])) {
 						result[keys[i]] = this[keys[i]];
 					}
 				}
@@ -514,7 +491,7 @@ Turn the object into a JSON String
 						result.deltaRoll = temp.roll;
 					}
 				}
-				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my.work.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my[this.type].prototype.defs[keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -524,33 +501,34 @@ Turn the object into a JSON String
 		/**
 Turn the object into a JSON String
 @method Pad.toString
-@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, designs and groups
+@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, styless and groups
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Pad.prototype.toString = function(noexternalobjects) {
-			var keys = Object.keys(my.work.d[this.type]),
+			var keys = Object.keys(my[this.type].prototype.defs),
 				result = {},
 				resarray = [],
 				groups = [],
 				entitys = [],
 				ctx,
-				designs = [],
+				styless = [],
 				blacklist = [&#x27;localWidth&#x27;, &#x27;localHeight&#x27;, &#x27;mouse&#x27;, &#x27;displayOffsetX&#x27;, &#x27;displayOffsetY&#x27;],
 				i, iz, j, jz;
 			result.type = this.type;
-			result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			result.parentElement = my.canvas[this.name].parentElement.id;
 			for (i = 0, iz = keys.length; i &lt; iz; i++) {
 				if (my.contains([&#x27;start&#x27;, &#x27;delta&#x27;, &#x27;handle&#x27;], keys[i])) {
-					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my[this.type].prototype.defs[keys[i]])) {
 						result[keys[i]] = this[keys[i]];
 					}
 				}
 				else if (my.contains(blacklist, keys[i])) {
 					//do nothing
 				}
-				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my.work.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my[this.type].prototype.defs[keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -570,18 +548,18 @@ Turn the object into a JSON String
 				}
 				for (i = 0, iz = entitys.length; i &lt; iz; i++) {
 					ctx = my.ctx[my.entity[entitys[i]].context];
-					if (my.contains(my.designnames, ctx.fillStyle)) {
-						my.pushUnique(designs, ctx.fillStyle);
+					if (my.contains(my.stylesnames, ctx.fillStyle)) {
+						my.pushUnique(styless, ctx.fillStyle);
 					}
-					if (my.contains(my.designnames, ctx.strokeStyle)) {
-						my.pushUnique(designs, ctx.strokeStyle);
+					if (my.contains(my.stylesnames, ctx.strokeStyle)) {
+						my.pushUnique(styless, ctx.strokeStyle);
 					}
-					if (my.contains(my.designnames, ctx.shadowColor)) {
-						my.pushUnique(designs, ctx.shadowColor);
+					if (my.contains(my.stylesnames, ctx.shadowColor)) {
+						my.pushUnique(styless, ctx.shadowColor);
 					}
 				}
-				for (i = 0, iz = designs.length; i &lt; iz; i++) {
-					resarray.push(my.design[designs[i]].toString());
+				for (i = 0, iz = styless.length; i &lt; iz; i++) {
+					resarray.push(my.styles[styless[i]].toString());
 				}
 				for (i = 0, iz = entitys.length; i &lt; iz; i++) {
 					resarray.push(my.entity[entitys[i]].toString(true));
@@ -593,24 +571,25 @@ Turn the object into a JSON String
 		/**
 Turn the object into a JSON String
 @method Cell.toString
-@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, designs and groups
+@param {Boolean} [noexternalobjects] True to exclude external objects such as entitys, styless and groups
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Cell.prototype.toString = function(noexternalobjects) {
-			var keys = Object.keys(my.work.d[this.type]),
+			var keys = Object.keys(my[this.type].prototype.defs),
 				result = {},
 				resarray = [],
 				entitys = [],
 				ctx,
-				designs = [],
+				styless = [],
 				blacklist = [&#x27;copyData&#x27;, &#x27;pasteData&#x27;, &#x27;actualWidth&#x27;, &#x27;actualHeight&#x27;],
 				i, iz, j, jz;
 			result.type = this.type;
-			result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (i = 0, iz = keys.length; i &lt; iz; i++) {
 				if (my.contains([&#x27;start&#x27;, &#x27;delta&#x27;, &#x27;handle&#x27;, &#x27;copy&#x27;, &#x27;copyDelta&#x27;], keys[i])) {
-					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my[this.type].prototype.defs[keys[i]])) {
 						result[keys[i]] = {
 							x: this[keys[i]].x,
 							y: this[keys[i]].y
@@ -620,7 +599,7 @@ Turn the object into a JSON String
 				else if (my.contains(blacklist, keys[i])) {
 					//do nothing
 				}
-				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my.work.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my[this.type].prototype.defs[keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -634,18 +613,18 @@ Turn the object into a JSON String
 				}
 				for (i = 0, iz = entitys.length; i &lt; iz; i++) {
 					ctx = my.ctx[my.entity[entitys[i]].context];
-					if (my.contains(my.designnames, ctx.fillStyle)) {
-						my.pushUnique(designs, ctx.fillStyle);
+					if (my.contains(my.stylesnames, ctx.fillStyle)) {
+						my.pushUnique(styless, ctx.fillStyle);
 					}
-					if (my.contains(my.designnames, ctx.strokeStyle)) {
-						my.pushUnique(designs, ctx.strokeStyle);
+					if (my.contains(my.stylesnames, ctx.strokeStyle)) {
+						my.pushUnique(styless, ctx.strokeStyle);
 					}
-					if (my.contains(my.designnames, ctx.shadowColor)) {
-						my.pushUnique(designs, ctx.shadowColor);
+					if (my.contains(my.stylesnames, ctx.shadowColor)) {
+						my.pushUnique(styless, ctx.shadowColor);
 					}
 				}
-				for (i = 0, iz = designs.length; i &lt; iz; i++) {
-					resarray.push(my.design[designs[i]].toString());
+				for (i = 0, iz = styless.length; i &lt; iz; i++) {
+					resarray.push(my.styles[styless[i]].toString());
 				}
 				for (i = 0, iz = entitys.length; i &lt; iz; i++) {
 					resarray.push(my.entity[entitys[i]].toString(true));
@@ -660,14 +639,14 @@ Turn the object into a JSON String; doesn&#x27;t include name and type attribute
 **/
 		my.Context.prototype.toString = function() {
 			var result = {};
-			for (var i = 0, z = my.work.contextKeys.length; i &lt; z; i++) {
-				if (my.work.contextKeys[i] === &#x27;lineDash&#x27;) {
-					if (my.xt(this.lineDash) &amp;&amp; this.lineDash.length &gt; 0) {
+			for (var i = 0, z = my.Context.prototype.allKeys.length; i &lt; z; i++) {
+				if (my.Context.prototype.allKeys[i] === &#x27;lineDash&#x27;) {
+					if (my.xt(this.lineDash) &amp;&amp; this.lineDash.length) {
 						result.lineDash = this.lineDash;
 					}
 				}
-				else if (my.xt(this[my.work.contextKeys[i]]) &amp;&amp; this[my.work.contextKeys[i]] !== my.work.d.Context[my.work.contextKeys[i]]) {
-					result[my.work.contextKeys[i]] = this[my.work.contextKeys[i]];
+				else if (my.xt(this[my.Context.prototype.allKeys[i]]) &amp;&amp; this[my.Context.prototype.allKeys[i]] !== my.Context.prototype.defs[my.Context.prototype.allKeys[i]]) {
+					result[my.Context.prototype.allKeys[i]] = this[my.Context.prototype.allKeys[i]];
 				}
 			}
 			return JSON.stringify(result);
@@ -681,17 +660,18 @@ Automatically removes the entitys attribute from the result; when loading, exist
 @return Array of JSON strings of non-default value attributes
 **/
 		my.Group.prototype.toString = function(noentitys) {
-			var keys = Object.keys(my.work.d[this.type]),
+			var keys = Object.keys(my[this.type].prototype.defs),
 				result = {},
 				resarray = [],
 				ctx,
-				designs = [],
+				styless = [],
 				i, iz;
 			result.type = this.type;
-			result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (i = 0, iz = keys.length; i &lt; iz; i++) {
-				if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my.work.d[this.type][keys[i]]) {
+				if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my[this.type].prototype.defs[keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -700,18 +680,18 @@ Automatically removes the entitys attribute from the result; when loading, exist
 			if (!noentitys) {
 				for (i = 0, iz = this.entitys.length; i &lt; iz; i++) {
 					ctx = my.ctx[my.entity[this.entitys[i]].context];
-					if (my.contains(my.designnames, ctx.fillStyle)) {
-						my.pushUnique(designs, ctx.fillStyle);
+					if (my.contains(my.stylesnames, ctx.fillStyle)) {
+						my.pushUnique(styless, ctx.fillStyle);
 					}
-					if (my.contains(my.designnames, ctx.strokeStyle)) {
-						my.pushUnique(designs, ctx.strokeStyle);
+					if (my.contains(my.stylesnames, ctx.strokeStyle)) {
+						my.pushUnique(styless, ctx.strokeStyle);
 					}
-					if (my.contains(my.designnames, ctx.shadowColor)) {
-						my.pushUnique(designs, ctx.shadowColor);
+					if (my.contains(my.stylesnames, ctx.shadowColor)) {
+						my.pushUnique(styless, ctx.shadowColor);
 					}
 				}
-				for (i = 0, iz = designs.length; i &lt; iz; i++) {
-					resarray.push(my.design[designs[i]].toString());
+				for (i = 0, iz = styless.length; i &lt; iz; i++) {
+					resarray.push(my.styles[styless[i]].toString());
 				}
 				for (i = 0, iz = this.entitys.length; i &lt; iz; i++) {
 					resarray.push(my.entity[this.entitys[i]].toString(true));
@@ -728,13 +708,14 @@ Retains the entitys attribute Array; does not include any other objects in the r
 @return Array of JSON Strings
 **/
 		my.Group.prototype.save = function() {
-			var keys = Object.keys(my.work.d[this.type]),
+			var keys = Object.keys(my[this.type].prototype.defs),
 				result = {};
 			result.type = this.type;
-			result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			for (var i = 0, z = keys.length; i &lt; z; i++) {
-				if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my.work.d[this.type][keys[i]]) {
+				if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my[this.type].prototype.defs[keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}
@@ -748,34 +729,35 @@ Turn the object into a JSON String
 **/
 		my.Entity.prototype.toString = function(noexternalobjects) {
 			noexternalobjects = (my.xt(noexternalobjects)) ? noexternalobjects : false;
-			var keys = Object.keys(my.work.d[this.type]),
+			var keys = Object.keys(my[this.type].prototype.defs),
 				result = {},
 				ctx = my.ctx[this.context],
 				ctxArray,
-				designs = [],
+				styless = [],
 				resarray = [],
 				vectorslist = [&#x27;start&#x27;, &#x27;delta&#x27;, &#x27;handle&#x27;, &#x27;copy&#x27;],
 				blacklist = [&#x27;collisionVectors&#x27;, &#x27;dataSet&#x27;, &#x27;pointList&#x27;, &#x27;firstPoint&#x27;, &#x27;linkList&#x27;, &#x27;linkDurations&#x27;, &#x27;perimeterLength&#x27;, &#x27;style&#x27;, &#x27;variant&#x27;, &#x27;weight&#x27;, &#x27;size&#x27;, &#x27;metrics&#x27;, &#x27;family&#x27;, &#x27;texts&#x27;, &#x27;copyData&#x27;, &#x27;pasteData&#x27;, &#x27;localHeight&#x27;, &#x27;localWidth&#x27;];
 			result.type = this.type;
-			result.classname = this.classname;
+			result.lib = this.lib;
+			result.libname = this.libname;
 			result.name = this.name;
 			if (!noexternalobjects) {
-				if (ctx &amp;&amp; ctx.fillStyle &amp;&amp; my.contains(my.designnames, ctx.fillStyle)) {
-					my.pushUnique(designs, ctx.fillStyle);
+				if (ctx &amp;&amp; ctx.fillStyle &amp;&amp; my.contains(my.stylesnames, ctx.fillStyle)) {
+					my.pushUnique(styless, ctx.fillStyle);
 				}
-				if (ctx &amp;&amp; ctx.strokeStyle &amp;&amp; my.contains(my.designnames, ctx.strokeStyle)) {
-					my.pushUnique(designs, ctx.strokeStyle);
+				if (ctx &amp;&amp; ctx.strokeStyle &amp;&amp; my.contains(my.stylesnames, ctx.strokeStyle)) {
+					my.pushUnique(styless, ctx.strokeStyle);
 				}
-				if (ctx &amp;&amp; ctx.shadowColor &amp;&amp; my.contains(my.designnames, ctx.shadowColor)) {
-					my.pushUnique(designs, ctx.shadowColor);
+				if (ctx &amp;&amp; ctx.shadowColor &amp;&amp; my.contains(my.stylesnames, ctx.shadowColor)) {
+					my.pushUnique(styless, ctx.shadowColor);
 				}
-				for (var k = 0, kz = designs.length; k &lt; kz; k++) {
-					resarray.push(my.design[designs[k]].toString());
+				for (var k = 0, kz = styless.length; k &lt; kz; k++) {
+					resarray.push(my.styles[styless[k]].toString());
 				}
 			}
 			for (var i = 0, iz = keys.length; i &lt; iz; i++) {
 				if (my.contains(vectorslist, keys[i])) {
-					if (!this[keys[i]].isLike(my.work.d[this.type][keys[i]])) {
+					if (!this[keys[i]].isLike(my[this.type].prototype.defs[keys[i]])) {
 						result[keys[i]] = {
 							x: this[keys[i]].x,
 							y: this[keys[i]].y
@@ -792,7 +774,7 @@ Turn the object into a JSON String
 				else if (my.contains(blacklist, keys[i])) {
 					//do nothing
 				}
-				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my.work.d[this.type][keys[i]]) {
+				else if (my.xt(this[keys[i]]) &amp;&amp; this[keys[i]] !== my[this.type].prototype.defs[keys[i]]) {
 					result[keys[i]] = this[keys[i]];
 				}
 			}

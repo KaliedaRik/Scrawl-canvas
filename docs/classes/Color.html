@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -266,7 +240,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlColor.js.html#l63"><code>source\scrawlColor.js:63</code></a>
+            Defined in: <a href="../files/source_scrawlColor.js.html#l55"><code>source\scrawlColor.js:55</code></a>
         </div>
     
 
@@ -294,7 +268,7 @@
 </ul>
 <h2 id="access">Access</h2>
 <ul>
-<li>scrawl.design.COLORNAME - for the Color design object</li>
+<li>scrawl.styles.COLORNAME - for the Color styles object</li>
 </ul>
 
 </div>
@@ -344,7 +318,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l63"><code>source\scrawlColor.js:63</code></a>
+        <a href="../files/source_scrawlColor.js.html#l55"><code>source\scrawlColor.js:55</code></a>
         
         </p>
 
@@ -454,6 +428,13 @@
                         
                             <li class="index-item method private">
                                 <a href="#method_getData">getData</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_makeName">makeName</a>
 
                                 
                                 
@@ -768,7 +749,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l350"><code>source\scrawlColor.js:350</code></a>
+        <a href="../files/source_scrawlColor.js.html#l343"><code>source\scrawlColor.js:343</code></a>
         
         </p>
 
@@ -849,7 +830,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l287"><code>source\scrawlColor.js:287</code></a>
+        <a href="../files/source_scrawlColor.js.html#l280"><code>source\scrawlColor.js:280</code></a>
         
         </p>
 
@@ -956,7 +937,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l451"><code>source\scrawlColor.js:451</code></a>
+        <a href="../files/source_scrawlColor.js.html#l444"><code>source\scrawlColor.js:444</code></a>
         
         </p>
 
@@ -1068,7 +1049,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l321"><code>source\scrawlColor.js:321</code></a>
+        <a href="../files/source_scrawlColor.js.html#l314"><code>source\scrawlColor.js:314</code></a>
         
         </p>
 
@@ -1174,7 +1155,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l266"><code>source\scrawlColor.js:266</code></a>
+        <a href="../files/source_scrawlColor.js.html#l259"><code>source\scrawlColor.js:259</code></a>
         
         </p>
 
@@ -1275,7 +1256,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l308"><code>source\scrawlColor.js:308</code></a>
+        <a href="../files/source_scrawlColor.js.html#l301"><code>source\scrawlColor.js:301</code></a>
         
         </p>
 
@@ -1300,6 +1281,111 @@
                 
                     
                     <p>CSS color String</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeName" class="method item private inherited">
+    <h3 class="name"><code>makeName</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[suggestedName]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_makeName">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2327"><code>source\scrawlCore.js:2327</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Generate unique names for new Scrawl objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[suggestedName]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>String of the suggested name</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>always true</p>
 
                 
             </div>
@@ -1361,7 +1447,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2486"><code>source\scrawlCore.js:2486</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2448"><code>source\scrawlCore.js:2448</code></a>
         
         </p>
 
@@ -1469,7 +1555,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2478"><code>source\scrawlCore.js:2478</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2440"><code>source\scrawlCore.js:2440</code></a>
         
         </p>
 
@@ -1540,7 +1626,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l1430"><code>source\scrawlColor.js:1430</code></a>
+        <a href="../files/source_scrawlColor.js.html#l689"><code>source\scrawlColor.js:689</code></a>
         
         </p>
 
@@ -1623,7 +1709,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l368"><code>source\scrawlColor.js:368</code></a>
+        <a href="../files/source_scrawlColor.js.html#l361"><code>source\scrawlColor.js:361</code></a>
         
         </p>
 
@@ -1735,7 +1821,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l433"><code>source\scrawlColor.js:433</code></a>
+        <a href="../files/source_scrawlColor.js.html#l426"><code>source\scrawlColor.js:426</code></a>
         
         </p>
 
@@ -1840,7 +1926,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l1421"><code>source\scrawlColor.js:1421</code></a>
+        <a href="../files/source_scrawlColor.js.html#l680"><code>source\scrawlColor.js:680</code></a>
         
         </p>
 
@@ -1945,7 +2031,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l1412"><code>source\scrawlColor.js:1412</code></a>
+        <a href="../files/source_scrawlColor.js.html#l671"><code>source\scrawlColor.js:671</code></a>
         
         </p>
 
@@ -2042,7 +2128,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l395"><code>source\scrawlColor.js:395</code></a>
+        <a href="../files/source_scrawlColor.js.html#l388"><code>source\scrawlColor.js:388</code></a>
         
         </p>
 
@@ -2108,7 +2194,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l130"><code>source\scrawlColor.js:130</code></a>
+        <a href="../files/source_scrawlColor.js.html#l123"><code>source\scrawlColor.js:123</code></a>
         
         </p>
 
@@ -2155,7 +2241,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l242"><code>source\scrawlColor.js:242</code></a>
+        <a href="../files/source_scrawlColor.js.html#l235"><code>source\scrawlColor.js:235</code></a>
         
         </p>
 
@@ -2202,7 +2288,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l186"><code>source\scrawlColor.js:186</code></a>
+        <a href="../files/source_scrawlColor.js.html#l179"><code>source\scrawlColor.js:179</code></a>
         
         </p>
 
@@ -2249,7 +2335,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l214"><code>source\scrawlColor.js:214</code></a>
+        <a href="../files/source_scrawlColor.js.html#l207"><code>source\scrawlColor.js:207</code></a>
         
         </p>
 
@@ -2296,7 +2382,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l158"><code>source\scrawlColor.js:158</code></a>
+        <a href="../files/source_scrawlColor.js.html#l151"><code>source\scrawlColor.js:151</code></a>
         
         </p>
 
@@ -2343,7 +2429,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l249"><code>source\scrawlColor.js:249</code></a>
+        <a href="../files/source_scrawlColor.js.html#l242"><code>source\scrawlColor.js:242</code></a>
         
         </p>
 
@@ -2390,7 +2476,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l123"><code>source\scrawlColor.js:123</code></a>
+        <a href="../files/source_scrawlColor.js.html#l116"><code>source\scrawlColor.js:116</code></a>
         
         </p>
 
@@ -2437,7 +2523,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l235"><code>source\scrawlColor.js:235</code></a>
+        <a href="../files/source_scrawlColor.js.html#l228"><code>source\scrawlColor.js:228</code></a>
         
         </p>
 
@@ -2484,7 +2570,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l179"><code>source\scrawlColor.js:179</code></a>
+        <a href="../files/source_scrawlColor.js.html#l172"><code>source\scrawlColor.js:172</code></a>
         
         </p>
 
@@ -2531,7 +2617,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l207"><code>source\scrawlColor.js:207</code></a>
+        <a href="../files/source_scrawlColor.js.html#l200"><code>source\scrawlColor.js:200</code></a>
         
         </p>
 
@@ -2578,7 +2664,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l151"><code>source\scrawlColor.js:151</code></a>
+        <a href="../files/source_scrawlColor.js.html#l144"><code>source\scrawlColor.js:144</code></a>
         
         </p>
 
@@ -2622,7 +2708,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2370"><code>source\scrawlCore.js:2370</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2305"><code>source\scrawlCore.js:2305</code></a>
         
         </p>
 
@@ -2669,7 +2755,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l116"><code>source\scrawlColor.js:116</code></a>
+        <a href="../files/source_scrawlColor.js.html#l109"><code>source\scrawlColor.js:109</code></a>
         
         </p>
 
@@ -2716,7 +2802,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l228"><code>source\scrawlColor.js:228</code></a>
+        <a href="../files/source_scrawlColor.js.html#l221"><code>source\scrawlColor.js:221</code></a>
         
         </p>
 
@@ -2763,7 +2849,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l172"><code>source\scrawlColor.js:172</code></a>
+        <a href="../files/source_scrawlColor.js.html#l165"><code>source\scrawlColor.js:165</code></a>
         
         </p>
 
@@ -2810,7 +2896,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l200"><code>source\scrawlColor.js:200</code></a>
+        <a href="../files/source_scrawlColor.js.html#l193"><code>source\scrawlColor.js:193</code></a>
         
         </p>
 
@@ -2857,7 +2943,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l144"><code>source\scrawlColor.js:144</code></a>
+        <a href="../files/source_scrawlColor.js.html#l137"><code>source\scrawlColor.js:137</code></a>
         
         </p>
 
@@ -2901,7 +2987,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2348"><code>source\scrawlCore.js:2348</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2284"><code>source\scrawlCore.js:2284</code></a>
         
         </p>
 
@@ -2946,7 +3032,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l109"><code>source\scrawlColor.js:109</code></a>
+        <a href="../files/source_scrawlColor.js.html#l102"><code>source\scrawlColor.js:102</code></a>
         
         </p>
 
@@ -2993,7 +3079,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l256"><code>source\scrawlColor.js:256</code></a>
+        <a href="../files/source_scrawlColor.js.html#l249"><code>source\scrawlColor.js:249</code></a>
         
         </p>
 
@@ -3041,7 +3127,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l221"><code>source\scrawlColor.js:221</code></a>
+        <a href="../files/source_scrawlColor.js.html#l214"><code>source\scrawlColor.js:214</code></a>
         
         </p>
 
@@ -3088,7 +3174,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l165"><code>source\scrawlColor.js:165</code></a>
+        <a href="../files/source_scrawlColor.js.html#l158"><code>source\scrawlColor.js:158</code></a>
         
         </p>
 
@@ -3135,7 +3221,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l193"><code>source\scrawlColor.js:193</code></a>
+        <a href="../files/source_scrawlColor.js.html#l186"><code>source\scrawlColor.js:186</code></a>
         
         </p>
 
@@ -3182,7 +3268,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l137"><code>source\scrawlColor.js:137</code></a>
+        <a href="../files/source_scrawlColor.js.html#l130"><code>source\scrawlColor.js:130</code></a>
         
         </p>
 
@@ -3226,7 +3312,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2384"><code>source\scrawlCore.js:2384</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2319"><code>source\scrawlCore.js:2319</code></a>
         
         </p>
 
@@ -3270,7 +3356,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2377"><code>source\scrawlCore.js:2377</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2312"><code>source\scrawlCore.js:2312</code></a>
         
         </p>
 
@@ -3319,7 +3405,7 @@
             
         
         
-        <a href="../files/source_scrawlColor.js.html#l100"><code>source\scrawlColor.js:100</code></a>
+        <a href="../files/source_scrawlColor.js.html#l92"><code>source\scrawlColor.js:92</code></a>
         
         </p>
 

@@ -1,7 +1,7 @@
 /***********************************************************************************
-* SCRAWL.JS Library 
+* SCRAWL-CANVAS Library 
 *
-*	version 6.0.1 - 14 January 2017
+*	version 7.0.0 - 26 June 2017
 *	Developed by Rik Roots - rik.roots@gmail.com, rik@rikweb.org.uk
 *
 *   Scrawl demo website: http://scrawl.rikweb.org.uk
@@ -15,7 +15,7 @@ C. Versions
 
 A. PURPOSE AND FEATURES
 ------------------------------------------------------------------------------------
-Scrawl.js is  JavaScript library which adds an API for handling and manipulating 
+Scrawl-canvas is  JavaScript library which adds an API for handling and manipulating 
 HTML5 <canvas> elements in the DOM.
 
 The library is extendable - only load the JavaScript that is needed, nothing more. Scrawl core
@@ -71,9 +71,9 @@ Scrawl-canvas includes functionality to manipulate multiple visible canvas eleme
 3 dimensions using CSS 3d transforms – where supported by the browser.
 
 Other DOM elements – including SVG images – can be included in Scrawl stacks, and 
-manipulated via Scrawl.js functionality.
+manipulated via Scrawl-canvas functionality.
 
-Canvases and elements in a Scrawl.js stack (including other stacks) can be moved and 
+Canvases and elements in a Scrawl-canvas stack (including other stacks) can be moved and 
 scaled very easily. DOM elements can be pivoted to each other and to canvas cells and
 entitys - and vice-versa.
 
@@ -86,22 +86,22 @@ http://scrawl.rikweb.org.uk/
 
 B. DEVELOPMENT
 ------------------------------------------------------------------------------------
-VERSION 6.0.1 released 14 January 2017
+VERSION 7.0.0 released 26 June 2017
 
     - the zip file includes:
 		
 		Production:
-		- scrawlCore-min.js (80kb)
-		- scrawlAnimation-min.js (28kb)
-		- scrawlBlock-min.js (5kb)
+		- scrawlCore-min.js (82kb)
+		- scrawlAnimation-min.js (29kb)
+		- scrawlBlock-min.js (4kb)
 		- scrawlCollisions-min.js (11kb)
-		- scrawlColor-min.js (18kb)
-		- scrawlFilters-min.js (25kb)
+		- scrawlColor-min.js (7kb)
 		- scrawlFrame-min.js (20kb)
 		- scrawlImageLoad-min.js (9kb)
 		- scrawlImages-min.js (40kb)
+		- scrawlMultiFilters-min.js (12kb)
 		- scrawlPath-min.js (24kb)
-		- scrawlPathFactories-min.js (9kb)
+		- scrawlPathFactories-min.js (8kb)
 		- scrawlPhrase-min.js (13kb)
 		- scrawlPhysics-min.js (10kb)
 		- scrawlQuaternion-min.js (6kb)
@@ -111,24 +111,24 @@ VERSION 6.0.1 released 14 January 2017
 		- scrawlWheel-min.js (7kb)
 
 		Development:
-		- scrawlCore.js (237kb)
+		- scrawlCore.js (238kb)
 		- scrawlAnimation.js (79kb)
-		- scrawlBlock.js (14kb)
+		- scrawlBlock.js (11kb)
 		- scrawlCollisions.js (29kb)
-		- scrawlColor.js (36kb)
-		- scrawlFilters.js (67kb)
-		- scrawlFrame (67kb)
+		- scrawlColor.js (18kb)
+		- scrawlFrame (65kb)
 		- scrawlImageLoad.js (30kb)
 		- scrawlImages.js (68kb)
-		- scrawlPath.js (68kb)
-		- scrawlPathFactories.js (25kb)
+		- scrawlMultiFilters.js (31kb)
+		- scrawlPath.js (67kb)
+		- scrawlPathFactories.js (24kb)
 		- scrawlPhrase.js (39kb)
 		- scrawlPhysics.js (26kb)
 		- scrawlQuaternion.js (18kb)
 		- scrawlSaveLoad.js (18kb)
-		- scrawlShape.js (26kb)
+		- scrawlShape.js (25kb)
 		- scrawlStacks.js (116kb)
-		- scrawlWheel.js (20kb)
+		- scrawlWheel.js (19kb)
 
 		Documentation:
 		- changelog.txt
@@ -137,8 +137,9 @@ VERSION 6.0.1 released 14 January 2017
 scrawl-canvas is also available for forking from GitHub: 
 https://github.com/KaliedaRik/Scrawl-canvas
 
-There's discussion pages for Scrawl.js on the GitHub website. 
-Please post all questions, suggestions and critiques of Scrawl.js to those pages:
+There's discussion pages for Scrawl-canvas on the GitHub website. 
+Please post all questions, suggestions and critiques of Scrawl-canvas to 
+those pages:
 https://github.com/KaliedaRik/Scrawl-canvas/pulls
 
 (I no longer update the version of scrawl on SourceForge - too much work)
@@ -147,6 +148,10 @@ If I don't answer, nudge me by email: rik.roots@gmail.com
 
 C. VERSIONS
 ------------------------------------------------------------------------------------
+VERSION 7.0.0 uploaded 26 June 2017
+	- breaking changes to the scrawl filters and color systems
+	- improvements and speed enhancements to core functionality
+
 Version 6.0.1 uploaded 14 January 2017
 	- scrawl stacks (and frames) efficiency refactor
 	- minor bugfix

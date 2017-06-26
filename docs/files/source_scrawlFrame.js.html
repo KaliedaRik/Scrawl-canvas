@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -310,14 +284,6 @@ scrawlFrame module adaptions to the Scrawl library object
 **/
 
 		/**
-Alias for makeFramePoint()
-@method newFramePoint
-@deprecated
-**/
-		my.newFramePoint = function(items) {
-			return new my.FramePoint(items);
-		};
-		/**
 A __factory__ function to generate new FramePoint entitys
 @method makeFramePoint
 @param {Object} items Key:value Object argument for setting attributes
@@ -325,14 +291,6 @@ A __factory__ function to generate new FramePoint entitys
 **/
 		my.makeFramePoint = function(items) {
 			return new my.FramePoint(items);
-		};
-		/**
-Alias for makeFrame()
-@method newFrame
-@deprecated
-**/
-		my.newFrame = function(items) {
-			return new my.Frame(items);
 		};
 		/**
 A __factory__ function to generate new Frame entitys
@@ -368,7 +326,8 @@ A __factory__ function to generate new Frame entitys
 		my.FramePoint = function FramePoint(items) {
 			var get = my.xtGet,
 			vec = my.makeVector;
-			my.Base.call(this, items);
+			this.makeName(items.name);
+			my.pushUnique(my[this.libName], this.name);
 			items = my.safeObject(items);
 			this.host = get(items.host, false);
 			this.data = get(items.data, false);
@@ -396,7 +355,7 @@ A __factory__ function to generate new Frame entitys
 @final
 **/
 		my.FramePoint.prototype.type = &#x27;FramePoint&#x27;;
-		my.work.d.FramePoint = {
+		my.FramePoint.prototype.defs = {
 			/**
 Frame emtity to which this frame corner belongs
 @property host
@@ -498,8 +457,9 @@ Positioning flag; set to true to ignore path/pivot/mouse changes along the Y axi
 **/
 			lockY: false
 		};
-		my.mergeInto(my.work.d.FramePoint, my.work.d.Base);
-		my.FramePoint.prototype.classname = &#x27;framepointnames&#x27;;
+		my.mergeInto(my.FramePoint.prototype.defs, my.Base.prototype.defs);
+		my.FramePoint.prototype.lib = &#x27;framepoint&#x27;;
+		my.FramePoint.prototype.libName = &#x27;framepointnames&#x27;;
 		/**
 @method get
 @param {String} item Name of attribute to return
@@ -749,7 +709,6 @@ setLocal() helper function - position supplied by Path entity
 			this.referencePoint = vec();
 
 			this.source = get(items.source, false);
-			// this.sourceType = false;
 			this.copy = {
 				x: get(items.copyX, 0),
 				y: get(items.copyY, 0),
@@ -799,14 +758,7 @@ setLocal() helper function - position supplied by Path entity
 			}
 			this.setCorners(items);
 			this.setEngine(this);
-			this.filtersEntityInit(items);
-			this.maxDimensions = {
-				top: 0,
-				bottom: 0,
-				left: 0,
-				right: 0,
-				flag: true
-			};
+			this.multifiltersEntityInit(items);
 
 			this.redraw = true;
 
@@ -820,8 +772,9 @@ setLocal() helper function - position supplied by Path entity
 @final
 **/
 		my.Frame.prototype.type = &#x27;Frame&#x27;;
-		my.Frame.prototype.classname = &#x27;entitynames&#x27;;
-		my.work.d.Frame = {
+		my.Frame.prototype.lib = &#x27;entity&#x27;;
+		my.Frame.prototype.libName = &#x27;entitynames&#x27;;
+		my.Frame.prototype.defs = {
 			/**
 Current coordinate for top left corner
 @property topLeft
@@ -1084,7 +1037,6 @@ ASSETNAME or CANVASNAME of source asset used to fill frame
 @default false
 **/
 			source: false,
-			// sourceType: false,
 			/**
 Every Frame entity includes its own personal &amp;lt;canvas&amp;gt; element, which is not part of the DOM and which can only be accessed through this attribute
 @property cell
@@ -1101,6 +1053,13 @@ The Frame entity&#x27;s &amp;lt;canvas&amp;gt; element&#x27;s 2d context engine 
 @private
 **/
 			engine: false,
+			/**
+MULTIFILTERNAME Strings, for multifilters to be applied to this entity
+@property multiFilter
+@type String
+@default &#x27;&#x27;
+**/
+			multiFilter: &#x27;&#x27;,
 			/**
 Array of FILTERNAME strings, for filters to be applied to this entity
 @property filters
@@ -1213,20 +1172,6 @@ The current Frame drawing process often leads to moire interference patterns app
 @default 1.03
 **/
 			interferenceFactor: 1.03,
-			/**
-Maximum dimensions - used as part of entity filter and collision detection functionality
-@property maxDimensions
-@type Object
-@default {top:0, bottom:0, left:0, right:0, flag:true}
-@private
-**/
-			maxDimensions: {
-				top: 0,
-				bottom: 0,
-				left: 0,
-				right: 0,
-				flag: true
-			}
 		};
 		/**
 Attribute cascaded to appropriate FramePoint object path attribute
@@ -1396,7 +1341,7 @@ Attribute cascaded to appropriate FramePoint object lockY attribute
 @type Boolean
 @default false
 **/
-		my.mergeInto(my.work.d.Frame, my.work.d.Base);
+		my.mergeInto(my.Frame.prototype.defs, my.Base.prototype.defs);
 		/**
 Frame.registerInLibrary hook function - modified by collisions extension
 @method collisionsEntityRegisterInLibrary
@@ -1600,7 +1545,7 @@ Augments Base.clone()
 @private
 **/
 		my.Frame.prototype.setEngine = function(items) {
-			var design, strokeStyle,
+			var styles, strokeStyle,
 				e = this.engine;
 			if (items.lineWidth) {
 				e.lineWidth = items.lineWidth;
@@ -1644,12 +1589,12 @@ Augments Base.clone()
 				e.shadowColor = items.shadowColor;
 			}
 			if (items.strokeStyle) {
-				design = my.design[items.strokeStyle];
-				if (my.xt(design)) {
-					if (my.contains([&#x27;Gradient&#x27;, &#x27;RadialGradient&#x27;, &#x27;Pattern&#x27;], design.type)) {
-						design.update(this.name, my.group[this.group].cell);
+				styles = my.styles[items.strokeStyle];
+				if (my.xt(styles)) {
+					if (my.contains([&#x27;Gradient&#x27;, &#x27;RadialGradient&#x27;, &#x27;Pattern&#x27;], styles.type)) {
+						styles.update(this.name, my.group[this.group].cell);
 					}
-					strokeStyle = design.getData();
+					strokeStyle = styles.getData();
 				}
 				else {
 					strokeStyle = items.strokeStyle;
@@ -1666,7 +1611,7 @@ Augments Base.clone()
 @private
 **/
 		my.Frame.prototype.setDestinationEngine = function(ctx, cellname, cell) {
-			var design, strokeStyle,
+			var styles, strokeStyle,
 				record = my.ctx[cellname];
 			if (record.lineWidth != this.lineWidth) {
 				ctx.lineWidth = this.lineWidth;
@@ -1714,12 +1659,12 @@ Augments Base.clone()
 				record.shadowColor = this.shadowColor;
 			}
 			if (record.strokeStyle != this.strokeStyle) {
-				if (my.xt(my.design[this.strokeStyle])) {
-					design = my.design[this.strokeStyle];
-					if (my.contains([&#x27;Gradient&#x27;, &#x27;RadialGradient&#x27;, &#x27;Pattern&#x27;], design.type)) {
-						design.update(this.name, my.group[this.group].cell);
+				if (my.xt(my.styles[this.strokeStyle])) {
+					styles = my.styles[this.strokeStyle];
+					if (my.contains([&#x27;Gradient&#x27;, &#x27;RadialGradient&#x27;, &#x27;Pattern&#x27;], styles.type)) {
+						styles.update(this.name, my.group[this.group].cell);
 					}
-					strokeStyle = design.getData();
+					strokeStyle = styles.getData();
 				}
 				else {
 					strokeStyle = this.strokeStyle;
@@ -1868,43 +1813,61 @@ Permitted methods include:
 			var dCell,
 				dName,
 				dCtx,
+				tempCellname, tempCell, tempEngine, tempGCO,
+				multifilterFlag = false,
+				tempFilter, work,
 				dMethod;
+
 			if (this.visibility) {
 				dCell = (cell) ? cell : my.group[this.group].cell;
 				dName = dCell.name;
 				dCtx = my.context[dName];
 				dMethod = (method) ? method : this.method;
+
+				if (this.multiFilter) {
+					tempFilter = my.multifilter[this.multiFilter];
+					if (tempFilter &amp;&amp; tempFilter.filters &amp;&amp; tempFilter.filters.length) {
+						multifilterFlag = true;
+						work = my.work;
+						ctx = my.ctx[this.name];
+						tempEngine = dCtx;
+						tempCell = dCell;
+						tempCellname = dName;
+
+						tempGCO = ctx.globalCompositeOperation;
+						ctx.globalCompositeOperation = &#x27;source-over&#x27;;
+						engine = work.cvx2;
+						cell = work.cvwrapper2;
+						cellname = work.cvwrapper2.name;
+						cell.set({
+							width: tempCell.actualWidth,
+							height: tempCell.actualHeight
+						});
+						my.work.cvcontroller.mice = my.pad[my.cell[tempCellname].pad].mice;
+					}
+				}
+
 				this.redrawCanvas();
 				this[dMethod](dCtx, dName, dCell);
-				this.stampFilter(dCtx, dName, dCell);
+
+				if (multifilterFlag) {
+					dCtx = tempEngine;
+					cell = tempCell;
+					cellname = tempCellname;
+					ctx.globalCompositeOperation = tempGCO;
+					this.stampMultifilter(dCtx, cell);
+				}
 			}
 			return this;
 		};
 		/**
 Entity constructor hook function - modified by filters module
-@method filtersEntityInit
+@method multifiltersEntityInit
 @private
 **/
-		my.Frame.prototype.filtersEntityInit = function(items) {
-			my.Entity.prototype.filtersEntityInit.call(this, items);
+		my.Frame.prototype.multifiltersEntityInit = function(items) {
+			my.Entity.prototype.multifiltersEntityInit.call(this, items);
 		};
-		/**
-Entity.stamp hook function - add a filter to an Entity, and any background detail enclosed by the Entity
-@method stampFilter
-@private
-**/
-		my.Frame.prototype.stampFilter = function(engine, cellname, cell) {
-			my.Entity.prototype.stampFilter.call(this, engine, cellname, cell);
-		};
-		/**
-Entity.stamp hook helper function
-@method stampFilterDefault
-@private
-**/
-		my.Frame.prototype.stampFilterDefault = function(entity, engine, cellname, cell) {
-			return my.Entity.prototype.stampFilterDefault.call(this, entity, engine, cellname, cell);
-		};
-		my.Frame.prototype.stampFilterDimensionsActions = my.Entity.prototype.stampFilterDimensionsActions;
 		/**
 Draw Frame entity in its own local canvas, then copy over to destimation canvas
 @method redrawCanvas
@@ -1921,6 +1884,15 @@ Draw Frame entity in its own local canvas, then copy over to destimation canvas
 				redraw, cornerCheck;
 
 			src = my.xtGet(my.asset[this.source], my.canvas[this.source], false);
+
+			if (!my.work.cv3) {
+				my.work.cvcontroller.addNewCell({
+					name: &#x27;defaultHiddenCanvasElementFrame&#x27;
+				});
+				my.work.cv3 = my.canvas.defaultHiddenCanvasElementFrame;
+				my.work.cvx3 = my.context.defaultHiddenCanvasElementFrame;
+			}
+
 			if (src) {
 
 				redraw = this.redraw;
@@ -1928,7 +1900,6 @@ Draw Frame entity in its own local canvas, then copy over to destimation canvas
 				if (redraw || cornerCheck) {
 
 					xta = my.xta;
-					// this.checkCorners();
 					tl = this.topLeft;
 					tr = this.topRight;
 					br = this.bottomRight;
@@ -1962,8 +1933,8 @@ Draw Frame entity in its own local canvas, then copy over to destimation canvas
 							dim = max.apply(Math, [width, height]);
 							maxDim = ceil(dim);
 							minDim = floor(dim);
-							cv = my.work.cv;
-							cvx = my.work.cvx;
+							cv = my.work.cv3;
+							cvx = my.work.cvx3;
 							getPos = this.getPosition;
 							iFac = this.interferenceFactor;
 							cell = this.cell;
@@ -2012,7 +1983,6 @@ Draw Frame entity in its own local canvas, then copy over to destimation canvas
 							}
 						}
 					}
-					this.maxDimensions.flag = true;
 				}
 			}
 			return this;
@@ -2399,77 +2369,6 @@ Either the &#x27;tests&#x27; attribute should contain a Vector, or an array of v
 				}
 			}
 			return (result) ? items : false;
-		};
-		/**
-Calculate the box position of the entity
-
-Returns an object with the following attributes:
-
-* __left__ - x coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __top__ - y coordinate of top-left corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __bottom__ - x coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-* __left__ - y coordinate of bottom-right corner of the enclosing box relative to the current cell&#x27;s top-left corner
-
-@method getMaxDimensions
-@param {Object} cell object
-@param {Object} entity object
-@return dimensions object
-@private
-**/
-		my.Frame.prototype.getMaxDimensions = function(cell) {
-			var tl, tr, br, bl, tlloc, trloc, brloc, blloc, t, l, b, r,
-				min = Math.min,
-				max = Math.max,
-				floor = Math.floor,
-				ceil = Math.ceil,
-				border, paste,
-				between = my.isBetween,
-				w, h, halfW, halfH;
-			tl = this.topLeft;
-			tr = this.topRight;
-			br = this.bottomRight;
-			bl = this.bottomLeft;
-			cell = (cell &amp;&amp; cell.type === &#x27;Cell&#x27;) ? cell : my.cell[my.group[this.group].cell];
-			if (my.xta(tl, tr, br, bl)) {
-				tlloc = tl.local;
-				trloc = tr.local;
-				brloc = br.local;
-				blloc = bl.local;
-				border = (this.lineWidth / 2) + 1;
-				l = floor(min.apply(Math, [tlloc.x, trloc.x, brloc.x, blloc.x]) - border);
-				t = floor(min.apply(Math, [tlloc.y, trloc.y, brloc.y, blloc.y]) - border);
-				r = ceil(max.apply(Math, [tlloc.x, trloc.x, brloc.x, blloc.x]) + border);
-				b = ceil(max.apply(Math, [tlloc.y, trloc.y, brloc.y, blloc.y]) + border);
-			}
-			else {
-				paste = my.safeObject(cell.pasteData);
-				l = floor(paste.x || 0);
-				t = floor(paste.y || 0);
-				r = ceil(paste.x + paste.w || 1);
-				b = ceil(paste.y + paste.h || 1);
-			}
-			w = cell.actualWidth;
-			h = cell.actualHeight;
-			halfW = w / 2;
-			halfH = h / 2;
-			if (!between(t, 0, h, true)) {
-				t = (t &gt; halfH) ? h : 0;
-			}
-			if (!between(b, 0, h, true)) {
-				b = (b &gt; halfH) ? h : 0;
-			}
-			if (!between(l, 0, w, true)) {
-				l = (l &gt; halfW) ? w : 0;
-			}
-			if (!between(r, 0, w, true)) {
-				r = (r &gt; halfW) ? w : 0;
-			}
-			this.maxDimensions.top = t;
-			this.maxDimensions.bottom = b;
-			this.maxDimensions.left = l;
-			this.maxDimensions.right = r;
-			this.maxDimensions.flag = false;
-			return this.maxDimensions;
 		};
 
 		my.Frame.prototype.parseCollisionPoints = function() {

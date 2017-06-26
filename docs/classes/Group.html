@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -266,7 +240,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlCore.js.html#l6696"><code>source\scrawlCore.js:6696</code></a>
+            Defined in: <a href="../files/source_scrawlCore.js.html#l6633"><code>source\scrawlCore.js:6633</code></a>
         </div>
     
 
@@ -346,7 +320,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6696"><code>source\scrawlCore.js:6696</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6633"><code>source\scrawlCore.js:6633</code></a>
         
         </p>
 
@@ -463,6 +437,13 @@
                         
                             <li class="index-item method">
                                 <a href="#method_getEntitysByMouseIndex">getEntitysByMouseIndex</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private inherited">
+                                <a href="#method_makeName">makeName</a>
 
                                 
                                 
@@ -701,7 +682,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6874"><code>source\scrawlCore.js:6874</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6838"><code>source\scrawlCore.js:6838</code></a>
         
         </p>
 
@@ -805,7 +786,7 @@
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2439"><code>source\scrawlCore.js:2439</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2401"><code>source\scrawlCore.js:2401</code></a>
         
         </p>
 
@@ -949,7 +930,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6827"><code>source\scrawlCore.js:6827</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6767"><code>source\scrawlCore.js:6767</code></a>
         
         </p>
 
@@ -1103,7 +1084,7 @@ newBox.get(&#39;height&#39;);       //returns 100</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2392"><code>source\scrawlCore.js:2392</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2346"><code>source\scrawlCore.js:2346</code></a>
         
         </p>
 
@@ -1222,7 +1203,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7103"><code>source\scrawlCore.js:7103</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7072"><code>source\scrawlCore.js:7072</code></a>
         
         </p>
 
@@ -1327,7 +1308,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7048"><code>source\scrawlCore.js:7048</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7010"><code>source\scrawlCore.js:7010</code></a>
         
         </p>
 
@@ -1432,7 +1413,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7081"><code>source\scrawlCore.js:7081</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7050"><code>source\scrawlCore.js:7050</code></a>
         
         </p>
 
@@ -1481,6 +1462,111 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
                 
                     
                     <p>Array of Entity objects</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_makeName" class="method item private inherited">
+    <h3 class="name"><code>makeName</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[suggestedName]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Base.html#method_makeName">Base</a>:
+            
+        
+        
+        <a href="../files/source_scrawlCore.js.html#l2327"><code>source\scrawlCore.js:2327</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Generate unique names for new Scrawl objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[suggestedName]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>String of the suggested name</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>always true</p>
 
                 
             </div>
@@ -1542,7 +1628,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2486"><code>source\scrawlCore.js:2486</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2448"><code>source\scrawlCore.js:2448</code></a>
         
         </p>
 
@@ -1650,7 +1736,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2478"><code>source\scrawlCore.js:2478</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2440"><code>source\scrawlCore.js:2440</code></a>
         
         </p>
 
@@ -1733,7 +1819,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7006"><code>source\scrawlCore.js:7006</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6970"><code>source\scrawlCore.js:6970</code></a>
         
         </p>
 
@@ -1841,7 +1927,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6918"><code>source\scrawlCore.js:6918</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6882"><code>source\scrawlCore.js:6882</code></a>
         
         </p>
 
@@ -1900,7 +1986,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 </div>
 
                 
-                    <div id="method_set" class="method item">
+                    <div id="method_set" class="method item inherited">
     <h3 class="name"><code>set</code></h3>
 
     
@@ -1939,16 +2025,13 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
 
     <div class="meta">
         
-            <p>Inherited from
-            <a href="../classes/Base.html#method_set">
-                Base
-            </a>
             
-            but overwritten in
+                <p>Inherited from
+                <a href="../classes/Base.html#method_set">Base</a>:
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6798"><code>source\scrawlCore.js:6798</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2370"><code>source\scrawlCore.js:2370</code></a>
         
         </p>
 
@@ -1959,7 +2042,8 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     </div>
 
     <div class="description">
-        <p>set</p>
+        <p>Set attribute values. Multiple attributes can be set in the one call by including the attribute key:value pair in the argument object.</p>
+<p>An attribute value will only be set if the object already has a default value for that attribute. This restricts the ability of coders to add attributes to Scrawl objects.</p>
 
     </div>
 
@@ -2004,6 +2088,25 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
     
 
     
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>var box = scrawl.makeBlock({
+    width: 50,
+    height: 50
+    });
+box.set({
+    height: 100,
+    favouriteAnimal: &#39;cat&#39;
+    });
+box.get(&#39;width&#39;);               //returns 50
+box.get(&#39;height&#39;);              //returns 100
+box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
+
+            </div>
+        </div>
+    
 </div>
 
                 
@@ -2047,7 +2150,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7159"><code>source\scrawlCore.js:7159</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7133"><code>source\scrawlCore.js:7133</code></a>
         
         </p>
 
@@ -2122,7 +2225,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l7138"><code>source\scrawlCore.js:7138</code></a>
+        <a href="../files/source_scrawlCore.js.html#l7112"><code>source\scrawlCore.js:7112</code></a>
         
         </p>
 
@@ -2205,7 +2308,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6990"><code>source\scrawlCore.js:6990</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6954"><code>source\scrawlCore.js:6954</code></a>
         
         </p>
 
@@ -2312,7 +2415,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6812"><code>source\scrawlCore.js:6812</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6752"><code>source\scrawlCore.js:6752</code></a>
         
         </p>
 
@@ -2439,7 +2542,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6844"><code>source\scrawlCore.js:6844</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6784"><code>source\scrawlCore.js:6784</code></a>
         
         </p>
 
@@ -2598,7 +2701,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6962"><code>source\scrawlCore.js:6962</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6926"><code>source\scrawlCore.js:6926</code></a>
         
         </p>
 
@@ -2689,7 +2792,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6731"><code>source\scrawlCore.js:6731</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6668"><code>source\scrawlCore.js:6668</code></a>
         
         </p>
 
@@ -2733,7 +2836,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2370"><code>source\scrawlCore.js:2370</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2305"><code>source\scrawlCore.js:2305</code></a>
         
         </p>
 
@@ -2780,7 +2883,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6724"><code>source\scrawlCore.js:6724</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6661"><code>source\scrawlCore.js:6661</code></a>
         
         </p>
 
@@ -2827,7 +2930,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6760"><code>source\scrawlCore.js:6760</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6697"><code>source\scrawlCore.js:6697</code></a>
         
         </p>
 
@@ -2871,7 +2974,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2348"><code>source\scrawlCore.js:2348</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2284"><code>source\scrawlCore.js:2284</code></a>
         
         </p>
 
@@ -2916,7 +3019,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6738"><code>source\scrawlCore.js:6738</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6675"><code>source\scrawlCore.js:6675</code></a>
         
         </p>
 
@@ -2963,7 +3066,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6767"><code>source\scrawlCore.js:6767</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6704"><code>source\scrawlCore.js:6704</code></a>
         
         </p>
 
@@ -3012,7 +3115,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6745"><code>source\scrawlCore.js:6745</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6682"><code>source\scrawlCore.js:6682</code></a>
         
         </p>
 
@@ -3056,7 +3159,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2384"><code>source\scrawlCore.js:2384</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2319"><code>source\scrawlCore.js:2319</code></a>
         
         </p>
 
@@ -3100,7 +3203,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l2377"><code>source\scrawlCore.js:2377</code></a>
+        <a href="../files/source_scrawlCore.js.html#l2312"><code>source\scrawlCore.js:2312</code></a>
         
         </p>
 
@@ -3149,7 +3252,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6780"><code>source\scrawlCore.js:6780</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6718"><code>source\scrawlCore.js:6718</code></a>
         
         </p>
 
@@ -3195,7 +3298,7 @@ box.get(&#39;favouriteAnimal&#39;);     //returns undefined</code></pre>
             
         
         
-        <a href="../files/source_scrawlCore.js.html#l6753"><code>source\scrawlCore.js:6753</code></a>
+        <a href="../files/source_scrawlCore.js.html#l6690"><code>source\scrawlCore.js:6690</code></a>
         
         </p>
 

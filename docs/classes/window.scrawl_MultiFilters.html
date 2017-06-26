@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>window.scrawl_Wheel - scrawl-canvas</title>
+    <title>window.scrawl_MultiFilters - scrawl-canvas</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -228,7 +228,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>window.scrawl_Wheel Class</h1>
+                        <h1>window.scrawl_MultiFilters Class</h1>
 <div class="box meta">
     
 
@@ -236,13 +236,13 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/source_scrawlWheel.js.html#l38"><code>source\scrawlWheel.js:38</code></a>
+            Defined in: <a href="../files/source_scrawlMultiFilters.js.html#l45"><code>source\scrawlMultiFilters.js:45</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/scrawlWheel.html">scrawlWheel</a>
+            Module: <a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a>
         
     
 
@@ -253,7 +253,22 @@
 
 <div class="box intro">
     <h1 id="window-scrawl">window.scrawl</h1>
-<p>scrawlWheel extension adaptions to the scrawl-canvas library object</p>
+<p>scrawlMultiFilters extension adaptions to the scrawl-canvas library object</p>
+<h2 id="new-library-sections">New library sections</h2>
+<ul>
+<li>scrawl.multifilter - for multifilter objects</li>
+</ul>
+<h3 id="hidden-canvas">Hidden canvas</h3>
+<p>makes use of the default hidden canvases:
+my.work.cv = my.canvas.defaultHiddenCanvasElement_base;
+my.work.cvx = my.context.defaultHiddenCanvasElement_base;
+my.work.cvmodel = my.ctx.defaultHiddenCanvasElement_base;
+my.work.cvwrapper = my.cell.defaultHiddenCanvasElement_base;
+my.work.cvcontroller = my.pad.defaultHiddenCanvasElement;
+my.work.cv2 = my.canvas.defaultHiddenCanvasElement;
+my.work.cvx2 = my.context.defaultHiddenCanvasElement;
+my.work.cvmodel2 = my.ctx.defaultHiddenCanvasElement;
+my.work.cvwrapper2 = my.cell.defaultHiddenCanvasElement;</p>
 
 </div>
 
@@ -266,6 +281,8 @@
         
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
+        
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
         
@@ -282,7 +299,59 @@
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_makeWheel">makeWheel</a>
+                                <a href="#method_makeFilter">makeFilter</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_makeMultiFilter">makeMultiFilter</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_multifiltersEntityInit">multifiltersEntityInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_multifiltersGroupInit">multifiltersGroupInit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_stampMultifilter">stampMultifilter</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_stampMultifilter">stampMultifilter</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                        
+                            <li class="index-item property">
+                                <a href="#property_Entity.multiFilter">Entity.multiFilter</a>
 
                                 
                                 
@@ -295,8 +364,6 @@
             
 
             
-
-            
         </div>
 
         
@@ -304,8 +371,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_makeWheel" class="method item">
-    <h3 class="name"><code>makeWheel</code></h3>
+                    <div id="method_makeFilter" class="method item">
+    <h3 class="name"><code>makeFilter</code></h3>
 
     
         <div class="args">
@@ -350,7 +417,7 @@
             
         
         
-        <a href="../files/source_scrawlWheel.js.html#l46"><code>source\scrawlWheel.js:46</code></a>
+        <a href="../files/source_scrawlMultiFilters.js.html#l75"><code>source\scrawlMultiFilters.js:75</code></a>
         
         </p>
 
@@ -361,7 +428,7 @@
     </div>
 
     <div class="description">
-        <p>A <strong>factory</strong> function to generate new Wheel entitys</p>
+        <p>A <strong>factory</strong> function to generate new Filter objects</p>
 
     </div>
 
@@ -398,7 +465,7 @@
             <div class="returns-description">
                 
                     
-                    <p>Wheel object</p>
+                    <p>Multifilter object</p>
 
                 
             </div>
@@ -406,21 +473,340 @@
     
 
     
-        <div class="example">
-            <h4>Example:</h4>
+</div>
 
-            <div class="example-content">
-                <pre class="code prettyprint"><code>scrawl.makeWheel({
-    radius: 50,
-    startX: 150,
-    startY: 60,
-    fillStyle: &#39;blue&#39;,
-    strokeStyle: &#39;red&#39;,
-    method: &#39;drawFill&#39;,
-    });</code></pre>
+                
+                    <div id="method_makeMultiFilter" class="method item">
+    <h3 class="name"><code>makeMultiFilter</code></h3>
 
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l84"><code>source\scrawlMultiFilters.js:84</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A <strong>factory</strong> function to generate new Multifilter objects</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Key:value Object argument for setting attributes</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    <p>Multifilter object</p>
+
+                
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_multifiltersEntityInit" class="method item private">
+    <h3 class="name"><code>multifiltersEntityInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l129"><code>source\scrawlMultiFilters.js:129</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity constructor hook function - modified by multiFilter module</p>
+<p>Adds the multiFilter, filterOnStroke and filterLevel attributes to Entity objects</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_multifiltersGroupInit" class="method item private">
+    <h3 class="name"><code>multifiltersGroupInit</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l118"><code>source\scrawlMultiFilters.js:118</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Group constructor hook function - modified by multiFilter module</p>
+<p>Adds the multiFilter, filterOnStroke and filterLevel attributes to Group objects</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_stampMultifilter" class="method item private">
+    <h3 class="name"><code>stampMultifilter</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l140"><code>source\scrawlMultiFilters.js:140</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Group.stamp hook function - modified by multifilters extension</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_stampMultifilter" class="method item private">
+    <h3 class="name"><code>stampMultifilter</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l163"><code>source\scrawlMultiFilters.js:163</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Entity.stamp hook function - modified by multifilters extension</p>
+
+    </div>
+
+    
+
+    
+
     
 </div>
 
@@ -428,6 +814,59 @@
             </div>
         
 
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_Entity.multiFilter" class="property item">
+    <h3 class="name"><code>Entity.multiFilter</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/source_scrawlMultiFilters.js.html#l93"><code>source\scrawlMultiFilters.js:93</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>MULTIFILTERNAME String, to be applied to this entity</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
         
 
         

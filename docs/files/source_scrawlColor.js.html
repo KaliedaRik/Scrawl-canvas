@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 6.0.1</em>
+            <em>API Docs for: 7.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -49,21 +49,11 @@
             
                 <li><a href="../classes/Block.html">Block</a></li>
             
-                <li><a href="../classes/BlurFilter.html">BlurFilter</a></li>
-            
-                <li><a href="../classes/BrightnessFilter.html">BrightnessFilter</a></li>
-            
                 <li><a href="../classes/Cell.html">Cell</a></li>
-            
-                <li><a href="../classes/ChannelsFilter.html">ChannelsFilter</a></li>
-            
-                <li><a href="../classes/ChannelStepFilter.html">ChannelStepFilter</a></li>
             
                 <li><a href="../classes/Color.html">Color</a></li>
             
                 <li><a href="../classes/Context.html">Context</a></li>
-            
-                <li><a href="../classes/Design.html">Design</a></li>
             
                 <li><a href="../classes/Device.html">Device</a></li>
             
@@ -83,21 +73,13 @@
             
                 <li><a href="../classes/Gradient.html">Gradient</a></li>
             
-                <li><a href="../classes/GreyscaleFilter.html">GreyscaleFilter</a></li>
-            
                 <li><a href="../classes/Group.html">Group</a></li>
             
                 <li><a href="../classes/Image.html">Image</a></li>
             
-                <li><a href="../classes/InvertFilter.html">InvertFilter</a></li>
-            
-                <li><a href="../classes/LeachFilter.html">LeachFilter</a></li>
-            
                 <li><a href="../classes/Link.html">Link</a></li>
             
-                <li><a href="../classes/MatrixFilter.html">MatrixFilter</a></li>
-            
-                <li><a href="../classes/NoiseFilter.html">NoiseFilter</a></li>
+                <li><a href="../classes/Multifilter.html">Multifilter</a></li>
             
                 <li><a href="../classes/Pad.html">Pad</a></li>
             
@@ -113,8 +95,6 @@
             
                 <li><a href="../classes/Picture.html">Picture</a></li>
             
-                <li><a href="../classes/PixelateFilter.html">PixelateFilter</a></li>
-            
                 <li><a href="../classes/Point.html">Point</a></li>
             
                 <li><a href="../classes/Position.html">Position</a></li>
@@ -122,10 +102,6 @@
                 <li><a href="../classes/Quaternion.html">Quaternion</a></li>
             
                 <li><a href="../classes/RadialGradient.html">RadialGradient</a></li>
-            
-                <li><a href="../classes/SaturationFilter.html">SaturationFilter</a></li>
-            
-                <li><a href="../classes/SeparateFilter.html">SeparateFilter</a></li>
             
                 <li><a href="../classes/Shape.html">Shape</a></li>
             
@@ -135,13 +111,11 @@
             
                 <li><a href="../classes/Stack.html">Stack</a></li>
             
+                <li><a href="../classes/Styles.html">Styles</a></li>
+            
                 <li><a href="../classes/Text.html">Text</a></li>
             
-                <li><a href="../classes/ThresholdFilter.html">ThresholdFilter</a></li>
-            
                 <li><a href="../classes/Ticker.html">Ticker</a></li>
-            
-                <li><a href="../classes/TintFilter.html">TintFilter</a></li>
             
                 <li><a href="../classes/Tween.html">Tween</a></li>
             
@@ -163,11 +137,11 @@
             
                 <li><a href="../classes/window.scrawl_Factories.html">window.scrawl_Factories</a></li>
             
-                <li><a href="../classes/window.scrawl_Filters.html">window.scrawl_Filters</a></li>
-            
                 <li><a href="../classes/window.scrawl_Frame.html">window.scrawl_Frame</a></li>
             
                 <li><a href="../classes/window.scrawl_Images.html">window.scrawl_Images</a></li>
+            
+                <li><a href="../classes/window.scrawl_MultiFilters.html">window.scrawl_MultiFilters</a></li>
             
                 <li><a href="../classes/window.scrawl_Path.html">window.scrawl_Path</a></li>
             
@@ -197,11 +171,11 @@
             
                 <li><a href="../modules/scrawlCore.html">scrawlCore</a></li>
             
-                <li><a href="../modules/scrawlFilters.html">scrawlFilters</a></li>
-            
                 <li><a href="../modules/scrawlFrame.html">scrawlFrame</a></li>
             
                 <li><a href="../modules/scrawlImages.html">scrawlImages</a></li>
+            
+                <li><a href="../modules/scrawlMultiFilters.html">scrawlMultiFilters</a></li>
             
                 <li><a href="../modules/scrawlPath.html">scrawlPath</a></li>
             
@@ -303,14 +277,6 @@ if (window.scrawl &amp;&amp; window.scrawl.work.extensions &amp;&amp; !window.sc
 	**/
 
 		/**
-Alias for makeColor()
-@method newColor
-@deprecated
-**/
-		my.newColor = function(items) {
-			return my.makeColor(items);
-		};
-		/**
 A __factory__ function to generate new Color objects
 @method makeColor
 @param {Object} items Key:value Object argument for setting attributes
@@ -334,7 +300,7 @@ A __factory__ function to generate new Color objects
 
 ## Access
 
-* scrawl.design.COLORNAME - for the Color design object
+* scrawl.styles.COLORNAME - for the Color styles object
 
 @class Color
 @constructor
@@ -352,8 +318,8 @@ A __factory__ function to generate new Color objects
 				this.generateRandomColor(items);
 			}
 			this.checkValues();
-			my.design[this.name] = this;
-			my.pushUnique(my.designnames, this.name);
+			my.styles[this.name] = this;
+			my.pushUnique(my.stylesnames, this.name);
 			return this;
 		};
 		my.Color.prototype = Object.create(my.Base.prototype);
@@ -364,8 +330,9 @@ A __factory__ function to generate new Color objects
 @final
 **/
 		my.Color.prototype.type = &#x27;Color&#x27;;
-		my.Color.prototype.classname = &#x27;designnames&#x27;;
-		my.work.d.Color = {
+		my.Color.prototype.lib = &#x27;styles&#x27;;
+		my.Color.prototype.libName = &#x27;stylesnames&#x27;;
+		my.Color.prototype.defs = {
 			/**
 Red channel value: 0 - 255
 @property r
@@ -522,7 +489,7 @@ This attribute is not retained by the color object, and can only be used in the 
 @default false
 **/
 		};
-		my.mergeInto(my.work.d.Color, my.work.d.Base);
+		my.mergeInto(my.Color.prototype.defs, my.Base.prototype.defs);
 		/**
 Augments Base.get()
 
@@ -726,10 +693,9 @@ Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/colo
 				g,
 				b,
 				a,
-				temp,
-				internal = true;
-			items = (my.isa(items, &#x27;str&#x27;)) ? items : &#x27;&#x27;;
-			if (items.length &gt; 0) {
+				temp;
+			items = (items.substring) ? items : &#x27;&#x27;;
+			if (items.length) {
 				items.toLowerCase();
 				r = 0;
 				g = 0;
@@ -767,907 +733,174 @@ Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/colo
 					b = temp[2];
 					a = temp[3];
 				}
+				else if (items === &#x27;transparent&#x27;) {
+					r = g = b = a = 0;
+				}
 				else {
 					temp = this.colorLibrary[items];
 					if (temp) {
-						internal = false;
-						temp.call(this);
+						r = parseInt(temp[0] + temp[1], 16);
+						g = parseInt(temp[2] + temp[3], 16);
+						b = parseInt(temp[4] + temp[5], 16);
+						a = 1;
 					}
 				}
-				if (internal) {
-					this.r = r;
-					this.g = g;
-					this.b = b;
-					this.a = a;
-				}
+				this.r = r;
+				this.g = g;
+				this.b = b;
+				this.a = a;
 				this.checkValues();
 			}
 			return this;
 		};
 		my.Color.prototype.colorLibrary = {
 			// color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/color_value
-			black: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			}, // #000000 	 
-			silver: function() {
-				this.r = parseInt(&#x27;c0&#x27;, 16);
-				this.g = parseInt(&#x27;c0&#x27;, 16);
-				this.b = parseInt(&#x27;c0&#x27;, 16);
-				this.a = 1;
-			}, // #c0c0c0 	 
-			gray: function() {
-				this.r = 127;
-				this.g = 127;
-				this.b = 127;
-				this.a = 1;
-			}, // #808080 	 
-			white: function() {
-				this.r = 255;
-				this.g = 255;
-				this.b = 255;
-				this.a = 1;
-			}, // #ffffff 	 
-			maroon: function() {
-				this.r = 127;
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			}, // #800000 	 
-			red: function() {
-				this.r = 255;
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			}, // #ff0000 	 
-			purple: function() {
-				this.r = 127;
-				this.g = 0;
-				this.b = 127;
-				this.a = 1;
-			}, // #800080 	 
-			fuchsia: function() {
-				this.r = 255;
-				this.g = 0;
-				this.b = 255;
-				this.a = 1;
-			}, // #ff00ff 	 
-			green: function() {
-				this.r = 0;
-				this.g = 127;
-				this.b = 0;
-				this.a = 1;
-			}, // #008000 	 
-			lime: function() {
-				this.r = 0;
-				this.g = 255;
-				this.b = 0;
-				this.a = 1;
-			}, // #00ff00 	 
-			olive: function() {
-				this.r = 127;
-				this.g = 127;
-				this.b = 0;
-				this.a = 1;
-			}, // #808000 	 
-			yellow: function() {
-				this.r = 255;
-				this.g = 255;
-				this.b = 0;
-				this.a = 1;
-			}, // #ffff00 	 
-			navy: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = 127;
-				this.a = 1;
-			}, // #000080 	 
-			blue: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = 255;
-				this.a = 1;
-			}, // #0000ff 	 
-			teal: function() {
-				this.r = 0;
-				this.g = 127;
-				this.b = 127;
-				this.a = 1;
-			}, // #008080 	 
-			aqua: function() {
-				this.r = 0;
-				this.g = 255;
-				this.b = 255;
-				this.a = 1;
-			}, // #00ffff 	 
-			orange: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;a5&#x27;, 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #ffa500 	 
-			aliceblue: function() {
-				this.r = parseInt(&#x27;f0&#x27;, 16);
-				this.g = parseInt(&#x27;f8&#x27;, 16);
-				this.b = 255;
-				this.a = 1;
-			}, // #f0f8ff 	 
-			antiquewhite: function() {
-				this.r = parseInt(&#x27;fa&#x27;, 16);
-				this.g = parseInt(&#x27;eb&#x27;, 16);
-				this.b = parseInt(&#x27;d7&#x27;, 16);
-				this.a = 1;
-			}, // #faebd7 	 
-			aquamarine: function() {
-				this.r = parseInt(&#x27;7f&#x27;, 16);
-				this.g = 255;
-				this.b = parseInt(&#x27;d4&#x27;, 16);
-				this.a = 1;
-			}, // #7fffd4 	 
-			azure: function() {
-				this.r = parseInt(&#x27;f0&#x27;, 16);
-				this.g = 255;
-				this.b = 255;
-				this.a = 1;
-			}, // #f0ffff 	 
-			beige: function() {
-				this.r = parseInt(&#x27;f5&#x27;, 16);
-				this.g = parseInt(&#x27;f5&#x27;, 16);
-				this.b = parseInt(&#x27;dc&#x27;, 16);
-				this.a = 1;
-			}, // #f5f5dc 	 
-			bisque: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;e4&#x27;, 16);
-				this.b = parseInt(&#x27;c4&#x27;, 16);
-				this.a = 1;
-			}, // #ffe4c4 	 
-			blanchedalmond: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;e4&#x27;, 16);
-				this.b = parseInt(&#x27;c4&#x27;, 16);
-				this.a = 1;
-			}, // #ffe4c4 	 
-			blueviolet: function() {
-				this.r = parseInt(&#x27;8a&#x27;, 16);
-				this.g = parseInt(&#x27;2b&#x27;, 16);
-				this.b = parseInt(&#x27;e2&#x27;, 16);
-				this.a = 1;
-			}, // #8a2be2 	 
-			brown: function() {
-				this.r = parseInt(&#x27;a5&#x27;, 16);
-				this.g = parseInt(&#x27;2a&#x27;, 16);
-				this.b = parseInt(&#x27;2a&#x27;, 16);
-				this.a = 1;
-			}, // #a52a2a 	 
-			burlywood: function() {
-				this.r = parseInt(&#x27;de&#x27;, 16);
-				this.g = parseInt(&#x27;b8&#x27;, 16);
-				this.b = parseInt(&#x27;87&#x27;, 16);
-				this.a = 1;
-			}, // #deb887 	 
-			cadetblue: function() {
-				this.r = parseInt(&#x27;5f&#x27;, 16);
-				this.g = parseInt(&#x27;9e&#x27;, 16);
-				this.b = parseInt(&#x27;a0&#x27;, 16);
-				this.a = 1;
-			}, // #5f9ea0 	 
-			chartreuse: function() {
-				this.r = parseInt(&#x27;7f&#x27;, 16);
-				this.g = 255;
-				this.b = 0;
-				this.a = 1;
-			}, // #7fff00 	 
-			chocolate: function() {
-				this.r = parseInt(&#x27;d2&#x27;, 16);
-				this.g = parseInt(&#x27;69&#x27;, 16);
-				this.b = parseInt(&#x27;1e&#x27;, 16);
-				this.a = 1;
-			}, // #d2691e 	 
-			coral: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;7f&#x27;, 16);
-				this.b = parseInt(&#x27;50&#x27;, 16);
-				this.a = 1;
-			}, // #ff7f50 	 
-			cornflowerblue: function() {
-				this.r = parseInt(&#x27;64&#x27;, 16);
-				this.g = parseInt(&#x27;95&#x27;, 16);
-				this.b = parseInt(&#x27;ed&#x27;, 16);
-				this.a = 1;
-			}, // #6495ed 	 
-			cornsilk: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;f8&#x27;, 16);
-				this.b = parseInt(&#x27;dc&#x27;, 16);
-				this.a = 1;
-			}, // #fff8dc 	 
-			crimson: function() {
-				this.r = parseInt(&#x27;dc&#x27;, 16);
-				this.g = parseInt(&#x27;14&#x27;, 16);
-				this.b = parseInt(&#x27;3c&#x27;, 16);
-				this.a = 1;
-			}, // #dc143c 	 
-			darkblue: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = parseInt(&#x27;8b&#x27;, 16);
-				this.a = 1;
-			}, // #00008b 	 
-			darkcyan: function() {
-				this.r = 0;
-				this.g = parseInt(&#x27;8b&#x27;, 16);
-				this.b = parseInt(&#x27;8b&#x27;, 16);
-				this.a = 1;
-			}, // #008b8b 	 
-			darkgoldenrod: function() {
-				this.r = parseInt(&#x27;b8&#x27;, 16);
-				this.g = parseInt(&#x27;86&#x27;, 16);
-				this.b = parseInt(&#x27;0b&#x27;, 16);
-				this.a = 1;
-			}, // #b8860b 	 
-			darkgray: function() {
-				this.r = parseInt(&#x27;a9&#x27;, 16);
-				this.g = parseInt(&#x27;a9&#x27;, 16);
-				this.b = parseInt(&#x27;a9&#x27;, 16);
-				this.a = 1;
-			}, // #a9a9a9 	 
-			darkgreen: function() {
-				this.r = 0;
-				this.g = parseInt(&#x27;64&#x27;, 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #006400 	 
-			darkgrey: function() {
-				this.r = parseInt(&#x27;a9&#x27;, 16);
-				this.g = parseInt(&#x27;a9&#x27;, 16);
-				this.b = parseInt(&#x27;a9&#x27;, 16);
-				this.a = 1;
-			}, // #a9a9a9 	 
-			darkkhaki: function() {
-				this.r = parseInt(&#x27;bd&#x27;, 16);
-				this.g = parseInt(&#x27;b7&#x27;, 16);
-				this.b = parseInt(&#x27;6b&#x27;, 16);
-				this.a = 1;
-			}, // #bdb76b 	 
-			darkmagenta: function() {
-				this.r = parseInt(&#x27;8b&#x27;, 16);
-				this.g = 0;
-				this.b = parseInt(&#x27;8b&#x27;, 16);
-				this.a = 1;
-			}, // #8b008b 	 
-			darkolivegreen: function() {
-				this.r = parseInt(&#x27;55&#x27;, 16);
-				this.g = parseInt(&#x27;6b&#x27;, 16);
-				this.b = parseInt(&#x27;2f&#x27;, 16);
-				this.a = 1;
-			}, // #556b2f 	 
-			darkorange: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;8c&#x27;, 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #ff8c00 	 
-			darkorchid: function() {
-				this.r = parseInt(&#x27;99&#x27;, 16);
-				this.g = parseInt(&#x27;32&#x27;, 16);
-				this.b = parseInt(&#x27;cc&#x27;, 16);
-				this.a = 1;
-			}, // #9932cc 	 
-			darkred: function() {
-				this.r = parseInt(&#x27;8b&#x27;, 16);
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			}, // #8b0000 	 
-			darksalmon: function() {
-				this.r = parseInt(&#x27;e9&#x27;, 16);
-				this.g = parseInt(&#x27;96&#x27;, 16);
-				this.b = parseInt(&#x27;7a&#x27;, 16);
-				this.a = 1;
-			}, // #e9967a 	 
-			darkseagreen: function() {
-				this.r = parseInt(&#x27;8f&#x27;, 16);
-				this.g = parseInt(&#x27;bc&#x27;, 16);
-				this.b = parseInt(&#x27;8f&#x27;, 16);
-				this.a = 1;
-			}, // #8fbc8f 	 
-			darkslateblue: function() {
-				this.r = parseInt(&#x27;48&#x27;, 16);
-				this.g = parseInt(&#x27;3d&#x27;, 16);
-				this.b = parseInt(&#x27;8b&#x27;, 16);
-				this.a = 1;
-			}, // #483d8b 	 
-			darkslategray: function() {
-				this.r = parseInt(&#x27;2f&#x27;, 16);
-				this.g = parseInt(&#x27;4f&#x27;, 16);
-				this.b = parseInt(&#x27;4f&#x27;, 16);
-				this.a = 1;
-			}, // #2f4f4f 	 
-			darkslategrey: function() {
-				this.r = parseInt(&#x27;2f&#x27;, 16);
-				this.g = parseInt(&#x27;4f&#x27;, 16);
-				this.b = parseInt(&#x27;4f&#x27;, 16);
-				this.a = 1;
-			}, // #2f4f4f 	 
-			darkturquoise: function() {
-				this.r = 0;
-				this.g = parseInt(&#x27;ce&#x27;, 16);
-				this.b = parseInt(&#x27;d1&#x27;, 16);
-				this.a = 1;
-			}, // #00ced1 	 
-			darkviolet: function() {
-				this.r = parseInt(&#x27;94&#x27;, 16);
-				this.g = 0;
-				this.b = parseInt(&#x27;d3&#x27;, 16);
-				this.a = 1;
-			}, // #9400d3 	 
-			deeppink: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;14&#x27;, 16);
-				this.b = parseInt(&#x27;93&#x27;, 16);
-				this.a = 1;
-			}, // #ff1493 	 
-			deepskyblue: function() {
-				this.r = 0;
-				this.g = parseInt(&#x27;bf&#x27;, 16);
-				this.b = 255;
-				this.a = 1;
-			}, // #00bfff 	 
-			dimgray: function() {
-				this.r = parseInt(&#x27;69&#x27;, 16);
-				this.g = parseInt(&#x27;69&#x27;, 16);
-				this.b = parseInt(&#x27;69&#x27;, 16);
-				this.a = 1;
-			}, // #696969 	 
-			dimgrey: function() {
-				this.r = parseInt(&#x27;69&#x27;, 16);
-				this.g = parseInt(&#x27;69&#x27;, 16);
-				this.b = parseInt(&#x27;69&#x27;, 16);
-				this.a = 1;
-			}, // #696969 	 
-			dodgerblue: function() {
-				this.r = parseInt(&#x27;1e&#x27;, 16);
-				this.g = parseInt(&#x27;90&#x27;, 16);
-				this.b = 255;
-				this.a = 1;
-			}, // #1e90ff 	 
-			firebrick: function() {
-				this.r = parseInt(&#x27;b2&#x27;, 16);
-				this.g = parseInt(&#x27;22&#x27;, 16);
-				this.b = parseInt(&#x27;22&#x27;, 16);
-				this.a = 1;
-			}, // #b22222 	 
-			floralwhite: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;fa&#x27;, 16);
-				this.b = parseInt(&#x27;f0&#x27;, 16);
-				this.a = 1;
-			}, // #fffaf0 	 
-			forestgreen: function() {
-				this.r = parseInt(&#x27;22&#x27;, 16);
-				this.g = parseInt(&#x27;8b&#x27;, 16);
-				this.b = parseInt(&#x27;22&#x27;, 16);
-				this.a = 1;
-			}, // #228b22 	 
-			gainsboro: function() {
-				this.r = parseInt(&#x27;dc&#x27;, 16);
-				this.g = parseInt(&#x27;dc&#x27;, 16);
-				this.b = parseInt(&#x27;dc&#x27;, 16);
-				this.a = 1;
-			}, // #dcdcdc 	 
-			ghostwhite: function() {
-				this.r = parseInt(&#x27;f8&#x27;, 16);
-				this.g = parseInt(&#x27;f8&#x27;, 16);
-				this.b = 255;
-				this.a = 1;
-			}, // #f8f8ff 	 
-			gold: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;d7&#x27;, 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #ffd700 	 
-			goldenrod: function() {
-				this.r = parseInt(&#x27;da&#x27;, 16);
-				this.g = parseInt(&#x27;a5&#x27;, 16);
-				this.b = parseInt(&#x27;20&#x27;, 16);
-				this.a = 1;
-			}, // #daa520 	 
-			greenyellow: function() {
-				this.r = parseInt(&#x27;ad&#x27;, 16);
-				this.g = 255;
-				this.b = parseInt(&#x27;2f&#x27;, 16);
-				this.a = 1;
-			}, // #adff2f 	 
-			grey: function() {
-				this.r = 127;
-				this.g = 127;
-				this.b = 127;
-				this.a = 1;
-			}, // #808080 	 
-			honeydew: function() {
-				this.r = parseInt(&#x27;f0&#x27;, 16);
-				this.g = 255;
-				this.b = parseInt(&#x27;f0&#x27;, 16);
-				this.a = 1;
-			}, // #f0fff0 	 
-			hotpink: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;69&#x27;, 16);
-				this.b = parseInt(&#x27;b4&#x27;, 16);
-				this.a = 1;
-			}, // #ff69b4 	 
-			indianred: function() {
-				this.r = parseInt(&#x27;cd&#x27;, 16);
-				this.g = parseInt(&#x27;5c&#x27;, 16);
-				this.b = parseInt(&#x27;5c&#x27;, 16);
-				this.a = 1;
-			}, // #cd5c5c 	 
-			indigo: function() {
-				this.r = parseInt(&#x27;4b&#x27;, 16);
-				this.g = 0;
-				this.b = parseInt(&#x27;82&#x27;, 16);
-				this.a = 1;
-			}, // #4b0082 	 
-			ivory: function() {
-				this.r = 255;
-				this.g = 255;
-				this.b = parseInt(&#x27;f0&#x27;, 16);
-				this.a = 1;
-			}, // #fffff0 	 
-			khaki: function() {
-				this.r = parseInt(&#x27;f0&#x27;, 16);
-				this.g = parseInt(&#x27;e6&#x27;, 16);
-				this.b = parseInt(&#x27;8c&#x27;, 16);
-				this.a = 1;
-			}, // #f0e68c 	 
-			lavender: function() {
-				this.r = parseInt(&#x27;e6&#x27;, 16);
-				this.g = parseInt(&#x27;e6&#x27;, 16);
-				this.b = parseInt(&#x27;fa&#x27;, 16);
-				this.a = 1;
-			}, // #e6e6fa 	 
-			lavenderblush: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;f0&#x27;, 16);
-				this.b = parseInt(&#x27;f5&#x27;, 16);
-				this.a = 1;
-			}, // #fff0f5 	 
-			lawngreen: function() {
-				this.r = parseInt(&#x27;7c&#x27;, 16);
-				this.g = parseInt(&#x27;fc&#x27;, 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #7cfc00 	 
-			lemonchiffon: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;fa&#x27;, 16);
-				this.b = parseInt(&#x27;cd&#x27;, 16);
-				this.a = 1;
-			}, // #fffacd 	 
-			lightblue: function() {
-				this.r = parseInt(&#x27;ad&#x27;, 16);
-				this.g = parseInt(&#x27;d8&#x27;, 16);
-				this.b = parseInt(&#x27;e6&#x27;, 16);
-				this.a = 1;
-			}, // #add8e6 	 
-			lightcoral: function() {
-				this.r = parseInt(&#x27;f0&#x27;, 16);
-				this.g = 127;
-				this.b = 127;
-				this.a = 1;
-			}, // #f08080 	 
-			lightcyan: function() {
-				this.r = parseInt(&#x27;e0&#x27;, 16);
-				this.g = 255;
-				this.b = 255;
-				this.a = 1;
-			}, // #e0ffff 	 
-			lightgoldenrodyellow: function() {
-				this.r = parseInt(&#x27;fa&#x27;, 16);
-				this.g = parseInt(&#x27;fa&#x27;, 16);
-				this.b = parseInt(&#x27;d2&#x27;, 16);
-				this.a = 1;
-			}, // #fafad2 	 
-			lightgray: function() {
-				this.r = parseInt(&#x27;d3&#x27;, 16);
-				this.g = parseInt(&#x27;d3&#x27;, 16);
-				this.b = parseInt(&#x27;d3&#x27;, 16);
-				this.a = 1;
-			}, // #d3d3d3 	 
-			lightgreen: function() {
-				this.r = parseInt(&#x27;90&#x27;, 16);
-				this.g = parseInt(&#x27;ee&#x27;, 16);
-				this.b = parseInt(&#x27;90&#x27;, 16);
-				this.a = 1;
-			}, // #90ee90 	 
-			lightgrey: function() {
-				this.r = parseInt(&#x27;d3&#x27;, 16);
-				this.g = parseInt(&#x27;d3&#x27;, 16);
-				this.b = parseInt(&#x27;d3&#x27;, 16);
-				this.a = 1;
-			}, // #d3d3d3 	 
-			lightpink: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;b6&#x27;, 16);
-				this.b = parseInt(&#x27;c1&#x27;, 16);
-				this.a = 1;
-			}, // #ffb6c1 	 
-			lightsalmon: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;a0&#x27;, 16);
-				this.b = parseInt(&#x27;7a&#x27;, 16);
-				this.a = 1;
-			}, // #ffa07a 	 
-			lightseagreen: function() {
-				this.r = parseInt(&#x27;20&#x27;, 16);
-				this.g = parseInt(&#x27;b2&#x27;, 16);
-				this.b = parseInt(&#x27;aa&#x27;, 16);
-				this.a = 1;
-			}, // #20b2aa 	 
-			lightskyblue: function() {
-				this.r = parseInt(&#x27;87&#x27;, 16);
-				this.g = parseInt(&#x27;ce&#x27;, 16);
-				this.b = parseInt(&#x27;fa&#x27;, 16);
-				this.a = 1;
-			}, // #87cefa 	 
-			lightslategray: function() {
-				this.r = parseInt(&#x27;77&#x27;, 16);
-				this.g = parseInt(&#x27;88&#x27;, 16);
-				this.b = parseInt(&#x27;99&#x27;, 16);
-				this.a = 1;
-			}, // #778899 	 
-			lightslategrey: function() {
-				this.r = parseInt(&#x27;77&#x27;, 16);
-				this.g = parseInt(&#x27;88&#x27;, 16);
-				this.b = parseInt(&#x27;99&#x27;, 16);
-				this.a = 1;
-			}, // #778899 	 
-			lightsteelblue: function() {
-				this.r = parseInt(&#x27;b0&#x27;, 16);
-				this.g = parseInt(&#x27;c4&#x27;, 16);
-				this.b = parseInt(&#x27;de&#x27;, 16);
-				this.a = 1;
-			}, // #b0c4de 	 
-			lightyellow: function() {
-				this.r = 255;
-				this.g = 255;
-				this.b = parseInt(&#x27;e0&#x27;, 16);
-				this.a = 1;
-			}, // #ffffe0 	 
-			limegreen: function() {
-				this.r = parseInt(&#x27;32&#x27;, 16);
-				this.g = parseInt(&#x27;cd&#x27;, 16);
-				this.b = parseInt(&#x27;32&#x27;, 16);
-				this.a = 1;
-			}, // #32cd32 	 
-			linen: function() {
-				this.r = parseInt(&#x27;fa&#x27;, 16);
-				this.g = parseInt(&#x27;f0&#x27;, 16);
-				this.b = parseInt(&#x27;e6&#x27;, 16);
-				this.a = 1;
-			}, // #faf0e6 	 
-			mediumaquamarine: function() {
-				this.r = parseInt(&#x27;66&#x27;, 16);
-				this.g = parseInt(&#x27;cd&#x27;, 16);
-				this.b = parseInt(&#x27;aa&#x27;, 16);
-				this.a = 1;
-			}, // #66cdaa 	 
-			mediumblue: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = parseInt(&#x27;cd&#x27;, 16);
-				this.a = 1;
-			}, // #0000cd 	 
-			mediumorchid: function() {
-				this.r = parseInt(&#x27;ba&#x27;, 16);
-				this.g = parseInt(&#x27;55&#x27;, 16);
-				this.b = parseInt(&#x27;d3&#x27;, 16);
-				this.a = 1;
-			}, // #ba55d3 	 
-			mediumpurple: function() {
-				this.r = parseInt(&#x27;93&#x27;, 16);
-				this.g = parseInt(&#x27;70&#x27;, 16);
-				this.b = parseInt(&#x27;db&#x27;, 16);
-				this.a = 1;
-			}, // #9370db 	 
-			mediumseagreen: function() {
-				this.r = parseInt(&#x27;3c&#x27;, 16);
-				this.g = parseInt(&#x27;b3&#x27;, 16);
-				this.b = parseInt(&#x27;71&#x27;, 16);
-				this.a = 1;
-			}, // #3cb371 	 
-			mediumslateblue: function() {
-				this.r = parseInt(&#x27;7b&#x27;, 16);
-				this.g = parseInt(&#x27;68&#x27;, 16);
-				this.b = parseInt(&#x27;ee&#x27;, 16);
-				this.a = 1;
-			}, // #7b68ee 	 
-			mediumspringgreen: function() {
-				this.r = 0;
-				this.g = parseInt(&#x27;fa&#x27;, 16);
-				this.b = parseInt(&#x27;9a&#x27;, 16);
-				this.a = 1;
-			}, // #00fa9a 	 
-			mediumturquoise: function() {
-				this.r = parseInt(&#x27;48&#x27;, 16);
-				this.g = parseInt(&#x27;d1&#x27;, 16);
-				this.b = parseInt(&#x27;cc&#x27;, 16);
-				this.a = 1;
-			}, // #48d1cc 	 
-			mediumvioletred: function() {
-				this.r = parseInt(&#x27;c7&#x27;, 16);
-				this.g = parseInt(&#x27;15&#x27;, 16);
-				this.b = parseInt(&#x27;85&#x27;, 16);
-				this.a = 1;
-			}, // #c71585 	 
-			midnightblue: function() {
-				this.r = parseInt(&#x27;19&#x27;, 16);
-				this.g = parseInt(&#x27;19&#x27;, 16);
-				this.b = parseInt(&#x27;70&#x27;, 16);
-				this.a = 1;
-			}, // #191970 	 
-			mintcream: function() {
-				this.r = parseInt(&#x27;f5&#x27;, 16);
-				this.g = 255;
-				this.b = parseInt(&#x27;fa&#x27;, 16);
-				this.a = 1;
-			}, // #f5fffa 	 
-			mistyrose: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;e4&#x27;, 16);
-				this.b = parseInt(&#x27;e1&#x27;, 16);
-				this.a = 1;
-			}, // #ffe4e1 	 
-			moccasin: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;e4&#x27;, 16);
-				this.b = parseInt(&#x27;b5&#x27;, 16);
-				this.a = 1;
-			}, // #ffe4b5 	 
-			navajowhite: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;de&#x27;, 16);
-				this.b = parseInt(&#x27;ad&#x27;, 16);
-				this.a = 1;
-			}, // #ffdead 	 
-			oldlace: function() {
-				this.r = parseInt(&#x27;fd&#x27;, 16);
-				this.g = parseInt(&#x27;f5&#x27;, 16);
-				this.b = parseInt(&#x27;e6&#x27;, 16);
-				this.a = 1;
-			}, // #fdf5e6 	 
-			olivedrab: function() {
-				this.r = parseInt(&#x27;6b&#x27;, 16);
-				this.g = parseInt(&#x27;8e&#x27;, 16);
-				this.b = parseInt(&#x27;23&#x27;, 16);
-				this.a = 1;
-			}, // #6b8e23 	 
-			orangered: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;45&#x27;, 16);
-				this.b = 0;
-				this.a = 1;
-			}, // #ff4500 	 
-			orchid: function() {
-				this.r = parseInt(&#x27;da&#x27;, 16);
-				this.g = parseInt(&#x27;70&#x27;, 16);
-				this.b = parseInt(&#x27;d6&#x27;, 16);
-				this.a = 1;
-			}, // #da70d6 	 
-			palegoldenrod: function() {
-				this.r = parseInt(&#x27;ee&#x27;, 16);
-				this.g = parseInt(&#x27;e8&#x27;, 16);
-				this.b = parseInt(&#x27;aa&#x27;, 16);
-				this.a = 1;
-			}, // #eee8aa 	 
-			palegreen: function() {
-				this.r = parseInt(&#x27;98&#x27;, 16);
-				this.g = parseInt(&#x27;fb&#x27;, 16);
-				this.b = parseInt(&#x27;98&#x27;, 16);
-				this.a = 1;
-			}, // #98fb98 	 
-			paleturquoise: function() {
-				this.r = parseInt(&#x27;af&#x27;, 16);
-				this.g = parseInt(&#x27;ee&#x27;, 16);
-				this.b = parseInt(&#x27;ee&#x27;, 16);
-				this.a = 1;
-			}, // #afeeee 	 
-			palevioletred: function() {
-				this.r = parseInt(&#x27;db&#x27;, 16);
-				this.g = parseInt(&#x27;70&#x27;, 16);
-				this.b = parseInt(&#x27;93&#x27;, 16);
-				this.a = 1;
-			}, // #db7093 	 
-			papayawhip: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;ef&#x27;, 16);
-				this.b = parseInt(&#x27;d5&#x27;, 16);
-				this.a = 1;
-			}, // #ffefd5 	 
-			peachpuff: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;da&#x27;, 16);
-				this.b = parseInt(&#x27;b9&#x27;, 16);
-				this.a = 1;
-			}, // #ffdab9 	 
-			peru: function() {
-				this.r = parseInt(&#x27;cd&#x27;, 16);
-				this.g = parseInt(&#x27;85&#x27;, 16);
-				this.b = parseInt(&#x27;3f&#x27;, 16);
-				this.a = 1;
-			}, // #cd853f 	 
-			pink: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;c0&#x27;, 16);
-				this.b = parseInt(&#x27;cb&#x27;, 16);
-				this.a = 1;
-			}, // #ffc0cb 	 
-			plum: function() {
-				this.r = parseInt(&#x27;dd&#x27;, 16);
-				this.g = parseInt(&#x27;a0&#x27;, 16);
-				this.b = parseInt(&#x27;dd&#x27;, 16);
-				this.a = 1;
-			}, // #dda0dd 	 
-			powderblue: function() {
-				this.r = parseInt(&#x27;b0&#x27;, 16);
-				this.g = parseInt(&#x27;e0&#x27;, 16);
-				this.b = parseInt(&#x27;e6&#x27;, 16);
-				this.a = 1;
-			}, // #b0e0e6 	 
-			rosybrown: function() {
-				this.r = parseInt(&#x27;bc&#x27;, 16);
-				this.g = parseInt(&#x27;8f&#x27;, 16);
-				this.b = parseInt(&#x27;8f&#x27;, 16);
-				this.a = 1;
-			}, // #bc8f8f 	 
-			royalblue: function() {
-				this.r = parseInt(&#x27;41&#x27;, 16);
-				this.g = parseInt(&#x27;69&#x27;, 16);
-				this.b = parseInt(&#x27;e1&#x27;, 16);
-				this.a = 1;
-			}, // #4169e1 	 
-			saddlebrown: function() {
-				this.r = parseInt(&#x27;8b&#x27;, 16);
-				this.g = parseInt(&#x27;45&#x27;, 16);
-				this.b = parseInt(&#x27;13&#x27;, 16);
-				this.a = 1;
-			}, // #8b4513 	 
-			salmon: function() {
-				this.r = parseInt(&#x27;fa&#x27;, 16);
-				this.g = 127;
-				this.b = parseInt(&#x27;72&#x27;, 16);
-				this.a = 1;
-			}, // #fa8072 	 
-			sandybrown: function() {
-				this.r = parseInt(&#x27;f4&#x27;, 16);
-				this.g = parseInt(&#x27;a4&#x27;, 16);
-				this.b = parseInt(&#x27;60&#x27;, 16);
-				this.a = 1;
-			}, // #f4a460 	 
-			seagreen: function() {
-				this.r = parseInt(&#x27;2e&#x27;, 16);
-				this.g = parseInt(&#x27;8b&#x27;, 16);
-				this.b = parseInt(&#x27;57&#x27;, 16);
-				this.a = 1;
-			}, // #2e8b57 	 
-			seashell: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;f5&#x27;, 16);
-				this.b = parseInt(&#x27;ee&#x27;, 16);
-				this.a = 1;
-			}, // #fff5ee 	 
-			sienna: function() {
-				this.r = parseInt(&#x27;a0&#x27;, 16);
-				this.g = parseInt(&#x27;52&#x27;, 16);
-				this.b = parseInt(&#x27;2d&#x27;, 16);
-				this.a = 1;
-			}, // #a0522d 	 
-			skyblue: function() {
-				this.r = parseInt(&#x27;87&#x27;, 16);
-				this.g = parseInt(&#x27;ce&#x27;, 16);
-				this.b = parseInt(&#x27;eb&#x27;, 16);
-				this.a = 1;
-			}, // #87ceeb 	 
-			slateblue: function() {
-				this.r = parseInt(&#x27;6a&#x27;, 16);
-				this.g = parseInt(&#x27;5a&#x27;, 16);
-				this.b = parseInt(&#x27;cd&#x27;, 16);
-				this.a = 1;
-			}, // #6a5acd 	 
-			slategray: function() {
-				this.r = parseInt(&#x27;70&#x27;, 16);
-				this.g = 127;
-				this.b = parseInt(&#x27;90&#x27;, 16);
-				this.a = 1;
-			}, // #708090 	 
-			slategrey: function() {
-				this.r = parseInt(&#x27;70&#x27;, 16);
-				this.g = 127;
-				this.b = parseInt(&#x27;90&#x27;, 16);
-				this.a = 1;
-			}, // #708090 	 
-			snow: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;fa&#x27;, 16);
-				this.b = parseInt(&#x27;fa&#x27;, 16);
-				this.a = 1;
-			}, // #fffafa 	 
-			springgreen: function() {
-				this.r = 0;
-				this.g = 255;
-				this.b = parseInt(&#x27;7f&#x27;, 16);
-				this.a = 1;
-			}, // #00ff7f 	 
-			steelblue: function() {
-				this.r = parseInt(&#x27;46&#x27;, 16);
-				this.g = parseInt(&#x27;82&#x27;, 16);
-				this.b = parseInt(&#x27;b4&#x27;, 16);
-				this.a = 1;
-			}, // #4682b4 	 
-			tan: function() {
-				this.r = parseInt(&#x27;d2&#x27;, 16);
-				this.g = parseInt(&#x27;b4&#x27;, 16);
-				this.b = parseInt(&#x27;8c&#x27;, 16);
-				this.a = 1;
-			}, // #d2b48c 	 
-			thistle: function() {
-				this.r = parseInt(&#x27;d8&#x27;, 16);
-				this.g = parseInt(&#x27;bf&#x27;, 16);
-				this.b = parseInt(&#x27;d8&#x27;, 16);
-				this.a = 1;
-			}, // #d8bfd8 	 
-			tomato: function() {
-				this.r = 255;
-				this.g = parseInt(&#x27;63&#x27;, 16);
-				this.b = parseInt(&#x27;47&#x27;, 16);
-				this.a = 1;
-			}, // #ff6347 
-			transparent: function() {
-				this.r = 0;
-				this.g = 0;
-				this.b = 0;
-				this.a = 1;
-			},
-			turquoise: function() {
-				this.r = parseInt(&#x27;40&#x27;, 16);
-				this.g = parseInt(&#x27;e0&#x27;, 16);
-				this.b = parseInt(&#x27;d0&#x27;, 16);
-				this.a = 1;
-			}, // #40e0d0 	 
-			violet: function() {
-				this.r = parseInt(&#x27;ee&#x27;, 16);
-				this.g = parseInt(&#x27;82&#x27;, 16);
-				this.b = parseInt(&#x27;ee&#x27;, 16);
-				this.a = 1;
-			}, // #ee82ee 	 
-			wheat: function() {
-				this.r = parseInt(&#x27;f5&#x27;, 16);
-				this.g = parseInt(&#x27;de&#x27;, 16);
-				this.b = parseInt(&#x27;b3&#x27;, 16);
-				this.a = 1;
-			}, // #f5deb3 	 
-			whitesmoke: function() {
-				this.r = parseInt(&#x27;f5&#x27;, 16);
-				this.g = parseInt(&#x27;f5&#x27;, 16);
-				this.b = parseInt(&#x27;f5&#x27;, 16);
-				this.a = 1;
-			}, // #f5f5f5 	 
-			yellowgreen: function() {
-				this.r = parseInt(&#x27;9a&#x27;, 16);
-				this.g = parseInt(&#x27;cd&#x27;, 16);
-				this.b = parseInt(&#x27;32&#x27;, 16);
-				this.a = 1;
-			}, // #9acd32 	 
-			rebeccapurple: function() {
-				this.r = parseInt(&#x27;66&#x27;, 16);
-				this.g = parseInt(&#x27;33&#x27;, 16);
-				this.b = parseInt(&#x27;99&#x27;, 16);
-				this.a = 1;
-			} // #663399			
+			aliceblue: &#x27;f0f8ff&#x27;,
+			antiquewhite: &#x27;faebd7&#x27;,
+			aqua: &#x27;00ffff&#x27;,
+			aquamarine: &#x27;7fffd4&#x27;,
+			azure: &#x27;f0ffff&#x27;,
+			beige: &#x27;f5f5dc&#x27;,
+			bisque: &#x27;ffe4c4&#x27;,
+			black: &#x27;000000&#x27;,
+			blanchedalmond: &#x27;ffe4c4&#x27;,
+			blue: &#x27;0000ff&#x27;,
+			blueviolet: &#x27;8a2be2&#x27;,
+			brown: &#x27;a52a2a&#x27;,
+			burlywood: &#x27;deb887&#x27;,
+			cadetblue: &#x27;5f9ea0&#x27;,
+			chartreuse: &#x27;7fff00&#x27;,
+			chocolate: &#x27;d2691e&#x27;,
+			coral: &#x27;ff7f50&#x27;,
+			cornflowerblue: &#x27;6495ed&#x27;,
+			cornsilk: &#x27;fff8dc&#x27;,
+			crimson: &#x27;dc143c&#x27;,
+			darkblue: &#x27;00008b&#x27;,
+			darkcyan: &#x27;008b8b&#x27;,
+			darkgoldenrod: &#x27;b8860b&#x27;,
+			darkgray: &#x27;a9a9a9&#x27;,
+			darkgreen: &#x27;006400&#x27;,
+			darkgrey: &#x27;a9a9a9&#x27;,
+			darkkhaki: &#x27;bdb76b&#x27;,
+			darkmagenta: &#x27;8b008b&#x27;,
+			darkolivegreen: &#x27;556b2f&#x27;,
+			darkorange: &#x27;ff8c00&#x27;,
+			darkorchid: &#x27;9932cc&#x27;,
+			darkred: &#x27;8b0000&#x27;,
+			darksalmon: &#x27;e9967a&#x27;,
+			darkseagreen: &#x27;8fbc8f&#x27;,
+			darkslateblue: &#x27;483d8b&#x27;,
+			darkslategray: &#x27;2f4f4f&#x27;,
+			darkslategrey: &#x27;2f4f4f&#x27;,
+			darkturquoise: &#x27;00ced1&#x27;,
+			darkviolet: &#x27;9400d3&#x27;,
+			deeppink: &#x27;ff1493&#x27;,
+			deepskyblue: &#x27;00bfff&#x27;,
+			dimgray: &#x27;696969&#x27;,
+			dimgrey: &#x27;696969&#x27;,
+			dodgerblue: &#x27;1e90ff&#x27;,
+			firebrick: &#x27;b22222&#x27;,
+			floralwhite: &#x27;fffaf0&#x27;,
+			forestgreen: &#x27;228b22&#x27;,
+			fuchsia: &#x27;ff00ff&#x27;,
+			gainsboro: &#x27;dcdcdc&#x27;,
+			ghostwhite: &#x27;f8f8ff&#x27;,
+			gold: &#x27;ffd700&#x27;,
+			goldenrod: &#x27;daa520&#x27;,
+			gray: &#x27;808080&#x27;,
+			green: &#x27;008000&#x27;,
+			greenyellow: &#x27;adff2f&#x27;,
+			grey: &#x27;808080&#x27;,
+			honeydew: &#x27;f0fff0&#x27;,
+			hotpink: &#x27;ff69b4&#x27;,
+			indianred: &#x27;cd5c5c&#x27;,
+			indigo: &#x27;4b0082&#x27;,
+			ivory: &#x27;fffff0&#x27;,
+			khaki: &#x27;f0e68c&#x27;,
+			lavender: &#x27;e6e6fa&#x27;,
+			lavenderblush: &#x27;fff0f5&#x27;,
+			lawngreen: &#x27;7cfc00&#x27;,
+			lemonchiffon: &#x27;fffacd&#x27;,
+			lightblue: &#x27;add8e6&#x27;,
+			lightcoral: &#x27;f08080&#x27;,
+			lightcyan: &#x27;e0ffff&#x27;,
+			lightgoldenrodyellow: &#x27;fafad2&#x27;,
+			lightgray: &#x27;d3d3d3&#x27;,
+			lightgreen: &#x27;90ee90&#x27;,
+			lightgrey: &#x27;d3d3d3&#x27;,
+			lightpink: &#x27;ffb6c1&#x27;,
+			lightsalmon: &#x27;ffa07a&#x27;,
+			lightseagreen: &#x27;20b2aa&#x27;,
+			lightskyblue: &#x27;87cefa&#x27;,
+			lightslategray: &#x27;778899&#x27;,
+			lightslategrey: &#x27;778899&#x27;,
+			lightsteelblue: &#x27;b0c4de&#x27;,
+			lightyellow: &#x27;ffffe0&#x27;,
+			lime: &#x27;00ff00&#x27;,
+			limegreen: &#x27;32cd32&#x27;,
+			linen: &#x27;faf0e6&#x27;,
+			maroon: &#x27;800000&#x27;,
+			mediumaquamarine: &#x27;66cdaa&#x27;,
+			mediumblue: &#x27;0000cd&#x27;,
+			mediumorchid: &#x27;ba55d3&#x27;,
+			mediumpurple: &#x27;9370db&#x27;,
+			mediumseagreen: &#x27;3cb371&#x27;,
+			mediumslateblue: &#x27;7b68ee&#x27;,
+			mediumspringgreen: &#x27;00fa9a&#x27;,
+			mediumturquoise: &#x27;48d1cc&#x27;,
+			mediumvioletred: &#x27;c71585&#x27;,
+			midnightblue: &#x27;191970&#x27;,
+			mintcream: &#x27;f5fffa&#x27;,
+			mistyrose: &#x27;ffe4e1&#x27;,
+			moccasin: &#x27;ffe4b5&#x27;,
+			navajowhite: &#x27;ffdead&#x27;,
+			navy: &#x27;000080&#x27;,
+			oldlace: &#x27;fdf5e6&#x27;,
+			olive: &#x27;808000&#x27;,
+			olivedrab: &#x27;6b8e23&#x27;,
+			orange: &#x27;ffa500&#x27;,
+			orangered: &#x27;ff4500&#x27;,
+			orchid: &#x27;da70d6&#x27;,
+			palegoldenrod: &#x27;eee8aa&#x27;,
+			palegreen: &#x27;98fb98&#x27;,
+			paleturquoise: &#x27;afeeee&#x27;,
+			palevioletred: &#x27;db7093&#x27;,
+			papayawhip: &#x27;ffefd5&#x27;,
+			peachpuff: &#x27;ffdab9&#x27;,
+			peru: &#x27;cd853f&#x27;,
+			pink: &#x27;ffc0cb&#x27;,
+			plum: &#x27;dda0dd&#x27;,
+			powderblue: &#x27;b0e0e6&#x27;,
+			purple: &#x27;800080&#x27;,
+			rebeccapurple: &#x27;663399&#x27;,
+			red: &#x27;ff0000&#x27;,
+			rosybrown: &#x27;bc8f8f&#x27;,
+			royalblue: &#x27;4169e1&#x27;,
+			saddlebrown: &#x27;8b4513&#x27;,
+			salmon: &#x27;fa8072&#x27;,
+			sandybrown: &#x27;f4a460&#x27;,
+			seagreen: &#x27;2e8b57&#x27;,
+			seashell: &#x27;fff5ee&#x27;,
+			sienna: &#x27;a0522d&#x27;,
+			silver: &#x27;c0c0c0&#x27;,
+			skyblue: &#x27;87ceeb&#x27;,
+			slateblue: &#x27;6a5acd&#x27;,
+			slategray: &#x27;708090&#x27;,
+			slategrey: &#x27;708090&#x27;,
+			snow: &#x27;fffafa&#x27;,
+			springgreen: &#x27;00ff7f&#x27;,
+			steelblue: &#x27;4682b4&#x27;,
+			tan: &#x27;d2b48c&#x27;,
+			teal: &#x27;008080&#x27;,
+			thistle: &#x27;d8bfd8&#x27;,
+			tomato: &#x27;ff6347&#x27;,
+			turquoise: &#x27;40e0d0&#x27;,
+			violet: &#x27;ee82ee&#x27;,
+			wheat: &#x27;f5deb3&#x27;,
+			white: &#x27;ffffff&#x27;,
+			whitesmoke: &#x27;f5f5f5&#x27;,
+			yellow: &#x27;ffff00&#x27;,
+			yellowgreen: &#x27;9acd32&#x27;
 		};
 		/**
 Convert a decimal Number to its hexidecimal String value
@@ -1693,9 +926,9 @@ Delete this Color object from the scrawl-canvas library
 @return Always true
 **/
 		my.Color.prototype.remove = function() {
-			delete my.dsn[this.name];
-			delete my.design[this.name];
-			my.removeItem(my.designnames, this.name);
+			delete my.sty[this.name];
+			delete my.styles[this.name];
+			my.removeItem(my.stylesnames, this.name);
 			return true;
 		};
 
