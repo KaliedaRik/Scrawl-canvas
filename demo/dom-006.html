@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 006</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #porthole {
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background-color: black;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 006</h1>
+  <h2>DOM tween stress test (using &lt;div> element)</h2>
+
+  <div id="porthole" data-stack></div>
+  <div id="starHold"></div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create and run many tweens/tickers, each associated with a single stack element</li>
+      <li>Test to see how many tweens a browser can run at a reasonable speed</li>
+    </ul>
+  </div>
+
+  <script src="dom-006.js" type="module"></script>
+
+</body>
+
+</html>

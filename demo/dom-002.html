@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 002</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #mystack {
+      width: 500px;
+      height: 500px;
+    }
+
+    .controls {
+      display: grid;
+
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+    }
+
+    .controls div {
+      box-sizing: border-box;
+      justify-self: stretch;
+      align-self: center;
+      text-align: center;
+      padding: 6px 0;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .blue {
+      background-color: lightblue;
+    }
+
+    select {
+      border: 0;
+      font-size: 80%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 002</h1>
+  <h2>Position DOM element - different x and y references</h2>
+
+  <div id="mystack" data-stack>
+    <div id="myelement">Move mouse over container element to move this box around. Use controls below to lock element to an axis.</div>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="label blue">Horizontal</div>
+    <div class="blue">
+      <select class="controlItem" id="horizontal">
+        <option value="0">Locked</option>
+        <option value="1">Unlocked</option>
+      </select>
+    </div>
+
+    <div class="label blue">Vertical</div>
+    <div class="blue">
+      <select class="controlItem" id="vertical">
+        <option value="0">Locked</option>
+        <option value="1">Unlocked</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Dynamically lock a stack element to the mouse cursor, both for horizontal and vertical movement of the mouse</li>
+    </ul>
+  </div>
+
+  <script src="dom-002.js" type="module"></script>
+</body>
+
+</html>

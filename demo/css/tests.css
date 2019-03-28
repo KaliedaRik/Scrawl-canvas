@@ -1,0 +1,97 @@
+/**
+ * canvas8 demo pages styling
+ *
+ *
+ */
+
+body {
+	font: 12pt Arial, sans-serif;
+	margin: 1em;
+	border: 0;
+	padding: 0;
+}
+h1 {
+	font-size: 140%;
+	margin: 0 0 0.2em 0;
+	border: 0;
+	border-bottom: 1px solid black;
+	padding: 0 0 0.2em 0;
+	text-align: center;
+}
+h2 {
+	font-size: 120%;
+	margin: 0 0 1em 0;
+	border: 0;
+	padding: 0;
+	text-align: center;
+}
+h3 {
+	font-family: monospace;
+	font-size: 100%;
+	font-weight: normal;
+	margin: 0 0 1em 0;
+	border: 0;
+	padding: 0;
+	text-align: center;
+	color: red;
+}
+p {
+	margin: 0 0 0.8em 0;
+	line-height: 1.2em;
+	border: 0;
+	padding: 0;
+}
+/*img, video {
+	position: fixed;
+	visibility: hidden;
+}
+*/
+code {
+	display: block;
+	font-size: 80%;
+	white-space: pre;
+}
+
+.scrawl-code {
+	font-family: monospace;
+	color: rgb(120, 0, 0);
+}
+#reportmessage {
+	padding: 1em;
+	background-color: rgba(0, 120, 0, .4);
+}
+
+[data-stack] {
+	border: 1px solid red;
+	box-sizing: border-box;
+}
+
+#testinfo {
+	margin-top: 2em;
+}
+
+table {
+  width: 100%;
+}
+th, td {
+  border: 1px solid gray;
+  font-size: 0.65em;
+  text-align: center;
+  width: 30%;
+}
+.rowlabel {
+  font-weight: bold;
+  width: 15%;
+}
+table input {
+  width: 100%;
+}
+.t0 {
+  background-color: lightgreen;
+}
+.t1 {
+  background-color: lightblue;
+}
+select {
+  display: inline;
+}

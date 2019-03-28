@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 001</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+#mystack {
+  margin-left: 10em;
+  padding: 1em;
+  width: 600px;
+  height: 600px;
+  font-family: monospace;
+  font-size: 12px;
+}
+  </style>
+
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 001</h1>
+  <h2>Loading the Scrawl-canvas library using a script tag in the HTML code</h2>
+
+  <p>Scrawl-canvas is added to the page through a <span class="scrawl-code">&lt;script></span> tag at the bottom of the html code. The tag takes the following attributes:</p>
+
+  <h3>&lt;script src="dom-001.js" type="module">&lt;/script></h3>
+
+  <ul>
+    <li><span class="scrawl-code">src=</span> - path to the user code which imports the <span class="scrawl-code">scrawl.js</span> file</li>
+    <li><span class="scrawl-code">type="module"</span> - user code file needs to be a module file (it has an <span class="scrawl-code">import</span> instruction at the top of the file)</li>
+  </ul>
+
+  <p>By importing the scrawl.js file, the browser will also import all the related files required by Scrawl-canvas. The import code goes at the top of the user code (in this example, the <span class="scrawl-code">dom-001.js</span> file):</p>
+
+  <h3>import scrawl from 'relative/path/to/scrawl.js'</h3>
+
+  <p>... the import doesn't need to be called <span class="scrawl-code">'scrawl'</span> - it can be whatever the user prefers.</p>
+
+  <div id="mystack" data-stack>
+    <p id="reportmessage"></p>
+    <div id="secondstack" data-stack style="width: 100%; height: 12em;">
+      <p style="color: lightgray; font-family: monospace; font-size: 5em; text-align: center;">element in a nested stack</p>
+    </div>
+    <canvas id="unusedcanvas"></canvas>
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Import the scrawl.js file</li>
+      <li>Import all other required Scrawl-canvas files</li>
+      <li>Discover and prepare stack elements in the DOM</li>
+      <li>Discover and prepare child elements in each stack element</li>
+      <li>Discover and prepare the &lt;canvas> element</li>
+      <li>Track the mouse over the root stack element</li>
+    </ul>
+  </div>
+
+  <script src="dom-001.js" type="module"></script>

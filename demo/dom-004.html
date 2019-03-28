@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 004</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #mystack {
+      width: 500px;
+      height: 500px;
+    }
+
+    #myelement {
+      border: 1px solid blue;
+    }
+
+    #mymimic {
+      background-color: lightgray;
+      color: red;
+    }
+
+    #mypivot {
+      border: 1px solid black;
+      font-weight: bold;
+    }
+
+    .controls {
+      display: grid;
+
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      font-size:  12px;
+    }
+
+    .controls div {
+      box-sizing: border-box;
+      justify-self: stretch;
+      align-self: center;
+      text-align: center;
+      padding: 6px 0;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .blue {
+      background-color: lightblue;
+    }
+
+    .green {
+      background-color: palegreen;
+    }
+
+    .pink {
+      background-color: pink;
+    }
+
+    .yellow {
+      background-color: palegoldenrod;
+    }
+
+    select {
+      border: 0;
+      font-size: 80%;
+    }
+
+    input {
+      width: 70%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 004</h1>
+  <h2>Testing element pivot, and mimic (with translate), functionality</h2>
+
+  <div id="mystack" data-stack>
+    <p id="mymimic">Mimics element</p>
+    <p id="mypivot">Pivots to element</p>
+    <p id="myelement">This element can be positioned within the stack element using Scrawl-canvas positioning; the grey element should mimic it.</p>
+  </div>
+
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="pink label">Width</div>
+    <div class="pink">'n%' <input class="controlItem" id="dims_widthPercent" type="range" value="0" min="0" max="120" step="1" /></div>
+    <div class="pink">n <input class="controlItem" id="dims_widthAbsolute" type="range" value="0" min="0" max="600" step="10" /></div>
+
+    <div class="pink label">Height</div>
+    <div class="pink">'n%' <input class="controlItem" id="dims_heightPercent" type="range" value="0" min="0" max="120" step="1" /></div>
+    <div class="pink">n <input class="controlItem" id="dims_heightAbsolute" type="range" value="0" min="0" max="600" step="10" /></div>
+
+    <div class="blue label">Starts ('n%')</div>
+    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
+
+    <div class="green label">Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
+
+    <div class="blue label">Starts (n)</div>
+    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="0" min="-20" max="620" step="5" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="0" min="-20" max="620" step="5" /></div>
+
+    <div class="green label">Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="0" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="0" min="-100" max="300" step="1" /></div>
+
+    <div class="blue label">Starts ('str')</div>
+    <div class="blue">X: <select class="controlItem" id="start_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="blue">Y: <select class="controlItem" id="start_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="green label">Handles ('str')</div>
+    <div class="green">X: <select class="controlItem" id="handle_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="green">Y: <select class="controlItem" id="handle_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Pitch</div>
+    <div class="yellow"><input class="controlItem" id="pitch" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Yaw</div>
+    <div class="yellow"><input class="controlItem" id="yaw" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="0" min="0" max="2" step="0.01" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="pink label">Pivot</div>
+    <div class="pink">Use pivot handles:
+      <select class="controlItem" id="pivot_handle">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="pink">Use pivot rotation:
+      <select class="controlItem" id="pivot_rotation">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="pink label">&nbsp;</div>
+    <div class="pink">&nbsp;</div>
+    <div class="pink">&nbsp;</div>
+
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Set a stack element to mimic the start, handle, dimensions and rotation values of another element</li>
+      <li>Check that the mimic element can be offset from the host element by a translate value</li>
+      <li>Set a stack element to pivot to another element</li>
+      <li>Check the attributes that allow a pivoted element to take into account the host element's handle and rotation values</li>
+    </ul>
+  </div>
+
+  <script src="dom-004.js" type="module"></script>
+
+</body>
+
+</html>
