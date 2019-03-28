@@ -13,9 +13,6 @@ import { makeStack } from "../factory/stack.js";
 import { makeElement } from "../factory/element.js";
 import { makeCanvas } from "../factory/canvas.js";
 
-
-
-
 /*
 ## Core DOM element discovery and management
 */

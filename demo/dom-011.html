@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 011</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #imagestore, img {
+      height: 0px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 011</h1>
+  <h2>Position DOM element - drag-and-drop</h2>
+
+  <div id="mystack" data-stack>
+    <div id="myelement">Click and drag this element</div>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Add Scrawl-canvas listeners to the stack to detect mouse and touch interactions</li>
+      <li>Drag and drop a stack element within that stack (clicking on the element outside the stack has no effect)</li>
+      <li>Check that when drag starts, and ends, the element does not 'jump'</li>
+      <li>Check that dragging a rotating element does not disturb the point around which the element rotates</li>
+    </ul>
+  </div>
+
+  <script src="dom-011.js" type="module"></script>
+
+</body>
+
+</html>

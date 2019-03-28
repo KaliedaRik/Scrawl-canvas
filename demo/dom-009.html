@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 009</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #mystack {
+      width: 500px;
+      height: 500px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 009</h1>
+  <h2>Tween actions on a DOM element</h2>
+  <h3>Click on the animation to make the boat reverse direction</h3>
+
+  <div id="mystack" data-stack>
+    <div id="myelement"></div>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Manipulate a tween while it is running, forcing it to stop, reverse and resume its animation</li>
+      <li>Add action objects to the tween's ticker</li>
+      <li>Check that action objects behave correctly, dependent on to current animation direction of the tween</li>
+    </ul>
+  </div>
+
+  <script src="dom-009.js" type="module"></script>
+
+</body>
+
+</html>

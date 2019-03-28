@@ -278,7 +278,7 @@ Tp.setEffectiveDuration = function() {
 
 Tp.sortSubscribers = function () {
 
-	if(this.subscribers.length > 1) bucketSort('tween', 'effectiveTime', this.subscribers);
+	if(this.subscribers.length > 1) this.subscribers = bucketSort('tween', 'effectiveTime', this.subscribers);
 };
 
 Tp.fn = function (reverseOrder) {
@@ -575,7 +575,7 @@ Tp.kill = function () {
 	if (this.active) this.halt();
 
 	delete animationtickers[this.name];
-	removeItem(my.animationtickersnames, this.name);
+	removeItem(animationtickersnames, this.name);
 	removeItem(tickerAnimations, this.name);
 	tickerAnimationsFlag = true;
 

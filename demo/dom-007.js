@@ -35,9 +35,10 @@ makeStars = function (buildNumber) {
 
 		starCount++;
 
-		starling = document.createElement('div');
+		starling = document.createElement('img');
 		id = `star_${starCount}`;
 		starling.id = id;
+		starling.src = "img/gsapdot.png";
 
 		starHold.appendChild(starling);
 		porthole.addDomElementToStack(starling);
@@ -47,16 +48,12 @@ makeStars = function (buildNumber) {
 		if (star) {
 
 			star.set({
-				width: 6,
-				height: 6,
+				width: 8,
+				height: 8,
 				startX: 300,
 				startY: 300,
 				handleX: 'center',
-				handleY: 'center',
-				css: {
-					backgroundColor: 'white',
-					borderRadius: '50%'
-				}
+				handleY: 'center'
 			});
 
 			r1 = Math.random();
@@ -118,7 +115,7 @@ makeStars(50);
 // Animation 
 scrawl.makeAnimation({
 
-	name: 'testD006Display',
+	name: 'testD007Display',
 
 	fn: function () {
 

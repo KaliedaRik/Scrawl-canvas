@@ -203,7 +203,7 @@ Tp.calculateEffectiveDuration = function (item) {
 	
 		if (this.ticker) {
 	
-			ticker = my.animationtickers[this.ticker];
+			ticker = animationtickers[this.ticker];
 	
 			if (ticker) {
 	

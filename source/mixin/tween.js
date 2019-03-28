@@ -323,7 +323,7 @@ All factories using the filter mixin will add these to their prototype objects
 
 		if (this.ticker === this.name + '_ticker') {
 
-			t = my.animationtickers[this.ticker];
+			t = animationtickers[this.ticker];
 			
 			if (t) t.kill();
 		}
