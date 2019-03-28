@@ -3,7 +3,7 @@
 */
 import { constructors, group, stack, stacknames, element, elementnames, artefact } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings } from '../core/utilities.js';
-import { rootElements, setRootElementsSort } from '../core/DOM.js';
+import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/DOM.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeGroup } from './group.js';
@@ -280,6 +280,15 @@ Sp.dimensionsUpdateHelper = function () {
 */
 Sp.setPerspective = function () {
 
+	addDomShowElement(this.name);
+	setDomShowRequired(true);
+};
+
+/*
+
+*/
+Sp.setPerspectiveNow = function () {
+
 	let style, p,
 		perspective, origin;
 
@@ -377,7 +386,12 @@ Sp.batchStampGroups = function (counter) {
 
 */
 Sp.show = function () {
-	return Promise.resolve(true);
+
+	return new Promise((resolve) => {
+
+		domShow();
+		resolve(true);
+	});
 };
 
 /*
@@ -385,12 +399,12 @@ Sp.show = function () {
 */
 Sp.render = function () {
 
-	// only do the compile step for stacks
 	let self = this;
 
 	return new Promise((resolve) => {
 
 		self.compile()
+		.then(() => self.show())
 		.then(() => resolve(true))
 		.catch((err) => resolve(false));
 	});

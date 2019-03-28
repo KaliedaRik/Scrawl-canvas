@@ -1,9 +1,10 @@
 /*
 # dom mixin
 */
-import { constructors, css, xcss, artefact, group } from '../core/library.js';
+import { constructors, artefact, group } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, isa_obj, isa_fn, isa_quaternion, xt, addStrings, xta } from '../core/utilities.js';
 import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
+import { addDomShowElement, setDomShowRequired } from '../core/DOM.js';
 
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
 
@@ -262,19 +263,12 @@ All factories using the dom mixin will add these to their prototype objects
 */
 	S.visibility = function (item) {
 
-		let el;
+		if (this.visibility !== item) {
 
-		if (this.domElement) {
+			this.visibility = item;
 
-			el = this.domElement.style;
-			
-			if (this.visibility !== item) {
-
-				this.visibility = item;
-
-				if (item) el.display = 'none';
-				else el.display = 'block';
-			}
+			addDomShowElement(this.name);
+			setDomShowRequired(true);
 		}
 	};
 
@@ -375,7 +369,10 @@ All factories using the dom mixin will add these to their prototype objects
 	S.css = function (item) {
 
 		this.css = (this.css) ? mergeOver(this.css, item) : item;
-		this.setCss(this.css);
+
+		this.dirtyCss = true;
+		addDomShowElement(this.name);
+		setDomShowRequired(true);
 	};
 
 /*
@@ -812,6 +809,15 @@ items argument is either an xy coordinate object, or an array of such objects. A
 */
 	obj.setPosition = function () {
 
+		addDomShowElement(this.name);
+		setDomShowRequired(true);
+	};
+
+/*
+
+*/
+	obj.setPositionNow = function () {
+
 		this.domElement.style.position = this.position;
 		this.dirtyPosition = false;
 	};
@@ -865,43 +871,6 @@ items argument is either an xy coordinate object, or an array of such objects. A
 
 		this.dirtyOffset = false;
 		this.dirtyScale = false;
-	};
-
-/*
-
-*/
-	obj.setCss = function (items = {}) {
-
-		let el, style, keyName, keys, key, i, iz;
-
-		el = this.domElement;
-
-		if (el) {
-
-			style = el.style;
-
-			if (style) {
-
-				keys = Object.keys(items);
-
-				for (i = 0, iz = keys.length; i < iz; i++) {
-
-					key = keys[i];
-
-					if (xcss.has(key)) {
-
-						keyName = `${key[0].toUpperCase}${key.substr(1)}`;
-
-						el.style[`webkit${keyName}`] = items[key];
-						el.style[`moz${keyName}`] = items[key];
-						el.style[`ms${keyName}`] = items[key];
-						el.style[`o${keyName}`] = items[key];
-						el.style[key] = items[key];
-					}
-					else if (css.has(key)) el.style[key] = items[key];
-				}
-			}
-		}
 	};
 
 /*
@@ -1050,20 +1019,19 @@ items argument is either an xy coordinate object, or an array of such objects. A
 
 		return new Promise((resolve) => {
 
-			let el = self.domElement,
-				cs, ch, ct, dt, a,
+			let cs, ch, ct, dt, a,
 				trans, origin, scale,
-				style, newtransform, newtransformArray,
+				newtransform, newtransformArray,
 				pivot, here, path, pathStart,
-				rotor, rv, rx, ry, rz, ra, x, y, z;
+				rotor, rv, rx, ry, rz, ra, x, y, z,
+				notifyForShow = false;
 
-			if (el) {
+			if (self.domElement) {
 
 				cs = self.currentStart;
 				ch = self.currentHandle;
 				ct = self.currentOffset;
 				dt = self.dragOffset;
-				style = self.domElement.style;
 				newtransform = '';
 
 				if (self.pivot) pivot = artefact[self.pivot];
@@ -1071,20 +1039,7 @@ items argument is either an xy coordinate object, or an array of such objects. A
 				here = self.getHere();
 				scale = self.scale;
 
-				if (self.dirtyDimensions) {
-
-					if (self.type === 'Canvas') {
-
-						el.width = self.localWidth;
-						el.height = self.localHeight;
-					}
-					else {
-						style.width = `${self.localWidth}px`;
-						style.height = (self.localHeight) ? `${self.localHeight}px` : 'auto';
-					}
-
-					self.dirtyDimensions = false;
-				}
+				if (self.dirtyDimensions) notifyForShow = true;
 
 				if (pivot && self.addPivotHandle) {
 
@@ -1103,8 +1058,8 @@ items argument is either an xy coordinate object, or an array of such objects. A
 
 				if (self.dirtyHandle) {
 
-					style.transformOrigin = `${ch.x}px ${ch.y}px 0`;
-					self.dirtyHandle = false;
+					self.transformOrigin = `${ch.x}px ${ch.y}px 0`;
+					notifyForShow = true;
 				}
 
 				x = self.updateStampX() - ch.x;
@@ -1135,12 +1090,19 @@ items argument is either an xy coordinate object, or an array of such objects. A
 				if (!self.currentTransform || self.currentTransform !== newtransform) {
 
 					self.currentTransform = newtransform;
-					style.transform = newtransform;
+					self.dirtyTransform = true;
+					notifyForShow = true;
 				}
 
 				self.dirtyStart = false;
 				self.dirtyRotation = false;
 				self.dirtyOffset = false;
+
+				if (notifyForShow) {
+
+					addDomShowElement(this.name);
+					setDomShowRequired(true);
+				}
 			}
 			resolve(true);
 		});

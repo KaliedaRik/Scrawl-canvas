@@ -7,7 +7,7 @@ The order in which DOM stack and canvas elements are processed during the displa
 */
 
 import { isa_canvas, generateUuid, isa_fn, isa_dom, isa_str, pushUnique, removeItem, xt } from "./utilities.js";
-import { artefact, canvas, group } from "./library.js";
+import { artefact, canvas, group, css, xcss } from "./library.js";
 
 import { makeStack } from "../factory/stack.js";
 import { makeElement } from "../factory/element.js";
@@ -664,6 +664,142 @@ const displayCycleBatchProcess = function (counter, method) {
 	});
 };
 
+/*
+
+*/
+const domShowElements = [];
+const addDomShowElement = function (item = '') {
+
+	if (item && item.substring) pushUnique(domShowElements, item);
+};
+
+let domShowRequired = false;
+const setDomShowRequired = function (val = true) {
+
+	domShowRequired = val;
+};
+
+const domShow = function () {
+
+	let myartefacts, art, style, el, 
+		i, iz,
+		p, perspective, origin,
+		j, jz, keys, key, keyName, items, item;
+
+	if (domShowRequired) {
+
+		domShowRequired = false;
+		myartefacts = [].concat(domShowElements);
+		domShowElements.length = 0;
+
+		for (i = 0, iz = myartefacts.length; i < iz; i++) {
+
+			art = artefact[myartefacts[i]];
+
+			if (art) {
+
+				el = art.domElement;
+
+				if (el) {
+
+					style = el.style;
+
+					// update perspective
+					if (art.dirtyPerspective) {
+
+						art.dirtyPerspective = false;
+
+						p = art.perspective;
+
+						perspective = `${p.z}px`;
+						origin = `${p.x} ${p.y}`;
+
+						style.webkitPerspectiveOrigin = origin;
+						style.mozPerspectiveOrigin = origin;
+						style.perspectiveOrigin = origin;
+						style.webkitPerspective = perspective;
+						style.mozPerspective = perspective;
+						style.perspective = perspective;
+					}
+
+					// update position
+					if (art.dirtyPosition) {
+
+						art.dirtyPosition = false;
+						style.position = art.position;
+					}
+
+					// update dimensions
+					if (art.dirtyDimensions) {
+
+						art.dirtyDimensions = false;
+
+						if (art.type === 'Canvas') {
+
+							el.width = art.localWidth;
+							el.height = art.localHeight;
+						}
+						else {
+
+							style.width = `${art.localWidth}px`;
+							style.height = (art.localHeight) ? `${art.localHeight}px` : 'auto';
+						}
+					}
+
+					// update handle/transformOrigin
+					if (art.dirtyHandle) {
+
+						art.dirtyHandle = false;
+						style.transformOrigin = art.transformOrigin;
+					}
+
+					// update transform
+					if (art.dirtyTransform) {
+
+						art.dirtyTransform = false;
+						style.transform = art.currentTransform;
+					}
+
+					// update visibility
+					if (art.dirtyVisibility) {
+
+						art.dirtyVisibility = false;
+						style.display = (art.visibility) ? 'block' : 'none';
+					}
+
+					// update other CSS changes
+					if (art.dirtyCss) {
+
+						art.dirtyCss = false;
+
+						items = art.css || {};
+
+						keys = Object.keys(items);
+
+						for (j = 0, jz = keys.length; j < jz; j++) {
+
+							key = keys[j];
+
+							if (xcss.has(key)) {
+
+								keyName = `${key[0].toUpperCase}${key.substr(1)}`;
+								item = items[key];
+
+								style[`webkit${keyName}`] = item;
+								style[`moz${keyName}`] = item;
+								style[`ms${keyName}`] = item;
+								style[`o${keyName}`] = item;
+								style[key] = item;
+							}
+							else if (css.has(key)) style[key] = items[key];
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 export {
 	getCanvases,
 	getStacks,
@@ -684,4 +820,8 @@ export {
 	compile,
 	show,
 	render,
+
+	addDomShowElement,
+	setDomShowRequired,
+	domShow,
 };

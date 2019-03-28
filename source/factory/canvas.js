@@ -2,7 +2,7 @@
 # Canvas factory
 */
 import { cell, constructors } from '../core/library.js';
-import { rootElements, setRootElementsSort, setCurrentCanvas } from '../core/DOM.js';
+import { rootElements, setRootElementsSort, setCurrentCanvas, domShow } from '../core/DOM.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
@@ -541,6 +541,8 @@ Cp.show = function(){
 
 		self.batchActionCells(0, 'show')
 		.then((res) => {
+
+			domShow();
 
 			self.engine.clearRect(0, 0, self.localWidth, self.localHeight);
 			return self.base.show();
