@@ -631,7 +631,7 @@ The __getAllArtefactsAt__ function returns all of the group object's artefacts l
 */
 Gp.getAllArtefactsAt = function (items) {
 
-	let i, artBuckets,
+	let i, artBuckets, art,
 		host = artefact[this.host],
 		result, hit,
 		resultNames = [],

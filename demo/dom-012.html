@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 012</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #mystack {
+      width: 500px;
+      height: 500px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 012</h1>
+  <h2>3d animated cube</h2>
+
+  <div id="mystack" data-stack>
+    <div id="cube"></div>
+    <div class="cubeface" id="frontface">FRONT</div>
+    <div class="cubeface" id="rightface">RIGHT</div>
+    <div class="cubeface" id="topface">TOP</div>
+    <div class="cubeface" id="backface">BACK</div>
+    <div class="cubeface" id="bottomface">BOTTOM</div>
+    <div class="cubeface" id="leftface">LEFT</div>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Pivot stack elements to another element, and add translate values to each to form a cube</li>
+      <li>Animate the cube by animating just the one element to which the others are pivoted</li>
+      <li>(Cube animations up to scrawl v7 relied on direct manipulation of quaternions in user code; this should all be hidden in v8, leaving the user able to animate the cube entirely via rotation attributes - pitch, yaw, roll)</li>
+    </ul>
+  </div>
+
+  <script src="dom-012.js" type="module"></script>
+
+</body>
+
+</html>

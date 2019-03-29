@@ -1,7 +1,7 @@
 /*
 # Stack factory
 */
-import { constructors, group, stack, stacknames, element, elementnames, artefact } from '../core/library.js';
+import { constructors, group, stack, stacknames, element, elementnames, artefact, artefactnames } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/DOM.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';

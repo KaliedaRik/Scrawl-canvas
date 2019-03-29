@@ -97,6 +97,11 @@ Not importing 'makeCell' - cells get generated from Canvas artefacts
 */ 
 
 /*
+### ./factory/color.js
+*/
+import { makeColor } from './factory/color.js';
+
+/*
 ### ./factory/element.js
 
 Not importing 'makeElement' - elements get generated from Stack artefacts
@@ -220,6 +225,7 @@ export default {
 
 	makeAction,
 	makeAnimation,
+	makeColor,
 	makeFilter,
 	makeGroup,
 	makeTicker,

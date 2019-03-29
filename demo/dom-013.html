@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 013</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #mystack {
+      width: 500px;
+      height: 500px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 013</h1>
+  <h2>Animating a DOM element using the delta attribute object</h2>
+  <h3>This stack is resizable - drag the bottom right corner to change its dimensions.</h3>
+
+  <div id="mystack" data-stack>
+    <img id="flower" src="img/iris.png" alt="Picture of an iris flower" />
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Animate a stack element via delta attributes</li>
+      <li>Dynamically reverse-sign specified delta attributes</li>
+      <li>Check that % string attributes work correctly, including when added together via delta functionality</li>
+      <li>Check that stacks and their elements respond correctly to resize actions</li>
+      <li>(Delta animations in Scrawl-canvas v7 needed to be called explicitly as part of a user's display cycle animation; v8 automates this process as part of the display cycle)</li>
+    </ul>
+  </div>
+
+  <script src="dom-013.js" type="module"></script>
+
+</body>
+
+</html>

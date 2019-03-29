@@ -7,7 +7,7 @@ The order in which DOM stack and canvas elements are processed during the displa
 */
 
 import { isa_canvas, generateUuid, isa_fn, isa_dom, isa_str, pushUnique, removeItem, xt } from "./utilities.js";
-import { artefact, canvas, group, css, xcss } from "./library.js";
+import { artefact, canvas, group, stack, css, xcss } from "./library.js";
 
 import { makeStack } from "../factory/stack.js";
 import { makeElement } from "../factory/element.js";
@@ -62,11 +62,11 @@ const sortRootElements = function () {
 */
 const addInitialStackElement = function (s) {
 
-	let j, jz, e, g, stack;
+	let j, jz, e, g, stk;
 
 	g = s.getAttribute('data-group');
 
-	stack = makeStack({
+	stk = makeStack({
 
 		name: s.id || s.getAttribute('name'),
 		domElement: s,
@@ -83,12 +83,12 @@ const addInitialStackElement = function (s) {
 
 				name: e.id || e.getAttribute('name'),
 				domElement: e,
-				group: stack.name
+				group: stk.name
 			});
 		}
-		else e.setAttribute('data-group', stack.name);
+		else e.setAttribute('data-group', stk.name);
 	}
-	return stack;
+	return stk;
 };
 
 /*
@@ -202,7 +202,7 @@ items object should include
 */
 const addStack = function (items = {}) {
 
-	let el, host, hostInScrawl, stack, name, i, iz, children, item;
+	let el, host, hostInScrawl, stk, name, i, iz, children, item;
 
 	if (isa_str(items.element)) items.element = document.querySelector(items.element);
 
@@ -234,10 +234,10 @@ const addStack = function (items = {}) {
 		if (hostInScrawl) el.setAttribute('data-group', hostInScrawl.name);
 	}
 
-	stack = addInitialStackElement(el);
+	stk = addInitialStackElement(el);
 
-	if (rootElements.indexOf(host.id) < 0) pushUnique(rootElements, stack.name);
-	else removeItem(rootElements, stack.name);
+	if (rootElements.indexOf(host.id) < 0) pushUnique(rootElements, stk.name);
+	else removeItem(rootElements, stk.name);
 
 	if (!el.parentElement || host.id !== el.parentElement.id) host.appendChild(el);
 
@@ -250,8 +250,8 @@ const addStack = function (items = {}) {
 		if (item.id && rootElements.indexOf(item.id) >= 0) removeItem(rootElements, item.id);
 	}
 
-	rootElementSort = true;
-	return stack;
+	rootElementsSort = true;
+	return stk;
 };
 
 /*
@@ -612,13 +612,7 @@ const displayCycleHelper = function (items) {
 
 		if (rootElementsSort) sortRootElements();
 	}
-	else{
-
-		rootElementBatches = [items];
-		
-		// I think this is pointless - not dealing with root elements in this scenario, just the elements presented in the items argument - comment out for now
-		// rootElementSort = true;
-	}
+	else rootElementBatches = [items];
 };
 
 /*

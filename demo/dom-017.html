@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 017</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .control_panel {
+      margin-bottom: 1em;
+    }
+    button {
+      width: 23%;
+      margin-right: 0.5%;
+      padding: 1em;
+      text-align: center;
+    }
+    #stack_host {
+      background-color: #b8ffb8;
+      padding: 1em;
+      margin-bottom: 1em;
+    }
+    ['data-stack'] {
+      border: 1px solid red;
+      min-height: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 017</h1>
+  <h2>Add and remove (demolish) Scrawl-canvas stacks programmatically</h2>
+
+  <div class="control_panel">
+    <button class="controls" id="action_1">1. Generate new stack</button>
+    <button class="controls" id="action_2" disabled>2. Remove stack 1</button>
+    <button class="controls" id="action_3">3. Convert existing element into stack</button>
+    <button class="controls" id="action_4" disabled>4. Remove stack 3</button>
+  </div>
+
+  <div id="stack_host">
+    <p id="p1">This is the &lt;div> element which will host the stack created by <b>Button 1</b>.</p>
+    <p name="p2"><b>Button 2</b> removes the Button 1 stack, wherever it is placed on the page.</p>
+    <p>Clicking <b>Button 3</b> will convert this &lt;div> element into a stack of its own, making all the child elements (these 4 &lt;p> tags) scrawl elements.</p>
+    <p id="p4">After clicking <b>Button 4</b>, creating a stack with button 1 will force that stack to be added to the end of the web page. You will no longer be able to turn this &lt;div> element into a stack because it will no longer exist.</p>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Turn a DOM element into a Scrawl-canvas stack programmatically</li>
+      <li>Create a Scrawl-canvas stack and add it to the DOM</li>
+      <li>Create a Scrawl-canvas stack inside another stack</li>
+      <li>Dynamically remove and delete a Scrawl-canvas stack from the DOM</li>
+    </ul>
+  </div>
+
+  <script src="dom-017.js" type="module"></script>
+
+</body>
+
+</html>
