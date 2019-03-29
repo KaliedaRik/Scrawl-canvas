@@ -1062,10 +1062,9 @@ items argument is either an xy coordinate object, or an array of such objects. A
 					notifyForShow = true;
 				}
 
-				x = self.updateStampX() - ch.x;
-				y = self.updateStampY() - ch.y;
+				x = self.updateStampX() - ch.x || 0;
+				y = self.updateStampY() - ch.y || 0;
 				z = ct.z;
-
 				if (self.dirtyRotationActive || self.rotateOnPivot) {
 
 					if (self.rotateOnPivot) rotor = requestQuaternion(self.rotation).quaternionRotate(pivot.rotation);

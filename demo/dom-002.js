@@ -1,17 +1,17 @@
 import scrawl from '../source/scrawl.js'
 
-// time display variables
+// Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
 
+// Scene setup
 let artefact = scrawl.library.artefact,
 	stack = artefact.mystack,
 	element = artefact.myelement,
 	stopE, events,
 	xLock = 'mouse',
 	yLock = 'start';
-
 
 element.set({
 	startX: 'center',
@@ -23,15 +23,17 @@ element.set({
 	lockTo: 'start'
 });
 
+// Set the DOM input values
 document.getElementById('vertical').value = 0;
 document.getElementById('horizontal').value = 1;
 
-// event listeners
+// Event listeners
 stopE = (e) => {
 
 	e.preventDefault();
 	e.returnValue = false;
 };
+
 events = (e) => {
 
 	stopE(e);
@@ -50,6 +52,7 @@ events = (e) => {
 
 scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
+// Animation 
 scrawl.makeAnimation({
 
 	// Naming the animation object is not required, but will help with debugging.

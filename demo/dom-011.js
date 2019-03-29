@@ -1,11 +1,11 @@
 import scrawl from '../source/scrawl.js'
 
-// time display variables
+// Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
 
-// scene setup
+// Scene setup
 let artefact = scrawl.library.artefact,
 	stack = artefact.mystack,
 	element = artefact.myelement,
@@ -42,7 +42,7 @@ stack.render()
 })
 .catch(() => resolve(false));
 
-// event listeners
+// Event listeners
 stopE = (e) => {
 
 	e.preventDefault();

@@ -1,11 +1,11 @@
 import scrawl from '../source/scrawl.js'
 
-// time display variables
+// Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
 
-// scene setup
+// Scene setup
 let artefact = scrawl.library.artefact,
 	porthole = artefact.porthole,
 	starfield = porthole.domElement,
@@ -95,7 +95,7 @@ makeStars = function (buildNumber) {
 	}
 }
 
-// event listeners
+// Event listeners
 stopE = (e) => {
 
 	e.preventDefault();

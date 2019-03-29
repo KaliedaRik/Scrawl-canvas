@@ -28,7 +28,7 @@ b3.disabled = false;
 b4.disabled = true;
 
 
-// event listeners
+// Event listeners
 stopE = (e) => {
 
 	if (e) {

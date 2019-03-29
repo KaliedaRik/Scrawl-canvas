@@ -1,11 +1,11 @@
 import scrawl from '../source/scrawl.js'
 
-// time display variables
+// Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
 
-// scene setup
+// Scene setup
 let artefact = scrawl.library.artefact,
 	stack = artefact.mystack,
 	element = artefact.myelement;
@@ -53,7 +53,7 @@ scrawl.makeTween({
 			end: 360
 		}
 	]
-// this works because the first tween creates its own ticker, then the cloned tween subscribes to that ticker
+// This works because the first tween creates its own ticker, then the cloned tween subscribes to that ticker
 }).clone({
 	name: 'myClonedTween',
 	targets: artefact.mysecondelement,
@@ -64,7 +64,7 @@ scrawl.makeTween({
 			end: 340
 		}
 	]
-// second clone has its own ticker (useNewTicker: true), which needs to be run separately
+// Second clone has its own ticker (useNewTicker: true), which needs to be run separately
 }).run().clone({ 
 	name: 'mySecondClonedTween',
 	targets: artefact.mythirdelement,

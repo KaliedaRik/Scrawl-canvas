@@ -92,7 +92,7 @@ stack.set({
 })
 .catch(() => {});
 
-// event listeners
+// Event listeners
 stopE = (e) => {
 
 	if (e) {

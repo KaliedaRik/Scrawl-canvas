@@ -616,11 +616,11 @@ Cp.compile = function(){
 			if (self.filters && self.filters.length) return self.applyFilters();
 			else return true;
 		})
-		.then((res) => {
+		// .then((res) => {
 
-			if (self.displaceMap) return self.applyDisplace();
-			else return true;
-		})
+		// 	if (self.displaceMap) return self.applyDisplace();
+		// 	else return true;
+		// })
 		.then((res) => {
 			resolve(true);
 		})
@@ -683,50 +683,9 @@ Cp.show = function () {
 
 		// get the destination cell's canvas context
 		let engine = (self.destination) ? self.destination.engine : false,
-			cs, ch, scale, pivot, path, ps, here, x, y, w, h,
-			temp, fit, px, py, pw, ph, rw, rh, state,
+			currentHandle, scale, width, height,
+			temp, fit, pasteX, pasteY, pasteWidth, pasteHeight, relWidth, relHeight, state,
 			floor = Math.floor;
-
-		x = y = 0;
-
-		// TODO: this needs to be rewritten to use mixin-position.js updateStampX and updateStampY functions
-		// var xLock = {
-
-		// 	start: function(){ 
-		// 		x = cs.x;
-		// 	},
-		// 	pivot: function(){ 
-		// 		x = ps.x; 
-		// 	},
-		// 	mouse: function(a){
-		// 		if(here){
-		// 			x = here.x; 
-		// 			if(a.localDrag){
-		// 				a.oldX = x;
-		// 			}
-		// 		}
-		// 	},
-		// 	path: function(a){ 
-		// 	},
-		// };
-		// var yLock = {
-		// 	start: function(){ 
-		// 		y = cs.y;
-		// 	},
-		// 	pivot: function(){ 
-		// 		y = ps.y; 
-		// 	},
-		// 	mouse: function(a){
-		// 		if(here){
-		// 			y = here.y; 
-		// 			if(a.localDrag){
-		// 				a.oldY = y;
-		// 			}
-		// 		}
-		// 	},
-		// 	path: function(a){ 
-		// 	},
-		// };
 
 		if (engine) {
 
@@ -754,117 +713,100 @@ Cp.show = function () {
 				engine.setTransform(1, 0, 0, 1, 0, 0);
 
 				fit = (self.controller) ? self.controller.fit : 'none';
-				w = floor(self.localWidth);
-				h = floor(self.localHeight);
+				width = floor(self.localWidth);
+				height = floor(self.localHeight);
 				
 				switch (fit) {
 
 					case 'contain' :
 
 						// base must copy into display resized, centered, letterboxing if necessary, maintaining aspect ratio
-						rw = self.destinationWidth / (w || 1);
-						rh = self.destinationHeight / (h || 1);
+						relWidth = self.destinationWidth / (width || 1);
+						relHeight = self.destinationHeight / (height || 1);
 
-						if (rw > rh) {
+						if (relWidth > relHeight) {
 
-							pw = floor(w * rh);
-							ph = floor(h * rh);
-							py = 0;
-							px = floor((self.destinationWidth - (w * rh)) / 2);
+							pasteWidth = floor(width * relHeight);
+							pasteHeight = floor(height * relHeight);
+							pasteY = 0;
+							pasteX = floor((self.destinationWidth - (width * relHeight)) / 2);
 						}
 						else {
 
-							pw = floor(w * rw);
-							ph = floor(h * rw);
-							px = 0;
-							py = floor((self.destinationHeight - (h * rw)) / 2);
+							pasteWidth = floor(width * relWidth);
+							pasteHeight = floor(height * relWidth);
+							pasteX = 0;
+							pasteY = floor((self.destinationHeight - (height * relWidth)) / 2);
 						}
 
-						engine.drawImage(self.element, 0, 0, w, h, px, py, pw, ph);
+						engine.drawImage(self.element, 0, 0, width, height, pasteX, pasteY, pasteWidth, pasteHeight);
 						break;
 
 					case 'cover' :
 
 						// base must copy into display resized, centered, leaving no letterbox area, maintaining aspect ratio
-						rw = self.destinationWidth / (w || 1);
-						rh = self.destinationHeight / (h || 1);
+						relWidth = self.destinationWidth / (width || 1);
+						relHeight = self.destinationHeight / (height || 1);
 
-						if (rw < rh) {
+						if (relWidth < relHeight) {
 
-							pw = floor(w * rh);
-							ph = floor(h * rh);
-							py = 0;
-							px = floor((self.destinationWidth - (w * rh)) / 2);
+							pasteWidth = floor(width * relHeight);
+							pasteHeight = floor(height * relHeight);
+							pasteY = 0;
+							pasteX = floor((self.destinationWidth - (width * relHeight)) / 2);
 						}
 						else{
 
-							pw = floor(w * rw);
-							ph = floor(h * rw);
-							px = 0;
-							py = floor((self.destinationHeight - (h * rw)) / 2);
+							pasteWidth = floor(width * relWidth);
+							pasteHeight = floor(height * relWidth);
+							pasteX = 0;
+							pasteY = floor((self.destinationHeight - (height * relWidth)) / 2);
 						}
 
-						engine.drawImage(self.element, 0, 0, w, h, px, py, pw, ph);
+						engine.drawImage(self.element, 0, 0, width, height, pasteX, pasteY, pasteWidth, pasteHeight);
 						break;
 
 					case 'fill' :
 
 						// base must copy into display resized, distorting the aspect ratio as necessary
-						pw = floor(self.destinationWidth);
-						ph = floor(self.destinationHeight);
+						pasteWidth = floor(self.destinationWidth);
+						pasteHeight = floor(self.destinationHeight);
 
-						engine.drawImage(self.element, 0, 0, w, h, 0, 0, pw, ph);
+						engine.drawImage(self.element, 0, 0, width, height, 0, 0, pasteWidth, pasteHeight);
 						break;
 
 					case 'none' :
 					default :
 
 						// base copies into display as-is, centred, maintaining aspect ratio
-						px = floor((self.destinationWidth - w) / 2);
-						py = floor((self.destinationHeight - h) / 2);
+						pasteX = floor((self.destinationWidth - width) / 2);
+						pasteY = floor((self.destinationHeight - height) / 2);
 
-						engine.drawImage(self.element, 0, 0, w, h, px, py, w, h);
+						engine.drawImage(self.element, 0, 0, width, height, pasteX, pasteY, width, height);
 				}
 			}
 			else if (scale > 0) {
 
 				// cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockXto and lockYto; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path eltity. If pivoted to the mouse, they will use the base canvas's .here attribute, which takes into account differences between the base and display canvas dimensions.
 
-				pivot = self.pivot || false; 
-				path = self.path || false; 
-
-				x = y = 0;
-				ch = self.currentHandle;
-
-				if (pivot && (self.lockXTo === 'pivot' || self.lockYTo === 'pivot')) ps = pivot.currentStart;
-
-				if (path && (self.lockXTo === 'path' || self.lockYTo === 'path')){
-					// do nothing for now - not yet coded up Path entity
-				}
-
-				if (self.lockXTo === 'start' || self.lockYTo === 'start') cs = self.currentStart; 
-
-				if ((self.lockXTo === 'mouse' || self.lockYTo === 'mouse') && self.destination.here) here = self.destination.here;
-				else here = false;
+				currentHandle = self.currentHandle;
 
 				self.renderPrecheck();
 				temp = self.showHelper(engine);
 
-				// xLock[self.lockXTo](self);
-				// yLock[self.lockYTo](self);
-				x = self.updateStampX();
-				y = self.updateStampY();
+				self.updateStampX();
+				self.updateStampY();
 
-				self.rotateDestination(engine, x, y);
+				self.rotateDestination(engine, self.stampX, self.stampY);
 
-				w = floor(self.localWidth);
-				h = floor(self.localHeight);
-				px = floor(-ch.x * scale);
-				py = floor(-ch.y * scale);
-				pw = floor(w * scale);
-				ph = floor(h * scale);
+				width = floor(self.localWidth);
+				height = floor(self.localHeight);
+				pasteX = floor(-currentHandle.x * scale);
+				pasteY = floor(-currentHandle.y * scale);
+				pasteWidth = floor(width * scale);
+				pasteHeight = floor(height * scale);
 
-				engine.drawImage(self.element, 0, 0, w, h, px, py, pw, ph);
+				engine.drawImage(self.element, 0, 0, width, height, pasteX, pasteY, pasteWidth, pasteHeight);
 			}
 
 			if (xt(temp[0])) engine.globalCompositeOperation = temp[0];
@@ -951,11 +893,11 @@ Cp.applyFilters = function () {
 /*
 
 */
-Cp.applyDisplace = function () {
-	// TODO: codeup functionality
-	// - can't do this until we have added image functionality
-	Promise.resolve(false);
-};
+// Cp.applyDisplace = function () {
+// 	// TODO: codeup functionality
+// 	// - can't do this until we have added image functionality
+// 	Promise.resolve(false);
+// };
 
 /*
 

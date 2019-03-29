@@ -1,11 +1,11 @@
 import scrawl from '../source/scrawl.js'
 
-// time display variables
+// Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
 
-// scene setup
+// Scene setup
 let artefact = scrawl.library.artefact,
 	stack = artefact.mystack,
 	element = artefact.myelement,
@@ -112,7 +112,7 @@ scrawl.makeAction({
 	revert: function () { element.set(purple) }
 });
 
-// event listeners
+// Event listeners
 stopE = (e) => {
 
 	e.preventDefault();
@@ -127,7 +127,7 @@ changeDirection = (e) => {
 
 scrawl.addNativeListener('click', changeDirection, stack.domElement);
 
-// start the ticker
+// Start the ticker
 ticker.run();
 
 // Animation 

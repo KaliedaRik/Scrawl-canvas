@@ -77,7 +77,7 @@ const Canvas = function (items = {}) {
 			destination: this,
 			controller: this,
 		};
-		this.base = makeCell(cellArgs);
+		this.base = this.buildCell(cellArgs);
 
 		// even if it is a child of a stack element, it needs to be recorded as a 'rootElement'
 		pushUnique(rootElements, this.name);
@@ -450,7 +450,7 @@ Cp.addCell = function (item) {
 	if (item) {
 
 		pushUnique(this.cells, item);
-		item.renderPrecheck(this);
+		cell[item].renderPrecheck(this);
 		this.dirtyCells = true;
 	}
 	return item;
@@ -520,6 +520,8 @@ Cp.compile = function () {
 	return new Promise((resolve) => {
 
 		self.batchActionCells(0, 'compile')
+		.then(() => self.prepareStamp())
+		.then(() => self.stamp())
 		.then(() => resolve(true))
 		.catch((err) => {
 			console.log('CANVAS COMPILE no base error', self.name, err);
@@ -542,14 +544,14 @@ Cp.show = function(){
 		self.batchActionCells(0, 'show')
 		.then((res) => {
 
-			domShow();
-
 			self.engine.clearRect(0, 0, self.localWidth, self.localHeight);
 			return self.base.show();
 		})
-		.then(() => self.prepareStamp())
-		.then(() => self.stamp())
-		.then(() => resolve(true))
+		.then(() => {
+
+			domShow();
+			resolve(true);
+		})
 		.catch((err) => {
 			console.log('CANVAS SHOW error', self.name, err);
 			resolve(false);

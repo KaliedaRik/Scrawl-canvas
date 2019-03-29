@@ -1,6 +1,6 @@
 import scrawl from '../source/scrawl.js'
 
-// test variables
+// Test variables
 let reportmessage = document.querySelector('#reportmessage'),
 	artefact = scrawl.library.artefact,
 	current = '';
@@ -17,7 +17,7 @@ let myStack = artefact.mystack,
 // Much of the data required for the information panel is contained in the stack wrapper's __here__ object. This data is updated every time Scrawl-canvas detects some sort of user interaction such as a mouse/pointer cursor movement, page scrolling, or when the browser window resizes.
 scrawl.makeAnimation({
 
-	// giving the animation object a name will make it easy to find in the Scrawl-canvas library object
+	// Giving the animation object a name will make it easy to find in the Scrawl-canvas library object
 	name: 'testD001Display',
 	
 	// Every animation object must include a __fn__ function attribute which MUST return a Promise object - even if the functionality within the function is entirely synchronous. This is because some animation functions (for instance: tweens) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise

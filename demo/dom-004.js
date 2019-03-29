@@ -1,11 +1,11 @@
 import scrawl from '../source/scrawl.js'
 
-// time display variables
+// Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
 
-// scene setup
+// Scene setup
 let artefact = scrawl.library.artefact,
 	stack = artefact.mystack,
 	element = artefact.myelement,
@@ -63,7 +63,7 @@ document.querySelector('#scale').value = 1;
 document.querySelector('#pivot_handle').value = 0;
 document.querySelector('#pivot_rotation').value = 0;
 
-// event listeners
+// Event listeners
 stopE = (e) => {
 
 	e.preventDefault();

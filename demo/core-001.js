@@ -1,9 +1,9 @@
 import scrawl from '../source/scrawl.js'
 
-// test variables
+// Test variables
 let report = document.querySelector('#reportmessage');
 
-// animation object
+// Animation
 scrawl.makeAnimation({
 
 	name: 'templateAnimation',

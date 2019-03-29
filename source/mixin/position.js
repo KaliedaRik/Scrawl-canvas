@@ -772,7 +772,7 @@ All factories using the position mixin will add these to their prototype objects
 			cs = this.currentStart,
 			ct = this.currentOffset,
 			dt = this.dragOffset,
-			pivot, here,
+			pivot, here, host,
 			z = cs.x;
 
 		if (lock !== 'start') {
@@ -792,10 +792,11 @@ All factories using the position mixin will add these to their prototype objects
 					break;
 
 				case 'mouse' :
+					host = this.currentHost || this.destination || false;
 
-					if (this.currentHost) {
+					if (host) {
 
-						here = this.currentHost.here;
+						here = host.here;
 
 						if (here) {
 
@@ -825,7 +826,7 @@ All factories using the position mixin will add these to their prototype objects
 			cs = this.currentStart,
 			ct = this.currentOffset,
 			dt = this.dragOffset,
-			pivot, here, 
+			pivot, here, host,
 			z = cs.y;
 
 		if (lock !== 'start') {
@@ -845,9 +846,11 @@ All factories using the position mixin will add these to their prototype objects
 					break;
 
 				case 'mouse' :
-					if (this.currentHost) {
+					host = this.currentHost || this.destination || false;
 
-						here = this.currentHost.here;
+					if (host) {
+
+						here = host.here;
 
 						if (here) {
 
