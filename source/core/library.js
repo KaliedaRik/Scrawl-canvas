@@ -68,6 +68,12 @@ const groupnames = [];
 /*
 
 */
+const palette = {};
+const palettenames = [];
+	
+/*
+
+*/
 const point = {};
 const pointnames = [];
 	
@@ -130,12 +136,14 @@ export {
 	userFilter,
 	group,
 	groupnames,
+	palette,
+	palettenames,
 	stack,
 	stacknames,
-	tween,
-	tweennames,
 	styles,
 	stylesnames,
+	tween,
+	tweennames,
 	constructors,
 	radian,
 	css,

@@ -118,9 +118,20 @@ Not importing 'makeElement' - elements get generated from Stack artefacts
 import { makeFilter } from './factory/filter.js';
 
 /*
+### ./factory/gradient.js
+*/
+import { makeGradient } from './factory/gradient.js';
+
+/*
 ### ./factory/group.js
 */
 import { makeGroup } from './factory/group.js';
+
+/*
+### ./factory/palette.js
+
+Not importing 'makePalette' - palettes are private to gradient and radial gradient styles
+*/ 
 
 /*
 ### ./factory/point.js
@@ -134,6 +145,11 @@ Not importing 'makeQuaternion' - get quaternions from the pool instead
 */ 
 import { requestQuaternion, 
 	releaseQuaternion } from './factory/quaternion.js';
+
+/*
+### ./factory/radialGradient.js
+*/
+import { makeRadialGradient } from './factory/radialGradient.js';
 
 /*
 ### ./factory/stack.js
@@ -227,22 +243,30 @@ export default {
 	stopCoreAnimationLoop,
 
 	currentCorePosition,
+
 	startCoreListeners,
 	stopCoreListeners,
 	applyCoreResizeListener,
 	applyCoreMoveListener,
 	applyCoreScrollListener,
 
-	makeAction,
 	makeAnimation,
-	makeBlock,
-	makeColor,
-	makeFilter,
-	makeGroup,
-	makePoint,
+
+	makeAction,
 	makeTicker,
 	makeTween,
 	makeUserObject,
+
+	makeColor,
+	makeGradient,
+	makeRadialGradient,
+
+	makeFilter,
+
+	makeGroup,
+
+	makeBlock,
+	makePoint,
 	makeWheel,
 
 	requestQuaternion, 

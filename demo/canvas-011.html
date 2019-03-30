@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 011</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      display: grid;
+
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      font-size:  12px;
+    }
+
+    .controls div {
+      box-sizing: border-box;
+      justify-self: stretch;
+      align-self: center;
+      text-align: center;
+      padding: 6px 0;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .blue {
+      background-color: lightblue;
+    }
+
+    .green {
+      background-color: palegreen;
+    }
+
+    .pink {
+      background-color: pink;
+    }
+
+    .yellow {
+      background-color: palegoldenrod;
+    }
+
+    select {
+      border: 0;
+      font-size: 80%;
+    }
+
+    input {
+      width: 70%;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 011</h1>
+  <h2>Radial gradients</h2>
+
+  <div class="controls">
+
+    <div class="pink label">paletteStart</div>
+    <div class="pink"><input class="controlItem" id="paletteStart" type="range" value="0" min="0" max="999" step="1" /></div>
+
+    <div class="pink label">paletteEnd</div>
+    <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
+
+    <div class="green label">startX</div>
+    <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="blue label">endX</div>
+    <div class="blue"><input class="controlItem" id="endX" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="green label">startY</div>
+    <div class="green"><input class="controlItem" id="startY" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="blue label">endY</div>
+    <div class="blue"><input class="controlItem" id="endY" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="green label">startRadius</div>
+    <div class="green"><input class="controlItem" id="startRadius" type="range" value="0" min="0" max="300" step="1" /></div>
+
+    <div class="blue label">endRadius</div>
+    <div class="blue"><input class="controlItem" id="endRadius" type="range" value="0" min="0" max="300" step="1" /></div>
+
+    <div class="yellow label">Include red</div>
+    <div class="yellow">
+      <select class="controlItem" id="red">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Include blue</div>
+    <div class="yellow">
+        <select class="controlItem" id="blue">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Setup a radial gradient, and a block entity which uses the gradient for its fillStyle value</li>
+      <li>Check that we can successfully manipulate the gradient's start and end coordinates, and its start and end radius values</li>
+      <li>Check that we can successfully manipulate the palettes's start and end cursors</li>
+      <li>Check that we can dynamically add and remove color stops</li>
+    </ul>
+
+    <h4>Note that:</h4>
+    <p>Demos canvas-010 and canvas-011 are not working in Edge, which is weird given that other gradient demos (-012 to -015) work fine.</p>
+  </div>
+
+  <script src="canvas-011.js" type="module"></script>
+
+</body>
+
+</html>
