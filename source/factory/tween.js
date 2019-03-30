@@ -148,6 +148,9 @@ S.completeAction = function (item) {
 ## Define prototype functions
 */
 
+/*
+
+*/
 Tp.set = function (items) {
 
 	let key, i, iz, s,
@@ -183,11 +186,17 @@ Tp.set = function (items) {
 	return this;
 };
 
+/*
+
+*/
 Tp.getEndTime = function () {
 
 	return this.effectiveTime + this.effectiveDuration;
 };
 
+/*
+
+*/
 Tp.calculateEffectiveDuration = function (item) {
 
 	let tweenDuration = xtGet(item, this.duration),
@@ -217,6 +226,9 @@ Tp.calculateEffectiveDuration = function (item) {
 	return this;
 };
 
+/*
+
+*/
 Tp.update = function (items = {}) {
 
 	let starts, ends,
@@ -272,6 +284,9 @@ Tp.update = function (items = {}) {
 	return true;
 };
 
+/*
+
+*/
 Tp.doSimpleUpdate = function (items = {}) {
 
 	let starts = this.effectiveTime,
@@ -307,11 +322,17 @@ Tp.doSimpleUpdate = function (items = {}) {
 	if (this.action) this.action();
 };
 
+/*
+
+*/
 Tp.updateCleanup = function (item) {
 
 	if (!item) this.status = (this.reversed) ? 'before' : 'after';
 };
 
+/*
+
+*/
 Tp.engineActions = {
 
 	out: function (start, change, position) {
@@ -411,6 +432,9 @@ Tp.engineActions = {
 	}
 };
 
+/*
+
+*/
 Tp.setDefinitionsValues = function () {
 
 	let i, iz, temp, def;
@@ -435,6 +459,9 @@ Tp.setDefinitionsValues = function () {
 	return this;
 };
 
+/*
+
+*/
 Tp.parseDefinitionsValue = function (item) {
 
 	let result = ['', 0],
@@ -455,6 +482,9 @@ Tp.parseDefinitionsValue = function (item) {
 	return result;
 };
 
+/*
+
+*/
 Tp.run = function () {
 
 	let t = animationtickers[this.ticker];
@@ -466,6 +496,9 @@ Tp.run = function () {
 	return this;
 };
 
+/*
+
+*/
 Tp.halt = function() {
 
 	let t = animationtickers[this.ticker];
@@ -475,6 +508,9 @@ Tp.halt = function() {
 	return this;
 };
 
+/*
+
+*/
 Tp.reverse = function() {
 
 	let t = animationtickers[this.ticker];
@@ -484,6 +520,9 @@ Tp.reverse = function() {
 	return this;
 };
 
+/*
+
+*/
 Tp.resume = function() {
 
 	let t = animationtickers[this.ticker];
@@ -493,6 +532,9 @@ Tp.resume = function() {
 	return this;
 };
 
+/*
+
+*/
 Tp.seekTo = function(milliseconds) {
 
 	let t = animationtickers[this.ticker];
@@ -502,6 +544,9 @@ Tp.seekTo = function(milliseconds) {
 	return this;
 };
 
+/*
+
+*/
 Tp.seekFor = function(milliseconds) {
 
 	let t = animationtickers[this.ticker];

@@ -1,7 +1,7 @@
 /*
 # State factory
 */
-import { constructors, entity } from '../core/library.js';
+import { constructors, entity, styles } from '../core/library.js';
 import { addStrings, getSafeObject, isa_canvas, isa_engine, isa_obj, pushUnique, xt, xtGet } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
@@ -221,7 +221,7 @@ S.fillStyle = function (item) {
 	if (isa_obj(item) && item.lib === 'styles') this.fillStyle = item;
 	else{
 
-		temp = my.styles[item];
+		temp = styles[item];
 
 		if (temp) this.fillStyle = temp;
 		else this.fillStyle = item;
@@ -238,7 +238,7 @@ S.strokeStyle = function (item) {
 	if (isa_obj(item) && item.lib === 'styles') this.strokeStyle = item;
 	else{
 
-		temp = my.styles[item];
+		temp = styles[item];
 
 		if (temp) this.strokeStyle = temp;
 		else this.strokeStyle = item;

@@ -85,6 +85,11 @@ import { makeAction } from './factory/action.js';
 import { makeAnimation } from './factory/animation.js';
 
 /*
+### ./factory/block.js
+*/
+import { makeBlock } from './factory/block.js';
+
+/*
 ### ./factory/canvas.js
 
 Not importing 'makeCanvas' - use __addCanvas__ instead
@@ -116,6 +121,11 @@ import { makeFilter } from './factory/filter.js';
 ### ./factory/group.js
 */
 import { makeGroup } from './factory/group.js';
+
+/*
+### ./factory/point.js
+*/
+import { makePoint } from './factory/point.js';
 
 /*
 ### ./factory/quaternion.js
@@ -161,6 +171,11 @@ import { requestVector,
 	releaseVector } from './factory/vector.js';
 
 /*
+### ./factory/wheel.js
+*/
+import { makeWheel } from './factory/wheel.js';
+
+/*
 ### Mixin and worker files
 
 All mixin and worker files are internal to Scrawl-canvas and don't need to be imported by this file
@@ -174,11 +189,6 @@ All mixin and worker files are internal to Scrawl-canvas and don't need to be im
 Flag to indicate if Scrawl-canvas is running in a touch-enabled environment
 */
 window.scrawlEnvironmentTouchSupported = ('ontouchstart' in window || (window.DocumentTouch && document instanceof DocumentTouch)) ? true : false;
-
-/*
-Flag to indicate if Scrawl-canvas is running in a browser/device that can use CanvasPath2D API
-*/
-window.scrawlEnvironmentPath2dSupported = (window.Path2D) ? true : false;
 
 /*
 Flag to indicate if Scrawl-canvas can use OffscreenCanvas interface
@@ -225,12 +235,15 @@ export default {
 
 	makeAction,
 	makeAnimation,
+	makeBlock,
 	makeColor,
 	makeFilter,
 	makeGroup,
+	makePoint,
 	makeTicker,
 	makeTween,
 	makeUserObject,
+	makeWheel,
 
 	requestQuaternion, 
 	releaseQuaternion,

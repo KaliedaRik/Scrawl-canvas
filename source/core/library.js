@@ -58,11 +58,18 @@ const filternames = [];
 
 */
 const userFilter = {};
+
 /*
 
 */
 const group = {};
 const groupnames = [];
+	
+/*
+
+*/
+const point = {};
+const pointnames = [];
 	
 /*
 

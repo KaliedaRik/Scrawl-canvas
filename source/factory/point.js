@@ -1,0 +1,232 @@
+/*
+# Point factory
+*/
+import { constructors, group, artefact } from '../core/library.js';
+import { defaultNonReturnFunction, mergeOver, pushUnique, xta } from '../core/utilities.js';
+import { currentGroup } from '../core/DOM.js';
+
+import { requestVector, releaseVector } from '../factory/vector.js';
+
+import baseMix from '../mixin/base.js';
+import positionMix from '../mixin/position.js';
+
+/*
+## Point constructor
+*/
+const Point = function (items = {}) {
+
+	this.makeName(items.name);
+	this.register();
+	this.set(this.defs);
+
+	if (!items.group) items.group = currentGroup;
+
+	this.set(items);
+
+	this.localWidth = this.width = 1;
+	this.localHeight = this.height = 1;
+
+	this.currentHandle = this.handle = {x: 0, y: 0};
+	this.currentOffset = this.offset = {x: 0, y: 0};
+
+	this.dirtyStart = true;
+
+	delete this.dirtyRotation;
+	delete this.dirtyScale;
+
+	return this;
+};
+
+/*
+## Point object prototype setup
+*/
+let Ep = Point.prototype = Object.create(Object.prototype);
+Ep.type = 'Point';
+Ep.lib = 'point';
+Ep.artefact = true;
+
+/*
+Apply mixins to prototype object
+*/
+Ep = baseMix(Ep);
+Ep = positionMix(Ep);
+
+/*
+## Define default attributes
+*/
+let defaultAttributes = {
+
+/*
+
+*/
+	hitRadius: 20,
+
+/*
+
+*/
+	species: '',
+};
+Ep.defs = mergeOver(Ep.defs, defaultAttributes);
+
+let G = Ep.getters,
+	S = Ep.setters,
+	D = Ep.deltaSetters;
+
+/*
+
+*/
+G.width = () => 1;
+G.height = () => 1;
+G.scale = () => 1;
+G.roll = () => 0;
+
+/*
+
+*/
+S.width = defaultNonReturnFunction;
+S.height = defaultNonReturnFunction;
+S.handleX = defaultNonReturnFunction;
+S.handleY = defaultNonReturnFunction;
+S.handle = defaultNonReturnFunction;
+// S.offsetX = defaultNonReturnFunction;
+// S.offsetY = defaultNonReturnFunction;
+// S.offset = defaultNonReturnFunction;
+S.scale = defaultNonReturnFunction;
+S.roll = defaultNonReturnFunction;
+
+/*
+
+*/
+G.group = function () {
+	return (this.group) ? this.group.name : '';
+};
+
+/*
+ISSUE - stack elements get given a group String for this attribute; here we're just assigning the entire group object
+- they need to be brought more into alignment!
+*/
+S.group = function (item) {
+
+	let g;
+
+	if (this.group) this.group.removeArtefacts(this.name);
+
+	if (item) {
+
+		if (item.substring) {
+
+			g = group[item];
+			if (g) this.group = g;
+		}
+		else if (item.type === 'Group') this.group = item;
+		else this.group = null;
+	}
+
+	if(this.group) this.group.addArtefacts(this.name);
+};
+
+/*
+
+*/
+D.width = defaultNonReturnFunction;
+D.height = defaultNonReturnFunction;
+D.handleX = defaultNonReturnFunction;
+D.handleY = defaultNonReturnFunction;
+D.handle = defaultNonReturnFunction;
+// D.offsetX = defaultNonReturnFunction;
+// D.offsetY = defaultNonReturnFunction;
+// D.offset = defaultNonReturnFunction;
+D.scale = defaultNonReturnFunction;
+D.roll = defaultNonReturnFunction;
+
+
+/*
+## Define prototype functions
+*/
+
+/*
+
+*/
+Ep.prepareStamp = function () {
+
+	if (this.dirtyStart) this.cleanStart();
+	if (this.dirtyOffset) this.cleanOffset();
+};
+
+Ep.cleanStart = function () {
+
+	let host = this.currentHost;
+
+	if (host) {
+
+		this.cleanVectorParameter('currentStart', this.start, host.localWidth, host.localHeight);
+		this.dirtyStart = false;
+	}
+};
+
+Ep.cleanOffset = function () {
+
+	let dims = this.cleanOffsetHelper();
+
+	this.cleanVectorParameter('currentOffset', this.offset, dims[0], dims[1]);
+	this.dirtyOffset = false;
+};
+
+Ep.stamp = function () {
+
+	let pivot, handle, tOffset, pOffset, scale, v, x, y;
+
+	if (this.pivot) pivot = artefact[this.pivot];
+
+	if (pivot) {
+
+		handle = pivot.currentHandle;
+		scale = pivot.scale;
+		pOffset = pivot.currentOffset;
+		tOffset = this.currentOffset;
+
+		x = (pivot.flipReverse) ?
+			(handle.x * scale) - tOffset.x :
+			(-handle.x * scale) + tOffset.x;
+
+		y = (pivot.flipUpend) ?
+			(handle.y * scale) - tOffset.y :
+			(-handle.y * scale) + tOffset.y;
+
+		if (pivot.roll) {
+
+			v = requestVector().setXY(x, y).rotate(pivot.roll);
+			this.stampX = pivot.stampX + pOffset.x + v.x;
+			this.stampY = pivot.stampY + pOffset.y + v.y;
+			releaseVector(v);
+		}
+		else {
+
+			this.stampX = pivot.stampX + pOffset.x + x;
+			this.stampY = pivot.stampY + pOffset.y + y;
+		}
+	}
+	else {
+
+		this.updateStampX();
+		this.updateStampY();
+	}
+	return Promise.resolve(true);
+};
+
+
+/*
+## Exported factory function
+*/
+const makePoint = function (items) {
+	return new Point(items);
+};
+
+/*
+Also store constructor in library - clone functionality expects to find it there
+*/
+constructors.Point = Point;
+
+export {
+	makePoint,
+};

@@ -82,6 +82,9 @@ S.triggered = function (item) {
 ## Define prototype functions
 */
 
+/*
+
+*/
 Ap.set = function(items) {
 
 	let key, i, iz, s,
@@ -113,10 +116,16 @@ Ap.set = function(items) {
 	return this;
 };
 
+/*
+
+*/
 Ap.getEndTime = function () {
 	return this.effectiveTime;
 };
 
+/*
+
+*/
 Ap.update = function (items) {
 
 	if (this.reversed) {

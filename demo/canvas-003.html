@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 003</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      display: grid;
+
+      grid-template-columns: 1fr 2fr 3fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      font-size:  12px;
+    }
+
+    .controls div {
+      box-sizing: border-box;
+      justify-self: stretch;
+      align-self: center;
+      text-align: center;
+      padding: 6px 0;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .blue {
+      background-color: lightblue;
+    }
+
+    .green {
+      background-color: palegreen;
+    }
+
+    .pink {
+      background-color: pink;
+    }
+
+    .yellow {
+      background-color: palegoldenrod;
+    }
+
+    select {
+      border: 0;
+      font-size: 80%;
+    }
+
+    input {
+      width: 70%;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 003</h1>
+  <h2>Canvas controller 'fit' attribute</h2>
+  <h3>This canvas is resizable* - drag the bottom right corner to change its dimensions.</h3>
+
+  <div class="controls">
+
+    <div class="green label">Canvas fit</div>
+    <div class="green">
+      <select class="controlItem" id="fitselect">
+        <option value="none">none</option>
+        <option value="contain">contain</option>
+        <option value="cover">cover</option>
+        <option value="fill">fill</option>
+      </select>
+    </div>
+    <div></div>
+
+  </div>
+
+  <div id="mystack" data-stack>
+    <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Check the various fit modes by which a virtual canvas can be copied into the display canvas</li>
+    </ul>
+
+    <h4>*Note</h4>
+    <p>Actually the stack &lt;div> element containing the &lt;canvas> element is resizable. No browser seems to permit resizable canvases (probably for understandable reasons, though I can't find this prohibition documented anywhere). In fact only Firefox seems to allow the div to be resized: Chrome shows the corner dragger but doesn't respond to user interaction; Edge doesn't even go that far.</p>
+  </div>
+
+  <script src="canvas-003.js" type="module"></script>
+
+</body>
+
+</html>

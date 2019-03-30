@@ -799,6 +799,9 @@ export {
 	addStack,
 	setCurrentCanvas,
 
+	currentCanvas,
+	currentGroup,
+
 	rootElements,
 	setRootElementsSort,
 

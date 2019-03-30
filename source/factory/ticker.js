@@ -119,11 +119,17 @@ Tp.defs = mergeOver(Tp.defs, defaultAttributes);
 let G = Tp.getters,
 	S = Tp.setters;
 
+/*
+
+*/
 G.subscribers = function () {
 
 	return [].concat(this.subscribers);
 };
 
+/*
+
+*/
 S.order = function (item) {
 
 	this.order = item;
@@ -131,6 +137,9 @@ S.order = function (item) {
 	if (this.active) tickerAnimationsFlag = true;
 };
 
+/*
+
+*/
 S.cycles = function (item) {
 
 	this.cycles = item;
@@ -138,12 +147,18 @@ S.cycles = function (item) {
 	if (!this.cycles) this.cycleCount = 0;
 };
 
+/*
+
+*/
 S.subscribers = function (item) {
 
 	this.subscribers = [];
 	this.subscribe(item);
 };
 
+/*
+
+*/
 S.duration = function (item) {
 
 	let i, iz, o;
@@ -171,6 +186,9 @@ S.duration = function (item) {
 ## Define prototype functions
 */
 
+/*
+
+*/
 Tp.makeTickerUpdateEvent = function() {
 
 	return new CustomEvent('tickerupdate', {
@@ -185,6 +203,9 @@ Tp.makeTickerUpdateEvent = function() {
 	});
 };
 
+/*
+
+*/
 Tp.subscribe = function (items) {
 
 	let myItems = [].concat(items),
@@ -212,6 +233,9 @@ Tp.subscribe = function (items) {
 	return this;
 };
 
+/*
+
+*/
 Tp.unsubscribe = function (items) {
 
 	var myItems = [].concat(items),
@@ -236,6 +260,9 @@ Tp.unsubscribe = function (items) {
 	return this;
 };
 
+/*
+
+*/
 Tp.recalculateEffectiveDuration = function() {
 
 	let i, iz, obj, durationValue, duration = 0;
@@ -257,6 +284,9 @@ Tp.recalculateEffectiveDuration = function() {
 	return this;
 };
 
+/*
+
+*/
 Tp.setEffectiveDuration = function() {
 
 	let temp;
@@ -276,11 +306,17 @@ Tp.setEffectiveDuration = function() {
 	return this;
 };
 
+/*
+
+*/
 Tp.sortSubscribers = function () {
 
 	if(this.subscribers.length > 1) this.subscribers = bucketSort('tween', 'effectiveTime', this.subscribers);
 };
 
+/*
+
+*/
 Tp.fn = function (reverseOrder) {
 
 	let i, iz, subs, sub, eTime, now, e;
@@ -377,6 +413,9 @@ Tp.fn = function (reverseOrder) {
 	}
 };
 
+/*
+
+*/
 Tp.updateSubscribers = function(items, reversed) {
 	
 	let subs = this.subscribers,
@@ -401,6 +440,9 @@ Tp.updateSubscribers = function(items, reversed) {
 	return this;
 };
 
+/*
+
+*/
 Tp.changeSubscriberDirection = function () {
 
 	var subs = this.subscribers,
@@ -414,6 +456,9 @@ Tp.changeSubscriberDirection = function () {
 	return this;
 };
 
+/*
+
+*/
 Tp.run = function () {
 
 	if (!this.active) {
@@ -434,6 +479,9 @@ Tp.run = function () {
 	return this;
 };
 
+/*
+
+*/
 Tp.reset = function () {
 
 	if (this.active) this.halt();
@@ -453,6 +501,9 @@ Tp.reset = function () {
 	return this;
 };
 
+/*
+
+*/
 Tp.complete = function () {
 
 	if (this.active) this.halt();
@@ -472,6 +523,9 @@ Tp.complete = function () {
 	return this;
 };
 
+/*
+
+*/
 Tp.reverse = function (resume = false) {
 
 	let timePlayed;
@@ -495,6 +549,9 @@ Tp.reverse = function (resume = false) {
 	return this;
 };
 
+/*
+
+*/
 Tp.halt = function () {
 
 	this.active = false;
@@ -503,6 +560,9 @@ Tp.halt = function () {
 	return this;
 };
 
+/*
+
+*/
 Tp.resume = function () {
 
 	let now, current, start;
@@ -522,6 +582,9 @@ Tp.resume = function () {
 	return this;
 };
 
+/*
+
+*/
 Tp.seekTo = function (milliseconds, resume = false) {
 
 	let backwards = false;
@@ -546,6 +609,9 @@ Tp.seekTo = function (milliseconds, resume = false) {
 	return this;
 };
 
+/*
+
+*/
 Tp.seekFor = function (milliseconds, resume = false) {
 
 	let backwards = false;
@@ -570,6 +636,9 @@ Tp.seekFor = function (milliseconds, resume = false) {
 	return this;
 };
 
+/*
+
+*/
 Tp.kill = function () {
 
 	if (this.active) this.halt();
@@ -582,6 +651,9 @@ Tp.kill = function () {
 	return true;
 };
 
+/*
+
+*/
 Tp.killTweens = function(autokill = false) {
 
 	let i, iz, sub;
