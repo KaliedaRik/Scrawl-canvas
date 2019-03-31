@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let canvas = scrawl.library.canvas.mycanvas,
@@ -29,6 +32,7 @@ cell = canvas.buildCell({
 	backgroundColor: 'blue',
 	lockTo: 'start',
 });
+
 
 // Animation 
 scrawl.makeAnimation({

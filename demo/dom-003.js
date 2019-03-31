@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -27,6 +30,7 @@ element.set({
 	yaw: 30
 });
 
+
 // Set the DOM input values
 document.querySelector('#dims_widthPercent').value = 50;
 document.querySelector('#dims_heightPercent').value = 50;
@@ -48,6 +52,7 @@ document.querySelector('#roll').value = 10;
 document.querySelector('#pitch').value = 20;
 document.querySelector('#yaw').value = 30;
 document.querySelector('#scale').value = 1;
+
 
 // Event listeners
 stopE = (e) => {
@@ -149,6 +154,7 @@ events = (e) => {
 };
 
 scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
+
 
 // Animation 
 scrawl.makeAnimation({

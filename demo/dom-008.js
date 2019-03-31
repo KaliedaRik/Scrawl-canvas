@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -40,6 +43,7 @@ element.set({
 	}
 });
 
+
 // Create and start tweens
 scrawl.makeTween({
 	name: 'myTween',
@@ -53,6 +57,7 @@ scrawl.makeTween({
 			end: 360
 		}
 	]
+
 // This works because the first tween creates its own ticker, then the cloned tween subscribes to that ticker
 }).clone({
 	name: 'myClonedTween',
@@ -64,6 +69,7 @@ scrawl.makeTween({
 			end: 340
 		}
 	]
+
 // Second clone has its own ticker (useNewTicker: true), which needs to be run separately
 }).run().clone({ 
 	name: 'mySecondClonedTween',
@@ -77,6 +83,7 @@ scrawl.makeTween({
 		}
 	]
 }).run(); 
+
 
 // Animation 
 scrawl.makeAnimation({

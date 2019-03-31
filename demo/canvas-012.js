@@ -17,51 +17,60 @@ let lib = scrawl.library,
 
 canvas.set({
 	fit: 'fill',
+	backgroundColor: 'lightgray',
 	css: {
 		border: '1px solid black'
 	}
-}).setBase({
-	width: 1000,
-	height: 1000,
-	backgroundColor: 'lightgray'
 });
 
+scrawl.makeGradient({
+	name: 'linear',
+	endX: '100%',
+})
+.updateColor(0, 'blue')
+.updateColor(495, 'red')
+.updateColor(500, 'yellow')
+.updateColor(505, 'red')
+.updateColor(999, 'green');
+
 scrawl.makeBlock({
-	name: 'entity-1',
-	width: 200,
-	height: 200,
-	startX: 350,
-	startY: 350,
+	name: 'static_block',
+	width: 150,
+	height: 150,
+	startX: 150,
+	startY: 150,
 	handleX: 'center',
 	handleY: 'center',
-
-	fillStyle: 'blue',
-	strokeStyle: 'gold',
+	fillStyle: 'linear',
+	strokeStyle: 'coral',
 	lineWidth: 6,
 	method: 'fillDraw',
 }).clone({
-	method: 'drawFill',
-	fillStyle: 'coral',
-	name: 'entity-2',
-	width: 120,
-	startX: 650,
+	name: 'rolling_block',
+	delta: {
+		roll: 0.5
+	},
+	scale: 1.2,
+	startY: 450,
 });
 
 scrawl.makeWheel({
-	name: 'entity-3',
-	radius: 100,
-	startX: 650,
-	startY: 650,
-	order: 1,
-
-	fillStyle: 'red',
+	name: 'static_wheel',
+	radius: 75,
+	startX: 450,
+	startY: 150,
+	fillStyle: 'linear',
+	strokeStyle: 'coral',
+	lineWidth: 6,
 	method: 'fillDraw',
 }).clone({
-	name: 'entity-4',
-	startX: 350,
-	strokeStyle: 'pink',
-	radius: 60,
-	lineWidth: 15,
+	name: 'rolling_wheel',
+	delta: {
+		roll: -0.5
+	},
+	scale: 1.2,
+	lineDash: [4, 4],
+	startY: 450,
 });
 
 
@@ -84,11 +93,11 @@ startDrag = (e) => {
 	}
 };
 
-endDrag = function(e) {
+endDrag = (e) => {
 
 	stopE(e);
 
-	if (current && current.artefact) {
+	if (current) {
 
 		current.artefact.dropArtefact();
 		current = false;
@@ -102,7 +111,7 @@ scrawl.addListener(['up', 'leave'], endDrag, canvas.domElement);
 // Animation 
 scrawl.makeAnimation({
 
-	name: 'testC007Display',
+	name: 'testC012Display',
 	
 	fn: function(){
 		

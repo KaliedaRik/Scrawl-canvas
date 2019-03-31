@@ -51,7 +51,8 @@ import { getCanvases,
 	clear,
 	compile,
 	show,
-	render } from './core/DOM.js';
+	render,
+	setScrawlPath } from './core/DOM.js';
 
 /*
 ### ./core/library.js
@@ -212,6 +213,11 @@ Flag to indicate if Scrawl-canvas can use OffscreenCanvas interface
 window.scrawlEnvironmentOffscreenCanvasSupported = ('OffscreenCanvas' in window) ? true : false;
 
 /*
+For workers, we need to determine the server location of this current script so we can fully determine the path for the worker scripts
+*/
+console.log('scrawl.js', document.currentScript);
+
+/*
 ## Initialize Scrawl-canvas on the page
 */
 
@@ -287,4 +293,6 @@ export default {
 	compile,
 	show,
 	render,
+
+	setScrawlPath,
 };

@@ -1,4 +1,5 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
 
 
 // Time display variables

@@ -1,4 +1,6 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Scene setup
 scrawl.library.canvas.mycanvas.set({
@@ -60,11 +62,13 @@ scrawl.makeBlock({
 	method: 'clear'
 });
 
+
 // Change the fill and stroke styles on one of the blocks, and any block sharing that block's state
 scrawl.library.artefact.myblock_fillDraw.set({
 	fillStyle: 'blue',
 	strokeStyle: 'coral'
 });
+
 
 // Display the scene
 scrawl.render()

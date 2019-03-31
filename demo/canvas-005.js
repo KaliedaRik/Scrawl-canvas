@@ -1,4 +1,6 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Scene setup
 scrawl.library.canvas.mycanvas.set({
@@ -63,11 +65,13 @@ scrawl.makeWheel({
 	method: 'clear'
 });
 
+
 // Change the fill and stroke styles on one of the blocks, and any block sharing that block's state
 scrawl.library.artefact.mywheel_drawFill.set({
 	fillStyle: 'blue',
 	strokeStyle: 'coral'
 });
+
 
 // Display the scene
 scrawl.render()

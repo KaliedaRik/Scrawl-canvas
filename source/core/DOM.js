@@ -791,6 +791,11 @@ const domShow = function () {
 	}
 }
 
+const setScrawlPath = function (url) {
+
+	window.scrawlPath = url;
+};
+
 export {
 	getCanvases,
 	getStacks,
@@ -818,4 +823,6 @@ export {
 	addDomShowElement,
 	setDomShowRequired,
 	domShow,
+
+	setScrawlPath,
 };

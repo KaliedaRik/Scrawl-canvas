@@ -1,4 +1,6 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
@@ -25,6 +27,7 @@ canvas.buildCell({
 	scale: 1.39,
 	backgroundColor: 'blue'
 });
+
 
 // Trigger a display cycle
 canvas.render()

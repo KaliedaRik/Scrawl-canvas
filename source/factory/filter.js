@@ -176,12 +176,11 @@ const releaseFilterWorker = function (f) {
 /*
 
 */
-const filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ? './worker/filter.js' : './worker/filter.js';
-
-/*
-
-*/
 const buildFilterWorker = function () {
+
+	let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ? 
+		`${window.location.origin}${window.scrawlPath}/worker/filter.js` : 
+		`${window.location.origin}${window.scrawlPath}/worker/filter.js`;
 
 	return new Worker(filterUrl, {type: 'module'});
 };

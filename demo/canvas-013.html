@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 013</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 013</h1>
+  <h2>Entity-locked gradients</h2>
+  <h3>Drag and drop the entitys around the canvas</h3>
+
+  <canvas id="mycanvas" width="600" height="600"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <p>Drag and drop the entitys to test that their gradients change in line with the underlying entity-locked gradient (which is shared by all these entitys)</p>
+
+    <ul>
+      <li>Setup a linear gradient</li>
+      <li>Create and clone block and wheel entitys, each using the gradient as a fill; lock the fill to the entity</li>
+      <li>The cloned entitys should include a roll delta</li>
+      <li>The gradient should fit inside each entity, taking into account that entity's scale</li>
+      <li>Check that when the drag operation starts, the gradient remains static within the entity (the yellow line should bisect each entity)</li>
+      <li>Check that when the drag operation ends, the gradient remains static within the entity</li>
+    </ul>
+  </div>
+
+  <script src="canvas-013.js" type="module"></script>
+
+</body>
+
+</html>

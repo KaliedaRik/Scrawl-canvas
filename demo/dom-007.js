@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -24,6 +27,7 @@ porthole.set({
 		backgroundColor: 'black',
 	}
 });
+
 
 // Create and start tweens
 makeStars = function (buildNumber) {
@@ -95,6 +99,7 @@ makeStars = function (buildNumber) {
 	}
 }
 
+
 // Event listeners
 stopE = (e) => {
 
@@ -111,6 +116,7 @@ addStars = (e) => {
 scrawl.addNativeListener('click', addStars, starfield);
 
 makeStars(50);
+
 
 // Animation 
 scrawl.makeAnimation({

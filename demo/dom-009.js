@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -24,6 +27,7 @@ element.set({
 		backgroundColor: 'red',
 	}
 });
+
 
 // Create and start ticker and tween
 ticker = scrawl.makeTicker({
@@ -46,6 +50,7 @@ scrawl.makeTween({
 		}
 	]
 });
+
 
 // Build timeline actions
 let red = { css: { backgroundColor: 'red' }},
@@ -112,6 +117,7 @@ scrawl.makeAction({
 	revert: function () { element.set(purple) }
 });
 
+
 // Event listeners
 stopE = (e) => {
 
@@ -127,8 +133,8 @@ changeDirection = (e) => {
 
 scrawl.addNativeListener('click', changeDirection, stack.domElement);
 
-// Start the ticker
 ticker.run();
+
 
 // Animation 
 scrawl.makeAnimation({

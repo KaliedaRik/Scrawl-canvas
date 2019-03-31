@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -72,6 +75,7 @@ stack.set({
 })
 .catch(() => {});
 
+
 // Animation loop
 scrawl.makeAnimation({
 
@@ -81,7 +85,6 @@ scrawl.makeAnimation({
 
 		return new Promise((resolve) => {
 
-			// Display cycle
 			let start, dims, changes, 
 				current, testClass,
 				minX, minY, maxX, maxY;
@@ -93,7 +96,6 @@ scrawl.makeAnimation({
 			maxX = minX * 9;
 			maxY = minY * 9;
 
-			// Check to see if the image needs to reverse direction
 			if (start.x < minX || start.x > maxX || start.y < minY || start.y > maxY) {
 
 				flower.reverseByDelta();

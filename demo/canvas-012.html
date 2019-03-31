@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 012</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 012</h1>
+  <h2>Cell-locked gradients</h2>
+  <h3>Drag and drop the entitys around the canvas</h3>
+
+  <canvas id="mycanvas" width="600" height="600"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <p>Drag and drop the entitys to test that their gradients change in line with the underlying cell-based gradient (which is shared by all these entitys)</p>
+
+    <ul>
+      <li>Setup a linear gradient</li>
+      <li>Create and clone block and wheel entitys, each using the gradient as a fill</li>
+      <li>The cloned entitys should include a roll delta</li>
+      <li>Check that when the drag operation starts, the gradient does not suddenly jump</li>
+      <li>During the drag operation, the gradient should change in line with the entity's position on the cell (the yellow line should bisect the cell)</li>
+      <li>Check that when the drag operation ends, the gradient does not suddenly jump</li>
+    </ul>
+
+    <h4>Expected results</h4>
+    <p>The gradient, when applied to rotating entitys, will rotate with the entitys. When dragged while rotating, the drop state of the gradient will change according to the degree of entity rotation at the time of the drop.</p>
+  </div>
+
+  <script src="canvas-012.js" type="module"></script>
+
+</body>
+
+</html>

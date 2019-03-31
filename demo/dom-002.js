@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -23,9 +26,11 @@ element.set({
 	lockTo: 'start'
 });
 
+
 // Set the DOM input values
 document.getElementById('vertical').value = 0;
 document.getElementById('horizontal').value = 1;
+
 
 // Event listeners
 stopE = (e) => {
@@ -52,8 +57,10 @@ events = (e) => {
 
 scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
+
 // Animation 
 scrawl.makeAnimation({
+
 
 	// Naming the animation object is not required, but will help with debugging.
 	name: 'testD002Display',
@@ -90,5 +97,3 @@ scrawl.makeAnimation({
 		});
 	}
 });
-
-console.log(scrawl.library);

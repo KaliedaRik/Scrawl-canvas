@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -80,6 +83,7 @@ artefact.bottomface.set({
 	css: { backgroundColor: 'rgba(0, 127, 0, 0.4)' },
 	pitch: 270,
 });
+
 
 // Animation 
 scrawl.makeAnimation({

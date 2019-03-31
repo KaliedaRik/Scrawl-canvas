@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -15,6 +18,7 @@ stack.set({
 	width: 500,
 	height: 500,
 });
+
 
 // If we render the stack, we can then position the element accurately within it
 stack.render()
@@ -41,6 +45,7 @@ stack.render()
 	resolve(true);
 })
 .catch(() => resolve(false));
+
 
 // Event listeners
 stopE = (e) => {
@@ -74,6 +79,7 @@ endDrag = function (e) {
 
 scrawl.addListener('down', startDrag, stack.domElement);
 scrawl.addListener(['up', 'leave'], endDrag, stack.domElement);
+
 
 // Animation 
 scrawl.makeAnimation({

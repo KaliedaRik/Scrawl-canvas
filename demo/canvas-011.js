@@ -1,4 +1,5 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
 
 
 // Time display variables
@@ -141,7 +142,7 @@ scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 // Animation 
 scrawl.makeAnimation({
 
-	name: 'testC006Display',
+	name: 'testC011Display',
 	
 	fn: function(){
 		

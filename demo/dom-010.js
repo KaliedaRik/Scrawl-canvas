@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let library = scrawl.library,
@@ -31,6 +34,7 @@ rocket.set({
 	handleY: 'center',
 });
 
+
 // Set this tween up as a template which can be cloned but will never itself run
 tween = scrawl.makeTween({
 	name: 'template',
@@ -45,6 +49,7 @@ tween = scrawl.makeTween({
 		}
 	]
 }).removeFromTicker();
+
 
 // Event listeners
 stopE = (e) => {
@@ -74,6 +79,7 @@ flyRocket = function(e) {
 };
 
 scrawl.addNativeListener('click', flyRocket, stack.domElement);
+
 
 // Animation 
 scrawl.makeAnimation({

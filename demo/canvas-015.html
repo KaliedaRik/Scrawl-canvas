@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 015</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 015</h1>
+  <h2>Animate gradient by tween</h2>
+  <h3>Click on the canvas to start the animation</h3>
+
+  <canvas id="mycanvas" width="600" height="600"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Setup a linear gradient, and a block entity to display it</li>
+      <li>Create a user-defined tween engine function to handle the tween calculations</li>
+      <li>Setup a tween to manipulate the gradient palette's start and end cursors, to be run when the user clicks on the canvas</li>
+      <li>During the animation the gradient should loop 3 times, with an ease covering the length of all loops</li>
+      <li>Check that the tween ignores user clicks while it is running</li>
+      <li>The gradient should remain coherent during the entire tween run, and there should be no flashes of solid black or other solid colors</li>
+    </ul>
+  </div>
+
+  <script src="canvas-015.js" type="module"></script>
+
+</body>
+
+</html>

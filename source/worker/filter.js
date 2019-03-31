@@ -7,6 +7,18 @@ let packet, image, iWidth, data,
 	cache, tiles, cacheFlag, 
 	localX, localY, localWidth, localHeight, localFlag;
 
+
+// TypedArray.slice() polyfill - for blur filter
+// - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/slice
+if (!Uint8Array.prototype.slice) {
+	Object.defineProperty(Uint8Array.prototype, 'slice', {
+		value: function (begin, end) {
+			return new Uint8Array(Array.prototype.slice.call(this, begin, end));
+		}
+	});
+}
+
+
 onmessage = function (e) {
 
 	let i, iz;
@@ -575,11 +587,10 @@ const actions = {
 				tempDataTo, tempDataFrom,
 				i, iz, index;
 
-			// this is wrong - where does 'self' come from?
-			let localX = self.localX,
-				localY = self.localY,
-				localWidth = self.localWidth,
-				localHeight = self.localHeight;
+			localX = self.localX;
+			localY = self.localY;
+			localWidth = self.localWidth;
+			localHeight = self.localHeight;
 
 			tempDataTo = data.slice();
 
@@ -653,9 +664,8 @@ const actions = {
 
 			let processRowWithAlpha = function (row) {
 
-				let pos, avg, val, x, xz, q, avgQ, cageQ, rowPosX,
+				let pos, val, x, xz, q, avgQ, cageQ, rowPosX,
 					avg = [],
-					hLead = radius * 4,
 					cage = [[], [], [], []],
 					rowPos = row * iWidth, 
 					hLead = radius * 4,
@@ -719,12 +729,11 @@ const actions = {
 
 			let processRowNoAlpha = function (row) {
 
-				let pos, avg, val, x, xz, q, avgQ, cageQ, rowPosX,
+				let pos, val, x, xz, q, avgQ, cageQ, rowPosX,
 					avg = [],
 					hLead = radius * 4,
 					cage = [[], [], []],
 					rowPos = row * iWidth, 
-					hLead = radius * 4,
 					dataPointer, cagePointer, cageLen;
 
 				q = 0;

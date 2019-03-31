@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -23,6 +26,7 @@ element.set({
 		backgroundColor: 'lightblue'
 	}
 });
+
 
 // Create and start tween
 scrawl.makeTween({
@@ -44,6 +48,7 @@ scrawl.makeTween({
 		}
 	]
 }).run();
+
 
 // Animation 
 scrawl.makeAnimation({

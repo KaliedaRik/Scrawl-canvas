@@ -1,9 +1,12 @@
 import scrawl from '../source/scrawl.js'
+scrawl.setScrawlPath('/source');
+
 
 // Time display variables
 let testTicker = Date.now(),
 	testTime, testNow, 
 	testMessage = document.querySelector('#reportmessage');
+
 
 // Scene setup
 let artefact = scrawl.library.artefact,
@@ -13,9 +16,11 @@ let artefact = scrawl.library.artefact,
 stack.set({
 	width: 600,
 	height: 400,
+
 // We .render here to fix initial dimensional changes to the stack. All other setup work can then go in the .then function. This is because of JavsScript's run-to-completion design, meaning that if we don't put the code inside a .then function it will run before the .render Promise triggers.
 }).render()
 .then(() => {
+
 
 	// Best to keep initial dimension changes and actionResize settings separate from each other.
 	stack.set({
@@ -41,11 +46,13 @@ stack.set({
 		css: {
 			borderRadius: '50%'
 		}
+
 	// For elements in the stack, it is enough to .apply the changes (which, unlike .render, is not a Promise function)
 	}).apply();
 
 })
 .catch(() => {});
+
 
 // Animation loop
 scrawl.makeAnimation({
@@ -55,6 +62,7 @@ scrawl.makeAnimation({
 	fn: function () {
 
 		return new Promise((resolve) => {
+
 
 			// Display cycle
 			let start, dims, changes,
@@ -66,6 +74,7 @@ scrawl.makeAnimation({
 			minY = dims.h / 10;
 			maxX = minX * 9;
 			maxY = minY * 9;
+
 
 			// Check to see if the image needs to reverse direction
 			if (start.x < minX || start.x > maxX || start.y < minY || start.y > maxY) {
