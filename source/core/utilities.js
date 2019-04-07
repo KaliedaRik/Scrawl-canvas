@@ -30,6 +30,8 @@ const addStrings = (current, delta) => {
 
 /*
 __bucketSort__ sorts the items in a scrawl-canvas library array (generally a -name array) based on an attribute value for an object in a related scrawl-canvas library object. *Private function*
+
+Note - to be deprecated
 */ 
 const bucketSort = (section, attribute, a) => {
 
@@ -190,141 +192,62 @@ __getSafeObject__ helps us avoid errors when accessing object attributes
 Note - trying to deprecate this utility
 */ 
 const safeObject = {};
-const getSafeObject = (item) => {
-
-	return (Object.prototype.toString.call(item) === '[object Object]') ? item : safeObject;
-};
+const getSafeObject = item => (Object.prototype.toString.call(item) === '[object Object]') ? item : safeObject;
 
 /*
 __isa_canvas__ checks to make sure the argument is a DOM &lt;canvas> element
 */ 
-const isa_canvas = (item) => {
-
-	return (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
-};
+const isa_canvas = item => (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
 
 /*
 __isa_dom__ checks to make sure the argument is a DOM element of some sort
 */ 
-const isa_dom = (item) => {
+const isa_dom = item => (item && item.querySelector && item.dispatchEvent) ? true : false;
 
-	return (item && item.querySelector && item.dispatchEvent) ? true : false;
-};
-
-const isa_engine = (item) => {
-
-	return (item && item.quadraticCurveTo) ? true : false;
-};
+/*
+__isa_engine__ checks to make sure the argument is a &lt;canvas> element's contenxt engine'
+*/ 
+const isa_engine = item => (item && item.quadraticCurveTo) ? true : false;
 
 /*
 __isa_fn__ checks to make sure the argument is a JavaScript function object
 */ 
-const isa_fn = (item) => {
-
-	return (typeof item === 'function') ? true : false;
-};
+const isa_fn = item => (typeof item === 'function') ? true : false;
 
 /*
 __isa_img__ checks to make sure the argument is a DOM &lt;img> element
 */ 
-const isa_img = (item) => {
-
-	return (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
-};
+const isa_img = item => (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
 
 /*
 __isa_obj__ checks to make sure the argument is a JavaScript Object
 */ 
-const isa_obj = (item) => {
-
-	return (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
-};
+const isa_obj = item => (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
 
 /*
 __isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object
 */ 
-const isa_quaternion = (item) => {
-
-	return (item && item.type && item.type === 'Quaternion') ? true : false;
-};
+const isa_quaternion = item => (item && item.type && item.type === 'Quaternion') ? true : false;
 
 /*
 __isa_str__ checks to make sure the argument is a JavaScript String
 */ 
-const isa_str = (item) => {
-
-	return (item && item.substring) ? true : false;
-};
+const isa_str = item => (item && item.substring) ? true : false;
 
 /*
 __isa_vector__ checks to make sure the argument is a Scrawl-canvas Vector object
 */ 
-const isa_vector = (item) => {
-
-	return (item && item.type && item.type === 'Vector') ? true : false;
-};
+const isa_vector = item => (item && item.type && item.type === 'Vector') ? true : false;
 
 /*
 __isa_video__ checks to make sure the argument is a DOM &lt;video> element
 */ 
-const isa_video = (item) => {
-
-	return (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
-};
-
-/*
-__loadScript__ is a dedicated function for loading scrawl-canvas javascript files. It takes two arguments:
-
-Note: trying to deprecate this functionality
-
-* _src_ - 'path/to/file.js', or an array of such strings
-* _callback_ - a callback function (with no arguments)
-
-The (currently) preferred method for loading scrawl-canvas into a web page is to use the &lt;script> tag with additional data-attributes to determine the extensions to load and the script to trigger once script loading completes.
-
-For more details on loading scrawl-canvas, see:
-
-* <a href="../tests/dom_001.html">demo</a>
-* <a href="./dom_001.html">demo code</a>
-*/
-const loadScripts = (src, callback) => {
-
-	var i, iz, item, count, el;
-
-	if (typeof src == 'undefined') src = [];
-	else if (src.substring) src = [src];
-
-	if (typeof callback !== 'function') callback = function(){};
-
-	if (Array.isArray(src)) {
-
-		count = src.length;
-
-		for (i = 0, iz = src.length; i < iz; i++) {
-
-			item = src[i];
-			el = document.createElement('script');
-			el.type = 'text/javascript';
-			el.async = 'true';
-
-			el.onload = (e) => {
-
-				count--;
-				
-				if (!count) callback();
-			};
-
-			el.onerror = (e) => console.log('scrawl.utils.loadScripts error', e.target.src);
-
-			el.src = item;
-
-			document.body.appendChild(el);
-		}
-	}
-};
+const isa_video = item => (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
 
 /*
 __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
+
+Note - this function may no longer be required, and should certainly be deprecated
 */ 
 const locateTargetSections = ['artefact', 'group', 'animation', 'tween', 'styles'];
 const locateTarget = (item) => {
@@ -355,13 +278,13 @@ Example:
     
     -> { name: 'Peter', age: 42, job: 'lawyer', pet: 'cat' }
 */
-const mergeInto = (o1, o2) => {
+const mergeInto = (original, additional) => {
 
-	for (let key in o2) {
+	for (let key in additional) {
 
-		if (o2.hasOwnProperty(key) && typeof o1[key] == 'undefined') o1[key] = o2[key];
+		if (additional.hasOwnProperty(key) && typeof original[key] == 'undefined') original[key] = additional[key];
 	}
-	return o1;
+	return original;
 };
 
 /*
@@ -375,13 +298,13 @@ Example:
     
     -> { name: 'Peter', age: 32, job: 'coder', pet: 'cat' }
 */
-const mergeOver = (o1, o2) => {
+const mergeOver = (original, additional) => {
 
-	for (let key in o2) {
+	for (let key in additional) {
 
-		if (o2.hasOwnProperty(key)) o1[key] = o2[key];
+		if (additional.hasOwnProperty(key)) original[key] = additional[key];
 	}
-	return o1;
+	return original;
 };
 
 /*
@@ -397,15 +320,13 @@ Example:
     -> ['apple', 'orange', 'banana']
 
 */
-const pushUnique = (item, o) => {
+const pushUnique = (myArray, potentialMember) => {
 
-	if (xta(item, o) && Array.isArray(item)) {
+	if (xta(myArray, potentialMember) && Array.isArray(myArray)) {
 
-		if (item.indexOf(o) < 0) item.push(o);
-
-		return item;
+		if (myArray.indexOf(potentialMember) < 0) myArray.push(potentialMember);
 	}
-	return false;
+	return myArray;
 };
 
 /*
@@ -420,72 +341,36 @@ Example:
     scrawl.utils.removeItem(myarray, 'apple');    
     -> ['orange']
 */
-const removeItem = (item, o) => {
+const removeItem = (myArray, unwantedMember) => {
 
-	if (xta(item, o) && Array.isArray(item)) {
+	if (xta(myArray, unwantedMember) && Array.isArray(myArray)) {
 
-		let index = item.indexOf(o);
+		let index = myArray.indexOf(unwantedMember);
 
-		if (index >= 0) item.splice(index, 1);
-
-		return item;
+		if (index >= 0) myArray.splice(index, 1);
 	}
-	return false;
+	return myArray;
 };
 
 /*
 __xt__ checks to see if argument exists (is not 'undefined')
 */ 
-const xt = (item) => {
-
-	return (typeof item == 'undefined') ? false : true;
-};
+const xt = item => (typeof item == 'undefined') ? false : true;
 
 /*
 __xta__ checks to make sure that all the arguments supplied to the function exist (none are 'undefined')
 */ 
-const xta = (...args) => {
-
-	if (args.length) {
-
-		for (let i = 0, iz = args.length; i < iz; i++) {
-
-			if (typeof args[i] === 'undefined') return false;
-		}
-		return true;
-	}
-	return false;
-};
+const xta = (...args) => args.every(item => typeof item != 'undefined');
 
 /*
 __xtGet__ returns the first existing (not 'undefined') argument supplied to the function
 */ 
-const xtGet = (...args) => {
-
-	if (args.length) {
-
-		for (let i = 0, iz = args.length; i < iz; i++) {
-
-			if (typeof args[i] !== 'undefined') return args[i];
-		}
-	}
-	return null;
-};
+const xtGet = (...args) => args.find(item => typeof item != 'undefined');
 
 /*
 __xto__ checks to make sure that at least one of the arguments supplied to the function exists (is not 'undefined')
 */ 
-const xto = (...args) => {
-
-	if (args.length) {
-
-		for (let i = 0, iz = args.length; i < iz; i++) {
-
-			if (typeof args[i] !== 'undefined') return true;
-		}
-	}
-	return false;
-};
+const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true : false;
 
 export {
 	addStrings,
@@ -508,7 +393,6 @@ export {
 	isa_str,
 	isa_vector,
 	isa_video,
-	loadScripts,
 	locateTarget,
 	mergeInto,
 	mergeOver,

@@ -54,17 +54,18 @@ const Element = function (items = {}) {
 /*
 ## Element object prototype setup
 */
-let Ep = Element.prototype = Object.create(Object.prototype);
-Ep.type = 'Element';
-Ep.lib = 'element';
-Ep.artefact = true;
+let P = Element.prototype = Object.create(Object.prototype);
+P.type = 'Element';
+P.lib = 'element';
+P.isArtefact = true;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Ep = baseMix(Ep);
-Ep = positionMix(Ep);
-Ep = domMix(Ep);
+P = baseMix(P);
+P = positionMix(P);
+P = domMix(P);
 
 /*
 ## Define prototype functions
@@ -73,7 +74,7 @@ Ep = domMix(Ep);
 /*
 
 */
-Ep.demolish = function (removeFromDom = false) {
+P.demolish = function (removeFromDom = false) {
 
 	let el = this.domElement,
 		name = this.name,

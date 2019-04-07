@@ -76,30 +76,25 @@ All factories using the filter mixin will add these to their prototype objects
 */
 	obj.cleanFilters = function () {
 
-		let i, iz, item, filt;
+		// 1. unset the flag
+		this.dirtyFilters = false;
 
-		// 1. bucket sort the filters array (made up of filter.name strings), on order attribute
+		// 2. bucket sort the filters array (made up of filter.name strings), on order attribute
 		if (this.filters.length > 1) bucketSort('filter', 'order', this.filters);
 
-		// 2. create/reset the currentFilters array, which holds the filters objects (in order)
+		// 3. create/reset the currentFilters array, which holds the filters objects (in order)
 		if (!Array.isArray(this.currentFilters)) this.currentFilters = [];
 		else this.currentFilters.length = 0;
 
-		// 3. populate the currentFilters array
-		for (i = 0, iz = this.filters.length; i < iz; i++) {
+		// 4. populate the currentFilters array
+		this.filters.forEach(item => {
 
-			item = this.filters[i];
+			let filt;
 
-			if (item) {
+			if (item) filt = filter[item];
+			if (filt) this.currentFilters.push(filt);
 
-				filt = filter[item];
-
-				if (filt) this.currentFilters.push(filt);
-			}
-		}
-
-		// 4. unset the flag
-		this.dirtyFilters = false;
+		}, this);
 	};
 
 /*
@@ -107,18 +102,14 @@ All factories using the filter mixin will add these to their prototype objects
 */
 	obj.addFilters = function (...args) {
 
-		let i, iz, item;
-
-		for (i = 0, iz = args.length; i < iz; i++) {
-
-			item = args[i];
+		args.forEach(item => {
 
 			if (item) {
 
 				if (item.substring) pushUnique(this.filters, item);
 				else if (item.type === 'Filter') pushUnique(this.filters, item.name);
 			}
-		}
+		}, this);
 
 		this.dirtyFilters = true;
 		return this;
@@ -129,18 +120,14 @@ All factories using the filter mixin will add these to their prototype objects
 */
 	obj.removeFilters = function (...args) {
 
-		let i, iz, item;
+		args.forEach(item => {
 
-		for (i = 0, iz = args.length; i < iz; i++) {
-
-			item = args[i];
-			
 			if (item) {
 
 				if (item.substring) removeItem(this.filters, item);
 				else if (item.type === 'Filter') removeItem(this.filters, item.name);
 			}
-		}
+		}, this);
 
 		this.dirtyFilters = true;
 		return this;

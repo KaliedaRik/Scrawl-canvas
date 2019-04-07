@@ -40,16 +40,17 @@ const Point = function (items = {}) {
 /*
 ## Point object prototype setup
 */
-let Ep = Point.prototype = Object.create(Object.prototype);
-Ep.type = 'Point';
-Ep.lib = 'point';
-Ep.artefact = true;
+let P = Point.prototype = Object.create(Object.prototype);
+P.type = 'Point';
+P.lib = 'point';
+P.isArtefact = true;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Ep = baseMix(Ep);
-Ep = positionMix(Ep);
+P = baseMix(P);
+P = positionMix(P);
 
 /*
 ## Define default attributes
@@ -66,11 +67,11 @@ let defaultAttributes = {
 */
 	species: '',
 };
-Ep.defs = mergeOver(Ep.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-let G = Ep.getters,
-	S = Ep.setters,
-	D = Ep.deltaSetters;
+let G = P.getters,
+	S = P.setters,
+	D = P.deltaSetters;
 
 /*
 
@@ -147,13 +148,13 @@ D.roll = defaultNonReturnFunction;
 /*
 
 */
-Ep.prepareStamp = function () {
+P.prepareStamp = function () {
 
 	if (this.dirtyStart) this.cleanStart();
 	if (this.dirtyOffset) this.cleanOffset();
 };
 
-Ep.cleanStart = function () {
+P.cleanStart = function () {
 
 	let host = this.currentHost;
 
@@ -164,7 +165,7 @@ Ep.cleanStart = function () {
 	}
 };
 
-Ep.cleanOffset = function () {
+P.cleanOffset = function () {
 
 	let dims = this.cleanOffsetHelper();
 
@@ -172,7 +173,7 @@ Ep.cleanOffset = function () {
 	this.dirtyOffset = false;
 };
 
-Ep.stamp = function () {
+P.stamp = function () {
 
 	let pivot, handle, tOffset, pOffset, scale, v, x, y;
 

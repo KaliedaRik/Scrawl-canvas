@@ -11,6 +11,7 @@ import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
 import cascadeMix from '../mixin/cascade.js';
+import assetMix from '../mixin/asset.js';
 import filterMix from '../mixin/filter.js';
 
 /*
@@ -18,17 +19,17 @@ import filterMix from '../mixin/filter.js';
 */
 const Cell = function (items = {}) {
 
-	let group, e;
-
 	this.makeName(items.name);
 
 	if (!isa_canvas(items.element)) {
 
-		e = document.createElement('canvas');
-		e.id = this.name;
-		e.width = xtGet(items.width, this.defs.width);
-		e.height = xtGet(items.height, this.defs.height);
-		items.element = e;
+		let mycanvas = document.createElement('canvas');
+		mycanvas.id = this.name;
+
+		// TODO: consider whether a cell can (and should be able to) take % dimensions
+		mycanvas.width = xtGet(items.width, this.defs.width);
+		mycanvas.height = xtGet(items.height, this.defs.height);
+		items.element = mycanvas;
 	}
 
 	this.installElement(items.element);
@@ -44,7 +45,7 @@ const Cell = function (items = {}) {
 
 	if (!items.isPool) {
 
-		group = makeGroup({
+		makeGroup({
 			name: this.name,
 			host: this.name
 		});
@@ -56,18 +57,20 @@ const Cell = function (items = {}) {
 /*
 ## Cell object prototype setup
 */
-let Cp = Cell.prototype = Object.create(Object.prototype);
-Cp.type = 'Cell';
-Cp.lib = 'cell';
-Cp.artefact = false;
+let P = Cell.prototype = Object.create(Object.prototype);
+P.type = 'Cell';
+P.lib = 'cell';
+P.isArtefact = false;
+P.isAsset = true;
 
 /*
 Apply mixins to prototype object
 */
-Cp = baseMix(Cp);
-Cp = positionMix(Cp);
-Cp = cascadeMix(Cp);
-Cp = filterMix(Cp);
+P = baseMix(P);
+P = positionMix(P);
+P = cascadeMix(P);
+P = assetMix(P);
+P = filterMix(P);
 
 /*
 ## Define default attributes
@@ -137,7 +140,7 @@ let defaultAttributes = {
 /*
 
 */
-	backgroundColor: 'rgba(0,0,0,0)',
+	backgroundColor: '',
 
 /*
 
@@ -164,9 +167,15 @@ let defaultAttributes = {
 */
 	localizeHere: false,
 };
-Cp.defs = mergeOver(Cp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-Cp.poolDefs = {
+/*
+Cells don't have a need for these default attributes, which will have been added in by mixin/asset.js
+*/
+delete P.defs.source;
+delete P.defs.sourceLoaded;
+
+P.poolDefs = {
 	element: null,
 	engine: null,
 	state: null,
@@ -179,37 +188,39 @@ Cp.poolDefs = {
 /*
 ## Define attribute getters and setters
 */
-let G = Cp.getters, 
-	S = Cp.setters,
-	D = Cp.deltaSetters;
+let G = P.getters, 
+	S = P.setters,
+	D = P.deltaSetters;
 
 /*
 
 */
-Cp.get = function (item) {
-	let undef,
-		g = this.getters[item],
-		d, i;
+P.get = function (item) {
 
-	if (g) return g.call(this);
-	else{
+	let getter = this.getters[item];
 
-		d = this.defs[item];
-		
-		if (typeof d !== 'undefined') {
-		
-			i = this[item];
-			return (typeof i !== 'undefined') ? i : d;
+	if (getter) return getter.call(this);
+
+	else {
+
+		let def = this.defs[item],
+			state = this.state,
+			val;
+
+		if (typeof def != 'undefined') {
+
+			val = this[item];
+			return (typeof val != 'undefined') ? val : def;
 		}
-		
-		d = this.state.defs[item];
-		
-		if (typeof d !== 'undefined') {
-		
-			i = this.state[item];
-			return (typeof i !== 'undefined') ? i : d;
+
+		def = state.defs[item];
+
+		if (typeof def != 'undefined') {
+
+			val = state[item];
+			return (typeof val != 'undefined') ? val : def;
 		}
-		else return undef;
+		return undef;
 	}
 };
 
@@ -228,6 +239,8 @@ G.height = function () {
 
 	return this.localHeight || this.element.getAttribute('height');
 };
+
+S.source = function () {};
 
 /*
 
@@ -315,9 +328,39 @@ S.state = function (item) {};
 */
 
 /*
+Overrides mixin/asset.js function
+*/
+P.checkSource = function (width, height) {
+
+	if (this.width !== width || this.height !== height) this.notifySubscribers();
+};
+
+/*
+Overrides mixin/asset.js function
+*/
+P.notifySubscriber = function (sub) {
+
+	sub.sourceNaturalWidth = this.width;
+	sub.sourceNaturalHeight = this.height;
+	sub.sourceLoaded = true;
+	sub.dirtyImage = true;
+};
+
+/*
+Overrides mixin/asset.js function
+*/
+P.subscribeAction = function (sub = {}) {
+
+	subs.push(sub);
+	sub.asset = this;
+	sub.source = this.element;
+	this.notifySubscriber(subs[i])
+};
+
+/*
 
 */
-Cp.installElement = function (element) {
+P.installElement = function (element) {
 
 	this.element = element;
 	this.engine = this.element.getContext('2d');
@@ -332,7 +375,7 @@ Cp.installElement = function (element) {
 /*
 
 */
-Cp.updateControllerCells = function () {
+P.updateControllerCells = function () {
 
 	if (this.controller) this.controller.dirtyCells = true;
 };
@@ -340,7 +383,7 @@ Cp.updateControllerCells = function () {
 /*
 
 */
-Cp.setEngineFromState = function (engine) {
+P.setEngineFromState = function (engine) {
 
 	let keys = this.allKeys,
 		key;
@@ -360,7 +403,7 @@ Cp.setEngineFromState = function (engine) {
 /*
 
 */
-Cp.setToDefaults = function () {
+P.setToDefaults = function () {
 
 	let items = this.state.defs,
 		state = this.state,
@@ -393,8 +436,8 @@ Cp.setToDefaults = function () {
 /*
 
 */
-Cp.stylesArray = ['Gradient', 'RadialGradient', 'Pattern'];
-Cp.setEngine = function (entity) {
+P.stylesArray = ['Gradient', 'RadialGradient', 'Pattern'];
+P.setEngine = function (entity) {
 
 	let state = this.state,
 		entityState = entity.state,
@@ -419,7 +462,7 @@ Cp.setEngine = function (entity) {
 /*
 
 */
-Cp.setEngineActions = {
+P.setEngineActions = {
 
 	fillStyle: function (item, engine, stylesArray, entity, layer) {
 
@@ -500,7 +543,7 @@ Cp.setEngineActions = {
 /*
 
 */
-Cp.clearShadow = function () {
+P.clearShadow = function () {
 
 	this.engine.shadowOffsetX = 0.0;
 	this.engine.shadowOffsetY = 0.0;
@@ -515,7 +558,7 @@ Cp.clearShadow = function () {
 /*
 
 */
-Cp.restoreShadow = function (entity) {
+P.restoreShadow = function (entity) {
 
 	let state = entity.state;
 
@@ -532,7 +575,7 @@ Cp.restoreShadow = function (entity) {
 /*
 
 */
-Cp.setToClearShape = function () {
+P.setToClearShape = function () {
 
 	this.engine.fillStyle = 'rgba(0,0,0,0)';
 	this.engine.strokeStyle = 'rgba(0,0,0,0)';
@@ -547,7 +590,7 @@ Cp.setToClearShape = function () {
 /*
 
 */
-Cp.saveEngine = function () {
+P.saveEngine = function () {
 
 	this.engine.save();
 	return this;
@@ -556,7 +599,7 @@ Cp.saveEngine = function () {
 /*
 
 */
-Cp.restoreEngine = function () {
+P.restoreEngine = function () {
 
 	this.engine.restore();
 	return this;
@@ -565,31 +608,35 @@ Cp.restoreEngine = function () {
 /*
 
 */
-Cp.clear = function () {
+P.clear = function () {
 
 	let self = this;
 
 	return new Promise((resolve) => {
 
 		let engine = self.engine,
-			tempBackground,
-			bgc = self.backgroundColor,
-			trans = 'rgba(0,0,0,0)',
-			w, h;
+			bgc = self.backgroundColor;
 
 		self.renderPrecheck();
 
-		w = self.localWidth;
-		h = self.localHeight;
+		let w = self.localWidth,
+			h = self.localHeight;
 
 		engine.setTransform(1,0,0,1,0,0);
 
 		if (bgc) {
 
-			tempBackground = engine.fillStyle;
+			let tempBackground = engine.fillStyle,
+				tempGCO = engine.globalCompositeOperation,
+				tempAlpha = engine.globalAlpha;
+
 			engine.fillStyle = bgc;
+			engine.globalCompositeOperation = 'source-over';
+			engine.globalAlpha = 1;
 			engine.fillRect(0, 0, w, h);
 			engine.fillStyle = tempBackground;
+			engine.globalCompositeOperation = tempGCO;
+			engine.globalAlpha = tempAlpha;
 		}
 		else engine.clearRect(0, 0, w, h);
 
@@ -600,82 +647,34 @@ Cp.clear = function () {
 /*
 
 */
-Cp.compile = function(){
+P.compile = function(){
 
 	let self = this;
 
 	return new Promise((resolve) => {
 
 		self.sortGroups();
-
 		self.renderPrecheck();
 
-		self.batchStampGroups(0)
+		let promises = [];
+
+		self.groupBuckets.forEach(mygroup => promises.push(mygroup.stamp()));
+
+		Promise.all(promises)
 		.then((res) => {
 
 			if (self.filters && self.filters.length) return self.applyFilters();
 			else return true;
 		})
-		// .then((res) => {
-
-		// 	if (self.displaceMap) return self.applyDisplace();
-		// 	else return true;
-		// })
-		.then((res) => {
-			resolve(true);
-		})
-		.catch((err) => {
-			console.log('CELL compile error', self.name);
-			resolve(false);
-		});
+		.then(() => resolve(true))
+		.catch(() => resolve(false));
 	});
 };
 
 /*
 
 */
-Cp.batchStampGroups = function (counter) {
-
-	var self = this;
-
-	return new Promise((resolve) => {
-
-		let i, iz, item, check,
-			promiseArray,
-			items = self.groupBuckets[counter];
-
-		if (items) {
-
-			let promiseArray = [Promise.resolve(true)];
-
-			for (i = 0, iz = items.length; i < iz; i++) {
-				item = items[i];
-				promiseArray.push(item.stamp());
-			}
-
-			Promise.all(promiseArray)
-			.then((res) => {
-
-				check = self.groupBuckets[counter + 1];
-
-				if (check) {
-
-					self.batchStampGroups(counter + 1)
-					.then((res) => resolve(true))
-					.catch((err) => resolve(false));
-				}
-				else resolve(true);
-			})
-			.catch((err) => resolve(false));
-		}
-		else resolve(true);
-	});
-};
-
-/*
-
-*/
-Cp.show = function () {
+P.show = function () {
 
 	var self = this;
 
@@ -822,7 +821,7 @@ Cp.show = function () {
 /*
 
 */
-Cp.showHelper = function (engine) {
+P.showHelper = function (engine) {
 
 	let dState = this.destination.state, 
 		dComposite, dAlpha;
@@ -846,7 +845,7 @@ Cp.showHelper = function (engine) {
 /*
 
 */
-Cp.applyFilters = function () {
+P.applyFilters = function () {
 
 	let self = this;
 
@@ -893,16 +892,7 @@ Cp.applyFilters = function () {
 /*
 
 */
-// Cp.applyDisplace = function () {
-// 	// TODO: codeup functionality
-// 	// - can't do this until we have added image functionality
-// 	Promise.resolve(false);
-// };
-
-/*
-
-*/
-Cp.renderPrecheck = function () {
+P.renderPrecheck = function () {
 
 	let d = this.destination,
 		dw, dh;
@@ -932,7 +922,9 @@ Cp.renderPrecheck = function () {
 /*
 
 */
-Cp.cleanDimensions = function (w, h) {
+P.cleanDimensions = function (w, h) {
+
+	this.dirtyDimensions = false;
 
 	let d = this.destination;
 
@@ -941,14 +933,12 @@ Cp.cleanDimensions = function (w, h) {
 
 	this.element.width = this.localWidth = convertLength(this.width, this.destinationWidth);
 	this.element.height = this.localHeight = convertLength(this.height, this.destinationHeight);
-
-	this.dirtyDimensions = false;
 };
 
 /*
 
 */
-Cp.updateHere = function () {
+P.updateHere = function () {
 
 	let d = this.controller,
 		rx, ry, dHere, here,
@@ -973,7 +963,9 @@ Cp.updateHere = function () {
 /*
 
 */
-Cp.cleanStart = function () {
+P.cleanStart = function () {
+
+	this.dirtyStart = false;
 
 	let w, h;
 
@@ -985,24 +977,22 @@ Cp.cleanStart = function () {
 		this.cleanVectorParameter('currentStart', this.start, w, h);
 	}
 	else this.cleanVectorParameter('currentStart', this.start, 0, 0);
-
-	this.dirtyStart = false;
 };
 
 /*
 
 */
-Cp.cleanHandle = function () {
-
-	this.cleanVectorParameter('currentHandle', this.handle, this.localWidth, this.localHeight);
+P.cleanHandle = function () {
 
 	this.dirtyHandle = false;
+
+	this.cleanVectorParameter('currentHandle', this.handle, this.localWidth, this.localHeight);
 };
 
 /*
 
 */
-Cp.rotateDestination = function (engine, x, y, entity) {
+P.rotateDestination = function (engine, x, y, entity) {
 
 	let self = (entity) ? entity : this,
 		reverse, upend, cos, sin,

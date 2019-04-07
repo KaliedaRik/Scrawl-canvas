@@ -20,18 +20,19 @@ const RadialGradient = function (items = {}) {
 /*
 ## Radial Gradient object prototype setup
 */
-let Gp = RadialGradient.prototype = Object.create(Object.prototype);
+let P = RadialGradient.prototype = Object.create(Object.prototype);
 
-Gp.type = 'RadialGradient';
-Gp.lib = 'styles';
-Gp.artefact = false;
+P.type = 'RadialGradient';
+P.lib = 'styles';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Gp = baseMix(Gp);
-Gp = positionMix(Gp);
-Gp = stylesMix(Gp);
+P = baseMix(P);
+P = positionMix(P);
+P = stylesMix(P);
 
 /*
 ## Define default attributes
@@ -48,11 +49,11 @@ let defaultAttributes = {
 */
 	endRadius: 0,
 };
-Gp.defs = mergeOver(Gp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-let G = Gp.getters,
-	S = Gp.setters,
-	D = Gp.deltaSetters;
+let G = P.getters,
+	S = P.setters,
+	D = P.deltaSetters;
 
 /*
 
@@ -113,7 +114,7 @@ D.endRadius = function (item) {
 /*
 
 */
-Gp.cleanRadius = function (width) {
+P.cleanRadius = function (width) {
 
 	this.localStartRadius = (width) ? convertLength(this.startRadius, width) : this.defs.startRadius;
 	this.localEndRadius = (width) ? convertLength(this.endRadius, width) : this.defs.endRadius;
@@ -122,7 +123,7 @@ Gp.cleanRadius = function (width) {
 /*
 
 */
-Gp.buildStyle = function (cell = {}) {
+P.buildStyle = function (cell = {}) {
 	
 	let gradient, engine,
 		sx, sy, sr, ex, ey, er;

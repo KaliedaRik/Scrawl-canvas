@@ -70,18 +70,19 @@ const Stack = function (items = {}) {
 /*
 ## Stack object prototype setup
 */
-let Sp = Stack.prototype = Object.create(Object.prototype);
-Sp.type = 'Stack';
-Sp.lib = 'stack';
-Sp.artefact = true;
+let P = Stack.prototype = Object.create(Object.prototype);
+P.type = 'Stack';
+P.lib = 'stack';
+P.isArtefact = true;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Sp = baseMix(Sp);
-Sp = positionMix(Sp);
-Sp = cascadeMix(Sp);
-Sp = domMix(Sp);
+P = baseMix(P);
+P = positionMix(P);
+P = cascadeMix(P);
+P = domMix(P);
 
 /*
 ## Define default attributes
@@ -103,11 +104,11 @@ let defaultAttributes = {
 */
 	trackHere: true
 };
-Sp.defs = mergeOver(Sp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-let G = Sp.getters,
-	S = Sp.setters,
-	D = Sp.deltaSetters;
+let G = P.getters,
+	S = P.setters,
+	D = P.deltaSetters;
 
 /*
 
@@ -247,7 +248,7 @@ D.perspectiveY = function (item) {
 /*
 
 */
-Sp.dimensionsUpdateHelper = function () {
+P.dimensionsUpdateHelper = function () {
 
 	let groups = this.groups,
 		i, iz, grp;
@@ -278,7 +279,7 @@ Sp.dimensionsUpdateHelper = function () {
 /*
 
 */
-Sp.setPerspective = function () {
+P.setPerspective = function () {
 
 	addDomShowElement(this.name);
 	setDomShowRequired(true);
@@ -287,7 +288,7 @@ Sp.setPerspective = function () {
 /*
 
 */
-Sp.setPerspectiveNow = function () {
+P.setPerspectiveNow = function () {
 
 	let style, p,
 		perspective, origin;
@@ -314,15 +315,15 @@ Sp.setPerspectiveNow = function () {
 /*
 
 */
-Sp.clear = function () {
+P.clear = function () {
 	return Promise.resolve(true);
 };
 
 /*
 
 */
-Sp.compile = function () {
-	// all stack compile operations are synchronous but, because stacks are processed alongside other artifacts, the function has to return a promise.
+P.compile = function () {
+
 	let self = this;
 
 	return new Promise((resolve) => {
@@ -334,7 +335,14 @@ Sp.compile = function () {
 		self.prepareStamp()
 
 		self.stamp()
-		.then(() => self.batchStampGroups(0))
+		.then(() => {
+
+			let promises = [];
+
+			self.groupBuckets.forEach(mygroup => promises.push(mygroup.stamp()));
+
+			return Promise.all(promises);
+		})
 		.then(() => resolve(true))
 		.catch((err) => resolve(false));
 	});
@@ -343,49 +351,7 @@ Sp.compile = function () {
 /*
 
 */
-Sp.batchStampGroups = function (counter) {
-
-	let self = this;
-
-	return new Promise((resolve) => {
-
-		let i, iz, item, check,
-			promiseArray,
-			items = self.groupBuckets[counter];
-
-		if (items) {
-
-			promiseArray = [Promise.resolve(true)];
-
-			for (i = 0, iz = items.length; i < iz; i++) {
-
-				item = items[i];
-				promiseArray.push(item.stamp());
-			}
-
-			Promise.all(promiseArray)
-			.then(() => {
-
-				check = self.groupBuckets[counter + 1];
-				
-				if (check) {
-
-					self.batchStampGroups(counter + 1)
-					.then(() => resolve(true))
-					.catch((err) => resolve(false));
-				}
-				else resolve(true);
-			})
-			.catch((err) => resolve(false));
-		}
-		else resolve(true);
-	});
-};
-
-/*
-
-*/
-Sp.show = function () {
+P.show = function () {
 
 	return new Promise((resolve) => {
 
@@ -397,7 +363,7 @@ Sp.show = function () {
 /*
 
 */
-Sp.render = function () {
+P.render = function () {
 
 	let self = this;
 
@@ -413,7 +379,7 @@ Sp.render = function () {
 /*
 
 */
-Sp.addDomElementToStack = function (search) {
+P.addDomElementToStack = function (search) {
 
 	let elements, el, captured, i, iz;
 
@@ -443,7 +409,7 @@ Sp.addDomElementToStack = function (search) {
 /*
 
 */
-Sp.demolish = function (removeFromDom = false) {
+P.demolish = function (removeFromDom = false) {
 
 	let el = this.domElement,
 		name = this.name,

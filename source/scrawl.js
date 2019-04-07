@@ -48,7 +48,7 @@ import { getCanvases,
 	removeListener,
 	addNativeListener,
 	removeNativeListener,
-	clear,
+	// clear,
 	compile,
 	show,
 	render,
@@ -74,6 +74,7 @@ import { currentCorePosition,
 
 Not importing any utilities - they remain private to Scrawl-canvas
 */ 
+
 
 /*
 ### ./factory/action.js
@@ -129,10 +130,22 @@ import { makeGradient } from './factory/gradient.js';
 import { makeGroup } from './factory/group.js';
 
 /*
+### ./factory/imageAsset.js
+
+Not importing 'makeImageAsset' - use importImage, importDomImage, makePicture and makePattern instead
+*/ 
+import { importImage, importDomImage, createImageFromCell, createImageFromGroup, createImageFromEntity } from './factory/imageAsset.js';
+
+/*
 ### ./factory/palette.js
 
 Not importing 'makePalette' - palettes are private to gradient and radial gradient styles
 */ 
+
+/*
+### ./factory/picture.js
+*/
+import { makePicture } from './factory/picture.js';
 
 /*
 ### ./factory/point.js
@@ -151,6 +164,12 @@ import { requestQuaternion,
 ### ./factory/radialGradient.js
 */
 import { makeRadialGradient } from './factory/radialGradient.js';
+
+/*
+### ./factory/spritesheet.js
+
+Not importing 'makeSpritesheetAsset' - object is private to Scrawl-canvas
+*/ 
 
 /*
 ### ./factory/stack.js
@@ -188,15 +207,23 @@ import { requestVector,
 	releaseVector } from './factory/vector.js';
 
 /*
+### ./factory/videoAsset.js
+
+Not importing 'makeVideoAsset' - object is private to Scrawl-canvas
+*/ 
+
+/*
 ### ./factory/wheel.js
 */
 import { makeWheel } from './factory/wheel.js';
+
 
 /*
 ### Mixin and worker files
 
 All mixin and worker files are internal to Scrawl-canvas and don't need to be imported by this file
 */
+
 
 /*
 ## Perform some environment checks - lodge the results in the window object so other parts of the Scrawl-canvas code base can quickly check them
@@ -212,10 +239,6 @@ Flag to indicate if Scrawl-canvas can use OffscreenCanvas interface
 */
 window.scrawlEnvironmentOffscreenCanvasSupported = ('OffscreenCanvas' in window) ? true : false;
 
-/*
-For workers, we need to determine the server location of this current script so we can fully determine the path for the worker scripts
-*/
-console.log('scrawl.js', document.currentScript);
 
 /*
 ## Initialize Scrawl-canvas on the page
@@ -238,6 +261,7 @@ Start the core listeners on the window object
 applyCoreResizeListener();
 applyCoreScrollListener();
 startCoreListeners();
+
 
 /*
 ## Export selected functionalities that users can use in their scripts
@@ -272,6 +296,7 @@ export default {
 	makeGroup,
 
 	makeBlock,
+	makePicture,
 	makePoint,
 	makeWheel,
 
@@ -284,12 +309,18 @@ export default {
 	addCanvas,
 	setCurrentCanvas,
 
+	importImage, 
+	importDomImage,
+	createImageFromCell, 
+	createImageFromGroup, 
+	createImageFromEntity,
+
 	addListener,
 	removeListener,
 	addNativeListener,
 	removeNativeListener,
 
-	clear,
+	// clear,
 	compile,
 	show,
 	render,

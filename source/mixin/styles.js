@@ -273,72 +273,68 @@ Delete a bunch of attributes and functions previously set by the position mixin,
 */
 
 /*
-
+Overwrites function defined in mixin/base.js - takes into account Palette object attributes
 */
 	obj.get = function (item) {
 
-		let undef, g, d, i;
+		let getter = this.getters[item];
 
-		g = this.getters[item];
-
-		if (g) return g.call(this);
+		if (getter) return getter.call(this);
 		else {
 
-			d = this.defs[item];
-			
-			if (typeof d !== 'undefined') {
+			let def = this.defs[item],
+				palette = this.palette,
+				val;
 
-				i = this[item];
-				return (typeof i !== 'undefined') ? i : d;
+			if (typeof def !== 'undefined') {
+
+				val = this[item];
+				return (typeof val !== 'undefined') ? val : def;
 			}
 
-			d = this.palette.defs[item];
+			def = palette.defs[item];
 
-			if (typeof d !== 'undefined') {
+			if (typeof def !== 'undefined') {
 
-				i = this.palette[item];
-				return (typeof i !== 'undefined') ? i : d;
+				val = palette[item];
+				return (typeof val !== 'undefined') ? val : def;
 			}
 			else return undef;
 		}
 	};
 
 /*
-
+Overwrites function defined in mixin/base.js - takes into account Palette object attributes
 */
-	obj.set = function (items) {
+	obj.set = function (items = {}) {
 
-		let key, i, iz, s,
-			keys = Object.keys(items),
-			gSetters = this.setters,
-			gDefs = this.defs,
-			pSetters, pDefs,
-			palette = this.palette;
+// console.log('styles set', this.name, items);
+		if (items) {
 
-		if (palette) {
+			let setters = this.setters,
+				defs = this.defs,
+				palette = this.palette,
+				paletteSetters = (palette) ? palette.setters : {},
+				paletteDefs = (palette) ? palette.defs : {};
 
-			pSetters = palette.setters;
-			pDefs = palette.defs;
-		}
+			Object.entries(items).forEach(([key, value]) => {
 
-		for (i = 0, iz = keys.length; i < iz; i++) {
+				if (key !== 'name') {
 
-			key = keys[i];
-			
-			if (key !== 'name') {
+					let predefined = setters[key],
+						paletteFlag = false;
 
-				s = gSetters[key];
-				
-				if (s) s.call(this, items[key]);
-				else if (typeof gDefs[key] !== 'undefined') this[key] = items[key];
-				else if (palette) {
+					if (!predefined) {
 
-					s = pSetters[key];
+						predefined = paletteSetters[key];
+						paletteFlag = true;
+					}
 
-					if (s) s.call(palette, items[key]);
-					else if (typeof pDefs[key] !== 'undefined') palette[key] = items[key];
+					if (predefined) predefined.call(paletteFlag ? this.palette : this, value);
+					else if (typeof defs[key] !== 'undefined') this[key] = value;
+					else if (typeof paletteDefs[key] !== 'undefined') palette[key] = value;
 				}
-			}
+			}, this);
 		}
 		return this;
 	};

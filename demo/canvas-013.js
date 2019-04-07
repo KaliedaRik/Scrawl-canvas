@@ -17,7 +17,7 @@ let lib = scrawl.library,
 
 canvas.set({
 	fit: 'fill',
-	backgroundColor: 'lightgray',
+	// backgroundColor: 'lightgray',
 	css: {
 		border: '1px solid black'
 	}

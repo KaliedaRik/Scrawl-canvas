@@ -69,15 +69,16 @@ const Ticker = function (items = {}) {
 /*
 ## Ticker object prototype setup
 */
-let Tp = Ticker.prototype = Object.create(Object.prototype);
-Tp.type = 'Ticker';
-Tp.lib = 'animationtickers';
-Tp.artefact = false;
+let P = Ticker.prototype = Object.create(Object.prototype);
+P.type = 'Ticker';
+P.lib = 'animationtickers';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Tp = baseMix(Tp);
+P = baseMix(P);
 
 /*
 ## Define default attributes
@@ -114,10 +115,10 @@ let defaultAttributes = {
 */
 	eventChoke: 0
 };
-Tp.defs = mergeOver(Tp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-let G = Tp.getters,
-	S = Tp.setters;
+let G = P.getters,
+	S = P.setters;
 
 /*
 
@@ -189,7 +190,7 @@ S.duration = function (item) {
 /*
 
 */
-Tp.makeTickerUpdateEvent = function() {
+P.makeTickerUpdateEvent = function() {
 
 	return new CustomEvent('tickerupdate', {
 		detail: {
@@ -206,7 +207,7 @@ Tp.makeTickerUpdateEvent = function() {
 /*
 
 */
-Tp.subscribe = function (items) {
+P.subscribe = function (items) {
 
 	let myItems = [].concat(items),
 		i, iz, item, name;
@@ -236,7 +237,7 @@ Tp.subscribe = function (items) {
 /*
 
 */
-Tp.unsubscribe = function (items) {
+P.unsubscribe = function (items) {
 
 	var myItems = [].concat(items),
 		i, iz, item, name;
@@ -263,7 +264,7 @@ Tp.unsubscribe = function (items) {
 /*
 
 */
-Tp.recalculateEffectiveDuration = function() {
+P.recalculateEffectiveDuration = function() {
 
 	let i, iz, obj, durationValue, duration = 0;
 
@@ -287,7 +288,7 @@ Tp.recalculateEffectiveDuration = function() {
 /*
 
 */
-Tp.setEffectiveDuration = function() {
+P.setEffectiveDuration = function() {
 
 	let temp;
 
@@ -309,7 +310,7 @@ Tp.setEffectiveDuration = function() {
 /*
 
 */
-Tp.sortSubscribers = function () {
+P.sortSubscribers = function () {
 
 	if(this.subscribers.length > 1) this.subscribers = bucketSort('tween', 'effectiveTime', this.subscribers);
 };
@@ -317,7 +318,7 @@ Tp.sortSubscribers = function () {
 /*
 
 */
-Tp.fn = function (reverseOrder) {
+P.fn = function (reverseOrder) {
 
 	let i, iz, subs, sub, eTime, now, e;
 	
@@ -416,7 +417,7 @@ Tp.fn = function (reverseOrder) {
 /*
 
 */
-Tp.updateSubscribers = function(items, reversed) {
+P.updateSubscribers = function(items, reversed) {
 	
 	let subs = this.subscribers,
 		i, iz;
@@ -443,7 +444,7 @@ Tp.updateSubscribers = function(items, reversed) {
 /*
 
 */
-Tp.changeSubscriberDirection = function () {
+P.changeSubscriberDirection = function () {
 
 	var subs = this.subscribers,
 		sub, i, iz;
@@ -459,7 +460,7 @@ Tp.changeSubscriberDirection = function () {
 /*
 
 */
-Tp.run = function () {
+P.run = function () {
 
 	if (!this.active) {
 
@@ -482,7 +483,7 @@ Tp.run = function () {
 /*
 
 */
-Tp.reset = function () {
+P.reset = function () {
 
 	if (this.active) this.halt();
 
@@ -504,7 +505,7 @@ Tp.reset = function () {
 /*
 
 */
-Tp.complete = function () {
+P.complete = function () {
 
 	if (this.active) this.halt();
 
@@ -526,7 +527,7 @@ Tp.complete = function () {
 /*
 
 */
-Tp.reverse = function (resume = false) {
+P.reverse = function (resume = false) {
 
 	let timePlayed;
 
@@ -552,7 +553,7 @@ Tp.reverse = function (resume = false) {
 /*
 
 */
-Tp.halt = function () {
+P.halt = function () {
 
 	this.active = false;
 	pushUnique(tickerAnimations, this.name);
@@ -563,7 +564,7 @@ Tp.halt = function () {
 /*
 
 */
-Tp.resume = function () {
+P.resume = function () {
 
 	let now, current, start;
 
@@ -585,7 +586,7 @@ Tp.resume = function () {
 /*
 
 */
-Tp.seekTo = function (milliseconds, resume = false) {
+P.seekTo = function (milliseconds, resume = false) {
 
 	let backwards = false;
 
@@ -612,7 +613,7 @@ Tp.seekTo = function (milliseconds, resume = false) {
 /*
 
 */
-Tp.seekFor = function (milliseconds, resume = false) {
+P.seekFor = function (milliseconds, resume = false) {
 
 	let backwards = false;
 
@@ -639,14 +640,14 @@ Tp.seekFor = function (milliseconds, resume = false) {
 /*
 
 */
-Tp.kill = function () {
+P.kill = function () {
 
 	if (this.active) this.halt();
 
-	delete animationtickers[this.name];
-	removeItem(animationtickersnames, this.name);
 	removeItem(tickerAnimations, this.name);
 	tickerAnimationsFlag = true;
+
+	this.deregister();
 
 	return true;
 };
@@ -654,7 +655,7 @@ Tp.kill = function () {
 /*
 
 */
-Tp.killTweens = function(autokill = false) {
+P.killTweens = function(autokill = false) {
 
 	let i, iz, sub;
 
@@ -702,7 +703,7 @@ const coreTickersAnimation = makeAnimation({
 
 				t = animationtickers[tickerAnimations[i]];
 				
-				if (t.fn) t.fn();
+				if (t && t.fn) t.fn();
 			}
 
 			resolve(true);

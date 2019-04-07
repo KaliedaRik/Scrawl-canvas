@@ -2,7 +2,7 @@
 # Base mixin
 */
 import * as library from '../core/library.js';
-import { mergeOver, pushUnique, generateUuid, isa_fn, isa_vector, addStrings } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, generateUuid, isa_fn, isa_vector, addStrings } from '../core/utilities.js';
 
 import { makeVector } from '../factory/vector.js';
 
@@ -81,26 +81,21 @@ Retrieve an attribute value using the __get__ function. While many attributes ca
 */
 	obj.get = function (item) {
 
-		let undef,
-			g = this.getters[item],
-			d, i;
+// console.log('base get', this.name, item);
+		let getter = this.getters[item];
 
-		if (g) {
+		if (getter) return getter.call(this);
 
-			return g.call(this);
-		}
-		else{
+		else {
 
-			d = this.defs[item];
+			let def = this.defs[item];
 
-			if (typeof d !== 'undefined') {
+			if (typeof def != 'undefined') {
 
-				i = this[item];
-				return (typeof i !== 'undefined') ? i : d;
+				let val = this[item];
+				return (typeof val != 'undefined') ? val : def;
 			}
-			else {
-				return undef;
-			}
+			return undef;
 		}
 	};
 
@@ -116,27 +111,22 @@ Set an attribute value using the __set__ function. It is extremely important tha
 */
 	obj.set = function (items = {}) {
 
-		let key, i, iz, s,
-			setters = this.setters,
-			keys = Object.keys(items),
-			d = this.defs;
+// console.log('base set', this.name, items);
+		if (items) {
 
-		for(i = 0, iz = keys.length; i < iz; i++){
+			let setters = this.setters,
+				defs = this.defs;
 
-			key = keys[i];
+			Object.entries(items).forEach(([key, value]) => {
 
-			if(key !== 'name'){
+				if (key !== 'name') {
 
-				s = setters[key];
-				if(s){
+					let predefined = setters[key];
 
-					s.call(this, items[key]);
+					if (predefined) predefined.call(this, value);
+					else if (typeof defs[key] !== 'undefined') this[key] = value;
 				}
-				else if (typeof d[key] !== 'undefined') {
-
-					this[key] = items[key];
-				}
-			}
+			}, this);
 		}
 		return this;
 	};
@@ -153,29 +143,21 @@ Add a value to an existing attribute value using the __setDelta__ function. It i
 */
 	obj.setDelta = function (items = {}) {
 
-		let key, i, iz, s, item,
-			setters = this.deltaSetters,
-			keys = Object.keys(items),
-			d = this.defs;
+		if (items) {
 
-		for(i = 0, iz = keys.length; i < iz; i++){
+			let setters = this.deltaSetters,
+				defs = this.defs;
 
-			key = keys[i];
+			Object.entries(items).forEach(([key, value]) => {
 
-			if(key !== 'name'){
+				if (key !== 'name') {
 
-				item = items[key];
-				s = setters[key];
+					let predefined = setters[key];
 
-				if(s){
-
-					s.call(this, item);
+					if (predefined) predefined.call(this, value);
+					else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
 				}
-				else if (typeof d[key] !== 'undefined') {
-
-					this[key] = addStrings(this[key], item);
-				}
-			}
+			}, this);
 		}
 		return this;
 	};
@@ -190,34 +172,28 @@ Most Scrawl-canvas factory objects can be copied using the __clone__ function. T
 */
 	obj.clone = function (items = {}) {
 
-		let copied, clone, keys, key,
-			that, i, iz;
+		let self = this,
+			regex = /^(local|dirty|current)/;
 
-		copied = JSON.parse(JSON.stringify(this));
+		let copied = JSON.parse(JSON.stringify(this));
 		copied.name = (items.name) ? items.name : generateUuid();
 
-		keys = Object.keys(this);
-		that = this;
+		Object.entries(this).forEach(([key, value]) => {
 
-		for (i = 0, iz = keys.length; i < iz; i++) {
+			if (regex.test(key)) delete copied[key];
+			if (isa_fn(this[key])) copied[key] = self[key];
+		}, this);
 
-			key = keys[i];
-
-			if(/^(local|dirty|current)/.test(key)){
-				delete copied[key];
-			}
-			if (isa_fn(this[key])) {
-				copied[key] = that[key];
-			}
-		}
-
-		clone = new library.constructors[this.type](copied);
+		let clone = new library.constructors[this.type](copied);
 		clone.set(items);
+
 		return clone;
 	};
 
 /*
 Get a record of a factory object using the __saveOut__ function. The object returned will contain only non-default attribute values. Passing _true_ as an argument will result in a JSON string of the result object being returned.
+
+Note: this whole concept needs to be reexamined!
 */
 	obj.saveOut = function (asString = false) {
 
@@ -281,14 +257,49 @@ Many (but not all) factory functions will register their result objects in the s
 
 		if(this.name){
 
-			if(this.artefact){
+			if(this.isArtefact){
 
 				pushUnique(library.artefactnames, this.name);
 				library.artefact[this.name] = this;
 			}
 
+			if(this.isAsset){
+
+				pushUnique(library.assetnames, this.name);
+				library.asset[this.name] = this;
+			}
+
 			pushUnique(arr, this.name);
 			mylib[this.name] = this;
+		}
+
+		return this;
+	};
+
+/*
+Reverse what register() does
+*/
+	obj.deregister = function () {
+
+		let arr = library[`${this.lib}names`],
+			mylib = library[this.lib];
+
+		if(this.name){
+
+			if(this.isArtefact){
+
+				removeItem(library.artefactnames, this.name);
+				delete library.artefact[this.name];
+			}
+
+			if(this.isAsset){
+
+				removeItem(library.assetnames, this.name);
+				delete library.asset[this.name];
+			}
+
+			removeItem(arr, this.name);
+			delete mylib[this.name];
 		}
 
 		return this;

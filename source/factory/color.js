@@ -28,15 +28,16 @@ const Color = function (items = {}) {
 /*
 ## Color object prototype setup
 */
-let Cp = Color.prototype = Object.create(Object.prototype);
-Cp.type = 'Color';
-Cp.lib = 'styles';
-Cp.artefact = false;
+let P = Color.prototype = Object.create(Object.prototype);
+P.type = 'Color';
+P.lib = 'styles';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Cp = baseMix(Cp);
+P = baseMix(P);
 
 /*
 ## Define default attributes
@@ -93,9 +94,9 @@ let defaultAttributes = {
 */
 	autoUpdate: false,
 };
-Cp.defs = mergeOver(Cp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-Cp.get = function (item) {
+P.get = function (item) {
 
 	let undef, g, d, i;
 
@@ -128,8 +129,9 @@ Cp.get = function (item) {
 	}
 };
 
-Cp.set = function (items = {}) {
+P.set = function (items = {}) {
 
+// console.log('color set', this.name, items);
 	let key, i, iz, s,
 		setters = this.setters,
 		keys = Object.keys(items),
@@ -155,7 +157,7 @@ Cp.set = function (items = {}) {
 	return this;
 };
 
-Cp.setDelta = function (items = {}) {
+P.setDelta = function (items = {}) {
 
 	let key, i, iz, s, item,
 		setters = this.deltaSetters,
@@ -179,7 +181,7 @@ Cp.setDelta = function (items = {}) {
 	return this;
 };
 
-Cp.clone = function (items = {}) {
+P.clone = function (items = {}) {
 
 	let a, b, c;
 
@@ -198,7 +200,7 @@ Cp.clone = function (items = {}) {
 	return c;
 };
 
-Cp.getData = function () {
+P.getData = function () {
 
 	if (this.autoUpdate) this.update();
 
@@ -207,7 +209,7 @@ Cp.getData = function () {
 	return this.get();
 };
 
-Cp.generateRandomColor = function (items = {}) {
+P.generateRandomColor = function (items = {}) {
 
 	let round = Math.round,
 		rnd = Math.random,
@@ -237,7 +239,7 @@ Cp.generateRandomColor = function (items = {}) {
 	return this;
 };
 
-Cp.checkValues = function () {
+P.checkValues = function () {
 
 	let f = Math.floor,
 		r = f(this.r) || 0,
@@ -253,9 +255,9 @@ Cp.checkValues = function () {
 	return this;
 };
 
-Cp.updateArray = ['r', 'g', 'b', 'a'];
+P.updateArray = ['r', 'g', 'b', 'a'];
 
-Cp.update = function () {
+P.update = function () {
 
 	let i, iz, item,
 		list = this.updateArray,
@@ -295,9 +297,9 @@ Cp.update = function () {
 	return this;
 };
 
-Cp.updateByDelta = Cp.update;
+P.updateByDelta = P.update;
 
-Cp.convert = function (items) {
+P.convert = function (items) {
 
 	let r, g, b, a, temp,
 		dec = this.toDecimal,
@@ -379,7 +381,7 @@ Cp.convert = function (items) {
 	return this;
 };
 
-Cp.colorLibrary = {
+P.colorLibrary = {
 	// color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/color_value
 	aliceblue: 'f0f8ff',
 	antiquewhite: 'faebd7',

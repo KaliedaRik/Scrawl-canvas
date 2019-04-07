@@ -16,113 +16,85 @@ import { makeCanvas } from "../factory/canvas.js";
 /*
 ## Core DOM element discovery and management
 */
-const rootElements = [];
-const rootElementBatches = [];
-const interimBatches = [];
+let rootElements = [],
+	interimBatches = [],
+	rootElementBatches = [];
 
-let rootElementsSort = true;
-const setRootElementsSort = function () {
-	rootElementsSort = true;
-};
+let rootElementsSort = true,
+	setRootElementsSort = () => {rootElementsSort = true};
 
-/*
-
-*/
 const sortRootElements = function () {
 
-	let i, iz, order, item,
-		floor = Math.floor;
+	let floor = Math.floor;
 
 	if (rootElementsSort) {
 
 		rootElementsSort = false;
 		interimBatches.length = 0;
 
-		for (i = 0, iz = rootElements.length; i < iz; i++) {
+		rootElements.forEach((item) => {
 
-			item = artefact[rootElements[i]] || {};
-			order = floor(item.order) || 0;
+			let art = artefact[item],
+				order = (art) ? floor(art.order) : 0;
 
 			if (!interimBatches[order]) interimBatches[order] = [];
 			
-			interimBatches[order].push(item.name);
-		}
+			interimBatches[order].push(art.name);
+		});
 
-		rootElementBatches.length = 0;
-
-		for (i = 0, iz = interimBatches.length; i < iz; i++) {
-
-			if (interimBatches[i].length) rootElementBatches.push(interimBatches[i]);
-		}
+		rootElementBatches = interimBatches.reduce((a, v) => a.concat(v), []);
 	}
 };
 
 /*
 
 */
-const addInitialStackElement = function (s) {
+const addInitialStackElement = function (element) {
 
-	let j, jz, e, g, stk;
+	let mygroup = element.getAttribute('data-group');
 
-	g = s.getAttribute('data-group');
-
-	stk = makeStack({
-
-		name: s.id || s.getAttribute('name'),
-		domElement: s,
-		group: (g) ? g : ''
+	let mystack = makeStack({
+		name: element.id || element.getAttribute('name'),
+		domElement: element,
+		group: (mygroup) ? mygroup : ''
 	});
 
-	for (j = 0, jz = s.children.length; j < jz; j++) {
-
-		e = s.children[j];
-
-		if (e.getAttribute('data-stack') == null && !isa_canvas(e)) {
+	[...element.children].forEach((child) => {
+	
+		if (child.getAttribute('data-stack') == null && !isa_canvas(child)) {
 
 			makeElement({
-
-				name: e.id || e.getAttribute('name'),
-				domElement: e,
-				group: stk.name
+				name: child.id || child.getAttribute('name'),
+				domElement: child,
+				group: mystack.name
 			});
 		}
-		else e.setAttribute('data-group', stk.name);
-	}
-	return stk;
+		else child.setAttribute('data-group', mystack.name);
+	});
+
+	return mystack;
 };
 
 /*
 create __canvas__ wrappers and controllers for a given canvas element.
 */
-const addInitialCanvasElement = function (s) {
+const addInitialCanvasElement = function (element) {
 
-	let g, myCanvas;
+	let mygroup = element.getAttribute('data-group');
 
-	g = s.getAttribute('data-group');
-
-	myCanvas = makeCanvas({
-
-		name: s.id || s.getAttribute('name'),
-		domElement: s,
-		group: (g) ? g : ''
+	return makeCanvas({
+		name: element.id || element.getAttribute('name'),
+		domElement: element,
+		group: (mygroup) ? mygroup : ''
 	});
-
-	return myCanvas;
 };
 
 /*
-Parse the DOM, looking for stack elements; then create __stack__ wrappers for each one found.
-*/ 
+
+*/
 const getStacks = function () {
-
-	let stacksList, i, iz;
-
-	stacksList = document.querySelectorAll('[data-stack]');
 		
-	for (i = 0, iz = stacksList.length; i < iz; i++) {
-
-		addInitialStackElement(stacksList[i]);
-	}
+	document.querySelectorAll('[data-stack]').forEach((element) => addInitialStackElement(element));
 };
 
 /*
@@ -130,17 +102,12 @@ Parse the DOM, looking for &lt;canvas> elements; then create __cell__ wrappers a
 */ 
 const getCanvases = function () {
 
-	let canvasList, i, iz, item;
+	document.querySelectorAll('canvas').forEach((element, index) => {
 
-	canvasList = document.querySelectorAll('canvas');
-		
-	for (i = 0, iz = canvasList.length; i < iz; i++) {
+		let item = addInitialCanvasElement(element);
 
-		item = addInitialCanvasElement(canvasList[i]);
-
-		// we set the FIRST discovered canvas to be the current canvas and group
-		if(i === 0) setCurrentCanvas(item);
-	}
+		if (!index) setCurrentCanvas(item);
+	});
 };
 
 /*
@@ -163,16 +130,16 @@ let currentCanvas = null,
 
 const setCurrentCanvas = function (item) {
 
-	let temp,
-		changeFlag = false;
+	let changeFlag = false;
 
 	if (item) {
+
 		if (item.substring) {
 
-			temp = canvas[item]
+			let mycanvas = canvas[item];
 
-			if (temp) {
-				currentCanvas = temp;
+			if (mycanvas) {
+				currentCanvas = mycanvas;
 				changeFlag = true;	
 			}
 		}
@@ -185,9 +152,9 @@ const setCurrentCanvas = function (item) {
 
 	if (changeFlag && currentCanvas.base) {
 
-		temp = group[currentCanvas.base.name];
+		let mygroup = group[currentCanvas.base.name];
 
-		if (temp) currentGroup = temp;
+		if (mygroup) currentGroup = mygroup;
 	}
 };
 
@@ -202,7 +169,7 @@ items object should include
 */
 const addStack = function (items = {}) {
 
-	let el, host, hostInScrawl, stk, name, i, iz, children, item;
+	let el, host, mystack, name;
 
 	if (isa_str(items.element)) items.element = document.querySelector(items.element);
 
@@ -229,29 +196,25 @@ const addStack = function (items = {}) {
 
 	if (host.getAttribute('data-stack') != null) {
 
-		hostInScrawl = stack[host.id];
+		let hostInScrawl = stack[host.id];
 
 		if (hostInScrawl) el.setAttribute('data-group', hostInScrawl.name);
 	}
 
-	stk = addInitialStackElement(el);
+	mystack = addInitialStackElement(el);
 
-	if (rootElements.indexOf(host.id) < 0) pushUnique(rootElements, stk.name);
-	else removeItem(rootElements, stk.name);
+	if (rootElements.indexOf(host.id) < 0) pushUnique(rootElements, mystack.name);
+	else removeItem(rootElements, mystack.name);
 
 	if (!el.parentElement || host.id !== el.parentElement.id) host.appendChild(el);
 
-	children = el.childNodes;
+	[...el.childNodes].forEach((child) => {
 
-	for (i = 0, iz = children.length; i < iz; i++) {
-
-		item = children[i];
-
-		if (item.id && rootElements.indexOf(item.id) >= 0) removeItem(rootElements, item.id);
-	}
+		if (child.id && rootElements.indexOf(child.id) >= 0) removeItem(rootElements, child.id);
+	});
 
 	rootElementsSort = true;
-	return stk;
+	return mystack;
 };
 
 /*
@@ -265,233 +228,132 @@ Each scrawl-canvas stack and canvas can have bespoke Scrawl-canvas listeners att
 * __leave__ - trigger an event when the mouse cursor or touch event exits from the DOM element
 
 The functions all takes the following arguments:
+
 * __evt__ - String name of the event ('move', 'down', 'up', 'enter', 'leave'), or an array of such strings
 * __fn__ - the function to be called when the event listener(s) trigger
 * __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String; these elements need to be registered in the Scrawl-canvas library beforehend (done automatically for stack and canvas elements)
 */
 const addListener = function (evt, fn, targ) {
 
-	let targets, i, iz, j, jz, nav;
-
-	removeListener(evt, fn, targ);
-
-	nav = (navigator.pointerEnabled || navigator.msPointerEnabled) ? true : false;
-	
-	evt = [].concat(evt);
-	
-	if (targ.substring) targets = document.body.querySelectorAll(targ);
-	else if (Array.isArray(targ)) targets = targ;
-	else targets = [targ];
-
 	if (isa_fn(fn)) {
 
-		for (j = 0, jz = evt.length; j < jz; j++) {
-
-			for (i = 0, iz = targets.length; i < iz; i++) {
-
-				if (isa_dom(targets[i])) {
-
-					switch (evt[j]) {
-					
-						case 'move':
-
-							if (nav) {
-
-								targets[i].addEventListener('pointermove', fn, false);
-							}
-							else {
-
-								targets[i].addEventListener('mousemove', fn, false);
-								targets[i].addEventListener('touchmove', fn, false);
-								targets[i].addEventListener('touchfollow', fn, false);
-							}
-							break;
-
-						case 'up':
-
-							if (nav) {
-
-								targets[i].addEventListener('pointerup', fn, false);
-							}
-							else {
-
-								targets[i].addEventListener('mouseup', fn, false);
-								targets[i].addEventListener('touchend', fn, false);
-							}
-							break;
-
-						case 'down':
-
-							if (nav) {
-
-								targets[i].addEventListener('pointerdown', fn, false);
-							}
-							else {
-
-								targets[i].addEventListener('mousedown', fn, false);
-								targets[i].addEventListener('touchstart', fn, false);
-							}
-							break;
-
-						case 'leave':
-
-							if (nav) {
-
-								targets[i].addEventListener('pointerleave', fn, false);
-							}
-							else {
-
-								targets[i].addEventListener('mouseleave', fn, false);
-								targets[i].addEventListener('touchleave', fn, false);
-							}
-							break;
-
-						case 'enter':
-
-							if (nav) {
-
-								targets[i].addEventListener('pointerenter', fn, false);
-							}
-							else {
-
-								targets[i].addEventListener('mouseenter', fn, false);
-								targets[i].addEventListener('touchenter', fn, false);
-							}
-							break;
-					}
-				}
-			}
-		}
+		actionListener(evt, fn, targ, 'removeEventListener');
+		actionListener(evt, fn, targ, 'addEventListener');
 	}
-	return true;
 };
 
 /*
-The counterpart to 'addListener' is __removeListener__ which removes event listeners from DOM elements in a similar way
+The counterpart to 'addListener' is __removeListener__ which removes Scrawl-canvas event listeners from DOM elements in a similar way
 */ 
 const removeListener = function (evt, fn, targ) {
 
-	let targets, i, iz, j, jz, nav;
+	if (isa_fn(fn)) actionListener(evt, fn, targ, 'removeEventListener');
+};
 
-	evt = [].concat(evt);
-	
-	nav = (navigator.pointerEnabled || navigator.msPointerEnabled) ? true : false;
+const actionListener = function (evt, fn, targ, action) {
+
+	let events = [].concat(evt),
+		targets;
 	
 	if (targ.substring) targets = document.body.querySelectorAll(targ);
 	else if (Array.isArray(targ)) targets = targ;
 	else targets = [targ];
 
-	if (isa_fn(fn)) {
+	if (navigator.pointerEnabled || navigator.msPointerEnabled) actionPointerListener(events, fn, targets, action);
+	else actionMouseListener(events, fn, targets, action);
+};
 
-		for (j = 0, jz = evt.length; j < jz; j++) {
+const actionMouseListener = function (events, fn, targets, action) {
 
-			for (i = 0, iz = targets.length; i < iz; i++) {
+	events.forEach((myevent) => {
 
-				if (isa_dom(targets[i])) {
+		targets.forEach((target) => {
 
-					switch (evt[j]) {
+			if (isa_dom(target)) {
 
-						case 'move':
+				switch (myevent) {
+				
+					case 'move':
+						target[action]('mousemove', fn, false);
+						target[action]('touchmove', fn, false);
+						target[action]('touchfollow', fn, false);
+						break;
 
-							if (nav) {
+					case 'up':
+						target[action]('mouseup', fn, false);
+						target[action]('touchend', fn, false);
+						break;
 
-								targets[i].removeEventListener('pointermove', fn, false);
-							}
-							else {
+					case 'down':
+						target[action]('mousedown', fn, false);
+						target[action]('touchstart', fn, false);
+						break;
 
-								targets[i].removeEventListener('mousemove', fn, false);
-								targets[i].removeEventListener('touchmove', fn, false);
-								targets[i].removeEventListener('touchfollow', fn, false);
-							}
-							break;
+					case 'leave':
+						target[action]('mouseleave', fn, false);
+						target[action]('touchleave', fn, false);
+						break;
 
-						case 'up':
-
-							if (nav) {
-								targets[i].removeEventListener('pointerup', fn, false);
-							}
-							else {
-
-								targets[i].removeEventListener('mouseup', fn, false);
-								targets[i].removeEventListener('touchend', fn, false);
-							}
-							break;
-
-						case 'down':
-
-							if (nav) {
-
-								targets[i].removeEventListener('pointerdown', fn, false);
-							}
-							else {
-
-								targets[i].removeEventListener('mousedown', fn, false);
-								targets[i].removeEventListener('touchstart', fn, false);
-							}
-							break;
-
-						case 'leave':
-
-							if (nav) {
-
-								targets[i].removeEventListener('pointerleave', fn, false);
-							}
-							else {
-
-								targets[i].removeEventListener('mouseleave', fn, false);
-								targets[i].removeEventListener('touchleave', fn, false);
-							}
-							break;
-
-						case 'enter':
-
-							if (nav) {
-
-								targets[i].removeEventListener('pointerenter', fn, false);
-							}
-							else {
-
-								targets[i].removeEventListener('mouseenter', fn, false);
-								targets[i].removeEventListener('touchenter', fn, false);
-							}
-							break;
-					}
+					case 'enter':
+						target[action]('mouseenter', fn, false);
+						target[action]('touchenter', fn, false);
+						break;
 				}
 			}
-		}
-	}
-	return true;
+		});
+	});
+};
+
+const actionPointerListener = function (events, fn, targets, action) {
+
+	events.forEach((myevent) => {
+
+		targets.forEach((target) => {
+
+			if (isa_dom(target)) {
+
+				switch (myevent) {
+				
+					case 'move':
+						target[action]('pointermove', fn, false);
+						break;
+
+					case 'up':
+						target[action]('pointerup', fn, false);
+						break;
+
+					case 'down':
+						target[action]('pointerdown', fn, false);
+						break;
+
+					case 'leave':
+						target[action]('pointerleave', fn, false);
+						break;
+
+					case 'enter':
+						target[action]('pointerenter', fn, false);
+						break;
+				}
+			}
+		});
+	});
 };
 
 /*
-Any event listener can be added to a scrawl-canvas stack or canvas DOM element. The __addNativeListener__ makes adding and removing these 'native' listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.
+Any event listener can be added to a Scrawl-canvas stack or canvas DOM element. The __addNativeListener__ makes adding and removing these 'native' listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.
+
 The function requires three arguments:
 
-* __evt__ - the event listener object, or an array of event listener objects
+* __evt__ - String name of the event ('click', 'input', 'change', etc), or an array of such strings
 * __fn__ - the function to be called when the event listener(s) trigger
 * __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String
 */
 const addNativeListener = function (evt, fn, targ) {
 
-	let targets, i, iz, j, jz;
-
-	removeNativeListener(evt, fn, targ);
-
-	evt = [].concat(evt);
-
-	if (targ.substring) targets = document.body.querySelectorAll(targ);
-	else if (Array.isArray(targ)) targets = targ;
-	else targets = [targ];
-
 	if (isa_fn(fn)) {
 
-		for (j = 0, jz = evt.length; j < jz; j++) {
-
-			for (i = 0, iz = targets.length; i < iz; i++) {
-
-				targets[i].addEventListener(evt[j], fn, false);
-			}
-		}
+		actionNativeListener(evt, fn, targ, 'removeEventListener');
+		actionNativeListener(evt, fn, targ, 'addEventListener');
 	}
 };
 
@@ -500,24 +362,25 @@ The counterpart to 'addNativeListener' is __removeNativeListener__ which removes
 */ 
 const removeNativeListener = function (evt, fn, targ) {
 
-	let targets, i, iz, j, jz;
+	if (isa_fn(fn)) actionNativeListener(evt, fn, targ, 'removeEventListener');
+};
 
-	evt = [].concat(evt);
+const actionNativeListener = function (evt, fn, targ, action) {
+
+	let events = [].concat(evt),
+		targets;
 
 	if (targ.substring) targets = document.body.querySelectorAll(targ);
 	else if (Array.isArray(targ)) targets = targ;
 	else targets = [targ];
 
-	if (isa_fn(fn)) {
+	events.forEach((myevent) => {
 
-		for (j = 0, jz = evt.length; j < jz; j++) {
+		targets.forEach((target) => {
 
-			for (i = 0, iz = targets.length; i < iz; i++) {
-
-				targets[i].removeEventListener(evt[j], fn, false);
-			}
-		}
-	}
+			if (isa_dom(target)) target[action](myevent, fn, false);
+		});
+	});
 };
 
 /*
@@ -536,16 +399,10 @@ Each display cycle function returns a Promise object which will resolve as true 
 * for a canvas, clear its display (reset all pixels to 0, or the designated background color) ready for it to be redrawn
 * for a stack element - no action required
 */
-const clear = function (items) {
+const clear = function (...items) {
 
-	return new Promise((resolve) => {
-
-		displayCycleHelper(items);
-
-		displayCycleBatchProcess(0, 'clear')
-		.then((res) => resolve(true))
-		.catch((err) => resolve(false));
-	});
+	displayCycleHelper(items);
+	return displayCycleBatchProcess('clear');
 };
 
 /*
@@ -554,16 +411,10 @@ const clear = function (items) {
 * for both canvas and stack elements, perform necessary entity/element positional calculations
 * for a canvas, stamp associated entitys onto the canvas
 */
-const compile = function (items) {
+const compile = function (...items) {
 
-	return new Promise((resolve) => {
-
-		displayCycleHelper(items);
-
-		displayCycleBatchProcess(0, 'compile')
-		.then((res) => resolve(true))
-		.catch((err) => resolve(false));
-	});
+	displayCycleHelper(items);
+	return displayCycleBatchProcess('compile');
 };
 
 /*
@@ -572,16 +423,10 @@ const compile = function (items) {
 * stamp additional 'layer' canvases onto the base canvas, then copy the base canvas onto the display canvas
 * for a stack element - no action required
 */
-const show = function (items) {
+const show = function (...items) {
 
-	return new Promise((resolve) => {
-
-		displayCycleHelper(items);
-
-		displayCycleBatchProcess(0, 'show')
-		.then((res) => resolve(true))
-		.catch((err) => resolve(false));
-	});
+	displayCycleHelper(items);
+	return displayCycleBatchProcess('show');
 };
 
 /*
@@ -589,16 +434,10 @@ const show = function (items) {
 
 * orchestrate the clear, compile and show actions on each stack and canvas DOM element
 */
-const render = function (items) {
+const render = function (...items) {
 
-	return new Promise(function(resolve, reject){
-
-		displayCycleHelper(items);
-
-		displayCycleBatchProcess(0, 'render')
-		.then((res) => resolve(true))
-		.catch((err) => resolve(false));
-	});
+	displayCycleHelper(items);
+	return displayCycleBatchProcess('render');
 };
 
 /*
@@ -606,53 +445,30 @@ Helper functions coordinate the actions required to complete a display cycle
 */
 const displayCycleHelper = function (items) {
 
-	items = (items) ? [].concat(items) : [];
-
-	if (!items.length) {
-
-		if (rootElementsSort) sortRootElements();
-	}
-	else rootElementBatches = [items];
+	if (items.length) rootElementBatches = items;
+	else if (rootElementsSort) sortRootElements();
 };
 
 /*
 
 */
-const displayCycleBatchProcess = function (counter, method) {
+const displayCycleBatchProcess = function (method) {
 
 	return new Promise((resolve) => {
 
-		let i, iz, item, check,
-			promiseArray,
-			items = rootElementBatches[counter];
+		let promises = [];
 
-		if (items) {
+		rootElementBatches.forEach((name) => {
 
-			promiseArray = [Promise.resolve(true)];
+			let item = artefact[name];
 
-			for (i = 0, iz = items.length; i < iz; i++) {
+			if (item && item[method]) promises.push(item[method]());
+		})
 
-				item = artefact[items[i]];
-				promiseArray.push(item[method]());
-			}
-
-			Promise.all(promiseArray)
-			.then((res) => {
-
-				check = rootElementBatches[counter + 1];
-
-				if (check) {
-					
-					displayCycleBatchProcess(counter + 1, method)
-					.then((res) => resolve(true))
-					.catch((err) => resolve(false));
-				}
-				else resolve(true);
-			})
-			.catch((err) => resolve(false));
-		}
-		else resolve(true);
-	});
+		Promise.all(promises)
+		.then(() => resolve(true))
+		.catch((err) => resolve(false));
+	})
 };
 
 /*
@@ -672,42 +488,38 @@ const setDomShowRequired = function (val = true) {
 
 const domShow = function () {
 
-	let myartefacts, art, style, el, 
-		i, iz,
-		p, perspective, origin,
-		j, jz, keys, key, keyName, items, item;
-
 	if (domShowRequired) {
 
 		domShowRequired = false;
-		myartefacts = [].concat(domShowElements);
+		
+		let myartefacts = [].concat(domShowElements);
 		domShowElements.length = 0;
 
-		for (i = 0, iz = myartefacts.length; i < iz; i++) {
+		myartefacts.forEach((name) => {
 
-			art = artefact[myartefacts[i]];
+			let art = artefact[name];
 
 			if (art) {
 
-				el = art.domElement;
+				let el = art.domElement;
 
 				if (el) {
 
-					style = el.style;
+					let style = el.style;
 
 					// update perspective
 					if (art.dirtyPerspective) {
 
 						art.dirtyPerspective = false;
 
-						p = art.perspective;
-
-						perspective = `${p.z}px`;
-						origin = `${p.x} ${p.y}`;
+						let p = art.perspective,
+							perspective = `${p.z}px`,
+							origin = `${p.x} ${p.y}`;
 
 						style.webkitPerspectiveOrigin = origin;
 						style.mozPerspectiveOrigin = origin;
 						style.perspectiveOrigin = origin;
+
 						style.webkitPerspective = perspective;
 						style.mozPerspective = perspective;
 						style.perspective = perspective;
@@ -763,34 +575,32 @@ const domShow = function () {
 
 						art.dirtyCss = false;
 
-						items = art.css || {};
+						let items = art.css || {};
 
-						keys = Object.keys(items);
-
-						for (j = 0, jz = keys.length; j < jz; j++) {
-
-							key = keys[j];
+						Object.entries(items).forEach(([key, value]) => {
 
 							if (xcss.has(key)) {
 
-								keyName = `${key[0].toUpperCase}${key.substr(1)}`;
-								item = items[key];
+								let keyName = `${key[0].toUpperCase}${key.substr(1)}`;
 
-								style[`webkit${keyName}`] = item;
-								style[`moz${keyName}`] = item;
-								style[`ms${keyName}`] = item;
-								style[`o${keyName}`] = item;
-								style[key] = item;
+								style[`webkit${keyName}`] = value;
+								style[`moz${keyName}`] = value;
+								style[`ms${keyName}`] = value;
+								style[`o${keyName}`] = value;
+								style[key] = value;
 							}
-							else if (css.has(key)) style[key] = items[key];
-						}
+							else if (css.has(key)) style[key] = value;
+						});
 					}
 				}
 			}
-		}
+		});
 	}
 }
 
+/*
+Used by Scrawl-canvas worker functionality to locate worker-related javascript files on the server
+*/
 const setScrawlPath = function (url) {
 
 	window.scrawlPath = url;

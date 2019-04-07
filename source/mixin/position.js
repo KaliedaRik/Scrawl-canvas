@@ -560,40 +560,39 @@ All factories using the position mixin will add these to their prototype objects
 		method = (method.substring) ? method.toLowerCase() : 'replace';
 		items = isa_obj(items) ? items : {};
 
-		let i, iz, keys, key, item, d;
+		let delta = this.delta;
 
 		switch (method) {
 
 			case 'into' :
 				// merges new data __into__ the old data - new attributes added, old attributes unchanged
-				this.delta = mergeInto(this.delta, items);
+				delta = mergeInto(delta, items);
 				break;
 
 			case 'over' :
 				// merges new data __over__ the old data - new attributes added, old attributes overwritten
-				this.delta = mergeOver(this.delta, items);
+				delta = mergeOver(delta, items);
 				break;
 
 			case 'reverse' :
 				// iterates through argument object, which contains key:true values, reversing the sign on those key attributes
-				keys = Object.keys(items);
+				let keys = Object.keys(items);
 
-				for (i = 0, iz = keys.length; i < iz; i++) {
+				keys.forEach(key => {
 
-					key = keys[i];
-					item = this.delta[key];
+					let item = delta[key];
 
 					if (items[key] && xt(item)) {
 
-						if (item.substring) this.delta[key] = -(parseFloat(item)) + '%';
-						else this.delta[key] = -item;
+						if (item.substring) delta[key] = -(parseFloat(item)) + '%';
+						else delta[key] = -item;
 					}
-				}
+				});
 				break;
 
 			case 'replace' :
 				// overwrites the old delta object with a new one
-				this.delta = items;
+				delta = items;
 				break;
 		}
 	};
@@ -616,20 +615,20 @@ All factories using the position mixin will add these to their prototype objects
 
 		if (this.delta) {
 
-			d = this.delta;
-			temp = {};
-			keys = Object.keys(d);
+			let delta = this.delta,
+				temp = {},
+				keys = Object.keys(delta);
 			
-			for (i = 0, iz = keys.length; i < iz; i++) {
+			keys.forEach(key => {
 
-				key = keys[i];
-				item = d[key];
+				let item = delta[key];
 
 				if (item.substring) item = -(parseFloat(item)) + '%';
 				else item = -item;
 
 				temp[key] = item;
-			}
+			});
+
 			this.setDelta(temp);
 		}
 		return this;
@@ -703,19 +702,19 @@ All factories using the position mixin will add these to their prototype objects
 */
 	obj.updatePivotSubscribers = function () {
 
-		let p = this.pivoted,
-			i, iz, item;
+		this.dirtyPivoted = false;
 
-		if (p && p.length) {
+		let pivoted = this.pivoted;
 
-			for (i = 0, iz = p.length; i < iz; i++) {
+		if (pivoted && pivoted.length) {
 
-				item = artefact[p[i]];
+			pivoted.forEach(name => {
+
+				item = artefact[name];
 
 				if (item) item.dirtyOffset = true;
-			}
+			});
 		}
-		this.dirtyPivoted = false;
 	};
 
 /*

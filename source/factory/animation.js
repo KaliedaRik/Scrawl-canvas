@@ -26,16 +26,17 @@ const Animation = function (items = {}) {
 /*
 ## Animation object prototype setup
 */
-let Ap = Animation.prototype = Object.create(Object.prototype);
+let P = Animation.prototype = Object.create(Object.prototype);
 
-Ap.type = 'Animation';
-Ap.lib = 'animation';
-Ap.artefact = false;
+P.type = 'Animation';
+P.lib = 'animation';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Ap = baseMix(Ap);
+P = baseMix(P);
 
 /*
 ## Define default attributes
@@ -52,7 +53,7 @@ let defaultAttributes = {
 */
 	fn: defaultNonReturnFunction
 };
-Ap.defs = mergeOver(Ap.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define prototype functions
@@ -61,7 +62,7 @@ Ap.defs = mergeOver(Ap.defs, defaultAttributes);
 /*
 
 */
-Ap.run = function () {
+P.run = function () {
 
 	pushUnique(animate, this.name);
 	resortAnimations();
@@ -71,7 +72,7 @@ Ap.run = function () {
 /*
 
 */
-Ap.isRunning = function () {
+P.isRunning = function () {
 
 	return (animate.indexOf(this.name >= 0)) ? true : false;
 };
@@ -79,7 +80,7 @@ Ap.isRunning = function () {
 /*
 
 */
-Ap.halt = function () {
+P.halt = function () {
 
 	removeItem(animate, this.name);
 	resortAnimations();
@@ -89,12 +90,14 @@ Ap.halt = function () {
 /*
 
 */
-Ap.kill = function () {
+P.kill = function () {
 
 	removeItem(animate, this.name);
-	removeItem(animationnames, this.name);
 	resortAnimations();
-	delete animation[this.name];
+
+	this.deregister();
+	
+	return true;
 };
 
 /*

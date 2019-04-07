@@ -2,7 +2,7 @@
 # Core user interaction
 */
 import { artefact } from "./library.js";
-import { xta, pushUnique, removeItem } from "./utilities.js";
+import { xta, pushUnique } from "./utilities.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
@@ -80,9 +80,7 @@ Functions to update uiSubscribedElements attached to specified DOM elements. Eac
 */
 const updateUiSubscribedElements = function () {
 
-	for (let i = 0, iz = uiSubscribedElements.length; i < iz; i++) {
-		updateUiSubscribedElement(uiSubscribedElements[i]);
-	}
+	uiSubscribedElements.forEach((item) => updateUiSubscribedElement(item));
 };
 
 /*
@@ -90,32 +88,31 @@ const updateUiSubscribedElements = function () {
 */
 const updateUiSubscribedElement = function (art) {
 
-	let dom, el, dims, l, t, h, dox, doy;
-
-	dom = artefact[art];
+	let dom = artefact[art];
 
 	if (xta(dom, dom.domElement)) {
 
-		el = dom.domElement;
-		dims = el.getBoundingClientRect();
-		dox = Math.round(dims.left + window.pageXOffset);
-		doy = Math.round(dims.top + window.pageYOffset);
+		let el = dom.domElement,
+			dims = el.getBoundingClientRect(),
+			dox = Math.round(dims.left + window.pageXOffset),
+			doy = Math.round(dims.top + window.pageYOffset);
 
 		if (!dom.here) dom.here = {}; 
 
-		h = dom.here;
-		h.x = Math.round(currentCorePosition.x - dox);
-		h.y = Math.round(currentCorePosition.y - doy);
-		h.w = Math.round(dims.width);
-		h.h = Math.round(dims.height);
-		h.normX = (h.w) ? h.x / h.w : false;
-		h.normY = (h.h) ? h.y / h.h : false;
-		h.offsetX = dox;
-		h.offsetY = doy;
-		h.type = currentCorePosition.type;
-		h.active = true;
+		let here = dom.here;
 
-		if (h.normX < 0 || h.normX > 1 || h.normY < 0 || h.normY > 1) h.active = false;
+		here.x = Math.round(currentCorePosition.x - dox);
+		here.y = Math.round(currentCorePosition.y - doy);
+		here.w = Math.round(dims.width);
+		here.h = Math.round(dims.height);
+		here.normX = (here.w) ? here.x / here.w : false;
+		here.normY = (here.h) ? here.y / here.h : false;
+		here.offsetX = dox;
+		here.offsetY = doy;
+		here.type = currentCorePosition.type;
+		here.active = true;
+
+		if (here.normX < 0 || here.normX > 1 || here.normY < 0 || here.normY > 1) here.active = false;
 	}
 };
 
@@ -149,23 +146,8 @@ const coreListenersTracker = makeAnimation({
 */
 const startCoreListeners = function () {
 
-	if (navigator.pointerEnabled) {
-		window.addEventListener('pointermove', moveAction, false);
-		window.addEventListener('pointerup', moveAction, false);
-		window.addEventListener('pointerdown', moveAction, false);
-		window.addEventListener('pointerleave', moveAction, false);
-		window.addEventListener('pointerenter', moveAction, false);
-	}
-	else {
-		window.addEventListener('mousemove', moveAction, false);
-		window.addEventListener('mouseup', moveAction, false);
-		window.addEventListener('mousedown', moveAction, false);
-		window.addEventListener('mouseleave', moveAction, false);
-		window.addEventListener('mouseenter', moveAction, false);
-	}
-
-	window.addEventListener('scroll', scrollAction, false);
-	window.addEventListener('resize', resizeAction, false);
+	actionCoreListeners('removeEventListener');
+	actionCoreListeners('addEventListener');
 
 	trackMouse = true;
 	mouseChanged = true;
@@ -181,23 +163,33 @@ const stopCoreListeners = function () {
 	mouseChanged = false;
 	coreListenersTracker.halt();
 
-	if (navigator.pointerEnabled) {
-		window.removeEventListener('pointermove', moveAction, false);
-		window.removeEventListener('pointerup', moveAction, false);
-		window.removeEventListener('pointerdown', moveAction, false);
-		window.removeEventListener('pointerleave', moveAction, false);
-		window.removeEventListener('pointerenter', moveAction, false);
+	actionCoreListeners('removeEventListener');
+};
+
+/*
+
+*/
+const actionCoreListeners = function (action) {
+
+	if (navigator.pointerEnabled || navigator.msPointerEnabled) {
+
+		window[action]('pointermove', moveAction, false);
+		window[action]('pointerup', moveAction, false);
+		window[action]('pointerdown', moveAction, false);
+		window[action]('pointerleave', moveAction, false);
+		window[action]('pointerenter', moveAction, false);
 	}
 	else {
-		window.removeEventListener('mousemove', moveAction, false);
-		window.removeEventListener('mouseup', moveAction, false);
-		window.removeEventListener('mousedown', moveAction, false);
-		window.removeEventListener('mouseleave', moveAction, false);
-		window.removeEventListener('mouseenter', moveAction, false);
+
+		window[action]('mousemove', moveAction, false);
+		window[action]('mouseup', moveAction, false);
+		window[action]('mousedown', moveAction, false);
+		window[action]('mouseleave', moveAction, false);
+		window[action]('mouseenter', moveAction, false);
 	}
 
-	window.removeEventListener('scroll', scrollAction, false);
-	window.removeEventListener('resize', resizeAction, false);
+	window[action]('scroll', scrollAction, false);
+	window[action]('resize', resizeAction, false);
 };
 
 /*

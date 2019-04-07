@@ -21,18 +21,19 @@ const Block = function (items = {}) {
 /*
 ## Block object prototype setup
 */
-let Ep = Block.prototype = Object.create(Object.prototype);
-Ep.type = 'Block';
-Ep.lib = 'entity';
-Ep.artefact = true;
+let P = Block.prototype = Object.create(Object.prototype);
+P.type = 'Block';
+P.lib = 'entity';
+P.isArtefact = true;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Ep = baseMix(Ep);
-Ep = positionMix(Ep);
-Ep = entityMix(Ep);
-Ep = filterMix(Ep);
+P = baseMix(P);
+P = positionMix(P);
+P = entityMix(P);
+P = filterMix(P);
 
 /*
 ## Define default attributes
@@ -48,13 +49,8 @@ let defaultAttributes = {
 
 */
 	height: 10,
-
-/*
-
-*/
-	method: 'fill',
 };
-Ep.defs = mergeOver(Ep.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define prototype functions
@@ -63,9 +59,9 @@ Ep.defs = mergeOver(Ep.defs, defaultAttributes);
 /*
 
 */
-Ep.cleanPathObject = function () {
+P.cleanPathObject = function () {
 
-	let p, handle, trans, scale, x, y, w, h;
+	let p, handle, scale, x, y, w, h;
 
 	this.dirtyPathObject = false;
 

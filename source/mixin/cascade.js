@@ -40,6 +40,7 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 
 */
 	G.groups = function () {
+
 		return [].concat(this.groups);
 	};
 
@@ -47,6 +48,7 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 
 */
 	S.groups = function (item) {
+
 		this.groups = [];
 		this.addGroups(item);
 	};
@@ -60,33 +62,25 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 */
 	obj.sortGroups = function (force = false) {
 
-		let buckets = [],
-			i, iz, item, order, oGroup, b,
-			floor = Math.floor;
-
 		if (this.batchResort) {
 
 			this.batchResort = false;
-			oGroup = this.groups;
 
-			for (i = 0, iz = oGroup.length; i < iz; i++) {
+			let floor = Math.floor,
+				groupnames = this.groups,
+				buckets = [];
 
-				item = group[oGroup[i]];
-				order = floor(item.order) || 0;
+			groupnames.forEach(name => {
+
+				let mygroup = group[name],
+					order = (mygroup) ? floor(mygroup.order) : 0;
 
 				if (!buckets[order]) buckets[order] = [];
 
-				buckets[order].push(item);
-			}
+				buckets[order].push(mygroup);
+			});
 
-			this.groupBuckets = [];
-
-			for (i = 0, iz = buckets.length; i < iz; i++) {
-
-				b = buckets[i];
-				
-				if (b && b.length) this.groupBuckets.push(b);
-			}
+			this.groupBuckets = buckets.reduce((a, v) => a.concat(v), []);
 		}
 	};
 
@@ -95,15 +89,12 @@ Groups should be added to, and removed from, the controller object using the __a
 */
 	obj.addGroups = function (...args) {
 
-		let i, iz, item;
-
-		for (i = 0, iz = args.length; i < iz; i++) {
-
-			item = args[i];
+		args.forEach( item => {
 
 			if (item && item.substring) pushUnique(this.groups, item);
 			else if (group[item]) pushUnique(this.groups, item.name);
-		}
+
+		}, this);
 
 		this.batchResort = true;
 		return this;
@@ -114,15 +105,12 @@ Groups should be added to, and removed from, the controller object using the __a
 */
 	obj.removeGroups = function (...args) {
 
-		let i, iz, item;
+		args.forEach( item => {
 
-		for (i = 0, iz = args.length; i < iz; i++) {
-
-			item = args[i];
-			
 			if (item && item.substring) removeItem(this.groups, item);
 			else if (group[item]) removeItem(this.groups, item.name);
-		}
+
+		}, this);
 
 		this.batchResort = true;
 		return this;
@@ -133,14 +121,14 @@ DRY function to handle a number of actions.
 */
 	obj.cascadeAction = function (items, action) {
 
-		let i, iz, g;
+		this.groups.forEach( groupname => {
 
-		for (i = 0, iz = this.groups.length; i < iz; i++) {
+			let grp = group[groupname];
 
-			g = group[this.groups[i]];
-			
-			if(g) g[action](items);
-		}
+			if (grp) grp[action](items);
+
+		}, this);
+
 		return this;
 	};
 
@@ -203,19 +191,19 @@ The __getArtefactAt__ function checks to see if any of the controller object's g
 */
 	obj.getArtefactAt = function (items) {
 
-		let i, g, result;
-
 		items = xtGet(items, this.here, false);
 
 		if (items) {
 
-			for (i = this.groups.length - 1; i >= 0; i--) {
+			let grp, result;
 
-				g = group[this.groups[i]];
+			for (let i = this.groups.length - 1; i >= 0; i--) {
 
-				if (g) {
+				grp = group[this.groups[i]];
 
-					result = g.getArtefactAt(items);
+				if (grp) {
+
+					result = grp.getArtefactAt(items);
 
 					if (result) return result;
 				}
@@ -229,20 +217,20 @@ The __getArtefactAt__ function checks to see if any of the controller object's g
 */
 	obj.getAllArtefactsAt = function (items) {
 
-		let i, g, result,
-			results = [];
-
 		items = xtGet(items, this.here, false);
 
 		if (items) {
 
-			for (i = this.groups.length - 1; i >= 0; i--) {
+			let grp, result,
+				results = [];
 
-				g = group[this.groups[i]];
+			for (let i = this.groups.length - 1; i >= 0; i--) {
 
-				if (g) {
+				grp = group[this.groups[i]];
 
-					result = g.getAllArtefactsAt(items);
+				if (grp) {
+
+					result = grp.getAllArtefactsAt(items);
 
 					if(result) results = results.concat(result);
 				}

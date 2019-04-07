@@ -22,18 +22,18 @@ const State = function (items = {}) {
 /*
 ## State object prototype setup
 */
-let Sp = State.prototype = Object.create(Object.prototype);
-Sp.type = 'State';
+let P = State.prototype = Object.create(Object.prototype);
+P.type = 'State';
 
 /*
 Apply mixins to prototype object
 */
-Sp = baseMix(Sp);
+P = baseMix(P);
 
 /*
 ## Define default attributes
 */
-Sp.defs = {
+P.defs = {
 
 /*
 Color, gradient or pattern used to fill a entity. Can be:
@@ -175,8 +175,9 @@ Text baseline value for single-line Phrase entitys set to follow a Path entity p
 /*
 ## Define attribute getters and setters
 */
-Sp.set = function (items) {
+P.set = function (items) {
 
+// console.log('state set', this.name, items);
 	let key, i, iz,
 		keys = Object.keys(items),
 		d = this.defs;
@@ -193,7 +194,7 @@ Sp.set = function (items) {
 	return this;
 };
 
-Sp.get = function (item) {
+P.get = function (item) {
 
 	let undef, d, i;
 
@@ -207,9 +208,9 @@ Sp.get = function (item) {
 	else return undef;
 };
 
-let G = Sp.getters,
-	S = Sp.setters,
-	D = Sp.deltaSetters;
+let G = P.getters,
+	S = P.setters,
+	D = P.deltaSetters;
 
 /*
 
@@ -248,16 +249,16 @@ S.strokeStyle = function (item) {
 /*
 ## Define prototype functions
 */
-Sp.allKeys = Object.keys(Sp.defs);
-Sp.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
-Sp.lineKeys = ['lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'];
-Sp.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];
-Sp.textKeys = ['font', 'textAlign', 'textBaseline'];
+P.allKeys = Object.keys(P.defs);
+P.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
+P.lineKeys = ['lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'];
+P.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];
+P.textKeys = ['font', 'textAlign', 'textBaseline'];
 
 /*
 
 */
-Sp.getChanges = function (ent, engineState) {
+P.getChanges = function (ent, engineState) {
 
 	let mainKeys = this.mainKeys,
 		lineKeys = this.lineKeys,
@@ -370,7 +371,7 @@ Sp.getChanges = function (ent, engineState) {
 	return result;
 };
 
-Sp.setStateFromEngine = function (engine) {
+P.setStateFromEngine = function (engine) {
 
 	let keys = this.allKeys,
 		key;

@@ -122,10 +122,7 @@ scrawl.makeAnimation({
 				if (changeFlag) starling.fastStamp = false;
 
 				// Normally the compile cascade will stamp an entity onto the canvas once. We use just the one entity for this scene, stamping it onto the canvas many times over using its simpleStamp function.
-				for (var i = 0, iz = starBag.length; i < iz; i++) {
-					
-					starling.simpleStamp(wormhole, starBag[i]);
-				}
+				starBag.forEach(shiny => starling.simpleStamp(wormhole, shiny));
 				return true;
 			})
 			.then(() => {

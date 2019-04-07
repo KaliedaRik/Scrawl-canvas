@@ -28,6 +28,12 @@ const artefactnames = [];
 /*
 
 */
+const asset = {};
+const assetnames = [];
+
+/*
+
+*/
 const canvas = {};
 const canvasnames = [];
 
@@ -119,6 +125,8 @@ export {
 	version,
 	animation,
 	animationnames,
+	asset,
+	assetnames,
 	animationtickers,
 	animationtickersnames,
 	artefact,

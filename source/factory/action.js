@@ -27,16 +27,17 @@ const Action = function (items = {}) {
 /*
 ## Action object prototype setup
 */
-let Ap = Action.prototype = Object.create(Object.prototype);
-Ap.type = 'Action';
-Ap.lib = 'tween';
-Ap.artefact = false;
+let P = Action.prototype = Object.create(Object.prototype);
+P.type = 'Action';
+P.lib = 'tween';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Ap = baseMix(Ap);
-Ap = tweenMix(Ap);
+P = baseMix(P);
+P = tweenMix(P);
 
 /*
 ## Define default attributes
@@ -48,10 +49,10 @@ let defaultAttributes = {
 */
 	revert: null
 };
-Ap.defs = mergeOver(Ap.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-let G = Ap.getters,
-	S = Ap.setters;
+let G = P.getters,
+	S = P.setters;
 
 /*
 
@@ -85,48 +86,48 @@ S.triggered = function (item) {
 /*
 
 */
-Ap.set = function(items) {
+P.set = function (items = {}) {
 
-	let key, i, iz, s,
-		setters = this.setters,
-		keys = Object.keys(items),
-		d = this.defs,
-		ticker = (xt(items.ticker)) ? this.ticker : false;
+// console.log('action set', this.name, items);
+	if (items) {
 
-	for (i = 0, iz = keys.length; i < iz; i++) {
+		let setters = this.setters,
+			defs = this.defs,
+			ticker = (xt(items.ticker)) ? this.ticker : false;
 
-		key = keys[i];
+		Object.entries(items).forEach(([key, value]) => {
 
-		if (key !== 'name') {
+			if (key !== 'name') {
 
-			s = setters[key];
-			
-			if (s) s.call(this, items[key]);
-			else if (typeof d[key] !== 'undefined') this[key] = items[key];
+				let predefined = setters[key];
+
+				if (predefined) predefined.call(this, value);
+				else if (typeof defs[key] !== 'undefined') this[key] = value;
+			}
+		}, this);
+
+		if (ticker) {
+
+			this.ticker = ticker;
+			this.addToTicker(items.ticker);
 		}
+		else if (xt(items.time)) this.calculateEffectiveTime();
 	}
-
-	if (ticker) {
-
-		this.ticker = ticker;
-		this.addToTicker(items.ticker);
-	}
-	else if (xt(items.time)) this.calculateEffectiveTime();
-
 	return this;
 };
+
 
 /*
 
 */
-Ap.getEndTime = function () {
+P.getEndTime = function () {
 	return this.effectiveTime;
 };
 
 /*
 
 */
-Ap.update = function (items) {
+P.update = function (items) {
 
 	if (this.reversed) {
 

@@ -25,18 +25,19 @@ const Wheel = function (items = {}) {
 /*
 ## Wheel object prototype setup
 */
-let Ep = Wheel.prototype = Object.create(Object.prototype);
-Ep.type = 'Wheel';
-Ep.lib = 'entity';
-Ep.artefact = true;
+let P = Wheel.prototype = Object.create(Object.prototype);
+P.type = 'Wheel';
+P.lib = 'entity';
+P.isArtefact = true;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Ep = baseMix(Ep);
-Ep = positionMix(Ep);
-Ep = entityMix(Ep);
-Ep = filterMix(Ep);
+P = baseMix(P);
+P = positionMix(P);
+P = entityMix(P);
+P = filterMix(P);
 
 /*
 ## Define default attributes
@@ -83,11 +84,11 @@ let defaultAttributes = {
 */
 	clockwise: true,
 };
-Ep.defs = mergeOver(Ep.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-let G = Ep.getters,
-	S = Ep.setters,
-	D = Ep.deltaSetters;
+let G = P.getters,
+	S = P.setters,
+	D = P.deltaSetters;
 
 /*
 
@@ -236,7 +237,7 @@ D.endAngle = function (item) {
 /*
 
 */
-Ep.defaultHandles = function (items) {
+P.defaultHandles = function (items) {
 
 	let iHandle = items.handle || {};
 
@@ -254,7 +255,7 @@ Ep.defaultHandles = function (items) {
 	}
 };
 
-Ep.dimensionsHelper = function () {
+P.dimensionsHelper = function () {
 
 	if (this.width.substring) this.radius = `${(parseFloat(this.width) / 2)}%`;
 	else this.radius = (this.width / 2);
@@ -265,7 +266,7 @@ Ep.dimensionsHelper = function () {
 	this.dirtyPivoted = true;
 };
 
-Ep.radiusHelper = function () {
+P.radiusHelper = function () {
 
 	if (this.radius.substring) this.width = this.height = (parseFloat(this.radius) * 2) + '%';
 	else this.width = this.height = (this.radius * 2);
@@ -276,7 +277,7 @@ Ep.radiusHelper = function () {
 	this.dirtyPivoted = true;
 };
 
-Ep.cleanDimensions = function () {
+P.cleanDimensions = function () {
 
 	// the radius only references the width of the canvas, never the height;
 	let host = this.currentHost,
@@ -298,7 +299,7 @@ Ep.cleanDimensions = function () {
 	}
 };
 
-Ep.cleanPathObject = function () {
+P.cleanPathObject = function () {
 
 	let p, handle, trans, scale, x, y, radius, starts, ends;
 
@@ -313,6 +314,9 @@ Ep.cleanPathObject = function () {
 	starts = this.startAngle * radian;
 	ends = this.endAngle * radian;
 
+	// p.beginPath();
+	// p.moveTo(x, y);
+	// p.arc(0, 0, radius, starts, ends, !this.clockwise);
 	p.arc(x, y, radius, starts, ends, !this.clockwise);
 
 	if (this.includeCenter) {
@@ -323,7 +327,7 @@ Ep.cleanPathObject = function () {
 	else if (this.closed) p.closePath();
 };
 
-Ep.finalizeCollisionPoints = function (pointsArray) {
+P.finalizeCollisionPoints = function (pointsArray) {
 
 	let cp = this.collisionPoints,
 		i, iz, item, pt;

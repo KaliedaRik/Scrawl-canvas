@@ -30,16 +30,17 @@ const Palette = function (items = {}) {
 /*
 ## Palette object prototype setup
 */
-let Pp = Palette.prototype = Object.create(Object.prototype);
+let P = Palette.prototype = Object.create(Object.prototype);
 
-Pp.type = 'Palette';
-Pp.lib = 'palette';
-Pp.artefact = false;
+P.type = 'Palette';
+P.lib = 'palette';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Pp = baseMix(Pp);
+P = baseMix(P);
 
 /*
 ## Define default attributes
@@ -62,10 +63,10 @@ If the cyclic flag is set, then we know to calculate appropriate stop values bet
 */
 	cyclic: false,
 };
-Pp.defs = mergeOver(Pp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-let G = Pp.getters,
-	S = Pp.setters;
+let G = P.getters,
+	S = P.setters;
 
 /*
 No checking is done prior to assigning the colors object to the colors attribute beyond verifying that the argument value is an object.
@@ -90,8 +91,9 @@ S.stops = defaultNonReturnFunction;
 /*
 
 */
-Pp.set = function (items = {}) {
+P.set = function (items = {}) {
 
+// console.log('palette set', this.name, items);
 	let keys = Object.keys(items),
 		i, iz, key;
 
@@ -105,12 +107,12 @@ Pp.set = function (items = {}) {
 /*
 
 */
-Pp.recalculateHold = [];
+P.recalculateHold = [];
 
 /*
 Question: possible tasks for web worker?
 */
-Pp.recalculate = function () {
+P.recalculate = function () {
 
 	let keys, i, iz, j, jz, cursor, diff, 
 		current, next, nextKey, temp,
@@ -214,7 +216,7 @@ Pp.recalculate = function () {
 /*
 
 */
-Pp.makeColorString = function (item) {
+P.makeColorString = function (item) {
 
 	let f = Math.floor,
 		r, g, b, a;
@@ -236,7 +238,7 @@ Pp.makeColorString = function (item) {
 /*
 
 */
-Pp.updateColor = function (index, color) {
+P.updateColor = function (index, color) {
 
 	let f = this.factory;
 
@@ -257,7 +259,7 @@ Pp.updateColor = function (index, color) {
 /*
 
 */
-Pp.removeColor = function (index) {
+P.removeColor = function (index) {
 	
 	if (xt(index)) {
 
@@ -275,7 +277,7 @@ Pp.removeColor = function (index) {
 /*
 
 */
-Pp.addStopsToGradient = function (gradient, start, end, cycle) {
+P.addStopsToGradient = function (gradient, start, end, cycle) {
 
 	let stops = this.stops,
 		keys = Object.keys(this.colors),
@@ -369,7 +371,7 @@ Pp.addStopsToGradient = function (gradient, start, end, cycle) {
 /*
 We add a Color object to the Palette prototype - one object is used for all the calculations preformed by all Palette objects
 */
-Pp.factory = makeColor({
+P.factory = makeColor({
 	opaque: false
 });
 

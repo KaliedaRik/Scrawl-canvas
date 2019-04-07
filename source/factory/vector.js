@@ -23,14 +23,14 @@ const Vector = function (items = {}) {
 /*
 ## Quaternion object prototype setup
 */
-let Vp = Vector.prototype = Object.create(Object.prototype);
+let P = Vector.prototype = Object.create(Object.prototype);
 
-Vp.type = 'Vector';
+P.type = 'Vector';
 
 /*
 ## Define default attributes
 */
-Vp.defs = {
+P.defs = {
 
 /*
 
@@ -61,7 +61,7 @@ Vp.defs = {
 /*
 
 */
-Vp.zero = function () {
+P.zero = function () {
 
 	this.x = 0;
 	this.y = 0;
@@ -72,7 +72,7 @@ Vp.zero = function () {
 /*
 
 */
-Vp.set = function (items = {}) {
+P.set = function (items = {}) {
 
 	this.x = (xtGet(items.x, this.x));
 	this.y = (xtGet(items.y, this.y));
@@ -83,7 +83,7 @@ Vp.set = function (items = {}) {
 /*
 
 */
-Vp.setXY = function (x, y) {
+P.setXY = function (x, y) {
 
 	this.x = (xtGet(x, this.x));
 	this.y = (xtGet(y, this.y));
@@ -93,7 +93,7 @@ Vp.setXY = function (x, y) {
 /*
 
 */
-Vp.vectorAdd = function (item = {}) {
+P.vectorAdd = function (item = {}) {
 
 	this.x += item.x || 0;
 	this.y += item.y || 0;
@@ -104,7 +104,7 @@ Vp.vectorAdd = function (item = {}) {
 /*
 
 */
-Vp.vectorSubtract = function (item = {}) {
+P.vectorSubtract = function (item = {}) {
 
 	this.x -= item.x || 0;
 	this.y -= item.y || 0;
@@ -115,7 +115,7 @@ Vp.vectorSubtract = function (item = {}) {
 /*
 
 */
-Vp.scalarMultiply = function (item) {
+P.scalarMultiply = function (item) {
 
 	if (item.toFixed) {
 		this.x *= item;
@@ -129,14 +129,14 @@ Vp.scalarMultiply = function (item) {
 /*
 
 */
-Vp.getMagnitude = function () {
+P.getMagnitude = function () {
 	return Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
 };
 
 /*
 
 */
-Vp.rotate = function (angle) {
+P.rotate = function (angle) {
 
 	let stat_vr = [0, 0];
 
@@ -152,7 +152,7 @@ Vp.rotate = function (angle) {
 };
 
 /*
-Vp.setMagnitudeTo = function (item) {
+P.setMagnitudeTo = function (item) {
 
 	this.normalize();
 	this.scalarMultiply(item);
@@ -171,7 +171,7 @@ Vp.setMagnitudeTo = function (item) {
 	return this;
 };
 
-Vp.normalize = function () {
+P.normalize = function () {
 
 	let val = this.getMagnitude();
 
@@ -184,7 +184,7 @@ Vp.normalize = function () {
 	return this;
 };
 
-Vp.isEqual = function (item) {
+P.isEqual = function (item) {
 
 	if (isa_vector(item)) {
 
@@ -193,7 +193,7 @@ Vp.isEqual = function (item) {
 	return false;
 };
 
-Vp.isLike = function (item) {
+P.isLike = function (item) {
 
 	if (isa_obj(item)) {
 		if (this.x === item.x && this.y === item.y && this.z === item.z) return true;
@@ -201,7 +201,7 @@ Vp.isLike = function (item) {
 	return false;
 };
 
-Vp.getData = function () {
+P.getData = function () {
 
 	return {
 		x: this.x,
@@ -210,11 +210,11 @@ Vp.getData = function () {
 	};
 };
 
-Vp.hasCoordinates = function (item) {
+P.hasCoordinates = function (item) {
 	return (xta(item, item.x, item.y)) ? true : false;
 };
 
-Vp.vectorMultiply = (item = {}) => {
+P.vectorMultiply = (item = {}) => {
 
 	this.x *= item.x || 1;
 	this.y *= item.y || 1;
@@ -222,7 +222,7 @@ Vp.vectorMultiply = (item = {}) => {
 	return this;
 };
 
-Vp.vectorDivide = function (item = {}) {
+P.vectorDivide = function (item = {}) {
 
 	this.x /= ((item.x || 0) !== 0) ? item.x : 1;
 	this.y /= ((item.y || 0) !== 0) ? item.y : 1;
@@ -230,7 +230,7 @@ Vp.vectorDivide = function (item = {}) {
 	return this;
 };
 
-Vp.scalarDivide = function (item) {
+P.scalarDivide = function (item) {
 
 	if ((item.toFixed) && item !== 0) {
 
@@ -242,11 +242,11 @@ Vp.scalarDivide = function (item) {
 	return this;
 };
 
-Vp.checkNotZero = function () {
+P.checkNotZero = function () {
 	return (this.x || this.y || this.z) ? true : false;
 };
 
-Vp.getVector = function () {
+P.getVector = function () {
 
 	return new Vector({
 		x: this.x,
@@ -255,7 +255,7 @@ Vp.getVector = function () {
 	});
 };
 
-Vp.getCrossProduct = function (u, v) {
+P.getCrossProduct = function (u, v) {
 
 	let v1x,
 		v1y,
@@ -283,7 +283,7 @@ Vp.getCrossProduct = function (u, v) {
 	return this;
 };
 
-Vp.getDotProduct = function (u, v) {
+P.getDotProduct = function (u, v) {
 
 	if (isa_obj(u)) {
 
@@ -293,7 +293,7 @@ Vp.getDotProduct = function (u, v) {
 	return false;
 };
 
-Vp.getTripleScalarProduct = function (u, v, w) {
+P.getTripleScalarProduct = function (u, v, w) {
 
 	let ux,
 		uy,
@@ -322,7 +322,7 @@ Vp.getTripleScalarProduct = function (u, v, w) {
 	return false;
 };
 
-Vp.reverse = function () {
+P.reverse = function () {
 
 	this.x = -this.x;
 	this.y = -this.y;
@@ -330,7 +330,7 @@ Vp.reverse = function () {
 	return this;
 };
 
-Vp.rotate3d = function (item, mag) {
+P.rotate3d = function (item, mag) {
 
 	let q1 = requestQuaternion(),
 		q2 = requestQuaternion(),

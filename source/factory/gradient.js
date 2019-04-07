@@ -20,18 +20,19 @@ const Gradient = function (items = {}) {
 /*
 ## Gradient object prototype setup
 */
-let Gp = Gradient.prototype = Object.create(Object.prototype);
+let P = Gradient.prototype = Object.create(Object.prototype);
 
-Gp.type = 'Gradient';
-Gp.lib = 'styles';
-Gp.artefact = false;
+P.type = 'Gradient';
+P.lib = 'styles';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Gp = baseMix(Gp);
-Gp = positionMix(Gp);
-Gp = stylesMix(Gp);
+P = baseMix(P);
+P = positionMix(P);
+P = stylesMix(P);
 
 /*
 ## Define prototype functions
@@ -40,7 +41,7 @@ Gp = stylesMix(Gp);
 /*
 
 */
-Gp.buildStyle = function (cell = {}) {
+P.buildStyle = function (cell = {}) {
 	
 	let gradient, engine,
 		sx, sy, ex, ey;

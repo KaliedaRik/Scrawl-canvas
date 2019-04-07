@@ -28,7 +28,7 @@
 
   <p>Scrawl-canvas is added to the page through a <span class="scrawl-code">&lt;script></span> tag at the bottom of the html code. The tag takes the following attributes:</p>
 
-  <h3>&lt;script src="dom-001.js" type="module">&lt;/script></h3>
+  <h3>&lt;script src="dom-001.js" <b>type="module"</b>>&lt;/script></h3>
 
   <ul>
     <li><span class="scrawl-code">src=</span> - path to the user code which imports the <span class="scrawl-code">scrawl.js</span> file</li>
@@ -37,7 +37,8 @@
 
   <p>By importing the scrawl.js file, the browser will also import all the related files required by Scrawl-canvas. The import code goes at the top of the user code (in this example, the <span class="scrawl-code">dom-001.js</span> file):</p>
 
-  <h3>import scrawl from 'relative/path/to/scrawl.js'</h3>
+  <h3><b>import</b> scrawl from '../../relative/path/to/scrawl.js'<br />
+  scrawl.setScrawlPath('/absolute/path/to');</h3>
 
   <p>... the import doesn't need to be called <span class="scrawl-code">'scrawl'</span> - it can be whatever the user prefers.</p>
 

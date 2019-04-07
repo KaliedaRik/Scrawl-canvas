@@ -2,7 +2,7 @@
 # Tween factory
 */
 import { constructors, animationtickers } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, isa_fn, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, isa_fn, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
@@ -55,16 +55,17 @@ const Tween = function (items = {}) {
 /*
 ## Tween object prototype setup
 */
-let Tp = Tween.prototype = Object.create(Object.prototype);
-Tp.type = 'Tween';
-Tp.lib = 'tween';
-Tp.artefact = false;
+let P = Tween.prototype = Object.create(Object.prototype);
+P.type = 'Tween';
+P.lib = 'tween';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Tp = baseMix(Tp);
-Tp = tweenMix(Tp);
+P = baseMix(P);
+P = tweenMix(P);
 
 /*
 ## Define default attributes
@@ -101,10 +102,10 @@ let defaultAttributes = {
 */
 	killOnComplete: false,
 };
-Tp.defs = mergeOver(Tp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
-let G = Tp.getters,
-	S = Tp.setters;
+let G = P.getters,
+	S = P.setters;
 
 /*
 
@@ -151,8 +152,9 @@ S.completeAction = function (item) {
 /*
 
 */
-Tp.set = function (items) {
+P.set = function (items) {
 
+// console.log('tween set', this.name, items);
 	let key, i, iz, s,
 		setters = this.setters,
 		keys = Object.keys(items),
@@ -189,7 +191,7 @@ Tp.set = function (items) {
 /*
 
 */
-Tp.getEndTime = function () {
+P.getEndTime = function () {
 
 	return this.effectiveTime + this.effectiveDuration;
 };
@@ -197,7 +199,7 @@ Tp.getEndTime = function () {
 /*
 
 */
-Tp.calculateEffectiveDuration = function (item) {
+P.calculateEffectiveDuration = function (item) {
 
 	let tweenDuration = xtGet(item, this.duration),
 		calculatedDur = convertTime(tweenDuration),
@@ -229,7 +231,7 @@ Tp.calculateEffectiveDuration = function (item) {
 /*
 
 */
-Tp.update = function (items = {}) {
+P.update = function (items = {}) {
 
 	let starts, ends,
 		tick = items.tick || 0,
@@ -287,7 +289,7 @@ Tp.update = function (items = {}) {
 /*
 
 */
-Tp.doSimpleUpdate = function (items = {}) {
+P.doSimpleUpdate = function (items = {}) {
 
 	let starts = this.effectiveTime,
 		effectiveTick,
@@ -325,7 +327,7 @@ Tp.doSimpleUpdate = function (items = {}) {
 /*
 
 */
-Tp.updateCleanup = function (item) {
+P.updateCleanup = function (item) {
 
 	if (!item) this.status = (this.reversed) ? 'before' : 'after';
 };
@@ -333,7 +335,7 @@ Tp.updateCleanup = function (item) {
 /*
 
 */
-Tp.engineActions = {
+P.engineActions = {
 
 	out: function (start, change, position) {
 		
@@ -435,7 +437,7 @@ Tp.engineActions = {
 /*
 
 */
-Tp.setDefinitionsValues = function () {
+P.setDefinitionsValues = function () {
 
 	let i, iz, temp, def;
 
@@ -462,7 +464,7 @@ Tp.setDefinitionsValues = function () {
 /*
 
 */
-Tp.parseDefinitionsValue = function (item) {
+P.parseDefinitionsValue = function (item) {
 
 	let result = ['', 0],
 		a;
@@ -485,7 +487,7 @@ Tp.parseDefinitionsValue = function (item) {
 /*
 
 */
-Tp.run = function () {
+P.run = function () {
 
 	let t = animationtickers[this.ticker];
 
@@ -499,7 +501,7 @@ Tp.run = function () {
 /*
 
 */
-Tp.halt = function() {
+P.halt = function() {
 
 	let t = animationtickers[this.ticker];
 
@@ -511,7 +513,7 @@ Tp.halt = function() {
 /*
 
 */
-Tp.reverse = function() {
+P.reverse = function() {
 
 	let t = animationtickers[this.ticker];
 
@@ -523,7 +525,7 @@ Tp.reverse = function() {
 /*
 
 */
-Tp.resume = function() {
+P.resume = function() {
 
 	let t = animationtickers[this.ticker];
 
@@ -535,7 +537,7 @@ Tp.resume = function() {
 /*
 
 */
-Tp.seekTo = function(milliseconds) {
+P.seekTo = function(milliseconds) {
 
 	let t = animationtickers[this.ticker];
 
@@ -547,7 +549,7 @@ Tp.seekTo = function(milliseconds) {
 /*
 
 */
-Tp.seekFor = function(milliseconds) {
+P.seekFor = function(milliseconds) {
 
 	let t = animationtickers[this.ticker];
 

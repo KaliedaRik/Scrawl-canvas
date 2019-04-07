@@ -274,110 +274,105 @@ ISSUE - stack elements get given a group String for this attribute; here we're j
 */
 
 /*
-
+Overwrites function defined in mixin/base.js - takes into account State object attributes
 */
 	obj.get = function (item) {
 
-		let undef,
-			g = this.getters[item],
-			d, i;
+// console.log('entity get', this.name, item);
+		let getter = this.getters[item];
 
-		if (g) return g.call(this);
-		else{
+		if (getter) return getter.call(this);
 
-			d = this.defs[item];
+		else {
 
-			if (typeof d !== 'undefined') {
+			let def = this.defs[item],
+				state = this.state,
+				val;
 
-				i = this[item];
-				return (typeof i !== 'undefined') ? i : d;
+			if (typeof def != 'undefined') {
+
+				val = this[item];
+				return (typeof val != 'undefined') ? val : def;
 			}
 
-			d = this.state.defs[item];
+			def = state.defs[item];
 
-			if (typeof d !== 'undefined') {
+			if (typeof def != 'undefined') {
 
-				i = this.state[item];
-				return (typeof i !== 'undefined') ? i : d;
+				val = state[item];
+				return (typeof val != 'undefined') ? val : def;
 			}
-			else return undef;
+			return undef;
 		}
 	};
 
 /*
-
+Overwrites function defined in mixin/base.js - takes into account State object attributes
 */
-	obj.set = function (items) {
+	obj.set = function (items = {}) {
 
-		let key, i, iz, s,
-			keys = Object.keys(items),
-			eSetters = this.setters,
-			eDefs = this.defs,
-			sSetters, sDefs;
+// console.log('entity set', this.name, items);
+		if (items) {
 
-		if (this.state) {
+			let setters = this.setters,
+				defs = this.defs,
+				state = this.state,
+				stateSetters = (state) ? state.setters : {},
+				stateDefs = (state) ? state.defs : {};
 
-			sSetters = this.state.setters;
-			sDefs = this.state.defs;
-		}
+			Object.entries(items).forEach(([key, value]) => {
 
-		for (i = 0, iz = keys.length; i < iz; i++) {
+				if (key !== 'name') {
 
-			key = keys[i];
+					let predefined = setters[key],
+						stateFlag = false;
 
-			if (key !== 'name') {
+					if (!predefined) {
 
-				s = eSetters[key];
-				
-				if (s) s.call(this, items[key]);
-				else if (typeof eDefs[key] !== 'undefined') this[key] = items[key];
-				else if (this.state) {
+						predefined = stateSetters[key];
+						stateFlag = true;
+					}
 
-					s = sSetters[key];
-
-					if (s) s.call(this.state, items[key]);
-					else if (typeof sDefs[key] !== 'undefined') this.state[key] = items[key];
+					if (predefined) predefined.call(stateFlag ? this.state : this, value);
+					else if (typeof defs[key] !== 'undefined') this[key] = value;
+					else if (typeof stateDefs[key] !== 'undefined') state[key] = value;
 				}
-			}
+			}, this);
 		}
 		return this;
 	};
 
 /*
-
+Overwrites function defined in mixin/base.js - takes into account State object attributes
 */
-	obj.setDelta = function (items) {
+	obj.setDelta = function (items = {}) {
 
-		let key, i, iz, s,
-			keys = Object.keys(items),
-			eSetters = this.deltaSetters,
-			eDefs = this.defs,
-			sSetters, sDefs;
+		if (items) {
 
-		if (this.state) {
+			let setters = this.deltaSetters,
+				defs = this.defs,
+				state = this.state,
+				stateSetters = (state) ? state.deltaSetters : {},
+				stateDefs = (state) ? state.defs : {};
 
-			sSetters = this.state.deltaSetters;
-			sDefs = this.state.defs;
-		}
+			Object.entries(items).forEach(([key, value]) => {
 
-		for (i = 0, iz = keys.length; i < iz; i++) {
+				if (key !== 'name') {
 
-			key = keys[i];
-			
-			if (key !== 'name') {
+					let predefined = setters[key],
+						stateFlag = false;
 
-				s = eSetters[key];
-				
-				if (s) s.call(this, items[key]);
-				else if (typeof eDefs[key] !== 'undefined') this[key] = items[key];
-				else if (this.state) {
+					if (!predefined) {
 
-					s = sSetters[key];
-					
-					if (s) s.call(this, items[key]);
-					else if (typeof sDefs[key] !== 'undefined') this.state[key] = items[key];
+						predefined = stateSetters[key];
+						stateFlag = true;
+					}
+
+					if (predefined) predefined.call(stateFlag ? this.state : this, value);
+					else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
+					else if (typeof stateDefs[key] !== 'undefined') state[key] = addStrings(state[key], value);
 				}
-			}
+			}, this);
 		}
 		return this;
 	};
@@ -407,19 +402,17 @@ ISSUE - stack elements get given a group String for this attribute; here we're j
 	};
 
 /*
-
+Overwrites the clone function in mixin/base.js
 */
 	obj.clone = function(items = {}) {
 
-		let copied, clone, keys, key,
-			that, i, iz, state, 
-			group, host,
+		let self = this,
+			regex = /^(local|dirty|current)/,
 			stateDefs = this.state.defs;
 
-		let updateCopiedState = function (copy, defs, item) {
+		let updateCopiedState = (copy, defs, item) => {
 
 			let temp = copy[item];
-
 			copy[item] = defs[item];
 
 			if (temp) {
@@ -429,30 +422,25 @@ ISSUE - stack elements get given a group String for this attribute; here we're j
 			}
 		};
 
-		group = this.group;
-		this.group = group.name;
+		let grp = this.group;
+		this.group = grp.name;
 		
-		host = this.currentHost;
+		let host = this.currentHost;
 		delete this.currentHost;
 
-		copied = JSON.parse(JSON.stringify(this));
+		let copied = JSON.parse(JSON.stringify(this));
 		copied.name = (items.name) ? items.name : generateUuid();
 
-		this.group = group;
+		this.group = grp;
+		this.currentHost = host;
 
-		keys = Object.keys(this);
-		that = this;
+		Object.entries(this).forEach(([key, value]) => {
 
-		for (i = 0, iz = keys.length; i < iz; i++) {
+			if (regex.test(key)) delete copied[key];
+			if (isa_fn(this[key])) copied[key] = self[key];
+		}, this);
 
-			key = keys[i];
-
-			if (/^(local|dirty|current)/.test(key)) delete copied[key];
-
-			if (isa_fn(this[key])) copied[key] = that[key];
-		}
-
-		state = copied.state;
+		let state = copied.state;
 		updateCopiedState(state, stateDefs, 'fillStyle');
 		updateCopiedState(state, stateDefs, 'strokeStyle');
 		updateCopiedState(state, stateDefs, 'shadowColor');
@@ -460,12 +448,11 @@ ISSUE - stack elements get given a group String for this attribute; here we're j
 
 		if (this.group) copied.group = this.group.name;
 
-		clone = new library.constructors[this.type](copied);
-
+		let clone = new library.constructors[this.type](copied);
 		clone.set(state);
 		clone.set(items);
 
-		if (items.sharedState) clone.state = that.state;
+		if (items.sharedState) clone.state = self.state;
 
 		return clone;
 	};
@@ -481,142 +468,84 @@ This is a null function required by entitys to match a function used by DOM elem
 	obj.getBox = defaultFalseReturnFunction;
 
 /*
-
+Replicates and adapts function defined in mixin.dom.js
 */
 	obj.addCollisionPoints = function (...args) {
 
-		let pointsArray, i, iz, item;
+		let pointMaker = function (item) {
 
-		this.collisionPoints = [];
-		pointsArray = [];
-
-		for (i = 0, iz = args.length; i < iz; i++) {
-
-			item = args[i];
-
-			if (item && item.substring) {
-				
-				item = item.toLowerCase();
-
-				switch (item) {
-
-					case 'ne' :
-					case 'n' :
-					case 'nw' :
-					case 'w' :
-					case 'sw' :
-					case 's' :
-					case 'se' :
-					case 'e' :
-						pushUnique(pointsArray, item);
-						break;
-
-					case 'corners' :
-						pushUnique(pointsArray, 'ne');
-						pushUnique(pointsArray, 'nw');
-						pushUnique(pointsArray, 'sw');
-						pushUnique(pointsArray, 'se');
-						break;
-
-					case 'edges' :
-						pushUnique(pointsArray, 'n');
-						pushUnique(pointsArray, 'w');
-						pushUnique(pointsArray, 's');
-						pushUnique(pointsArray, 'e');
-						break;
-
-					case 'border' :
-						pushUnique(pointsArray, 'ne');
-						pushUnique(pointsArray, 'n');
-						pushUnique(pointsArray, 'nw');
-						pushUnique(pointsArray, 'w');
-						pushUnique(pointsArray, 'sw');
-						pushUnique(pointsArray, 's');
-						pushUnique(pointsArray, 'se');
-						pushUnique(pointsArray, 'e');
-						break;
-
-					case 'center' :
-						pushUnique(pointsArray, 'c');
-						break;
-
-					case 'all' :
-						pushUnique(pointsArray, 'ne');
-						pushUnique(pointsArray, 'n');
-						pushUnique(pointsArray, 'nw');
-						pushUnique(pointsArray, 'w');
-						pushUnique(pointsArray, 'sw');
-						pushUnique(pointsArray, 's');
-						pushUnique(pointsArray, 'se');
-						pushUnique(pointsArray, 'e');
-						pushUnique(pointsArray, 'c');
-						break;
-				}
-			}
-		}
-
-		this.finalizeCollisionPoints(pointsArray);
-
-		return this;
-	};
-
-/*
-
-*/
-	obj.finalizeCollisionPoints = function (pointsArray) {
-
-		let cp = this.collisionPoints,
-			i, iz, item, pt;
-
-		for (i = 0, iz = pointsArray.length; i < iz; i++) {
-
-			item = pointsArray[i];
-
-			pt = makePoint({
+			return makePoint({
 				name: `${this.name}_cp_${item}`,
 				pivot: this.name,
 				group: this.group
 			});
+		};
 
-			switch(item){
+		let collisionPoints = this.collisionPoints = [],
+			pointsArray = new Set();
 
-				case 'ne' :
-					cp.push(pt.set({offsetX: 'right', offsetY: 'top'}));
-					break;
+		args.forEach(arg => {
 
-				case 'n' :
-					cp.push(pt.set({offsetX: 'center', offsetY: 'top'}));
-					break;
+			if (arg != null && arg.substring) {
 
-				case 'nw' :
-					cp.push(pt.set({offsetX: 'left', offsetY: 'top'}));
-					break;
+				arg = arg.toLowerCase();
 
-				case 'w' :
-					cp.push(pt.set({offsetX: 'left', offsetY: 'center'}));
-					break;
+				switch (arg) {
 
-				case 'sw' :
-					cp.push(pt.set({offsetX: 'left', offsetY: 'bottom'}));
-					break;
+					case 'corners' :
+						pointsArray.add('ne').add('nw').add('sw').add('se');
+						break;
 
-				case 's' :
-					cp.push(pt.set({offsetX: 'center', offsetY: 'bottom'}));
-					break;
+					case 'edges' :
+						pointsArray.add('n').add('w').add('s').add('e');
+						break;
 
-				case 'se' :
-					cp.push(pt.set({offsetX: 'right', offsetY: 'bottom'}));
-					break;
+					case 'border' :
+						pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e');
+						break;
 
-				case 'e' :
-					cp.push(pt.set({offsetX: 'right', offsetY: 'center'}));
-					break;
+					case 'center' :
+						pointsArray.add('c');
+						break;
 
-				case 'c' :
-					cp.push(pt.set({offsetX: 'center', offsetY: 'center'}));
-					break;
+					case 'all' :
+						pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e').add('c');
+						break;
+
+					case 'ne' :
+					case 'e' :
+					case 'se' :
+					case 's' :
+					case 'sw' :
+					case 'w' :
+					case 'nw' :
+					case 'n' :
+						pointsArray.add(arg);
+						break;
+				}
 			}
-		}
+		});
+
+		let topArray = ['ne', 'n', 'nw'],
+			middleArray = ['e', 'w', 'c'],
+			leftArray = ['nw', 'w', 'sw'],
+			centerArray = ['n', 's', 'c'];
+
+		pointsArray.forEach(val => {
+
+			let point = pointMaker(val);
+
+			if (topArray.indexOf(val) >= 0) point.set({ offsetY: 'top' });
+			else if (middleArray.indexOf(val) >= 0) point.set({ offsetY: 'center' });
+			else point.set({ offsetY: 'bottom' });
+
+			if (leftArray.indexOf(val) >= 0) point.set({ offsetX: 'left' });
+			else if (centerArray.indexOf(val) >= 0) point.set({ offsetX: 'center' });
+			else point.set({ offsetX: 'right' });
+
+			collisionPoints.push(point);
+		});
+		return this;
 	};
 
 /*
@@ -642,10 +571,8 @@ CURRENTLY does not support filters on entitys
 				this.prepareStamp();
 			}
 
-			return this.regularStampSynchronousActions();
+			this.regularStampSynchronousActions();
 		}
-
-		return false;
 	};
 
 /*
@@ -668,9 +595,10 @@ CURRENTLY does not support filters on entitys
 
 		if (this.localWidth && this.localHeight) {
 
-			this.cleanVectorParameter('currentHandle', this.handle, this.localWidth, this.localHeight);
-			this.dirtyHandle = false;
 			this.dirtyPathObject = true;
+			this.dirtyHandle = false;
+
+			this.cleanVectorParameter('currentHandle', this.handle, this.localWidth, this.localHeight);
 		}
 	};
 
@@ -679,12 +607,12 @@ CURRENTLY does not support filters on entitys
 */
 	obj.cleanOffset = function () {
 
+		this.dirtyOffset = false;
+		this.dirtyScale = false;
+
 		let dims = this.cleanOffsetHelper();
 
 		this.cleanVectorParameter('currentOffset', this.offset, dims[0], dims[1]);
-
-		this.dirtyOffset = false;
-		this.dirtyScale = false;
 	};
 
 /*
@@ -696,8 +624,9 @@ CURRENTLY does not support filters on entitys
 
 		if (host) {
 
-			this.cleanVectorParameter('currentStart', this.start, host.localWidth, host.localHeight);
 			this.dirtyStart = false;
+
+			this.cleanVectorParameter('currentStart', this.start, host.localWidth, host.localHeight);
 		}
 	};
 
@@ -711,6 +640,8 @@ CURRENTLY does not support filters on entitys
 
 		if (host) {
 
+			this.dirtyDimensions = false;
+
 			w = this.width;
 			h = this.height;
 
@@ -719,8 +650,6 @@ CURRENTLY does not support filters on entitys
 
 			if (h.substring) this.localHeight = (parseFloat(h) / 100) * host.localHeight;
 			else this.localHeight = h;
-
-			this.dirtyDimensions = false;
 		}
 	};
 
@@ -889,9 +818,24 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 
 		return new Promise((resolve) => {
 
-			let result = self.regularStampSynchronousActions();
+			let dest = self.currentHost, 
+				engine, x, y;
 
-			resolve(result);
+			if (dest) {
+
+				engine = dest.engine;
+				x = self.updateStampX();
+				y = self.updateStampY();
+
+				dest.rotateDestination(engine, x, y, self);
+
+				if (!self.fastStamp) dest.setEngine(self);
+
+				self.stamper[self.method](engine, self);
+
+				resolve(true);
+			}
+			resolve(false);
 		});
 	};
 
@@ -914,10 +858,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 			if (!this.fastStamp) dest.setEngine(this);
 
 			this.stamper[this.method](engine, this);
-
-			return true;
 		}
-		else return false;
 	};
 
 /*
@@ -925,45 +866,38 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 */
 	obj.checkHit = function (items = {}) {
 
-		let tests, test, t,
-			dest = this.currentHost, 
-			i, iz, engine, x, y, tx, ty, result;
+		let dest = this.currentHost;
 
 		if (dest) {
 
-			tests = (!Array.isArray(items)) ?  [items] : items;
+			let tests = (!Array.isArray(items)) ?  [items] : items;
 
-			engine = dest.engine;
-			x = this.updateStampX();
-			y = this.updateStampY();
+			let engine = dest.engine,
+				x = this.updateStampX(),
+				y = this.updateStampY(),
+				tx, ty;
+
+			if (this.dirtyPathObject) this.cleanPathObject();
 
 			dest.rotateDestination(engine, x, y, this);
 
-			for (i = 0, iz = tests.length; i < iz; i++) {
+			if (tests.some(test => {
 
-				t = tests[i];
-				test = (Object.prototype.toString.call(t) === '[object Object]') ? t : {};
+				if (Object.prototype.toString.call(test) !== '[object Object]') return false;
 
-				tx = test.x || 0;
-				ty = test.y || 0;
+				tx = test.x;
+				ty = test.y;
 
-				result = (this.pathObject) ? 
-					engine.isPointInPath(this.pathObject, tx, ty, this.winding) :
-					engine.isPointInPath(tx, ty, this.winding);
+				if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
-				if (result) break;
-			}
+				return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
 
-			if (result) {
-
-				return {
-					x: tx,
-					y: ty,
-					artefact: this
-				};
-			}
+			}, this)) return {
+				x: tx,
+				y: ty,
+				artefact: this
+			};
 		}
-
 		return false;
 	};
 

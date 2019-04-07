@@ -18,93 +18,49 @@ const resortAnimations = function () {
 /*
 
 */
-const animationLoop = function () {
-
-	let i, iz, a, order,
-		floor = Math.floor,
-		buckets;
+const sortAnimations = function () {
 
 	if (resortBatchAnimations) {
 
 		resortBatchAnimations = false;
-		buckets = [];
 
-		for (i = 0, iz = animate.length; i < iz; i++){
+		let floor = Math.floor,
+			buckets = [];
 
-			a = animation[animate[i]];
-			order = floor(a.order) || 0;
+		animate.forEach((item) => {
+
+			let obj = animation[item],
+				order = floor(obj.order) || 0;
 
 			if (!buckets[order]) buckets[order] = [];
 
-			buckets[order].push(a);
-		}
+			buckets[order].push(obj);
+		});
 
-		animate_buckets.length = 0;
-
-		for (i = 0, iz = buckets.length; i < iz; i++){
-
-			if (buckets[i] && buckets[i].length) animate_buckets.push(buckets[i]);
-		}
+		animate_buckets = buckets.reduce((a, v) => a.concat(v), []);
 	}
-
-/*
-
-*/
-	animationBatchPromise(0)
-	.then((res) => {
-
-		if (res) throw 'animationLoop completed'; 
-		else throw 'animationLoop error'; 
-	})
-	.catch((err) => {
-
-		if (doAnimation) {
-			window.requestAnimationFrame(function() {
-				animationLoop();
-			});
-		}
-	});
 };
 
 /*
 
 */
-const animationBatchPromise = function (counter) {
+const animationLoop = function () {
 
-	return new Promise((resolve, reject) => {
+	let promises = [];
 
-		let i, iz, item, check,
-			promiseArray,
-			items = animate_buckets[counter];
+	if (resortBatchAnimations) sortAnimations();
 
-		if (items){
+	animate_buckets.forEach((item) => {
 
-			let promiseArray = [Promise.resolve(true)];
-
-			for (i = 0, iz = items.length; i < iz; i++){
-
-				item = items[i];
-				// item.fn MUST be a function returning a promise!
-				if (item.fn) promiseArray.push(item.fn());
-			}
-
-			Promise.all(promiseArray)
-			.then((res) => {
-
-				check = animate_buckets[counter + 1];
-
-				if (check){
-
-					animationBatchPromise(counter + 1)
-					.then((res) => resolve(true))
-					.catch((err) => resolve(false));
-				}
-				else resolve(true);
-			})
-			.catch((err) => resolve(false));
-		}
-		else resolve(true);
+		if (item.fn) promises.push(item.fn());
 	});
+
+	Promise.all(promises)
+	.then(() => {
+
+		if (doAnimation) window.requestAnimationFrame(() => animationLoop());
+	})
+	.catch((err) => console.log('animationLoop error: ', err.message));
 };
 
 /*

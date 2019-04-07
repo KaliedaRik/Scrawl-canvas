@@ -1,10 +1,9 @@
-import scrawl from '../source/scrawl.js'
+import scrawl from '../source/scrawl.js';
 scrawl.setScrawlPath('/source');
 
 
 // Test variables
-let reportmessage = document.querySelector('#reportmessage'),
-	artefact = scrawl.library.artefact,
+let artefact = scrawl.library.artefact,
 	current = '';
 
 
@@ -42,7 +41,7 @@ scrawl.makeAnimation({
 				});
 
 				// Render the stack once
-				scrawl.render();
+				scrawl.render().catch();
 			}
 
 			let here = myStack.here || {};

@@ -93,17 +93,18 @@ const Canvas = function (items = {}) {
 /*
 ## Canvas object prototype setup
 */
-let Cp = Canvas.prototype = Object.create(Object.prototype);
-Cp.type = 'Canvas';
-Cp.lib = 'canvas';
-Cp.artefact = true;
+let P = Canvas.prototype = Object.create(Object.prototype);
+P.type = 'Canvas';
+P.lib = 'canvas';
+P.isArtefact = true;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Cp = baseMix(Cp);
-Cp = positionMix(Cp);
-Cp = domMix(Cp);
+P = baseMix(P);
+P = positionMix(P);
+P = domMix(P);
 
 /*
 ## Define default attributes
@@ -130,14 +131,14 @@ let defaultAttributes = {
 	*/
 	fit: 'none',
 };
-Cp.defs = mergeOver(Cp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define attribute getters and setters
 */
-let G = Cp.getters,
-	S = Cp.setters,
-	D = Cp.deltaSetters;
+let G = P.getters,
+	S = P.setters,
+	D = P.deltaSetters;
 
 /*
 
@@ -222,7 +223,7 @@ D.height = function (item) {
 /*
 
 */
-Cp.fitDefaults = ['fill', 'contain', 'cover'];
+P.fitDefaults = ['fill', 'contain', 'cover'];
 S.fit = function (item) {
 
 	this.fit = (this.fitDefaults.indexOf(item) >= 0) ? item : 'none';
@@ -310,7 +311,7 @@ D.alpha = function(item) {
 /*
 
 */
-Cp.dimensionsUpdateHelper = function (dim) {
+P.dimensionsUpdateHelper = function (dim) {
 
 	let here = this.getHere(),
 		w, h;
@@ -332,7 +333,7 @@ Cp.dimensionsUpdateHelper = function (dim) {
 /*
 
 */
-Cp.setNow = function (items) {
+P.setNow = function (items) {
 
 	this.set(items);
 	this.setNowHelper();
@@ -342,7 +343,7 @@ Cp.setNow = function (items) {
 /*
 
 */
-Cp.setBase = function (items) {
+P.setBase = function (items) {
 
 	if (this.base) {
 
@@ -355,7 +356,7 @@ Cp.setBase = function (items) {
 /*
 
 */
-Cp.setAsCurrentCanvas = function () {
+P.setAsCurrentCanvas = function () {
 
 	if (this.base) setCurrentCanvas(this);
 	return this;
@@ -364,7 +365,7 @@ Cp.setAsCurrentCanvas = function () {
 /*
 
 */
-Cp.deltaSetNow = function (items) {
+P.deltaSetNow = function (items) {
 
 	this.deltaSet(items);
 	this.setNowHelper();
@@ -374,7 +375,7 @@ Cp.deltaSetNow = function (items) {
 /*
 
 */
-Cp.deltaSetBase = function (items) {
+P.deltaSetBase = function (items) {
 
 	if (this.base) {
 
@@ -387,63 +388,55 @@ Cp.deltaSetBase = function (items) {
 /*
 
 */
-Cp.setNowHelper = function () {
-
-	let i, iz,
-		cells = this.cells;
+P.setNowHelper = function () {
 
 	this.cleanCells();
-
 	this.base.renderPrecheck(this);
 
-	for (i = 0, iz = cells.length; i < iz; i++) {
-
-		cell[cells[i]].renderPrecheck(this);
-	}
+	this.cells.forEach(mycell => cell[mycell].renderPrecheck(this), this);
 };
 
 /*
 
 */
-Cp.setBaseHelper = function () {
-
-	let i, iz, item,
-		cells = this.cells;
+P.setBaseHelper = function () {
 
 	this.cleanCells();
-
 	this.base.renderPrecheck(this);
 
-	for (i = 0, iz = cells.length; i < iz; i++) {
+	this.cells.forEach(item => {
 
-		item = cell[cells[i]];
-		item.dirtyStart = true;
-		item.dirtyHandle = true;
-	}
+		let mycell = cell[item];
+
+		if (mycell) {
+
+			mycell.dirtyStart = true;
+			mycell.dirtyHandle = true;
+		}
+	});
 };
 
 /*
 
 */
-Cp.buildCell = function (items = {}) {
+P.buildCell = function (items = {}) {
 
-	let destination = items.destination || false,
-		c;
+	let destination = items.destination || false;
 
 	if (!destination) items.destination = this.base;
 	else if (destination.substring) items.destination = cell[destination] || this.base;
 
-	c = makeCell(items);
+	let mycell = makeCell(items);
 	
-	this.addCell(c);
+	this.addCell(mycell);
 	this.cleanCells();
-	return c;
+	return mycell;
 };
 
 /*
 
 */
-Cp.addCell = function (item) {
+P.addCell = function (item) {
 
 	item = (item.substring) ? item : item.name || false;
 
@@ -459,7 +452,7 @@ Cp.addCell = function (item) {
 /*
 
 */
-Cp.removeCell = function (item) {
+P.removeCell = function (item) {
 
 	item = (item.substring) ? item : item.name || false;
 
@@ -472,9 +465,11 @@ Cp.removeCell = function (item) {
 };
 
 /*
-TODO - is this all that is needed?
+TODO - is this all that is needed? 
+
+Assume that killing a cell involves also killing its associated group(s) and any entitys, tweens, filters etc currently associated with it?
 */
-Cp.killCell = function (item) {
+P.killCell = function (item) {
 
 	this.dirtyCells = true;
 	return this;
@@ -482,8 +477,11 @@ Cp.killCell = function (item) {
 
 /*
 TODO - code up this functionality
+
+Will meed to kill all cells associated with the visible canvas - except for che displayed cell?
+- Makes no sense NOT to remove the canvas from the DOM - with no cells, it is a broken thing anyway
 */
-Cp.demolish = function (removeFromDom) {
+P.demolish = function (removeFromDom) {
 
 	return true;
 };
@@ -491,57 +489,63 @@ Cp.demolish = function (removeFromDom) {
 /*
 
 */
-Cp.clear = function () {
+P.clear = function () {
 
 	let self = this;
 
-	if (this.dirtyCells) this.cleanCells();
-
 	return new Promise((resolve) => {
 
-		self.batchActionCells(0, 'clear')
+		let promises = [];
+
+		if (self.dirtyCells) self.cleanCells();
+
+		self.cellBatchesClear.forEach(mycell => promises.push(mycell.clear()));
+
+		Promise.all(promises)
 		.then(() => resolve(true))
-		.catch((err) => {
-			console.log('CANVAS CLEAR no base error', self.name, err);
-			resolve(false);
-		});
+		.catch(() => resolve(false));
 	});
 };
 
 /*
 
 */
-Cp.compile = function () {
+P.compile = function () {
 
 	let self = this;
 
-	if (this.dirtyCells) this.cleanCells();
-	
 	return new Promise((resolve) => {
 
-		self.batchActionCells(0, 'compile')
+		let promises = [];
+
+		if (self.dirtyCells) self.cleanCells();
+
+		self.cellBatchesCompile.forEach(mycell => promises.push(mycell.compile()));
+
+		Promise.all(promises)
 		.then(() => self.prepareStamp())
 		.then(() => self.stamp())
 		.then(() => resolve(true))
-		.catch((err) => {
-			console.log('CANVAS COMPILE no base error', self.name, err);
-			resolve(false);
-		});
+		.catch(() => resolve(false));
 	});
 };
 
 /*
 
 */
-Cp.show = function(){
+P.show = function(){
 
 	let self = this;
 
-	if (this.dirtyCells) this.cleanCells();
-	
 	return new Promise((resolve) => {
 
-		self.batchActionCells(0, 'show')
+		let promises = [];
+
+		if (self.dirtyCells) self.cleanCells();
+
+		self.cellBatchesShow.forEach(mycell => promises.push(mycell.show()));
+
+		Promise.all(promises)
 		.then((res) => {
 
 			self.engine.clearRect(0, 0, self.localWidth, self.localHeight);
@@ -552,163 +556,80 @@ Cp.show = function(){
 			domShow();
 			resolve(true);
 		})
-		.catch((err) => {
-			console.log('CANVAS SHOW error', self.name, err);
-			resolve(false);
-		});
+		.catch(() => resolve(false));
 	});
 };
 
 /*
 
 */
-Cp.render = function () {
+P.render = function () {
 
 	let self = this;
 
-	if (this.dirtyCells) this.cleanCells();
-	
 	return new Promise((resolve) => {
 
 		self.clear()
 		.then(() => self.compile())
 		.then(() => self.show())
 		.then(() => resolve(true))
-		.catch((err) => {
-			console.log('CANVAS RENDER error', self.name, err);
-			resolve(false);
-		});
+		.catch(() => resolve(false));
 	});
 };
 
 /*
 
 */
-Cp.cleanCells = function () {
+P.cleanCells = function () {
 
-	let i, iz, item, order,
-		tempClear = [],
+	this.dirtyCells = false;
+
+	let tempClear = [],
 		tempCompile = [],
 		tempShow = [],
-		cells = this.cells;
+		cells = this.cells,
+		order;
 
-	for (i = 0, iz = cells.length; i < iz; i++) {
+	cells.forEach(item => {
 
-		item = cell[cells[i]];
+		let mycell = cell[item];
 
-		if (item) {
+		if (mycell) {
 
-			if (item.cleared) tempClear.push(item);
+			if (mycell.cleared) tempClear.push(mycell);
 
-			if (item.compiled){
+			if (mycell.compiled) {
 
-				order = item.compileOrder;
+				order = mycell.compileOrder;
 
 				if (!tempCompile[order]) tempCompile[order] = [];
 
-				tempCompile[order].push(item);
+				tempCompile[order].push(mycell);
 			}
 
-			if (item.shown) {
+			if (mycell.shown) {
 
-				order = item.showOrder;
+				order = mycell.showOrder;
 
-				if( !tempShow[order]) tempShow[order] = [];
-				tempShow[order].push(item);
+				if (!tempShow[order]) tempShow[order] = [];
+				tempShow[order].push(mycell);
 			}
 		}
-	}
+	});
 
-	this.cellBatchesClear = [tempClear];
-	this.cellBatchesCompile = [];
-	this.cellBatchesShow = [];
-
-	for (i = 0, iz = tempCompile.length; i < iz; i++) {
-
-		item = tempCompile[i];
-		
-		if (item) this.cellBatchesCompile.push(item);
-	}
-
-	for (i = 0, iz = tempShow.length; i < iz; i++) {
-
-		item = tempShow[i];
-
-		if (item) this.cellBatchesShow.push(item);
-	}
+	this.cellBatchesClear = [].concat(tempClear);
+	this.cellBatchesCompile = tempCompile.reduce((a, v) => a.concat(v), []);
+	this.cellBatchesShow = tempShow.reduce((a, v) => a.concat(v), []);
 
 	if (this.dirtyDimensions) {
 
+		this.dirtyDimensions = false;
+
 		this.domElement.setAttribute('width', this.localWidth);
 		this.domElement.setAttribute('height', this.localHeight);
-		this.dirtyDimensions = false;
 	}
-
-	this.dirtyCells = false;
 };
 
-/*
-
-*/
-Cp.batchActionCells = function (counter, action) {
-
-	let self = this;
-
-	return new Promise((resolve) => {
-
-		let i, iz, item, check,
-			promiseArray,
-			bucket,
-			items = false;
-
-		switch (action) {
-
-			case 'clear' :
-				bucket = self.cellBatchesClear;
-				break;
-
-			case 'compile' :
-				bucket = self.cellBatchesCompile;
-				break;
-				
-			case 'show' :
-				bucket = self.cellBatchesShow;
-				break;
-			
-			default :
-				bucket = false;
-		};
-
-		if (bucket) items = bucket[counter];
-
-		if (items) {
-
-			let promiseArray = [Promise.resolve(true)];
-
-			for (i = 0, iz = items.length; i < iz; i++) {
-
-				item = items[i];
-				promiseArray.push(item[action]());
-			}
-
-			Promise.all(promiseArray)
-			.then((res) => {
-
-				check = bucket[counter + 1];
-
-				if (check) {
-
-					self.batchActionCells(counter + 1, action)
-					.then(() => resolve(true))
-					.catch((err) => resolve(false));
-				}
-				else resolve(true);
-			})
-			.catch((err) => resolve(false));
-		}
-		else resolve(true);
-	});
-};
 
 /*
 ## Exported factory function

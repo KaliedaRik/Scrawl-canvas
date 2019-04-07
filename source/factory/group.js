@@ -29,17 +29,18 @@ const Group = function (items = {}) {
 /*
 ## Group object prototype setup
 */
-let Gp = Group.prototype = Object.create(Object.prototype);
+let P = Group.prototype = Object.create(Object.prototype);
 
-Gp.type = 'Group';
-Gp.lib = 'group';
-Gp.artefact = false;
+P.type = 'Group';
+P.lib = 'group';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Gp = baseMix(Gp);
-Gp = filterMix(Gp);
+P = baseMix(P);
+P = filterMix(P);
 
 /*
 ## Define default attributes
@@ -81,13 +82,13 @@ let defaultAttributes = {
 */
 	regionRadius: 0
 };
-Gp.defs = mergeOver(Gp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define attribute getters and setters
 */
-let G = Gp.getters,
-	S = Gp.setters;
+let G = P.getters,
+	S = P.setters;
 
 G.artefacts = function () {
 	return [].concat(this.artefacts);
@@ -127,7 +128,7 @@ S.order = function (item) {
 /*
 
 */
-Gp.getHost = function (item) {
+P.getHost = function (item) {
 
 	return artefact[item] || cell[item] || null;
 };
@@ -135,7 +136,7 @@ Gp.getHost = function (item) {
 /*
 The Display Cycle is mediated through Groups - these Group functions control display functionality via a series of Promise cascades which in turn allow individual artefacts to make use of web workers, where appropriate, to achieve their stamping functionality - for example when they need to apply image filters to their output.
 */
-Gp.stamp = function () {
+P.stamp = function () {
 
 	let self = this;
 
@@ -173,7 +174,7 @@ Gp.stamp = function () {
 /*
 
 */
-Gp.forceStamp = function () {
+P.forceStamp = function () {
 
 	var self = this;
 
@@ -197,7 +198,7 @@ Gp.forceStamp = function () {
 /*
 
 */
-Gp.applyFilters = function (myCell) {
+P.applyFilters = function (myCell) {
 
 	let self = this;
 
@@ -270,7 +271,7 @@ Gp.applyFilters = function (myCell) {
 /*
 
 */
-Gp.checkForFilters = function () {
+P.checkForFilters = function () {
 
 	if(this.filters && this.filters.length){
 		return requestCell();
@@ -281,7 +282,7 @@ Gp.checkForFilters = function () {
 /*
 
 */
-Gp.sortArtefacts = function () {
+P.sortArtefacts = function () {
 
 	let i, iz, item, order, arts, b;
 
@@ -308,7 +309,7 @@ Gp.sortArtefacts = function () {
 /*
 
 */
-Gp.prepareStamp = function (myCell) {
+P.prepareStamp = function (myCell) {
 
 	let arts = this.artefactBuckets,
 		host = this.getHost(this.host),
@@ -330,9 +331,9 @@ Gp.prepareStamp = function (myCell) {
 };
 
 /*
-
+TOBERECODED
 */
-Gp.stampAction = function () {
+P.stampAction = function () {
 
 	let self = this;
 
@@ -345,9 +346,9 @@ Gp.stampAction = function () {
 };
 
 /*
-
+TOBERECODED
 */
-Gp.batchProcess = function (counter) {
+P.batchProcess = function (counter) {
 
 	let self = this;
 
@@ -380,7 +381,7 @@ Gp.batchProcess = function (counter) {
 /*
 Artefacts should be added to, and removed from, the group object using the __addArtefacts__ and __removeArtefacts__ functions. The argument can be one or more artefact object's name attribute, or the artefact object(s) itself.
 */
-Gp.addArtefacts = function (...args) {
+P.addArtefacts = function (...args) {
 
 	let i, iz, item;
 
@@ -402,7 +403,7 @@ Gp.addArtefacts = function (...args) {
 /*
 
 */
-Gp.moveArtefactsIntoGroup = function (...args) {
+P.moveArtefactsIntoGroup = function (...args) {
 
 	let i, iz, item, temp;
 
@@ -438,7 +439,7 @@ Gp.moveArtefactsIntoGroup = function (...args) {
 /*
 
 */
-Gp.removeArtefacts = function (...args) {
+P.removeArtefacts = function (...args) {
 
 	let i, iz, item;
 
@@ -460,7 +461,7 @@ Gp.removeArtefacts = function (...args) {
 /*
 Update all artefact objects using the __updateArtefacts__ function. The supplied argument will be passed on to each artefact's _setDelta_ function.
 */
-Gp.updateArtefacts = function (items) {
+P.updateArtefacts = function (items) {
 
 	this.cascadeAction(items, 'setDelta');
 	return this;
@@ -469,7 +470,7 @@ Gp.updateArtefacts = function (items) {
 /*
 Set all artefact objects using the __setArtefacts__ function. The supplied argument will be passed on to each artefact's _set_ function.
 */
-Gp.setArtefacts = function (items) {
+P.setArtefacts = function (items) {
 
 	this.cascadeAction(items, 'set');
 	return this;
@@ -478,7 +479,7 @@ Gp.setArtefacts = function (items) {
 /*
 
 */
-Gp.updateByDelta = function () {
+P.updateByDelta = function () {
 
 	this.cascadeAction(false, 'updateByDelta');
 	return this;
@@ -487,7 +488,7 @@ Gp.updateByDelta = function () {
 /*
 
 */
-Gp.reverseByDelta = function () {
+P.reverseByDelta = function () {
 
 	this.cascadeAction(false, 'reverseByDelta');
 	return this;
@@ -496,7 +497,7 @@ Gp.reverseByDelta = function () {
 /*
 
 */
-Gp.addArtefactClasses = function (items) {
+P.addArtefactClasses = function (items) {
 
 	this.cascadeAction(items, 'addClasses');
 	return this;
@@ -505,7 +506,7 @@ Gp.addArtefactClasses = function (items) {
 /*
 
 */
-Gp.removeArtefactClasses = function (items) {
+P.removeArtefactClasses = function (items) {
 
 	this.cascadeAction(items, 'removeClasses');
 	return this;
@@ -514,7 +515,7 @@ Gp.removeArtefactClasses = function (items) {
 /*
 
 */
-Gp.cascadeAction = function (items, action) {
+P.cascadeAction = function (items, action) {
 
 	let i, iz, art;
 
@@ -530,7 +531,7 @@ Gp.cascadeAction = function (items, action) {
 /*
 
 */
-Gp.setDeltaValues = function (items, method) {
+P.setDeltaValues = function (items, method) {
 
 	let i, iz, art;
 
@@ -546,7 +547,7 @@ Gp.setDeltaValues = function (items, method) {
 /*
 
 */
-Gp.addFiltersToEntitys = function () {
+P.addFiltersToEntitys = function () {
 
 	let i, iz, ent;
 
@@ -565,7 +566,7 @@ Gp.addFiltersToEntitys = function () {
 /*
 
 */
-Gp.removeFiltersFromEntitys = function (...args) {
+P.removeFiltersFromEntitys = function (...args) {
 
 	let i, iz, ent;
 
@@ -584,7 +585,7 @@ Gp.removeFiltersFromEntitys = function (...args) {
 /*
 
 */
-Gp.demolishGroup = function (removeFromDom) {
+P.demolishGroup = function (removeFromDom) {
 
 	let i, iz, art,
 		cp = [].concat(this.artefacts);
@@ -603,7 +604,7 @@ Gp.demolishGroup = function (removeFromDom) {
 /*
 The __getArtefactAt__ function checks to see if any of the group object's artefacts are located at the supplied coordinates in the argument object. The first artefact to report back as being at that coordinate will be returned by the function; where no artefacts are present at that coordinate the function returns false. The artefact with the highest order attribute value will be returned first. This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
 */
-Gp.getArtefactAt = function (items) {
+P.getArtefactAt = function (items) {
 
 	let i, art, artBuckets,
 		host = artefact[this.host],
@@ -629,7 +630,7 @@ Gp.getArtefactAt = function (items) {
 /*
 The __getAllArtefactsAt__ function returns all of the group object's artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first. The function will always return an array of artefact objects.
 */
-Gp.getAllArtefactsAt = function (items) {
+P.getAllArtefactsAt = function (items) {
 
 	let i, artBuckets, art,
 		host = artefact[this.host],

@@ -21,15 +21,16 @@ const Filter = function (items = {}) {
 /*
 ## Filter object prototype setup
 */
-let Fp = Filter.prototype = Object.create(Object.prototype);
-Fp.type = 'Filter';
-Fp.lib = 'filter';
-Fp.artefact = false;
+let P = Filter.prototype = Object.create(Object.prototype);
+P.type = 'Filter';
+P.lib = 'filter';
+P.isArtefact = false;
+P.isAsset = false;
 
 /*
 Apply mixins to prototype object
 */
-Fp = baseMix(Fp);
+P = baseMix(P);
 
 /*
 ## Define default attributes
@@ -148,7 +149,7 @@ The user-defined filter should be set as an anonymous function on the __userFilt
 */
 	userFilter: null,
 };
-Fp.defs = mergeOver(Fp.defs, defaultAttributes);
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Filter webworker pool

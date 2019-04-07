@@ -28,14 +28,14 @@ const Quaternion = function (items = {}) {
 /*
 ## Quaternion object prototype setup
 */
-let Qp = Quaternion.prototype = Object.create(Object.prototype);
+let P = Quaternion.prototype = Object.create(Object.prototype);
 
-Qp.type = 'Quaternion';
+P.type = 'Quaternion';
 
 /*
 ## Define default attributes
 */
-Qp.defs = {
+P.defs = {
 
 /*
 
@@ -65,7 +65,7 @@ Qp.defs = {
 /*
 
 */
-Qp.zero = function () {
+P.zero = function () {
 
 	let v = this.v;
 
@@ -80,7 +80,7 @@ Qp.zero = function () {
 /*
 
 */
-Qp.getMagnitude = function () {
+P.getMagnitude = function () {
 
 	let v = this.v;
 
@@ -90,7 +90,7 @@ Qp.getMagnitude = function () {
 /*
 
 */
-Qp.normalize = function () {
+P.normalize = function () {
 
 	let mag = this.getMagnitude(),
 		v = this.v;
@@ -115,7 +115,7 @@ Qp.normalize = function () {
 /*
 
 */
-Qp.set = function (items = {}) {
+P.set = function (items = {}) {
 
 	let x, y, z, n, v,
 		tv = this.v;
@@ -151,7 +151,7 @@ Qp.set = function (items = {}) {
 /*
 
 */
-Qp.setFromQuaternion = function (item) {
+P.setFromQuaternion = function (item) {
 
 	let tv, iv;
 
@@ -172,7 +172,7 @@ Qp.setFromQuaternion = function (item) {
 /*
 
 */
-Qp.quaternionMultiply = function (item) {
+P.quaternionMultiply = function (item) {
 
 	let x1, y1, z1, n1, x2, y2, z2, n2, tv, iv;
 
@@ -205,7 +205,7 @@ Qp.quaternionMultiply = function (item) {
 /*
 
 */
-Qp.getAngle = function (degree) {
+P.getAngle = function (degree) {
 
 	let result;
 
@@ -224,7 +224,7 @@ Qp.getAngle = function (degree) {
 /*
 
 */
-Qp.quaternionRotate = function (item) {
+P.quaternionRotate = function (item) {
 
 	let q4, q5;
 
@@ -246,7 +246,7 @@ Qp.quaternionRotate = function (item) {
 /*
 
 */
-Qp.setFromEuler = function (items = {}) {
+P.setFromEuler = function (items = {}) {
 
 	let pitch, yaw, roll, c1, c2, c3, s1, s2, s3,
 		cos = Math.cos,
@@ -275,7 +275,7 @@ Qp.setFromEuler = function (items = {}) {
 };
 
 /*
-Qp.checkNormal = function (tolerance) {
+P.checkNormal = function (tolerance) {
 
 	let check;
 
@@ -289,15 +289,15 @@ Qp.checkNormal = function (tolerance) {
 	return false;
 };
 
-Qp.getVector = function () {
+P.getVector = function () {
 	return this.v;
 };
 
-Qp.getScalar = function () {
+P.getScalar = function () {
 	return this.n;
 };
 
-Qp.quaternionAdd = function (item) {
+P.quaternionAdd = function (item) {
 
 	let tv, iv;
 
@@ -315,7 +315,7 @@ Qp.quaternionAdd = function (item) {
 	return this;
 };
 
-Qp.quaternionSubtract = function (item) {
+P.quaternionSubtract = function (item) {
 
 	let tv, iv;
 
@@ -333,7 +333,7 @@ Qp.quaternionSubtract = function (item) {
 	return this;
 };
 
-Qp.scalarMultiply = function (item) {
+P.scalarMultiply = function (item) {
 
 	let tv;
 
@@ -350,7 +350,7 @@ Qp.scalarMultiply = function (item) {
 	return this;
 };
 
-Qp.scalarDivide = function (item) {
+P.scalarDivide = function (item) {
 
 	let tv;
 
@@ -367,7 +367,7 @@ Qp.scalarDivide = function (item) {
 	return this;
 };
 
-Qp.conjugate = function () {
+P.conjugate = function () {
 
 	let tv = this.v;
 
@@ -378,7 +378,7 @@ Qp.conjugate = function () {
 	return this;
 };
 
-Qp.setFromVector = function (item) {
+P.setFromVector = function (item) {
 
 	let tv;
 
@@ -395,7 +395,7 @@ Qp.setFromVector = function (item) {
 	return this;
 };
 
-Qp.vectorMultiply = function (item) {
+P.vectorMultiply = function (item) {
 
 	let x1, y1, z1, n1, x2, y2, z2, tv;
 
@@ -423,7 +423,7 @@ Qp.vectorMultiply = function (item) {
 	return this;
 };
 
-Qp.getAxis = function () {
+P.getAxis = function () {
 
 	let magnitude, result,
 		v = requestVector();
@@ -438,7 +438,7 @@ Qp.getAxis = function () {
 	return result;
 };
 
-Qp.vectorRotate = function (item) {
+P.vectorRotate = function (item) {
 
 	if (isa_vector(item)) {
 		return item.rotate3d(this);
@@ -446,7 +446,7 @@ Qp.vectorRotate = function (item) {
 	return false;
 };
 
-Qp.getEulerAngles = function () {
+P.getEulerAngles = function () {
 	let sqw, sqx, sqy, sqz, unit, test,
 		result = {
 			pitch: 0,
@@ -507,7 +507,7 @@ Qp.getEulerAngles = function () {
 	return result;
 };
 
-Qp.getEulerRoll = function () {
+P.getEulerRoll = function () {
 
 	let unit, test,
 		tv = this.v,

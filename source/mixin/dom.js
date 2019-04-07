@@ -136,7 +136,7 @@ All factories using the dom mixin will add these to their prototype objects
 */
 	G.width = function () {
 
-		if(!xt(this.width)){
+		if (!xt(this.width)) {
 
 			let w = this.domElement.style.width;
 			this.width = (xt(w)) ? parseFloat(w) : this.defs.width;
@@ -149,7 +149,7 @@ All factories using the dom mixin will add these to their prototype objects
 */
 	G.height = function () {
 
-		if(!xt(this.height)){
+		if (!xt(this.height)) {
 
 			let h = this.domElement.style.height;
 
@@ -380,16 +380,16 @@ All factories using the dom mixin will add these to their prototype objects
 */
 	S.group = function (item) {
 
-		let g = group[item],
+		let grp = group[item],
 			old;
 
-		if (g) {
+		if (grp) {
 
-			old = g[this.group];
+			old = grp[this.group];
 
 			if (old) old.removeArtefacts(this.name);
 
-			g.addArtefacts(this.name);
+			grp.addArtefacts(this.name);
 			this.group = item;
 		}
 	};
@@ -428,56 +428,52 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 
 */
-	obj.checkRotationAngle = function (a) {
+	obj.checkRotationAngle = function (angle) {
 
-		if (a < -180 || a > 180) {
-			a += (a > 0) ? -360 : 360;
+		if (angle < -180 || angle > 180) {
+			angle += (angle > 0) ? -360 : 360;
 		}
 
-		return a;
+		return angle;
 	};
 
 /*
-
+Overwrites the clone function in mixin/base.js
 */
 	obj.clone = function (items = {}) {
 
-		let copied, clone, keys, key, g, host,
-			currentHost, that, i, iz;
+		let self = this,
+			regex = /^(local|dirty|current)/;
 
-		currentHost = this.currentHost;
+		let currentHost = this.currentHost;
 		delete this.currentHost;
-		copied = JSON.parse(JSON.stringify(this));
-		this.currentHost = currentHost;
+
+		let copied = JSON.parse(JSON.stringify(this));
 		copied.name = (items.name) ? items.name : generateUuid();
+		this.currentHost = currentHost;
 
-		keys = Object.keys(this);
-		that = this;
+		Object.entries(this).forEach(([key, value]) => {
 
-		for (i = 0, iz = keys.length; i < iz; i++) {
-
-			key = keys[i];
-			
-			if (/^(local|dirty|current)/.test(key)) delete copied[key];
-
-			if (isa_fn(this[key])) copied[key] = that[key];
-		}
+			if (regex.test(key)) delete copied[key];
+			if (isa_fn(this[key])) copied[key] = self[key];
+		}, this);
 
 		if (this.domElement) {
 
 			copied.domElement = this.domElement.cloneNode(true);
 			copied.domElement.id = copied.name;
-			host = artefact[this.group];
+			
+			let host = artefact[this.group];
 
 			if (host && host.domElement) host.domElement.appendChild(copied.domElement);
 		}
 
-		clone = new constructors[this.type](copied);
+		let clone = new constructors[this.type](copied);
 		clone.set(items);
 
-		g = group[this.group];
+		let grp = group[this.group];
 
-		if(g) g.addArtefacts(clone);
+		if(grp) grp.addArtefacts(clone);
 
 		return clone;
 	};
@@ -487,18 +483,16 @@ All factories using the dom mixin will add these to their prototype objects
 */
 	obj.addClasses = function (item) {
 
-		let el;
-
 		if (item.substring) {
 
-			el = this.domElement;
+			let el = this.domElement;
 
 			if (!el.className.length) el.className = item;
 			else if (' ' === el.className[el.className.length - 1]) el.className += item;
-			else el.className += ' ' + item;
+			else el.className += ` ${item}`;
 
-			return this;
 		}
+		return this;
 	};
 
 /*
@@ -506,23 +500,17 @@ All factories using the dom mixin will add these to their prototype objects
 */
 	obj.removeClasses = function (item) {
 
-		let el,
-			classes,
-			eClass,
-			search,
-			i, iz;
-
 		if (item.substring) {
 
-			el = this.domElement;
-			eClass = el.className;
-			classes = item.split();
+			let el = this.domElement,
+				eClass = el.className,
+				classes = item.split();
 
-			for (i = 0, iz = classes.length; i < iz; i++) {
+			classes.forEach(cls => {
 
-				search = new RegExp(' ?' + classes[i] + ' ?');
+				let search = new RegExp(' ?' + cls + ' ?');
 				eClass = eClass.replace(search, ' ');
-			}
+			});
 
 			el.className = eClass;
 		}
@@ -540,22 +528,21 @@ All factories using the dom mixin will add these to their prototype objects
 	};
 
 /*
-items argument is either an xy coordinate object, or an array of such objects. A hit will return the hit object with x, y and artefact attributes
+Items argument is either an xy coordinate object, or an array of such objects. A hit will return the hit object with x, y and artefact attributes
 */
 	obj.checkHit = function (items, host) {
-
-		let xMin, yMin, xMax, yMax, box, i, iz, x, y, item;
 
 		if (xt(host) && this.collides) {
 
 			if (this.checkHitMethod === 'box') {
 
-				box = this.box;
+				let box = this.box,
+					xMin, yMin, xMax, yMax, x, y;
 
-				if (!this.box || this.dirtyBox) {
+				if (!box || this.dirtyBox) {
 
-					box = this.box = this.getBox(host);
 					this.dirtyBox = false;
+					box = this.box = this.getBox(host);
 				}
 
 				if (box) {
@@ -564,28 +551,23 @@ items argument is either an xy coordinate object, or an array of such objects. A
 					yMin = box[1];
 					xMax = box[2];
 					yMax = box[3];
+
 					items = [].concat(items);
 
-					for (i = 0, iz = items.length; i < iz; i++) {
+					if (items.some(item => {
 
-						item = items[i];
 						item = isa_obj(item) ? item : {};
 
 						x = item.x;
 						y = item.y;
 
-						if (xta(x, y)) {
+						return (xta(x, y) && x >= xMin && x <= xMax && y >= yMin && y <= yMax);
 
-							if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
-
-								return {
-									x: x,
-									y: y,
-									artefact: this
-								};
-							}
-						}
-					}
+					})) return {
+						x: x,
+						y: y,
+						artefact: this
+					};
 				}
 			}
 		}
@@ -597,30 +579,33 @@ items argument is either an xy coordinate object, or an array of such objects. A
 */
 	obj.getBox = function (host) {
 
-		let xMin = 999999, yMin = 999999, xMax = -999999, yMax = -999999, 
-			cp = this.collisionPoints, 
-			here, x, y, tx, ty, client, i, iz;
+		let collisionPoints = this.collisionPoints || [];
 
-		if (cp && cp.length) {
+		if (collisionPoints.length) {
 
-			here = isa_obj(host.here) ? host.here : {};
-			x = currentCorePosition.scrollX - (here.offsetX || 0);
-			y = currentCorePosition.scrollY - (here.offsetY || 0);
+			let xMin = 999999, yMin = 999999, xMax = -999999, yMax = -999999,
+				round = Math.round,
+				tx, ty;
 
-			for (i = 0, iz = cp.length; i < iz; i++) {
+			let here = isa_obj(host.here) ? host.here : {},
+				x = currentCorePosition.scrollX - (here.offsetX || 0),
+				y = currentCorePosition.scrollY - (here.offsetY || 0);
 
-				client = cp[i].getClientRects();
+			collisionPoints.forEach(point => {
+
+				let client = point.getClientRects();
 				client = client[0];
 
 				if (client) {
-					tx = Math.round(client.left + x);
-					ty = Math.round(client.top + y);
+
+					tx = round(client.left + x);
+					ty = round(client.top + y);
 					xMin = (xMin > tx) ? tx : xMin;
 					xMax = (xMax < tx) ? tx : xMax;
 					yMin = (yMin > ty) ? ty : yMin;
 					yMax = (yMax < ty) ? ty : yMax;
 				}
-			}
+			});
 			return [xMin, yMin, xMax, yMax];
 		}
 		else return false
@@ -630,8 +615,6 @@ items argument is either an xy coordinate object, or an array of such objects. A
 
 */
 	obj.addCollisionPoints = function (...args) {
-
-		let pointsArray, el, i, iz, item, cp;
 
 		let pointMaker = function () {
 
@@ -644,54 +627,20 @@ items argument is either an xy coordinate object, or an array of such objects. A
 			return p;
 		};
 
-		cp = this.collisionPoints = [];
-		el = this.domElement;
+		let collisionPoints = this.collisionPoints = [],
+			element = this.domElement;
 
-		if (el) {
+		if (element) {
 
-			pointsArray = new Set();
+			let pointsArray = new Set();
 
-			for (i = 0, iz = args.length; i < iz; i++) {
-
-				item = args[i];
+			args.forEach(item => {
 
 				if (item.substring) {
 
 					item = item.toLowerCase();
 
 					switch (item) {
-
-						case 'ne' :
-							pointsArray.add('ne');
-							break;
-
-						case 'n' :
-							pointsArray.add('n');
-							break;
-
-						case 'nw' :
-							pointsArray.add('nw');
-							break;
-
-						case 'w' :
-							pointsArray.add('w');
-							break;
-
-						case 'sw' :
-							pointsArray.add('sw');
-							break;
-
-						case 's' :
-							pointsArray.add('s');
-							break;
-
-						case 'se' :
-							pointsArray.add('se');
-							break;
-
-						case 'e' :
-							pointsArray.add('e');
-							break;
 
 						case 'corners' :
 							pointsArray.add('ne').add('nw').add('sw').add('se');
@@ -712,64 +661,40 @@ items argument is either an xy coordinate object, or an array of such objects. A
 						case 'all' :
 							pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e').add('c');
 							break;
+
+						case 'ne' :
+						case 'e' :
+						case 'se' :
+						case 's' :
+						case 'sw' :
+						case 'w' :
+						case 'nw' :
+						case 'n' :
+							pointsArray.add(item);
+							break;
 					}
 				}
-			}
+			});
 
-			pointsArray.forEach((val) => {
+			let topArray = ['ne', 'n', 'nw'],
+				middleArray = ['e', 'w', 'c'],
+				leftArray = ['nw', 'w', 'sw'],
+				centerArray = ['n', 's', 'c'];
 
-				let pt = pointMaker();
+			pointsArray.forEach(val => {
 
-				switch (val) {
+				let point = pointMaker();
 
-					case 'ne' :
-						pt.style.top = '0%';
-						pt.style.left = '100%';
-						break;
+				if (topArray.indexOf(val) >= 0) point.style.top = '0%';
+				else if (middleArray.indexOf(val) >= 0) point.style.top = '50%';
+				else point.style.top = '100%';
 
-					case 'n' :
-						pt.style.top = '0%';
-						pt.style.left = '50%';
-						break;
+				if (leftArray.indexOf(val) >= 0) point.style.left = '0%';
+				else if (centerArray.indexOf(val) >= 0) point.style.left = '50%';
+				else point.style.left = '100%';
 
-					case 'nw' :
-						pt.style.top = '0%';
-						pt.style.left = '0%';
-						break;
-
-					case 'w' :
-						pt.style.top = '50%';
-						pt.style.left = '0%';
-						break;
-
-					case 'sw' :
-						pt.style.top = '100%';
-						pt.style.left = '0%';
-						break;
-
-					case 's' :
-						pt.style.top = '100%';
-						pt.style.left = '50%';
-						break;
-
-					case 'se' :
-						pt.style.top = '100%';
-						pt.style.left = '100%';
-						break;
-
-					case 'e' :
-						pt.style.top = '50%';
-						pt.style.left = '100%';
-						break;
-
-					case 'c' :
-						pt.style.top = '50%';
-						pt.style.left = '50%';
-						break;
-				}
-
-				el.appendChild(pt);
-				cp.push(pt);
+				element.appendChild(point);
+				collisionPoints.push(point);
 			});
 		}
 		return this;
@@ -780,27 +705,23 @@ items argument is either an xy coordinate object, or an array of such objects. A
 */
 	obj.getCollisionPointCoordinates = function (host) {
 
-		let cp = this.collisionPoints,
+		let cPoints = this.collisionPoints,
 			here = isa_obj(host.here) ? host.here : {},
 			x = currentCorePosition.scrollX - (here.offsetX || 0),
 			y = currentCorePosition.scrollY - (here.offsetY || 0),
-			client,
-			results = [],
-			result, i, iz;
+			round = Math.round,
+			results = [];
 
-		for (i = 0, iz = cp.length; i < iz; i++) {
+		this.collisionPoints.forEach((point) => {
 
-			client = cp[i].getClientRects();
+			let client = point.getClientRects();
 			client = client[0];
 			
-			if (client){
-				result = [
-					Math.round(client.left + x),
-					Math.round(client.top + y)
-				];
-				results.push(result);
-			}
-		}
+			if (client) results.push([
+				round(client.left + x),
+				round(client.top + y)
+			]);
+		});
 		return results;
 	};
 
@@ -878,86 +799,10 @@ items argument is either an xy coordinate object, or an array of such objects. A
 */
 	obj.prepareStamp = function () {
 
-		let mimic;
-
 		if (this.domElement) {
 
-			if (this.mimic) {
-
-				mimic = artefact[this.mimic];
-
-				if (mimic) {
-
-					if (this.position !== mimic.position) {
-
-						this.position = mimic.position;
-						this.dirtyPosition = true;
-						this.setPosition();
-					}
-
-					if (this.localWidth !== mimic.localWidth || this.localHeight !== mimic.localHeight) {
-
-						this.width = mimic.width;
-						this.height = mimic.height;
-						this.localWidth = mimic.localWidth;
-						this.localHeight = mimic.localHeight;
-						this.dirtyDimensions = true;
-					}
-
-					if (this.roll !== mimic.roll || this.pitch !== mimic.pitch || this.yaw !== mimic.yaw) {
-
-						this.roll = mimic.roll;
-						this.pitch = mimic.pitch;
-						this.yaw = mimic.yaw;
-						this.dirtyRotationActive = true;
-						this.dirtyRotation = true;
-						this.cleanRotation();
-					}
-
-					if (this.scale !== mimic.scale) this.scale = mimic.scale;
-
-					this.currentStart = mimic.currentStart;
-					this.dirtyStart = true;
-
-					this.currentHandle = mimic.currentHandle;
-					this.dirtyHandle = true;
-
-					this.lockXTo = mimic.lockXTo;
-					this.lockYTo = mimic.lockYTo;
-				}
-			}
-			else {
-
-				if (this.dirtyPosition) {
-
-					this.setPosition();
-					this.dirtyBox = true;
-				}
-
-				if (this.dirtyDimensions) {
-
-					this.cleanDimensions();
-					this.dirtyBox = true;
-				}
-
-				if (this.dirtyRotation) {
-
-					this.cleanRotation();
-					this.dirtyBox = true;
-				}
-
-				if (this.dirtyStart) {
-
-					this.cleanStart();
-					this.dirtyBox = true;
-				}
-
-				if (this.dirtyHandle) {
-
-					this.cleanHandle();
-					this.dirtyBox = true;
-				}
-			}
+			if (this.mimic) this.prepareMimicStamp();
+			else this.prepareDefaultStamp();
 		}
 
 		if (this.dirtyPivoted) this.updatePivotSubscribers();
@@ -974,21 +819,103 @@ items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
+	obj.prepareMimicStamp = function () {
+
+		let mimic = artefact[this.mimic];
+
+		if (mimic) {
+
+			if (this.position !== mimic.position) {
+
+				this.position = mimic.position;
+				this.dirtyPosition = true;
+				this.setPosition();
+			}
+
+			if (this.localWidth !== mimic.localWidth || this.localHeight !== mimic.localHeight) {
+
+				this.width = mimic.width;
+				this.height = mimic.height;
+				this.localWidth = mimic.localWidth;
+				this.localHeight = mimic.localHeight;
+				this.dirtyDimensions = true;
+			}
+
+			if (this.roll !== mimic.roll || this.pitch !== mimic.pitch || this.yaw !== mimic.yaw) {
+
+				this.roll = mimic.roll;
+				this.pitch = mimic.pitch;
+				this.yaw = mimic.yaw;
+				this.dirtyRotationActive = true;
+				this.dirtyRotation = true;
+				this.cleanRotation();
+			}
+
+			if (this.scale !== mimic.scale) this.scale = mimic.scale;
+
+			this.currentStart = mimic.currentStart;
+			this.dirtyStart = true;
+
+			this.currentHandle = mimic.currentHandle;
+			this.dirtyHandle = true;
+
+			this.lockXTo = mimic.lockXTo;
+			this.lockYTo = mimic.lockYTo;
+		}
+	};
+
+/*
+
+*/
+	obj.prepareDefaultStamp = function () {
+
+		if (this.dirtyPosition) {
+
+			this.setPosition();
+			this.dirtyBox = true;
+		}
+
+		if (this.dirtyDimensions) {
+
+			this.cleanDimensions();
+			this.dirtyBox = true;
+		}
+
+		if (this.dirtyRotation) {
+
+			this.cleanRotation();
+			this.dirtyBox = true;
+		}
+
+		if (this.dirtyStart) {
+
+			this.cleanStart();
+			this.dirtyBox = true;
+		}
+
+		if (this.dirtyHandle) {
+
+			this.cleanHandle();
+			this.dirtyBox = true;
+		}
+	};
+
+/*
+
+*/
 	obj.checkForResize = function () {
 
-		let e = this.domElement,
-			s = this.domElement.style,
-			eWidth, eHeight,
-			item, i, iz;
+		let element = this.domElement,
+			elementStyle = this.domElement.style;
 
-		eWidth = s.width || e.width;
-		this.width = (xt(eWidth)) ? parseFloat(eWidth) : this.defs.width;
+		let elementWidth = elementStyle.width || element.width;
+		this.width = (xt(elementWidth)) ? parseFloat(elementWidth) : this.defs.width;
 
-		eHeight = s.height || e.height;
+		let elementHeight = elementStyle.height || element.height;
 
-		if (eHeight === 'auto') eHeight = 0;
+		if (elementHeight === 'auto') elementHeight = 0;
 
-		this.height = (xt(eHeight)) ? parseFloat(eHeight) : this.defs.height;
+		this.height = (xt(elementHeight)) ? parseFloat(elementHeight) : this.defs.height;
 
 		if (this.width !== this.localWidth || this.height !== this.localHeight) {
 
@@ -997,15 +924,16 @@ items argument is either an xy coordinate object, or an array of such objects. A
 
 			if (this.groups) {
 
-				for (i = 0, iz = this.groups.length; i < iz; i++) {
+				this.groups.forEach((grp) => {
 
-					item = group[this.groups[i]];
-					item.setArtefacts({
+					let item = group[grp];
+
+					if (item) item.setArtefacts({
 						dirtyDimensions: true,
 						dirtyHandle: true,
 						dirtyStart: true
 					});
-				}
+				});
 			}
 		}
 	};
@@ -1065,6 +993,7 @@ items argument is either an xy coordinate object, or an array of such objects. A
 				x = self.updateStampX() - ch.x || 0;
 				y = self.updateStampY() - ch.y || 0;
 				z = ct.z;
+				
 				if (self.dirtyRotationActive || self.rotateOnPivot) {
 
 					if (self.rotateOnPivot) rotor = requestQuaternion(self.rotation).quaternionRotate(pivot.rotation);
@@ -1096,7 +1025,6 @@ items argument is either an xy coordinate object, or an array of such objects. A
 				self.dirtyStart = false;
 				self.dirtyRotation = false;
 				self.dirtyOffset = false;
-
 				if (notifyForShow) {
 
 					addDomShowElement(this.name);

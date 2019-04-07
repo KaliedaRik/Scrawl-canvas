@@ -170,12 +170,9 @@ All factories using the filter mixin will add these to their prototype objects
 
 		items = [].concat(items);
 
-		let newTargets = [],
-			item, i, iz, result;
+		let newTargets = [];
 
-		for (i = 0, iz = items.length; i < iz; i++) {
-
-			item = items[i];
+		items.forEach(item => {
 
 			if (isa_fn(item)) {
 
@@ -184,11 +181,11 @@ All factories using the filter mixin will add these to their prototype objects
 			else if (isa_obj(item) && xt(item.name)) newTargets.push(item);
 			else {
 
-				result = locateTarget(item);
+				let result = locateTarget(item);
 
 				if (result) newTargets.push(result);
 			}
-		}
+		});
 
 		this.targets = newTargets;
 
@@ -202,12 +199,8 @@ All factories using the filter mixin will add these to their prototype objects
 
 		items = [].concat(items);
 
-		let item, i, iz, result;
+		items.forEach(item => {
 
-		for (i = 0, iz = items.length; i < iz; i++) {
-
-			item = items[i];
-			
 			if (typeof item === 'function') {
 
 				if (typeof item.set === 'function') this.targets.push(item);
@@ -218,97 +211,86 @@ All factories using the filter mixin will add these to their prototype objects
 
 				if (result) this.targets.push(result);
 			}
-		}
+		}, this);
+
 		return this;
 	};
 
 /*
 
 */
-	// WARNING - possibly plays with scrawl names???
 	obj.removeFromTargets = function (items) {
 
 		items = [].concat(items);
 
-		let item, i, iz, j, jz, k, kz,
-			t, type, name, doRemove, myObj, objName,
-			identifiers = [],
+		let identifiers = [],
 			newTargets = [].concat(this.targets);
 
-		for (j = 0, jz = newTargets.length; j < jz; j++) {
+		newTargets.forEach(target => {
 
-			t = newTargets[j];
-			type = t.type || 'unknown';
-			name = t.name || 'unnamed';
+			let type = target.type || 'unknown',
+				name = target.name || 'unnamed';
 
 			if (type !== 'unknown' && name !== 'unnamed') identifiers.push(`${type}_${name}`);
-		}
+		});
 
-		for (i = 0, iz = items.length; i < iz; i++) {
+		items.forEach(item => {
 
-			item = items[i];
-			myObj = false;
+			let myObj;
 			
 			if (typeof item === 'function') myObj = item;
-			else myObj = my.locateTarget(item);
+			else myObj = locateTarget(item);
 
 			if (myObj) {
 
-				type = myObj.type || 'unknown';
-				name = myObj.name || 'unnamed';
+				let type = myObj.type || 'unknown',
+					name = myObj.name || 'unnamed';
 
 				if (type !== 'unknown' && name !== 'unnamed') {
 
-					objName = `${type}_${name}`;
-					doRemove = identifiers.indexOf(objName);
+					let objName = `${type}_${name}`,
+						doRemove = identifiers.indexOf(objName);
 
 					if (doRemove >= 0) newTargets[doRemove] = false;
 				}
 			}
-		}
+		});
 
 		this.targets = [];
 
-		for (k = 0, kz = newTargets; k < kz; k++) {
+		newTargets.forEach(target => {
 
-			if (newTargets[k]) this.targets.push(newTargets[k]);
-		}
+			if (target) this.targets.push(target);
+		}, this);
 
 		return this;
 	};
 
 /*
-
+Overwrites the clone function in mixin/base.js
 */
 	obj.clone = function (items = {}) {
 
-		let copied, clone, keys, key,
-			that, i, iz, ticker,
-			a = animationtickers;
+		let self = this,
+			regex = /^(local|dirty|current)/;
 
-		copied = JSON.parse(JSON.stringify(this));
+		let copied = JSON.parse(JSON.stringify(this));
 		copied.name = (items.name) ? items.name : generateUuid();
 
-		keys = Object.keys(this);
-		that = this;
+		Object.entries(this).forEach(([key, value]) => {
 
-		for (i = 0, iz = keys.length; i < iz; i++) {
-
-			key = keys[i];
-			
-			if (/^(local|dirty|current)/.test(key)) delete copied[key];
-
-			if (isa_fn(this[key])) copied[key] = that[key];
-		}
+			if (regex.test(key)) delete copied[key];
+			if (isa_fn(this[key])) copied[key] = self[key];
+		}, this);
 
 		if (items.useNewTicker) {
 
+			let ticker = animationtickers[this.ticker];
 			delete copied.ticker;
-			ticker = a[this.ticker];
 			copied.cycles = (xt(items.cycles)) ? items.cycles : (ticker) ? ticker.cycles : 1;
 		}
 
-		clone = new constructors[this.type](copied);
+		let clone = new constructors[this.type](copied);
 		clone.set(items);
 
 		return clone;
@@ -329,8 +311,7 @@ All factories using the filter mixin will add these to their prototype objects
 		}
 		else if (this.ticker) this.removeFromTicker(this.ticker);
 
-		delete tween[this.name];
-		removeItem(tweennames, this.name);
+		this.deregister();
 
 		return true;
 	};

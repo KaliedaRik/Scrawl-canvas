@@ -19,7 +19,7 @@ const UserObject = function (items = {}) {
 /*
 ## UserObject object prototype setup
 */
-let Uop = UserObject.prototype = Object.create(Object.prototype);
+let P = UserObject.prototype = Object.create(Object.prototype);
 
 
 /*
@@ -29,8 +29,9 @@ let Uop = UserObject.prototype = Object.create(Object.prototype);
 /*
 
 */
-Uop.set = function (items = {}) {
+P.set = function (items = {}) {
 
+// console.log('userObject set', this.name, items);
 	let keys = Object.keys(items),
 		i, iz, key;
 
