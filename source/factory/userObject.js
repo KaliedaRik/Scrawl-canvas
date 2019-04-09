@@ -31,7 +31,6 @@ let P = UserObject.prototype = Object.create(Object.prototype);
 */
 P.set = function (items = {}) {
 
-// console.log('userObject set', this.name, items);
 	let keys = Object.keys(items),
 		i, iz, key;
 

@@ -177,7 +177,6 @@ Text baseline value for single-line Phrase entitys set to follow a Path entity p
 */
 P.set = function (items) {
 
-// console.log('state set', this.name, items);
 	let key, i, iz,
 		keys = Object.keys(items),
 		d = this.defs;

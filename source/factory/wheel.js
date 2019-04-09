@@ -314,9 +314,6 @@ P.cleanPathObject = function () {
 	starts = this.startAngle * radian;
 	ends = this.endAngle * radian;
 
-	// p.beginPath();
-	// p.moveTo(x, y);
-	// p.arc(0, 0, radius, starts, ends, !this.clockwise);
 	p.arc(x, y, radius, starts, ends, !this.clockwise);
 
 	if (this.includeCenter) {

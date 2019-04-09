@@ -154,7 +154,6 @@ S.completeAction = function (item) {
 */
 P.set = function (items) {
 
-// console.log('tween set', this.name, items);
 	let key, i, iz, s,
 		setters = this.setters,
 		keys = Object.keys(items),

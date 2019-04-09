@@ -88,7 +88,6 @@ S.triggered = function (item) {
 */
 P.set = function (items = {}) {
 
-// console.log('action set', this.name, items);
 	if (items) {
 
 		let setters = this.setters,

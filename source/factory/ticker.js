@@ -2,7 +2,7 @@
 # Ticker factory
 */
 import { constructors, animationtickers, animationtickersnames, tween } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt, xtGet, bucketSort, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, xtGet, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
 
@@ -312,7 +312,25 @@ P.setEffectiveDuration = function() {
 */
 P.sortSubscribers = function () {
 
-	if(this.subscribers.length > 1) this.subscribers = bucketSort('tween', 'effectiveTime', this.subscribers);
+	let mysubscribers = this.subscribers;
+
+	if(mysubscribers.length > 1) {
+
+		let subs = [].concat(mysubscribers),
+			floor = Math.floor,
+			buckets = [];
+
+		subs.forEach(obj => {
+
+			let effectiveTime = floor(obj.effectiveTime) || 0;
+
+			if (!buckets[effectiveTime]) buckets[effectiveTime] = [];
+
+			buckets[effectiveTime].push(obj);
+		});
+
+		this.subscribers = buckets.reduce((a, v) => a.concat(v), []);
+	}
 };
 
 /*
@@ -696,16 +714,34 @@ const coreTickersAnimation = makeAnimation({
 			if (tickerAnimationsFlag) {
 
 				tickerAnimationsFlag = false;
-				if (tickerAnimations.length > 1) tickerAnimations = bucketSort('animationtickers', 'order', tickerAnimations);
+
+				if (tickerAnimations.length > 1) {
+
+					let tans = [].concat(tickerAnimations),
+						floor = Math.floor,
+						buckets = [];
+
+					tans.forEach(name => {
+
+						let obj = animationtickers[name],
+							order = floor(obj.order) || 0;
+
+						if (!buckets[order]) buckets[order] = [];
+
+						buckets[order].push(obj);
+					});
+
+					tickerAnimations = buckets.reduce((a, v) => a.concat(v), []);
+				}
 			}
 
-			for (i = 0, iz = tickerAnimations.length; i < iz; i++) {
+			tickerAnimations.forEach(name => {
 
-				t = animationtickers[tickerAnimations[i]];
-				
-				if (t && t.fn) t.fn();
-			}
+				let obj = animationtickers[name];
 
+				if (obj && obj.fn) obj.fn();
+
+			});
 			resolve(true);
 		});
 	}

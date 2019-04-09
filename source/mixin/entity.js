@@ -278,7 +278,6 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 */
 	obj.get = function (item) {
 
-// console.log('entity get', this.name, item);
 		let getter = this.getters[item];
 
 		if (getter) return getter.call(this);
@@ -311,7 +310,6 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 */
 	obj.set = function (items = {}) {
 
-// console.log('entity set', this.name, items);
 		if (items) {
 
 			let setters = this.setters,

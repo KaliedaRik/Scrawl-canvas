@@ -81,7 +81,6 @@ Retrieve an attribute value using the __get__ function. While many attributes ca
 */
 	obj.get = function (item) {
 
-// console.log('base get', this.name, item);
 		let getter = this.getters[item];
 
 		if (getter) return getter.call(this);
@@ -111,7 +110,6 @@ Set an attribute value using the __set__ function. It is extremely important tha
 */
 	obj.set = function (items = {}) {
 
-// console.log('base set', this.name, items);
 		if (items) {
 
 			let setters = this.setters,

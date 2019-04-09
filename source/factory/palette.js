@@ -93,7 +93,6 @@ S.stops = defaultNonReturnFunction;
 */
 P.set = function (items = {}) {
 
-// console.log('palette set', this.name, items);
 	let keys = Object.keys(items),
 		i, iz, key;
 

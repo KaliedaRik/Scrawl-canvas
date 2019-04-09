@@ -2,7 +2,7 @@
 # Group factory
 */
 import { constructors, cell, artefact, group, groupnames, entity } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, bucketSort } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
 
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
 import { requestCell, releaseCell } from './cell.js';
@@ -146,9 +146,6 @@ P.stamp = function () {
 
 		if (self.visibility) {
 
-			// need a way to (intelligently) integrate filters and displace maps
-			// - particularly as the map is really a form of filter ...
-			// - but I want displacement work handled in a dedicated displacement worker
 			filterCell = self.checkForFilters();
 			self.sortArtefacts();
 
@@ -280,29 +277,29 @@ P.checkForFilters = function () {
 };
 
 /*
-
+REPLACE call to bucketSort with own functionality here
+- the key is that artefactBuckets MUST be a flat array
 */
 P.sortArtefacts = function () {
-
-	let i, iz, item, order, arts, b;
 
 	if (this.batchResort) {
 
 		this.batchResort = false;
 
-		this.artefacts = bucketSort('artefact', 'order', this.artefacts);
-		arts = this.artefacts;
+		let floor = Math.floor,
+			buckets = [];
+		
+		this.artefacts.forEach(name => {
 
-		if (Array.isArray(this.artefactBuckets)) this.artefactBuckets.length = 0;
-		else this.artefactBuckets = [];
+			let obj = artefact[name],
+				order = floor(obj.order) || 0;
 
-		b = this.artefactBuckets;
+			if (!buckets[order]) buckets[order] = [];
 
-		for (i = 0, iz = arts.length; i < iz; i++) {
+			buckets[order].push(obj);
+		});
 
-			item = artefact[arts[i]];
-			if (item) b.push(item);
-		}
+ 		this.artefactBuckets = buckets.reduce((a, v) => a.concat(v), []);
 	}
 };
 
@@ -311,9 +308,8 @@ P.sortArtefacts = function () {
 */
 P.prepareStamp = function (myCell) {
 
-	let arts = this.artefactBuckets,
-		host = this.getHost(this.host),
-		i, iz, item;
+	let artefactBuckets = this.artefactBuckets,
+		host = this.getHost(this.host);
 
 	if (myCell && myCell.element) {
 
@@ -321,61 +317,43 @@ P.prepareStamp = function (myCell) {
 		myCell.height = myCell.element.height = host.localHeight;
 	}
 
-	for (i = 0, iz = arts.length; i < iz; i++) {
+	artefactBuckets.forEach(item => {
 
-		item = arts[i];
 		item.currentHost = (myCell && item.lib === 'entity') ? myCell : host;
 		item.updateByDelta();
 		item.prepareStamp();
-	}
+	});
 };
 
 /*
-TOBERECODED
+
 */
 P.stampAction = function () {
 
-	let self = this;
+	let artefactBuckets = this.artefactBuckets;
 
-	return new Promise((resolve) => {
+	let next = (counter) => {
 
-		self.batchProcess(0)
-		.then((res) => resolve(true))
-		.catch((err) => resolve(false));
-	});
-};
+		return new Promise((resolve) => {
 
-/*
-TOBERECODED
-*/
-P.batchProcess = function (counter) {
+			let art = artefactBuckets[counter];
 
-	let self = this;
+			if (art && art.stamp) {
 
-	return new Promise((resolve) => {
+				art.stamp()
+				.then(() => {
 
-		let i, iz, check,
-			item = self.artefactBuckets[counter];
+					next(counter + 1)
+					.then(() => resolve(true))
+					.catch(() => resolve(false));
+				})
+				.catch((err) => resolve(false));
+			}
+			else resolve(true)
+		});
+	};
 
-		if (item) {
-
-			item.stamp()
-			.then((res) => {
-
-				check = self.artefactBuckets[counter + 1];
-
-				if (check) {
-
-					self.batchProcess(counter + 1)
-					.then((res) => resolve(true))
-					.catch((err) => resolve(false));
-				}
-				else resolve(true);
-			})
-			.catch((err) => resolve(false));
-		}
-		else resolve(true)
-	});
+	return next(0);
 };
 
 /*
@@ -383,18 +361,14 @@ Artefacts should be added to, and removed from, the group object using the __add
 */
 P.addArtefacts = function (...args) {
 
-	let i, iz, item;
-
-	for(i = 0, iz = args.length; i < iz; i++){
-
-		item = args[i];
+	args.forEach(item => {
 
 		if (item) {
 
 			if (item.substring) pushUnique(this.artefacts, item);
 			else if (item.name) pushUnique(this.artefacts, item.name);
 		}
-	}
+	}, this);
 
 	this.batchResort = true;
 	return this;
@@ -405,13 +379,11 @@ P.addArtefacts = function (...args) {
 */
 P.moveArtefactsIntoGroup = function (...args) {
 
-	let i, iz, item, temp;
+	args.forEach(item => {
 
-	for (i = 0, iz = args.length; i < iz; i++) {
-
-		item = args[i];
-		
 		if (item) {
+
+			let temp;
 
 			if (item.substring) {
 
@@ -430,7 +402,7 @@ P.moveArtefactsIntoGroup = function (...args) {
 				pushUnique(this.artefacts, item.name);
 			}
 		}
-	}
+	}, this);
 
 	this.batchResort = true;
 	return this;
@@ -441,18 +413,14 @@ P.moveArtefactsIntoGroup = function (...args) {
 */
 P.removeArtefacts = function (...args) {
 
-	let i, iz, item;
-
-	for (i = 0, iz = args.length; i < iz; i++) {
-
-		item = args[i];
+	args.forEach(item => {
 
 		if (item) {
 
 			if (item.substring) removeItem(this.artefacts, item);
 			else if (item.name) removeItem(this.artefacts, item.name);
 		}
-	}
+	}, this);
 
 	this.batchResort = true;
 	return this;
@@ -517,14 +485,12 @@ P.removeArtefactClasses = function (items) {
 */
 P.cascadeAction = function (items, action) {
 
-	let i, iz, art;
+	this.artefacts.forEach(name => {
 
-	for (i = 0, iz = this.artefacts.length; i < iz; i++) {
-
-		art = artefact[this.artefacts[i]];
+		let art = artefact[name];
 		
 		if(art && art[action]) art[action](items);
-	}
+	});
 	return this;
 };
 
@@ -533,14 +499,12 @@ P.cascadeAction = function (items, action) {
 */
 P.setDeltaValues = function (items, method) {
 
-	let i, iz, art;
+	this.artefacts.forEach(name => {
 
-	for (i = 0, iz = this.artefacts.length; i < iz; i++) {
-
-		art = artefact[this.artefacts[i]];
+		let art = artefact[name];
 
 		if (art && art.setDeltaValues) art.setDeltaValues(items, method);
-	}
+	});
 	return this;
 };
 
@@ -549,16 +513,14 @@ P.setDeltaValues = function (items, method) {
 */
 P.addFiltersToEntitys = function () {
 
-	let i, iz, ent;
-
 	if (this.filters) {
 
-		for (i = 0, iz = this.artefacts.length; i < iz; i++) {
+		this.artefacts.forEach(name => {
 
-			ent = entity[this.artefacts[i]];
+			let ent = entity[name];
 			
 			if (ent && ent.addFilters) ent.addFilters.apply(ent, arguments);
-		}
+		});
 	}
 	return this;
 };
@@ -568,16 +530,14 @@ P.addFiltersToEntitys = function () {
 */
 P.removeFiltersFromEntitys = function (...args) {
 
-	let i, iz, ent;
-
 	if (this.filters) {
 
-		for (i = 0, iz = this.artefacts.length; i < iz; i++) {
+		this.artefacts.forEach(name => {
 
-			ent = entity[this.artefacts[i]];
+			let ent = entity[name];
 
 			if (ent && ent.removeFilters) ent.removeFilters.apply(ent, arguments);
-		}
+		});
 	}
 	return this;
 };
@@ -587,15 +547,15 @@ P.removeFiltersFromEntitys = function (...args) {
 */
 P.demolishGroup = function (removeFromDom) {
 
-	let i, iz, art,
-		cp = [].concat(this.artefacts);
+	let cp = [].concat(this.artefacts);
 
-	for (i = 0, iz = cp.length; i < iz; i++) {
+	cp.forEach(name => {
 
-		art = artefact[cp[i]];
+		let art = artefact[name];
 
 		if (art && art.demolish) art.demolish(removeFromDom);
-	}
+	});
+
 	removeItem(groupnames, this.name);
 	delete group[this.name];
 	return true;
@@ -606,20 +566,18 @@ The __getArtefactAt__ function checks to see if any of the group object's artefa
 */
 P.getArtefactAt = function (items) {
 
-	let i, art, artBuckets,
-		host = artefact[this.host],
-		result;
+	let host = artefact[this.host],
+		artBuckets = this.artefactBuckets;
 
 	this.sortArtefacts();
-	artBuckets = this.artefactBuckets;
 
-	for (i = artBuckets.length - 1; i >= 0; i--) {
+	for (let i = artBuckets.length - 1; i >= 0; i--) {
 
-		art = artBuckets[i];
+		let art = artBuckets[i];
 		
 		if (art) {
 
-			result = art.checkHit(items, host);
+			let result = art.checkHit(items, host);
 
 			if (result) return result;
 		}
@@ -629,29 +587,29 @@ P.getArtefactAt = function (items) {
 
 /*
 The __getAllArtefactsAt__ function returns all of the group object's artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first. The function will always return an array of artefact objects.
+
+There's scope here to use a Set?
 */
 P.getAllArtefactsAt = function (items) {
 
-	let i, artBuckets, art,
-		host = artefact[this.host],
-		result, hit,
+	let host = artefact[this.host],
+		artBuckets = this.artefactBuckets,
 		resultNames = [],
 		results = [];
 
 	this.sortArtefacts();
-	artBuckets = this.artefactBuckets;
+	
+	for (let i = artBuckets.length - 1; i >= 0; i--) {
 
-	for (i = artBuckets.length - 1; i >= 0; i--) {
-
-		art = artBuckets[i];
+		let art = artBuckets[i];
 		
 		if (art) {
 
-			result = art.checkHit(items, host);
+			let result = art.checkHit(items, host);
 			
 			if (result && result.artefact) {
 
-				hit = result.artefact;
+				let hit = result.artefact;
 
 				if (resultNames.indexOf(hit.name) < 0) {
 

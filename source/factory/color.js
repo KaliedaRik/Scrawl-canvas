@@ -98,8 +98,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 P.get = function (item) {
 
-	let undef, g, d, i;
-
 	if (!xt(item)) {
 
 		if (this.opaque) return `rgb(${this.r || 0}, ${this.g || 0}, ${this.b || 0})`;
@@ -112,42 +110,41 @@ P.get = function (item) {
 	}
 	else{
 
-		g = this.getters[item];
-		
-		if (g) return g.call(this);
+		let getter = this.getters[item];
+
+		if (getter) return getter.call(this);
+
 		else {
 
-			d = this.defs[item];
-			
-			if (typeof d !== 'undefined') {
-			
-				i = this[item];
-				return (typeof i !== 'undefined') ? i : d;
+			let def = this.defs[item];
+
+			if (typeof def != 'undefined') {
+
+				let val = this[item];
+				return (typeof val != 'undefined') ? val : def;
 			}
-			else return undef;
+			return undef;
 		}
 	}
 };
 
 P.set = function (items = {}) {
 
-// console.log('color set', this.name, items);
-	let key, i, iz, s,
-		setters = this.setters,
-		keys = Object.keys(items),
-		d = this.defs;
+	if (items) {
 
-	for (i = 0, iz = keys.length; i < iz; i++) {
+		let setters = this.setters,
+			defs = this.defs;
 
-		key = keys[i];
-		
-		if (key !== 'name') {
+		Object.entries(items).forEach(([key, value]) => {
 
-			s = setters[key];
+			if (key !== 'name') {
 
-			if (s) s.call(this, items[key]);
-			else if (typeof d[key] !== 'undefined') this[key] = items[key];
-		}
+				let predefined = setters[key];
+
+				if (predefined) predefined.call(this, value);
+				else if (typeof defs[key] !== 'undefined') this[key] = value;
+			}
+		}, this);
 	}
 
 	if (items.random) this.generateRandomColor(items);
@@ -157,37 +154,11 @@ P.set = function (items = {}) {
 	return this;
 };
 
-P.setDelta = function (items = {}) {
-
-	let key, i, iz, s, item,
-		setters = this.deltaSetters,
-		keys = Object.keys(items),
-		d = this.defs;
-
-	for (i = 0, iz = keys.length; i < iz; i++) {
-
-		key = keys[i];
-
-		if (key !== 'name') {
-
-			item = items[key];
-			s = setters[key];
-			
-			if (s) s.call(this, item);
-			else if (typeof d[key] !== 'undefined') this[key] = addStrings(this[key], item);
-		}
-	}
-
-	return this;
-};
-
 P.clone = function (items = {}) {
 
-	let a, b, c;
-
-	a = this.parse();
-	b = mergeOver(a, items);
-	c = makeColor(b);
+	let a = this.parse(),
+		b = mergeOver(a, items),
+		c = makeColor(b);
 
 	if (items.random) {
 		delete c.r;
@@ -212,16 +183,15 @@ P.getData = function () {
 P.generateRandomColor = function (items = {}) {
 
 	let round = Math.round,
-		rnd = Math.random,
-		rMax, gMax, bMax, aMax, rMin, gMin, bMin, aMin, a;
+		rnd = Math.random;
 
-	rMax = this.rMax = xtGet(items.rMax, this.rMax, 255);
-	gMax = this.gMax = xtGet(items.gMax, this.gMax, 255);
-	bMax = this.bMax = xtGet(items.bMax, this.bMax, 255);
+	let rMax = this.rMax = xtGet(items.rMax, this.rMax, 255),
+		gMax = this.gMax = xtGet(items.gMax, this.gMax, 255),
+		bMax = this.bMax = xtGet(items.bMax, this.bMax, 255);
 
-	rMin = this.rMin = xtGet(items.rMin, this.rMin, 0);
-	gMin = this.gMin = xtGet(items.gMin, this.gMin, 0);
-	bMin = this.bMin = xtGet(items.bMin, this.bMin, 0);
+	let rMin = this.rMin = xtGet(items.rMin, this.rMin, 0),
+		gMin = this.gMin = xtGet(items.gMin, this.gMin, 0),
+		bMin = this.bMin = xtGet(items.bMin, this.bMin, 0);
 
 	this.r = items.r || round((rnd() * (rMax - rMin)) + rMin);
 	this.g = items.g || round((rnd() * (gMax - gMin)) + gMin);
@@ -259,24 +229,21 @@ P.updateArray = ['r', 'g', 'b', 'a'];
 
 P.update = function () {
 
-	let i, iz, item,
-		list = this.updateArray,
-		col, shift, min, max, bounce, temp;
+	let list = this.updateArray;
 
 	if (this.rShift || this.gShift || this.bShift || this.aShift) {
 
-		for (i = 0, iz = list.length; i < iz; i++) {
-		
-			item = list[i];
-			shift = this[item + 'Shift'];
+		list.forEach(item => {
+
+			let shift = this[item + 'Shift'];
 		
 			if (shift) {
 
-				col = this[item];
-				min = this[item + 'Min'];
-				max = this[item + 'Max'];
-				bounce = this[item + 'Bounce'];
-				temp = col + shift;
+				let col = this[item],
+					min = this[`${item}Min`],
+					max = this[`${item}Max`],
+					bounce = this[`${item}Bounce`],
+					temp = col + shift;
 
 				if (temp > max || temp < min) {
 
@@ -289,11 +256,10 @@ P.update = function () {
 				}
 				
 				this[item] = temp;
-				this[item + 'Shift'] = shift;
+				this[`${item}Shift`] = shift;
 			}
-		}
+		}, this);
 	}
-
 	return this;
 };
 

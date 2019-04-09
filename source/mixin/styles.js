@@ -308,7 +308,6 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 */
 	obj.set = function (items = {}) {
 
-// console.log('styles set', this.name, items);
 		if (items) {
 
 			let setters = this.setters,

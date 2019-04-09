@@ -89,9 +89,6 @@ S.height = defaultNonReturnFunction;
 S.handleX = defaultNonReturnFunction;
 S.handleY = defaultNonReturnFunction;
 S.handle = defaultNonReturnFunction;
-// S.offsetX = defaultNonReturnFunction;
-// S.offsetY = defaultNonReturnFunction;
-// S.offset = defaultNonReturnFunction;
 S.scale = defaultNonReturnFunction;
 S.roll = defaultNonReturnFunction;
 
@@ -134,9 +131,6 @@ D.height = defaultNonReturnFunction;
 D.handleX = defaultNonReturnFunction;
 D.handleY = defaultNonReturnFunction;
 D.handle = defaultNonReturnFunction;
-// D.offsetX = defaultNonReturnFunction;
-// D.offsetY = defaultNonReturnFunction;
-// D.offset = defaultNonReturnFunction;
 D.scale = defaultNonReturnFunction;
 D.roll = defaultNonReturnFunction;
 

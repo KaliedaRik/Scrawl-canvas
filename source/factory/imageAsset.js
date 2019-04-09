@@ -77,22 +77,20 @@ Arguments can be either string urls - 'http://www.example.com/path/to/image/flow
 */
 const importImage = function (...args) {
 
-	let i, iz,
-		reg = /.*\/(.*?)\./;
+	let reg = /.*\/(.*?)\./;
 
-	for (i = 0, iz = args.length; i < iz; i++) {
+	args.forEach(item => {
 
-		let item, match, name, url, flag, className, visibility, parent, img, image,
+		let name, url, className, visibility, parent,
 			results = [];
 
-		item = args[i];
-		flag = false;
+		let flag = false;
 
 		if (item.substring) {
 
-			match = reg.exec(item);
-			name = (match && match[1]) ? match[1] : '';
+			let match = reg.exec(item);
 
+			name = (match && match[1]) ? match[1] : '';
 			url = item;
 			className = '';
 			visibility = false;
@@ -119,11 +117,11 @@ const importImage = function (...args) {
 
 		if (flag) {
 
-			image = makeImageAsset({
+			let image = makeImageAsset({
 				name: name,
 			});
 
-			img = document.createElement('img');
+			let img = document.createElement('img');
 
 			img.name = name;
 			img.className = className;
@@ -145,7 +143,7 @@ const importImage = function (...args) {
 			results.push(name);
 		}
 		else results.push(false);
-	}
+	});
 	return results;
 };
 
@@ -158,26 +156,24 @@ Note: unlike in Scrawl-canvas v7, img elements imported from the DOM will always
 */
 const importDomImage = function (query) {
 
-	let items, i, iz,
-		reg = /.*\/(.*?)\./;
+	let reg = /.*\/(.*?)\./;
 
-	items = document.querySelectorAll(query);
+	let items = document.querySelectorAll(query);
 
-	for (i = 0, iz = items.length; i < iz; i++) {
+	items.forEach(item => {
 
-		let item = items[i],
-			image, name, match;
+		let name;
 
 		if (['IMG', 'PICTURE'].indexOf(item.tagName.toUpperCase()) >= 0) {
 
 			if (item.id || item.name) name = item.id || item.name;
 			else {
 
-				match = reg.exec(item.src);
+				let match = reg.exec(item.src);
 				name = (match && match[1]) ? match[1] : '';
 			}
 
-			image = makeImageAsset({
+			let image = makeImageAsset({
 				name: name,
 				source: item,
 			});
@@ -192,7 +188,7 @@ const importDomImage = function (query) {
 				};
 			}
 		}
-	}
+	});
 };
 
 /*

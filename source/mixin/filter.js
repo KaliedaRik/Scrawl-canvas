@@ -2,7 +2,7 @@
 # Filter mixin
 */
 import { filter } from '../core/library.js';
-import { bucketSort, mergeOver, pushUnique, removeItem } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
 
 export default function (obj = {}) {
 
@@ -76,25 +76,23 @@ All factories using the filter mixin will add these to their prototype objects
 */
 	obj.cleanFilters = function () {
 
-		// 1. unset the flag
 		this.dirtyFilters = false;
 
-		// 2. bucket sort the filters array (made up of filter.name strings), on order attribute
-		if (this.filters.length > 1) bucketSort('filter', 'order', this.filters);
+		let myfilters = this.filters,
+			floor = Math.floor,
+			buckets = [];
 
-		// 3. create/reset the currentFilters array, which holds the filters objects (in order)
-		if (!Array.isArray(this.currentFilters)) this.currentFilters = [];
-		else this.currentFilters.length = 0;
+		myfilters.forEach(name => {
 
-		// 4. populate the currentFilters array
-		this.filters.forEach(item => {
+			let obj = filter[name],
+				order = floor(obj.order) || 0;
 
-			let filt;
+			if (!buckets[order]) buckets[order] = [];
 
-			if (item) filt = filter[item];
-			if (filt) this.currentFilters.push(filt);
+			buckets[order].push(obj);
+		});
 
-		}, this);
+		this.currentFilters = buckets.reduce((a, v) => a.concat(v), []);
 	};
 
 /*

@@ -29,58 +29,6 @@ const addStrings = (current, delta) => {
 };
 
 /*
-__bucketSort__ sorts the items in a scrawl-canvas library array (generally a -name array) based on an attribute value for an object in a related scrawl-canvas library object. *Private function*
-
-Note - to be deprecated
-*/ 
-const bucketSort = (section, attribute, a) => {
-
-	let s, b, i, iz, m, o, f, j, jz;
-
-	if (Array.isArray(a) && a.length > 1) {
-
-		s = library[section];
-
-		if (s) {
-
-			b = []
-			b.push([]);
-			
-			for (i = 0, iz = a.length; i < iz; i++) {
-
-				m = a[i];
-				o = 0;
-				
-				if (m && s[m] && s[m][attribute]) o = Math.floor(s[m][attribute]);
-
-				if (!b[o]) b[o] = [];
-
-				b[o].push(a[i]);
-			}
-
-			f = [];
-
-			for (i = 0, iz = b.length; i < iz; i++) {
-
-				m = b[i];
-				
-				if (m) {
-
-					for (j = 0, jz = m.length; j < jz; j++) {
-
-						f.push(m[j]);
-					}
-				}
-			}
-			a.length = 0;
-			a = a.concat(f);
-		}
-	}
-
-	return a;
-};
-
-/*
 __convertLength__ takes a value, checks if it is a percent value and - if true - returns a value relative to the supplied length; otherwise returns the value as a number
 
 Examples:
@@ -247,22 +195,21 @@ const isa_video = item => (Object.prototype.toString.call(item) === '[object HTM
 /*
 __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
 
-Note - this function may no longer be required, and should certainly be deprecated
+... used by gradients
 */ 
 const locateTargetSections = ['artefact', 'group', 'animation', 'tween', 'styles'];
 const locateTarget = (item) => {
 
-	var section, temp, i, iz;
-
 	if(item && item.substring){
 
-		for(i = 0, iz = locateTargetSections.length; i < iz; i++) {
+		let result;
 
-			section = locateTargetSections[i];
-			temp = library[section][item];
+		return (locateTargetSections.some(section => {
+			
+			result = library[section][item];
+			return result;
 
-			if (temp) return temp;
-		}
+		})) ? result : false;
 	}
 	return false;
 };
@@ -374,7 +321,6 @@ const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true 
 
 export {
 	addStrings,
-	bucketSort,
 	convertLength,
 	convertTime,
 	defaultNonReturnFunction,

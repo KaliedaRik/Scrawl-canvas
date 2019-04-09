@@ -385,14 +385,7 @@ P.updateControllerCells = function () {
 */
 P.setEngineFromState = function (engine) {
 
-	let keys = this.allKeys,
-		key;
-
-	for (var i = 0, iz = keys.length; i < iz; i++) {
-
-		key = keys[i];
-		this[key] = engine[key];
-	}
+	this.allKeys.forEach(key => this[key] = engine[key], this);
 
 	this.lineDash = (xt(engine.lineDash)) ? engine.lineDash : [];
 	this.lineDashOffset = xtGet(engine.lineDashOffset, 0);
@@ -407,29 +400,25 @@ P.setToDefaults = function () {
 
 	let items = this.state.defs,
 		state = this.state,
-		keys = Object.keys(items),
 		engine = this.engine,
-		i, iz, key, item;
+		isArray = Array.isArray;
 
-	for (i = 0, iz = keys.length; i < iz; i++) {
+	Object.entries(items).forEach(([key, value]) => {
 
-		key = keys[i];
-		item = items[key];
-		
 		if (key === 'lineDash') {
 
-			if (!Array.isArray(engine.lineDash)) engine.lineDash = [];
+			if (!isArray(engine.lineDash)) engine.lineDash = [];
 			else engine.lineDash.length = 0;
 
-			if (!Array.isArray(state.lineDash)) state.lineDash = [];
+			if (!isArray(state.lineDash)) state.lineDash = [];
 			else state.lineDash.length = 0;
 		}
 		else {
 
-			engine[key] = item;
-			state[key] = item;
+			engine[key] = value;
+			state[key] = value;
 		}
-	}
+	});
 	return this;
 };
 

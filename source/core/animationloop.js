@@ -27,9 +27,9 @@ const sortAnimations = function () {
 		let floor = Math.floor,
 			buckets = [];
 
-		animate.forEach((item) => {
+		animate.forEach(name => {
 
-			let obj = animation[item],
+			let obj = animation[name],
 				order = floor(obj.order) || 0;
 
 			if (!buckets[order]) buckets[order] = [];

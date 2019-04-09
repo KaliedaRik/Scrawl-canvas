@@ -195,27 +195,20 @@ const actionFilterWorker = function (worker, items) {
 
 		worker.onmessage = (e) => {
 
-			let i, iz, filters, fltr, data, func;
-
 			if (e && e.data && e.data.image) {
 
-				data = e.data;
-				filters = data.filters;
+				let data = e.data,
+					filters = data.filters;
 
-				for (i = 0, iz = filters.length; i < iz; i++) {
-
-					fltr = filters[i];
+				filters.forEach(fltr => {
 
 					if (fltr.userFilter) {
 
-						func = userFilter[fltr.userFilter];
+						let func = userFilter[fltr.userFilter];
 
-						if (func) {
-							data.image = func(data.image, fltr, data.localDimensions, data.cache);
-						}
+						if (func) data.image = func(data.image, fltr, data.localDimensions, data.cache);
 					}
-				}
-
+				});
 				resolve(data.image);
 			}
 			else resolve(false);
