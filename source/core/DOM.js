@@ -59,7 +59,7 @@ const addInitialStackElement = function (element) {
 		group: (mygroup) ? mygroup : ''
 	});
 
-	[...element.children].forEach((child) => {
+	Array.from(element.children).forEach(child => {
 	
 		if (child.getAttribute('data-stack') == null && !isa_canvas(child)) {
 
@@ -208,7 +208,7 @@ const addStack = function (items = {}) {
 
 	if (!el.parentElement || host.id !== el.parentElement.id) host.appendChild(el);
 
-	[...el.childNodes].forEach((child) => {
+	Array.from(el.childNodes).forEach((child) => {
 
 		if (child.id && rootElements.indexOf(child.id) >= 0) removeItem(rootElements, child.id);
 	});

@@ -1,5 +1,5 @@
 /*
-# Filter factory
+# Filter factory TEST chrome not caching 2
 */
 
 let packet, image, iWidth, data, 
@@ -162,7 +162,7 @@ const getTiles = function () {
 	}
 };
 
-// returns the average of values in an array
+// Returns the average of values in an array
 const average = function (c) {
 
 	let a = 0,

@@ -183,7 +183,9 @@ const buildFilterWorker = function () {
 		`${window.location.origin}${window.scrawlPath}/worker/filter.js` : 
 		`${window.location.origin}${window.scrawlPath}/worker/filter.js`;
 
-	return new Worker(filterUrl, {type: 'module'});
+	// chrome does not yet support module
+	// return new Worker(filterUrl, {type: 'module'});
+	return new Worker(filterUrl);
 };
 
 /*

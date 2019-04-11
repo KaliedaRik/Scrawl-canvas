@@ -395,7 +395,7 @@ All factories using the position mixin will add these to their prototype objects
 */
 	S.delta = function (item) {
 
-		// overwrites the old delta object with a new one
+		// Overwrites the old delta object with a new one
 		this.delta = isa_obj(item) ? item : {};
 	};
 
@@ -565,17 +565,17 @@ All factories using the position mixin will add these to their prototype objects
 		switch (method) {
 
 			case 'into' :
-				// merges new data __into__ the old data - new attributes added, old attributes unchanged
+				// Merges new data __into__ the old data - new attributes added, old attributes unchanged
 				delta = mergeInto(delta, items);
 				break;
 
 			case 'over' :
-				// merges new data __over__ the old data - new attributes added, old attributes overwritten
+				// Merges new data __over__ the old data - new attributes added, old attributes overwritten
 				delta = mergeOver(delta, items);
 				break;
 
 			case 'reverse' :
-				// iterates through argument object, which contains key:true values, reversing the sign on those key attributes
+				// Iterates through argument object, which contains key:true values, reversing the sign on those key attributes
 				let keys = Object.keys(items);
 
 				keys.forEach(key => {
@@ -591,7 +591,7 @@ All factories using the position mixin will add these to their prototype objects
 				break;
 
 			case 'replace' :
-				// overwrites the old delta object with a new one
+				// Overwrites the old delta object with a new one
 				delta = items;
 				break;
 		}

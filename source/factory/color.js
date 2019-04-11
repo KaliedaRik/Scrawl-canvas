@@ -96,6 +96,9 @@ let defaultAttributes = {
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+/*
+Overrides function in mixin/base.js
+*/
 P.get = function (item) {
 
 	if (!xt(item)) {
@@ -128,6 +131,9 @@ P.get = function (item) {
 	}
 };
 
+/*
+Overrides function in mixin/base.js
+*/
 P.set = function (items = {}) {
 
 	if (items) {
@@ -154,6 +160,9 @@ P.set = function (items = {}) {
 	return this;
 };
 
+/*
+Overrides function in mixin/base.js
+*/
 P.clone = function (items = {}) {
 
 	let a = this.parse(),
@@ -171,6 +180,9 @@ P.clone = function (items = {}) {
 	return c;
 };
 
+/*
+
+*/
 P.getData = function () {
 
 	if (this.autoUpdate) this.update();
@@ -180,6 +192,9 @@ P.getData = function () {
 	return this.get();
 };
 
+/*
+
+*/
 P.generateRandomColor = function (items = {}) {
 
 	let round = Math.round,
@@ -209,6 +224,9 @@ P.generateRandomColor = function (items = {}) {
 	return this;
 };
 
+/*
+
+*/
 P.checkValues = function () {
 
 	let f = Math.floor,
@@ -225,6 +243,9 @@ P.checkValues = function () {
 	return this;
 };
 
+/*
+
+*/
 P.updateArray = ['r', 'g', 'b', 'a'];
 
 P.update = function () {
@@ -265,6 +286,9 @@ P.update = function () {
 
 P.updateByDelta = P.update;
 
+/*
+
+*/
 P.convert = function (items) {
 
 	let r, g, b, a, temp,
@@ -347,8 +371,10 @@ P.convert = function (items) {
 	return this;
 };
 
+/*
+Color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/color_value
+*/
 P.colorLibrary = {
-	// color keywords harvested from https://developer.mozilla.org/en/docs/Web/CSS/color_value
 	aliceblue: 'f0f8ff',
 	antiquewhite: 'faebd7',
 	aqua: '00ffff',

@@ -31,7 +31,7 @@ const Tween = function (items = {}) {
 	if (animationtickers[items.ticker]) this.addToTicker(items.ticker);
 	else {
 
-		// here is where we create the ticker - will have same name as the tween
+		// Here is where we create the ticker - will have same name as the tween
 		tn = `${this.name}_ticker`;
 
 		makeTicker({
@@ -150,7 +150,7 @@ S.completeAction = function (item) {
 */
 
 /*
-
+Overwrites function defined in mixin/base.js
 */
 P.set = function (items) {
 
@@ -237,7 +237,7 @@ P.update = function (items = {}) {
 		revTick = items.reverseTick || 0,
 		status = 'running';
 
-	// 1. Should we do work for this tween?
+	// Should we do work for this tween?
 	if (!this.reversed) {
 
 		starts = this.effectiveTime;
@@ -255,7 +255,7 @@ P.update = function (items = {}) {
 		else if (revTick < ends) status = 'before';
 	}
 
-	// for tweens with a duration > 0
+	// For tweens with a duration > 0
 	if (this.effectiveDuration) {
 
 		if (status === 'running' || status !== this.status) {
@@ -265,7 +265,7 @@ P.update = function (items = {}) {
 			this.updateCleanup(items.next);
 		}
 	}
-	// for tweens with a duration == 0
+	// For tweens with a duration == 0
 	else {
 
 		if (status !== this.status) {

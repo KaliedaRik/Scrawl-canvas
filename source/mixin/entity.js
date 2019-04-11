@@ -774,14 +774,14 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 
 			if (self.isStencil) {
 
-				// this is where we copy over the current canvas to the new canvas using appropriate gco
+				// This is where we copy over the current canvas to the new canvas using appropriate gco
 				hostState.globalCompositeOperation = hostEngine.globalCompositeOperation = 'source-in';
 				hostState.globalAlpha = hostEngine.globalAlpha = 1;
 				hostEngine.setTransform(1, 0, 0, 1, 0, 0);
 				hostEngine.drawImage(oldElement, 0, 0);
 			} 
 
-			// at this point we will send the contents of the host canvas over to the web worker, alongside details of the filters we wish to apply to it
+			// At this point we will send the contents of the host canvas over to the web worker, alongside details of the filters we wish to apply to it
 			image = hostEngine.getImageData(0, 0, w, h);
 			worker = requestFilterWorker();
 

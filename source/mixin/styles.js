@@ -426,7 +426,7 @@ This is where we have to calculate all the stuff necessary to get the ctx gradie
 			eScale = entity.scale,
 			pch, pScale, correctX, correctY;
 
-		// the entity stamp will have shifted the canvas grid prior to setting the style on the canvas engine
+		// The entity stamp will have shifted the canvas grid prior to setting the style on the canvas engine
 		if (p) {
 
 			pch = p.currentHandle;

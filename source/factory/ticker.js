@@ -280,7 +280,8 @@ P.recalculateEffectiveDuration = function() {
 
 		this.effectiveDuration = duration;
 	}
-	else this.setEffectiveDuration(); // shouldn't cause an infinite loop ...
+	// Shouldn't cause an infinite loop ...
+	else this.setEffectiveDuration();
 
 	return this;
 };
@@ -298,7 +299,7 @@ P.setEffectiveDuration = function() {
 
 		if (temp[0] === '%') {
 
-			// cannot use percentage values for ticker durations
+			// Cannot use percentage values for ticker durations
 			this.duration = 0
 			this.recalculateEffectiveDuration();
 		}
@@ -715,24 +716,25 @@ const coreTickersAnimation = makeAnimation({
 
 				tickerAnimationsFlag = false;
 
-				if (tickerAnimations.length > 1) {
+				let tans = [].concat(tickerAnimations),
+					floor = Math.floor,
+					buckets = [];
 
-					let tans = [].concat(tickerAnimations),
-						floor = Math.floor,
-						buckets = [];
+				tans.forEach(name => {
 
-					tans.forEach(name => {
+					let obj = animationtickers[name];
 
-						let obj = animationtickers[name],
-							order = floor(obj.order) || 0;
+					if (xt(obj)) {
+
+						let order = floor(obj.order) || 0;
 
 						if (!buckets[order]) buckets[order] = [];
 
-						buckets[order].push(obj);
-					});
+						buckets[order].push(obj.name);
+					}
+				});
 
-					tickerAnimations = buckets.reduce((a, v) => a.concat(v), []);
-				}
+				tickerAnimations = buckets.reduce((a, v) => a.concat(v), []);
 			}
 
 			tickerAnimations.forEach(name => {
