@@ -10,9 +10,6 @@
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
-    canvas {
-      border: 1px solid darkgreen;
-    }
     .controls {
       grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
     }
@@ -134,6 +131,9 @@
       <li>Check that the entity location and dimensions attributes (start, handle, width, height) work as expected</li>
       <li>Check that the entity manipulation attributes (roll, scale, flip) work as expected</li>
       <li>Check that altering the entity's copy attributes (copyStart, copyWidth, copyHeight) perform as expected, and that the code correctly compensates when the user attempts to copy from outside the image assets natural dimensions - in particular, the image should not stretch when the copy attributes abut or cross the image asset's dimension boundaries</li>
+    </ul>
+    <ul>
+      <li>Import an image dynamically by defining and displaying a Picture entity with an imageSource attribute</li>
     </ul>
   </div>
 

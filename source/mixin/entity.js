@@ -406,7 +406,8 @@ Overwrites the clone function in mixin/base.js
 
 		let self = this,
 			regex = /^(local|dirty|current)/,
-			stateDefs = this.state.defs;
+			stateDefs = this.state.defs,
+			copied;
 
 		let updateCopiedState = (copy, defs, item) => {
 
@@ -426,7 +427,21 @@ Overwrites the clone function in mixin/base.js
 		let host = this.currentHost;
 		delete this.currentHost;
 
-		let copied = JSON.parse(JSON.stringify(this));
+		if (this.asset || this.source) {
+
+			let tempAsset = this.asset,
+				tempSource = this.source;
+
+			delete this.asset;
+			delete this.source;
+
+			copied = JSON.parse(JSON.stringify(this));
+
+			this.asset = tempAsset;
+			this.source = tempSource;
+		}
+		else copied = JSON.parse(JSON.stringify(this));
+
 		copied.name = (items.name) ? items.name : generateUuid();
 
 		this.group = grp;

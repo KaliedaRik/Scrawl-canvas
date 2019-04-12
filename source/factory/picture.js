@@ -2,7 +2,7 @@
 # Picture factory
 */
 import { constructors, assetnames, asset } from '../core/library.js';
-import { mergeOver, xt, addStrings } from '../core/utilities.js';
+import { mergeOver, xt, xta, addStrings } from '../core/utilities.js';
 
 import { importImage } from './imageAsset.js';
 
@@ -147,7 +147,7 @@ Should only be used as part of makePicture argument object?
 */
 	S.imageSource = function (item) {
 
-		let results, asset;
+		let results, myAsset;
 
 		if (item.substring) {
 
@@ -155,13 +155,13 @@ Should only be used as part of makePicture argument object?
 
 			if (results) {
 
-				asset = asset[results[0]]
+				myAsset = asset[results[0]]
 
-				if (asset) {
+				if (myAsset) {
 
 					if (this.asset) this.asset.unsubscribe(this);
 				
-					asset.subscribe(this);
+					myAsset.subscribe(this);
 				}
 			}
 		}
@@ -290,28 +290,31 @@ P.cleanImage = function () {
 		natWidth = this.sourceNaturalWidth,
 		natHeight = this.sourceNaturalHeight;
 
-	this.dirtyImage = false;
+	if (xta(natWidth, natHeight)) {
 
-	if (this.dirtyCopyStart) this.cleanCopyStart();
+		this.dirtyImage = false;
 
-	start = this.currentCopyStart;
-	x = start.x;
-	y = start.y;
+		if (this.dirtyCopyStart) this.cleanCopyStart();
 
-	if (this.dirtyCopyDimensions) this.cleanCopyDimensions();
+		start = this.currentCopyStart;
+		x = start.x;
+		y = start.y;
 
-	w = this.currentCopyWidth;
-	h = this.currentCopyHeight;
+		if (this.dirtyCopyDimensions) this.cleanCopyDimensions();
 
-	if (x + w > natWidth) start.x = natWidth - w;
-	if (y + h > natHeight) start.y = natHeight - h;
+		w = this.currentCopyWidth;
+		h = this.currentCopyHeight;
 
-	this.copyObject = {
-		x: start.x,
-		y: start.y,
-		w: w,
-		h: h
-	};
+		if (x + w > natWidth) start.x = natWidth - w;
+		if (y + h > natHeight) start.y = natHeight - h;
+
+		this.copyObject = {
+			x: start.x,
+			y: start.y,
+			w: w,
+			h: h
+		};
+	}
 };
 
 /*
@@ -324,24 +327,27 @@ P.cleanCopyStart = function () {
 		height = this.sourceNaturalHeight,
 		current, x, y;
 
-	this.dirtyCopyStart = false;
+	if (xta(width, height)) {
 
-	this.cleanVectorParameter('currentCopyStart', start, width, height);
+		this.dirtyCopyStart = false;
 
-	current = this.currentCopyStart;
-	x = current.x;
-	y = current.y;
+		this.cleanVectorParameter('currentCopyStart', start, width, height);
 
-	if (x < 0 || x > width) {
+		current = this.currentCopyStart;
+		x = current.x;
+		y = current.y;
 
-		if (x < 0) current.x = 0;
-		else current.x = width - 1;
-	}
+		if (x < 0 || x > width) {
 
-	if (y < 0 || y > height) {
+			if (x < 0) current.x = 0;
+			else current.x = width - 1;
+		}
 
-		if (y < 0) current.y = 0;
-		else current.y = height - 1;
+		if (y < 0 || y > height) {
+
+			if (y < 0) current.y = 0;
+			else current.y = height - 1;
+		}
 	}
 };
 
@@ -367,15 +373,15 @@ P.cleanCopyDimensions = function () {
 	currentWidth = this.currentCopyWidth;
 	currentHeight = this.currentCopyHeight;
 
-	if (currentWidth < 0 || currentWidth > natWidth) {
+	if (currentWidth <= 0 || currentWidth > natWidth) {
 
-		if (x < 0) this.currentCopyWidth = 1;
+		if (currentWidth <= 0) this.currentCopyWidth = 1;
 		else this.currentCopyWidth = natWidth;
 	}
 
-	if (currentHeight < 0 || currentHeight > natHeight) {
+	if (currentHeight <= 0 || currentHeight > natHeight) {
 
-		if (x < 0) this.currentCopyHeight = 1;
+		if (currentHeight <= 0) this.currentCopyHeight = 1;
 		else this.currentCopyHeight = natHeight;
 	}
 };

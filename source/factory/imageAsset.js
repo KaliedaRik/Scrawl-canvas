@@ -77,12 +77,12 @@ Arguments can be either string urls - 'http://www.example.com/path/to/image/flow
 */
 const importImage = function (...args) {
 
-	let reg = /.*\/(.*?)\./;
+	let reg = /.*\/(.*?)\./,
+		results = [];
 
 	args.forEach(item => {
 
-		let name, url, className, visibility, parent,
-			results = [];
+		let name, url, className, visibility, parent;
 
 		let flag = false;
 
@@ -139,6 +139,10 @@ const importImage = function (...args) {
 			};
 			
 			img.src = url;
+
+			image.set({
+				source: img,
+			});
 
 			results.push(name);
 		}
@@ -207,6 +211,37 @@ const createImageFromGroup = function (items) {
 	return false;
 };
 
+// 		/**
+// A __factory__ function to convert a group of entitys into a single Picture entity
+
+// Argument attributes can include any entity positioning and styling values, alongside the following flag:
+
+// * __convert__ - when set to true, existing entitys in the group will be deleted; default: false
+
+// If no name attribute is supplied in the argument object, the new Picture entity will be given the name: GROUPNAME+'_entity'
+// @method Group.convertGroupToPicture
+// @param {Object} items Key:value Object argument for setting attributes
+// @return Picture entity object; false if no entitys contained in group
+// **/
+// 		my.Group.prototype.convertGroupToPicture = function(items) {
+// 			var image,
+// 				cell,
+// 				engine;
+// 			items = my.safeObject(items);
+// 			if (this.entitys.length) {
+// 				cell = my.cell[this.cell];
+// 				engine = my.context[this.cell];
+// 				image = my.prepareConvert(cell, engine, this);
+// 				items.name = items.name || this.name + '_entity';
+// 				items.group = items.group || this.name;
+// 				if (items.convert) {
+// 					my.deleteEntity(this.entitys);
+// 				}
+// 				return my.doConvert(image, items);
+// 			}
+// 			return false;
+// 		};
+
 /*
 TODO: code up this functionality - function should be available to users
 */
@@ -215,6 +250,94 @@ const createImageFromEntity = function (items) {
 	return false;
 };
 
+// 		/**
+// A __factory__ function to convert a entity into a Picture entity
+
+// Argument attributes can include any entity positioning and styling values, alongside the following flag:
+
+// * __convert__ - when set to true, existing entity will be deleted; default: false
+
+// If no name attribute is supplied in the argument object, the new Picture entity will be given the name: SPRITENAME+'_picture'
+// @method Entity.convertToPicture
+// @param {Object} items Key:value Object argument for setting attributes
+// @return Picture entity object
+// **/
+// 		my.Entity.prototype.convertToPicture = function(items) {
+// 			var image,
+// 				cell,
+// 				engine,
+// 				cellname = my.group[this.group].cell;
+// 			items = my.safeObject(items);
+// 			cell = my.cell[cellname];
+// 			engine = my.context[cellname];
+// 			image = my.prepareConvert(cell, engine, this);
+// 			items.name = items.name || this.name + '_picture';
+// 			items.group = items.group || this.group;
+// 			if (items.convert) {
+// 				my.deleteEntity([this.name]);
+// 			}
+// 			return my.doConvert(image, items);
+// 		};
+
+
+// 		/**
+// Helper function for convert functions
+// @method prepareConvert
+// @return ImageData object
+// @private
+// **/
+// 		my.prepareConvert = function(cell, ctx, obj) {
+// 			var image,
+// 				data,
+// 				left,
+// 				right,
+// 				top,
+// 				bottom,
+// 				pos,
+// 				i,
+// 				iz,
+// 				j,
+// 				jz;
+// 			left = cell.actualWidth;
+// 			right = 0;
+// 			top = cell.actualHeight;
+// 			bottom = 0;
+// 			cell.clear();
+// 			obj.stamp(null, cell.name);
+// 			image = ctx.getImageData(0, 0, cell.actualWidth, cell.actualHeight);
+// 			data = image.data;
+// 			for (i = 0, iz = cell.actualHeight; i < iz; i++) {
+// 				for (j = 0, jz = cell.actualWidth; j < jz; j++) {
+// 					pos = (((i * cell.actualWidth) + j) * 4) + 3;
+// 					if (data[pos] > 0) {
+// 						top = (top > i) ? i : top;
+// 						bottom = (bottom < i) ? i : bottom;
+// 						left = (left > j) ? j : left;
+// 						right = (right < j) ? j : right;
+// 					}
+// 				}
+// 			}
+// 			image = ctx.getImageData(left, top, (right - left + 1), (bottom - top + 1));
+// 			cell.clear();
+// 			return image;
+// 		};
+// 		/**
+// Helper function for convert functions
+// @method doConvert
+// @return Picture entity object
+// @private
+// **/
+// 		my.doConvert = function(image, items) {
+// 			var cv = my.work.imageCanvas;
+// 			cv.width = image.width;
+// 			cv.height = image.height;
+// 			my.work.imageCvx.putImageData(image, 0, 0);
+// 			items.url = cv.toDataURL();
+// 			items.width = image.width;
+// 			items.height = image.height;
+// 			image = my.makeImage(items);
+// 			return my.makePicture(items);
+// 		};
 
 /*
 ## Exported factory function

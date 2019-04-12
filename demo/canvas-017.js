@@ -37,9 +37,32 @@ piccy = scrawl.makePicture({
 
 	lineWidth: 10,
 
+	order: 1,
 	method: 'drawFill',
-})
-scrawl.library.artefact.mycanvas.render().catch()
+
+});
+
+piccy.clone({
+
+	name: 'myFactory',
+	imageSource: 'img/canalFactory-800.png',
+
+	width: 600,
+	height: 400,
+
+	startX: 0,
+	startY: 0,
+	handleX: 0,
+	handleY: 0,
+
+	copyWidth: 600,
+	copyHeight: 400,
+	copyStartX: 150,
+	copyStartY: 0,
+
+	order: 0,
+	method: 'fill',
+});
 
 // Event listeners
 stopE = (e) => {

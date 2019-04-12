@@ -111,6 +111,8 @@ All factories using the filter mixin will add these to their prototype objects
 		sub.sourceNaturalHeight = this.sourceNaturalHeight;
 		sub.sourceLoaded = this.sourceLoaded;
 		sub.dirtyImage = true;
+		sub.dirtyCopyStart = true;
+		sub.dirtyCopyDimensions = true;
 	};
 
 /*
