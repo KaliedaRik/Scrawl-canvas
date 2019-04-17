@@ -1,12 +1,13 @@
 /*
 # Cell factory
 */
-import { artefact, radian, constructors } from '../core/library.js';
+import { artefact, radian, constructors, styles, stylesnames } from '../core/library.js';
 import { convertLength, generateUuid, isa_canvas, mergeOver, xt, xtGet } from '../core/utilities.js';
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
+import { colorList } from './color.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
@@ -455,7 +456,20 @@ P.setEngineActions = {
 
 	fillStyle: function (item, engine, stylesArray, entity, layer) {
 
-		if (item.substring) engine.fillStyle = item;
+		if (item.substring) {
+
+			if (stylesnames.indexOf(item) >= 0) {
+
+				let brokenStyle = styles[item];
+
+				if (brokenStyle) {
+					
+					entity.state.fillStyle = brokenStyle;
+					engine.fillStyle = brokenStyle.getData(entity, layer, true);
+				}
+			}
+			else engine.fillStyle = item;
+		}
 		else engine.fillStyle = item.getData(entity, layer, true);
 	},
 
@@ -512,7 +526,20 @@ P.setEngineActions = {
 
 	strokeStyle: function (item, engine, stylesArray, entity, layer) {
 
-		if (item.substring) engine.strokeStyle = item;
+		if (item.substring) {
+
+			if (stylesnames.indexOf(item) >= 0) {
+
+				let brokenStyle = styles[item];
+
+				if (brokenStyle) {
+
+					entity.state.strokeStyle = brokenStyle;
+					engine.strokeStyle = brokenStyle.getData(entity, layer, false);
+				}
+			}
+			else engine.strokeStyle = item;
+		}
 		else engine.strokeStyle = item.getData(entity, layer, false);
 	},
 

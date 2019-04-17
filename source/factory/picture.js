@@ -4,11 +4,10 @@
 import { constructors, assetnames, asset } from '../core/library.js';
 import { mergeOver, xt, xta, addStrings } from '../core/utilities.js';
 
-import { importImage } from './imageAsset.js';
-
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
 import entityMix from '../mixin/entity.js';
+import assetConsumerMix from '../mixin/assetConsumer.js';
 import filterMix from '../mixin/filter.js';
 
 /*
@@ -36,6 +35,7 @@ Apply mixins to prototype object
 P = baseMix(P);
 P = positionMix(P);
 P = entityMix(P);
+P = assetConsumerMix(P);
 P = filterMix(P);
 
 /*
@@ -72,31 +72,6 @@ let defaultAttributes = {
 
 */
 	currentCopyHeight: 0,
-
-/*
-
-*/
-	asset: null,
-
-/*
-
-*/
-	source: null,
-
-/*
-
-*/
-	sourceNaturalWidth: 0,
-
-/*
-
-*/
-	sourceNaturalHeight: 0,
-
-/*
-
-*/
-	sourceLoaded: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -107,174 +82,128 @@ let G = P.getters,
 /*
 
 */
-	G.copyStartX = function () {
+G.copyStartX = function () {
 
-		this.checkVector('copyStart');
-		return this.copyStart.x;
-	};
-
-/*
-
-*/
-	G.copyStartY = function () {
-
-		this.checkVector('copyStart');
-		return this.copyStart.y;
-	};
+	this.checkVector('copyStart');
+	return this.copyStart.x;
+};
 
 /*
 
 */
-	S.asset = function (item) {
+G.copyStartY = function () {
 
-		let index;
-
-		if (item && item.substring) {
-
-			index = assetnames.indexOf(item);
-
-			if (index >= 0) {
-
-				if (this.asset) this.asset.unsubscribe(this);
-
-				asset[assetnames[index]].subscribe(this);
-			}
-		}
-	};
-
-/*
-Should only be used as part of makePicture argument object?
-*/
-	S.imageSource = function (item) {
-
-		let results, myAsset;
-
-		if (item.substring) {
-
-			results = importImage(item);
-
-			if (results) {
-
-				myAsset = asset[results[0]]
-
-				if (myAsset) {
-
-					if (this.asset) this.asset.unsubscribe(this);
-				
-					myAsset.subscribe(this);
-				}
-			}
-		}
-	};
+	this.checkVector('copyStart');
+	return this.copyStart.y;
+};
 
 /*
 
 */
-	S.copyStartX = function (item) {
+S.copyStartX = function (item) {
 
-		this.checkVector('copyStart');
-		this.copyStart.x = item;
-		this.dirtyCopyStart = true;
-		this.dirtyImage = true;
-	};
-
-/*
-
-*/
-	S.copyStartY = function (item) {
-
-		this.checkVector('copyStart');
-		this.copyStart.y = item;
-		this.dirtyCopyStart = true;
-		this.dirtyImage = true;
-	};
+	this.checkVector('copyStart');
+	this.copyStart.x = item;
+	this.dirtyCopyStart = true;
+	this.dirtyImage = true;
+};
 
 /*
 
 */
-	S.copyStart = function (item = {}) {
+S.copyStartY = function (item) {
 
-		this.checkVector('copyStart');
-		this.copyStart.x = (xt(item.x)) ? item.x : this.copyStart.x;
-		this.copyStart.y = (xt(item.y)) ? item.y : this.copyStart.y;
-		this.dirtyCopyStart = true;
-		this.dirtyImage = true;
-	};
-
-/*
-
-*/
-	S.copyWidth = function (item) {
-
-		this.copyWidth = item;
-		this.dirtyCopyDimensions = true;
-		this.dirtyImage = true;
-	};
+	this.checkVector('copyStart');
+	this.copyStart.y = item;
+	this.dirtyCopyStart = true;
+	this.dirtyImage = true;
+};
 
 /*
 
 */
-	S.copyHeight = function (item) {
+S.copyStart = function (item = {}) {
 
-		this.copyHeight = item;
-		this.dirtyCopyDimensions = true;
-		this.dirtyImage = true;
-	};
-
-/*
-
-*/
-	D.copyStartX = function (item) {
-
-		this.checkVector('copyStart');
-		this.copyStart.x = addStrings(this.copyStart.x, item);
-		this.dirtyCopyStart = true;
-		this.dirtyImage = true;
-	};
+	this.checkVector('copyStart');
+	this.copyStart.x = (xt(item.x)) ? item.x : this.copyStart.x;
+	this.copyStart.y = (xt(item.y)) ? item.y : this.copyStart.y;
+	this.dirtyCopyStart = true;
+	this.dirtyImage = true;
+};
 
 /*
 
 */
-	D.copyStartY = function (item) {
+S.copyWidth = function (item) {
 
-		this.checkVector('copyStart');
-		this.copyStart.y = addStrings(this.copyStart.y, item);
-		this.dirtyCopyStart = true;
-		this.dirtyImage = true;
-	};
-
-/*
-
-*/
-	D.copyStart = function (item = {}) {
-
-		this.checkVector('copyStart');
-		this.copyStart.x = (xt(item.x)) ? addStrings(this.copyStart.x, item) : this.copyStart.x;
-		this.copyStart.y = (xt(item.y)) ? addStrings(this.copyStart.y, item) : this.copyStart.y;
-		this.dirtyCopyStart = true;
-		this.dirtyImage = true;
-	};
+	this.copyWidth = item;
+	this.dirtyCopyDimensions = true;
+	this.dirtyImage = true;
+};
 
 /*
 
 */
-	D.copyWidth = function (item) {
+S.copyHeight = function (item) {
 
-		this.copyWidth = addStrings(this.copyWidth, item);
-		this.dirtyCopyDimensions = true;
-		this.dirtyImage = true;
-	};
+	this.copyHeight = item;
+	this.dirtyCopyDimensions = true;
+	this.dirtyImage = true;
+};
 
 /*
 
 */
-	D.copyHeight = function (item) {
+D.copyStartX = function (item) {
 
-		this.copyHeight = addStrings(this.copyHeight, item);
-		this.dirtyCopyDimensions = true;
-		this.dirtyImage = true;
-	};
+	this.checkVector('copyStart');
+	this.copyStart.x = addStrings(this.copyStart.x, item);
+	this.dirtyCopyStart = true;
+	this.dirtyImage = true;
+};
 
+/*
+
+*/
+D.copyStartY = function (item) {
+
+	this.checkVector('copyStart');
+	this.copyStart.y = addStrings(this.copyStart.y, item);
+	this.dirtyCopyStart = true;
+	this.dirtyImage = true;
+};
+
+/*
+
+*/
+D.copyStart = function (item = {}) {
+
+	this.checkVector('copyStart');
+	this.copyStart.x = (xt(item.x)) ? addStrings(this.copyStart.x, item) : this.copyStart.x;
+	this.copyStart.y = (xt(item.y)) ? addStrings(this.copyStart.y, item) : this.copyStart.y;
+	this.dirtyCopyStart = true;
+	this.dirtyImage = true;
+};
+
+/*
+
+*/
+D.copyWidth = function (item) {
+
+	this.copyWidth = addStrings(this.copyWidth, item);
+	this.dirtyCopyDimensions = true;
+	this.dirtyImage = true;
+};
+
+/*
+
+*/
+D.copyHeight = function (item) {
+
+	this.copyHeight = addStrings(this.copyHeight, item);
+	this.dirtyCopyDimensions = true;
+	this.dirtyImage = true;
+};
 
 
 /*

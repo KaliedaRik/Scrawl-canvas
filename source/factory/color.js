@@ -523,6 +523,8 @@ P.colorLibrary = {
 	yellowgreen: '9acd32'
 };
 
+const colorList = Object.keys(P.colorLibrary);
+
 /*
 ## Exported factory function
 */
@@ -539,4 +541,5 @@ constructors.Color = Color;
 
 export {
 	makeColor,
+	colorList,
 };

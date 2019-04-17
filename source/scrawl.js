@@ -143,6 +143,11 @@ Not importing 'makePalette' - palettes are private to gradient and radial gradie
 */ 
 
 /*
+### ./factory/pattern.js
+*/
+import { makePattern } from './factory/pattern.js';
+
+/*
 ### ./factory/picture.js
 */
 import { makePicture } from './factory/picture.js';
@@ -290,6 +295,7 @@ export default {
 	makeColor,
 	makeGradient,
 	makeRadialGradient,
+	makePattern,
 
 	makeFilter,
 

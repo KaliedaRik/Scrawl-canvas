@@ -9,9 +9,14 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
+
+    h2 {
+      margin: 2em 0 1em 0;
+    }
+    
     .container {
       display: grid;
-      grid-template-columns: 80px auto;
+      grid-template-columns: grid-template-columns: 1fr 2fr;
       grid-column-gap: 10px;
 
       grid-template-rows: auto;
@@ -20,10 +25,33 @@
       justify-content: stretch;
       justify-items: start;
 
-      align-items: center;
+      align-items: top;
+
+      background-color: #f9f9f9;
+      padding: 0.5em;
     }
-    img {
+    .container div {
       width: 100%;
+    }
+    .container div a {
+      display: block;
+      margin-bottom: 1em;
+    }
+    .container div img {
+      width: 100%;
+      max-width: 8em;
+    }
+
+    @media (min-width: 40em) {
+      .container {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+    }
+
+    @media (min-width: 60em) {
+      .container {
+        grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr;
+      }
     }
   </style>
 </head>
@@ -94,7 +122,6 @@
 
     <div><img src="thumbs/dom-017.png" /></div>
     <div><a href="dom-017.html">DOM 017</a> - Add and remove (demolish) Scrawl-canvas stacks programmatically</div>
-
   </div>
 
   <h2>Canvas tests</h2>
@@ -150,8 +177,10 @@
     <div><a href="canvas-016.html">Canvas 016</a> - Apply filters at the entity, group and cell level</div>
 
     <div><img src="thumbs/canvas-017.png" /></div>
-    <div><a href="canvas-017.html">Canvas 017</a> - Picture entity: positioning; manipulating copy attributes</div>
+    <div><a href="canvas-017.html">Canvas 017</a> - Picture entity position; manipulate copy attributes</div>
 
+    <div><img src="thumbs/canvas-018.png" /></div>
+    <div><a href="canvas-018.html">Canvas 018</a> - Pattern styles</div>
   </div>
 
   <h2>Collisions tests</h2>
