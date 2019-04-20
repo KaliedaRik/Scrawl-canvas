@@ -3,7 +3,7 @@
 */
 import * as library from '../core/library.js';
 import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
-	generateUuid, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta } from '../core/utilities.js';
+	generateUuid, isa_fn, mergeOver, xt } from '../core/utilities.js';
 import { currentGroup } from '../core/DOM.js';
 
 import { makePoint } from '../factory/point.js';
@@ -402,74 +402,6 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 /*
 Overwrites the clone function in mixin/base.js
 */
-	// obj.clone = function(items = {}) {
-
-	// 	let self = this,
-	// 		regex = /^(local|dirty|current)/,
-	// 		stateDefs = this.state.defs,
-	// 		copied;
-
-	// 	let updateCopiedState = (copy, defs, item) => {
-
-	// 		let temp = copy[item];
-	// 		copy[item] = defs[item];
-
-	// 		if (temp) {
-
-	// 			if (temp.substring) copy[item] = temp;
-	// 			else if (temp.name) copy[item] = temp.name;
-	// 		}
-	// 	};
-
-	// 	let grp = this.group;
-	// 	this.group = grp.name;
-		
-	// 	let host = this.currentHost;
-	// 	delete this.currentHost;
-
-	// 	if (this.asset || this.source) {
-
-	// 		let tempAsset = this.asset,
-	// 			tempSource = this.source;
-
-	// 		delete this.asset;
-	// 		delete this.source;
-
-	// 		copied = JSON.parse(JSON.stringify(this));
-
-	// 		this.asset = tempAsset;
-	// 		this.source = tempSource;
-	// 	}
-	// 	else copied = JSON.parse(JSON.stringify(this));
-
-	// 	copied.name = (items.name) ? items.name : generateUuid();
-
-	// 	this.group = grp;
-	// 	this.currentHost = host;
-
-	// 	Object.entries(this).forEach(([key, value]) => {
-
-	// 		if (regex.test(key)) delete copied[key];
-	// 		if (isa_fn(this[key])) copied[key] = self[key];
-	// 	}, this);
-
-	// 	let state = copied.state;
-	// 	updateCopiedState(state, stateDefs, 'fillStyle');
-	// 	updateCopiedState(state, stateDefs, 'strokeStyle');
-	// 	updateCopiedState(state, stateDefs, 'shadowColor');
-	// 	delete copied.state;
-
-	// 	if (this.group) copied.group = this.group.name;
-
-	// 	let clone = new library.constructors[this.type](copied);
-	// 	clone.set(state);
-	// 	clone.set(items);
-
-	// 	if (items.sharedState) clone.state = self.state;
-
-	// 	return clone;
-	// };
-
 	obj.clone = function(items = {}) {
 
 		let self = this,

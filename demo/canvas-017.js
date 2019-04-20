@@ -265,3 +265,4 @@ scrawl.makeAnimation({
 		});
 	}
 });
+console.log(scrawl.library);

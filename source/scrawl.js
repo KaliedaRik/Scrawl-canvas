@@ -48,7 +48,7 @@ import { getCanvases,
 	removeListener,
 	addNativeListener,
 	removeNativeListener,
-	// clear,
+	clear,
 	compile,
 	show,
 	render,
@@ -216,6 +216,7 @@ import { requestVector,
 
 Not importing 'makeVideoAsset' - object is private to Scrawl-canvas
 */ 
+import { importDomVideo } from './factory/videoAsset.js';
 
 /*
 ### ./factory/wheel.js
@@ -320,6 +321,8 @@ export default {
 	createImageFromCell, 
 	createImageFromGroup, 
 	createImageFromEntity,
+
+	importDomVideo,
 
 	addListener,
 	removeListener,

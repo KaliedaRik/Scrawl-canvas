@@ -1,7 +1,7 @@
 /*
 # Animation factory
 */
-import { animation, animationnames, constructors } from '../core/library.js';
+import { animation, constructors } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt, defaultNonReturnFunction } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 

@@ -2,7 +2,7 @@
 # Tween factory
 */
 import { constructors, animationtickers } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_fn, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 

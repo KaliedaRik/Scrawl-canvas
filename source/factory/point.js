@@ -2,7 +2,7 @@
 # Point factory
 */
 import { constructors, group, artefact } from '../core/library.js';
-import { defaultNonReturnFunction, mergeOver, pushUnique, xta } from '../core/utilities.js';
+import { defaultNonReturnFunction, mergeOver } from '../core/utilities.js';
 import { currentGroup } from '../core/DOM.js';
 
 import { requestVector, releaseVector } from '../factory/vector.js';

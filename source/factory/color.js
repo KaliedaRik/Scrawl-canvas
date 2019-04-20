@@ -2,7 +2,7 @@
 # Color factory
 */
 import { constructors } from '../core/library.js';
-import { addStrings, mergeOver, pushUnique, xt, xtGet } from '../core/utilities.js';
+import { mergeOver, xt, xtGet } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 

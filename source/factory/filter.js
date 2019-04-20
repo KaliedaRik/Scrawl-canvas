@@ -2,7 +2,7 @@
 # Filter factory
 */
 import { constructors, userFilter } from '../core/library.js';
-import { mergeOver, pushUnique } from '../core/utilities.js';
+import { mergeOver } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 

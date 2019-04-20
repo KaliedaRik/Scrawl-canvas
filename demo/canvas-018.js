@@ -8,6 +8,11 @@ let testTicker = Date.now(),
 	testMessage = document.querySelector('#reportmessage');
 
 
+// Scene setup
+let artefact = scrawl.library.artefact,
+	canvas = artefact.mycanvas;
+
+
 // Get image from DOM
 scrawl.importDomImage('.mypatterns');
 
@@ -34,50 +39,68 @@ scrawl.makePattern({
 
 });
 
+// Create a canvas-based pattern
+canvas.buildCell({
 
-// scrawl.makePattern({
+	name: 'cell-pattern',
 
-// 	name: 'brick-pattern',
-// 	asset: 'brick',
+	width: 50,
+	height: 50,
 
-// });
-// scrawl.makePattern({
+	backgroundColor: 'lightblue',
 
-// 	name: 'leaves-pattern',
-// 	asset: 'leaves',
+	shown: false,
+});
 
-// });
-// scrawl.makePattern({
+canvas.base.set({
 
-// 	name: 'water-pattern',
-// 	imageSource: 'img/water.png',
+	compileOrder: 1,
+});
 
-// });
-// scrawl.makePattern({
+scrawl.makeBlock({
 
-// 	name: 'marble-pattern',
-// 	imageSource: 'img/marble.png',
+	name: 'cell-pattern-block',
+	group: 'cell-pattern',
 
-// });
+	width: 40,
+	height: 40,
 
+	startX: 'center',
+	startY: 'center',
+
+	handleX: 'center',
+	handleY: 'center',
+
+	method: 'fill',
+
+	fillStyle: 'water-pattern',
+
+	delta: {
+		roll: -0.3
+	},
+});
 
 // Create Block entitys
 scrawl.makeBlock({
 
 	name: 'water-in-leaves',
+	group: canvas.base.name,
 
-	width: 240,
-	height: 140,
+	width: '40%',
+	height: '40%',
 
-	startX: 40,
-	startY: 40,
+	startX: '25%',
+	startY: '25%',
+
+	handleX: 'center',
+	handleY: 'center',
 
 	lineWidth: 20,
 	lineJoin: 'round',
 
 	method: 'sinkInto',
 
-	fillStyle: 'water-pattern',
+	fillStyle: 'cell-pattern',
 	strokeStyle: 'leaves-pattern',
 
 	shadowOffsetX: 5,
@@ -89,7 +112,7 @@ scrawl.makeBlock({
 
 	name: 'leaves-in-brick',
 
-	startX: 340,
+	startX: '75%',
 
 	fillStyle: 'leaves-pattern',
 	strokeStyle: 'brick-pattern',
@@ -98,7 +121,7 @@ scrawl.makeBlock({
 	
 	name: 'brick-in-marble',
 
-	startY: 240,
+	startY: '75%',
 
 	fillStyle: 'brick-pattern',
 	strokeStyle: 'marble-pattern',
@@ -107,7 +130,7 @@ scrawl.makeBlock({
 	
 	name: 'marble-in-water',
 
-	startX: 40,
+	startX: '25%',
 
 	fillStyle: 'marble-pattern',
 	strokeStyle: 'water-pattern',

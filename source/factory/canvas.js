@@ -76,6 +76,7 @@ const Canvas = function (items = {}) {
 			localizeHere: true,
 			destination: this,
 			controller: this,
+			order: 10,
 		};
 		this.base = this.buildCell(cellArgs);
 

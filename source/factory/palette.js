@@ -2,7 +2,7 @@
 # Palette factory
 */
 import { constructors } from '../core/library.js';
-import { addStrings, defaultNonReturnFunction, isa_obj, mergeOver, pushUnique, xt, xta } from '../core/utilities.js';
+import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 

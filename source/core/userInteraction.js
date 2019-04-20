@@ -2,7 +2,7 @@
 # Core user interaction
 */
 import { artefact } from "./library.js";
-import { xta, pushUnique } from "./utilities.js";
+import { xta } from "./utilities.js";
 
 import { makeAnimation } from "../factory/animation.js";
 

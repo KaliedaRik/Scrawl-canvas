@@ -2,7 +2,7 @@
 # Radial Gradient factory
 */
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, addStrings, convertLength } from '../core/utilities.js';
+import { mergeOver, addStrings, convertLength } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';

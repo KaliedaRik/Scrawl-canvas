@@ -2,7 +2,7 @@
 # ImageAsset factory
 */
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, isa_obj } from '../core/utilities.js';
+import { mergeOver, isa_obj } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -12,15 +12,7 @@ import assetMix from '../mixin/asset.js';
 */
 const ImageAsset = function (items = {}) {
 
-	this.makeName(items.name);
-	this.register();
-	this.subscribers = [];
-	this.set(this.defs);
-	this.set(items);
-
-	if (items.subscribe) this.subscribers.push(items.subscribe);
-
-	return this;
+	return this.assetConstructor(items);
 };
 
 /*
@@ -53,11 +45,60 @@ let G = P.getters,
 /*
 
 */
+S.source = function (item = {}) {
+
+	if (item) {
+
+		// For &lt;img> and &lt;picture> elements
+		if (['IMG', 'PICTURE'].indexOf(item.tagName.toUpperCase()) >= 0) {
+
+			this.source = item;
+			this.sourceNaturalWidth = item.naturalWidth;
+			this.sourceNaturalHeight = item.naturalHeight;
+			this.sourceLoaded = item.complete;
+		}
+
+		if (this.sourceLoaded) this.notifySubscribers();
+	}
+};
+
 
 
 /*
 ## Define prototype functions
 */
+
+/*
+
+*/
+P.checkSource = function (width, height) {
+
+	let el = this.source;
+
+	if (this.sourceLoaded) {
+
+		if (this.sourceNaturalWidth !== el.naturalWidth || 
+				this.sourceNaturalHeight !== el.naturalHeight || 
+				this.sourceNaturalWidth !== width ||
+				this.sourceNaturalHeight !== height) {
+
+			this.sourceNaturalWidth = el.naturalWidth;
+			this.sourceNaturalHeight = el.naturalHeight;
+
+			this.notifySubscribers();
+		}
+	}
+};
+
+/*
+
+*/
+const gettableImageAssetAtributes = [];
+
+/*
+
+*/
+const settableImageAssetAtributes = [];
 
 /*
 Import images from wherever
@@ -353,6 +394,9 @@ constructors.ImageAsset = ImageAsset;
 
 export {
 	makeImageAsset,
+
+	gettableImageAssetAtributes,
+	settableImageAssetAtributes,
 
 	importImage,
 	importDomImage,

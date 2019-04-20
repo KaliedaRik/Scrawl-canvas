@@ -2,7 +2,7 @@
 # Action factory
 */
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, xt, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, xt, defaultNonReturnFunction } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';

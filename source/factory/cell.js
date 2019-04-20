@@ -1,13 +1,12 @@
 /*
 # Cell factory
 */
-import { artefact, radian, constructors, styles, stylesnames } from '../core/library.js';
+import { artefact, radian, constructors, styles, stylesnames, cell, cellnames } from '../core/library.js';
 import { convertLength, generateUuid, isa_canvas, mergeOver, xt, xtGet } from '../core/utilities.js';
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
-import { colorList } from './color.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
@@ -51,6 +50,9 @@ const Cell = function (items = {}) {
 			host: this.name
 		});
 	}
+
+	this.sourceLoaded = true;
+	this.subscribers = [];
 
 	return this;
 };
@@ -167,6 +169,21 @@ let defaultAttributes = {
 
 */
 	localizeHere: false,
+
+/*
+
+*/
+	sourceNaturalWidth: 0,
+
+/*
+
+*/
+	sourceNaturalHeight: 0,
+
+/*
+
+*/
+	repeat: 'repeat',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -325,6 +342,17 @@ Do nothing - the __state__ MUST reflect the state of the Cell's engine
 S.state = function (item) {};
 
 /*
+
+*/
+P.repeatValues = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat']
+
+S.repeat = function (item) {
+
+	if (this.repeatValues.indexOf(item) >= 0) this.repeat = item;
+	else this.repeat = this.defs.repeat;
+};
+
+/*
 ## Define prototype functions
 */
 
@@ -333,7 +361,39 @@ Overrides mixin/asset.js function
 */
 P.checkSource = function (width, height) {
 
-	if (this.width !== width || this.height !== height) this.notifySubscribers();
+	if (this.localWidth !== width || this.localHeight !== height) this.notifySubscribers();
+};
+
+/*
+Used when a cell is the source for a pattern style
+*/
+P.getData = function (entity, cell, isFill) {
+
+	this.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
+
+	return this.buildStyle(cell);
+};
+
+/*
+Used when a cell is the source for a pattern style
+*/
+P.buildStyle = function (mycell = {}) {
+	
+	if (mycell) {
+
+		let engine = false;
+
+		if (mycell.substring) {
+
+			let realcell = cell[mycell];
+
+			if (realcell && realcell.engine) engine = realcell.engine;
+		}
+		else if (mycell.engine) engine = mycell.engine;
+
+		if (engine) return engine.createPattern(this.element, this.repeat);
+	}
+	return 'rgba(0,0,0,0)';
 };
 
 /*
@@ -341,8 +401,8 @@ Overrides mixin/asset.js function
 */
 P.notifySubscriber = function (sub) {
 
-	sub.sourceNaturalWidth = this.width;
-	sub.sourceNaturalHeight = this.height;
+	sub.sourceNaturalWidth = this.localWidth;
+	sub.sourceNaturalHeight = this.localHeight;
 	sub.sourceLoaded = true;
 	sub.dirtyImage = true;
 };
@@ -351,11 +411,11 @@ P.notifySubscriber = function (sub) {
 Overrides mixin/asset.js function
 */
 P.subscribeAction = function (sub = {}) {
-
-	subs.push(sub);
+console.log('cell.js', this.name, sub);
+	this.subscribers.push(sub);
 	sub.asset = this;
 	sub.source = this.element;
-	this.notifySubscriber(subs[i])
+	this.notifySubscriber(sub)
 };
 
 /*
@@ -458,15 +518,15 @@ P.setEngineActions = {
 
 		if (item.substring) {
 
-			if (stylesnames.indexOf(item) >= 0) {
+			let brokenStyle = false;
 
-				let brokenStyle = styles[item];
+			if (stylesnames.indexOf(item) >= 0) brokenStyle = styles[item];
+			else if (cellnames.indexOf(item) >= 0) brokenStyle = cell[item];
 
-				if (brokenStyle) {
-					
-					entity.state.fillStyle = brokenStyle;
-					engine.fillStyle = brokenStyle.getData(entity, layer, true);
-				}
+			if (brokenStyle) {
+				
+				entity.state.fillStyle = brokenStyle;
+				engine.fillStyle = brokenStyle.getData(entity, layer, true);
 			}
 			else engine.fillStyle = item;
 		}
@@ -528,15 +588,15 @@ P.setEngineActions = {
 
 		if (item.substring) {
 
-			if (stylesnames.indexOf(item) >= 0) {
+			let brokenStyle = false;
 
-				let brokenStyle = styles[item];
+			if (stylesnames.indexOf(item) >= 0) brokenStyle = styles[item];
+			else if (cellnames.indexOf(item) >= 0) brokenStyle = cell[item];
 
-				if (brokenStyle) {
-
-					entity.state.strokeStyle = brokenStyle;
-					engine.strokeStyle = brokenStyle.getData(entity, layer, false);
-				}
+			if (brokenStyle) {
+				
+				entity.state.strokeStyle = brokenStyle;
+				engine.strokeStyle = brokenStyle.getData(entity, layer, true);
 			}
 			else engine.strokeStyle = item;
 		}

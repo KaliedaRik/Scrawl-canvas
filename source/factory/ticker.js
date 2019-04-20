@@ -1,8 +1,8 @@
 /*
 # Ticker factory
 */
-import { constructors, animationtickers, animationtickersnames, tween } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt, xtGet, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
+import { constructors, animationtickers, tween } from '../core/library.js';
+import { mergeOver, pushUnique, removeItem, xt, xtGet, convertTime } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
 

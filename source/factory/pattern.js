@@ -2,7 +2,7 @@
 # Pattern factory
 */
 import { constructors, cell } from '../core/library.js';
-import { mergeOver, pushUnique, isa_fn } from '../core/utilities.js';
+import { mergeOver, isa_fn } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';

@@ -1,8 +1,8 @@
 /*
 # Tween mixin
 */
-import { animationtickers, constructors, tween, tweennames } from '../core/library.js';
-import { generateUuid, mergeOver, removeItem, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
+import { constructors, animationtickers } from '../core/library.js';
+import { generateUuid, mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
 
 export default function (obj = {}) {
 

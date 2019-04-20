@@ -2,7 +2,7 @@
 # Element factory
 */
 import { group, element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
+import { generateUuid, pushUnique, removeItem, xt } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import baseMix from '../mixin/base.js';

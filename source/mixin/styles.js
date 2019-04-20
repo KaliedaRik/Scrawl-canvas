@@ -3,7 +3,7 @@
 
 Note: this mixin needs to be applied after the position mixin in order to work properly
 */
-import { addStrings, defaultNonReturnFunction, isa_obj, mergeOver, pushUnique, xt, xta } from '../core/utilities.js';
+import { addStrings, defaultNonReturnFunction, mergeOver, xt } from '../core/utilities.js';
 
 import { makePalette } from '../factory/palette.js';
 

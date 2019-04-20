@@ -1,8 +1,11 @@
 /*
 # Picture factory
 */
-import { constructors, assetnames, asset } from '../core/library.js';
+import { constructors, asset } from '../core/library.js';
 import { mergeOver, xt, xta, addStrings } from '../core/utilities.js';
+
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
@@ -210,6 +213,92 @@ D.copyHeight = function (item) {
 ## Define prototype functions
 */
 
+
+/*
+Overwrites function defined in mixin/entity.js - takes into account image/videoAsset source attributes
+*/
+P.get = function (item) {
+
+	let source = this.source;
+
+	if ((item.indexOf('video_') === 0 || item.indexOf('image_') === 0) && source) {
+
+		if (gettableVideoAssetAtributes.indexOf(item) >= 0) return source[item.substring(6)];
+		else if (gettableImageAssetAtributes.indexOf(item) >= 0) return source[item.substring(6)];
+	}
+
+	else {
+
+		let getter = this.getters[item];
+
+		if (getter) return getter.call(this);
+
+		else {
+
+			let def = this.defs[item],
+				state = this.state,
+				val;
+
+			if (typeof def != 'undefined') {
+
+				val = this[item];
+				return (typeof val != 'undefined') ? val : def;
+			}
+
+			def = state.defs[item];
+
+			if (typeof def != 'undefined') {
+
+				val = state[item];
+				return (typeof val != 'undefined') ? val : def;
+			}
+			return undef;
+		}
+	}
+};
+
+/*
+Overwrites function defined in mixin/entity.js - takes into account State object attributes
+*/
+P.set = function (items = {}) {
+
+	if (items) {
+
+		let setters = this.setters,
+			defs = this.defs,
+			state = this.state,
+			source = this.source,
+			stateSetters = (state) ? state.setters : {},
+			stateDefs = (state) ? state.defs : {};
+
+		Object.entries(items).forEach(([key, value]) => {
+
+			if ((key.indexOf('video_') === 0 || key.indexOf('image_') === 0) && source) {
+
+				if (settableVideoAssetAtributes.indexOf(key) >= 0) source[key.substring(6)] = value
+				else if (settableImageAssetAtributes.indexOf(key) >= 0) source[key.substring(6)] = value
+			}
+
+			else if (key !== 'name') {
+
+				let predefined = setters[key],
+					stateFlag = false;
+
+				if (!predefined) {
+
+					predefined = stateSetters[key];
+					stateFlag = true;
+				}
+
+				if (predefined) predefined.call(stateFlag ? this.state : this, value);
+				else if (typeof defs[key] !== 'undefined') this[key] = value;
+				else if (typeof stateDefs[key] !== 'undefined') state[key] = value;
+			}
+		}, this);
+	}
+	return this;
+};
+
 /*
 
 */
@@ -320,7 +409,7 @@ Overrides mixin/entity.js
 */
 P.prepareStamp = function() {
 
-	this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
+	if (this.asset && this.asset.checkSource) this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
 
 	if (this.dirtyDimensions || this.dirtyHandle || this.dirtyScale) this.dirtyPaste = true;
 
@@ -444,6 +533,60 @@ P.stamper = {
 		
 		engine.globalCompositeOperation = gco;
 	},	
+};
+
+/*
+video actions
+*/
+P.videoAction = function (action, ...args) {
+
+	let myAsset = this.asset;
+
+	if (myAsset && myAsset.type === 'Video') return myAsset[action](...args);
+};
+
+P.videoPromiseAction = function (action, ...args) {
+
+	let myAsset = this.asset;
+
+	if (myAsset && myAsset.type === 'Video') return myAsset[action](...args);
+	else return Promise.reject('Asset not a video');
+};
+
+P.videoAddTextTrack = function (kind, label, language) {
+	return this.videoAction('addTextTrack', kind, label, language);
+};
+
+P.videoCaptureStream = function () {
+	return this.videoAction('captureStream');
+};
+
+P.videoCanPlayType = function (mytype) {
+	return this.videoAction('canPlayType', mytype);
+};
+
+P.videoFastSeek = function (time) {
+	return this.videoAction('fastSeek', time);
+};
+
+P.videoLoad = function () {
+	return this.videoAction('load');
+};
+
+P.videoPause = function () {
+	return this.videoAction('pause');
+};
+
+P.videoPlay = function () {
+	return this.videoPromiseAction('play');
+};
+
+P.videoSetMediaKeys = function (keys) {
+	return this.videoPromiseAction('setMediaKeys', keys);
+};
+
+P.videoSetSinkId = function () {
+	return this.videoPromiseAction('setSinkId');
 };
 
 

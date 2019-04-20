@@ -2,7 +2,7 @@
 # Quaternion factory
 */
 import { radian, constructors } from '../core/library.js';
-import { isa_obj, isa_quaternion, isa_vector, xt, xto } from '../core/utilities.js';
+import { isa_quaternion, isa_vector, xt, xto } from '../core/utilities.js';
 
 import { requestVector, releaseVector, makeVector } from './vector.js';
 

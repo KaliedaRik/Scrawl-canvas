@@ -2,7 +2,7 @@
 # Block factory
 */
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique } from '../core/utilities.js';
+import { mergeOver } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';

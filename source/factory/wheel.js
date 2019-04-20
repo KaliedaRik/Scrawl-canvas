@@ -2,7 +2,7 @@
 # Wheel factory
 */
 import { constructors, radian } from '../core/library.js';
-import { mergeOver, pushUnique, xt, xto } from '../core/utilities.js';
+import { mergeOver, xt, xto } from '../core/utilities.js';
 
 import { makePoint } from './point.js';
 

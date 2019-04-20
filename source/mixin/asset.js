@@ -8,7 +8,7 @@ export default function (obj = {}) {
 /*
 ## Define attributes
 
-All factories using the filter mixin will add these to their prototype objects
+All factories using the asset mixin will add these to their prototype objects
 */
 	let defaultAttributes = {
 
@@ -37,28 +37,13 @@ All factories using the filter mixin will add these to their prototype objects
 		D = obj.deltaSetters;
 
 /*
-
+imageAsset.js and videoAsset.js overwrite this function, thus only put here so cell.js also gains the function - which I don't think it will ever need as cells ARE their own source
 */
 	S.source = function (item = {}) {
 
 		if (item) {
 
-			// For &lt;img> and &lt;picture> elements
-			if (['IMG', 'PICTURE'].indexOf(item.tagName.toUpperCase()) >= 0) {
-
-				this.source = item;
-				this.sourceNaturalWidth = item.naturalWidth;
-				this.sourceNaturalHeight = item.naturalHeight;
-				this.sourceLoaded = item.complete;
-			}
-
-			// TODO: for &lt;video> elements
-			else if (item.tagName.toUpperCase() === 'VIDEO') {
-
-			}
-
 			// No action required for Canvas objects as they don't have a source; they ARE the source!
-
 			if (this.sourceLoaded) this.notifySubscribers();
 		}
 	};
@@ -75,23 +60,17 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.checkSource = function (width, height) {
+	obj.assetConstructor = function (items = {}) {
 
-		let el = this.source;
+		this.makeName(items.name);
+		this.register();
+		this.subscribers = [];
+		this.set(this.defs);
+		this.set(items);
 
-		if (this.sourceLoaded) {
+		if (items.subscribe) this.subscribers.push(items.subscribe);
 
-			if (this.sourceNaturalWidth !== el.naturalWidth || 
-					this.sourceNaturalHeight !== el.naturalHeight || 
-					this.sourceNaturalWidth !== width ||
-					this.sourceNaturalHeight !== height) {
-
-				this.sourceNaturalWidth = el.naturalWidth;
-				this.sourceNaturalHeight = el.naturalHeight;
-
-				this.notifySubscribers();
-			}
-		}
+		return this;
 	};
 
 /*

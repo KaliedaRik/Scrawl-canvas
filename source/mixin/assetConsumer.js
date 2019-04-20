@@ -5,6 +5,7 @@ import { mergeOver } from '../core/utilities.js';
 import { assetnames, asset } from '../core/library.js';
 
 import { importImage } from '../factory/imageAsset.js';
+import { importVideo } from '../factory/videoAsset.js';
 
 export default function (obj = {}) {
 
@@ -72,22 +73,37 @@ All factories using the position mixin will add these to their prototype objects
 */
 	S.imageSource = function (item) {
 
-		let results, myAsset;
+		let results = importImage(item);
 
-		if (item.substring) {
+		if (results) {
 
-			results = importImage(item);
+			let myAsset = asset[results[0]];
 
-			if (results) {
+			if (myAsset) {
 
-				myAsset = asset[results[0]]
+				if (this.asset) this.asset.unsubscribe(this);
+			
+				myAsset.subscribe(this);
+			}
+		}
+	};
 
-				if (myAsset) {
+/*
 
-					if (this.asset) this.asset.unsubscribe(this);
-				
-					myAsset.subscribe(this);
-				}
+*/
+	S.videoSource = function (item) {
+
+		let result = importVideo(item);
+
+		if (result) {
+
+			let myAsset = asset[result];
+
+			if (myAsset) {
+
+				if (this.asset) this.asset.unsubscribe(this);
+			
+				myAsset.subscribe(this);
 			}
 		}
 	};

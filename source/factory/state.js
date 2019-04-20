@@ -2,7 +2,7 @@
 # State factory
 */
 import { constructors, entity, styles } from '../core/library.js';
-import { addStrings, getSafeObject, isa_canvas, isa_engine, isa_obj, pushUnique, xt, xtGet } from '../core/utilities.js';
+import { isa_obj, xt, xtGet } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
