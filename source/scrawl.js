@@ -171,6 +171,16 @@ import { requestQuaternion,
 import { makeRadialGradient } from './factory/radialGradient.js';
 
 /*
+### ./factory/shape.js
+*/
+import { makeShape,
+	makeLine,
+	makeQuadratic,
+	makeBezier,
+	makeRectangle,
+	makeOval } from './factory/shape.js';
+
+/*
 ### ./factory/spritesheet.js
 
 Not importing 'makeSpritesheetAsset' - object is private to Scrawl-canvas
@@ -307,6 +317,13 @@ export default {
 	makePoint,
 	makeWheel,
 
+	makeShape,
+	makeLine,
+	makeQuadratic,
+	makeBezier,
+	makeRectangle,
+	makeOval,
+
 	requestQuaternion, 
 	releaseQuaternion,
 	requestVector, 
@@ -329,7 +346,7 @@ export default {
 	addNativeListener,
 	removeNativeListener,
 
-	// clear,
+	clear,
 	compile,
 	show,
 	render,

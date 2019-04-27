@@ -8,16 +8,11 @@ let testTicker = Date.now(),
 	testMessage = document.querySelector('#reportmessage');
 
 
-// Scene setup
-let artefact = scrawl.library.artefact,
-	piccy, stopE, events;
-
-
 // Get image from DOM
 scrawl.importDomImage('.flowers');
 
 // Create Picture entity
-piccy = scrawl.makePicture({
+let piccy = scrawl.makePicture({
 
 	name: 'myFlower',
 	asset: 'iris',
@@ -65,13 +60,13 @@ piccy.clone({
 });
 
 // Event listeners
-stopE = (e) => {
+let stopE = (e) => {
 
 	e.preventDefault();
 	e.returnValue = false;
 };
 
-events = (e) => {
+let events = (e) => {
 
 	let items = {};
 
@@ -245,11 +240,6 @@ scrawl.makeAnimation({
 				testTime = testNow - testTicker;
 				testTicker = testNow;
 
-				// testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}<br />
-				// lock to: ${element.lockXTo}; width: ${element.width}; height: ${element.height}<br />
-				// startX: ${element.start.x}; startY: ${element.start.y}; handleX: ${element.handle.x}; handleY: ${element.handle.y}<br />
-				// scale: ${element.scale}; roll: ${element.roll}&deg;; pitch: ${element.pitch}&deg;; yaw: ${element.yaw}&deg;`;
-
 				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 				assets: ${scrawl.library.assetnames.length}; artefacts: ${scrawl.library.artefactnames.length}`;
 
@@ -265,4 +255,3 @@ scrawl.makeAnimation({
 		});
 	}
 });
-console.log(scrawl.library);

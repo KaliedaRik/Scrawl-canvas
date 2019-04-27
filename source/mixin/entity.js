@@ -5,6 +5,7 @@ import * as library from '../core/library.js';
 import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
 	generateUuid, isa_fn, mergeOver, xt } from '../core/utilities.js';
 import { currentGroup } from '../core/DOM.js';
+import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makePoint } from '../factory/point.js';
 import { makeState } from '../factory/state.js';
@@ -274,6 +275,27 @@ ISSUE - stack elements get given a group String for this attribute; here we're j
 */
 
 /*
+
+*/
+	obj.getHostDimensions = function () {
+
+		if (this.group && this.group.host) {
+
+			let h = library.cell[this.group.host];
+
+			if (h) {
+
+				return {
+					w: h.localWidth,
+					h: h.localHeight
+				};
+			}
+		}
+		console.log(this.name, 'unable to get host dimensions - returning default 100 x 100');
+		return {w: 100, h: 100};
+	};
+
+/*
 Overwrites function defined in mixin/base.js - takes into account State object attributes
 */
 	obj.get = function (item) {
@@ -396,7 +418,7 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 
 		this.dirtyPathObject = true;
 
-		delete this.dirtyRotation;
+		this.dirtyRotation = null;
 	};
 
 /*
@@ -404,10 +426,9 @@ Overwrites the clone function in mixin/base.js
 */
 	obj.clone = function(items = {}) {
 
-		let self = this,
-			regex = /^(local|dirty|current)/,
+		let regex = /^(local|dirty|current)/,
 			stateDefs = this.state.defs,
-			copied;
+			copied, myCurrentState, myCloneState;
 
 		let updateCopiedState = (copy, defs, item) => {
 
@@ -427,7 +448,9 @@ Overwrites the clone function in mixin/base.js
 		let host = this.currentHost;
 		delete this.currentHost;
 
-		let state = mergeOver({}, this.state);
+		myCurrentState = this.state;
+		if (items.sharedState) myCloneState = this.state;
+		else myCloneState = mergeOver({}, this.state);
 		delete this.state;
 
 		if (this.asset || this.source) {
@@ -450,23 +473,26 @@ Overwrites the clone function in mixin/base.js
 		this.group = grp;
 		this.currentHost = host;
 
-		updateCopiedState(state, stateDefs, 'fillStyle');
-		updateCopiedState(state, stateDefs, 'strokeStyle');
-		updateCopiedState(state, stateDefs, 'shadowColor');
-		this.state = makeState(state);
+		this.state = myCurrentState;
+		if (!items.sharedState) {
+			
+			updateCopiedState(myCloneState, stateDefs, 'fillStyle');
+			updateCopiedState(myCloneState, stateDefs, 'strokeStyle');
+			updateCopiedState(myCloneState, stateDefs, 'shadowColor');
+		}
 
 		Object.entries(this).forEach(([key, value]) => {
 
 			if (regex.test(key)) delete copied[key];
-			if (isa_fn(this[key])) copied[key] = self[key];
+			if (isa_fn(this[key])) copied[key] = this[key];
 		}, this);
 
 		if (this.group) copied.group = this.group.name;
 
 		let clone = new library.constructors[this.type](copied);
 
-		if (items.sharedState) clone.state = self.state;
-		else clone.set(state);
+		if (items.sharedState) clone.state = myCloneState;
+		else clone.set(myCloneState);
 
 		clone.set(items);
 

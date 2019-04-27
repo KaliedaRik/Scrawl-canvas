@@ -331,7 +331,6 @@ All factories using the position mixin will add these to their prototype objects
 		this.checkVector('offset');
 		this.offset.x = (xt(item.x)) ? item.x : this.offset.x;
 		this.offset.y = (xt(item.y)) ? item.y : this.offset.y;
-		this.dirtyVelocity = true;
 		this.dirtyOffset = true;
 	};
 
@@ -391,11 +390,10 @@ All factories using the position mixin will add these to their prototype objects
 	};
 
 /*
-
+Overwrites the old delta object with a new one, thus no practical way of resetting a subset of existing attributes in the delta object with new values
 */
 	S.delta = function (item) {
 
-		// Overwrites the old delta object with a new one
 		this.delta = isa_obj(item) ? item : {};
 	};
 
@@ -436,7 +434,7 @@ All factories using the position mixin will add these to their prototype objects
 		this.checkVector('start');
 		this.start.x = (xt(item.x)) ? addStrings(this.start.x, item) : this.start.x;
 		this.start.y = (xt(item.y)) ? addStrings(this.start.y, item) : this.start.y;
-		this.dirtyVelocity = true;
+		this.dirtyStart = true;
 	};
 
 /*
@@ -467,7 +465,7 @@ All factories using the position mixin will add these to their prototype objects
 		this.checkVector('handle');
 		this.handle.x = (xt(item.x)) ? addStrings(this.handle.x, item) : this.handle.x;
 		this.handle.y = (xt(item.y)) ? addStrings(this.handle.y, item) : this.handle.y;
-		this.dirtyVelocity = true;
+		this.dirtyHandle = true;
 	};
 
 /*
@@ -499,7 +497,6 @@ All factories using the position mixin will add these to their prototype objects
 		this.offset.x = (xt(item.x)) ? addStrings(this.offset.x, item) : this.offset.x;
 		this.offset.y = (xt(item.y)) ? addStrings(this.offset.y, item) : this.offset.y;
 		this.dirtyOffset = true;
-		this.dirtyVelocity = true;
 	};
 
 /*
