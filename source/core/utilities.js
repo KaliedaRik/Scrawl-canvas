@@ -4,7 +4,7 @@
 import * as library from "./library.js";
 
 /*
-__addStrings__ adds the two arguments together and returns a percentage string value
+__addStrings__ adds the two arguments together and returns a percentage string value if either of the values was a string; 
 
 Examples:
 
@@ -22,10 +22,12 @@ Examples:
 */
 const addStrings = (current, delta) => {
 
+	let stringFlag = (current.substring || delta.substring) ? true : false;
+
 	if (current.toFixed) current += (delta.toFixed) ? delta : parseFloat(delta);
 	else current = parseFloat(current) + ((delta.toFixed) ? delta : parseFloat(delta));
 
-	return current + '%';
+	return (stringFlag) ? current + '%' : current;
 };
 
 /*

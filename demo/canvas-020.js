@@ -390,4 +390,3 @@ scrawl.library.artefact.myshape_fillDraw.set({
 
 // Display the scene
 scrawl.render().catch(() => {});
-console.log(scrawl.library.entity);

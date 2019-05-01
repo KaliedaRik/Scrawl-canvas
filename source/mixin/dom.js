@@ -1005,7 +1005,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 						rv = rotor.v;
 						ra = rotor.getAngle(false);
 						newtransform = `translate(${x}px,${y}px) rotate3d(${rv.x},${rv.y},${rv.z},${ra}rad) translateZ(${z}px) scale(${scale},${scale})`;
-						releaseQuaternion();
+						releaseQuaternion(rotor);
 					}
 					else {
 

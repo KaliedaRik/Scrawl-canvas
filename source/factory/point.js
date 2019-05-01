@@ -31,8 +31,8 @@ const Point = function (items = {}) {
 
 	this.dirtyStart = true;
 
-	delete this.dirtyRotation;
-	delete this.dirtyScale;
+	this.dirtyRotation = null;
+	this.dirtyScale = null;
 
 	return this;
 };

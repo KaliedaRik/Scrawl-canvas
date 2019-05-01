@@ -1,8 +1,10 @@
 /*
 # Shape factory
 */
-import { constructors } from '../core/library.js';
+import { constructors, radian } from '../core/library.js';
 import { mergeOver, xt, addStrings, xtGet } from '../core/utilities.js';
+
+import { requestVector, releaseVector } from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
@@ -17,6 +19,10 @@ const Shape = function (items = {}) {
 	this.entityInit(items);
 
 	this.units = [];
+	this.unitLengths = [];
+	this.unitPartials = [];
+
+	this.subscribers = [];
 
 	return this;
 };
@@ -49,9 +55,21 @@ let defaultAttributes = {
 	species: '',
 
 /*
+Only used when we kill/delete the entity - quick way of fining artefacts using this Shape as a path
+*/
+	subscribers: [],
+
+/*
 
 */
 	showBoundingBox: false,
+
+/*
+
+*/
+	useAsPath: false,
+	length: 0,
+	precision: 10,
 
 /*
 
@@ -393,27 +411,6 @@ D.end = function (item = {}) {
 	this.dirtyEnd = true;
 };
 
-P.setRectHelper = function (item, side) {
-
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
-
-	if(!item.substring) return item;
-	else {
-
-		let dim;
-
-		if (this.species === 'oval') {
-
-			let here = this.getHostDimensions();
-			
-			dim = here[side] || 100;
-		}
-		else dim = (side === 'w') ? this.rectangleWidth || 100 : this.rectangleHeight || 100; 
-
-		return (parseFloat(item) / 100) * dim;
-	}
-};
 S.radius = function (item) {
 
 	this.radiusTLX = this.radiusTRX = this.radiusBRX = this.radiusBLX = this.radiusX = this.setRectHelper(item, 'w');
@@ -524,23 +521,6 @@ S.radiusBLY = function (item) {
 	this.radiusBLY = this.setRectHelper(item, 'h');
 };
 
-P.deltaRectHelper = function (item, side, corner) {
-
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
-	
-	let r = this[corner];
-
-	if(!item.substring) return (r) ? r + item : item;
-	else {
-
-		let here = this.getHostDimensions(),
-			dim = here[side] || 100,
-			val = (parseFloat(item) / 100) * dim;
-
-		return (r) ? r + val : val;
-	}
-};
 D.radius = function (item) {
 
 	this.radiusTLX = this.radiusTRX = this.radiusBRX = this.radiusBLX = this.radiusX = this.deltaRectHelper(item, 'w', 'radiusX')
@@ -660,11 +640,85 @@ D.radiusBLY = function (item) {
 /*
 
 */
+P.setRectHelper = function (item, side) {
+
+	this.dirtySpecies = true;
+	this.dirtyPathObject = true;
+
+	if(!item.substring) return item;
+	else {
+
+		let dim;
+
+		if (this.species === 'oval') {
+
+			let here = this.getHostDimensions();
+			
+			dim = here[side] || 100;
+		}
+		else dim = (side === 'w') ? this.rectangleWidth || 100 : this.rectangleHeight || 100; 
+
+		return (parseFloat(item) / 100) * dim;
+	}
+};
+
+/*
+
+*/
+P.deltaRectHelper = function (item, side, corner) {
+
+	this.dirtySpecies = true;
+	this.dirtyPathObject = true;
+	
+	let r = this[corner];
+
+	if(!item.substring) return (r) ? r + item : item;
+	else {
+
+		let here = this.getHostDimensions(),
+			dim = here[side] || 100,
+			val = (parseFloat(item) / 100) * dim;
+
+		return (r) ? r + val : val;
+	}
+};
+
+/*
+
+*/
+P.positionPointOnPath = function (vals) {
+
+	let v = requestVector(vals);
+
+	v.vectorSubtract(this.currentHandle);
+
+	if(this.flipReverse) v.x = -v.x;
+	if(this.flipUpend) v.y = -v.y;
+
+	v.rotate(this.roll);
+
+	v.vectorAdd(this.currentStart).vectorAdd(this.currentOffset);
+
+	let res = {
+		x: v.x,
+		y: v.y
+	}
+
+	releaseVector(v);
+
+	return res;
+};
+
+/*
+
+*/
 P.getBezierXY = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 
+	let T = 1 - t;
+
 	return {
-		x: Math.pow(1-t,3) * sx + 3 * t * Math.pow(1 - t, 2) * cp1x + 3 * t * t * (1 - t) * cp2x + t * t * t * ex,
-		y: Math.pow(1-t,3) * sy + 3 * t * Math.pow(1 - t, 2) * cp1y + 3 * t * t * (1 - t) * cp2y + t * t * t * ey
+		x: (Math.pow(T, 3) * sx) + (3 * t * Math.pow(T, 2) * cp1x) + (3 * t * t * T * cp2x) + (t * t * t * ex),
+		y: (Math.pow(T, 3) * sy) + (3 * t * Math.pow(T, 2) * cp1y) + (3 * t * t * T * cp2y) + (t * t * t * ey)
 	};
 };
 
@@ -673,9 +727,22 @@ P.getBezierXY = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 */
 P.getQuadraticXY = function (t, sx, sy, cp1x, cp1y, ex, ey) {
 
+	let T = 1 - t;
+
 	return {
-		x: (1-t) * (1-t) * sx + 2 * (1-t) * t * cp1x + t * t * ex,
-		y: (1-t) * (1-t) * sy + 2 * (1-t) * t * cp1y + t * t * ey
+		x: T * T * sx + 2 * T * t * cp1x + t * t * ex,
+		y: T * T * sy + 2 * T * t * cp1y + t * t * ey
+	};
+};
+
+/*
+
+*/
+P.getLinearXY = function (t, sx, sy, ex, ey) {
+
+	return {
+		x: sx + ((ex - sx) * t),
+		y: sy + ((ey - sy) * t)
 	};
 };
 
@@ -684,10 +751,11 @@ P.getQuadraticXY = function (t, sx, sy, cp1x, cp1y, ex, ey) {
 */
 P.getBezierAngle = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 
-	let dx = Math.pow(1-t, 2) * (cp1x - sx) + 2 * t * (1 - t) * (cp2x - cp1x) + t * t * (ex - cp2x),
-		dy = Math.pow(1-t, 2) * (cp1y - sy) + 2 * t * (1 - t) * (cp2y - cp1y) + t * t * (ey - cp2y);
+	let T = 1 - t,
+		dx = Math.pow(T, 2) * (cp1x - sx) + 2 * t * T * (cp2x - cp1x) + t * t * (ex - cp2x),
+		dy = Math.pow(T, 2) * (cp1y - sy) + 2 * t * T * (cp2y - cp1y) + t * t * (ey - cp2y);
 
-	return -Math.atan2(dx, dy) + 0.5*Math.PI;
+	return (-Math.atan2(dx, dy) + (0.5 * Math.PI)) / radian;
 };
 
 /*
@@ -695,11 +763,169 @@ P.getBezierAngle = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 */
 P.getQuadraticAngle = function (t, sx, sy, cp1x, cp1y, ex, ey) {
 
-	let dx = 2 * (1 - t) * (cp1x - sx) + 2 * t * (ex - cp1x),
-		dy = 2 * (1 - t) * (cp1y - sy) + 2 * t * (ey - cp1y);
+	let T = 1 - t,
+		dx = 2 * T * (cp1x - sx) + 2 * t * (ex - cp1x),
+		dy = 2 * T * (cp1y - sy) + 2 * t * (ey - cp1y);
 
-	return -Math.atan2(dx, dy) + 0.5*Math.PI;
+	return (-Math.atan2(dx, dy) + (0.5 * Math.PI)) / radian;
 };
+
+/*
+
+*/
+P.getLinearAngle = function (t, sx, sy, ex, ey) {
+
+	let dx = ex - sx,
+		dy = ey - sy;
+
+	return (-Math.atan2(dx, dy) + (0.5 * Math.PI)) / radian;
+};
+
+/*
+
+*/
+P.getShapeUnitMetaData = function (species, args) {
+
+	let xPts = [],
+		yPts = [],
+		len = 0,
+		w, h;
+
+	// we want to separate out linear species before going into the while loop
+	// - because these calculations will be simple
+	if (species === 'linear') {
+
+		let [sx, sy, ex, ey] = args;
+
+		w = ex - sx,
+		h = ey - sy;
+
+		len = Math.sqrt((w * w) + (h * h));
+
+		xPts = xPts.concat([sx, ex]);
+		yPts = yPts.concat([sy, ey]);
+	}
+	else if (species === 'bezier' || (species === 'quadratic')) {
+
+		let func = (species === 'bezier') ? 'getBezierXY' : 'getQuadraticXY',
+			flag = false,
+			step = 0.25,
+			currentLength = 0,
+			newLength = 0,
+			precision = this.precision,
+			oldX, oldY, x, y, t, res;
+
+		while (!flag) {
+
+			xPts.length = 0;
+			yPts.length = 0;
+			newLength = 0;
+
+			res = this[func](0, ...args);
+			oldX = res.x;
+			oldY = res.y;
+			xPts.push(oldX);
+			yPts.push(oldY);
+
+			for (t = step; t <= 1; t += step) {
+
+				res = this[func](t, ...args);
+				({x, y} = res)
+
+				xPts.push(x);
+				yPts.push(y);
+
+				w = x - oldX,
+				h = y - oldY;
+
+				newLength += Math.sqrt((w * w) + (h * h));
+				oldX = x;
+				oldY = y;
+			}
+
+			// stop the while loop if we're getting close to the true length of the curve
+			if (newLength < len + precision) flag = true;
+
+			len = newLength;
+
+			step /= 2;
+
+			// stop the while loop after checking a maximum of 129 points along the curve
+			if (step < 0.004) flag = true;
+		}
+	}
+
+	return {
+		length: len,
+		xPoints: xPts,
+		yPoints: yPts
+	};
+};
+
+/*
+
+*/
+P.getPathPositionData = function (pos) {
+
+	if (pos.toFixed) {
+
+		let remainder = pos % 1,
+			unitPartials = this.unitPartials,
+			unitLengths = this.unitLengths,
+			previousLen = 0, 
+			stoppingLen, myLen, i, iz,
+			unit, species, vars, myPositionedPoint, myPoint, results, angle;
+
+		if (pos === 0 || pos === 1) remainder = pos;
+
+		// 1. determine the pertinent subpath to use for calculation
+		for (i = 0, iz = unitPartials.length; i < iz; i++) {
+
+			species = this.units[i][0];
+			if (species === 'move' || species === 'close' || species === 'unknown') continue;
+
+			stoppingLen = unitPartials[i];
+
+			if (remainder <= stoppingLen) {
+
+				// 2. calculate point along the subpath the pos value represents
+				unit = this.units[i];
+				myLen = (remainder - previousLen) / (stoppingLen - previousLen);
+
+				break;
+			}
+
+			previousLen = stoppingLen;
+		}
+
+		// 3. get coordinates and angle at that point from subpath; return results
+		if (unit) {
+
+			[species, ...vars] = unit;
+
+			switch (species) {
+
+				case 'linear' :
+					myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
+					myPoint.angle = this.getLinearAngle(myLen, ...vars);
+					break;
+
+				case 'quadratic' :
+					myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
+					myPoint.angle = this.getQuadraticAngle(myLen, ...vars);
+					break;
+					
+				case 'bezier' :
+					myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
+					myPoint.angle = this.getBezierAngle(myLen, ...vars);
+					break;
+			}
+
+			return myPoint;
+		}
+	}
+	return false;
+}
 
 /*
 Overwrites mixin.entity.js function
@@ -780,10 +1006,11 @@ P.cleanSpecies = function () {
 };
 
 /*
-TODO: this functionality is sub-optimal - the dimensions calculated will rarely coincide with the volumen covered by the drawn shape. A better solution is to draw (fill) the Shape on a canvas and check each pixel for opacity (but that probably requires a web worker and until we get support across browsers for offscreen Canvas elements that can be used in web workers we might as well stick with this solution)
+
 */
 P.calculateLocalPath = function (d) {
 
+	// setup local variables
 	let points = [],
 		myData = [],
 		command = '',
@@ -792,6 +1019,8 @@ P.calculateLocalPath = function (d) {
 		start = this.currentStart,
 		useAsPath = this.useAsPath,
 		units = this.units,
+		unitLengths = this.unitLengths,
+		unitPartials = this.unitPartials,
 		mySet = d.match(/([A-Za-z][0-9. ,\-]*)/g), 
 		i, iz, j, jz;
 
@@ -803,6 +1032,10 @@ P.calculateLocalPath = function (d) {
 	let xPoints = [],
 		yPoints = [];
 
+	let reflectX = 0,
+		reflectY = 0;
+
+	// local function to populate the temporary myData array with data for every path partial
 	let buildArrays = (thesePoints) => {
 
 		myData.push({
@@ -810,10 +1043,17 @@ P.calculateLocalPath = function (d) {
 			p: thesePoints || null,
 			x: oldX,
 			y: oldY,
+			cx: curX,
+			cy: curY,
+			rx: reflectX,
+			ry: reflectY
 		});
 
-		xPoints.push(curX);
-		yPoints.push(curY);
+		if (!useAsPath) {
+
+			xPoints.push(curX);
+			yPoints.push(curY);
+		}
 
 		oldX = curX;
 		oldY = curY;
@@ -823,6 +1063,7 @@ P.calculateLocalPath = function (d) {
 	// 1. convert all point values fromn strings to floats
 	// 2. scale every value
 	// 3. relativize every value to the last stated cursor position
+	// 4. populate the temporary myData array with data which can be used for all subsequent calculations
 	for (i = 0, iz = mySet.length; i < iz; i++) {
 
 		command = mySet[i][0];
@@ -857,6 +1098,7 @@ P.calculateLocalPath = function (d) {
 
 						points[j] = (points[j] * scale) - oldX;
 						curX += points[j];
+						reflectX = reflectY = 0;
 						buildArrays(points.slice(j, j + 1));
 					}
 					break;
@@ -866,6 +1108,7 @@ P.calculateLocalPath = function (d) {
 
 						points[j] = (points[j] * scale) - oldY;
 						curY += points[j];
+						reflectX = reflectY = 0;
 						buildArrays(points.slice(j, j + 1));
 					}
 					break;
@@ -877,6 +1120,7 @@ P.calculateLocalPath = function (d) {
 						points[j + 1] = (points[j + 1] * scale) - oldY;
 						curX += points[j];
 						curY += points[j + 1];
+						reflectX = reflectY = 0;
 						buildArrays(points.slice(j, j + 2));
 					}
 					break;
@@ -889,6 +1133,16 @@ P.calculateLocalPath = function (d) {
 						points[j + 1] = (points[j + 1] * scale) - oldY;
 						curX += points[j];
 						curY += points[j + 1];
+
+						if (command === 'T') {
+
+							reflectX = points[j] + oldX;
+							reflectY = points[j + 1] + oldY;
+						}
+						else {
+
+							reflectX = reflectY = 0;
+						}
 						buildArrays(points.slice(j, j + 2));
 					}
 					break;
@@ -903,6 +1157,8 @@ P.calculateLocalPath = function (d) {
 						points[j + 3] = (points[j + 3] * scale) - oldY;
 						curX += points[j + 2];
 						curY += points[j + 3];
+						reflectX = points[j] + oldX;
+						reflectY = points[j + 1] + oldY;
 						buildArrays(points.slice(j, j + 4));
 					}
 					break;
@@ -918,6 +1174,8 @@ P.calculateLocalPath = function (d) {
 						points[j + 5] = (points[j + 5] * scale) - oldY;
 						curX += points[j + 4];
 						curY += points[j + 5];
+						reflectX = points[j + 2] + oldX;
+						reflectY = points[j + 3] + oldY;
 						buildArrays(points.slice(j, j + 6));
 					}
 					break;
@@ -929,6 +1187,7 @@ P.calculateLocalPath = function (d) {
 						points[j + 6] = (points[j + 6] * scale) - oldY;
 						curX += points[j + 5];
 						curY += points[j + 6];
+						reflectX = reflectY = 0;
 						buildArrays(points.slice(j, j + 7));
 					}
 					break;
@@ -938,6 +1197,7 @@ P.calculateLocalPath = function (d) {
 
 						points[j] *= scale;
 						curX += points[j];
+						reflectX = reflectY = 0;
 						buildArrays(points.slice(j, j + 1));
 					}
 					break;
@@ -947,6 +1207,7 @@ P.calculateLocalPath = function (d) {
 
 						points[j] *= scale;
 						curY += points[j];
+						reflectX = reflectY = 0;
 						buildArrays(points.slice(j, j + 1));
 					}
 					break;
@@ -960,6 +1221,16 @@ P.calculateLocalPath = function (d) {
 						points[j + 1] *= scale;
 						curX += points[j];
 						curY += points[j + 1];
+
+						if (command === 't') {
+
+							reflectX = points[j] + oldX;
+							reflectY = points[j + 1] + oldY;
+						}
+						else {
+
+							reflectX = reflectY = 0;
+						}
 						buildArrays(points.slice(j, j + 2));
 					}
 					break;
@@ -974,6 +1245,8 @@ P.calculateLocalPath = function (d) {
 						points[j + 3] *= scale;
 						curX += points[j + 2];
 						curY += points[j + 3];
+						reflectX = points[j] + oldX;
+						reflectY = points[j + 1] + oldY;
 						buildArrays(points.slice(j, j + 4));
 					}
 					break;
@@ -989,6 +1262,8 @@ P.calculateLocalPath = function (d) {
 						points[j + 5] *= scale;
 						curX += points[j + 4];
 						curY += points[j + 5];
+						reflectX = points[j + 2] + oldX;
+						reflectY = points[j + 3] + oldY;
 						buildArrays(points.slice(j, j + 6));
 					}
 					break;
@@ -1002,13 +1277,18 @@ P.calculateLocalPath = function (d) {
 						points[j + 6] *= scale;
 						curX += points[j + 5];
 						curY += points[j + 6];
+						reflectX = reflectY = 0;
 						buildArrays(points.slice(j, j + 7));
 					}
 					break;
 			}
 
 		}
-		else buildArrays();
+		else {
+
+			reflectX = reflectY = 0;
+			buildArrays();
+		}
 	}
 
 	// this loop builds the local path string
@@ -1025,15 +1305,161 @@ P.calculateLocalPath = function (d) {
 			}
 
 			localPath += `${curData.c}${curData.p.join()}`;
+
+			for (j = 0, jz = points.length; j < jz; j++) {
+
+				points[j] = parseFloat(points[j]);
+			}
+
 		}
 		else localPath += `${curData.c}`;
 	}
 
+	if (useAsPath) {
+
+		units.length = 0;
+
+		// request a vector - used for reflection points
+		let v = requestVector();
+
+		// this loop calculates this.units array data
+		// - because the lengths calculations requires absolute coordinates
+		// - and TtSs path units use reflective coordinates
+		for (i = 0, iz = myData.length; i < iz; i++) {
+
+			let curData = myData[i],
+				prevData = (i > 0) ? myData[i - 1] : false;
+
+			let {c, p, x, y, cx, cy, rx, ry} = curData;
+
+			switch (c) {
+
+				case 'h' :
+					units[i] = ['linear', x, y, p[0] + x, y];
+					break;
+
+				case 'v' :
+					units[i] = ['linear', x, y, x, p[0] + y];
+					break;
+					
+				case 'm' :
+					units[i] = ['move', x, y];
+					break;
+					
+				case 'l' :
+					units[i] = ['linear', x, y, p[0] + x, p[1] + y];
+					break;
+					
+				case 't' :
+					if (prevData && (prevData.rx || prevData.ry)) {
+
+						v.set({
+							x: prevData.rx - cx,
+							y: prevData.ry - cy,
+						}).rotate(180);
+
+						units[i] = ['quadratic', x, y, v.x + cx, v.y + cy, p[0] + x, p[1] + y];
+					}
+					else units[i] = ['quadratic', x, y, x, y, p[0] + x, p[1] + y];
+					break;
+					
+				case 'q' :
+					units[i] = ['quadratic', x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
+					break;
+					
+				case 's' :
+					if (prevData && (prevData.rx || prevData.ry)) {
+
+						v.set({
+							x: prevData.rx - cx,
+							y: prevData.ry - cy,
+						}).rotate(180);
+
+						units[i] = ['bezier', x, y, v.x + cx, v.y + cy, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
+					}
+					else units[i] = ['bezier', x, y, x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
+					break;
+					
+				case 'c' :
+					units[i] = ['bezier', x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y, p[4] + x, p[5] + y];
+					break;
+					
+				case 'a' :
+					units[i] = ['linear', x, y, p[5] + x, p[6] + y];
+					break;
+					
+				case 'z' :
+					units[i] = ['close', x, y]
+					break;
+
+				default :
+					units[i] = ['unknown', x, y]
+			}
+		}
+
+		// release the vector
+		releaseVector(v);
+
+		// Should now be in a good position to calculate unit lengths and generate data for boundingBox arrays
+		unitLengths.length = 0;
+
+		for (i = 0, iz = units.length; i < iz; i++) {
+
+			let [spec, ...data] = units[i],
+				results;
+
+			switch (spec) {
+
+				case 'linear' :
+				case 'quadratic' :
+				case 'bezier' :
+					results = this.getShapeUnitMetaData(spec, data);
+					unitLengths[i] = results.length;
+					xPoints = xPoints.concat(results.xPoints);
+					yPoints = yPoints.concat(results.yPoints);
+					break;
+					
+				default :
+					unitLengths[i] = 0;
+			}
+		}
+
+		// Build the partials array
+		unitPartials.length = 0;
+
+		let myLen = unitLengths.reduce((a, v) => a + v, 0);
+
+		let mySum = 0;
+
+		for (i = 0, iz = unitLengths.length; i < iz; i++) {
+
+			mySum += unitLengths[i] / myLen;
+			unitPartials[i] = mySum;
+		}
+
+		this.length = parseFloat(myLen.toFixed(1));
+	}
+	// calculate bounding box dimensions
 	let maxX = Math.max(...xPoints),
 		maxY = Math.max(...yPoints),
 		minX = Math.min(...xPoints),
 		minY = Math.min(...yPoints);
 
+	// pad excessively thin widths and heights
+	// - in particular for quad and bezier curves not being used as paths
+	if ((maxX - minX) < 10) {
+
+		maxX += 5;
+		minX -= 5;
+	}
+
+	if ((maxY - minY) < 10) {
+
+		maxY += 5;
+		minY -= 5;
+	}
+
+	// set Shape attributes with results of work
 	this.localWidth = parseFloat((maxX - minX).toFixed(1));
 	this.localHeight = parseFloat((maxY - minY).toFixed(1));
 	this.localBoxStartX = parseFloat(minX.toFixed(1));
@@ -1048,56 +1474,48 @@ P.stamper = {
 
 	draw: function (engine, entity) {
 
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-
 		engine.stroke(entity.pathObject);
+		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
 	},
 
 	fill: function (engine, entity) {
 
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-
 		engine.fill(entity.pathObject, entity.winding);
+		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
 	},
 
 	drawFill: function (engine, entity) {
 
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-
 		engine.stroke(entity.pathObject);
 		entity.currentHost.clearShadow();
 		engine.fill(entity.pathObject, entity.winding);
+		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
 	},
 
 	fillDraw: function (engine, entity) {
 
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-
 		engine.stroke(entity.pathObject);
 		entity.currentHost.clearShadow();
 		engine.fill(entity.pathObject, entity.winding);
 		engine.stroke(entity.pathObject);
+		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
 	},
 
 	floatOver: function (engine, entity) {
 
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-
 		engine.stroke(entity.pathObject);
 		engine.fill(entity.pathObject, entity.winding);
+		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
 	},
 
 	sinkInto: function (engine, entity) {
 
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-
 		engine.fill(entity.pathObject, entity.winding);
 		engine.stroke(entity.pathObject);
+		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
 	},
 
 	clear: function (engine, entity) {
-
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
 
 		let gco = engine.globalCompositeOperation;
 
@@ -1105,6 +1523,8 @@ P.stamper = {
 		engine.fill(entity.pathObject, entity.winding);
 		
 		engine.globalCompositeOperation = gco;
+
+		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
 	},	
 };
 
@@ -1246,141 +1666,6 @@ P.makeLinearPath = function (items = {}) {
 	return `m0,0l${(endX - startX)},${(endY - startY)}`;
 };
 
-		/**
-A __factory__ function to generate regular entitys such as triangles, stars, hexagons, etc
-
-The argument can include:
-* __angle__ - Number; eg an angle of 72 produces a pentagon, while 144 produces a five-pointed star - default: 0
-* __sides__ - Number; number of sides to the regular entity - default: 0
-* __outline__ - Number; default: 0
-* __radius__ - Number; default: 0 (not retained)
-* __startControlX__ - Number or % String - x coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)
-* __controlX__ - alias for startControlX; default: 0 (not retained)
-* __startControlY__ - Number or % String - y coordinate for control (quadratic) or startControl (bezier) curve; default: 0 (not retained)
-* __controlY__ - alias for startControlY; default: 0 (not retained)
-* __endControlX__ - Number or % String - x coordinate for endControl (bezier) curve; default: 0 (not retained)
-* __endControlY__ - Number or % String - y coordinate for endControl (bezier) curve; default: 0 (not retained)
-* __lineType__ - String defining type of line/curve to use for generated entity (not retained)
-* __shape__ - Boolean, true to create Shape; false (default) to create Path (not retained)
-* any other legitimate Entity, Context or Shape/Path attribute
-
-Entitys can be generated using lines, or quadratic or bezier curves. The species of line to use is defined in the __lineType__ attribute which accepts the following values:
-* '__l__' - straight line (default)
-* '__q__' - quadratic curve
-* '__t__' - reflected quadratic curve
-* '__c__' - bezier curve
-* '__s__' - reflected bezier curve
-
-_Either the 'angle' attribute or the 'sides' attribute (but not both) must be included in the argument object_
-
-Percentage String values are relative to the entity's cell's dimensions
-
-@method makeRegularShape
-@param {Object} items Object containing attributes
-@return Shape or Path entity object
-**/
-// my.makeRegularShape = function(items) {
-// 	var stat1 = ['c', 's', 'q', 't', 'l'],
-// 		stat2 = ['s', 't'],
-// 		stat3 = ['c', 's', 'q', 't'],
-// 		stat4 = ['c', 'q'],
-// 		cell,
-// 		startX, startY, radius,
-// 		turn, currentAngle,
-// 		count, test,
-// 		species,
-// 		c1x, c1y, c2x, c2y,
-// 		data,
-// 		conv = my.Position.prototype.numberConvert,
-// 		get = my.xtGet,
-// 		cont = my.contains,
-// 		wv1, wv2, wc1, wc2,
-// 		sides, angle;
-// 	items = my.safeObject(items);
-// 	cell = my.Entity.prototype.getEntityCell(items);
-// 	sides = items.sides;
-// 	angle = items.angle;
-// 	if (my.xto(sides, angle)) {
-// 		items.closed = true;
-// 		items.isLine = false;
-// 		c1x = get(items.startControlX, items.controlX, 0);
-// 		c1y = get(items.startControlY, items.controlY, 0);
-// 		c2x = items.endControlX || 0;
-// 		c2y = items.endControlY || 0;
-// 		c1x = (c1x.substring) ? conv(c1x, cell.actualWidth) : c1x;
-// 		c1y = (c1y.substring) ? conv(c1y, cell.actualHeight) : c1y;
-// 		c2x = (c2x.substring) ? conv(c2x, cell.actualWidth) : c2x;
-// 		c2y = (c2y.substring) ? conv(c2y, cell.actualHeight) : c2y;
-// 		species = (cont(stat1, items.lineType)) ? items.lineType : 'l';
-// 		radius = items.radius || 20;
-// 		// - known bug: items.sides has difficulty exiting the loop, hence the count<1000 limit
-// 		turn = (sides && sides.toFixed && sides > 1) ? 360 / sides : ((angle && angle.toFixed && angle > 0) ? angle : 4);
-// 		currentAngle = 0;
-// 		count = 0;
-// 		wv1 = my.requestVector();
-// 		wv2 = my.requestVector();
-// 		wc1 = my.requestVector();
-// 		wc2 = my.requestVector();
-// 		wv1.x = wv2.x = radius;
-// 		wv1.y = wv2.y = 0;
-// 		wc1.x = c1x;
-// 		wc1.y = c1y;
-// 		wc2.x = c2x;
-// 		wc2.y = c2y;
-// 		data = 'm' + wv1.x.toFixed(1) + ',' + wv1.y.toFixed(1);
-// 		if (cont(stat2, species)) {
-// 			data += ('s' === species) ? 'c' : 'q';
-// 		}
-// 		else {
-// 			data += species;
-// 		}
-// 		do {
-// 			count++;
-// 			currentAngle += turn;
-// 			currentAngle = currentAngle % 360;
-// 			test = currentAngle.toFixed(0);
-// 			wv1.rotate(turn);
-// 			wc1.rotate(turn);
-// 			wc2.rotate(turn);
-// 			if (cont(stat3, species)) {
-// 				if (1 === count && cont(stat2, species)) {
-// 					if ('s' === species) {
-// 						data += wc1.x.toFixed(1) + ',' + wc1.y.toFixed(1) + ' ' + wc2.x.toFixed(1) + ',' + wc2.y.toFixed(1) + ' ';
-// 					}
-// 					else {
-// 						data += wc1.x.toFixed(1) + ',' + wc1.y.toFixed(1) + ' ';
-// 					}
-// 				}
-// 				else {
-// 					if ('s' === species) {
-// 						data += wc2.x.toFixed(1) + ',' + wc2.y.toFixed(1) + ' ';
-// 					}
-// 					else if (cont(stat4, species)) {
-// 						data += wc1.x.toFixed(1) + ',' + wc1.y.toFixed(1) + ' ';
-// 					}
-// 				}
-// 			}
-// 			if ('c' === species) {
-// 				data += wc2.x.toFixed(1) + ',' + wc2.y.toFixed(1) + ' ';
-// 			}
-// 			data += (wv1.x - wv2.x).toFixed(1) + ',' + (wv1.y - wv2.y).toFixed(1) + ' ';
-// 			if (1 === count) {
-// 				if (cont(stat2, species)) {
-// 					data += ('s' === species) ? 's' : 't';
-// 				}
-// 			}
-// 			wv2.set(wv1);
-// 		} while (test !== '0' && count < 1000);
-// 		data += 'z';
-// 		items.data = data;
-// 		my.releaseVector(wv1);
-// 		my.releaseVector(wv2);
-// 		my.releaseVector(wc1);
-// 		my.releaseVector(wc2);
-// 		return (items.shape) ? my.makeShape(items) : my.makePath(items);
-// 	}
-// 	return false;
-// };
 
 /*
 ## Exported factory functions

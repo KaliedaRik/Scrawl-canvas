@@ -26,23 +26,42 @@ let arrow = scrawl.makeShape({
 	lineWidth: 10,
 	lineJoin: 'round',
 
-	strokeStyle: 'darkgreen',
 	fillStyle: 'lightgreen',
 
-	method: 'drawFill',
+	method: 'fill',
+
 	showBoundingBox: true,
-
+	useAsPath: true,
+	precision: 2,
 });
 
-scrawl.makeWheel({
-
+let myWheel = scrawl.makeWheel({
 	fillStyle: 'red',
-	radius: 5,
-	pivot: 'myArrow',
-	lockTo: 'pivot',
+	radius: 3,
+	path: 'myArrow',
+	pathPosition: 0,
+	lockTo: 'path',
 
+	delta: {
+		pathPosition: 0.0008,
+	}
+})
 
-});
+for (let i = 0.01; i < 1; i += 0.01) {
+
+	let col;
+
+	if (i < 0.2) col = 'red';
+	else if (i < 0.4) col = 'orange';
+	else if (i < 0.6) col = 'darkgreen';
+	else if (i < 0.8) col = 'blue';
+	else col = 'purple';
+
+	myWheel.clone({
+		pathPosition: i,
+		fillStyle: col,
+	})
+}
 
 
 // Event listeners
@@ -153,7 +172,7 @@ document.querySelector('#reverse').options.selectedIndex = 0;
 // Animation 
 scrawl.makeAnimation({
 
-	name: 'testC021Display',
+	name: 'testC023Display',
 	
 	fn: function(){
 		
@@ -166,7 +185,8 @@ scrawl.makeAnimation({
 				testTime = testNow - testTicker;
 				testTicker = testNow;
 
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}<br />
+					Shape path length: ${arrow.length}`;
 
 				resolve(true);
 			})

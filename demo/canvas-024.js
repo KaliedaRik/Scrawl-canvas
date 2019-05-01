@@ -2,6 +2,12 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
+// Time display variables
+let testTicker = Date.now(),
+	testTime, testNow, 
+	testMessage = document.querySelector('#reportmessage');
+
+
 // Scene setup
 let library = scrawl.library;
 
@@ -19,7 +25,9 @@ scrawl.makeOval({
 	startX: 20,
 	startY: 20,
 	radius: 40,
+
 	showBoundingBox: true,
+	useAsPath: true,
 
 }).clone({
 	name: 'ellipse',
@@ -45,7 +53,6 @@ scrawl.makeOval({
 	startX: 470,
 	startY: 32,
 	radius: 50,
-
 	offshootA: 1.2,
 	offshootB: -0.5,
 	intersectY: 0.32,
@@ -60,7 +67,9 @@ scrawl.makeRectangle({
 	radius: '50%',
 	fillStyle: 'lightblue',
 	method: 'fillDraw',
+
 	showBoundingBox: true,
+	useAsPath: true,
 
 }).clone({
 	name: 'tab',
@@ -94,7 +103,9 @@ scrawl.makeLine({
 	lineCap: 'round',
 	strokeStyle: 'darkgoldenrod',
 	method: 'draw',
+
 	showBoundingBox: true,
+	useAsPath: true,
 
 }).clone({
 	name: 'secondLine',
@@ -121,7 +132,9 @@ scrawl.makeQuadratic({
 	lineCap: 'round',
 	strokeStyle: 'darkseagreen',
 	method: 'draw',
+
 	showBoundingBox: true,
+	useAsPath: true,
 
 }).clone({
 	name: 'secondQuad',
@@ -150,7 +163,9 @@ scrawl.makeBezier({
 	lineCap: 'round',
 	strokeStyle: 'linen',
 	method: 'draw',
+
 	showBoundingBox: true,
+	useAsPath: true,
 
 }).clone({
 	name: 'secondBezier',
@@ -167,6 +182,127 @@ scrawl.makeBezier({
 	endX: '91%',
 });
 
+scrawl.makePicture({
 
-// Display the scene
-scrawl.render().catch(() => {});
+	name: '_tab',
+	imageSource: 'img/bunny.png',
+
+	width: 26,
+	height: 37,
+
+	copyWidth: 26,
+	copyHeight: 37,
+
+	handleX: 'center',
+	handleY: 'center',
+
+	path: 'tab',
+	pathPosition: 0,
+	lockTo: 'path',
+	addPathRoll: true,
+
+	delta: {
+		pathPosition: 0.0015,
+	}
+}).clone({
+	name: '_blockRectangle',
+	path: 'blockRectangle',
+	pathPosition: 0.05,
+}).clone({
+	name: '_circle',
+	path: 'circle',
+	pathPosition: 0.1,
+}).clone({
+	name: '_egg',
+	path: 'egg',
+	pathPosition: 0.15,
+}).clone({
+	name: '_ellipse',
+	path: 'ellipse',
+	pathPosition: 0.2,
+}).clone({
+	name: '_firstBezier',
+	path: 'firstBezier',
+	pathPosition: 0.25,
+}).clone({
+	name: '_firstLine',
+	path: 'firstLine',
+	pathPosition: 0.3,
+}).clone({
+	name: '_firstQuad',
+	path: 'firstQuad',
+	pathPosition: 0.35,
+}).clone({
+	name: '_notRectangle',
+	path: 'notRectangle',
+	pathPosition: 0.4,
+}).clone({
+	name: '_ovalRectangle',
+	path: 'ovalRectangle',
+	pathPosition: 0.45,
+}).clone({
+	name: '_secondBezier',
+	path: 'secondBezier',
+	pathPosition: 0.5,
+}).clone({
+	name: '_secondLine',
+	path: 'secondLine',
+	pathPosition: 0.55,
+}).clone({
+	name: '_secondQuad',
+	path: 'secondQuad',
+	pathPosition: 0.6,
+}).clone({
+	name: '_shield',
+	path: 'shield',
+	pathPosition: 0.65,
+}).clone({
+	name: '_splodge',
+	path: 'splodge',
+	pathPosition: 0.7,
+}).clone({
+	name: '_thirdBezier',
+	path: 'thirdBezier',
+	pathPosition: 0.75,
+}).clone({
+	name: '_thirdQuad',
+	path: 'thirdQuad',
+	pathPosition: 0.8,
+}).clone({
+	name: '_thirdLine',
+	path: 'thirdLine',
+	pathPosition: 0.85,
+});
+
+
+// Animation 
+scrawl.makeAnimation({
+
+	name: 'testC024Display',
+	
+	fn: function(){
+		
+		return new Promise((resolve) => {
+
+			scrawl.render()
+			.then(() => {
+
+				testNow = Date.now();
+				testTime = testNow - testTicker;
+				testTicker = testNow;
+
+				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+
+				resolve(true);
+			})
+			.catch((err) => {
+
+				testTicker = Date.now();
+				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
+
+				resolve(false);
+			});
+		});
+	}
+});
+console.log(library.entity);

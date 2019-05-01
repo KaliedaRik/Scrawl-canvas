@@ -3,7 +3,7 @@
 */
 import * as library from '../core/library.js';
 import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
-	generateUuid, isa_fn, mergeOver, xt } from '../core/utilities.js';
+	generateUuid, isa_fn, mergeOver, xt, addStrings } from '../core/utilities.js';
 import { currentGroup } from '../core/DOM.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
@@ -458,8 +458,10 @@ Overwrites the clone function in mixin/base.js
 			let tempAsset = this.asset,
 				tempSource = this.source;
 
-			delete this.asset;
-			delete this.source;
+			// delete this.asset;
+			// delete this.source;
+			this.asset = tempAsset.name;
+			this.source = tempSource.name;
 
 			copied = JSON.parse(JSON.stringify(this));
 

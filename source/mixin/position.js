@@ -92,7 +92,12 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
-		pathRoll: 0,
+		path: '',
+
+/*
+
+*/
+		pathPosition: 0,
 
 /*
 
@@ -762,13 +767,45 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
+	obj.getPathData = function () {
+
+		let pathPos = this.pathPosition;
+
+		if (this.currentPathData && this.currentPathPosition === pathPos) return this.currentPathData;
+		else {
+
+			let path = this.path;
+
+			if (path && path.substring) {
+
+				path = this.path = artefact[this.path];
+
+				if (path.type === 'Shape' && path.useAsPath) path.subscribers.push(this.name);
+				else {
+
+					path = this.path = false;
+				}
+			}
+			if (path) {
+
+				this.currentPathData = path.getPathPositionData(pathPos);
+				this.currentPathPosition = pathPos;
+				return this.currentPathData;
+			}
+		}
+		return false;
+	};
+
+/*
+
+*/
 	obj.updateStampX = function () {
 
 		let lock = this.lockXTo,
 			cs = this.currentStart,
 			ct = this.currentOffset,
 			dt = this.dragOffset,
-			pivot, here, host,
+			pivot, path, pathData, here, host,
 			z = cs.x;
 
 		if (lock !== 'start') {
@@ -785,6 +822,12 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 					break;
 
 				case 'path' :
+					if (this.path) {
+
+						pathData = this.getPathData();
+
+						if (pathData) z = pathData.x;
+					}
 					break;
 
 				case 'mouse' :
@@ -822,7 +865,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 			cs = this.currentStart,
 			ct = this.currentOffset,
 			dt = this.dragOffset,
-			pivot, here, host,
+			pivot, path, pathData, here, host,
 			z = cs.y;
 
 		if (lock !== 'start') {
@@ -839,6 +882,12 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 					break;
 
 				case 'path' :
+					if (this.path) {
+
+						pathData = this.getPathData();
+
+						if (pathData) z = pathData.y;
+					}
 					break;
 
 				case 'mouse' :

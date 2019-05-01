@@ -1074,13 +1074,13 @@ P.rotateDestination = function (engine, x, y, entity) {
 		reverse, upend, cos, sin,
 		rotation = 0, 
 		pivot = (self.pivot) ? artefact[self.pivot] : false, 
-		rotateOnPivot, pivotRoll, addPivotHandle, ph, addPathRoll;
+		rotateOnPivot, pivotRoll, addPivotHandle, ph, addPathRoll, pathRoll;
 
 	reverse = (self.flipReverse) ? -1 : 1;
 	upend = (self.flipUpend) ? -1 : 1;
 	rotateOnPivot = self.rotateOnPivot;
 	addPivotHandle = self.addPivotHandle;
-	addPathRoll = self.addPathRoll;
+	pathRoll = (self.addPathRoll && self.currentPathData && self.currentPathData.angle) ? self.currentPathData.angle : 0;
 
 	if (pivot && addPivotHandle) {
 
@@ -1095,19 +1095,15 @@ P.rotateDestination = function (engine, x, y, entity) {
 		if (self.lockXTo === 'pivot') engine.translate(-ph.x, 0);
 		if (self.lockYTo === 'pivot') engine.translate(0, -ph.y);
 
-		rotation += self.roll;
-
-		if (addPathRoll) rotation += self.pathRoll;
+		rotation += self.roll + pathRoll;
 
 		if (rotation) engine.rotate(rotation * radian);
 	}
 	else {
 
-		rotation += self.roll;
+		rotation += self.roll + pathRoll;
 
 		if (pivot && rotateOnPivot) rotation += pivot.roll;
-
-		if (addPathRoll) rotation += self.pathRoll;
 
 		if (rotation) {
 

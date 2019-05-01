@@ -152,6 +152,18 @@ P.rotate = function (angle) {
 };
 
 /*
+
+*/
+P.reverse = function () {
+
+	this.x = -this.x;
+	this.y = -this.y;
+	this.z = -this.z;
+	return this;
+};
+
+
+/*
 P.setMagnitudeTo = function (item) {
 
 	this.normalize();
