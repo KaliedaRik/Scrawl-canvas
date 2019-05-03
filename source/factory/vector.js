@@ -146,7 +146,6 @@ P.rotate = function (angle) {
 		stat_vr[1] = this.getMagnitude();
 		this.x = stat_vr[1] * Math.cos(stat_vr[0]);
 		this.y = stat_vr[1] * Math.sin(stat_vr[0]);
-		return this;
 	}
 	return this;
 };

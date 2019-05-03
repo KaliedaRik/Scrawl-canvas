@@ -55,7 +55,7 @@ let defaultAttributes = {
 	species: '',
 
 /*
-Only used when we kill/delete the entity - quick way of fining artefacts using this Shape as a path
+Only used when we kill/delete the entity - quick way of finding artefacts using this Shape as a path
 */
 	subscribers: [],
 
@@ -71,11 +71,22 @@ Only used when we kill/delete the entity - quick way of fining artefacts using t
 	length: 0,
 	precision: 10,
 
+// TODO - takes 'elements' and 'repeat' as arguments
+// TODO - takes 'elements', 'rectangleWidth' and 'rectangleHeight' as arguments
+// TODO - like oval, but connected by straight lines
+
+// TODO - takes 'sides' and 'radius' as arguments
+// TODO - takes 'points', 'radiusX' and 'radiusY' as arguments
+// TODO - takes 'flavour' and 'pointsArray' as arguments
+
 /*
 
 */
 	rectangleWidth: 10,
 	rectangleHeight: 10,
+	// NEW - need setters etc
+	elements: [],
+	repeat: 0,
 
 /*
 
@@ -98,6 +109,24 @@ Only used when we kill/delete the entity - quick way of fining artefacts using t
 	intersectY: 0.5,
 	offshootA: 0.55,
 	offshootB: 0,
+
+/*
+
+*/
+	// NEW - need setters etc
+	sides: 0,
+	sideLength: 0,
+	radius1: 0,
+	radius2: 0,
+	points: 0,
+	twist: 0,
+
+/*
+
+*/
+	// NEW - need setters etc
+	flavour: '',
+	pointsArray: [],
 
 /*
 
@@ -183,7 +212,7 @@ S.species = function (item) {
 		if (item) this.dirtyPathObject = true;
 
 		this.species = item;
-		this.dirtySpecies = true;
+		this.updateDirty();
 	}
 };
 
@@ -191,8 +220,7 @@ S.startControlX = function (item) {
 
 	this.checkVector('startControl');
 	this.startControl.x = item;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyStartControl = true;
 };
 
@@ -200,18 +228,17 @@ S.startControlY = function (item) {
 
 	this.checkVector('startControl');
 	this.startControl.y = item;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyStartControl = true;
 };
 
 S.startControl = function (item = {}) {
 
 	this.checkVector('startControl');
-	this.startControl.x = (xt(item.x)) ? item.x : this.startControl.x;
-	this.startControl.y = (xt(item.y)) ? item.y : this.startControl.y;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	let startControl = this.startControl;
+	startControl.x = (xt(item.x)) ? item.x : startControl.x;
+	startControl.y = (xt(item.y)) ? item.y : startControl.y;
+	this.updateDirty();
 	this.dirtyStartControl = true;
 };
 
@@ -219,8 +246,7 @@ D.startControlX = function (item) {
 
 	this.checkVector('startControl');
 	this.startControl.x = addStrings(this.startControl.x, item);
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyStartControl = true;
 };
 
@@ -228,18 +254,17 @@ D.startControlY = function (item) {
 
 	this.checkVector('startControl');
 	this.startControl.y = addStrings(this.startControl.y, item);
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyStartControl = true;
 };
 
 D.startControl = function (item = {}) {
 
 	this.checkVector('startControl');
-	this.startControl.x = (xt(item.x)) ? addStrings(this.startControl.x, item) : this.startControl.x;
-	this.startControl.y = (xt(item.y)) ? addStrings(this.startControl.y, item) : this.startControl.y;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	let startControl = this.startControl;
+	startControl.x = (xt(item.x)) ? addStrings(startControl.x, item) : startControl.x;
+	startControl.y = (xt(item.y)) ? addStrings(startControl.y, item) : startControl.y;
+	this.updateDirty();
 	this.dirtyStartControl = true;
 };
 
@@ -247,8 +272,7 @@ S.endControlX = function (item) {
 
 	this.checkVector('endControl');
 	this.endControl.x = item;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyEndControl = true;
 };
 
@@ -256,18 +280,17 @@ S.endControlY = function (item) {
 
 	this.checkVector('endControl');
 	this.endControl.y = item;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyEndControl = true;
 };
 
 S.endControl = function (item = {}) {
 
 	this.checkVector('endControl');
-	this.endControl.x = (xt(item.x)) ? item.x : this.endControl.x;
-	this.endControl.y = (xt(item.y)) ? item.y : this.endControl.y;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	let endControl = this.endControl;
+	endControl.x = (xt(item.x)) ? item.x : endControl.x;
+	endControl.y = (xt(item.y)) ? item.y : endControl.y;
+	this.updateDirty();
 	this.dirtyEndControl = true;
 };
 
@@ -275,8 +298,7 @@ D.endControlX = function (item) {
 
 	this.checkVector('endControl');
 	this.endControl.x = addStrings(this.endControl.x, item);
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyEndControl = true;
 };
 
@@ -284,18 +306,17 @@ D.endControlY = function (item) {
 
 	this.checkVector('endControl');
 	this.endControl.y = addStrings(this.endControl.y, item);
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyEndControl = true;
 };
 
 D.endControl = function (item = {}) {
 
 	this.checkVector('endControl');
-	this.endControl.x = (xt(item.x)) ? addStrings(this.endControl.x, item) : this.endControl.x;
-	this.endControl.y = (xt(item.y)) ? addStrings(this.endControl.y, item) : this.endControl.y;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	let endControl = this.endControl;
+	endControl.x = (xt(item.x)) ? addStrings(endControl.x, item) : endControl.x;
+	endControl.y = (xt(item.y)) ? addStrings(endControl.y, item) : endControl.y;
+	this.updateDirty();
 	this.dirtyEndControl = true;
 };
 
@@ -303,8 +324,7 @@ S.controlX = function (item) {
 
 	this.checkVector('control');
 	this.control.x = item;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyControl = true;
 };
 
@@ -312,18 +332,17 @@ S.controlY = function (item) {
 
 	this.checkVector('control');
 	this.control.y = item;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyControl = true;
 };
 
 S.control = function (item = {}) {
 
 	this.checkVector('control');
-	this.control.x = (xt(item.x)) ? item.x : this.control.x;
-	this.control.y = (xt(item.y)) ? item.y : this.control.y;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	let control = this.control;
+	control.x = (xt(item.x)) ? item.x : control.x;
+	control.y = (xt(item.y)) ? item.y : control.y;
+	this.updateDirty();
 	this.dirtyControl = true;
 };
 
@@ -331,8 +350,7 @@ D.controlX = function (item) {
 
 	this.checkVector('control');
 	this.control.x = addStrings(this.control.x, item);
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyControl = true;
 };
 
@@ -340,18 +358,17 @@ D.controlY = function (item) {
 
 	this.checkVector('control');
 	this.control.y = addStrings(this.control.y, item);
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyControl = true;
 };
 
 D.control = function (item = {}) {
 
 	this.checkVector('control');
-	this.control.x = (xt(item.x)) ? addStrings(this.control.x, item) : this.control.x;
-	this.control.y = (xt(item.y)) ? addStrings(this.control.y, item) : this.control.y;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	let control = this.control;
+	control.x = (xt(item.x)) ? addStrings(control.x, item) : control.x;
+	control.y = (xt(item.y)) ? addStrings(control.y, item) : control.y;
+	this.updateDirty();
 	this.dirtyControl = true;
 };
 
@@ -359,8 +376,7 @@ S.endX = function (item) {
 
 	this.checkVector('end');
 	this.end.x = item;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
@@ -368,18 +384,17 @@ S.endY = function (item) {
 
 	this.checkVector('end');
 	this.end.y = item;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
 S.end = function (item = {}) {
 
 	this.checkVector('end');
-	this.end.x = (xt(item.x)) ? item.x : this.end.x;
-	this.end.y = (xt(item.y)) ? item.y : this.end.y;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	let end = this.end;
+	end.x = (xt(item.x)) ? item.x : end.x;
+	end.y = (xt(item.y)) ? item.y : end.y;
+	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
@@ -387,8 +402,7 @@ D.endX = function (item) {
 
 	this.checkVector('end');
 	this.end.x = addStrings(this.end.x, item);
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
@@ -396,18 +410,17 @@ D.endY = function (item) {
 
 	this.checkVector('end');
 	this.end.y = addStrings(this.end.y, item);
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
 D.end = function (item = {}) {
 
 	this.checkVector('end');
-	this.end.x = (xt(item.x)) ? addStrings(this.end.x, item) : this.end.x;
-	this.end.y = (xt(item.y)) ? addStrings(this.end.y, item) : this.end.y;
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
+	let end = this.end;
+	end.x = (xt(item.x)) ? addStrings(end.x, item) : end.x;
+	end.y = (xt(item.y)) ? addStrings(end.y, item) : end.y;
+	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
@@ -631,6 +644,78 @@ D.radiusBLY = function (item) {
 	this.radiusBLY = this.deltaRectHelper(item, 'h', 'radiusBLY');
 };
 
+S.sides = function (item) {
+
+	this.sides = item;
+	this.updateDirty();
+};
+
+D.sides = function (item) {
+
+	this.sides += item;
+	this.updateDirty();
+};
+
+S.sideLength = function (item) {
+
+	this.sideLength = item;
+	this.updateDirty();
+};
+
+D.sideLength = function (item) {
+
+	this.sideLength += item;
+	this.updateDirty();
+};
+
+S.radius1 = function (item) {
+
+	this.radius1 = item;
+	this.updateDirty();
+};
+
+D.radius1 = function (item) {
+
+	this.radius1 += item;
+	this.updateDirty();
+};
+
+S.radius2 = function (item) {
+
+	this.radius2 = item;
+	this.updateDirty();
+};
+
+D.radius2 = function (item) {
+
+	this.radius2 += item;
+	this.updateDirty();
+};
+
+S.points = function (item) {
+
+	this.points = item;
+	this.updateDirty();
+};
+
+D.points = function (item) {
+
+	this.points += item;
+	this.updateDirty();
+};
+
+S.twist = function (item) {
+
+	this.twist = item;
+	this.updateDirty();
+};
+
+D.twist = function (item) {
+
+	this.twist += item;
+	this.updateDirty();
+};
+
 
 /*
 ## Define prototype functions
@@ -640,17 +725,25 @@ D.radiusBLY = function (item) {
 /*
 
 */
-P.setRectHelper = function (item, side) {
+P.updateDirty = function () {
 
 	this.dirtySpecies = true;
 	this.dirtyPathObject = true;
+};
+
+/*
+
+*/
+P.setRectHelper = function (item, side) {
+
+	this.updateDirty();
 
 	if(!item.substring) return item;
 	else {
 
 		let dim;
 
-		if (this.species === 'oval') {
+		if (['oval', 'tetragon'].indexOf(this.species) >= 0) {
 
 			let here = this.getHostDimensions();
 			
@@ -667,9 +760,8 @@ P.setRectHelper = function (item, side) {
 */
 P.deltaRectHelper = function (item, side, corner) {
 
-	this.dirtySpecies = true;
-	this.dirtyPathObject = true;
-	
+	this.updateDirty();
+
 	let r = this[corner];
 
 	if(!item.substring) return (r) ? r + item : item;
@@ -995,6 +1087,33 @@ P.cleanSpecies = function () {
 			p = this.makeRectanglePath();
 			break;
 
+		case 'tetragon' :
+			p = this.makeTetragonPath();
+			break;
+
+		case 'polygon' :
+			p = this.makePolygonPath();
+			break;
+
+		case 'star' :
+			p = this.makeStarPath();
+			break;
+
+		case 'radialshape' :
+			p = this.makeRadialShapePath();
+			break;
+
+		case 'boxedshape' :
+			p = this.makeBoxedShapePath();
+			break;
+
+		case 'polyline' :
+			p = this.makePolylinePath();
+			break;
+
+		case 'spiral' :
+			p = this.makeSpiralPath();
+			break;
 	}
 
 	this.dirtyEnd = false;
@@ -1315,6 +1434,7 @@ P.calculateLocalPath = function (d) {
 		else localPath += `${curData.c}`;
 	}
 
+	// calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box 
 	if (useAsPath) {
 
 		units.length = 0;
@@ -1577,6 +1697,24 @@ P.makeOvalPath = function () {
 	return myData;
 };
 
+/**
+
+**/
+P.makeTetragonPath = function () {
+
+	let width = this.radiusX * 2,
+		height = this.radiusY * 2,
+		port = width * this.intersectX,
+		starboard = width - port,
+		fore = height * this.intersectY,
+		aft = height - fore;
+
+	let myData = `m${port},0`;
+
+	myData += `l${starboard},${fore} ${-starboard},${aft} ${-port},${-aft} ${port},${-fore}z`;
+
+	return myData;
+};
 
 /**
 
@@ -1641,7 +1779,7 @@ P.makeBezierPath = function () {
 /**
 
 **/
-P.makeQuadraticPath = function (items = {}) {
+P.makeQuadraticPath = function () {
 	
 	let startX = this.currentStart.x,
 		startY = this.currentStart.y,
@@ -1656,7 +1794,7 @@ P.makeQuadraticPath = function (items = {}) {
 /**
 
 **/
-P.makeLinearPath = function (items = {}) {
+P.makeLinearPath = function () {
 	
 	let startX = this.currentStart.x,
 		startY = this.currentStart.y,
@@ -1665,6 +1803,148 @@ P.makeLinearPath = function (items = {}) {
 
 	return `m0,0l${(endX - startX)},${(endY - startY)}`;
 };
+
+/**
+
+**/
+P.makePolygonPath = function () {
+	
+	let sideLength = this.sideLength,
+		sides = this.sides,
+		turn = 360 / sides,
+		myPath = ``,
+		yPts = [],
+		currentY = 0,
+		myMax, myMin, myYoffset;
+
+	let v = requestVector({x: 0, y: -sideLength});
+
+	for (let i = 0; i < sides; i++) {
+
+		v.rotate(turn);
+		currentY += v.y;
+		yPts.push(currentY);
+		myPath += `${v.x.toFixed(1)},${v.y.toFixed(1)} `;
+	}
+
+	releaseVector(v);
+
+	myMin = Math.min(...yPts);
+	myMax = Math.max(...yPts);
+	myYoffset = (((Math.abs(myMin) + Math.abs(myMax)) - sideLength) / 2).toFixed(1);
+
+	myPath = `m0,${myYoffset}l${myPath}z`;
+
+	return myPath;
+};
+
+/**
+
+**/
+P.makeStarPath = function () {
+	
+	let points = this.points,
+		twist = this.twist,
+		radius1 = this.radius1,
+		radius2 = this.radius2,
+		turn = 360 / points,
+		xPts = [],
+		currentX, currentY, x, y,
+		myMin, myXoffset, myYoffset, i,
+		myPath = '';
+
+	let v1 = requestVector({x: 0, y: -radius1}),
+		v2 = requestVector({x: 0, y: -radius2});
+
+	currentX = v1.x;
+	currentY = v1.y;
+
+	xPts.push(currentX);
+
+	v2.rotate(-turn/2);
+	v2.rotate(twist);
+
+	for (i = 0; i < points; i++) {
+
+		v2.rotate(turn);
+
+		x = parseFloat((v2.x - currentX).toFixed(1));
+		currentX += x;
+		xPts.push(currentX);
+
+		y = parseFloat((v2.y - currentY).toFixed(1));
+		currentY += y;
+
+		myPath += `${x},${y} `;
+
+		v1.rotate(turn);
+
+		x = parseFloat((v1.x - currentX).toFixed(1));
+		currentX += x;
+		xPts.push(currentX);
+
+		y = parseFloat((v1.y - currentY).toFixed(1));
+		currentY += y;
+
+		myPath += `${x},${y} `;
+
+	}
+
+	releaseVector(v1);
+	releaseVector(v2);
+
+	myMin = Math.min(...xPts);
+	myXoffset = Math.abs(myMin).toFixed(1);
+
+	myPath = `m${myXoffset},0l${myPath}z`;
+
+	return myPath;
+};
+
+/**
+// TODO - takes 'elements' and 'repeat' as arguments
+
+**/
+P.makeRadialShapePath = function () {
+	
+	let a = 0;
+
+	return `m0,0`;
+};
+
+/**
+// TODO - takes 'elements', 'rectangleWidth' and 'rectangleHeight' as arguments
+
+**/
+P.makeBoxedShapePath = function () {
+	
+	let a = 0;
+
+	return `m0,0`;
+};
+
+/**
+// TODO - takes 'flavour' and 'pointsArray' as arguments
+
+**/
+P.makePolylinePath = function () {
+	
+	let a = 0;
+
+	return `m0,0`;
+};
+
+/**
+// TODO - no idea yet how to do this one
+
+**/
+P.makeSpiralPath = function () {
+	
+	let a = 0;
+
+	return `m0,0`;
+};
+
 
 
 /*
@@ -1705,6 +1985,49 @@ const makeOval = function (items = {}) {
 	return new Shape(items);
 };
 
+const makeTetragon = function (items = {}) {
+
+	items.species = 'tetragon';
+	return new Shape(items);
+};
+
+const makePolygon = function (items = {}) {
+
+	items.species = 'polygon';
+	return new Shape(items);
+};
+
+const makeStar = function (items = {}) {
+
+	items.species = 'star';
+	return new Shape(items);
+};
+
+const makeRadialShape = function (items = {}) {
+
+	items.species = 'radialshape';
+	return new Shape(items);
+};
+
+const makeBoxedShape = function (items = {}) {
+
+	items.species = 'boxedshape';
+	return new Shape(items);
+};
+
+const makePolyline = function (items = {}) {
+
+	items.species = 'polyline';
+	return new Shape(items);
+};
+
+const makeSpiral = function (items = {}) {
+
+	items.species = 'spiral';
+	return new Shape(items);
+};
+
+
 /*
 Also store constructor in library - clone functionality expects to find it there
 */
@@ -1718,4 +2041,12 @@ export {
 	makeBezier,
 	makeRectangle,
 	makeOval,
+
+	makeTetragon,
+	makePolygon,
+	makeStar,
+	makeRadialShape,
+	makeBoxedShape,
+	makePolyline,
+	makeSpiral
 };

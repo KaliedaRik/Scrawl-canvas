@@ -178,7 +178,14 @@ import { makeShape,
 	makeQuadratic,
 	makeBezier,
 	makeRectangle,
-	makeOval } from './factory/shape.js';
+	makeOval,
+	makeTetragon,
+	makePolygon,
+	makeStar,
+	makeRadialShape,
+	makeBoxedShape,
+	makePolyline,
+	makeSpiral } from './factory/shape.js';
 
 /*
 ### ./factory/spritesheet.js
@@ -323,6 +330,13 @@ export default {
 	makeBezier,
 	makeRectangle,
 	makeOval,
+	makeTetragon,
+	makePolygon,
+	makeStar,
+	makeRadialShape,
+	makeBoxedShape,
+	makePolyline,
+	makeSpiral,
 
 	requestQuaternion, 
 	releaseQuaternion,
