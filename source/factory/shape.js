@@ -71,19 +71,14 @@ Only used when we kill/delete the entity - quick way of finding artefacts using 
 	length: 0,
 	precision: 10,
 
-// TODO - takes 'elements' and 'repeat' as arguments
-// TODO - takes 'elements', 'rectangleWidth' and 'rectangleHeight' as arguments
-// TODO - like oval, but connected by straight lines
-
-// TODO - takes 'sides' and 'radius' as arguments
-// TODO - takes 'points', 'radiusX' and 'radiusY' as arguments
-// TODO - takes 'flavour' and 'pointsArray' as arguments
-
 /*
 
 */
 	rectangleWidth: 10,
 	rectangleHeight: 10,
+	loops: 0,
+	loopIncrement: 0.2,
+	innerRadius: 0,
 	// NEW - need setters etc
 	elements: [],
 	repeat: 0,
@@ -113,7 +108,6 @@ Only used when we kill/delete the entity - quick way of finding artefacts using 
 /*
 
 */
-	// NEW - need setters etc
 	sides: 0,
 	sideLength: 0,
 	radius1: 0,
@@ -713,6 +707,30 @@ S.twist = function (item) {
 D.twist = function (item) {
 
 	this.twist += item;
+	this.updateDirty();
+};
+
+S.loops = function (item) {
+
+	this.loops = item;
+	this.updateDirty();
+};
+
+D.loops = function (item) {
+
+	this.loops += item;
+	this.updateDirty();
+};
+
+S.innerRadius = function (item) {
+
+	this.innerRadius = item;
+	this.updateDirty();
+};
+
+D.innerRadius = function (item) {
+
+	this.innerRadius += item;
 	this.updateDirty();
 };
 
@@ -1902,7 +1920,7 @@ P.makeStarPath = function () {
 };
 
 /**
-// TODO - takes 'elements' and 'repeat' as arguments
+// TODO - takes 'path' and 'repeat' as arguments
 
 **/
 P.makeRadialShapePath = function () {
@@ -1935,16 +1953,52 @@ P.makePolylinePath = function () {
 };
 
 /**
-// TODO - no idea yet how to do this one
+Taken from this page - https://rosettacode.org/wiki/Archimedean_spiral#JavaScript
 
 **/
 P.makeSpiralPath = function () {
 	
-	let a = 0;
+	let loops = this.loops,
+		loopIncrement = this.loopIncrement,
+		innerRadius = this.innerRadius;
 
-	return `m0,0`;
+	let myAngle = 0,
+		angleIncrement = 0.1,
+		angleSteps = loops * 2 * Math.PI,
+		steps = angleSteps / angleIncrement,
+		xPts = [],
+		yPts = [],
+		x, y, minX, minY, maxX, maxY, i;
+
+	let currentX = innerRadius,
+		currentY = 0;
+
+	let myPath = `l`;
+
+	for (i = 0; i < steps; i++) {
+
+		x = innerRadius * Math.cos(myAngle);
+		y = innerRadius * Math.sin(myAngle);
+
+		myPath += `${x - currentX},${y - currentY} `;
+
+		currentX = x; 
+		currentY = y;
+
+		xPts.push(currentX);
+		yPts.push(currentY);
+
+		innerRadius += loopIncrement; 
+		myAngle += angleIncrement;
+	}
+
+	minX = Math.abs(Math.min(...xPts));
+	minY = Math.abs(Math.min(...yPts));
+
+	myPath = `m${minX + this.innerRadius},${minY}${myPath}`;
+
+	return myPath;
 };
-
 
 
 /*
