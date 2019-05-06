@@ -74,12 +74,15 @@ scrawl.makePicture({
 }).clone({
 	name: '_spiral2',
 	path: 'spiral2',
+	pathPosition: 0.25,
 }).clone({
 	name: '_spiral3',
 	path: 'spiral3',
+	pathPosition: 0.5,
 }).clone({
 	name: '_spiral4',
 	path: 'spiral4',
+	pathPosition: 0.75,
 });
 
 

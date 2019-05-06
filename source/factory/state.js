@@ -146,30 +146,7 @@ Color used for entity shadow effect. Can be:
 /*
 Cascading Style Sheet font String, for Phrase entitys
 */
-	font: '10pt sans-serif',
-
-/*
-Text alignment for multi-line Phrase entitys. Permitted values include:
-
-* 'start'
-* 'left'
-* 'center'
-* 'right'
-* 'end'
-*/
-	textAlign: 'start',
-
-/*
-Text baseline value for single-line Phrase entitys set to follow a Path entity path. Permitted values include:
-
-* 'alphabetic'
-* 'top'
-* 'hanging'
-* 'middle'
-* 'ideographic'
-* 'bottom'
-*/
-	textBaseline: 'alphabetic'
+	font: '12px sans-serif',
 };
 
 /*
@@ -252,7 +229,7 @@ P.allKeys = Object.keys(P.defs);
 P.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
 P.lineKeys = ['lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'];
 P.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];
-P.textKeys = ['font', 'textAlign', 'textBaseline'];
+P.textKeys = ['font'];
 
 /*
 
@@ -355,7 +332,7 @@ P.getChanges = function (ent, engineState) {
 		else result[k] = desired;
 	}
 
-	// 'font', 'textAlign', 'textBaseline'
+	// 'font'
 	if (ent.type === 'Phrase') {
 
 		for (i = 0, iz = textKeys.length; i < iz; i++) {

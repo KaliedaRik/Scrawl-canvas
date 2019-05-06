@@ -50,6 +50,26 @@ P = filterMix(P);
 let defaultAttributes = {
 
 /*
+Current species supported, note that the parameters required by each species' 'make?' function differ:
+
+* default '' (makeShape)
+* __line__ (makeLine) 
+* __quadratic__ (makeQuadratic)
+* __bezier__ (makeBezier)
+* __rectangle__ (makeRectangle)
+* __oval__ (makeOval)
+* __tetragon__ (makeTetragon)
+* __polygon__ (makePolygon)
+* __star__ (makeStar)
+* __spiral__ (makeSpiral)
+
+TODO: The following species are under consideration - currently their 'make?' functions return a 'm0,0' Shape entity
+
+* __radialshape__ (makeRadialShape) - use path and repeat arguments; functionality will be to: swivel the path around a central point 'repeat' number of times (angle = 360/repeat) and turn the resulting radial shape into a single path value
+
+* __boxedshape__ (makeBoxedShape) - I'm a bit fuzzy about this one, but I want to somehow _box up_ (relativize) other Shape paths with box width/height values which can then be manipulated - allowing us to stretch the Shape path to match its box dimensions
+
+* __polyline__ (makePolyline) - a shape for freehand drawing. Should include a 'points' Array which could include [x,y] coordinates, or possibly any object containing x/y values (eg Vectors). The functionality would be to construct a long line (linear, possibly also quadratic for smoother lines) from the [points] data
 
 */
 	species: '',
@@ -60,32 +80,34 @@ Only used when we kill/delete the entity - quick way of finding artefacts using 
 	subscribers: [],
 
 /*
-
+Useful for development
 */
 	showBoundingBox: false,
+	boundingBoxColor: 'rgba(0,0,0,0.5)',
 
 /*
-
+By default, a Shape entity is just lines on the screen. It needs to be explicitly defined as a 'path' if it is to be used as a path by other artefacts.
 */
 	useAsPath: false,
 	length: 0,
+
+/*
+Used when doing length calculations - the smaller this value, the greater the precision of the final length value
+*/
 	precision: 10,
 
 /*
-
+Used by 'spiral' species
 */
-	rectangleWidth: 10,
-	rectangleHeight: 10,
 	loops: 0,
 	loopIncrement: 0.2,
 	innerRadius: 0,
-	// NEW - need setters etc
-	elements: [],
-	repeat: 0,
 
 /*
-
+Used by 'rectangle' species
 */
+	rectangleWidth: 10,
+	rectangleHeight: 10,
 	radiusTLX: 0,
 	radiusTLY: 0,
 	radiusTRX: 0,
@@ -96,7 +118,7 @@ Only used when we kill/delete the entity - quick way of finding artefacts using 
 	radiusBLY: 0,
 
 /*
-
+Used by 'oval' and 'tetragon' species
 */
 	radiusX: 5,
 	radiusY: 5,
@@ -106,24 +128,27 @@ Only used when we kill/delete the entity - quick way of finding artefacts using 
 	offshootB: 0,
 
 /*
-
+Used by 'polygon' species
 */
 	sides: 0,
 	sideLength: 0,
+
+/*
+Used by 'star' species
+*/
 	radius1: 0,
 	radius2: 0,
 	points: 0,
 	twist: 0,
 
 /*
+Used by 'line', 'quadratic', 'bezier' species
 
-*/
-	// NEW - need setters etc
-	flavour: '',
-	pointsArray: [],
+TODO: make sure these vectors can be set and used as both absolute (number) and relative (string) values
 
-/*
+TODO: I want to be able to replace these vectors with Point (or similar) entitys, which would then allow me to pivot them to other entitys, or use a Path, or track the mouse/touch cursor - with x and y coordinates treated separately - eg position them as we currently position artefacts using start, path, pivot etc attributes
 
+CONSIDER: would it be a better idea to pass all positioning functionality down to a dedicated Point/Vector object?
 */
 	startControl: {},
 	endControl: {},
@@ -1664,6 +1689,8 @@ P.stamper = {
 
 		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
 	},	
+
+	none: function (engine, entity) {},	
 };
 
 /*
@@ -1671,23 +1698,22 @@ P.stamper = {
 */
 P.drawBoundingBox = function (engine, entity) {
 
-	let strokeStyle = engine.strokeStyle,
-		lineWidth = engine.lineWidth,
-		gco = engine.globalCompositeOperation,
-		alpha = engine.globalAlpha,
-		handle = entity.currentHandle;
+	let handle = entity.currentHandle,
+		floor = Math.floor,
+		ceil = Math.ceil;
 
-	engine.strokeStyle = 'rgb(0,0,0)';
+	engine.save();
+	engine.strokeStyle = entity.boundingBoxColor;
 	engine.lineWidth = 1;
 	engine.globalCompositeOperation = 'source-over';
-	engine.globalAlpha = 0.5;
+	engine.globalAlpha = 1;
+	engine.shadowOffsetX = 0;
+	engine.shadowOffsetY = 0;
+	engine.shadowBlur = 0;
 
-	engine.strokeRect(entity.localBoxStartX - handle.x, entity.localBoxStartY - handle.y, entity.localWidth, entity.localHeight);
+	engine.strokeRect(floor(entity.localBoxStartX - handle.x), floor(entity.localBoxStartY - handle.y), ceil(entity.localWidth), ceil(entity.localHeight));
 
-	engine.strokeStyle = strokeStyle;
-	engine.lineWidth = lineWidth;
-	engine.globalCompositeOperation = gco;
-	engine.globalAlpha = alpha;
+	engine.restore();
 };
 
 /**
@@ -1920,8 +1946,7 @@ P.makeStarPath = function () {
 };
 
 /**
-// TODO - takes 'path' and 'repeat' as arguments
-
+TODO: Use path and repeat arguments; functionality will be to: swivel the path around a central point 'repeat' number of times (angle = 360/repeat) and turn the resulting radial shape into a single path value
 **/
 P.makeRadialShapePath = function () {
 	
@@ -1931,8 +1956,7 @@ P.makeRadialShapePath = function () {
 };
 
 /**
-// TODO - takes 'elements', 'rectangleWidth' and 'rectangleHeight' as arguments
-
+TODO: I'm a bit fuzzy about this one, but I want to somehow _box up_ (relativize) other Shape paths with box width/height values which can then be manipulated - allowing us to stretch the Shape path to match its box dimensions
 **/
 P.makeBoxedShapePath = function () {
 	
@@ -1942,8 +1966,7 @@ P.makeBoxedShapePath = function () {
 };
 
 /**
-// TODO - takes 'flavour' and 'pointsArray' as arguments
-
+TODO: A shape for freehand drawing. Should include a 'points' Array which could include [x,y] coordinates, or possibly any object containing x/y values (eg Vectors). The functionality would be to construct a long line (linear, possibly also quadratic for smoother lines) from the [points] data
 **/
 P.makePolylinePath = function () {
 	
@@ -1955,6 +1978,10 @@ P.makePolylinePath = function () {
 /**
 Taken from this page - https://rosettacode.org/wiki/Archimedean_spiral#JavaScript
 
+TODO: find a solution that uses far fewer sub-units
+- current solution uses lots of short lines
+- shoule be able to achieve the same effect using 4 bezier curves per turn
+- beziers would also offer a way to make much more interesting 'spiral' shapes 
 **/
 P.makeSpiralPath = function () {
 	

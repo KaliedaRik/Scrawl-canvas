@@ -285,6 +285,7 @@ P.cleanDimensions = function () {
 
 	if (host) {
 
+		this.dirtyDimensions = false;
 		w = this.width;
 
 		if (w.substring) this.localWidth = this.localHeight = (parseFloat(w) / 100) * host.localWidth;
@@ -294,8 +295,6 @@ P.cleanDimensions = function () {
 
 		if (r.substring) this.localRadius = (parseFloat(r) / 100) * host.localWidth;
 		else this.localRadius = r;
-
-		this.dirtyDimensions = false;
 	}
 };
 

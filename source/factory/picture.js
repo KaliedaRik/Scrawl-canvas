@@ -533,6 +533,8 @@ P.stamper = {
 		
 		engine.globalCompositeOperation = gco;
 	},	
+
+	none: function (engine, entity) {},	
 };
 
 /*

@@ -500,6 +500,10 @@ P.setEngine = function (entity) {
 
 		engine = this.engine;
 
+		// Scrawl-canvas ignores these attributes, but needs them set to known quantities in all cases
+		if (engine.textAlign !== 'start') engine.textAlign = 'start';
+		if (engine.textBaseline !== 'top') engine.textBaseline = 'top';
+
 		for (item in changes) {
 
 			action[item](changes[item], engine, stylesArray, entity, this);
@@ -606,14 +610,6 @@ P.setEngineActions = {
 	miterLimit: function (item, engine) {
 		engine.miterLimit = item;
 	},
-
-	textAlign: function (item, engine) {
-		engine.textAlign = item;
-	},
-
-	textBaseline: function (item, engine) {
-		engine.textBaseline = item;
-	}
 };
 
 /*

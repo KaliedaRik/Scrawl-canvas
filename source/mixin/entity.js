@@ -422,6 +422,11 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 	};
 
 /*
+
+*/
+	obj.preCloneActions = defaultNonReturnFunction;
+
+/*
 Overwrites the clone function in mixin/base.js
 */
 	obj.clone = function(items = {}) {
@@ -441,6 +446,8 @@ Overwrites the clone function in mixin/base.js
 				else if (temp.name) copy[item] = temp.name;
 			}
 		};
+
+		this.preCloneActions();
 
 		let grp = this.group;
 		this.group = grp.name;
@@ -752,6 +759,8 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 			
 			engine.globalCompositeOperation = gco;
 		},	
+
+		none: function (engine, entity) {},	
 	};
 
 /*
