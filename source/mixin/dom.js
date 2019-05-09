@@ -756,6 +756,16 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 		if (this.height.toFixed) this.localHeight = this.height;
 		else if (this.height === 'auto') this.localHeight = 0;
 		else this.localHeight = (parseFloat(this.height) / 100) * here.h;
+
+		if (this.mimic) {
+
+			if (this.mimicPaddingWidth.toFixed) this.localMimicPaddingWidth = this.mimicPaddingWidth;
+			else this.localMimicPaddingWidth = (parseFloat(this.mimicPaddingWidth) / 100) * here.w;
+
+			if (this.mimicPaddingHeight.toFixed) this.localMimicPaddingHeight = this.mimicPaddingHeight;
+			else this.localMimicPaddingHeight = (parseFloat(this.mimicPaddingHeight) / 100) * here.h;
+
+		}
 	};
 
 /*
@@ -816,53 +826,54 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 		if (this.actionResize) this.checkForResize();
 	};
 
-/*
+// /*
 
-*/
-	obj.prepareMimicStamp = function () {
+// */
+// 	obj.prepareMimicStamp = function () {
 
-		let mimic = artefact[this.mimic];
+// 		let mimic = artefact[this.mimic];
 
-		if (mimic) {
+// 		if (mimic) {
 
-			if (this.position !== mimic.position) {
+// 			if (this.position !== mimic.position) {
 
-				this.position = mimic.position;
-				this.dirtyPosition = true;
-				this.setPosition();
-			}
+// 				this.position = mimic.position;
+// 				this.dirtyPosition = true;
+// 				this.setPosition();
+// 			}
 
-			if (this.localWidth !== mimic.localWidth || this.localHeight !== mimic.localHeight) {
+// 			if (this.localWidth !== mimic.localWidth || this.localHeight !== mimic.localHeight) {
 
-				this.width = mimic.width;
-				this.height = mimic.height;
-				this.localWidth = mimic.localWidth;
-				this.localHeight = mimic.localHeight;
-				this.dirtyDimensions = true;
-			}
+// 				this.width = mimic.width;
+// 				this.height = mimic.height;
+// 				this.localWidth = mimic.localWidth;
+// 				this.localHeight = mimic.localHeight;
+// 				this.dirtyDimensions = true;
+// 			}
 
-			if (this.roll !== mimic.roll || this.pitch !== mimic.pitch || this.yaw !== mimic.yaw) {
+// 			if (this.roll !== mimic.roll || this.pitch !== mimic.pitch || this.yaw !== mimic.yaw) {
 
-				this.roll = mimic.roll;
-				this.pitch = mimic.pitch;
-				this.yaw = mimic.yaw;
-				this.dirtyRotationActive = true;
-				this.dirtyRotation = true;
-				this.cleanRotation();
-			}
+// 				this.roll = mimic.roll;
+// 				this.pitch = mimic.pitch;
+// 				this.yaw = mimic.yaw;
+// 				this.dirtyRotationActive = true;
+// 				this.dirtyRotation = true;
+// 				this.cleanRotation();
+// 			}
 
-			if (this.scale !== mimic.scale) this.scale = mimic.scale;
+// 			// TODO: I think I want the mimic to have the ability to have additional scale
+// 			if (this.scale !== mimic.scale) this.scale = mimic.scale;
 
-			this.currentStart = mimic.currentStart;
-			this.dirtyStart = true;
+// 			this.currentStart = mimic.currentStart;
+// 			this.dirtyStart = true;
 
-			this.currentHandle = mimic.currentHandle;
-			this.dirtyHandle = true;
+// 			this.currentHandle = mimic.currentHandle;
+// 			this.dirtyHandle = true;
 
-			this.lockXTo = mimic.lockXTo;
-			this.lockYTo = mimic.lockYTo;
-		}
-	};
+// 			this.lockXTo = mimic.lockXTo;
+// 			this.lockYTo = mimic.lockYTo;
+// 		}
+// 	};
 
 /*
 

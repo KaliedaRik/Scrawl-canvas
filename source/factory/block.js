@@ -61,18 +61,35 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 */
 P.cleanPathObject = function () {
 
-	let p, handle, scale, x, y, w, h;
-
 	this.dirtyPathObject = false;
 
-	p = this.pathObject = new Path2D();
+	let p = this.pathObject = new Path2D();
 	
-	handle = this.currentHandle;
-	scale = this.scale;
-	x = -handle.x * scale;
-	y = -handle.y * scale;
-	w = this.localWidth * scale;
-	h = this.localHeight * scale;
+	let handle = this.currentHandle,
+		scale = this.scale,
+		mimic = this.mimic, 
+		mType = this.mimicType, 
+		mPhrase = (mType === 'Phrase'),
+		mWidth = this.localMimicPaddingWidth,
+		mHeight = this.localMimicPaddingHeight,
+		x, y, w, h;
+
+	if (mimic) {
+
+		x = (-handle.x * scale) - mWidth;
+		y = (mPhrase) ? -handle.y - mHeight : (-handle.y * scale) - mHeight;
+
+		w = (this.localWidth * scale) + (mWidth * 2);
+		h = (mPhrase) ? this.localHeight + (mHeight * 2) : (this.localHeight * scale) + (mHeight * 2);
+	}
+	else {
+
+		x = -handle.x * scale;
+		y = -handle.y * scale;
+
+		w = this.localWidth * scale;
+		h = this.localHeight * scale;
+	}
 
 	p.rect(x, y, w, h);
 };

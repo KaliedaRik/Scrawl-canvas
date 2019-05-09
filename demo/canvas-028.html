@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 028</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 028</h1>
+  <h2>Phrase entity position and font attributes; Block mimic functionality</h2>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="blue label">Starts ('n%')</div>
+    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="green label">Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="blue label">Starts (n)</div>
+    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
+
+    <div class="green label">Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+
+    <div class="blue label">Starts ('str')</div>
+    <div class="blue">X: <select class="controlItem" id="start_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="blue">Y: <select class="controlItem" id="start_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="green label">Handles ('str')</div>
+    <div class="green">X: <select class="controlItem" id="handle_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="green">Y: <select class="controlItem" id="handle_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="pink label">Width ('n%')</div>
+    <div class="pink"><input class="controlItem" id="relativeWidth" type="range" value="50" min="20" max="80" step="0.1" /></div>
+    <div class="pink">&nbsp;</div>
+
+    <div class="pink label">Width (n)</div>
+    <div class="pink"><input class="controlItem" id="absoluteWidth" type="range" value="300" min="100" max="500" step="1" /></div>
+    <div class="pink">&nbsp;</div>
+
+    <div class="lavender label">Font weight</div>
+    <div class="lavender">
+      <select class="controlItem" id="weight">
+        <option value="normal">normal</option>
+        <option value="bold">bold</option>
+        <option value="lighter">lighter</option>
+        <option value="bolder">bolder</option>
+        <option value="100">100</option>
+        <option value="200">200</option>
+        <option value="300">300</option>
+        <option value="400">400</option>
+        <option value="500">500</option>
+        <option value="600">600</option>
+        <option value="700">700</option>
+        <option value="800">800</option>
+        <option value="900">900</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Font style</div>
+    <div class="lavender">
+      <select class="controlItem" id="style">
+        <option value="normal">normal</option>
+        <option value="italic">italic</option>
+        <option value="oblique">oblique</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Font variant</div>
+    <div class="lavender">
+      <select class="controlItem" id="variant">
+        <option value="normal">normal</option>
+        <option value="small-caps">small-caps</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Font family</div>
+    <div class="lavender">
+      <select class="controlItem" id="family">
+        <option value="% 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif">sans-serif</option>
+        <option value="% 'Lucida Bright', 'Lucida Fax', Palatino, 'Palatino Linotype', Palladio, 'URW Palladio', serif">serif</option>
+        <option value="% 'Fira Mono', 'DejaVu Sans Mono', Menlo, Consolas, 'Liberation Mono', Monaco, 'Lucida Console', monospace">monospace</option>
+        <option value="% 'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', 'Apple Chancery', cursive">cursive</option>
+        <option value="% Papyrus, Herculanum, 'Party LET', 'Curlz MT', Harrington, fantasy">fantasy</option>
+        <option value="% system-ui">system-ui</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Font size</div>
+    <div class="lavender">
+      <select class="controlItem" id="size_string">
+        <option value="smaller">smaller</option>
+        <option value="xx-small">xx-small</option>
+        <option value="x-small">x-small</option>
+        <option value="small">small</option>
+        <option value="medium">medium</option>
+        <option value="large">large</option>
+        <option value="x-large">x-large</option>
+        <option value="xx-large">xx-large</option>
+        <option value="larger">larger</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Font size (px)</div>
+    <div class="lavender"><input class="controlItem" id="size_px" type="range" value="16" min="8" max="32" step="1" /></div>
+    <div class="lavender">&nbsp;</div>
+
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create a Phrase entity</li>
+      <li>Display the Phrase entity on a canvas</li>
+      <li>Check that the entity location (start, handle) and width (but not height) attributes work as expected</li>
+      <li>Check that the entity manipulation attributes (roll, scale, flip) work as expected</li>
+      <li>Check that the entity font attributes (fontSize, fontWeight, fontStyle, fontVariant) work as expected</li>
+      <li>Create a Wheel entity pivoted to the Phrase entity</li>
+      <li>Create a Block entity that mimics (including mimicPadding) the Phrase entity</li>
+    </ul>
+  </div>
+
+  <script src="canvas-028.js" type="module"></script>
+
+</body>
+
+</html>

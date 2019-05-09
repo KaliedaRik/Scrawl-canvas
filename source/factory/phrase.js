@@ -268,6 +268,9 @@ S.fontWeight = function (item) {
 		v = (item.indexOf(' 800 ') >= 0) ? '800' : v;
 		v = (item.indexOf(' 900 ') >= 0) ? '900' : v;
 
+		// also need to capture instances where a number value has been directly set with no other font attributes around it
+		v = (/^\d00$/.test(item)) ? item : v;
+
 		this.currentFontWeight = v;
 	}
 
@@ -450,6 +453,25 @@ D.width = function (item) {
 	this.dirtyText = true;
 };
 
+S.scale = function (item) {
+
+	this.scale = item;
+
+	this.dirtyFont = true;
+	this.dirtyPathObject = true;
+	this.dirtyScale = true;
+	this.dirtyPivoted = true;
+};
+D.scale = function (item) {
+
+	this.scale += item;
+
+	this.dirtyFont = true;
+	this.dirtyPathObject = true;
+	this.dirtyScale = true;
+	this.dirtyPivoted = true;
+};
+
 /*
 Manipulating lineHeight and letterSpacing attributes
 */
@@ -530,7 +552,7 @@ P.buildFont = function () {
 	if (this.currentFontVariant !== 'normal') font += `${this.currentFontVariant} `;
 	if (this.currentFontWeight !== 'normal') font += `${this.currentFontWeight} `;
 	if (this.currentFontStretch !== 'normal') font += `${this.currentFontStretch} `;
-	if (this.currentFontSize) font += `${this.currentFontSize}${this.currentFontSizeMetric} `;
+	if (this.currentFontSize) font += `${this.currentFontSize * this.scale}${this.currentFontSizeMetric} `;
 	else font += `${this.currentFontSizeMetric} `;
 
 	font += `${this.currentFontFamily}`;
@@ -579,7 +601,7 @@ P.calculateTextDimensions = function (item) {
 	// setup local variables
 	let myCell = requestCell(),
 		engine = myCell.engine,
-		width = this.localWidth,
+		width = this.localWidth * this.scale,
 		textLines = this.textLines,
 		textLineWidths = this.textLineWidths,
 		textWords = this.textWords,
@@ -695,10 +717,34 @@ Fonts don't have accessible paths...
 P.cleanPathObject = function () {
 
 	this.dirtyPathObject = false;
+
 	if (this.dirtyFont) this.buildFont();
 	if (this.dirtyText) this.buildText();
 	if (this.dirtyHandle) this.cleanHandle();
+
+	let p = this.pathObject = new Path2D();
+	
+	let handle = this.currentHandle,
+		scale = this.scale,
+		x = -handle.x * scale,
+		y = -handle.y,
+		w = this.localWidth * scale,
+		h = this.localHeight;
+
+	p.rect(x, y, w, h);
 };
+
+/*
+
+*/
+// P.prepareMimicStampDimensions = function (mimic) {
+
+// 	this.width = mimic.width;
+// 	// this.height = mimic.height;
+// 	this.localWidth = mimic.localWidth;
+// 	// this.localHeight = mimic.localHeight;
+// 	this.dirtyDimensions = true;
+// };
 
 /*
 
@@ -817,7 +863,8 @@ P.getLineData = function (lineItem) {
 
 	let handle = this.currentHandle,
 		height = this.textHeight,
-		width = this.localWidth,
+		scale = this.scale,
+		width = this.localWidth * scale,
 		justify = this.justify,
 		lines = this.textLines,
 		lineWidths = this.textLineWidths,
@@ -827,19 +874,19 @@ P.getLineData = function (lineItem) {
 	switch (justify) {
 
 		case 'right' :
-			x = width - lineWidths[lineItem] - handle.x;
+			x = width - lineWidths[lineItem] - handle.x * scale;
 			y = (lineItem * height) - handle.y;
 			break;
 
 		case 'center' :
-			x = ((width - lineWidths[lineItem]) / 2) - handle.x;
+			x = ((width - lineWidths[lineItem]) / 2) - handle.x * scale;
 			y = (lineItem * height) - handle.y;
 			break;
 
 		// 'full' justified text needs to be done by the word, not by the line
 		case 'full' :
 		default :
-			x = -handle.x;
+			x = -handle.x * scale;
 			y = (lineItem * height) - handle.y;
 			break;
 
@@ -854,6 +901,7 @@ P.getLineData = function (lineItem) {
 P.drawBoundingBox = function (engine, entity) {
 
 	let handle = entity.currentHandle,
+		scale = entity.scale,
 		floor = Math.floor,
 		ceil = Math.ceil;
 
@@ -865,7 +913,7 @@ P.drawBoundingBox = function (engine, entity) {
 	engine.shadowOffsetX = 0;
 	engine.shadowOffsetY = 0;
 	engine.shadowBlur = 0;
-	engine.strokeRect(floor(-handle.x), floor(-handle.y), ceil(entity.localWidth), ceil(entity.localHeight));
+	engine.strokeRect(floor(-handle.x * scale), floor(-handle.y), ceil(entity.localWidth * scale), ceil(entity.localHeight));
 	engine.restore();
 };
 

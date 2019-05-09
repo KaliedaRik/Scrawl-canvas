@@ -32,6 +32,14 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
+		mimicPaddingWidth: 0,
+		mimicPaddingHeight: 0,
+		localMimicPaddingWidth: 0,
+		localMimicPaddingHeight: 0,
+
+/*
+
+*/
 		start: {},
 
 /*
@@ -369,6 +377,37 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
+	S.mimicPadding = function (item) {
+
+		this.mimicPaddingWidth = item;
+		this.mimicPaddingHeight = item;
+		this.dirtyDimensions = true;
+		this.dirtyPivoted = true;
+	};
+
+/*
+
+*/
+	S.mimicPaddingWidth = function (item) {
+
+		this.mimicPaddingWidth = item;
+		this.dirtyDimensions = true;
+		this.dirtyPivoted = true;
+	};
+
+/*
+
+*/
+	S.mimicPaddingHeight = function (item) {
+
+		this.mimicPaddingHeight = item;
+		this.dirtyDimensions = true;
+		this.dirtyPivoted = true;
+	};
+
+/*
+
+*/
 	S.lockTo = function (item) {
 
 		this.lockXTo = item;
@@ -405,11 +444,11 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	S.mimic = function (item) {
+	// S.mimic = function (item) {
 
-		if (item && artefact[item]) this.mimic = item;
-		else this.mimic = '';
-	};
+	// 	if (item && artefact[item]) this.mimic = item;
+	// 	else this.mimic = '';
+	// };
 
 /*
 
@@ -527,6 +566,39 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 	D.height = function (item) {
 
 		this.height = addStrings(this.height, item);
+		this.dirtyDimensions = true;
+		this.dirtyPivoted = true;
+	};
+
+/*
+
+*/
+	D.mimicPadding = function (item) {
+
+		let d = addStrings(this.mimicPadding, item);
+
+		this.mimicPaddingWidth = d;
+		this.mimicPaddingHeight = d;
+		this.dirtyDimensions = true;
+		this.dirtyPivoted = true;
+	};
+
+/*
+
+*/
+	D.mimicPaddingWidth = function (item) {
+
+		this.mimicPaddingWidth = addStrings(this.mimicPadding, item);
+		this.dirtyDimensions = true;
+		this.dirtyPivoted = true;
+	};
+
+/*
+
+*/
+	D.mimicPaddingHeight = function (item) {
+
+		this.mimicPaddingHeight = addStrings(this.mimicPadding, item);
 		this.dirtyDimensions = true;
 		this.dirtyPivoted = true;
 	};
@@ -915,6 +987,126 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 		this.stampY = z;
 		return z + ct.y;
 	};
+
+/*
+
+*/
+	obj.prepareMimicStamp = function () {
+
+		let mimic = artefact[this.mimic];
+
+		if (mimic) {
+
+			this.mimicType = mimic.type;
+
+			if (this.position !== mimic.position) this.prepareMimicStampPosition(mimic);
+
+			if (this.localWidth !== mimic.localWidth || this.localHeight !== mimic.localHeight) this.prepareMimicStampDimensions(mimic);
+
+			if (this.roll !== mimic.roll || this.pitch !== mimic.pitch || this.yaw !== mimic.yaw) this.prepareMimicStampRotation(mimic);
+
+			if (this.scale !== mimic.scale) this.prepareMimicStampScale(mimic);
+
+			this.prepareMimicStampStart(mimic);
+		}
+		else this.mimicType = '';
+	};
+
+/*
+
+*/
+	obj.prepareMimicStampPosition = function (mimic) {
+
+		if (xt(mimic.position)) {
+
+			this.position = mimic.position;
+			this.dirtyPosition = true;
+			this.setPosition();
+		}
+	};
+
+/*
+
+*/
+	obj.prepareMimicStampScale = function (mimic) {
+
+		if (xt(mimic.scale)) {
+
+			this.localScale = this.scale;
+			this.scale = mimic.scale;
+		}
+	};
+
+/*
+
+*/
+	obj.prepareMimicStampDimensions = function (mimic) {
+
+		let updatedWidth, updatedHeight;
+
+		if (xt(mimic.localWidth)) {
+
+			updatedWidth = mimic.localWidth;
+
+			this.width = updatedWidth;
+			this.localWidth = updatedWidth;
+		}
+
+		if (xt(mimic.localHeight)) {
+
+			updatedHeight = mimic.localHeight;
+
+			this.height = updatedHeight;
+			this.localHeight = updatedHeight;
+		}
+
+		if (mimic.type !== 'Phrase') this.dirtyDimensions = true;
+	};
+
+/*
+
+*/
+	obj.prepareMimicStampRotation = function (mimic) {
+
+		if (xt(mimic.roll)) this.roll = mimic.roll;
+		if (xt(mimic.pitch)) this.pitch = mimic.pitch;
+		if (xt(mimic.yaw)) this.yaw = mimic.yaw;
+
+		if (xt(this.dirtyRotation)) {
+
+			this.dirtyRotationActive = true;
+			this.dirtyRotation = true;
+			this.cleanRotation();
+		}
+	};
+
+/*
+
+*/
+	obj.prepareMimicStampStart = function (mimic) {
+
+		if (xt(mimic.start) && mimic.start.type === 'Vector'){
+
+			this.start.x = mimic.start.x;
+			this.start.y = mimic.start.y;
+			this.dirtyStart = true;
+		}
+
+		if (xt(mimic.handle) && mimic.handle.type === 'Vector'){
+
+			this.handle.x = mimic.handle.x;
+			this.handle.y = mimic.handle.y;
+			this.dirtyHandle = true;
+		}
+
+		if (xt(mimic.flipUpend)) this.flipUpend = mimic.flipUpend;
+		if (xt(mimic.flipReverse)) this.flipReverse = mimic.flipReverse;
+
+		if (xt(mimic.lockXTo)) this.lockXTo = mimic.lockXTo;
+		if (xt(mimic.lockXTo)) this.lockYTo = mimic.lockYTo;
+	};
+
+/*
 
 /*
 

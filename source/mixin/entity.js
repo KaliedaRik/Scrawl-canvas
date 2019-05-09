@@ -630,12 +630,22 @@ CURRENTLY does not support filters on entitys
 */
 	obj.prepareStamp = function() {
 
+		if (this.mimic) this.prepareMimicStamp();
+
 		if (this.dirtyDimensions) this.cleanDimensions();
 		if (this.dirtyStart) this.cleanStart();
 		if (this.dirtyHandle) this.cleanHandle();
 		if (this.dirtyOffset || this.dirtyScale || this.pivot) this.cleanOffset();
 		if (this.dirtyPathObject) this.cleanPathObject();
 		if (this.dirtyPivoted) this.updatePivotSubscribers();
+	};
+
+/*
+Overwrites mixin/position.js function
+*/
+	obj.prepareMimicStampRotation = function (mimic) {
+
+		if (xt(mimic.roll)) this.roll = mimic.roll;
 	};
 
 /*
@@ -686,7 +696,7 @@ CURRENTLY does not support filters on entitys
 	obj.cleanDimensions = function () {
 
 		let host = this.currentHost,
-			w, h;
+			w, h, mw, mh;
 
 		if (host) {
 
@@ -700,6 +710,18 @@ CURRENTLY does not support filters on entitys
 
 			if (h.substring) this.localHeight = (parseFloat(h) / 100) * host.localHeight;
 			else this.localHeight = h;
+
+			if (this.mimic) {
+
+				mw = this.mimicPaddingWidth;
+				mh = this.mimicPaddingHeight
+
+				if (mw.substring) this.localMimicPaddingWidth = (parseFloat(mw) / 100) * host.localWidth;
+				else this.localMimicPaddingWidth = mw;
+
+				if (mh.substring) this.localMimicPaddingHeight = (parseFloat(mh) / 100) * host.localHeight;
+				else this.localMimicPaddingHeight = mh;
+			}
 		}
 	};
 
