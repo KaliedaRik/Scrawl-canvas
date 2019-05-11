@@ -2,7 +2,13 @@
 # Phrase factory
 */
 import { constructors } from '../core/library.js';
-import { mergeOver, xt } from '../core/utilities.js';
+import { mergeOver, 
+	xt, 
+	defaultNonReturnFunction, 
+	ensurePositiveFloat, 
+	ensureFloat, 
+	ensureString, 
+	removeCharFromString } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -19,12 +25,12 @@ tDimsCalc.style.padding = 0;
 tDimsCalc.style.border = 0;
 tDimsCalc.style.margin = 0;
 tDimsCalc.style.height = 'auto';
-tDimsCalc.style.width = '20em';
+tDimsCalc.style.width = '200em';
 tDimsCalc.style.boxSizing = 'border-box';
 tDimsCalc.style.position = 'absolute';
 tDimsCalc.style.top = '-5000px';
 tDimsCalc.style.left = '-5000px';
-tDimsCalc.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qyp';
+tDimsCalc.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwerty0123456789QWERTY';
 document.body.appendChild(tDimsCalc);
 
 const textEntityConverter = document.createElement('textarea');
@@ -91,6 +97,10 @@ Scrawl-canvas will break a text string into lines based on the width value set f
 */
 	textLines: [],
 	textLineWidths: [],
+	textLineGlyphs: [],
+	textLineGlyphWidths: [],
+	textLineWords: [],
+	textLineWordWidths: [],
 
 /*
 Required for when using 'full' justification for text
@@ -119,12 +129,27 @@ Permitted values are: 'left' (default), 'center', 'right', 'full'
 /*
 
 */
-	lineHeight: 1.3,
+	lineHeight: 1.5,
 
 /*
 
 */
 	letterSpacing: 1,
+
+/*
+
+*/
+	textPath: '',
+
+/*
+
+*/
+	textPathPosition: 0,
+
+/*
+
+*/
+	addTextPathRoll: true,
 
 /*
 
@@ -422,7 +447,7 @@ Handling text updates
 */
 S.text = function (item) {
 
-	this.text = (item.substring) ? item : item.toString();
+	this.text = ensureString(item);
 	
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
@@ -455,7 +480,7 @@ D.width = function (item) {
 
 S.scale = function (item) {
 
-	this.scale = item;
+	this.scale = ensurePositiveFloat(item);
 
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
@@ -464,7 +489,8 @@ S.scale = function (item) {
 };
 D.scale = function (item) {
 
-	this.scale += item;
+	this.scale += ensureFloat(item);
+	if (this.scale < 0) this.scale = 0;
 
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
@@ -477,52 +503,34 @@ Manipulating lineHeight and letterSpacing attributes
 */
 S.lineHeight = function (item) {
 
-	if (xt(item)) {
+	this.lineHeight = ensurePositiveFloat(item, 3);
 
-		let val = (item.toFixed) ? item : parseFloat(item);
-
-		this.lineHeight = (val) ? val : this.defs.lineHeight;
-
-		this.dirtyPathObject = true;
-		this.dirtyText = true;
-	}
+	this.dirtyPathObject = true;
+	this.dirtyText = true;
 };
 D.lineHeight = function (item) {
 
-	if (xt(item)) {
+	this.lineHeight += ensureFloat(item, 3);
+	if (this.lineHeight < 0) this.lineHeight = 0;
 
-		let val = (item.toFixed) ? item : parseFloat(item);
-
-		this.lineHeight += (val) ? val : 0;
-
-		this.dirtyPathObject = true;
-		this.dirtyText = true;
-	}
+	this.dirtyPathObject = true;
+	this.dirtyText = true;
 };
 
 S.letterSpacing = function (item) {
 
-	if (xt(item)) {
+	this.letterSpacing = ensurePositiveFloat(item, 3);
 
-		let val = (item.toFixed) ? item : parseFloat(item);
-
-		this.letterSpacing = (val) ? val : this.defs.letterSpacing;
-
-		this.dirtyPathObject = true;
-		this.dirtyText = true;
-	}
+	this.dirtyPathObject = true;
+	this.dirtyText = true;
 };
 D.letterSpacing = function (item) {
 
-	if (xt(item)) {
+	this.letterSpacing += ensureFloat(item, 3);
+	if (this.letterSpacing < 0) this.letterSpacing = 0;
 
-		let val = (item.toFixed) ? item : parseFloat(item);
-
-		this.letterSpacing += (val) ? val : 0;
-
-		this.dirtyPathObject = true;
-		this.dirtyText = true;
-	}
+	this.dirtyPathObject = true;
+	this.dirtyText = true;
 };
 
 
@@ -588,7 +596,11 @@ P.convertTextEntityCharacters = function (item) {
 };
 
 /*
+TODO:
 
+1. refactor into smaller functions
+
+2. recode - currently full-justified text, and text where letterspacing != 1, recalculate word/glyph position data for every display cycle. It will be far more efficient to calculate those positions here, once, and then use those precalculated position coordinates for the display cycle
 */
 P.calculateTextDimensions = function (item) {
 
@@ -604,24 +616,34 @@ P.calculateTextDimensions = function (item) {
 		width = this.localWidth * this.scale,
 		textLines = this.textLines,
 		textLineWidths = this.textLineWidths,
+		textLineGlyphs = this.textLineGlyphs,
+		textLineGlyphWidths = this.textLineGlyphWidths,
 		textWords = this.textWords,
 		textWordWidths = this.textWordWidths,
+		textLineWords = this.textLineWords,
+		textLineWordWidths = this.textLineWordWidths,
 		textGlyphs = this.textGlyphs,
 		textGlyphWidths = this.textGlyphWidths,
 		letterSpacing = this.letterSpacing,
-		measure, fullLineLength, i, iz, words, wordLengths, wordCursor,
-		lineOfWords, lineOfWordsLength, oldLineOfWords, oldLineOfWordsLength;
+		lineHeight = this.lineHeight,
+		textHeight = this.textHeight,
+		measure, fullLineLength, i, iz, j, jz, wordCursor,
+		lineOfWords, lineOfWordsLength, oldLineOfWords, oldLineOfWordsLength,
+		currentLineWords, currentLineWordWidths, currentLineGlyphWidths;
 
 	// prime the engine
 	engine.font = this.font;
 
 	// get text length as a single line
-	measure = engine.measureText(item); 
-	fullLineLength = measure.width;
+	fullLineLength = engine.measureText(item).width * letterSpacing; 
 
 	// clear the text arrays
 	textLines.length = 0;
 	textLineWidths.length = 0;
+	textLineGlyphs.length = 0;
+	textLineGlyphWidths.length = 0;
+	textLineWords.length = 0;
+	textLineWordWidths.length = 0;
 	textWords.length = 0;
 	textWordWidths.length = 0;
 	textGlyphs.length = 0;
@@ -632,17 +654,19 @@ P.calculateTextDimensions = function (item) {
 
 	for (i = 0, iz = textWords.length; i < iz; i++) {
 
-		measure = engine.measureText(textWords[i]);
-		textWordWidths.push(measure.width * letterSpacing);
+		measure = engine.measureText(textWords[i]).width * letterSpacing;
+		textWordWidths.push(measure);
 	}
 
 	// break into lines of text
 
-	// ... single line Phrase - note we've already corrected for letterspacing when we extracted text height above
+	// ... entire text is shorter than Phrase width
 	if (fullLineLength <= width) {
 
 		textLines.push(item);
 		textLineWidths.push(fullLineLength);
+		textLineWords.push(textWords);
+		textLineWordWidths.push(textWordWidths);
 	}
 
 	// ... multiple line Phrase
@@ -654,6 +678,8 @@ P.calculateTextDimensions = function (item) {
 
 			lineOfWords = '';
 			lineOfWordsLength = 0;
+			currentLineWords = [];
+			currentLineWordWidths = [];
 
 			for (i = wordCursor, iz = textWords.length; i < iz; i++) {
 
@@ -668,6 +694,8 @@ P.calculateTextDimensions = function (item) {
 					// ... for situations where a single word is longer than the width
 					if (i === wordCursor) {
 
+						currentLineWords.push(textWords[i]);
+						currentLineWordWidths.push(textWordWidths[i]);
 						textLines.push(lineOfWords);
 						textLineWidths.push(lineOfWordsLength);
 						wordCursor = i + 1;
@@ -685,20 +713,63 @@ P.calculateTextDimensions = function (item) {
 				// ... final line is shorter than width
 				else if (i + 1 === iz) {
 
+					currentLineWords.push(textWords[i]);
+					currentLineWordWidths.push(textWordWidths[i]);
 					textLines.push(lineOfWords);
 					textLineWidths.push(lineOfWordsLength);
 					wordCursor = iz;
 					break;
 				}
+
+				// ... otherwise, add word data to currentLine arrays, and iterate again
+				else {
+
+					currentLineWords.push(textWords[i]);
+					currentLineWordWidths.push(textWordWidths[i]);
+				}
 			}
+
+			textLineWords.push(currentLineWords);
+			textLineWordWidths.push(currentLineWordWidths);
 		}
 	}
 
 	// calculate localHeight
-	this.localHeight = this.textLines.length * this.textHeight;
+	this.localHeight = ((this.textLines.length - 1) * textHeight * lineHeight) + textHeight;
 	this.dirtyHandle = true;
 
 	// calculater glyph arrays (if required)
+	if (this.textPath) {
+
+		textGlyphs.push(...item.split(''));
+
+		for (i = 0, iz = textGlyphs.length; i < iz; i++) {
+
+			// ... seem to get a better kerning result if we measure glyph width this way, rather than just measuring the glyph on its own
+			measure = engine.measureText(removeCharFromString(item, i)).width * letterSpacing;
+			textGlyphWidths.push(fullLineLength - measure);
+		}
+	}
+
+	else if (this.letterSpacing !== 1) {
+
+		for (i = 0, iz = textLines.length; i < iz; i++) {
+
+			lineOfWords = textLines[i];
+			lineOfWordsLength = textLineWidths[i];
+			currentLineGlyphWidths = [];
+
+			textLineGlyphs.push(lineOfWords.split(''));
+
+			for (j = 0, jz = lineOfWords.length; j < jz; j++) {
+
+				measure = engine.measureText(removeCharFromString(lineOfWords, j)).width * letterSpacing;
+				currentLineGlyphWidths.push(lineOfWordsLength - measure);
+			}
+
+			textLineGlyphWidths.push(currentLineGlyphWidths);
+		}
+	}
 
 	releaseCell(myCell);
 };
@@ -737,183 +808,456 @@ P.cleanPathObject = function () {
 /*
 
 */
-// P.prepareMimicStampDimensions = function (mimic) {
+P.regularStampSynchronousActions = function () {
 
-// 	this.width = mimic.width;
-// 	// this.height = mimic.height;
-// 	this.localWidth = mimic.localWidth;
-// 	// this.localHeight = mimic.localHeight;
-// 	this.dirtyDimensions = true;
-// };
+	let dest = this.currentHost, 
+		engine;
 
-/*
+	if (dest) {
 
-*/
-P.stamper = {
+		engine = dest.engine;
 
-	draw: function (engine, entity) {
+		if (!this.fastStamp) dest.setEngine(this);
 
-		let data, i, iz;
+		if (this.method === 'none') defaultNonReturnFunction();
+		else if (this.textPath) this.textPathStamper[this.method](engine, this);
+		else if (this.justify === 'full') {
 
-		for (i = 0, iz = entity.textLines.length; i < iz; i++) {
-
-			data = entity.getLineData(i);
-			engine.strokeText(...data);
+			if (this.letterSpacing !== 1) this.spaceJustifiedStamper[this.method](engine, this);
+			else this.justifiedStamper[this.method](engine, this);
 		}
-
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	fill: function (engine, entity) {
-
-		let data, i, iz;
-
-		for (i = 0, iz = entity.textLines.length; i < iz; i++) {
-
-			data = entity.getLineData(i);
-			engine.fillText(...data);
-		}
-
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	drawFill: function (engine, entity) {
-
-		let data, i, iz;
-
-		for (i = 0, iz = entity.textLines.length; i < iz; i++) {
-
-			data = entity.getLineData(i);
-			engine.strokeText(...data);
-			entity.currentHost.clearShadow();
-			engine.fillText(...data);
-		}
-
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	fillDraw: function (engine, entity) {
-
-		let data, i, iz;
-
-		for (i = 0, iz = entity.textLines.length; i < iz; i++) {
-
-			data = entity.getLineData(i);
-			engine.fillText(...data);
-			entity.currentHost.clearShadow();
-			engine.strokeText(...data);
-		}
-
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	floatOver: function (engine, entity) {
-
-		let data, i, iz;
-
-		for (i = 0, iz = entity.textLines.length; i < iz; i++) {
-
-			data = entity.getLineData(i);
-			engine.strokeText(...data);
-			engine.fillText(...data);
-		}
-
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	sinkInto: function (engine, entity) {
-
-		let data, i, iz;
-
-		for (i = 0, iz = entity.textLines.length; i < iz; i++) {
-
-			data = entity.getLineData(i);
-			engine.fillText(...data);
-			engine.strokeText(...data);
-		}
-
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	clear: function (engine, entity) {
-
-		let data, i, iz,
-			gco = engine.globalCompositeOperation;
-
-		engine.globalCompositeOperation = 'destination-out';
-
-		for (i = 0, iz = entity.textLines.length; i < iz; i++) {
-
-			data = entity.getLineData(i);
-			engine.fillText(...data);
-		}
-
-		engine.globalCompositeOperation = gco;
-
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},	
-
-	none: function (engine, entity) {},	
+		else if (this.letterSpacing !== 1) this.spacedStamper[this.method](engine, this);
+		else this.stamper[this.method](engine, this);
+	}
 };
 
 /*
 
 */
-P.getLineData = function (lineItem) {
+P.performRotation = function (engine) {
+
+	let dest = this.currentHost, 
+		x, y;
+
+	if (dest) {
+
+		x = this.updateStampX();
+		y = this.updateStampY();
+
+		dest.rotateDestination(engine, x, y, this);
+	}
+};
+
+/*
+TODO: recode in line with calculateTextDimensions() TODO point 2...
+*/
+P.getLineData = function (lineIndex) {
 
 	let handle = this.currentHandle,
 		height = this.textHeight,
+		lineHeight = this.lineHeight,
 		scale = this.scale,
 		width = this.localWidth * scale,
 		justify = this.justify,
 		lines = this.textLines,
 		lineWidths = this.textLineWidths,
 		x = 0, 
-		y = 0;
+		y = (lineIndex * height * lineHeight) - handle.y;
 
 	switch (justify) {
 
 		case 'right' :
-			x = width - lineWidths[lineItem] - handle.x * scale;
-			y = (lineItem * height) - handle.y;
+			x = width - lineWidths[lineIndex] - (handle.x * scale);
 			break;
 
 		case 'center' :
-			x = ((width - lineWidths[lineItem]) / 2) - handle.x * scale;
-			y = (lineItem * height) - handle.y;
+			x = ((width - lineWidths[lineIndex]) / 2) - (handle.x * scale);
 			break;
 
-		// 'full' justified text needs to be done by the word, not by the line
-		case 'full' :
 		default :
 			x = -handle.x * scale;
-			y = (lineItem * height) - handle.y;
 			break;
 
 	}
 
-	return [lines[lineItem], x, y];
+	return [lines[lineIndex], x, y];
+};
+
+/*
+TODO: recode in line with calculateTextDimensions() TODO point 2...
+*/
+P.getWordData = function (lineIndex, wordIndex, spaceWidth) {
+
+	let handle = this.currentHandle,
+		height = this.textHeight,
+		lineHeight = this.lineHeight,
+		scaledHandleX = -handle.x * this.scale,
+		x = 0, 
+		y = (lineIndex * height * lineHeight) - handle.y;
+
+	let justify = this.justify,
+		words = this.textLineWords[lineIndex],
+		wordWidths = this.textLineWordWidths[lineIndex],
+		slicedWidths, width;
+
+	// first word is always hard left
+	if (wordIndex === 0) x = scaledHandleX;
+
+	// second and subsequent words
+	else {
+
+		switch (justify) {
+
+			case 'full' :
+				slicedWidths = wordWidths.slice(0, wordIndex);
+				width = slicedWidths.reduce((a, v) => a + v, 0);
+				x = width + (spaceWidth * wordIndex) + scaledHandleX;
+				break;
+
+			default :
+				x = scaledHandleX;
+				break;
+		}
+	}
+
+	return [words[wordIndex], x, y];
+};
+
+/*
+TODO: recode in line with calculateTextDimensions() TODO point 2...
+*/
+P.getLineGlyphData = function (lineIndex, glyphIndex) {
+
+	let handle = this.currentHandle,
+		height = this.textHeight,
+		lineHeight = this.lineHeight,
+		scale = this.scale,
+		width = this.localWidth * scale,
+		scaledHandleX = -handle.x * scale,
+		x = 0, 
+		y = (lineIndex * height * lineHeight) - handle.y;
+
+	let justify = this.justify,
+		glyphs = this.textLineGlyphs[lineIndex],
+		glyphWidths = this.textLineGlyphWidths[lineIndex],
+		slicedWidths, currentWidth, offset;
+
+	slicedWidths = glyphWidths.slice(0, glyphIndex);
+	currentWidth = slicedWidths.reduce((a, v) => a + v, 0);
+	offset = width - glyphWidths.reduce((a, v) => a + v, 0);
+
+	switch (justify) {
+
+		case 'right' :
+			x = currentWidth + offset + scaledHandleX;
+			break;
+
+		case 'center' :
+			x = currentWidth + (offset / 2) + scaledHandleX;
+			break;
+
+		default :
+			x = currentWidth + scaledHandleX;
+			break;
+	}
+
+	return [glyphs[glyphIndex], x, y];
+};
+
+/*
+TODO: recode in line with calculateTextDimensions() TODO point 2...
+*/
+P.getJustifiedSpace = function (lineIndex) {
+
+	let lineWidth = this.textLineWordWidths[lineIndex].reduce((a, v) => a + v, 0),
+		spaceCount = this.textLineWords[lineIndex].length - 1;
+
+	return (spaceCount > 0) ? ((this.localWidth * this.scale) - lineWidth) / spaceCount : 0;
 };
 
 /*
 
 */
-P.drawBoundingBox = function (engine, entity) {
+P.stamperMethods = function (engine, method, data) {
 
-	let handle = entity.currentHandle,
-		scale = entity.scale,
+	switch (method) {
+
+		case 'draw' :
+			engine.strokeText(...data);
+			break;
+
+		case 'fill' :
+			engine.fillText(...data);
+			break;
+
+		case 'drawFill' :
+			engine.strokeText(...data);
+			this.currentHost.clearShadow();
+			engine.fillText(...data);
+			break;
+
+		case 'fillDraw' :
+			engine.fillText(...data);
+			this.currentHost.clearShadow();
+			engine.strokeText(...data);
+			break;
+
+		case 'floatOver' :
+			engine.strokeText(...data);
+			engine.fillText(...data);
+			break;
+
+		case 'sinkInto' :
+			engine.fillText(...data);
+			engine.strokeText(...data);
+			break;
+
+		case 'clear' :
+			let gco = engine.globalCompositeOperation;
+			engine.globalCompositeOperation = 'destination-out';
+			engine.fillText(...data);
+			engine.globalCompositeOperation = gco;
+			break;
+	}
+};
+
+/*
+
+*/
+P.stamper = {
+
+	draw: function (engine, entity) { 
+
+		entity.stamperFunctions(engine, 'draw'); 
+	},
+	fill: function (engine, entity) { 
+
+		entity.stamperFunctions(engine, 'fill'); 
+	},
+	drawFill: function (engine, entity) { 
+
+		entity.stamperFunctions(engine, 'drawFill'); 
+	},
+	fillDraw: function (engine, entity) { 
+
+		entity.stamperFunctions(engine, 'fillDraw'); 
+	},
+	floatOver: function (engine, entity) { 
+
+		entity.stamperFunctions(engine, 'floatOver'); 
+	},
+	sinkInto: function (engine, entity) { 
+
+		entity.stamperFunctions(engine, 'sinkInto'); 
+	},
+	clear: function (engine, entity) { 
+
+		entity.stamperFunctions(engine, 'clear'); 
+	},	
+};
+
+/*
+
+*/
+P.stamperFunctions = function (engine, method) {
+
+	let data, i, iz;
+
+	this.performRotation(engine);
+
+	for (i = 0, iz = this.textLines.length; i < iz; i++) {
+
+		data = this.getLineData(i);
+		this.stamperMethods(engine, method, data);
+	}
+
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+};
+
+/*
+
+*/
+P.spacedStamper = {
+
+	draw: function (engine, entity) { 
+
+		entity.spacedStamperFunctions(engine, 'draw'); 
+	},
+	fill: function (engine, entity) { 
+
+		entity.spacedStamperFunctions(engine, 'fill'); 
+	},
+	drawFill: function (engine, entity) { 
+
+		entity.spacedStamperFunctions(engine, 'drawFill'); 
+	},
+	fillDraw: function (engine, entity) { 
+
+		entity.spacedStamperFunctions(engine, 'fillDraw'); 
+	},
+	floatOver: function (engine, entity) { 
+
+		entity.spacedStamperFunctions(engine, 'floatOver'); 
+	},
+	sinkInto: function (engine, entity) { 
+
+		entity.spacedStamperFunctions(engine, 'sinkInto'); 
+	},
+	clear: function (engine, entity) { 
+
+		entity.spacedStamperFunctions(engine, 'clear'); 
+	},	
+};
+
+/*
+
+*/
+P.spacedStamperFunctions = function (engine, method) {
+
+	let lineGlyphs, data, 
+		i, iz, j, jz;
+
+	this.performRotation(engine);
+
+	for (i = 0, iz = this.textLines.length; i < iz; i++) {
+
+		lineGlyphs = this.textLineGlyphs[i];
+
+		for (j = 0, jz = lineGlyphs.length; j < jz; j++) {
+
+			data = this.getLineGlyphData(i, j);
+			this.stamperMethods(engine, method, data);
+		}
+	}
+
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+};
+
+/*
+
+*/
+P.spaceJustifiedStamper = {
+
+	draw: function (engine, entity) { 
+
+		entity.spaceJustifiedStamperFunctions(engine, 'draw'); 
+	},
+	fill: function (engine, entity) { 
+
+		entity.spaceJustifiedStamperFunctions(engine, 'fill'); 
+	},
+	drawFill: function (engine, entity) { 
+
+		entity.spaceJustifiedStamperFunctions(engine, 'drawFill'); 
+	},
+	fillDraw: function (engine, entity) { 
+
+		entity.spaceJustifiedStamperFunctions(engine, 'fillDraw'); 
+	},
+	floatOver: function (engine, entity) { 
+
+		entity.spaceJustifiedStamperFunctions(engine, 'floatOver'); 
+	},
+	sinkInto: function (engine, entity) { 
+
+		entity.spaceJustifiedStamperFunctions(engine, 'sinkInto'); 
+	},
+	clear: function (engine, entity) { 
+
+		entity.spaceJustifiedStamperFunctions(engine, 'clear'); 
+	},	
+};
+
+/*
+TODO: code up this functionality
+*/
+P.spaceJustifiedStamperFunctions = function (engine, method) {
+
+	let data, i, iz;
+
+	this.performRotation(engine);
+
+	for (i = 0, iz = this.textLines.length; i < iz; i++) {
+
+		data = this.getLineData(i);
+		this.stamperMethods(engine, method, data);
+	}
+
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+};
+
+/*
+
+*/
+P.textPathStamper = {
+
+	draw: function (engine, entity) { 
+
+		entity.textPathStamperFunctions(engine, 'draw'); 
+	},
+	fill: function (engine, entity) { 
+
+		entity.textPathStamperFunctions(engine, 'fill'); 
+	},
+	drawFill: function (engine, entity) { 
+
+		entity.textPathStamperFunctions(engine, 'drawFill'); 
+	},
+	fillDraw: function (engine, entity) { 
+
+		entity.textPathStamperFunctions(engine, 'fillDraw'); 
+	},
+	floatOver: function (engine, entity) { 
+
+		entity.textPathStamperFunctions(engine, 'floatOver'); 
+	},
+	sinkInto: function (engine, entity) { 
+
+		entity.textPathStamperFunctions(engine, 'sinkInto'); 
+	},
+	clear: function (engine, entity) { 
+
+		entity.textPathStamperFunctions(engine, 'clear'); 
+	},	
+};
+
+/*
+TODO: code up this functionality
+*/
+P.textPathStamperFunctions = function (engine, method) {
+
+	let data, i, iz;
+
+	this.performRotation(engine);
+
+	for (i = 0, iz = this.textLines.length; i < iz; i++) {
+
+		data = this.getLineData(i);
+		this.stamperMethods(engine, method, data);
+	}
+
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+};
+
+/*
+
+*/
+P.drawBoundingBox = function (engine) {
+
+	let handle = this.currentHandle,
+		scale = this.scale,
 		floor = Math.floor,
 		ceil = Math.ceil;
 
 	engine.save();
-	engine.strokeStyle = entity.boundingBoxColor;
+	engine.strokeStyle = this.boundingBoxColor;
 	engine.lineWidth = 1;
 	engine.globalCompositeOperation = 'source-over';
 	engine.globalAlpha = 1;
 	engine.shadowOffsetX = 0;
 	engine.shadowOffsetY = 0;
 	engine.shadowBlur = 0;
-	engine.strokeRect(floor(-handle.x * scale), floor(-handle.y), ceil(entity.localWidth * scale), ceil(entity.localHeight));
+	engine.strokeRect(floor(-handle.x * scale), floor(-handle.y), ceil(this.localWidth * scale), ceil(this.localHeight));
 	engine.restore();
 };
 

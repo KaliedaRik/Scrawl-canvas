@@ -68,13 +68,13 @@ P.cleanPathObject = function () {
 	let handle = this.currentHandle,
 		scale = this.scale,
 		mimic = this.mimic, 
-		mType = this.mimicType, 
-		mPhrase = (mType === 'Phrase'),
-		mWidth = this.localMimicPaddingWidth,
-		mHeight = this.localMimicPaddingHeight,
 		x, y, w, h;
 
 	if (mimic) {
+
+		let mPhrase = (this.mimicType === 'Phrase'),
+			mWidth = this.localMimicPaddingWidth,
+			mHeight = this.localMimicPaddingHeight;
 
 		x = (-handle.x * scale) - mWidth;
 		y = (mPhrase) ? -handle.y - mHeight : (-handle.y * scale) - mHeight;

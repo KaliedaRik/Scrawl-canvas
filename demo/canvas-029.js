@@ -127,16 +127,16 @@ let events = (e) => {
 			items.width = Math.round(e.target.value);
 			break;
 
-		case 'weight':
-			items.fontWeight = e.target.value;
+		case 'letterSpacing':
+			items.letterSpacing = parseFloat(e.target.value);
 			break;
 
-		case 'style':
-			items.fontStyle = e.target.value;
+		case 'lineHeight':
+			items.lineHeight = parseFloat(e.target.value);
 			break;
 
-		case 'variant':
-			items.fontVariant = e.target.value;
+		case 'justify':
+			items.justify = e.target.value;
 			break;
 
 		case 'family':
@@ -177,9 +177,9 @@ document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
 document.querySelector('#relativeWidth').value = 50;
 document.querySelector('#absoluteWidth').value = 300;
-document.querySelector('#weight').options.selectedIndex = 0;
-document.querySelector('#style').options.selectedIndex = 0;
-document.querySelector('#variant').options.selectedIndex = 0;
+document.querySelector('#lineHeight').value = 1.5;
+document.querySelector('#letterSpacing').value = 1;
+document.querySelector('#justify').options.selectedIndex = 0;
 document.querySelector('#family').options.selectedIndex = 0;
 document.querySelector('#size_px').value = 16;
 document.querySelector('#size_string').options.selectedIndex = 4;
@@ -201,17 +201,18 @@ scrawl.makeAnimation({
 				testTime = testNow - testTicker;
 				testTicker = testNow;
 
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+				testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
 
 				resolve(true);
 			})
 			.catch((err) => {
 
 				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
+				testMessage.textContent = (err.substring) ? err : JSON.stringify(err);
 
 				resolve(false);
 			});
 		});
 	}
 });
+console.log(scrawl.library.entity)

@@ -23,6 +23,7 @@ scrawl.makePhrase({
 	handleY: 'center',
 
 	justify: 'center',
+	lineHeight: 1,
 
 	fillStyle: 'green',
 	strokeStyle: 'gold',

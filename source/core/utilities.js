@@ -123,6 +123,54 @@ const defaultThisReturnFunction = function () { return this; };
 const defaultFalseReturnFunction = () => { return false; };
 
 /*
+
+*/ 
+const ensureInteger = (val) => {
+
+	val = parseInt(val, 10);
+	if (!val.toFixed || isNaN(val)) val = 0;
+	return val;
+};
+
+/*
+
+*/ 
+const ensurePositiveInteger = (val) => {
+
+	val = parseInt(val, 10);
+	if (!val.toFixed || isNaN(val)) val = 0;
+	return Math.abs(val);
+};
+
+/*
+
+*/ 
+const ensureFloat = (val, precision) => {
+
+	val = parseFloat(val);
+	if (!val.toFixed || isNaN(val)) val = 0;
+	return (xt(precision)) ? parseFloat(val.toFixed(precision)) : val;
+};
+
+/*
+
+*/ 
+const ensurePositiveFloat = (val, precision) => {
+
+	val = parseFloat(val);
+	if (!val.toFixed || isNaN(val)) val = 0;
+	return (xt(precision)) ? Math.abs(parseFloat(val.toFixed(precision))) : Math.abs(val);
+};
+
+/*
+
+*/ 
+const ensureString = (val) => {
+
+	return (val.substring) ? val : val.toString;
+};
+
+/*
 __generateUuid__ is a simple (crude) uuid generator 
 http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 (imported 2017-07-08)
@@ -279,6 +327,17 @@ const pushUnique = (myArray, potentialMember) => {
 };
 
 /*
+
+*/
+const removeCharFromString = (str, pos) => {
+
+	let start = str.substring(0, pos),
+		end = str.substring(pos + 1, str.length);
+
+	return (start + end);
+};
+
+/*
 __removeItem__ removes a value from an array. This function mutates the array
 
 Example:
@@ -329,6 +388,11 @@ export {
 	defaultArgReturnFunction,
 	defaultThisReturnFunction,
 	defaultFalseReturnFunction,
+	ensureInteger,
+	ensurePositiveInteger,
+	ensureFloat,
+	ensurePositiveFloat,
+	ensureString,
 	generateUuid,
 	getSafeObject,
 	isa_canvas,
@@ -345,6 +409,7 @@ export {
 	mergeInto,
 	mergeOver,
 	pushUnique,
+	removeCharFromString,
 	removeItem,
 	xt,
 	xta,
