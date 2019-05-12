@@ -3,7 +3,7 @@
 */
 import { mergeOver, defaultNonReturnFunction } from '../core/utilities.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 ## Define attributes
@@ -27,14 +27,14 @@ All factories using the asset mixin will add these to their prototype objects
 */
 		subscribers: null,
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let G = obj.getters, 
-		S = obj.setters, 
-		D = obj.deltaSetters;
+	let G = P.getters, 
+		S = P.setters, 
+		D = P.deltaSetters;
 
 /*
 imageAsset.js and videoAsset.js overwrite this function, thus only put here so cell.js also gains the function - which I don't think it will ever need as cells ARE their own source
@@ -60,7 +60,7 @@ imageAsset.js and videoAsset.js overwrite this function, thus only put here so c
 /*
 
 */
-	obj.assetConstructor = function (items = {}) {
+	P.assetConstructor = function (items = {}) {
 
 		this.makeName(items.name);
 		this.register();
@@ -76,7 +76,7 @@ imageAsset.js and videoAsset.js overwrite this function, thus only put here so c
 /*
 
 */
-	obj.notifySubscribers = function () {
+	P.notifySubscribers = function () {
 
 		this.subscribers.forEach(sub => this.notifySubscriber(sub), this);
 	};
@@ -84,7 +84,7 @@ imageAsset.js and videoAsset.js overwrite this function, thus only put here so c
 /*
 
 */
-	obj.notifySubscriber = function (sub) {
+	P.notifySubscriber = function (sub) {
 
 		sub.sourceNaturalWidth = this.sourceNaturalWidth;
 		sub.sourceNaturalHeight = this.sourceNaturalHeight;
@@ -97,7 +97,7 @@ imageAsset.js and videoAsset.js overwrite this function, thus only put here so c
 /*
 
 */
-	obj.subscribe = function (sub = {}) {
+	P.subscribe = function (sub = {}) {
 
 		if (sub && sub.name) {
 
@@ -110,7 +110,7 @@ imageAsset.js and videoAsset.js overwrite this function, thus only put here so c
 /*
 Separated out because cells handle things differently (they ARE the source)
 */
-	obj.subscribeAction = function (sub = {}) {
+	P.subscribeAction = function (sub = {}) {
 
 		this.subscribers.push(sub);
 		sub.asset = this;
@@ -121,7 +121,7 @@ Separated out because cells handle things differently (they ARE the source)
 /*
 
 */
-	obj.unsubscribe = function (sub = {}) {
+	P.unsubscribe = function (sub = {}) {
 
 		if (sub.name) {
 
@@ -140,5 +140,5 @@ Separated out because cells handle things differently (they ARE the source)
 		}
 	};
 
-	return obj;
+	return P;
 };

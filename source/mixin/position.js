@@ -5,7 +5,7 @@ import { artefact, group } from '../core/library.js';
 import { defaultNonReturnFunction, mergeOver, mergeInto, isa_obj, xt, xta, addStrings, xtGet, pushUnique, removeItem } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 ## Define attributes
@@ -142,14 +142,14 @@ All factories using the position mixin will add these to their prototype objects
 */
 		delta: {},
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let G = obj.getters,
-		S = obj.setters,
-		D = obj.deltaSetters;
+	let G = P.getters,
+		S = P.setters,
+		D = P.deltaSetters;
 
 /*
 
@@ -629,7 +629,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.setDeltaValues = function (items, method) {
+	P.setDeltaValues = function (items, method) {
 
 		method = (method.substring) ? method.toLowerCase() : 'replace';
 		items = isa_obj(items) ? items : {};
@@ -674,7 +674,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.updateByDelta = function () {
+	P.updateByDelta = function () {
 
 		if (this.delta) this.setDelta(this.delta);
 		return this;
@@ -683,7 +683,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.reverseByDelta = function () {
+	P.reverseByDelta = function () {
 
 		let temp, keys, key, i, iz, d, item;
 
@@ -711,7 +711,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.cleanVectorParameter = function (currentLabel, external, width, height) {
+	P.cleanVectorParameter = function (currentLabel, external, width, height) {
 
 		let dim, def, current;
 
@@ -756,7 +756,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.cleanHandle = function () {
+	P.cleanHandle = function () {
 
 		this.cleanVectorParameter('currentHandle', this.handle, this.localWidth, this.localHeight);
 	};
@@ -764,7 +764,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.cleanStart = function () {
+	P.cleanStart = function () {
 
 		let here = this.getHere();
 
@@ -774,7 +774,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.updatePivotSubscribers = function () {
+	P.updatePivotSubscribers = function () {
 
 		this.dirtyPivoted = false;
 
@@ -794,7 +794,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.cleanOffsetHelper = function () {
+	P.cleanOffsetHelper = function () {
 
 		let w, h,
 			pivot = this.pivot;
@@ -820,7 +820,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.getHere = function () {
+	P.getHere = function () {
 
 		return (this.currentHost && this.currentHost.here) ? this.currentHost.here : currentCorePosition;
 	};
@@ -828,7 +828,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.getStart = function () {
+	P.getStart = function () {
 
 		return {
 			x: this.currentStart.x, 
@@ -839,7 +839,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.getPathData = function () {
+	P.getPathData = function () {
 
 		let pathPos = this.pathPosition;
 
@@ -871,7 +871,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.updateStampX = function () {
+	P.updateStampX = function () {
 
 		let lock = this.lockXTo,
 			cs = this.currentStart,
@@ -931,7 +931,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.updateStampY = function () {
+	P.updateStampY = function () {
 
 		let lock = this.lockYTo,
 			cs = this.currentStart,
@@ -991,7 +991,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.prepareMimicStamp = function () {
+	P.prepareMimicStamp = function () {
 
 		let mimic = artefact[this.mimic];
 
@@ -1015,7 +1015,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.prepareMimicStampPosition = function (mimic) {
+	P.prepareMimicStampPosition = function (mimic) {
 
 		if (xt(mimic.position)) {
 
@@ -1028,7 +1028,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.prepareMimicStampScale = function (mimic) {
+	P.prepareMimicStampScale = function (mimic) {
 
 		if (xt(mimic.scale)) {
 
@@ -1040,7 +1040,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.prepareMimicStampDimensions = function (mimic) {
+	P.prepareMimicStampDimensions = function (mimic) {
 
 		let updatedWidth, updatedHeight;
 
@@ -1066,7 +1066,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.prepareMimicStampRotation = function (mimic) {
+	P.prepareMimicStampRotation = function (mimic) {
 
 		if (xt(mimic.roll)) this.roll = mimic.roll;
 		if (xt(mimic.pitch)) this.pitch = mimic.pitch;
@@ -1083,7 +1083,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.prepareMimicStampStart = function (mimic) {
+	P.prepareMimicStampStart = function (mimic) {
 
 		if (xt(mimic.start) && mimic.start.type === 'Vector'){
 
@@ -1111,7 +1111,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.pickupArtefact = function (items = {}) {
+	P.pickupArtefact = function (items = {}) {
 
 		this.oldLockXTo = this.lockXTo;
 		this.oldLockYTo = this.lockYTo;
@@ -1138,7 +1138,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	obj.dropArtefact = function () {
+	P.dropArtefact = function () {
 
 		this.start.x = this.oldX + this.dragOffset.x;
 		this.start.y = this.oldY + this.dragOffset.y;
@@ -1167,5 +1167,5 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 		return this;
 	};
 
-	return obj;
+	return P;
 };

@@ -8,7 +8,7 @@ import { addDomShowElement, setDomShowRequired } from '../core/DOM.js';
 
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 ## Define attributes
@@ -122,14 +122,14 @@ All factories using the dom mixin will add these to their prototype objects
 */
 		dirtyStart: true,
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let G = obj.getters,
-		S = obj.setters,
-		D = obj.deltaSetters;
+	let G = P.getters,
+		S = P.setters,
+		D = P.deltaSetters;
 
 /*
 
@@ -397,7 +397,7 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 
 */
-	obj.setNow = function (items) {
+	P.setNow = function (items) {
 
 		this.set(items);
 		this.prepareStamp();
@@ -407,7 +407,7 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 
 */
-	obj.setDeltaNow = function (items) {
+	P.setDeltaNow = function (items) {
 
 		this.setDelta(items);
 		this.prepareStamp();
@@ -417,7 +417,7 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 
 */
-	obj.getDimensions = function () {
+	P.getDimensions = function () {
 
 		return {
 			w: this.localWidth,
@@ -428,7 +428,7 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 
 */
-	obj.checkRotationAngle = function (angle) {
+	P.checkRotationAngle = function (angle) {
 
 		if (angle < -180 || angle > 180) {
 			angle += (angle > 0) ? -360 : 360;
@@ -440,7 +440,7 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 Overwrites the clone function in mixin/base.js
 */
-	obj.clone = function (items = {}) {
+	P.clone = function (items = {}) {
 
 		let self = this,
 			regex = /^(local|dirty|current)/;
@@ -481,7 +481,7 @@ Overwrites the clone function in mixin/base.js
 /*
 
 */
-	obj.addClasses = function (item) {
+	P.addClasses = function (item) {
 
 		if (item.substring) {
 
@@ -498,7 +498,7 @@ Overwrites the clone function in mixin/base.js
 /*
 
 */
-	obj.removeClasses = function (item) {
+	P.removeClasses = function (item) {
 
 		if (item.substring) {
 
@@ -520,7 +520,7 @@ Overwrites the clone function in mixin/base.js
 /*
 
 */
-	obj.makeCollidable = function () {
+	P.makeCollidable = function () {
 
 		this.collides = true;
 		this.addCollisionPoints('corners');
@@ -530,7 +530,7 @@ Overwrites the clone function in mixin/base.js
 /*
 Items argument is either an xy coordinate object, or an array of such objects. A hit will return the hit object with x, y and artefact attributes
 */
-	obj.checkHit = function (items, host) {
+	P.checkHit = function (items, host) {
 
 		if (xt(host) && this.collides) {
 
@@ -577,7 +577,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.getBox = function (host) {
+	P.getBox = function (host) {
 
 		let collisionPoints = this.collisionPoints || [];
 
@@ -614,7 +614,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.addCollisionPoints = function (...args) {
+	P.addCollisionPoints = function (...args) {
 
 		let pointMaker = function () {
 
@@ -703,7 +703,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.getCollisionPointCoordinates = function (host) {
+	P.getCollisionPointCoordinates = function (host) {
 
 		let cPoints = this.collisionPoints,
 			here = isa_obj(host.here) ? host.here : {},
@@ -728,7 +728,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.setPosition = function () {
+	P.setPosition = function () {
 
 		addDomShowElement(this.name);
 		setDomShowRequired(true);
@@ -737,7 +737,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.setPositionNow = function () {
+	P.setPositionNow = function () {
 
 		this.domElement.style.position = this.position;
 		this.dirtyPosition = false;
@@ -746,7 +746,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.cleanDimensions = function () {
+	P.cleanDimensions = function () {
 
 		let here = this.getHere();
 
@@ -771,7 +771,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.cleanRotation = function () {
+	P.cleanRotation = function () {
 
 		let r;
 
@@ -792,7 +792,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.cleanOffset = function () {
+	P.cleanOffset = function () {
 
 		let dims = this.cleanOffsetHelper();
 
@@ -807,7 +807,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.prepareStamp = function () {
+	P.prepareStamp = function () {
 
 		if (this.domElement) {
 
@@ -829,7 +829,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 // /*
 
 // */
-// 	obj.prepareMimicStamp = function () {
+// 	P.prepareMimicStamp = function () {
 
 // 		let mimic = artefact[this.mimic];
 
@@ -878,7 +878,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.prepareDefaultStamp = function () {
+	P.prepareDefaultStamp = function () {
 
 		if (this.dirtyPosition) {
 
@@ -914,7 +914,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.checkForResize = function () {
+	P.checkForResize = function () {
 
 		let element = this.domElement,
 			elementStyle = this.domElement.style;
@@ -952,7 +952,7 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.stamp = function () {
+	P.stamp = function () {
 
 		let self = this;
 
@@ -1049,9 +1049,9 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 /*
 
 */
-	obj.apply = function() {
+	P.apply = function() {
 		applyCoreResizeListener();
 	};
 
-	return obj;
+	return P;
 };

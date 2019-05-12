@@ -4,7 +4,7 @@
 import { constructors, animationtickers } from '../core/library.js';
 import { generateUuid, mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 ## Define attributes
@@ -48,13 +48,13 @@ All factories using the filter mixin will add these to their prototype objects
 */
 		order: 1
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let G = obj.getters,
-		S = obj.setters;
+	let G = P.getters,
+		S = P.setters;
 
 /*
 
@@ -89,7 +89,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.calculateEffectiveTime = function (item) {
+	P.calculateEffectiveTime = function (item) {
 
 		let time = xtGet(item, this.time),
 			calculatedTime = convertTime(time),
@@ -121,7 +121,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.addToTicker = function (item) {
+	P.addToTicker = function (item) {
 
 		let tick;
 
@@ -144,7 +144,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.removeFromTicker = function (item) {
+	P.removeFromTicker = function (item) {
 
 		let tick;
 
@@ -166,7 +166,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.setTargets = function (items) {
+	P.setTargets = function (items) {
 
 		items = [].concat(items);
 
@@ -195,7 +195,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.addToTargets = function (items) {
+	P.addToTargets = function (items) {
 
 		items = [].concat(items);
 
@@ -219,7 +219,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.removeFromTargets = function (items) {
+	P.removeFromTargets = function (items) {
 
 		items = [].concat(items);
 
@@ -269,7 +269,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 Overwrites the clone function in mixin/base.js
 */
-	obj.clone = function (items = {}) {
+	P.clone = function (items = {}) {
 
 		let self = this,
 			regex = /^(local|dirty|current)/;
@@ -299,7 +299,7 @@ Overwrites the clone function in mixin/base.js
 /*
 
 */
-	obj.kill = function () {
+	P.kill = function () {
 
 		let t;
 
@@ -316,5 +316,5 @@ Overwrites the clone function in mixin/base.js
 		return true;
 	};
 
-	return obj;
+	return P;
 };

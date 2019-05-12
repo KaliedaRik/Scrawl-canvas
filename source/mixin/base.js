@@ -6,7 +6,7 @@ import { mergeOver, pushUnique, removeItem, generateUuid, isa_fn, isa_vector, ad
 
 import { makeVector } from '../factory/vector.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 Define the getters, setters and deltaSetters objects, and the defs object
@@ -33,7 +33,7 @@ The __deltaSetters__ object holds a suite of functions for given factory object 
 */
 		deltaSetters: {}
 	};
-	obj = mergeOver(obj, protoAttributes);
+	P = mergeOver(P, protoAttributes);
 
 /*
 ## Define attributes
@@ -67,7 +67,7 @@ We can store a string value in the __comment__ attribute - for use by assistive 
 */
 		comment: '',
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define functions to be added to the factory prototype
@@ -79,7 +79,7 @@ Retrieve an attribute value using the __get__ function. While many attributes ca
     scrawl.artefact.myelement.get('startX');
     -> 200
 */
-	obj.get = function (item) {
+	P.get = function (item) {
 
 		let getter = this.getters[item];
 
@@ -108,7 +108,7 @@ Set an attribute value using the __set__ function. It is extremely important tha
         roll: 90,
     });
 */
-	obj.set = function (items = {}) {
+	P.set = function (items = {}) {
 
 		if (items) {
 
@@ -139,7 +139,7 @@ Add a value to an existing attribute value using the __setDelta__ function. It i
         roll: 5,
     });
 */
-	obj.setDelta = function (items = {}) {
+	P.setDelta = function (items = {}) {
 
 		if (items) {
 
@@ -168,7 +168,7 @@ Most Scrawl-canvas factory objects can be copied using the __clone__ function. T
         startY: 60,
     });
 */
-	obj.clone = function (items = {}) {
+	P.clone = function (items = {}) {
 
 		let self = this,
 			regex = /^(local|dirty|current)/;
@@ -193,7 +193,7 @@ Get a record of a factory object using the __saveOut__ function. The object retu
 
 Note: this whole concept needs to be reexamined!
 */
-	obj.saveOut = function (asString = false) {
+	P.saveOut = function (asString = false) {
 
 		let d = this.defs,
 			keys = Object.keys(d),
@@ -221,7 +221,7 @@ Note: this whole concept needs to be reexamined!
 /*
 Functions for checking that a given attribute is a vector or array, and supplying new vectors or arrays if this is not the case.
 */
-	obj.checkVector = function (v) {
+	P.checkVector = function (v) {
 
 		if (v) {
 
@@ -237,7 +237,7 @@ Functions for checking that a given attribute is a vector or array, and supplyin
 /*
 If the user/coder doesn't supply a name value for a factory function, then Scrawl-canvas will generate a random name for the object to use.
 */
-	obj.makeName = function (item) {
+	P.makeName = function (item) {
 
 		if (item && item.substring && library[`${this.lib}names`].indexOf(item) < 0) this.name = item;				
 		else this.name = generateUuid();
@@ -248,7 +248,7 @@ If the user/coder doesn't supply a name value for a factory function, then Scraw
 /*
 Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function's type value. Some objects are stored in more than one place - for example the artefacts section will include Stack, Element and Canvas objects in addition to various Entity objects
 */
-	obj.register = function () {
+	P.register = function () {
 
 		let arr = library[`${this.lib}names`],
 			mylib = library[this.lib];
@@ -277,7 +277,7 @@ Many (but not all) factory functions will register their result objects in the s
 /*
 Reverse what register() does
 */
-	obj.deregister = function () {
+	P.deregister = function () {
 
 		let arr = library[`${this.lib}names`],
 			mylib = library[this.lib];
@@ -303,5 +303,5 @@ Reverse what register() does
 		return this;
 	};
 
-	return obj;
+	return P;
 };

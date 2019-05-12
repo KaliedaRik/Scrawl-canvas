@@ -41,6 +41,24 @@ const textEntityConverter = document.createElement('textarea');
 const Phrase = function (items = {}) {
 
 	this.entityInit(items);
+
+	this.textPositions = [];
+
+	this.textGlyphs = [];
+	this.textGlyphWidths = [];
+
+	this.textLines = [];
+	this.textLineWidths = [];
+
+	this.textLineGlyphs = [];
+	this.textLineGlyphWidths = [];
+
+	this.textLineWords = [];
+	this.textLineWordWidths = [];
+
+	this.textWords = [];
+	this.textWordWidths = [];
+
 	return this;
 };
 
@@ -91,6 +109,7 @@ let defaultAttributes = {
 
 */
 	text: '',
+	textPositions: [],
 
 /*
 Scrawl-canvas will break a text string into lines based on the width value set for the entity
@@ -163,6 +182,43 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 let G = P.getters,
 	S = P.setters,
 	D = P.deltaSetters;
+
+/*
+
+*/
+S.handleX = function (item) {
+
+	this.checkVector('handle');
+	this.handle.x = item;
+	this.dirtyHandle = true;
+	this.dirtyText = true;
+	this.dirtyPathObject = true;
+};
+
+/*
+
+*/
+S.handleY = function (item) {
+
+	this.checkVector('handle');
+	this.handle.y = item;
+	this.dirtyHandle = true;
+	this.dirtyText = true;
+	this.dirtyPathObject = true;
+};
+
+/*
+
+*/
+S.handle = function (item = {}) {
+
+	this.checkVector('handle');
+	this.handle.x = (xt(item.x)) ? item.x : this.handle.x;
+	this.handle.y = (xt(item.y)) ? item.y : this.handle.y;
+	this.dirtyHandle = true;
+	this.dirtyText = true;
+	this.dirtyPathObject = true;
+};
 
 /*
 Retrieving aspects of the font string
@@ -453,6 +509,14 @@ S.text = function (item) {
 	this.dirtyPathObject = true;
 };
 
+S.justify = function (item) {
+
+	this.justify = ensureString(item);
+	
+	this.dirtyText = true;
+	this.dirtyPathObject = true;
+};
+
 
 /*
 Handling text width - overwrites functions defined in mixin/entity.js
@@ -584,6 +648,7 @@ P.buildText = function () {
 	this.dirtyText = false;
 	this.text = this.convertTextEntityCharacters(this.text);
 	this.calculateTextDimensions(this.text);
+	this.dirtyTextPositions = true;
 };
 
 /*
@@ -638,16 +703,7 @@ P.calculateTextDimensions = function (item) {
 	fullLineLength = engine.measureText(item).width * letterSpacing; 
 
 	// clear the text arrays
-	textLines.length = 0;
-	textLineWidths.length = 0;
-	textLineGlyphs.length = 0;
-	textLineGlyphWidths.length = 0;
-	textLineWords.length = 0;
-	textLineWordWidths.length = 0;
-	textWords.length = 0;
-	textWordWidths.length = 0;
-	textGlyphs.length = 0;
-	textGlyphWidths.length = 0;
+	this.clearTextArrays();
 
 	// create the textWords arrays
 	textWords.push(...item.split(' '));
@@ -849,7 +905,7 @@ P.performRotation = function (engine) {
 };
 
 /*
-TODO: recode in line with calculateTextDimensions() TODO point 2...
+
 */
 P.getLineData = function (lineIndex) {
 
@@ -884,7 +940,7 @@ P.getLineData = function (lineIndex) {
 };
 
 /*
-TODO: recode in line with calculateTextDimensions() TODO point 2...
+
 */
 P.getWordData = function (lineIndex, wordIndex, spaceWidth) {
 
@@ -924,7 +980,7 @@ P.getWordData = function (lineIndex, wordIndex, spaceWidth) {
 };
 
 /*
-TODO: recode in line with calculateTextDimensions() TODO point 2...
+
 */
 P.getLineGlyphData = function (lineIndex, glyphIndex) {
 
@@ -965,7 +1021,7 @@ P.getLineGlyphData = function (lineIndex, glyphIndex) {
 };
 
 /*
-TODO: recode in line with calculateTextDimensions() TODO point 2...
+
 */
 P.getJustifiedSpace = function (lineIndex) {
 
@@ -1024,6 +1080,27 @@ P.stamperMethods = function (engine, method, data) {
 /*
 
 */
+P.clearTextArrays = function () {
+
+	this.textGlyphs.length = 0;
+	this.textGlyphWidths.length = 0;
+
+	this.textLines.length = 0;
+	this.textLineWidths.length = 0;
+
+	this.textLineGlyphs.length = 0;
+	this.textLineGlyphWidths.length = 0;
+
+	this.textLineWords.length = 0;
+	this.textLineWordWidths.length = 0;
+
+	this.textWords.length = 0;
+	this.textWordWidths.length = 0;
+};
+
+/*
+
+*/
 P.stamper = {
 
 	draw: function (engine, entity) { 
@@ -1061,14 +1138,31 @@ P.stamper = {
 */
 P.stamperFunctions = function (engine, method) {
 
-	let data, i, iz;
+	let data, i, iz,
+		pos = this.textPositions;
 
 	this.performRotation(engine);
 
-	for (i = 0, iz = this.textLines.length; i < iz; i++) {
+	if (this.dirtyTextPositions) {
 
-		data = this.getLineData(i);
-		this.stamperMethods(engine, method, data);
+		this.dirtyTextPositions = false;
+		pos.length = 0;
+
+		for (i = 0, iz = this.textLines.length; i < iz; i++) {
+
+			data = this.getLineData(i);
+			pos.push(data);
+			this.stamperMethods(engine, method, data);
+		}
+
+		this.clearTextArrays();
+	}
+	else {
+
+		for (i = 0, iz = pos.length; i < iz; i++) {
+
+			this.stamperMethods(engine, method, pos[i]);
+		}
 	}
 
 	if (this.showBoundingBox) this.drawBoundingBox(engine);
@@ -1115,18 +1209,35 @@ P.spacedStamper = {
 P.spacedStamperFunctions = function (engine, method) {
 
 	let lineGlyphs, data, 
-		i, iz, j, jz;
+		i, iz, j, jz,
+		pos = this.textPositions;
 
 	this.performRotation(engine);
 
-	for (i = 0, iz = this.textLines.length; i < iz; i++) {
+	if (this.dirtyTextPositions) {
 
-		lineGlyphs = this.textLineGlyphs[i];
+		this.dirtyTextPositions = false;
+		pos.length = 0;
 
-		for (j = 0, jz = lineGlyphs.length; j < jz; j++) {
+		for (i = 0, iz = this.textLines.length; i < iz; i++) {
 
-			data = this.getLineGlyphData(i, j);
-			this.stamperMethods(engine, method, data);
+			lineGlyphs = this.textLineGlyphs[i];
+
+			for (j = 0, jz = lineGlyphs.length; j < jz; j++) {
+
+				data = this.getLineGlyphData(i, j);
+				pos.push(data);
+				this.stamperMethods(engine, method, data);
+			}
+		}
+
+		this.clearTextArrays();
+	}
+	else {
+
+		for (i = 0, iz = pos.length; i < iz; i++) {
+
+			this.stamperMethods(engine, method, pos[i]);
 		}
 	}
 
@@ -1173,14 +1284,110 @@ TODO: code up this functionality
 */
 P.spaceJustifiedStamperFunctions = function (engine, method) {
 
-	let data, i, iz;
+	let data, i, iz,
+		pos = this.textPositions;
 
 	this.performRotation(engine);
 
-	for (i = 0, iz = this.textLines.length; i < iz; i++) {
+	if (this.dirtyTextPositions) {
 
-		data = this.getLineData(i);
-		this.stamperMethods(engine, method, data);
+console.log('spaceJustifiedStamperFunctions - dirty');
+		this.dirtyTextPositions = false;
+		pos.length = 0;
+
+		for (i = 0, iz = this.textLines.length; i < iz; i++) {
+
+			data = this.getLineData(i);
+			pos.push(data);
+			this.stamperMethods(engine, method, data);
+		}
+
+		this.clearTextArrays();
+	}
+	else {
+
+console.log('spaceJustifiedStamperFunctions - clean');
+		for (i = 0, iz = pos.length; i < iz; i++) {
+
+			this.stamperMethods(engine, method, pos[i]);
+		}
+	}
+
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+};
+
+/*
+
+*/
+P.justifiedStamper = {
+
+	draw: function (engine, entity) { 
+
+		entity.justifiedStamperFunctions(engine, 'draw'); 
+	},
+	fill: function (engine, entity) { 
+
+		entity.justifiedStamperFunctions(engine, 'fill'); 
+	},
+	drawFill: function (engine, entity) { 
+
+		entity.justifiedStamperFunctions(engine, 'drawFill'); 
+	},
+	fillDraw: function (engine, entity) { 
+
+		entity.justifiedStamperFunctions(engine, 'fillDraw'); 
+	},
+	floatOver: function (engine, entity) { 
+
+		entity.justifiedStamperFunctions(engine, 'floatOver'); 
+	},
+	sinkInto: function (engine, entity) { 
+
+		entity.justifiedStamperFunctions(engine, 'sinkInto'); 
+	},
+	clear: function (engine, entity) { 
+
+		entity.justifiedStamperFunctions(engine, 'clear'); 
+	},	
+};
+
+/*
+
+*/
+P.justifiedStamperFunctions = function (engine, method) {
+
+	let lineWords, space, data, 
+		i, iz, j, jz,
+		pos = this.textPositions;
+
+	this.performRotation(engine);
+
+	if (this.dirtyTextPositions) {
+
+		this.dirtyTextPositions = false;
+		pos.length = 0;
+
+		for (i = 0, iz = this.textLines.length; i < iz; i++) {
+
+			lineWords = this.textLineWords[i];
+			space = this.getJustifiedSpace(i);
+
+			for (j = 0, jz = lineWords.length; j < jz; j++) {
+
+				data = this.getWordData(i, j, space);
+				pos.push(data);
+				this.stamperMethods(engine, method, data);
+			}
+		}
+
+		this.clearTextArrays();
+	}
+	else {
+
+		for (i = 0, iz = pos.length; i < iz; i++) {
+
+			this.stamperMethods(engine, method, pos[i]);
+		}
 	}
 
 	if (this.showBoundingBox) this.drawBoundingBox(engine);
@@ -1226,14 +1433,33 @@ TODO: code up this functionality
 */
 P.textPathStamperFunctions = function (engine, method) {
 
-	let data, i, iz;
+	let data, i, iz,
+		pos = this.textPositions;
 
 	this.performRotation(engine);
 
-	for (i = 0, iz = this.textLines.length; i < iz; i++) {
+	if (this.dirtyTextPositions) {
 
-		data = this.getLineData(i);
-		this.stamperMethods(engine, method, data);
+console.log('textPathStamperFunctions - dirty');
+		this.dirtyTextPositions = false;
+		pos.length = 0;
+
+		for (i = 0, iz = this.textLines.length; i < iz; i++) {
+
+			data = this.getLineData(i);
+			pos.push(data);
+			this.stamperMethods(engine, method, data);
+		}
+
+		this.clearTextArrays();
+	}
+	else {
+
+console.log('textPathStamperFunctions - clean');
+		for (i = 0, iz = pos.length; i < iz; i++) {
+
+			this.stamperMethods(engine, method, pos[i]);
+		}
 	}
 
 	if (this.showBoundingBox) this.drawBoundingBox(engine);

@@ -7,7 +7,7 @@ import { addStrings, defaultNonReturnFunction, mergeOver, xt } from '../core/uti
 
 import { makePalette } from '../factory/palette.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 ## Define attributes
@@ -40,27 +40,27 @@ The cyclePalette attribute tells the Palette object how to handle situations whe
 */
 		cyclePalette: false,
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let G = obj.getters,
-		S = obj.setters,
-		D = obj.deltaSetters;
+	let G = P.getters,
+		S = P.setters,
+		D = P.deltaSetters;
 
 /*
 Delete a bunch of attributes and functions previously set by the position mixin, not required by a styles object
 */
-	delete obj.defs.mimic;
-	delete obj.defs.handle;
-	delete obj.defs.currentHandle;
-	delete obj.defs.visibility;
-	delete obj.defs.order;
-	delete obj.defs.width;
-	delete obj.defs.height;
-	delete obj.defs.roll;
-	delete obj.defs.scale;
+	delete P.defs.mimic;
+	delete P.defs.handle;
+	delete P.defs.currentHandle;
+	delete P.defs.visibility;
+	delete P.defs.order;
+	delete P.defs.width;
+	delete P.defs.height;
+	delete P.defs.roll;
+	delete P.defs.scale;
 	delete G.handleX;
 	delete G.handleY;
 	delete S.handleX;
@@ -77,10 +77,10 @@ Delete a bunch of attributes and functions previously set by the position mixin,
 	delete D.height;
 	delete D.roll;
 	delete D.scale;
-	delete obj.cleanHandle;
-	delete obj.cleanStart;
-	delete obj.getHere;
-	delete obj.getStart;
+	delete P.cleanHandle;
+	delete P.cleanStart;
+	delete P.getHere;
+	delete P.getStart;
 
 /*
 
@@ -275,7 +275,7 @@ Delete a bunch of attributes and functions previously set by the position mixin,
 /*
 Overwrites function defined in mixin/base.js - takes into account Palette object attributes
 */
-	obj.get = function (item) {
+	P.get = function (item) {
 
 		let getter = this.getters[item];
 
@@ -306,7 +306,7 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 /*
 Overwrites function defined in mixin/base.js - takes into account Palette object attributes
 */
-	obj.set = function (items = {}) {
+	P.set = function (items = {}) {
 
 		if (items) {
 
@@ -341,7 +341,7 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 /*
 
 */
-	obj.stylesInit = function (items = {}) {
+	P.stylesInit = function (items = {}) {
 
 		this.makeName(items.name);
 		this.register();
@@ -359,7 +359,7 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 /*
 
 */
-	obj.updateByDelta = function () {
+	P.updateByDelta = function () {
 
 		this.setDelta(this.delta);
 		return this;
@@ -368,7 +368,7 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 /*
 This is where we have to calculate all the stuff necessary to get the ctx gradient object attached to the ctx, so we can use it for upcoming fillStyle and strokeStyle settings on the engine. We have to create the ctx gradient and return it. 
 */
-	obj.getData = function (entity, cell, isFill) {
+	P.getData = function (entity, cell, isFill) {
 
 		// Step 1: see if the palette is dirty, from having colors added/deleted/changed
 		if(this.palette && this.palette.dirtyPalette) this.palette.recalculate();
@@ -386,7 +386,7 @@ This is where we have to calculate all the stuff necessary to get the ctx gradie
 /*
 
 */
-	obj.cleanStyle = function (entity = {}, cell = {}, isFill) {
+	P.cleanStyle = function (entity = {}, cell = {}, isFill) {
 
 		let w, h;
 
@@ -417,7 +417,7 @@ This is where we have to calculate all the stuff necessary to get the ctx gradie
 /*
 
 */
-	obj.finalizeCoordinates = function (entity = {}, isFill) {
+	P.finalizeCoordinates = function (entity = {}, isFill) {
 
 		let p = entity.pivot || false,
 			cs = this.currentStart,
@@ -467,12 +467,12 @@ This is where we have to calculate all the stuff necessary to get the ctx gradie
 /*
 Do stuff here for startRadius, endRadius, producing local variants - overwritten in factory-radialgradient.js file
 */
-	obj.cleanRadius = defaultNonReturnFunction;
+	P.cleanRadius = defaultNonReturnFunction;
 
 /*
 Just in case something went wrong with loading other styles files, which must overwrite this function, we can return transparent color here
 */
-	obj.buildStyle = function (cell) {
+	P.buildStyle = function (cell) {
 
 		return 'rgba(0,0,0,0)';
 	};
@@ -480,7 +480,7 @@ Just in case something went wrong with loading other styles files, which must ov
 /*
 
 */
-	obj.addStopsToGradient = function (gradient, start, stop, cycle) {
+	P.addStopsToGradient = function (gradient, start, stop, cycle) {
 
 		if (this.palette) return this.palette.addStopsToGradient(gradient, start, stop, cycle);
 
@@ -490,7 +490,7 @@ Just in case something went wrong with loading other styles files, which must ov
 /*
 
 */
-	obj.updateColor = function (index, color) {
+	P.updateColor = function (index, color) {
 
 		if (this.palette) this.palette.updateColor(index, color);
 
@@ -500,12 +500,12 @@ Just in case something went wrong with loading other styles files, which must ov
 /*
 
 */
-	obj.removeColor = function (index) {
+	P.removeColor = function (index) {
 
 		if (this.palette) this.palette.removeColor(index);
 
 		return this;
 	};
 
-	return obj;
+	return P;
 };

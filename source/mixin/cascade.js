@@ -4,7 +4,7 @@
 import { group } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xtGet } from '../core/utilities.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 ## Define attributes
@@ -28,13 +28,13 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 */
 		batchResort: true,
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let G = obj.getters,
-		S = obj.setters;
+	let G = P.getters,
+		S = P.setters;
 
 /*
 
@@ -60,7 +60,7 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 /*
 
 */
-	obj.sortGroups = function (force = false) {
+	P.sortGroups = function (force = false) {
 
 		if (this.batchResort) {
 
@@ -87,7 +87,7 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 /*
 Groups should be added to, and removed from, the controller object using the __addGroups__ and __removeGroups__ functions. The argument can be one or more group object's name attribute, or the group object(s) itself.
 */
-	obj.addGroups = function (...args) {
+	P.addGroups = function (...args) {
 
 		args.forEach( item => {
 
@@ -103,7 +103,7 @@ Groups should be added to, and removed from, the controller object using the __a
 /*
 
 */
-	obj.removeGroups = function (...args) {
+	P.removeGroups = function (...args) {
 
 		args.forEach( item => {
 
@@ -119,7 +119,7 @@ Groups should be added to, and removed from, the controller object using the __a
 /*
 DRY function to handle a number of actions.
 */
-	obj.cascadeAction = function (items, action) {
+	P.cascadeAction = function (items, action) {
 
 		this.groups.forEach( groupname => {
 
@@ -135,7 +135,7 @@ DRY function to handle a number of actions.
 /*
 Update all artefact objects in all the controller object's groups using the __updateArtefacts__ function. The supplied argument will be passed on to each artefact's _setDelta_ function.
 */
-	obj.updateArtefacts = function (items) {
+	P.updateArtefacts = function (items) {
 
 		this.cascadeAction(items, 'updateArtefacts');
 		return this;
@@ -144,7 +144,7 @@ Update all artefact objects in all the controller object's groups using the __up
 /*
 Set all artefact objects in all the controller object's groups using the __setArtefacts__ function. The supplied argument will be passed on to each artefact's _set_ functions
 */
-	obj.setArtefacts = function (items) {
+	P.setArtefacts = function (items) {
 
 		this.cascadeAction(items, 'setArtefacts');
 		return this;
@@ -153,7 +153,7 @@ Set all artefact objects in all the controller object's groups using the __setAr
 /*
 
 */
-	obj.addArtefactClasses = function (items) {
+	P.addArtefactClasses = function (items) {
 
 		this.cascadeAction(items, 'addArtefactClasses');
 		return this;
@@ -162,7 +162,7 @@ Set all artefact objects in all the controller object's groups using the __setAr
 /*
 
 */
-	obj.removeArtefactClasses = function (items) {
+	P.removeArtefactClasses = function (items) {
 
 		this.cascadeAction(items, 'removeArtefactClasses');
 		return this;
@@ -171,7 +171,7 @@ Set all artefact objects in all the controller object's groups using the __setAr
 /*
 
 */
-	obj.updateByDelta = function () {
+	P.updateByDelta = function () {
 
 		this.cascadeAction(false, 'updateByDelta');
 		return this;
@@ -180,7 +180,7 @@ Set all artefact objects in all the controller object's groups using the __setAr
 /*
 
 */
-	obj.reverseByDelta = function () {
+	P.reverseByDelta = function () {
 
 		this.cascadeAction(false, 'reverseByDelta');
 		return this;
@@ -189,7 +189,7 @@ Set all artefact objects in all the controller object's groups using the __setAr
 /*
 The __getArtefactAt__ function checks to see if any of the controller object's groups' artefacts are located at the supplied coordinates in the argument object. The first artefact to report back as being at that coordinate will be returned by the function; where no artefacts are present at that coordinate the function returns false. The artefact with the highest order attribute value will be returned first. This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
 */
-	obj.getArtefactAt = function (items) {
+	P.getArtefactAt = function (items) {
 
 		items = xtGet(items, this.here, false);
 
@@ -215,7 +215,7 @@ The __getArtefactAt__ function checks to see if any of the controller object's g
 /*
  The __getAllArtefactsAt__ function returns all of the controller object's groups' artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first. The function will always return an array of artefact objects.
 */
-	obj.getAllArtefactsAt = function (items) {
+	P.getAllArtefactsAt = function (items) {
 
 		items = xtGet(items, this.here, false);
 
@@ -240,5 +240,5 @@ The __getArtefactAt__ function checks to see if any of the controller object's g
 		return [];
 	};
 
-	return obj;
+	return P;
 };

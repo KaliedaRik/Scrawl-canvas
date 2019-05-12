@@ -7,7 +7,7 @@ import { assetnames, asset } from '../core/library.js';
 import { importImage } from '../factory/imageAsset.js';
 import { importVideo } from '../factory/videoAsset.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 ## Define attributes
@@ -41,12 +41,12 @@ All factories using the position mixin will add these to their prototype objects
 */
 		sourceLoaded: false,
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let S = obj.setters;
+	let S = P.setters;
 
 /*
 
@@ -108,5 +108,5 @@ All factories using the position mixin will add these to their prototype objects
 		}
 	};
 
-	return obj;
+	return P;
 };

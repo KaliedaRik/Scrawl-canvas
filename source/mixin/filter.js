@@ -4,7 +4,7 @@
 import { filter } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 ## Define attributes
@@ -38,12 +38,12 @@ All factories using the filter mixin will add these to their prototype objects
 */
 		filterComposite: 'source-over',
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let S = obj.setters;
+	let S = P.setters;
 
 /*
 
@@ -74,7 +74,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.cleanFilters = function () {
+	P.cleanFilters = function () {
 
 		this.dirtyFilters = false;
 
@@ -84,12 +84,12 @@ All factories using the filter mixin will add these to their prototype objects
 
 		myfilters.forEach(name => {
 
-			let obj = filter[name],
-				order = floor(obj.order) || 0;
+			let myobj = filter[name],
+				order = floor(myobj.order) || 0;
 
 			if (!buckets[order]) buckets[order] = [];
 
-			buckets[order].push(obj);
+			buckets[order].push(myobj);
 		});
 
 		this.currentFilters = buckets.reduce((a, v) => a.concat(v), []);
@@ -98,7 +98,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.addFilters = function (...args) {
+	P.addFilters = function (...args) {
 
 		args.forEach(item => {
 
@@ -116,7 +116,7 @@ All factories using the filter mixin will add these to their prototype objects
 /*
 
 */
-	obj.removeFilters = function (...args) {
+	P.removeFilters = function (...args) {
 
 		args.forEach(item => {
 
@@ -131,5 +131,5 @@ All factories using the filter mixin will add these to their prototype objects
 		return this;
 	};
 
-	return obj;
+	return P;
 };

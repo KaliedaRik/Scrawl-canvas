@@ -12,7 +12,7 @@ import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from '../factory/filter.js';
 
-export default function (obj = {}) {
+export default function (P = {}) {
 
 /*
 ## Define attributes
@@ -81,14 +81,14 @@ All factories using the position mixin will add these to their prototype objects
 */
 		lockStrokeStyleToEntity: false,
 	};
-	obj.defs = mergeOver(obj.defs, defaultAttributes);
+	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let G = obj.getters,
-		S = obj.setters,
-		D = obj.deltaSetters;
+	let G = P.getters,
+		S = P.setters,
+		D = P.deltaSetters;
 
 /*
 
@@ -277,7 +277,7 @@ ISSUE - stack elements get given a group String for this attribute; here we're j
 /*
 
 */
-	obj.getHostDimensions = function () {
+	P.getHostDimensions = function () {
 
 		if (this.group && this.group.host) {
 
@@ -298,7 +298,7 @@ ISSUE - stack elements get given a group String for this attribute; here we're j
 /*
 Overwrites function defined in mixin/base.js - takes into account State object attributes
 */
-	obj.get = function (item) {
+	P.get = function (item) {
 
 		let getter = this.getters[item];
 
@@ -330,7 +330,7 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 /*
 Overwrites function defined in mixin/base.js - takes into account State object attributes
 */
-	obj.set = function (items = {}) {
+	P.set = function (items = {}) {
 
 		if (items) {
 
@@ -365,7 +365,7 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 /*
 Overwrites function defined in mixin/base.js - takes into account State object attributes
 */
-	obj.setDelta = function (items = {}) {
+	P.setDelta = function (items = {}) {
 
 		if (items) {
 
@@ -400,7 +400,7 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 /*
 
 */
-	obj.entityInit = function (items = {}) {
+	P.entityInit = function (items = {}) {
 
 		this.makeName(items.name);
 		this.register();
@@ -424,12 +424,12 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 /*
 
 */
-	obj.preCloneActions = defaultNonReturnFunction;
+	P.preCloneActions = defaultNonReturnFunction;
 
 /*
 Overwrites the clone function in mixin/base.js
 */
-	obj.clone = function(items = {}) {
+	P.clone = function(items = {}) {
 
 		let regex = /^(local|dirty|current)/,
 			stateDefs = this.state.defs,
@@ -510,17 +510,17 @@ Overwrites the clone function in mixin/base.js
 /*
 This is a null function required by entitys to match a function used by DOM elements
 */
-	obj.makeCollidable = defaultThisReturnFunction;
+	P.makeCollidable = defaultThisReturnFunction;
 
 /*
 This is a null function required by entitys to match a function used by DOM elements
 */
-	obj.getBox = defaultFalseReturnFunction;
+	P.getBox = defaultFalseReturnFunction;
 
 /*
 Replicates and adapts function defined in mixin.dom.js
 */
-	obj.addCollisionPoints = function (...args) {
+	P.addCollisionPoints = function (...args) {
 
 		let pointMaker = function (item) {
 
@@ -601,7 +601,7 @@ Replicates and adapts function defined in mixin.dom.js
 /*
 NEEDS coding up
 */
-	obj.getCollisionPointCoordinates = function (host) {
+	P.getCollisionPointCoordinates = function (host) {
 
 		return false;
 	};
@@ -609,7 +609,7 @@ NEEDS coding up
 /*
 CURRENTLY does not support filters on entitys
 */
-	obj.simpleStamp = function (host, changes = {}) {
+	P.simpleStamp = function (host, changes = {}) {
 
 		if (host && host.type === 'Cell') {
 
@@ -628,7 +628,7 @@ CURRENTLY does not support filters on entitys
 /*
 
 */
-	obj.prepareStamp = function() {
+	P.prepareStamp = function() {
 
 		if (this.mimic) this.prepareMimicStamp();
 
@@ -643,7 +643,7 @@ CURRENTLY does not support filters on entitys
 /*
 Overwrites mixin/position.js function
 */
-	obj.prepareMimicStampRotation = function (mimic) {
+	P.prepareMimicStampRotation = function (mimic) {
 
 		if (xt(mimic.roll)) this.roll = mimic.roll;
 	};
@@ -651,7 +651,7 @@ Overwrites mixin/position.js function
 /*
 
 */
-	obj.cleanHandle = function () {
+	P.cleanHandle = function () {
 
 		if (this.localWidth && this.localHeight) {
 
@@ -665,7 +665,7 @@ Overwrites mixin/position.js function
 /*
 
 */
-	obj.cleanOffset = function () {
+	P.cleanOffset = function () {
 
 		this.dirtyOffset = false;
 		this.dirtyScale = false;
@@ -678,7 +678,7 @@ Overwrites mixin/position.js function
 /*
 
 */
-	obj.cleanStart = function () {
+	P.cleanStart = function () {
 
 		let host = this.currentHost;
 
@@ -693,7 +693,7 @@ Overwrites mixin/position.js function
 /*
 
 */
-	obj.cleanDimensions = function () {
+	P.cleanDimensions = function () {
 
 		let host = this.currentHost,
 			w, h, mw, mh;
@@ -728,12 +728,12 @@ Overwrites mixin/position.js function
 /*
 EVERY ENTITY FILE will need to define its own .cleanPathObject function
 */
-	obj.cleanPathObject = defaultNonReturnFunction;
+	P.cleanPathObject = defaultNonReturnFunction;
 
 /*
 
 */
-	obj.stamper = {
+	P.stamper = {
 
 		draw: function (engine, entity) {
 
@@ -788,7 +788,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 /*
 
 */
-	obj.stamp = function () {
+	P.stamp = function () {
 
 		if (this.visibility) {
 
@@ -801,7 +801,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 /*
 
 */
-	obj.filteredStamp = function(){
+	P.filteredStamp = function(){
 
 		let self = this;
 
@@ -886,7 +886,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 /*
 
 */
-	obj.regularStamp = function () {
+	P.regularStamp = function () {
 
 		let self = this;
 
@@ -922,7 +922,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 /*
 
 */
-	obj.regularStampSynchronousActions = function () {
+	P.regularStampSynchronousActions = function () {
 
 		let dest = this.currentHost, 
 			engine, x, y;
@@ -944,7 +944,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 /*
 
 */
-	obj.checkHit = function (items = {}) {
+	P.checkHit = function (items = {}) {
 
 		let dest = this.currentHost;
 
@@ -981,5 +981,5 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 		return false;
 	};
 
-	return obj;
+	return P;
 };
