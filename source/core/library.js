@@ -54,6 +54,7 @@ const elementnames = [];
 */
 const entity = {};
 const entitynames = [];
+
 /*
 
 */
@@ -64,6 +65,12 @@ const filternames = [];
 
 */
 const userFilter = {};
+
+/*
+
+*/
+const fontattribute = {};
+const fontattributenames = [];
 
 /*
 
@@ -142,6 +149,8 @@ export {
 	filter,
 	filternames,
 	userFilter,
+	fontattribute,
+	fontattributenames,
 	group,
 	groupnames,
 	palette,

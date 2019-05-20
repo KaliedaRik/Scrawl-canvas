@@ -75,8 +75,8 @@ scrawl.makePhrase({
 
 	text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
 
-	fontSize: '12px',
-	fontWeight: 'normal',
+	size: '12px',
+	weight: 'normal',
 
 	startX: '84%',
 	method: 'fill',

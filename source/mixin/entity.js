@@ -425,6 +425,7 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 
 */
 	P.preCloneActions = defaultNonReturnFunction;
+	P.postCloneActions = defaultNonReturnFunction;
 
 /*
 Overwrites the clone function in mixin/base.js
@@ -465,8 +466,6 @@ Overwrites the clone function in mixin/base.js
 			let tempAsset = this.asset,
 				tempSource = this.source;
 
-			// delete this.asset;
-			// delete this.source;
 			this.asset = tempAsset.name;
 			this.source = tempSource.name;
 
@@ -505,8 +504,11 @@ Overwrites the clone function in mixin/base.js
 
 		clone.set(items);
 
+		this.postCloneActions(clone, items);
+
 		return clone;
 	};
+
 /*
 This is a null function required by entitys to match a function used by DOM elements
 */
@@ -629,7 +631,7 @@ CURRENTLY does not support filters on entitys
 
 */
 	P.prepareStamp = function() {
-
+// console.log(this.name, 'prepareStamp')
 		if (this.mimic) this.prepareMimicStamp();
 
 		if (this.dirtyDimensions) this.cleanDimensions();

@@ -31,7 +31,7 @@
     <div class="lavender">&nbsp;</div>
 
     <div class="lavender label">Letter spacing</div>
-    <div class="lavender"><input class="controlItem" id="letterSpacing" type="range" value="1" min="0.5" max="3" step="0.01" /></div>
+    <div class="lavender"><input class="controlItem" id="letterSpacing" type="range" value="0" min="-10" max="30" step="0.1" /></div>
     <div class="lavender">&nbsp;</div>
 
     <div class="lavender label">Justify</div>
@@ -48,12 +48,12 @@
     <div class="lavender label">Font family</div>
     <div class="lavender">
       <select class="controlItem" id="family">
-        <option value="% 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif">sans-serif</option>
-        <option value="% 'Lucida Bright', 'Lucida Fax', Palatino, 'Palatino Linotype', Palladio, 'URW Palladio', serif">serif</option>
-        <option value="% 'Fira Mono', 'DejaVu Sans Mono', Menlo, Consolas, 'Liberation Mono', Monaco, 'Lucida Console', monospace">monospace</option>
-        <option value="% 'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', 'Apple Chancery', cursive">cursive</option>
-        <option value="% Papyrus, Herculanum, 'Party LET', 'Curlz MT', Harrington, fantasy">fantasy</option>
-        <option value="% system-ui">system-ui</option>
+        <option value="'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif">sans-serif</option>
+        <option value="'Lucida Bright', 'Lucida Fax', Palatino, 'Palatino Linotype', Palladio, 'URW Palladio', serif">serif</option>
+        <option value="'Fira Mono', 'DejaVu Sans Mono', Menlo, Consolas, 'Liberation Mono', Monaco, 'Lucida Console', monospace">monospace</option>
+        <option value="'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', 'Apple Chancery', cursive">cursive</option>
+        <option value="Papyrus, Herculanum, 'Party LET', 'Curlz MT', Harrington, fantasy">fantasy</option>
+        <option value="system-ui">system-ui</option>
       </select>
     </div>
     <div class="lavender">&nbsp;</div>
@@ -127,7 +127,7 @@
     <div class="yellow">&nbsp;</div>
 
     <div class="yellow label">Scale</div>
-    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.1" /></div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.02" /></div>
     <div class="yellow">&nbsp;</div>
 
     <div class="yellow label">Flip-upend</div>
@@ -162,9 +162,10 @@
     <ul>
       <li>Create a Phrase entity</li>
       <li>Display the Phrase entity on a canvas</li>
-      <li>Check that the entity location (start, handle) and width (but not height) attributes work as expected</li>
-      <li>Check that the entity manipulation attributes (roll, scale, flip) work as expected</li>
-      <li>Check that the entity font attributes (fontSize, fontWeight, fontStyle, fontVariant) work as expected</li>
+      <li>Check that Phrase.setGlyphStyles() functionality works as expected</li>
+      <li>Check that Phrase justification functionality works as expected</li>
+      <li>Check that Phrase line height functionality works as expected</li>
+      <li>Check that Phrase letter spacing functionality works as expected</li>
     </ul>
   </div>
 

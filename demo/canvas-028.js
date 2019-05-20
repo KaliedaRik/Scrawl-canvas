@@ -141,27 +141,27 @@ let events = (e) => {
 			break;
 
 		case 'weight':
-			items.fontWeight = e.target.value;
+			items.weight = e.target.value;
 			break;
 
 		case 'style':
-			items.fontStyle = e.target.value;
+			items.style = e.target.value;
 			break;
 
 		case 'variant':
-			items.fontVariant = e.target.value;
+			items.variant = e.target.value;
 			break;
 
 		case 'family':
-			items.fontFamily = e.target.value;
+			items.family = e.target.value;
 			break;
 
 		case 'size_px':
-			items.fontSize = `${e.target.value}px`;
+			items.size = `${e.target.value}px`;
 			break;
 
 		case 'size_string':
-			items.fontSize = e.target.value;
+			items.size = e.target.value;
 			break;
 	}
 

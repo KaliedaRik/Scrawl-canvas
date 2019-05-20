@@ -22,21 +22,64 @@ let lorem = scrawl.makePhrase({
 	text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
 	font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
-	fillStyle: 'darkgreen',
+	fillStyle: 'darkred',
 
 	method: 'fill',
 	showBoundingBox: true,
-
 });
+
+lorem.setGlyphStyles({
+
+	defaults: true
+}, 70, 126, 158).setGlyphStyles({
+
+	fill: 'black'
+}, 12).setGlyphStyles({
+
+	style: 'italic'
+}, 22).setGlyphStyles({
+
+	style: 'normal'
+}, 30).setGlyphStyles({
+
+	variant: 'small-caps'
+}, 42).setGlyphStyles({
+
+	variant: 'normal'
+}, 52).setGlyphStyles({
+
+	weight: 'bold'
+}, 67, 92, 155).setGlyphStyles({
+
+	weight: 'normal'
+}, 95).setGlyphStyles({
+
+	highlight: true
+}, 106).setGlyphStyles({
+
+	highlight: false
+}, 117).setGlyphStyles({
+
+	size: '24px'
+}, 123).setGlyphStyles({
+
+	space: 10
+}, 132).setGlyphStyles({
+
+	space: 0
+}, 135).setGlyphStyles({
+
+	family: 'monospace'
+}, 149);
 
 scrawl.makeWheel({
 
-	fillStyle: 'red',
+	fillStyle: 'gold',
+	strokeStyle: 'darkblue',
 	radius: 5,
 	pivot: 'myPhrase',
 	lockTo: 'pivot',
-
-
+	method: 'fillDraw',
 });
 
 
@@ -140,15 +183,15 @@ let events = (e) => {
 			break;
 
 		case 'family':
-			items.fontFamily = e.target.value;
+			items.family = e.target.value;
 			break;
 
 		case 'size_px':
-			items.fontSize = `${e.target.value}px`;
+			items.size = `${e.target.value}px`;
 			break;
 
 		case 'size_string':
-			items.fontSize = e.target.value;
+			items.size = e.target.value;
 			break;
 	}
 
@@ -178,7 +221,7 @@ document.querySelector('#reverse').options.selectedIndex = 0;
 document.querySelector('#relativeWidth').value = 50;
 document.querySelector('#absoluteWidth').value = 300;
 document.querySelector('#lineHeight').value = 1.5;
-document.querySelector('#letterSpacing').value = 1;
+document.querySelector('#letterSpacing').value = 0;
 document.querySelector('#justify').options.selectedIndex = 0;
 document.querySelector('#family').options.selectedIndex = 0;
 document.querySelector('#size_px').value = 16;
@@ -216,3 +259,83 @@ scrawl.makeAnimation({
 	}
 });
 console.log(scrawl.library.entity)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
