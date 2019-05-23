@@ -147,6 +147,22 @@ Color used for entity shadow effect. Can be:
 Cascading Style Sheet font String, for Phrase entitys
 */
 	font: '12px sans-serif',
+
+/*
+Following values are permitted according to Canvas API specs: 'left', 'center', 'right', 'start', 'end'
+
+TODO: check how setting this value to different values affects Scrawl-canvas functionality
+- because at the moment I ignore it, beyond setting it on the canvas2d rendering engine
+*/
+	textAlign: 'start',
+
+/*
+Following values are permitted according to Canvas API specs: 'top', 'hanging', 'middle', 'alphabetic', 'ideographic', 'bottom'
+
+TODO: find a (sane) way to interrogate fonts to find out the values - from font tables? - given for these settings
+- because if I can do that, then I can work out the bounding box
+*/
+	textBaseline: 'alphabetic',
 };
 
 /*

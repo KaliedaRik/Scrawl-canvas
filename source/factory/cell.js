@@ -411,7 +411,7 @@ P.notifySubscriber = function (sub) {
 Overrides mixin/asset.js function
 */
 P.subscribeAction = function (sub = {}) {
-console.log('cell.js', this.name, sub);
+
 	this.subscribers.push(sub);
 	sub.asset = this;
 	sub.source = this.element;
@@ -501,8 +501,8 @@ P.setEngine = function (entity) {
 		engine = this.engine;
 
 		// Scrawl-canvas ignores these attributes, but needs them set to known quantities in all cases
-		if (engine.textAlign !== 'start') engine.textAlign = 'start';
-		if (engine.textBaseline !== 'top') engine.textBaseline = 'top';
+		// if (engine.textAlign !== 'start') engine.textAlign = 'start';
+		// if (engine.textBaseline !== 'top') engine.textBaseline = 'top';
 
 		for (item in changes) {
 
@@ -572,6 +572,18 @@ P.setEngineActions = {
 		engine.lineWidth = item;
 	},
 
+	miterLimit: function (item, engine) {
+		engine.miterLimit = item;
+	},
+
+	textAlign: function (item, engine) {
+		engine.textAlign = item;
+	},
+
+	textBaseline: function (item, engine) {
+		engine.textBaseline = item;
+	},
+
 	shadowBlur: function (item, engine) {
 		engine.shadowBlur = item;
 	},
@@ -605,10 +617,6 @@ P.setEngineActions = {
 			else engine.strokeStyle = item;
 		}
 		else engine.strokeStyle = item.getData(entity, layer, false);
-	},
-
-	miterLimit: function (item, engine) {
-		engine.miterLimit = item;
 	},
 };
 

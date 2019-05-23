@@ -22,7 +22,7 @@ let lorem = scrawl.makePhrase({
 	text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
 	font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
-	fillStyle: 'darkred',
+	fillStyle: '#003399',
 
 	method: 'fill',
 	showBoundingBox: true,
@@ -58,7 +58,19 @@ lorem.setGlyphStyles({
 }, 106).setGlyphStyles({
 
 	highlight: false
-}, 117).setGlyphStyles({
+}, 118).setGlyphStyles({
+
+	underline: true
+}, 140).setGlyphStyles({
+
+	underline: false
+}, 148).setGlyphStyles({
+
+	overline: true
+}, 102).setGlyphStyles({
+
+	overline: false
+}, 114).setGlyphStyles({
 
 	size: '24px'
 }, 123).setGlyphStyles({
@@ -162,8 +174,8 @@ let events = (e) => {
 			items.flipReverse = (e.target.value === '1') ? true : false;
 			break;
 
-		case 'relativeWidth':
-			items.width = e.target.value + '%';
+		case 'overline':
+			items.overlinePosition = parseFloat(e.target.value);
 			break;
 
 		case 'absoluteWidth':
@@ -218,7 +230,7 @@ document.querySelector('#roll').value = 0;
 document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
-document.querySelector('#relativeWidth').value = 50;
+document.querySelector('#overline').value = 0.1;
 document.querySelector('#absoluteWidth').value = 300;
 document.querySelector('#lineHeight').value = 1.5;
 document.querySelector('#letterSpacing').value = 0;

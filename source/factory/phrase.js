@@ -27,6 +27,7 @@ tDimsCalc.style.padding = 0;
 tDimsCalc.style.border = 0;
 tDimsCalc.style.margin = 0;
 tDimsCalc.style.height = 'auto';
+tDimsCalc.style.lineHeight = 1;
 tDimsCalc.style.width = '200em';
 tDimsCalc.style.boxSizing = 'border-box';
 tDimsCalc.style.position = 'absolute';
@@ -130,6 +131,9 @@ The styling object can take one or more of the following attributes:
 
 * highlight - boolean - whether highlight should be applied to the glyph
 
+* underline - boolean - whether underline should be applied to the glyph
+* overline - boolean - whether overline should be applied to the glyph
+
 * defaults - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity's current font and fill/stroke style values
 
 	Example: "make the word __glyphs__ bold"
@@ -149,6 +153,19 @@ Permitted values are: 'left' (default), 'center', 'right', 'full'
 A multiplier applied to the font height to add space between lines of text
 */
 	lineHeight: 1.5,
+
+/*
+The position and stroke style to be applied to a glyph when it is set to show underline or overline
+*/
+	overlinePosition: 0.1,
+	overlineStyle: 'rgb(250,0,0)',
+	underlinePosition: 0.6,
+	underlineStyle: 'rgb(250,0,0)',
+
+/*
+The fill style to be applied to a glyph when it is set to show background highlighting
+*/
+	highlightStyle: 'rgb(250,218,94)',
 
 /*
 A set number of pixels to place between each glyph. Positive numbers only
@@ -180,11 +197,6 @@ A set number of pixels to place between each glyph. Positive numbers only
 */
 	boundingBoxColor: 'rgba(0,0,0,0.5)',
 	showBoundingBox: false,
-
-/*
-
-*/
-	highlightColor: 'rgb(250,218,94)',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -455,6 +467,36 @@ D.letterSpacing = function (item) {
 	this.dirtyText = true;
 };
 
+S.overlinePosition = function (item) {
+
+	this.overlinePosition = ensureFloat(item, 3);
+
+	this.dirtyPathObject = true;
+	this.dirtyText = true;
+};
+D.overlinePosition = function (item) {
+
+	this.overlinePosition += ensureFloat(item, 3);
+
+	this.dirtyPathObject = true;
+	this.dirtyText = true;
+};
+
+S.underlinePosition = function (item) {
+
+	this.underlinePosition = ensureFloat(item, 3);
+
+	this.dirtyPathObject = true;
+	this.dirtyText = true;
+};
+D.underlinePosition = function (item) {
+
+	this.underlinePosition += ensureFloat(item, 3);
+
+	this.dirtyPathObject = true;
+	this.dirtyText = true;
+};
+
 
 /*
 ## Define prototype functions
@@ -545,7 +587,6 @@ P.calculateTextPositions = function (mytext) {
 		textLineWidths = [],
 		textLineWords = [], 
 		textPositions = [],
-		fontLibrary = [],
 		spacesArray = [],
 		gStyle, gPos, item, 
 		starts, ends, cursor, word, height,
@@ -560,7 +601,9 @@ P.calculateTextPositions = function (mytext) {
 
 	let glyphStyles = this.glyphStyles;
 
-	let state = this.state;
+	let state = this.state,
+		fontLibrary = {},
+		fontArray = [];
 
 	let scale = this.scale,
 		width = this.localWidth * scale,
@@ -579,15 +622,23 @@ P.calculateTextPositions = function (mytext) {
 		currentStrokeStyle = defaultStrokeStyle, 
 		currentSpace = defaultSpace;
 
-	let highlightColor = (this.highlightColor) ? makeStyle(this.highlightColor) : false,
+	let highlightStyle = (this.highlightStyle) ? makeStyle(this.highlightStyle) : false,
 		highlightFlag = false;
+
+	let underlineStyle = (this.underlineStyle) ? makeStyle(this.underlineStyle) : false,
+		underlinePosition = this.underlinePosition,
+		underlineFlag = false;
+
+	let overlineStyle = (this.overlineStyle) ? makeStyle(this.overlineStyle) : false,
+		overlinePosition = this.overlinePosition,
+		overlineFlag = false;
 
 	let maxHeight = 0;
 
 	// 2. create textGlyphs array
 	// - also shove the default font into the fontLibrary array
 	textGlyphs = (treatWordAsGlyph) ? this.text.split(' ') : this.text.split('');
-	fontLibrary.push(currentFont);
+	fontArray.push(currentFont);
 
 	// 3. textPositions array will include an array of data for each glyph
 	// - [font, strokeStyle, fillStyle, highlight, text, startX, startY]
@@ -596,93 +647,124 @@ P.calculateTextPositions = function (mytext) {
 
 		item = textGlyphs[i];
 
-		// textPositions[i] = (i === 0) ? 
-		// 	[currentFont, currentStrokeStyle, currentFillStyle, false, item, 0, 0] :
-		// 	[, , , , item, 0, 0];
-		textPositions[i] = [, , , , item, 0, 0];
+		textPositions[i] = [, , , , , , item, 0, 0, 0];
 
 		if (item === ' ') spacesArray.push(i);
 	}
 
 	// 4. process the glyphStyles array to start populating the textPositions arrays
-	// TODO - things definitely not working yet: space
-	if (glyphStyles.length) {
+	if (!glyphStyles[0]) glyphStyles[0] = {
+		family: glyphAttributes.family,
+		size: (glyphAttributes.sizeValue) ? `${glyphAttributes.sizeValue}${glyphAttributes.sizeMetric}` : glyphAttributes.sizeMetric,
+		stretch: glyphAttributes.stretch,
+		style: glyphAttributes.style,
+		variant: glyphAttributes.variant,
+		weight: glyphAttributes.weight,
+	};
 
-		for (i = 0, iz = glyphStyles.length; i < iz; i++) {
+	for (i = 0, iz = glyphStyles.length; i < iz; i++) {
 
-			gStyle = glyphStyles[i];
+		gStyle = glyphStyles[i];
 
-			if (gStyle) {
+		if (gStyle) {
 
-				gPos = textPositions[i];
+			gPos = textPositions[i];
 
-				if (gStyle.defaults) {
-					currentFont = glyphAttributes.update(scale, fontAttributes);
-					currentStrokeStyle = defaultStrokeStyle;
-					currentFillStyle = defaultFillStyle;
-					currentSpace = defaultSpace;
+			if (i === 0) {
+				gPos[0] = currentFont;
+				gPos[1] = currentStrokeStyle;
+				gPos[2] = currentFillStyle;
+				gPos[3] = highlightFlag;
+				gPos[4] = underlineFlag;
+				gPos[5] = overlineFlag;
+			}
+
+			if (gStyle.defaults) {
+				currentFont = glyphAttributes.update(scale, fontAttributes);
+				currentStrokeStyle = defaultStrokeStyle;
+				currentFillStyle = defaultFillStyle;
+				currentSpace = defaultSpace;
+				gPos[0] = currentFont;
+				gPos[1] = currentStrokeStyle;
+				gPos[2] = currentFillStyle;
+				gPos[3] = highlightFlag;
+				gPos[4] = underlineFlag;
+				gPos[5] = overlineFlag;
+			}
+
+			item = gStyle.stroke;
+			if (item && item !== currentStrokeStyle) {
+
+				currentStrokeStyle = makeStyle(gStyle.stroke);
+				gPos[1] = currentStrokeStyle;
+			};
+
+			item = gStyle.fill;
+			if (item && item !== currentFillStyle) {
+
+				currentFillStyle = makeStyle(gStyle.fill);
+				gPos[2] = currentFillStyle;
+			};
+
+			item = gStyle.space;
+			if (xt(item) && item !== currentSpace) currentSpace = item * scale
+
+			item = gStyle.highlight;
+			if (xt(item) && item !== highlightFlag) {
+
+				highlightFlag = item;
+				gPos[3] = highlightFlag;
+			};
+
+			item = gStyle.underline;
+			if (xt(item) && item !== underlineFlag) {
+
+				underlineFlag = item;
+				gPos[4] = underlineFlag;
+			};
+
+			item = gStyle.overline;
+			if (xt(item) && item !== overlineFlag) {
+
+				overlineFlag = item;
+				gPos[5] = overlineFlag;
+			};
+
+			if (i !== 0 && (gStyle.variant || gStyle.weight || gStyle.style || gStyle.stretch || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font)) {
+
+				item = glyphAttributes.update(scale, gStyle);
+				if (item !== currentFont) {
+
+					currentFont = item;
 					gPos[0] = currentFont;
-					gPos[1] = currentStrokeStyle;
-					gPos[2] = currentFillStyle;
-					gPos[3] = highlightFlag;
-				}
 
-				item = gStyle.stroke;
-				if (item && item !== currentStrokeStyle) {
-
-					currentStrokeStyle = makeStyle(gStyle.stroke);
-					gPos[1] = currentStrokeStyle;
-				};
-
-				item = gStyle.fill;
-				if (item && item !== currentFillStyle) {
-
-					currentFillStyle = makeStyle(gStyle.fill);
-					gPos[2] = currentFillStyle;
-				};
-
-				item = gStyle.space;
-				if (xt(item) && item !== currentSpace) currentSpace = item * scale
-
-				item = gStyle.highlight;
-				if (xt(item) && item !== highlightFlag) {
-
-					highlightFlag = item;
-					gPos[3] = highlightFlag;
-				};
-
-				if (gStyle.variant || gStyle.weight || gStyle.style || gStyle.stretch || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font) {
-
-					item = glyphAttributes.update(scale, gStyle);
-					if (item !== currentFont) {
-
-						currentFont = item;
-						gPos[0] = currentFont;
-
-						if (fontLibrary.indexOf(currentFont) < 0) fontLibrary.push(currentFont);
-					}
+					if (fontArray.indexOf(currentFont) < 0) fontArray.push(currentFont);
 				}
 			}
-			else if (i === 0) {
-
-				textPositions[0][0] = currentFont;
-				textPositions[0][1] = currentStrokeStyle;
-				textPositions[0][2] = currentFillStyle;
-				textPositions[0][3] = highlightFlag;
-			}
-
-			// setup textGlyphWidths array, populating it with current letterSpacing values
-			textGlyphWidths[i] = currentSpace;
 		}
+
+		// setup textGlyphWidths array, populating it with current letterSpacing values
+		textGlyphWidths[i] = currentSpace;
+	}
+
+	// finish populating textGlyphWidths
+	for (i = 0, iz = textGlyphs.length; i < iz; i++) {
+
+		if (xt(textGlyphWidths[i])) currentSpace = textGlyphWidths[i];
+
+		textGlyphWidths[i] = currentSpace;
 	}
 
 	// 5. calculate the text height value
 	// - all lines in a multiline Phrase will use the maximum text height value, even if they don't include the biggest value
-	fontLibrary.forEach(font => {
+	fontArray.forEach(font => {
 
 		tDimsCalc.style.font = font;
-		maxHeight = (tDimsCalc.clientHeight > maxHeight) ? tDimsCalc.clientHeight : maxHeight;
+		item = tDimsCalc.clientHeight;
+		fontLibrary[font] = item;
 	});
+
+	maxHeight = Math.max(...Object.values(fontLibrary));
 
 	// 6. calculate glyph width values
 	// - this is the tricky bit as, ideally, we need to take into account font kerning values
@@ -690,40 +772,24 @@ P.calculateTextPositions = function (mytext) {
 	// - and we need to remember that letterSpacing can also be different in different parts of the text
 	// - this is also the best place to populate the textLine arrays
 
-	// TODO - mixed text doesn't scale as expected - investigate
-	// TODO - none of this takes into consideration the needs of RTL scripts eg Arabic, Hebrew, etc
+	// TODO - none of this takes into consideration the needs of RTL scripts eg Arabic, Hebrew, etc - needs testing, review and necessary refactor to fix (if required)
 
 	totalLen = lineLen = starts = ends = 0;
 
 	for (i = 0, iz = textPositions.length; i < iz; i++) {
 
 		glyphArr = textPositions[i];
-		glyph = glyphArr[4];
+		glyph = glyphArr[6];
 
-		if (glyphArr[0]) {
+		if (glyphArr[0]) engine.font = glyphArr[0];
 
-			engine.font = glyphArr[0];
-			singles.push(engine.measureText(glyph).width);
-			
-			if (i > 0) pairs.push(false);
-			else {
+		singles.push(engine.measureText(glyph).width);
+		
+		nextGlyph = textPositions[i + 1];
+		nextGlyph = (!treatWordAsGlyph && nextGlyph) ? nextGlyph[6] : false;
 
-				nextGlyph = textPositions[i + 1];
-				nextGlyph = (!treatWordAsGlyph && nextGlyph) ? nextGlyph[4] : false;
-				len = (nextGlyph) ? engine.measureText(`${glyph}${nextGlyph}`).width : false;
-				pairs.push(len);
-			}
-		}
-		else {
-
-			nextGlyph = textPositions[i + 1];
-			nextGlyph = (!treatWordAsGlyph && nextGlyph) ? nextGlyph[4] : false;
-
-			singles.push(engine.measureText(glyph).width);
-
-			len = (nextGlyph) ? engine.measureText(`${glyph}${nextGlyph}`).width : false;
-			pairs.push(len);
-		}
+		len = (nextGlyph) ? engine.measureText(`${glyph}${nextGlyph}`).width : false;
+		pairs.push(len);
 	}
 
 	for (i = 0, iz = pairs.length; i < iz; i++) {
@@ -733,14 +799,17 @@ P.calculateTextPositions = function (mytext) {
 		if (glyph) {
 
 			len = singles[i] + singles[i + 1];
+			gPos = textPositions[i + 1];
 
-			if (len > glyph) singles[i] -= (len - glyph);
+			if (len > glyph && !gPos[0]) singles[i] -= (len - glyph);
 		}
 	}
 
+	// calculate text line arrays
 	for (i = 0, iz = textPositions.length; i < iz; i++) {
 
-		glyph = textPositions[i][4];
+		glyphArr = textPositions[i];
+		glyph = glyphArr[6];
 
 		glyphWidth = singles[i] + textGlyphWidths[i];
 		textGlyphWidths[i] = glyphWidth;
@@ -767,7 +836,7 @@ P.calculateTextPositions = function (mytext) {
 		}
 
 		// need to pick up the last (or only) line
-		else if (i + 1 === iz) {
+		if (i + 1 === iz) {
 
 			// pick up single line
 			if (lineLen === totalLen) {
@@ -791,6 +860,15 @@ P.calculateTextPositions = function (mytext) {
 				textLineWidths.push(len);
 			}
 		}
+
+		// and complete the population of data for highlight, overline, underline
+		if (xt(glyphArr[3])) highlightFlag = glyphArr[3];
+		if (xt(glyphArr[4])) underlineFlag = glyphArr[4];
+		if (xt(glyphArr[5])) overlineFlag = glyphArr[5];
+
+		glyphArr[3] = highlightFlag;
+		glyphArr[4] = underlineFlag;
+		glyphArr[5] = overlineFlag;
 	}
 
 	// 7. calculate localHeight
@@ -804,17 +882,12 @@ P.calculateTextPositions = function (mytext) {
 	handleY = -handle.y;
 
 	// 8. we should now be in a position where we can calculate each glyph's startXY values
-	// - BE AWARE - this is probably where the whole thing falls over visually
-	// - because I've set textBaseline to the top of the glyph
-	//   - so bigger letters will line up at the top (CONFIRMED), not on their (latin/cyrillic) baselines
 
-	// TODO - work out a way to manage Text Baseline - preferably better than native canvas engine does - so different sized text can mix in a better pleasing, more flexible way
-
-	// we have 3 scenarios, each with two options determined by whether we're going to position by-word or by-glyph
+	// - we have 3 scenarios: text-along-a-path; full-justified text; and regular text
 
 	// Scenario 1: text needs to be positioned on, or move along, a Shape entity path
 	// - we'll have to get the position fresh each time? Assume yes for now ...
-	// - change the positions array constituentt to: [font, strokeStyle, fillStyle, highlight, text, pathPos, rotateWithPath]
+	// - change the positions array constituentt to: [font, strokeStyle, fillStyle, highlight, underline, overline, text, pathPos, rotateWithPath, glyphWidth]
 	if (this.textPath && this.textPath.length) {
 
 		len = this.textPath.length;
@@ -824,8 +897,9 @@ P.calculateTextPositions = function (mytext) {
 		for (i = 0, iz = textPositions.length; i < iz; i++) {
 
 			item = textPositions[i];
-			item[5] = cursor / len;
-			item[6] = rotate;
+			item[7] = cursor / len;
+			item[8] = rotate;
+			item[9] = textGlyphWidths[i];
 
 			cursor += textGlyphWidths[i];
 		}
@@ -836,19 +910,41 @@ P.calculateTextPositions = function (mytext) {
 	// TODO!
 	else if (justify === 'full') {
 
-		for (j = 0, jz = textPositions.length; j < jz; j++) {
+		cursor = 0;
+		height = handleY + (maxHeight / 2);
 
-			item = textPositions[j];
-			item[5] = 0;
-			item[6] = 0;
+		for (i = 0, iz = textLineWidths.length; i < iz; i++) {
+
+			len = handleX;
+
+			if (textLineWords[i] > 1) space = (width - textLineWidths[i]) / (textLineWords[i] - 1);
+			else space = 0;
+
+			for (j = 0, jz = textLines[i].length; j < jz; j++) {
+
+				item = textPositions[cursor];
+
+				if (item[6] === ' ') textGlyphWidths[cursor] += space;
+
+				item[7] = len;
+				item[8] = height;
+				item[9] = textGlyphWidths[cursor];
+
+				len += textGlyphWidths[cursor];
+
+				cursor++;
+			}
+
+			cursor++;
+			height += (maxHeight * lineHeight);
 		}
 	}
 
-	// Scenario 3: justify === 'left', or 'centre', or 'right'
+	// Scenario 3: regular text - justify === 'left', or 'centre', or 'right'
 	else {
 
 		cursor = 0;
-		height = handleY;
+		height = handleY + (maxHeight / 2);
 
 		for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 
@@ -859,8 +955,10 @@ P.calculateTextPositions = function (mytext) {
 			for (j = 0, jz = textLines[i].length; j < jz; j++) {
 
 				item = textPositions[cursor];
-				item[5] = len;
-				item[6] = height;
+
+				item[7] = len;
+				item[8] = height;
+				item[9] = textGlyphWidths[cursor];
 
 				len += textGlyphWidths[cursor];
 
@@ -881,6 +979,7 @@ P.calculateTextPositions = function (mytext) {
 	this.textPositions = textPositions;
 	this.textHeight = maxHeight;
 	this.textLength = totalLen;
+	this.fontLibrary = fontLibrary;
 
 	releaseCell(myCell);
 };
@@ -917,7 +1016,6 @@ P.cleanPathObject = function () {
 		this.fontAttributes.buildFont(this.scale);
 		this.dirtyText = true;
 	}
-
 	if (this.dirtyText) this.buildText();
 
 	if (this.dirtyHandle) this.cleanHandle();
@@ -980,7 +1078,7 @@ P.regularStampSynchronousActions = function () {
 
 			for (i = 0, iz = pos.length; i < iz; i++) {
 
-				data = preStamper(engine, pos[i]);
+				data = preStamper(engine, this, pos[i]);
 				stamper[method](engine, this, data);
 			}
 
@@ -992,15 +1090,47 @@ P.regularStampSynchronousActions = function () {
 /*
 
 */
-P.preStamper = function (engine, args) {
+P.preStamper = function (engine, entity, args) {
 
-	let [font, strokeStyle, fillStyle, highlight, ...data] = args;
+	let [font, strokeStyle, fillStyle, highlight, underline, overline, ...data] = args;
 
 	if (font) engine.font = font;
+
+	if (highlight || underline || overline) {
+
+		let highlightStyle = entity.highlightStyle,
+			height = entity.textHeight,
+			halfHeight = height / 2,
+			underlineStyle = entity.underlineStyle,
+			underlinePosition = entity.underlinePosition,
+			overlineStyle = entity.overlineStyle,
+			overlinePosition = entity.overlinePosition;
+
+		engine.save();
+
+		if (highlight) {
+
+			engine.fillStyle = highlightStyle;
+			engine.fillRect(data[1], data[2] - halfHeight, data[3], height);
+		}
+
+		if (underline) {
+
+			engine.strokeStyle = underlineStyle;
+			engine.strokeRect(data[1], data[2] - halfHeight + (height * underlinePosition), data[3], 1);
+		}
+
+		if (overline) {
+
+			engine.strokeStyle = overlineStyle;
+			engine.strokeRect(data[1], data[2] - halfHeight + (height * overlinePosition), data[3], 1);
+		}
+
+		engine.restore();
+	}
+
 	if (strokeStyle) engine.strokeStyle = strokeStyle;
 	if (fillStyle) engine.fillStyle = fillStyle;
-
-	// TODO - highlight stuff needs to go here
 
 	return data;
 };
