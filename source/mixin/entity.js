@@ -412,6 +412,8 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 
 		this.set(items);
 
+		this.midInitActions(items);
+		
 		this.dirtyDimensions = true;
 		this.dirtyHandle = true;
 		this.dirtyStart = true;
@@ -424,6 +426,7 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 /*
 
 */
+	P.midInitActions = defaultNonReturnFunction;
 	P.preCloneActions = defaultNonReturnFunction;
 	P.postCloneActions = defaultNonReturnFunction;
 
@@ -631,7 +634,7 @@ CURRENTLY does not support filters on entitys
 
 */
 	P.prepareStamp = function() {
-// console.log(this.name, 'prepareStamp')
+
 		if (this.mimic) this.prepareMimicStamp();
 
 		if (this.dirtyDimensions) this.cleanDimensions();

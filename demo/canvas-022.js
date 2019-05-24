@@ -18,7 +18,7 @@ scrawl.makeOval({
 	method: 'fillDraw',
 	startX: 20,
 	startY: 20,
-	radius: 40,
+	radius: '6%',
 	showBoundingBox: true,
 
 }).clone({

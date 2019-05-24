@@ -765,6 +765,12 @@ D.innerRadius = function (item) {
 */
 
 
+P.midInitActions = function (items) {
+
+	this.set(items);
+};
+
+
 /*
 
 */
@@ -1007,9 +1013,13 @@ P.getPathPositionData = function (pos) {
 		let remainder = pos % 1,
 			unitPartials = this.unitPartials,
 			unitLengths = this.unitLengths,
+			roll = this.roll,
+			reverse = this.flipReverse,
+			upend = this.flipUpend,
 			previousLen = 0, 
 			stoppingLen, myLen, i, iz,
-			unit, species, vars, myPositionedPoint, myPoint, results, angle;
+			unit, species, vars, myPositionedPoint, myPoint, results, angle,
+			flipAngle = 0;
 
 		if (pos === 0 || pos === 1) remainder = pos;
 
@@ -1042,19 +1052,27 @@ P.getPathPositionData = function (pos) {
 
 				case 'linear' :
 					myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
-					myPoint.angle = this.getLinearAngle(myLen, ...vars);
+					angle = this.getLinearAngle(myLen, ...vars);
 					break;
 
 				case 'quadratic' :
 					myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
-					myPoint.angle = this.getQuadraticAngle(myLen, ...vars);
+					angle = this.getQuadraticAngle(myLen, ...vars);
 					break;
 					
 				case 'bezier' :
 					myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
-					myPoint.angle = this.getBezierAngle(myLen, ...vars);
+					angle = this.getBezierAngle(myLen, ...vars);
 					break;
 			}
+
+			if (reverse) flipAngle++;
+			if (upend) flipAngle++;
+
+			if (flipAngle === 1) angle = -angle;
+			angle += this.roll;
+
+			myPoint.angle = angle;
 
 			return myPoint;
 		}

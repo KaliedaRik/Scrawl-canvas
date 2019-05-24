@@ -1,7 +1,7 @@
 /*
 # Phrase factory
 */
-import { constructors, cell, cellnames, styles, stylesnames } from '../core/library.js';
+import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { mergeOver, 
 	xt, 
 	defaultNonReturnFunction, 
@@ -165,7 +165,7 @@ The position and stroke style to be applied to a glyph when it is set to show un
 /*
 The fill style to be applied to a glyph when it is set to show background highlighting
 */
-	highlightStyle: 'rgb(250,218,94)',
+	highlightStyle: 'rgba(250,218,94,0.4)',
 
 /*
 A set number of pixels to place between each glyph. Positive numbers only
@@ -176,20 +176,9 @@ A set number of pixels to place between each glyph. Positive numbers only
 
 */
 	textPath: '',
-
-/*
-
-*/
 	textPathPosition: 0,
-
-/*
-
-*/
+	textPathDirection: 'ltr',
 	textPathLoop: true,
-
-/*
-
-*/
 	addTextPathRoll: true,
 
 /*
@@ -236,6 +225,18 @@ S.handle = function (item = {}) {
 	this.checkVector('handle');
 	this.handle.x = (xt(item.x)) ? item.x : this.handle.x;
 	this.handle.y = (xt(item.y)) ? item.y : this.handle.y;
+	this.dirtyHandle = true;
+	this.dirtyText = true;
+	this.dirtyPathObject = true;
+};
+
+/*
+
+*/
+S.textPath = function (item) {
+
+	this.textPath = item;
+
 	this.dirtyHandle = true;
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
@@ -531,6 +532,27 @@ P.setGlyphStyles = function (args, ...pos) {
 /*
 
 */
+P.getTextPath = function () {
+
+	let path = this.textPath;
+
+	if (path && path.substring) {
+
+		path = this.textPath = artefact[this.textPath];
+
+		if (path.type === 'Shape' && path.useAsPath) path.subscribers.push(this.name);
+		else {
+
+			path = this.path = false;
+		}
+	}
+
+	return path;
+};
+
+/*
+
+*/
 P.buildText = function () {
 
 	this.dirtyText = false;
@@ -592,9 +614,11 @@ P.calculateTextPositions = function (mytext) {
 		starts, ends, cursor, word, height,
 		space, i, iz, j, jz, k, kz;
 
-	let fragment, len, glyphArr, glyph, nextGlyph, glyphWidth, lineLen, totalLen, rotate,
+	let fragment, len, glyphArr, glyph, nextGlyph, glyphWidth, lineLen, totalLen,
 		singles = [],
-		pairs = [];
+		pairs = [],
+		path = this.getTextPath(),
+		direction, loop, rotate;
 
 	let fontAttributes = this.fontAttributes,
 		glyphAttributes = fontAttributes.clone({});
@@ -871,102 +895,85 @@ P.calculateTextPositions = function (mytext) {
 		glyphArr[5] = overlineFlag;
 	}
 
-	// 7. calculate localHeight
-	this.localHeight = (((textLines.length - 1) * maxHeight) * lineHeight) + maxHeight;
+	// handle path positioning (which we'll assume will need to be done for every display cycle) separately during stamping
+	if (!path) {
 
-	this.cleanHandle();
-	this.dirtyHandle = false;
-	handle = this.currentHandle;
-	
-	handleX = -handle.x * scale;
-	handleY = -handle.y;
+		// 7. calculate localHeight
+		this.localHeight = (((textLines.length - 1) * maxHeight) * lineHeight) + maxHeight;
 
-	// 8. we should now be in a position where we can calculate each glyph's startXY values
+		this.cleanHandle();
+		this.dirtyHandle = false;
+		handle = this.currentHandle;
+		
+		handleX = -handle.x * scale;
+		handleY = -handle.y;
 
-	// - we have 3 scenarios: text-along-a-path; full-justified text; and regular text
+		// 8. we should now be in a position where we can calculate each glyph's startXY values
 
-	// Scenario 1: text needs to be positioned on, or move along, a Shape entity path
-	// - we'll have to get the position fresh each time? Assume yes for now ...
-	// - change the positions array constituentt to: [font, strokeStyle, fillStyle, highlight, underline, overline, text, pathPos, rotateWithPath, glyphWidth]
-	if (this.textPath && this.textPath.length) {
+		// - we have 2 non-path scenarios: full-justified text; and regular text
 
-		len = this.textPath.length;
-		rotate = this.addTextPathRoll;
-		cursor = 0;
 
-		for (i = 0, iz = textPositions.length; i < iz; i++) {
+		// Scenario 1: justify === 'full'
+		if (justify === 'full') {
 
-			item = textPositions[i];
-			item[7] = cursor / len;
-			item[8] = rotate;
-			item[9] = textGlyphWidths[i];
+			cursor = 0;
+			height = handleY + (maxHeight / 2);
 
-			cursor += textGlyphWidths[i];
-		}
+			for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 
-	}
+				len = handleX;
 
-	// Scenario 2: justify === 'full'
-	// TODO!
-	else if (justify === 'full') {
+				if (textLineWords[i] > 1) space = (width - textLineWidths[i]) / (textLineWords[i] - 1);
+				else space = 0;
 
-		cursor = 0;
-		height = handleY + (maxHeight / 2);
+				for (j = 0, jz = textLines[i].length; j < jz; j++) {
 
-		for (i = 0, iz = textLineWidths.length; i < iz; i++) {
+					item = textPositions[cursor];
 
-			len = handleX;
+					if (item[6] === ' ') textGlyphWidths[cursor] += space;
 
-			if (textLineWords[i] > 1) space = (width - textLineWidths[i]) / (textLineWords[i] - 1);
-			else space = 0;
+					item[7] = len;
+					item[8] = height;
+					item[9] = textGlyphWidths[cursor];
 
-			for (j = 0, jz = textLines[i].length; j < jz; j++) {
+					len += textGlyphWidths[cursor];
 
-				item = textPositions[cursor];
-
-				if (item[6] === ' ') textGlyphWidths[cursor] += space;
-
-				item[7] = len;
-				item[8] = height;
-				item[9] = textGlyphWidths[cursor];
-
-				len += textGlyphWidths[cursor];
+					cursor++;
+				}
 
 				cursor++;
+				height += (maxHeight * lineHeight);
 			}
-
-			cursor++;
-			height += (maxHeight * lineHeight);
 		}
-	}
 
-	// Scenario 3: regular text - justify === 'left', or 'centre', or 'right'
-	else {
+		// Scenario 2: regular text - justify === 'left', or 'centre', or 'right'
+		else {
 
-		cursor = 0;
-		height = handleY + (maxHeight / 2);
+			cursor = 0;
+			height = handleY + (maxHeight / 2);
 
-		for (i = 0, iz = textLineWidths.length; i < iz; i++) {
+			for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 
-			if (justify === 'right') len = (width - textLineWidths[i]) + handleX;
-			else if (justify === 'center') len = ((width - textLineWidths[i]) / 2) + handleX;
-			else len = handleX;
+				if (justify === 'right') len = (width - textLineWidths[i]) + handleX;
+				else if (justify === 'center') len = ((width - textLineWidths[i]) / 2) + handleX;
+				else len = handleX;
 
-			for (j = 0, jz = textLines[i].length; j < jz; j++) {
+				for (j = 0, jz = textLines[i].length; j < jz; j++) {
 
-				item = textPositions[cursor];
+					item = textPositions[cursor];
 
-				item[7] = len;
-				item[8] = height;
-				item[9] = textGlyphWidths[cursor];
+					item[7] = len;
+					item[8] = height;
+					item[9] = textGlyphWidths[cursor];
 
-				len += textGlyphWidths[cursor];
+					len += textGlyphWidths[cursor];
+
+					cursor++;
+				}
 
 				cursor++;
+				height += (maxHeight * lineHeight);
 			}
-
-			cursor++;
-			height += (maxHeight * lineHeight);
 		}
 	}
 
@@ -983,6 +990,43 @@ P.calculateTextPositions = function (mytext) {
 
 	releaseCell(myCell);
 };
+
+/*
+
+*/
+P.calculateGlyphPathPositions = function () {
+
+	let path = this.getTextPath(),
+		len = path.length,
+		textPos = this.textPositions,
+		widths = this.textGlyphWidths,
+		direction = (this.textPathDirection === 'ltr') ? true : false,
+		pathPos = this.textPathPosition,
+		distance, posArray, i, iz, width,
+		justify = this.justify,
+		loop = this.textPathLoop;
+
+	for (i = 0, iz = textPos.length; i < iz; i++) {
+
+		posArray = textPos[i];
+		width = widths[i];
+
+		if (justify === 'right') posArray[7] = -width;
+		else if (justify === 'center') posArray[7] = -width / 2;
+
+		posArray[10] = path.getPathPositionData(pathPos);
+		posArray[9] = width;
+
+		if (direction) pathPos += (width / len);
+		else pathPos -= (width / len);
+
+		if (loop && (pathPos > 1 || pathPos < 0)) {
+
+			pathPos = (pathPos > 0.5) ? pathPos - 1 : pathPos + 1;
+		}
+	}
+};
+
 
 /*
 
@@ -1053,7 +1097,7 @@ P.regularStampSynchronousActions = function () {
 
 	let dest = this.currentHost, 
 		method = this.method,
-		engine, i, iz, pos, data, 
+		engine, i, iz, pos, data,
 		preStamper = this.preStamper,
 		stamper = this.stamper;
 
@@ -1068,7 +1112,35 @@ P.regularStampSynchronousActions = function () {
 			this.performRotation(engine);
 		}
 
-		// TODO - need an elseif here to handle text along a path
+		else if (this.textPath) {
+
+			this.getTextPath();
+			this.calculateGlyphPathPositions();
+
+			pos = this.textPositions;
+
+			let item, pathData,
+				aPR = this.addPathRoll,
+				currentHost = this.currentHost;
+
+			this.addPathRoll = this.addTextPathRoll;
+
+			for (i = 0, iz = pos.length; i < iz; i++) {
+
+				item = pos[i];
+
+				pathData = item[10];
+
+				this.currentPathData = pathData;
+
+				dest.rotateDestination(engine, pathData.x, pathData.y, this);
+
+				data = preStamper(engine, this, item);
+				stamper[method](engine, this, data);
+			}
+
+			this.addPathRoll = aPR;
+		}
 
 		else {
 
