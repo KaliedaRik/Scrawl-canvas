@@ -897,24 +897,6 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 
 		return new Promise((resolve) => {
 
-			// let dest = self.currentHost, 
-			// 	engine, x, y;
-
-			// if (dest) {
-
-			// 	engine = dest.engine;
-			// 	x = self.updateStampX();
-			// 	y = self.updateStampY();
-
-			// 	dest.rotateDestination(engine, x, y, self);
-
-			// 	if (!self.fastStamp) dest.setEngine(self);
-
-			// 	self.stamper[self.method](engine, self);
-
-			// 	resolve(true);
-			// }
-
 			if (self.currentHost) {
 
 				self.regularStampSynchronousActions();

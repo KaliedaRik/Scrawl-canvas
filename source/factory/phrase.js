@@ -90,11 +90,6 @@ let defaultAttributes = {
 /*
 
 */
-	// fontAttributes: {},
-
-/*
-
-*/
 	text: '',
 	textPositions: [],
 
@@ -581,6 +576,7 @@ P.convertTextEntityCharacters = function (item) {
 P.calculateTextPositions = function (mytext) {
 
 	// 0. strokeStyle/fillStyle helper function
+	// TODO: need to check (with a demo-test) that we can use gradients and patterns as styles
 	let makeStyle = function (item) {
 
 		if (item.substring) {
@@ -597,6 +593,7 @@ P.calculateTextPositions = function (mytext) {
 	};
 
 	// 1. setup - get values for text? arrays, current?, highlight?, ?Attributes, etc
+	// TODO - check code uses all of these local variables; remove those that are not used
 	let myCell = requestCell(),
 		engine = myCell.engine;
 
@@ -665,8 +662,9 @@ P.calculateTextPositions = function (mytext) {
 	fontArray.push(currentFont);
 
 	// 3. textPositions array will include an array of data for each glyph
-	// - [font, strokeStyle, fillStyle, highlight, text, startX, startY]
+	// - [font, strokeStyle, fillStyle, highlight, underline, overline, text, startX, startY, (pathData)]
 	// - and populate spacesArray with space position data (for full justify calculations later)
+	// TODO - does current code use SpacesArray? If not, refactor code to delete it
 	for (i = 0, iz = textGlyphs.length; i < iz; i++) {
 
 		item = textGlyphs[i];
@@ -830,6 +828,7 @@ P.calculateTextPositions = function (mytext) {
 	}
 
 	// calculate text line arrays
+	// TODO: create a demo-test for treatWordAsGlyph
 	for (i = 0, iz = textPositions.length; i < iz; i++) {
 
 		glyphArr = textPositions[i];
@@ -1011,6 +1010,7 @@ P.calculateGlyphPathPositions = function () {
 		posArray = textPos[i];
 		width = widths[i];
 
+		// TODO - justify isn't working as I'd like it to (ie stamping glyph so centres middle of glyph on path)
 		if (justify === 'right') posArray[7] = -width;
 		else if (justify === 'center') posArray[7] = -width / 2;
 
@@ -1120,8 +1120,7 @@ P.regularStampSynchronousActions = function () {
 			pos = this.textPositions;
 
 			let item, pathData,
-				aPR = this.addPathRoll,
-				currentHost = this.currentHost;
+				aPR = this.addPathRoll;
 
 			this.addPathRoll = this.addTextPathRoll;
 

@@ -500,10 +500,6 @@ P.setEngine = function (entity) {
 
 		engine = this.engine;
 
-		// Scrawl-canvas ignores these attributes, but needs them set to known quantities in all cases
-		// if (engine.textAlign !== 'start') engine.textAlign = 'start';
-		// if (engine.textBaseline !== 'top') engine.textBaseline = 'top';
-
 		for (item in changes) {
 
 			action[item](changes[item], engine, stylesArray, entity, this);
@@ -772,6 +768,7 @@ P.show = function () {
 			scale = self.scale;
 
 			if (self.isBase) {
+
 				// copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller's fit attribute requirements
 				self.renderPrecheck();
 

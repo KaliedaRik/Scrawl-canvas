@@ -233,6 +233,7 @@ P.applyFilters = function (myCell) {
 		};
 
 		if (self.isStencil) {
+			
 			// this is where we copy over the current canvas to the new canvas using appropriate gco
 			hostState.globalCompositeOperation = hostEngine.globalCompositeOperation = 'source-in';
 			hostState.globalAlpha = hostEngine.globalAlpha = 1;

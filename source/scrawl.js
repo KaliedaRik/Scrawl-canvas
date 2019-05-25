@@ -1,7 +1,7 @@
 /*
 # Scrawl-canvas
 
-### Version 8.0.0 (alpha) - 24 March 2019
+### Version 8.0.1 (alpha) - 25 May 2019
 
 ---------------------------------------------------------------------------------
 The MIT License (MIT)

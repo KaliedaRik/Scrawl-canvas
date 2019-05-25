@@ -444,15 +444,6 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 /*
 
 */
-	// S.mimic = function (item) {
-
-	// 	if (item && artefact[item]) this.mimic = item;
-	// 	else this.mimic = '';
-	// };
-
-/*
-
-*/
 	D.startX = function (item) {
 
 		this.checkVector('start');
@@ -1087,6 +1078,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 
 		if (xt(mimic.start) && mimic.start.type === 'Vector'){
 
+			this.checkVector('start');
 			this.start.x = mimic.start.x;
 			this.start.y = mimic.start.y;
 			this.dirtyStart = true;
@@ -1094,6 +1086,7 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 
 		if (xt(mimic.handle) && mimic.handle.type === 'Vector'){
 
+			this.checkVector('handle');
 			this.handle.x = mimic.handle.x;
 			this.handle.y = mimic.handle.y;
 			this.dirtyHandle = true;

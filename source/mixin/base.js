@@ -222,7 +222,7 @@ Note: this whole concept needs to be reexamined!
 Functions for checking that a given attribute is a vector or array, and supplying new vectors or arrays if this is not the case.
 */
 	P.checkVector = function (v) {
-
+		
 		if (v) {
 
 			if (!isa_vector(this[v])) {
