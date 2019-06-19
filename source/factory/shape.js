@@ -1,20 +1,41 @@
 /*
 # Shape factory
 */
-import { constructors, radian } from '../core/library.js';
-import { mergeOver, xt, addStrings, xtGet } from '../core/utilities.js';
+import { constructors, radian, artefact } from '../core/library.js';
+import { mergeOver, xt, xta, addStrings, xtGet, defaultNonReturnFunction, capitalize, removeItem, pushUnique } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from './vector.js';
+import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
 import entityMix from '../mixin/entity.js';
 import filterMix from '../mixin/filter.js';
 
+import calculatePath from '../mixin/shapePathCalculation.js';
+
+
 /*
 ## Shape constructor
 */
 const Shape = function (items = {}) {
+
+	this.startControl = makeCoordinate();
+	this.control = makeCoordinate();
+	this.endControl = makeCoordinate();
+	this.end = makeCoordinate();
+
+	this.currentStartControl = makeCoordinate();
+	this.currentControl = makeCoordinate();
+	this.currentEndControl = makeCoordinate();
+	this.currentEnd = makeCoordinate();
+
+	this.controlledLineOffset = makeCoordinate();
+
+	this.startControlLockTo = 'coord';
+	this.controlLockTo = 'coord';
+	this.endControlLockTo = 'coord';
+	this.endLockTo = 'coord';
 
 	this.entityInit(items);
 
@@ -22,7 +43,17 @@ const Shape = function (items = {}) {
 	this.unitLengths = [];
 	this.unitPartials = [];
 
-	this.subscribers = [];
+	this.pathed = [];
+
+	this.localBox = [];
+
+	this.dirtyStartControl = true;
+	this.dirtyEndControl = true;
+	this.dirtyControl = true;
+	this.dirtyEnd = true;
+
+	this.dirtySpecies = true;
+	this.dirtyPathObject = true;
 
 	return this;
 };
@@ -50,6 +81,11 @@ P = filterMix(P);
 let defaultAttributes = {
 
 /*
+The box represents the rectangle surrounding the shape
+*/
+	localBox: null,
+
+/*
 Current species supported, note that the parameters required by each species' 'make?' function differ:
 
 * default '' (makeShape)
@@ -75,9 +111,9 @@ TODO: The following species are under consideration - currently their 'make?' fu
 	species: '',
 
 /*
-Only used when we kill/delete the entity - quick way of finding artefacts using this Shape as a path
+
 */
-	subscribers: [],
+	pathed: null,
 
 /*
 Useful for development
@@ -90,6 +126,7 @@ By default, a Shape entity is just lines on the screen. It needs to be explicitl
 */
 	useAsPath: false,
 	length: 0,
+	pathCalculatedOnce: false,
 
 /*
 Used when doing length calculations - the smaller this value, the greater the precision of the final length value
@@ -143,26 +180,58 @@ Used by 'star' species
 
 /*
 Used by 'line', 'quadratic', 'bezier' species
-
-TODO: make sure these vectors can be set and used as both absolute (number) and relative (string) values
-
-TODO: I want to be able to replace these vectors with Point (or similar) entitys, which would then allow me to pivot them to other entitys, or use a Path, or track the mouse/touch cursor - with x and y coordinates treated separately - eg position them as we currently position artefacts using start, path, pivot etc attributes
-
-CONSIDER: would it be a better idea to pass all positioning functionality down to a dedicated Point/Vector object?
 */
-	startControl: {},
-	endControl: {},
-	control: {},
-	end: {},
-	currentStartControl: {},
-	currentEndControl: {},
-	currentControl: {},
-	currentEnd: {},
+	startControl: null,
+	control: null,
+	endControl: null,
+	end: null,
+
+	currentStartControl: null,
+	currentControl: null,
+	currentEndControl: null,
+	currentEnd: null,
+
+	startControlPivot: '',
+	addStartControlPivotHandle: false,
+	addStartControlPivotOffset: false,
+	startControlPath: '',
+	startControlPathPosition: 0,
+	addStartControlPathHandle: false,
+	addStartControlPathOffset: true,
+	startControlLockTo: '',
+
+	controlPivot: '',
+	addControlPivotHandle: false,
+	addControlPivotOffset: false,
+	controlPath: '',
+	controlPathPosition: 0,
+	addControlPathHandle: false,
+	addControlPathOffset: true,
+	controlLockTo: '',
+
+	endControlPivot: '',
+	addEndControlPivotHandle: false,
+	addEndControlPivotOffset: false,
+	endControlPath: '',
+	endControlPathPosition: 0,
+	addEndControlPathHandle: false,
+	addEndControlPathOffset: true,
+	endControlLockTo: '',
+
+	endPivot: '',
+	addEndPivotHandle: false,
+	addEndPivotOffset: false,
+	endPath: '',
+	endPathPosition: 0,
+	addEndPathHandle: false,
+	addEndPathOffset: true,
+	endLockTo: '',
+
+	useStartAsControlPoint: false,
+	controlledLineOffset: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
-P.specialAttributes = [
-];
 
 let S = P.setters,
 	D = P.deltaSetters;
@@ -170,60 +239,15 @@ let S = P.setters,
 /*
 
 */
-S.path = function (item) {
+S.pathDefinition = function (item) {
 
-	if (item.substring) this.path = item;
+	if (item.substring) this.pathDefinition = item;
 	this.dirtyPathObject = true;
 };
 
 /*
-Overwrite mixin/position.js handle functions - handle recalculations have to wait until after we determine the Shape's dimensions, which happens very late in the display cycle (when the path is recalculated)
+
 */
-S.handleX = function (item) {
-
-	this.checkVector('handle');
-	this.handle.x = item;
-	this.dirtyPathObject = true;
-};
-
-S.handleY = function (item) {
-
-	this.checkVector('handle');
-	this.handle.y = item;
-	this.dirtyPathObject = true;
-};
-
-S.handle = function (item = {}) {
-
-	this.checkVector('handle');
-	this.handle.x = (xt(item.x)) ? item.x : this.handle.x;
-	this.handle.y = (xt(item.y)) ? item.y : this.handle.y;
-	this.dirtyPathObject = true;
-};
-
-D.handleX = function (item) {
-
-	this.checkVector('handle');
-	this.handle.x = addStrings(this.handle.x, item);
-	this.dirtyPathObject = true;
-};
-
-D.handleY = function (item) {
-
-	this.checkVector('handle');
-	this.handle.y = addStrings(this.handle.y, item);
-	this.dirtyPathObject = true;
-};
-
-D.handle = function (item = {}) {
-
-	this.checkVector('handle');
-	this.handle.x = (xt(item.x)) ? addStrings(this.handle.x, item) : this.handle.x;
-	this.handle.y = (xt(item.y)) ? addStrings(this.handle.y, item) : this.handle.y;
-	this.dirtyPathObject = true;
-};
-
-
 S.species = function (item) {
 
 	if (xt(item)) {
@@ -235,434 +259,546 @@ S.species = function (item) {
 	}
 };
 
-S.startControlX = function (item) {
+S.useStartAsControlPoint = function (item) {
 
-	this.checkVector('startControl');
-	this.startControl.x = item;
+	this.useStartAsControlPoint = item;
+
+	if (!item) {
+
+		let controlledLine = this.controlledLineOffset;
+		controlledLine[0] = 0;
+		controlledLine[1] = 0;
+	}
+
 	this.updateDirty();
-	this.dirtyStartControl = true;
 };
 
-S.startControlY = function (item) {
+// Invalidate dimensions setters - dimensions are an emergent property of shapes, not a defining property
+S.width = defaultNonReturnFunction;
+S.height = defaultNonReturnFunction;
+S.dimensions = defaultNonReturnFunction;
+D.width = defaultNonReturnFunction;
+D.height = defaultNonReturnFunction;
+D.dimensions = defaultNonReturnFunction;
 
-	this.checkVector('startControl');
-	this.startControl.y = item;
-	this.updateDirty();
-	this.dirtyStartControl = true;
-};
 
-S.startControl = function (item = {}) {
+/*
 
-	this.checkVector('startControl');
-	let startControl = this.startControl;
-	startControl.x = (xt(item.x)) ? item.x : startControl.x;
-	startControl.y = (xt(item.y)) ? item.y : startControl.y;
-	this.updateDirty();
-	this.dirtyStartControl = true;
-};
+*/
+S.endPivot = function (item) {
 
-D.startControlX = function (item) {
-
-	this.checkVector('startControl');
-	this.startControl.x = addStrings(this.startControl.x, item);
-	this.updateDirty();
-	this.dirtyStartControl = true;
-};
-
-D.startControlY = function (item) {
-
-	this.checkVector('startControl');
-	this.startControl.y = addStrings(this.startControl.y, item);
-	this.updateDirty();
-	this.dirtyStartControl = true;
-};
-
-D.startControl = function (item = {}) {
-
-	this.checkVector('startControl');
-	let startControl = this.startControl;
-	startControl.x = (xt(item.x)) ? addStrings(startControl.x, item) : startControl.x;
-	startControl.y = (xt(item.y)) ? addStrings(startControl.y, item) : startControl.y;
-	this.updateDirty();
-	this.dirtyStartControl = true;
-};
-
-S.endControlX = function (item) {
-
-	this.checkVector('endControl');
-	this.endControl.x = item;
-	this.updateDirty();
-	this.dirtyEndControl = true;
-};
-
-S.endControlY = function (item) {
-
-	this.checkVector('endControl');
-	this.endControl.y = item;
-	this.updateDirty();
-	this.dirtyEndControl = true;
-};
-
-S.endControl = function (item = {}) {
-
-	this.checkVector('endControl');
-	let endControl = this.endControl;
-	endControl.x = (xt(item.x)) ? item.x : endControl.x;
-	endControl.y = (xt(item.y)) ? item.y : endControl.y;
-	this.updateDirty();
-	this.dirtyEndControl = true;
-};
-
-D.endControlX = function (item) {
-
-	this.checkVector('endControl');
-	this.endControl.x = addStrings(this.endControl.x, item);
-	this.updateDirty();
-	this.dirtyEndControl = true;
-};
-
-D.endControlY = function (item) {
-
-	this.checkVector('endControl');
-	this.endControl.y = addStrings(this.endControl.y, item);
-	this.updateDirty();
-	this.dirtyEndControl = true;
-};
-
-D.endControl = function (item = {}) {
-
-	this.checkVector('endControl');
-	let endControl = this.endControl;
-	endControl.x = (xt(item.x)) ? addStrings(endControl.x, item) : endControl.x;
-	endControl.y = (xt(item.y)) ? addStrings(endControl.y, item) : endControl.y;
-	this.updateDirty();
-	this.dirtyEndControl = true;
-};
-
-S.controlX = function (item) {
-
-	this.checkVector('control');
-	this.control.x = item;
-	this.updateDirty();
-	this.dirtyControl = true;
-};
-
-S.controlY = function (item) {
-
-	this.checkVector('control');
-	this.control.y = item;
-	this.updateDirty();
-	this.dirtyControl = true;
-};
-
-S.control = function (item = {}) {
-
-	this.checkVector('control');
-	let control = this.control;
-	control.x = (xt(item.x)) ? item.x : control.x;
-	control.y = (xt(item.y)) ? item.y : control.y;
-	this.updateDirty();
-	this.dirtyControl = true;
-};
-
-D.controlX = function (item) {
-
-	this.checkVector('control');
-	this.control.x = addStrings(this.control.x, item);
-	this.updateDirty();
-	this.dirtyControl = true;
-};
-
-D.controlY = function (item) {
-
-	this.checkVector('control');
-	this.control.y = addStrings(this.control.y, item);
-	this.updateDirty();
-	this.dirtyControl = true;
-};
-
-D.control = function (item = {}) {
-
-	this.checkVector('control');
-	let control = this.control;
-	control.x = (xt(item.x)) ? addStrings(control.x, item) : control.x;
-	control.y = (xt(item.y)) ? addStrings(control.y, item) : control.y;
-	this.updateDirty();
-	this.dirtyControl = true;
-};
-
-S.endX = function (item) {
-
-	this.checkVector('end');
-	this.end.x = item;
+	this.setControlHelper(item, 'endPivot', 'end');
 	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
-S.endY = function (item) {
+S.endPath = function (item) {
 
-	this.checkVector('end');
-	this.end.y = item;
+	this.setControlHelper(item, 'endPath', 'end');
 	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
-S.end = function (item = {}) {
+S.controlPivot = function (item) {
 
-	this.checkVector('end');
-	let end = this.end;
-	end.x = (xt(item.x)) ? item.x : end.x;
-	end.y = (xt(item.y)) ? item.y : end.y;
+	this.setControlHelper(item, 'controlPivot', 'control');
+	this.updateDirty();
+	this.dirtyControl = true;
+};
+
+S.controlPath = function (item) {
+
+	this.setControlHelper(item, 'controlPath', 'control');
+	this.updateDirty();
+	this.dirtyControl = true;
+};
+
+S.endControlPivot = function (item) {
+
+	this.setControlHelper(item, 'endControlPivot', 'endControl');
+	this.updateDirty();
+	this.dirtyEndControl = true;
+};
+
+S.endControlPath = function (item) {
+
+	this.setControlHelper(item, 'endControlPath', 'endControl');
+	this.updateDirty();
+	this.dirtyEndControl = true;
+};
+
+S.startControlPivot = function (item) {
+
+	this.setControlHelper(item, 'startControlPivot', 'startControl');
+	this.updateDirty();
+	this.dirtyStartControl = true;
+};
+
+S.startControlPath = function (item) {
+
+	this.setControlHelper(item, 'startControlPath', 'startControl');
+	this.updateDirty();
+	this.dirtyStartControl = true;
+};
+
+/*
+
+*/
+S.startControlX = function (coord) {
+
+	if (coord != null) {
+
+		this.startControl[0] = coord;
+		this.updateDirty();
+		this.dirtyStartControl = true;
+	}
+};
+
+S.startControlY = function (coord) {
+
+	if (coord != null) {
+
+		this.startControl[1] = coord;
+		this.updateDirty();
+		this.dirtyStartControl = true;
+	}
+};
+
+S.startControl = function (x, y) {
+
+	this.setCoordinateHelper('startControl', x, y);
+	this.updateDirty();
+	this.dirtyStartControl = true;
+};
+
+D.startControlX = function (coord) {
+
+	let c = this.startControl;
+	c[0] = addStrings(c[0], coord);
+	this.updateDirty();
+	this.dirtyStartControl = true;
+};
+
+D.startControlY = function (coord) {
+
+	let c = this.startControl;
+	c[1] = addStrings(c[1], coord);
+	this.updateDirty();
+	this.dirtyStartControl = true;
+};
+
+D.startControl = function (x, y) {
+
+	this.setDeltaCoordinateHelper('startControl', x, y);
+	this.updateDirty();
+	this.dirtyStartControl = true;
+};
+
+S.endControlX = function (coord) {
+
+	if (coord != null) {
+
+		this.endControl[0] = coord;
+		this.updateDirty();
+		this.dirtyEndControl = true;
+	}
+};
+
+S.endControlY = function (coord) {
+
+	if (coord != null) {
+
+		this.endControl[1] = coord;
+		this.updateDirty();
+		this.dirtyEndControl = true;
+	}
+};
+
+S.endControl = function (x, y) {
+
+	this.setCoordinateHelper('endControl', x, y);
+	this.updateDirty();
+	this.dirtyEndControl = true;
+};
+
+D.endControlX = function (coord) {
+
+	let c = this.endControl;
+	c[0] = addStrings(c[0], coord);
+	this.updateDirty();
+	this.dirtyEndControl = true;
+};
+
+D.endControlY = function (coord) {
+
+	let c = this.endControl;
+	c[1] = addStrings(c[1], coord);
+	this.updateDirty();
+	this.dirtyEndControl = true;
+};
+
+D.endControl = function (x, y) {
+
+	this.setDeltaCoordinateHelper('endControl', x, y);
+	this.updateDirty();
+	this.dirtyEndControl = true;
+};
+
+S.controlX = function (coord) {
+
+	if (coord != null) {
+
+		this.control[0] = coord;
+		this.updateDirty();
+		this.dirtyControl = true;
+	}
+};
+
+S.controlY = function (coord) {
+
+	if (coord != null) {
+
+		this.control[1] = coord;
+		this.updateDirty();
+		this.dirtyControl = true;
+	}
+};
+
+S.control = function (x, y) {
+
+	this.setCoordinateHelper('control', x, y);
+	this.updateDirty();
+	this.dirtyControl = true;
+};
+
+D.controlX = function (coord) {
+
+	let c = this.control;
+	c[0] = addStrings(c[0], coord);
+	this.updateDirty();
+	this.dirtyControl = true;
+};
+
+D.controlY = function (coord) {
+
+	let c = this.control;
+	c[1] = addStrings(c[1], coord);
+	this.updateDirty();
+	this.dirtyControl = true;
+};
+
+D.control = function (x, y) {
+
+	this.setDeltaCoordinateHelper('control', x, y);
+	this.updateDirty();
+	this.dirtyControl = true;
+};
+
+S.endX = function (coord) {
+
+	if (coord != null) {
+
+		this.end[0] = coord;
+		this.updateDirty();
+		this.dirtyEnd = true;
+	}
+};
+
+S.endY = function (coord) {
+
+	if (coord != null) {
+
+		this.end[1] = coord;
+		this.updateDirty();
+		this.dirtyEnd = true;
+	}
+};
+
+S.end = function (x, y) {
+
+	this.setCoordinateHelper('end', x, y);
 	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
-D.endX = function (item) {
+D.endX = function (coord) {
 
-	this.checkVector('end');
-	this.end.x = addStrings(this.end.x, item);
+	let c = this.end;
+	c[0] = addStrings(c[0], coord);
 	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
-D.endY = function (item) {
+D.endY = function (coord) {
 
-	this.checkVector('end');
-	this.end.y = addStrings(this.end.y, item);
+	let c = this.end;
+	c[1] = addStrings(c[1], coord);
 	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
-D.end = function (item = {}) {
+D.end = function (x, y) {
 
-	this.checkVector('end');
-	let end = this.end;
-	end.x = (xt(item.x)) ? addStrings(end.x, item) : end.x;
-	end.y = (xt(item.y)) ? addStrings(end.y, item) : end.y;
+	this.setDeltaCoordinateHelper('end', x, y);
 	this.updateDirty();
 	this.dirtyEnd = true;
 };
 
+/*
+
+*/
+S.startControlLockTo = function (item) {
+
+	this.startControlLockTo = item;
+	this.updateDirty();
+	this.dirtyStartControlLock = true;
+};
+
+S.endControlLockTo = function (item) {
+
+	this.endControlLockTo = item;
+	this.updateDirty();
+	this.dirtyEndControlLock = true;
+};
+
+S.controlLockTo = function (item) {
+
+	this.controlLockTo = item;
+	this.updateDirty();
+	this.dirtyControlLock = true;
+};
+
+S.endLockTo = function (item) {
+
+	this.endLockTo = item;
+	this.updateDirty();
+	this.dirtyEndLock = true;
+};
+
+/*
+
+*/
 S.radius = function (item) {
 
-	this.radiusTLX = this.radiusTRX = this.radiusBRX = this.radiusBLX = this.radiusX = this.setRectHelper(item, 'w');
-	this.radiusTLY = this.radiusTRY = this.radiusBRY = this.radiusBLY = this.radiusY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX', 'radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY']);
 };
 S.radiusX = function (item) {
 
-	this.radiusTLX = this.radiusTRX = this.radiusBRX = this.radiusBLX = this.radiusX = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX']);
 };
 S.radiusY = function (item) {
 
-	this.radiusTLY = this.radiusTRY = this.radiusBRY = this.radiusBLY = this.radiusY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY']);
 };
 S.radiusT = function (item) {
 
-	this.radiusTLX = this.radiusTLY = this.radiusTRX = this.radiusTRY = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY']);
 };
 S.radiusB = function (item) {
 
-	this.radiusBRX = this.radiusBRY = this.radiusBLX = this.radiusBLY = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY']);
 };
 S.radiusL = function (item) {
 
-	this.radiusTLX = this.radiusTLY = this.radiusBLX = this.radiusBLY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusTLX', 'radiusTLY', 'radiusBLX', 'radiusBLY']);
 };
 S.radiusR = function (item) {
 
-	this.radiusTRX = this.radiusTRY = this.radiusBRX = this.radiusBRY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY']);
 };
 S.radiusTX = function (item) {
 
-	this.radiusTLX = this.radiusTRX = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusTLX', 'radiusTRX']);
 };
 S.radiusBX = function (item) {
 
-	this.radiusBRX = this.radiusBLX = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusBRX', 'radiusBLX']);
 };
 S.radiusLX = function (item) {
 
-	this.radiusTLX = this.radiusBLX = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusTLX', 'radiusBLX']);
 };
 S.radiusRX = function (item) {
 
-	this.radiusTRX = this.radiusBRX = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusTRX', 'radiusBRX']);
 };
 S.radiusTY = function (item) {
 
-	this.radiusTLY = this.radiusTRY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusTLY', 'radiusTRY']);
 };
 S.radiusBY = function (item) {
 
-	this.radiusBRY = this.radiusBLY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusBRY', 'radiusBLY']);
 };
 S.radiusLY = function (item) {
 
-	this.radiusTLY = this.radiusBLY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusTLY', 'radiusBLY']);
 };
 S.radiusRY = function (item) {
 
-	this.radiusTRY = this.radiusBRY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusTRY', 'radiusBRY']);
 };
 S.radiusTL = function (item) {
 
-	this.radiusTLX = this.radiusTLY = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusTLX', 'radiusTLY']);
 };
 S.radiusTR = function (item) {
 
-	this.radiusTRX = this.radiusTRY = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusTRX', 'radiusTRY']);
 };
 S.radiusBL = function (item) {
 
-	this.radiusBLX = this.radiusBLY = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusBLX', 'radiusBLY']);
 };
 S.radiusBR = function (item) {
 
-	this.radiusBRX = this.radiusBRY = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusBRX', 'radiusBRY']);
 };
 S.radiusTLX = function (item) {
 
-	this.radiusTLX = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusTLX']);
 };
 S.radiusTLY = function (item) {
 
-	this.radiusTLY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusTLY']);
 };
 S.radiusTRX = function (item) {
 
-	this.radiusTRX = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusTRX']);
 };
 S.radiusTRY = function (item) {
 
-	this.radiusTRY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusTRY']);
 };
 S.radiusBRX = function (item) {
 
-	this.radiusBRX = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusBRX']);
 };
 S.radiusBRY = function (item) {
 
-	this.radiusBRY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusBRY']);
 };
 S.radiusBLX = function (item) {
 
-	this.radiusBLX = this.setRectHelper(item, 'w');
+	this.setRectHelper(item, ['radiusBLX']);
 };
 S.radiusBLY = function (item) {
 
-	this.radiusBLY = this.setRectHelper(item, 'h');
+	this.setRectHelper(item, ['radiusBLY']);
 };
 
 D.radius = function (item) {
 
-	this.radiusTLX = this.radiusTRX = this.radiusBRX = this.radiusBLX = this.radiusX = this.deltaRectHelper(item, 'w', 'radiusX')
-	this.radiusTLY = this.radiusTRY = this.radiusBRY = this.radiusBLY = this.radiusY = this.deltaRectHelper(item, 'h', 'radiusY');
+	this.deltaRectHelper(item, ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX', 'radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY']);
 };
 D.radiusX = function (item) {
 
-	this.radiusTLX = this.radiusTRX = this.radiusBRX = this.radiusBLX = this.radiusX = this.deltaRectHelper(item, 'w', 'radiusX');
+	this.deltaRectHelper(item, ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX']);
 };
 D.radiusY = function (item) {
 
-	this.radiusTLY = this.radiusTRY = this.radiusBRY = this.radiusBLY = this.radiusY = this.deltaRectHelper(item, 'h', 'radiusY');
+	this.deltaRectHelper(item, ['radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY']);
 };
 D.radiusT = function (item) {
 
-	this.radiusTLX = this.radiusTLY = this.radiusTRX = this.radiusTRY = this.deltaRectHelper(item, 'w', 'radiusTLX');
+	this.deltaRectHelper(item, ['radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY']);
 };
 D.radiusB = function (item) {
 
-	this.radiusBRX = this.radiusBRY = this.radiusBLX = this.radiusBLY = this.deltaRectHelper(item, 'w', 'radiusBRX');
+	this.deltaRectHelper(item, ['radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY']);
 };
 D.radiusL = function (item) {
 
-	this.radiusTLX = this.radiusTLY = this.radiusBLX = this.radiusBLY = this.deltaRectHelper(item, 'h', 'radiusTLX');
+	this.deltaRectHelper(item, ['radiusTLX', 'radiusTLY', 'radiusBLX', 'radiusBLY']);
 };
 D.radiusR = function (item) {
 
-	this.radiusTRX = this.radiusTRY = this.radiusBRX = this.radiusBRY = this.deltaRectHelper(item, 'h', 'radiusTRX');
+	this.deltaRectHelper(item, ['radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY']);
 };
 D.radiusTX = function (item) {
 
-	this.radiusTLX = this.radiusTRX = this.deltaRectHelper(item, 'w', 'radiusTLX');
+	this.deltaRectHelper(item, ['radiusTLX', 'radiusTRX']);
 };
 D.radiusBX = function (item) {
 
-	this.radiusBRX = this.radiusBLX = this.deltaRectHelper(item, 'w', 'radiusBRX');
+	this.deltaRectHelper(item, ['radiusBRX', 'radiusBLX']);
 };
 D.radiusLX = function (item) {
 
-	this.radiusTLX = this.radiusBLX = this.deltaRectHelper(item, 'w', 'radiusTLX');
+	this.deltaRectHelper(item, ['radiusTLX', 'radiusBLX']);
 };
 D.radiusRX = function (item) {
 
-	this.radiusTRX = this.radiusBRX = this.deltaRectHelper(item, 'w', 'radiusTRX');
+	this.deltaRectHelper(item, ['radiusTRX', 'radiusBRX']);
 };
 D.radiusTY = function (item) {
 
-	this.radiusTLY = this.radiusTRY = this.deltaRectHelper(item, 'h', 'radiusTLY');
+	this.deltaRectHelper(item, ['radiusTLY', 'radiusTRY']);
 };
 D.radiusBY = function (item) {
 
-	this.radiusBRY = this.radiusBLY = this.deltaRectHelper(item, 'h', 'radiusBRY');
+	this.deltaRectHelper(item, ['radiusBRY', 'radiusBLY']);
 };
 D.radiusLY = function (item) {
 
-	this.radiusTLY = this.radiusBLY = this.deltaRectHelper(item, 'h', 'radiusTLY');
+	this.deltaRectHelper(item, ['radiusTLY', 'radiusBLY']);
 };
 D.radiusRY = function (item) {
 
-	this.radiusTRY = this.radiusBRY = this.deltaRectHelper(item, 'h', 'radiusTRY');
+	this.deltaRectHelper(item, ['radiusTRY', 'radiusBRY']);
 };
 D.radiusTL = function (item) {
 
-	this.radiusTLX = this.radiusTLY = this.deltaRectHelper(item, 'w', 'radiusTLX');
+	this.deltaRectHelper(item, ['radiusTLX', 'radiusTLY']);
 };
 D.radiusTR = function (item) {
 
-	this.radiusTRX = this.radiusTRY = this.deltaRectHelper(item, 'w', 'radiusTRX');
+	this.deltaRectHelper(item, ['radiusTRX', 'radiusTRY']);
 };
 D.radiusBL = function (item) {
 
-	this.radiusBLX = this.radiusBLY = this.deltaRectHelper(item, 'w', 'radiusBLX');
+	this.deltaRectHelper(item, ['radiusBLX', 'radiusBLY']);
 };
 D.radiusBR = function (item) {
 
-	this.radiusBRX = this.radiusBRY = this.deltaRectHelper(item, 'w', 'radiusBRX');
+	this.deltaRectHelper(item, ['radiusBRX', 'radiusBRY']);
 };
 D.radiusTLX = function (item) {
 
-	this.radiusTLX = this.deltaRectHelper(item, 'w', 'radiusTLX');
+	this.deltaRectHelper(item, ['radiusTLX']);
 };
 D.radiusTLY = function (item) {
 
-	this.radiusTLY = this.deltaRectHelper(item, 'h', 'radiusTLY');
+	this.deltaRectHelper(item, ['radiusTLY']);
 };
 D.radiusTRX = function (item) {
 
-	this.radiusTRX = this.deltaRectHelper(item, 'w', 'radiusTRX');
+	this.deltaRectHelper(item, ['radiusTRX']);
 };
 D.radiusTRY = function (item) {
 
-	this.radiusTRY = this.deltaRectHelper(item, 'h', 'radiusTRY');
+	this.deltaRectHelper(item, ['radiusTRY']);
 };
 D.radiusBRX = function (item) {
 
-	this.radiusBRX = this.deltaRectHelper(item, 'w', 'radiusBRX');
+	this.deltaRectHelper(item, ['radiusBRX']);
 };
 D.radiusBRY = function (item) {
 
-	this.radiusBRY = this.deltaRectHelper(item, 'h', 'radiusBRY');
+	this.deltaRectHelper(item, ['radiusBRY']);
 };
 D.radiusBLX = function (item) {
 
-	this.radiusBLX = this.deltaRectHelper(item, 'w', 'radiusBLX');
+	this.deltaRectHelper(item, ['radiusBLX']);
 };
 D.radiusBLY = function (item) {
 
-	this.radiusBLY = this.deltaRectHelper(item, 'h', 'radiusBLY');
+	this.deltaRectHelper(item, ['radiusBLY']);
 };
 
+/*
+
+*/
 S.sides = function (item) {
 
 	this.sides = item;
@@ -765,12 +901,6 @@ D.innerRadius = function (item) {
 */
 
 
-P.midInitActions = function (items) {
-
-	this.set(items);
-};
-
-
 /*
 
 */
@@ -780,48 +910,47 @@ P.updateDirty = function () {
 	this.dirtyPathObject = true;
 };
 
-/*
-
-*/
-P.setRectHelper = function (item, side) {
+P.setRectHelper = function (item, corners) {
 
 	this.updateDirty();
 
-	if(!item.substring) return item;
-	else {
+	corners.forEach(corner => {
 
-		let dim;
+		this[corner] = item;
+	}, this);
+};
 
-		if (['oval', 'tetragon'].indexOf(this.species) >= 0) {
+P.deltaRectHelper = function (item, corners) {
 
-			let here = this.getHostDimensions();
-			
-			dim = here[side] || 100;
-		}
-		else dim = (side === 'w') ? this.rectangleWidth || 100 : this.rectangleHeight || 100; 
+	this.updateDirty();
 
-		return (parseFloat(item) / 100) * dim;
+	corners.forEach(corner => {
+
+		this[corner] = addStrings(this[corner], item);
+	}, this);
+};
+
+P.setControlHelper = function (item, attr, label) {
+
+	let oldControl = this[attr],
+		newControl = (item.substring) ? artefact[item] : item;
+
+	if (newControl && newControl.isArtefact) {
+
+		if (oldControl && oldControl.isArtefact && oldControl[`${label}Subscriber`]) removeItem(oldControl[`${label}Subscriber`], this.name);
+
+		if (newControl[`${label}Subscriber`]) pushUnique(newControl[`${label}Subscriber`], this.name);
+
+		this[attr] = newControl;
 	}
 };
 
 /*
 
 */
-P.deltaRectHelper = function (item, side, corner) {
+P.midInitActions = function (items) {
 
-	this.updateDirty();
-
-	let r = this[corner];
-
-	if(!item.substring) return (r) ? r + item : item;
-	else {
-
-		let here = this.getHostDimensions(),
-			dim = here[side] || 100,
-			val = (parseFloat(item) / 100) * dim;
-
-		return (r) ? r + val : val;
-	}
+	this.set(items);
 };
 
 /*
@@ -831,14 +960,14 @@ P.positionPointOnPath = function (vals) {
 
 	let v = requestVector(vals);
 
-	v.vectorSubtract(this.currentHandle);
+	v.vectorSubtract(this.currentStampHandlePosition);
 
 	if(this.flipReverse) v.x = -v.x;
 	if(this.flipUpend) v.y = -v.y;
 
 	v.rotate(this.roll);
 
-	v.vectorAdd(this.currentStart).vectorAdd(this.currentOffset);
+	v.vectorAdd(this.currentStampPosition);
 
 	let res = {
 		x: v.x,
@@ -863,9 +992,6 @@ P.getBezierXY = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 	};
 };
 
-/*
-
-*/
 P.getQuadraticXY = function (t, sx, sy, cp1x, cp1y, ex, ey) {
 
 	let T = 1 - t;
@@ -876,9 +1002,6 @@ P.getQuadraticXY = function (t, sx, sy, cp1x, cp1y, ex, ey) {
 	};
 };
 
-/*
-
-*/
 P.getLinearXY = function (t, sx, sy, ex, ey) {
 
 	return {
@@ -887,9 +1010,6 @@ P.getLinearXY = function (t, sx, sy, ex, ey) {
 	};
 };
 
-/*
-
-*/
 P.getBezierAngle = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 
 	let T = 1 - t,
@@ -899,9 +1019,6 @@ P.getBezierAngle = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 	return (-Math.atan2(dx, dy) + (0.5 * Math.PI)) / radian;
 };
 
-/*
-
-*/
 P.getQuadraticAngle = function (t, sx, sy, cp1x, cp1y, ex, ey) {
 
 	let T = 1 - t,
@@ -911,9 +1028,6 @@ P.getQuadraticAngle = function (t, sx, sy, cp1x, cp1y, ex, ey) {
 	return (-Math.atan2(dx, dy) + (0.5 * Math.PI)) / radian;
 };
 
-/*
-
-*/
 P.getLinearAngle = function (t, sx, sy, ex, ey) {
 
 	let dx = ex - sx,
@@ -925,101 +1039,14 @@ P.getLinearAngle = function (t, sx, sy, ex, ey) {
 /*
 
 */
-P.getShapeUnitMetaData = function (species, args) {
-
-	let xPts = [],
-		yPts = [],
-		len = 0,
-		w, h;
-
-	// we want to separate out linear species before going into the while loop
-	// - because these calculations will be simple
-	if (species === 'linear') {
-
-		let [sx, sy, ex, ey] = args;
-
-		w = ex - sx,
-		h = ey - sy;
-
-		len = Math.sqrt((w * w) + (h * h));
-
-		xPts = xPts.concat([sx, ex]);
-		yPts = yPts.concat([sy, ey]);
-	}
-	else if (species === 'bezier' || (species === 'quadratic')) {
-
-		let func = (species === 'bezier') ? 'getBezierXY' : 'getQuadraticXY',
-			flag = false,
-			step = 0.25,
-			currentLength = 0,
-			newLength = 0,
-			precision = this.precision,
-			oldX, oldY, x, y, t, res;
-
-		while (!flag) {
-
-			xPts.length = 0;
-			yPts.length = 0;
-			newLength = 0;
-
-			res = this[func](0, ...args);
-			oldX = res.x;
-			oldY = res.y;
-			xPts.push(oldX);
-			yPts.push(oldY);
-
-			for (t = step; t <= 1; t += step) {
-
-				res = this[func](t, ...args);
-				({x, y} = res)
-
-				xPts.push(x);
-				yPts.push(y);
-
-				w = x - oldX,
-				h = y - oldY;
-
-				newLength += Math.sqrt((w * w) + (h * h));
-				oldX = x;
-				oldY = y;
-			}
-
-			// stop the while loop if we're getting close to the true length of the curve
-			if (newLength < len + precision) flag = true;
-
-			len = newLength;
-
-			step /= 2;
-
-			// stop the while loop after checking a maximum of 129 points along the curve
-			if (step < 0.004) flag = true;
-		}
-	}
-
-	return {
-		length: len,
-		xPoints: xPts,
-		yPoints: yPts
-	};
-};
-
-/*
-
-*/
 P.getPathPositionData = function (pos) {
 
 	if (pos.toFixed) {
 
 		let remainder = pos % 1,
 			unitPartials = this.unitPartials,
-			unitLengths = this.unitLengths,
-			roll = this.roll,
-			reverse = this.flipReverse,
-			upend = this.flipUpend,
 			previousLen = 0, 
-			stoppingLen, myLen, i, iz,
-			unit, species, vars, myPositionedPoint, myPoint, results, angle,
-			flipAngle = 0;
+			stoppingLen, myLen, i, iz, unit, species;
 
 		if (pos === 0 || pos === 1) remainder = pos;
 
@@ -1046,9 +1073,11 @@ P.getPathPositionData = function (pos) {
 		// 3. get coordinates and angle at that point from subpath; return results
 		if (unit) {
 
-			[species, ...vars] = unit;
+			let [unitSpecies, ...vars] = unit;
 
-			switch (species) {
+			let myPoint, angle;
+
+			switch (unitSpecies) {
 
 				case 'linear' :
 					myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
@@ -1066,11 +1095,20 @@ P.getPathPositionData = function (pos) {
 					break;
 			}
 
-			if (reverse) flipAngle++;
-			if (upend) flipAngle++;
+			let flipAngle = 0
+			if (this.flipReverse) flipAngle++;
+			if (this.flipUpend) flipAngle++;
 
 			if (flipAngle === 1) angle = -angle;
+
 			angle += this.roll;
+
+			let stamp = this.currentStampPosition,
+				lineOffset = this.controlledLineOffset,
+				localBox = this.localBox;
+
+			myPoint.x += lineOffset[0];
+			myPoint.y += lineOffset[1];
 
 			myPoint.angle = angle;
 
@@ -1081,16 +1119,237 @@ P.getPathPositionData = function (pos) {
 }
 
 /*
-Overwrites mixin.entity.js function
+
 */
-P.cleanHandle = function () {
+P.cleanControlLock = function (label) {
 
-	if (xt(this.localWidth, this.localHeight)) {
+	let capLabel = capitalize(label);
 
-		this.dirtyHandle = false;
+	this[`dirty${capLabel}Lock`] = false;
+	this[`dirty${capLabel}`] = true;
+};
 
-		this.cleanVectorParameter('currentHandle', this.handle, this.localWidth, this.localHeight);
+/*
+
+*/
+P.cleanControl = function (label) {
+
+	let capLabel = capitalize(label);
+
+	this[`dirty${capLabel}`] = false;
+
+	let pivotLabel = `${label}Pivot`,
+		pathLabel = `${label}Path`,
+		pivot = this[pivotLabel],
+		path = this[pathLabel],
+		art, pathData;
+
+	if (pivot && pivot.substring) {
+
+		art = artefact[pivot];
+
+		if (art) pivot = art;
 	}
+
+	if (path && path.substring) {
+
+		art = artefact[path];
+
+		if (art) path = art;
+	}
+
+	let lock = this[`${label}LockTo`], 
+		x, y, ox, oy, here, flag,
+		raw = this[label],
+		current = this[`current${capLabel}`];
+
+	if (lock === 'pivot' && (!pivot || pivot.substring)) lock = 'coord';
+	else if (lock === 'path' && (!path || path.substring)) lock = 'coord';
+
+	switch(lock) {
+
+		case 'pivot' :
+
+			[x, y] = pivot.currentStampPosition;
+
+			if (!this.addPivotOffset) {
+
+				[ox, oy] = pivot.currentOffset;
+				x -= ox;
+				y -= oy;
+			}
+
+			break;
+
+		case 'path' :
+
+			pathData = this.getControlPathData(path, label, capLabel);
+
+			x = pathData.x;
+			y = pathData.y;
+
+			if (!this.addPathOffset) {
+
+				x -= path.currentOffset[0];
+				y -= path.currentOffset[1];
+			}
+
+			break;
+
+		case 'mouse' :
+
+			here = this.getHere();
+
+			x = here.x || 0;
+			y = here.y || 0;
+
+			break;
+
+		default :
+			
+			x = y = 0;
+
+			here = this.getHere();
+
+			if (xt(here)) {
+
+				if (xta(here.w, here.h)) {
+
+					this.cleanPosition(current, raw, [here.w, here.h]);
+					[x, y] = current;
+				}
+			}
+	}
+
+	current[0] = x;
+	current[1] = y;
+
+	this.dirtySpecies = true;
+	this.dirtyPathObject = true;
+};
+
+/*
+
+*/
+P.getControlPathData = function (path, label, capLabel) {
+
+	let pathPos = this[`${label}PathPosition`],
+		tempPos = pathPos,
+		pathData = path.getPathPositionData(pathPos);
+
+	if (pathPos < 0) pathPos += 1;
+	if (pathPos > 1) pathPos = pathPos % 1;
+
+	pathPos = parseFloat(pathPos.toFixed(6));
+	if (pathPos !== tempPos) this[`${label}PathPosition`] = pathPos;
+
+	if (pathData) return pathData;
+
+	else {
+
+		let here = this.getHere();
+
+		if (xt(here)) {
+
+			if (xta(here.w, here.h)) {
+
+				let current = this[`current${capLabel}`];
+
+				this.cleanPosition(current, this[label], [here.w, here.h]);
+
+				return {
+					x: current[0],
+					y: current[1]
+				};
+			}
+		}
+		return {
+			x: 0,
+			y: 0
+		};
+	}
+};
+
+/*
+Overwrites mixin/position.js function
+*/
+P.updatePathSubscribers = function () {
+
+	this.pathed.forEach(name => {
+
+		let instance = artefact[name];
+
+		if (instance) {
+
+			instance.dirtyStart = true;
+			if (instance.addPathHandle) instance.dirtyHandle = true;
+			if (instance.addPathOffset) instance.dirtyOffset = true;
+			if (instance.addPathRotation) instance.dirtyRotation = true;
+		}
+	});
+};
+
+/*
+
+*/
+P.prepareStamp = function() {
+
+	if (this.dirtyHost) this.dirtyHost = false;
+
+	if (this.dirtyLock) this.cleanLock();
+	if (this.dirtyStartControlLock) this.cleanControlLock('startControl');
+	if (this.dirtyEndControlLock) this.cleanControlLock('endControl');
+	if (this.dirtyControlLock) this.cleanControlLock('control');
+	if (this.dirtyEndLock) this.cleanControlLock('end');
+
+	if (this.startControlLockTo === 'path') this.dirtyStartControl = true;
+	if (this.endControlLockTo === 'path') this.dirtyEndControl = true;
+	if (this.controlLockTo === 'path') this.dirtyControl = true;
+	if (this.endLockTo === 'path') this.dirtyEnd = true;
+
+	if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
+
+		this.dirtyPathObject = true;
+
+		if (this.useStartAsControlPoint && this.dirtyStart) {
+
+			this.dirtySpecies = true;
+			this.pathCalculatedOnce = false;
+		}
+
+		if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd)  this.pathCalculatedOnce = false;
+
+	}
+
+	if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+
+		this.dirtyStampPositions = true;
+
+		if (this.useStartAsControlPoint) {
+
+			this.dirtySpecies = true;
+			this.dirtyPathObject = true;
+			this.pathCalculatedOnce = false;
+		}
+	}
+
+	if (this.dirtyScale) this.cleanScale();
+
+	if (this.dirtyStart) this.cleanStart();
+	if (this.dirtyStartControl) this.cleanControl('startControl');
+	if (this.dirtyEndControl) this.cleanControl('endControl');
+	if (this.dirtyControl) this.cleanControl('control');
+	if (this.dirtyEnd) this.cleanControl('end');
+
+	if (this.dirtyOffset) this.cleanOffset();
+	if (this.dirtyRotation) this.cleanRotation();
+
+	if (this.dirtyStampPositions) this.cleanStampPositions();
+
+	if (this.dirtySpecies) this.cleanSpecies();
+	if (this.dirtyPathObject) this.cleanPathObject();
+
+	if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 };
 
 /*
@@ -1100,14 +1359,95 @@ P.cleanPathObject = function () {
 
 	this.dirtyPathObject = false;
 
-	if (this.species && this.dirtySpecies) this.cleanSpecies();
+	this.calculateLocalPath(this.pathDefinition);
+	this.cleanStampPositionsAdditionalActions();
 
-	this.calculateLocalPath(this.path);
-	this.cleanHandle();
+	if (this.dirtyDimensions) this.cleanDimensions();
+	if (this.dirtyHandle) this.cleanHandle();
+	if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
-	let handle = this.currentHandle;
+	let handle = this.currentStampHandlePosition,
+		controlledLine = this.controlledLineOffset;
 
-	this.pathObject = new Path2D(`m${-handle.x},${-handle.y}${this.localPath}`);
+	this.pathObject = new Path2D(`m${-handle[0] + controlledLine[0]},${-handle[1] + controlledLine[1]}${this.localPath}`);
+};
+
+/*
+
+*/
+P.cleanDimensions = function () {
+
+	this.dirtyDimensions = false;
+	this.dirtyHandle = true;
+};
+
+/*
+
+*/
+P.calculateLocalPath = function (d) {
+
+	let res;
+
+	if (!this.pathCalculatedOnce) {
+
+		res = calculatePath(d, this.currentScale, this.currentStart, this.useAsPath, this.precision);
+		this.pathCalculatedOnce = true;
+	}
+
+	if (res) {
+
+		this.localPath = res.localPath;
+		this.units = res.units;
+		this.unitLengths = res.unitLengths;
+		this.unitPartials = res.unitPartials;
+		this.length = res.length;
+
+		let maxX = res.maxX,
+			maxY = res.maxY,
+			minX = res.minX,
+			minY = res.minY;
+
+		let dims = this.dimensions,
+			currentDims = this.currentDimensions,
+			box = this.localBox;
+
+		dims[0] = parseFloat((maxX - minX).toFixed(1));
+		dims[1] = parseFloat((maxY - minY).toFixed(1));
+		
+		if(dims[0] !== currentDims[0] || dims[1] !== currentDims[1]) {
+
+			currentDims[0] = dims[0];
+			currentDims[1] = dims[1];
+			this.dirtyHandle = true;
+		}
+
+
+		box.length = 0;
+		box.push(parseFloat(minX.toFixed(1)), parseFloat(minY.toFixed(1)), dims[0], dims[1]);
+	}
+};
+
+/*
+
+*/
+P.cleanStampPositionsAdditionalActions = function () {
+
+	if (this.useStartAsControlPoint) {
+
+		let [x, y] = this.localBox,
+			lineOffset = this.controlledLineOffset;
+
+		lineOffset[0] = (x < 0) ? x : 0;
+		lineOffset[1] = (y < 0) ? y : 0;
+
+		this.dirtyPathObject = true;
+	}
+
+	if (this.path && this.lockTo.indexOf('path') >= 0) {
+
+		this.dirtyStampPositions = true;
+		this.dirtyStampHandlePositions = true;
+	}
 };
 
 /*
@@ -1117,26 +1457,19 @@ P.cleanSpecies = function () {
 
 	this.dirtySpecies = false;
 
-	let p = 'M0,0',
-		here = this.getHostDimensions();
+	let p = 'M0,0';
 
 	switch (this.species) {
 
 		case 'line' :
-			if (this.dirtyEnd) this.cleanVectorParameter('currentEnd', this.end, here.w, here.h);
 			p = this.makeLinearPath();
 			break;
 
 		case 'quadratic' :
-			if (this.dirtyEnd) this.cleanVectorParameter('currentEnd', this.end, here.w, here.h);
-			if (this.dirtyControl) this.cleanVectorParameter('currentControl', this.control, here.w, here.h);
 			p = this.makeQuadraticPath();
 			break;
 
 		case 'bezier' :
-			if (this.dirtyEnd) this.cleanVectorParameter('currentEnd', this.end, here.w, here.h);
-			if (this.dirtyStartControl) this.cleanVectorParameter('currentStartControl', this.startControl, here.w, here.h);
-			if (this.dirtyEndControl) this.cleanVectorParameter('currentEndControl', this.endControl, here.w, here.h);
 			p = this.makeBezierPath();
 			break;
 
@@ -1175,553 +1508,95 @@ P.cleanSpecies = function () {
 		case 'spiral' :
 			p = this.makeSpiralPath();
 			break;
+
+		default :
+			p = this.pathDefinition;
 	}
-
-	this.dirtyEnd = false;
-	this.dirtyStartControl = false;
-	this.dirtyEndControl = false;
-	this.dirtyControl = false;
-
-	this.path = p;
+	this.pathDefinition = p;
 };
+
+P.draw = function (engine) {
+
+	engine.stroke(this.pathObject);
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+
+P.fill = function (engine) {
+
+	engine.fill(this.pathObject, this.winding);
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+
+P.drawFill = function (engine) {
+
+	let p = this.pathObject;
+
+	engine.stroke(p);
+	this.currentHost.clearShadow();
+	engine.fill(p, this.winding);
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+
+P.fillDraw = function (engine) {
+
+	let p = this.pathObject;
+
+	engine.stroke(p);
+	this.currentHost.clearShadow();
+	engine.fill(p, this.winding);
+	engine.stroke(p);
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+
+P.floatOver = function (engine) {
+
+	let p = this.pathObject;
+
+	engine.stroke(p);
+	engine.fill(p, this.winding);
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+
+P.sinkInto = function (engine) {
+
+	let p = this.pathObject;
+
+	engine.fill(p, this.winding);
+	engine.stroke(p);
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+
+P.clear = function (engine) {
+
+	let gco = engine.globalCompositeOperation;
+
+	engine.globalCompositeOperation = 'destination-out';
+	engine.fill(this.pathObject, this.winding);
+	
+	engine.globalCompositeOperation = gco;
+
+	if (this.showBoundingBox) this.drawBoundingBox(engine);
+},	
 
 /*
 
 */
-P.calculateLocalPath = function (d) {
+P.drawBoundingBox = function (engine) {
 
-	// setup local variables
-	let points = [],
-		myData = [],
-		command = '',
-		localPath = '',
-		scale = this.scale,
-		start = this.currentStart,
-		useAsPath = this.useAsPath,
-		units = this.units,
-		unitLengths = this.unitLengths,
-		unitPartials = this.unitPartials,
-		mySet = d.match(/([A-Za-z][0-9. ,\-]*)/g), 
-		i, iz, j, jz;
-
-	let curX = 0, 
-		curY = 0, 
-		oldX = 0, 
-		oldY = 0;
-
-	let xPoints = [],
-		yPoints = [];
-
-	let reflectX = 0,
-		reflectY = 0;
-
-	// local function to populate the temporary myData array with data for every path partial
-	let buildArrays = (thesePoints) => {
-
-		myData.push({
-			c: command.toLowerCase(),
-			p: thesePoints || null,
-			x: oldX,
-			y: oldY,
-			cx: curX,
-			cy: curY,
-			rx: reflectX,
-			ry: reflectY
-		});
-
-		if (!useAsPath) {
-
-			xPoints.push(curX);
-			yPoints.push(curY);
-		}
-
-		oldX = curX;
-		oldY = curY;
-	};
-
-	// the purpose of this loop is to 
-	// 1. convert all point values fromn strings to floats
-	// 2. scale every value
-	// 3. relativize every value to the last stated cursor position
-	// 4. populate the temporary myData array with data which can be used for all subsequent calculations
-	for (i = 0, iz = mySet.length; i < iz; i++) {
-
-		command = mySet[i][0];
-		points = mySet[i].match(/(-?[0-9.]+\b)/g) || [];
-
-		if (points.length) {
-
-			for (j = 0, jz = points.length; j < jz; j++) {
-
-				points[j] = parseFloat(points[j]);
-			}
-
-			if (i === 0) {
-
-				if (command === 'M') {
-
-					oldX = (points[0] * scale) - start.x;
-					oldY = (points[1] * scale) - start.y;
-					command = 'm';
-				}
-			} 
-			else {
-				
-				oldX = curX;
-				oldY = curY;
-			}
-
-			switch (command) {
-
-				case 'H':
-					for (j = 0, jz = points.length; j < jz; j++) {
-
-						points[j] = (points[j] * scale) - oldX;
-						curX += points[j];
-						reflectX = reflectY = 0;
-						buildArrays(points.slice(j, j + 1));
-					}
-					break;
-
-				case 'V':
-					for (j = 0, jz = points.length; j < jz; j++) {
-
-						points[j] = (points[j] * scale) - oldY;
-						curY += points[j];
-						reflectX = reflectY = 0;
-						buildArrays(points.slice(j, j + 1));
-					}
-					break;
-
-				case 'M':
-					for (j = 0, jz = points.length; j < jz; j += 2) {
-
-						points[j] = (points[j] * scale) - oldX;
-						points[j + 1] = (points[j + 1] * scale) - oldY;
-						curX += points[j];
-						curY += points[j + 1];
-						reflectX = reflectY = 0;
-						buildArrays(points.slice(j, j + 2));
-					}
-					break;
-
-				case 'L':
-				case 'T':
-					for (j = 0, jz = points.length; j < jz; j += 2) {
-
-						points[j] = (points[j] * scale) - oldX;
-						points[j + 1] = (points[j + 1] * scale) - oldY;
-						curX += points[j];
-						curY += points[j + 1];
-
-						if (command === 'T') {
-
-							reflectX = points[j] + oldX;
-							reflectY = points[j + 1] + oldY;
-						}
-						else {
-
-							reflectX = reflectY = 0;
-						}
-						buildArrays(points.slice(j, j + 2));
-					}
-					break;
-
-				case 'Q':
-				case 'S':
-					for (j = 0, jz = points.length; j < jz; j += 4) {
-
-						points[j] = (points[j] * scale) - oldX;
-						points[j + 1] = (points[j + 1] * scale) - oldY;
-						points[j + 2] = (points[j + 2] * scale) - oldX;
-						points[j + 3] = (points[j + 3] * scale) - oldY;
-						curX += points[j + 2];
-						curY += points[j + 3];
-						reflectX = points[j] + oldX;
-						reflectY = points[j + 1] + oldY;
-						buildArrays(points.slice(j, j + 4));
-					}
-					break;
-
-				case 'C':
-					for (j = 0, jz = points.length; j < jz; j += 6) {
-
-						points[j] = (points[j] * scale) - oldX;
-						points[j + 1] = (points[j + 1] * scale) - oldY;
-						points[j + 2] = (points[j + 2] * scale) - oldX;
-						points[j + 3] = (points[j + 3] * scale) - oldY;
-						points[j + 4] = (points[j + 4] * scale) - oldX;
-						points[j + 5] = (points[j + 5] * scale) - oldY;
-						curX += points[j + 4];
-						curY += points[j + 5];
-						reflectX = points[j + 2] + oldX;
-						reflectY = points[j + 3] + oldY;
-						buildArrays(points.slice(j, j + 6));
-					}
-					break;
-
-				case 'A':
-					for (j = 0, jz = points.length; j < jz; j += 7) {
-
-						points[j + 5] = (points[j + 5] * scale) - oldX;
-						points[j + 6] = (points[j + 6] * scale) - oldY;
-						curX += points[j + 5];
-						curY += points[j + 6];
-						reflectX = reflectY = 0;
-						buildArrays(points.slice(j, j + 7));
-					}
-					break;
-
-				case 'h':
-					for (j = 0, jz = points.length; j < jz; j++) {
-
-						points[j] *= scale;
-						curX += points[j];
-						reflectX = reflectY = 0;
-						buildArrays(points.slice(j, j + 1));
-					}
-					break;
-
-				case 'v':
-					for (j = 0, jz = points.length; j < jz; j++) {
-
-						points[j] *= scale;
-						curY += points[j];
-						reflectX = reflectY = 0;
-						buildArrays(points.slice(j, j + 1));
-					}
-					break;
-
-				case 'm':
-				case 'l':
-				case 't':
-					for (j = 0, jz = points.length; j < jz; j += 2) {
-
-						points[j] *= scale;
-						points[j + 1] *= scale;
-						curX += points[j];
-						curY += points[j + 1];
-
-						if (command === 't') {
-
-							reflectX = points[j] + oldX;
-							reflectY = points[j + 1] + oldY;
-						}
-						else {
-
-							reflectX = reflectY = 0;
-						}
-						buildArrays(points.slice(j, j + 2));
-					}
-					break;
-
-				case 'q':
-				case 's':
-					for (j = 0, jz = points.length; j < jz; j += 4) {
-
-						points[j] *= scale;
-						points[j + 1] *= scale;
-						points[j + 2] *= scale;
-						points[j + 3] *= scale;
-						curX += points[j + 2];
-						curY += points[j + 3];
-						reflectX = points[j] + oldX;
-						reflectY = points[j + 1] + oldY;
-						buildArrays(points.slice(j, j + 4));
-					}
-					break;
-
-				case 'c':
-					for (j = 0, jz = points.length; j < jz; j += 6) {
-
-						points[j] *= scale;
-						points[j + 1] *= scale;
-						points[j + 2] *= scale;
-						points[j + 3] *= scale;
-						points[j + 4] *= scale;
-						points[j + 5] *= scale;
-						curX += points[j + 4];
-						curY += points[j + 5];
-						reflectX = points[j + 2] + oldX;
-						reflectY = points[j + 3] + oldY;
-						buildArrays(points.slice(j, j + 6));
-					}
-					break;
-
-				case 'a':
-					for (j = 0, jz = points.length; j < jz; j += 7) {
-
-						points[j] *= scale;
-						points[j + 1] *= scale;
-						points[j + 5] *= scale;
-						points[j + 6] *= scale;
-						curX += points[j + 5];
-						curY += points[j + 6];
-						reflectX = reflectY = 0;
-						buildArrays(points.slice(j, j + 7));
-					}
-					break;
-			}
-
-		}
-		else {
-
-			reflectX = reflectY = 0;
-			buildArrays();
-		}
-	}
-
-	// this loop builds the local path string
-	for (i = 0, iz = myData.length; i < iz; i++) {
-
-		let curData = myData[i],
-			points = curData.p;
-
-		if (points) {
-
-			for (j = 0, jz = points.length; j < jz; j++) {
-
-				points[j] = points[j].toFixed(1);
-			}
-
-			localPath += `${curData.c}${curData.p.join()}`;
-
-			for (j = 0, jz = points.length; j < jz; j++) {
-
-				points[j] = parseFloat(points[j]);
-			}
-
-		}
-		else localPath += `${curData.c}`;
-	}
-
-	// calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box 
-	if (useAsPath) {
-
-		units.length = 0;
-
-		// request a vector - used for reflection points
-		let v = requestVector();
-
-		// this loop calculates this.units array data
-		// - because the lengths calculations requires absolute coordinates
-		// - and TtSs path units use reflective coordinates
-		for (i = 0, iz = myData.length; i < iz; i++) {
-
-			let curData = myData[i],
-				prevData = (i > 0) ? myData[i - 1] : false;
-
-			let {c, p, x, y, cx, cy, rx, ry} = curData;
-
-			switch (c) {
-
-				case 'h' :
-					units[i] = ['linear', x, y, p[0] + x, y];
-					break;
-
-				case 'v' :
-					units[i] = ['linear', x, y, x, p[0] + y];
-					break;
-					
-				case 'm' :
-					units[i] = ['move', x, y];
-					break;
-					
-				case 'l' :
-					units[i] = ['linear', x, y, p[0] + x, p[1] + y];
-					break;
-					
-				case 't' :
-					if (prevData && (prevData.rx || prevData.ry)) {
-
-						v.set({
-							x: prevData.rx - cx,
-							y: prevData.ry - cy,
-						}).rotate(180);
-
-						units[i] = ['quadratic', x, y, v.x + cx, v.y + cy, p[0] + x, p[1] + y];
-					}
-					else units[i] = ['quadratic', x, y, x, y, p[0] + x, p[1] + y];
-					break;
-					
-				case 'q' :
-					units[i] = ['quadratic', x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
-					break;
-					
-				case 's' :
-					if (prevData && (prevData.rx || prevData.ry)) {
-
-						v.set({
-							x: prevData.rx - cx,
-							y: prevData.ry - cy,
-						}).rotate(180);
-
-						units[i] = ['bezier', x, y, v.x + cx, v.y + cy, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
-					}
-					else units[i] = ['bezier', x, y, x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y];
-					break;
-					
-				case 'c' :
-					units[i] = ['bezier', x, y, p[0] + x, p[1] + y, p[2] + x, p[3] + y, p[4] + x, p[5] + y];
-					break;
-					
-				case 'a' :
-					units[i] = ['linear', x, y, p[5] + x, p[6] + y];
-					break;
-					
-				case 'z' :
-					units[i] = ['close', x, y]
-					break;
-
-				default :
-					units[i] = ['unknown', x, y]
-			}
-		}
-
-		// release the vector
-		releaseVector(v);
-
-		// Should now be in a good position to calculate unit lengths and generate data for boundingBox arrays
-		unitLengths.length = 0;
-
-		for (i = 0, iz = units.length; i < iz; i++) {
-
-			let [spec, ...data] = units[i],
-				results;
-
-			switch (spec) {
-
-				case 'linear' :
-				case 'quadratic' :
-				case 'bezier' :
-					results = this.getShapeUnitMetaData(spec, data);
-					unitLengths[i] = results.length;
-					xPoints = xPoints.concat(results.xPoints);
-					yPoints = yPoints.concat(results.yPoints);
-					break;
-					
-				default :
-					unitLengths[i] = 0;
-			}
-		}
-
-		// Build the partials array
-		unitPartials.length = 0;
-
-		let myLen = unitLengths.reduce((a, v) => a + v, 0);
-
-		let mySum = 0;
-
-		for (i = 0, iz = unitLengths.length; i < iz; i++) {
-
-			mySum += unitLengths[i] / myLen;
-			unitPartials[i] = mySum;
-		}
-
-		this.length = parseFloat(myLen.toFixed(1));
-	}
-	// calculate bounding box dimensions
-	let maxX = Math.max(...xPoints),
-		maxY = Math.max(...yPoints),
-		minX = Math.min(...xPoints),
-		minY = Math.min(...yPoints);
-
-	// pad excessively thin widths and heights
-	// - in particular for quad and bezier curves not being used as paths
-	if ((maxX - minX) < 10) {
-
-		maxX += 5;
-		minX -= 5;
-	}
-
-	if ((maxY - minY) < 10) {
-
-		maxY += 5;
-		minY -= 5;
-	}
-
-	// set Shape attributes with results of work
-	this.localWidth = parseFloat((maxX - minX).toFixed(1));
-	this.localHeight = parseFloat((maxY - minY).toFixed(1));
-	this.localBoxStartX = parseFloat(minX.toFixed(1));
-	this.localBoxStartY = parseFloat(minY.toFixed(1));
-	this.localPath = localPath;
-};
-
-/*
-
-*/
-P.stamper = {
-
-	draw: function (engine, entity) {
-
-		engine.stroke(entity.pathObject);
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	fill: function (engine, entity) {
-
-		engine.fill(entity.pathObject, entity.winding);
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	drawFill: function (engine, entity) {
-
-		engine.stroke(entity.pathObject);
-		entity.currentHost.clearShadow();
-		engine.fill(entity.pathObject, entity.winding);
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	fillDraw: function (engine, entity) {
-
-		engine.stroke(entity.pathObject);
-		entity.currentHost.clearShadow();
-		engine.fill(entity.pathObject, entity.winding);
-		engine.stroke(entity.pathObject);
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	floatOver: function (engine, entity) {
-
-		engine.stroke(entity.pathObject);
-		engine.fill(entity.pathObject, entity.winding);
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	sinkInto: function (engine, entity) {
-
-		engine.fill(entity.pathObject, entity.winding);
-		engine.stroke(entity.pathObject);
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},
-
-	clear: function (engine, entity) {
-
-		let gco = engine.globalCompositeOperation;
-
-		engine.globalCompositeOperation = 'destination-out';
-		engine.fill(entity.pathObject, entity.winding);
-		
-		engine.globalCompositeOperation = gco;
-
-		if (entity.showBoundingBox) entity.drawBoundingBox(engine, entity);
-	},	
-
-	none: function (engine, entity) {},	
-};
-
-/*
-
-*/
-P.drawBoundingBox = function (engine, entity) {
-
-	let handle = entity.currentHandle,
-		floor = Math.floor,
+	let floor = Math.floor,
 		ceil = Math.ceil;
 
+	let [x, y, w, h] = this.localBox;
+	let [lx, ly] = this.controlledLineOffset;
+	let [hX, hY] = this.currentStampHandlePosition;
+
+	// Pad out excessively thin widths and heights
+	if (w < 20) w = 20;
+	if (h < 20) h = 20;
+
 	engine.save();
-	engine.strokeStyle = entity.boundingBoxColor;
+
+	engine.strokeStyle = this.boundingBoxColor;
 	engine.lineWidth = 1;
 	engine.globalCompositeOperation = 'source-over';
 	engine.globalAlpha = 1;
@@ -1729,10 +1604,11 @@ P.drawBoundingBox = function (engine, entity) {
 	engine.shadowOffsetY = 0;
 	engine.shadowBlur = 0;
 
-	engine.strokeRect(floor(entity.localBoxStartX - handle.x), floor(entity.localBoxStartY - handle.y), ceil(entity.localWidth), ceil(entity.localHeight));
+	engine.strokeRect(floor(x - hX + lx), floor(y - hY + ly), ceil(w), ceil(h));
 
 	engine.restore();
 };
+
 
 /**
 
@@ -1740,11 +1616,28 @@ P.drawBoundingBox = function (engine, entity) {
 P.makeOvalPath = function () {
 
 	let A = this.offshootA,
-		B = this.offshootB;
+		B = this.offshootB,
+		radiusX = this.radiusX,
+		radiusY = this.radiusY,
+		width, height;
 
-	let width = this.radiusX * 2,
-		height = this.radiusY * 2,
-		port = width * this.intersectX,
+	if (radiusX.substring || radiusY.substring) {
+
+		let here = this.getHere();
+
+		let rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * here.w : radiusX,
+			ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * here.h : radiusY;
+
+		width = rx * 2;
+		height = ry * 2;
+	}
+	else {
+
+		width = radiusX * 2;
+		height = radiusY * 2;
+	}
+
+	let port = width * this.intersectX,
 		starboard = width - port,
 		fore = height * this.intersectY,
 		aft = height - fore;
@@ -1764,9 +1657,26 @@ P.makeOvalPath = function () {
 **/
 P.makeTetragonPath = function () {
 
-	let width = this.radiusX * 2,
-		height = this.radiusY * 2,
-		port = width * this.intersectX,
+	let radiusX = this.radiusX,
+		radiusY = this.radiusY,
+		width, height;
+
+	if (radiusX.substring || radiusY.substring) {
+
+		let here = this.getHere(),
+			rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * here.w : radiusX,
+			ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * here.h : radiusY;
+
+		width = rx * 2;
+		height = ry * 2;
+	}
+	else {
+
+		width = radiusX * 2;
+		height = radiusY * 2;
+	}
+
+	let port = width * this.intersectX,
 		starboard = width - port,
 		fore = height * this.intersectY,
 		aft = height - fore;
@@ -1798,6 +1708,18 @@ P.makeRectanglePath = function () {
 		_blx = this.radiusBLX,
 		_bly = this.radiusBLY;
 
+	if (_tlx.substring || _tly.substring || _trx.substring || _try.substring || _brx.substring || _bry.substring || _blx.substring || _bly.substring) {
+
+		_tlx = (_tlx.substring) ? (parseFloat(_tlx) / 100) * width : _tlx;
+		_tly = (_tly.substring) ? (parseFloat(_tly) / 100) * height : _tly;
+		_trx = (_trx.substring) ? (parseFloat(_trx) / 100) * width : _trx;
+		_try = (_try.substring) ? (parseFloat(_try) / 100) * height : _try;
+		_brx = (_brx.substring) ? (parseFloat(_brx) / 100) * width : _brx;
+		_bry = (_bry.substring) ? (parseFloat(_bry) / 100) * height : _bry;
+		_blx = (_blx.substring) ? (parseFloat(_blx) / 100) * width : _blx;
+		_bly = (_bly.substring) ? (parseFloat(_bly) / 100) * height : _bly;
+	}
+
 	let myData = `m${_tlx},0`;
 
 	if (width - _tlx - _trx !== 0) myData += `h${width - _tlx - _trx}`;
@@ -1826,14 +1748,10 @@ P.makeRectanglePath = function () {
 **/
 P.makeBezierPath = function () {
 	
-	let startX = this.currentStart.x,
-		startY = this.currentStart.y,
-		startControlX = this.currentStartControl.x,
-		startControlY = this.currentStartControl.y,
-		endControlX = this.currentEndControl.x,
-		endControlY = this.currentEndControl.y,
-		endX = this.currentEnd.x,
-		endY = this.currentEnd.y;
+	let [startX, startY] = this.currentStampPosition;
+	let [startControlX, startControlY] = this.currentStartControl;
+	let [endControlX, endControlY] = this.currentEndControl;
+	let [endX, endY] = this.currentEnd;
 
 	return `m0,0c${(startControlX - startX)},${(startControlY - startY)} ${(endControlX - startX)},${(endControlY - startY)} ${(endX - startX)},${(endY - startY)}`;
 };
@@ -1843,12 +1761,9 @@ P.makeBezierPath = function () {
 **/
 P.makeQuadraticPath = function () {
 	
-	let startX = this.currentStart.x,
-		startY = this.currentStart.y,
-		controlX = this.currentControl.x,
-		controlY = this.currentControl.y,
-		endX = this.currentEnd.x,
-		endY = this.currentEnd.y;
+	let [startX, startY] = this.currentStampPosition;
+	let [controlX, controlY] = this.currentControl;
+	let [endX, endY] = this.currentEnd;
 
 	return `m0,0q${(controlX - startX)},${(controlY - startY)} ${(endX - startX)},${(endY - startY)}`;
 };
@@ -1858,10 +1773,8 @@ P.makeQuadraticPath = function () {
 **/
 P.makeLinearPath = function () {
 	
-	let startX = this.currentStart.x,
-		startY = this.currentStart.y,
-		endX = this.currentEnd.x,
-		endY = this.currentEnd.y;
+	let [startX, startY] = this.currentStampPosition;
+	let [endX, endY] = this.currentEnd;
 
 	return `m0,0l${(endX - startX)},${(endY - startY)}`;
 };

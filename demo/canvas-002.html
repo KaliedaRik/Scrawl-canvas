@@ -12,7 +12,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 002</h1>
-  <h2>Cell positioning (mouse)</h2>
+  <h2>Block and wheel entity positioning (start, pivot, mimic, mouse)</h2>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
@@ -21,9 +21,9 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Resize the canvas element's virtual canvas</li>
-      <li>Check that mouse coordinate values are properly translated between visible and virtual canvases</li>
-      <li>Position a cell on the canvas using the mouse coordinates</li>
+      <li>Create and clone block and wheel entitys</li>
+      <li>Position the entitys on the canvas using start (default) attributes, alongside pivot and mimic attributes</li>
+      <li>Check that when an entity mimics or pivots on an entity that itself mimics or pivots another entity, everything positions as expected</li>
     </ul>
   </div>
 

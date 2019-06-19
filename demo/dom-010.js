@@ -2,123 +2,136 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
-
-
 // Scene setup
-let library = scrawl.library,
-	artefact = library.artefact,
-	stack = artefact.mystack,
-	rocket, tween, clone, stopE, flyRocket;
-
-stack.set({
-	width: 300,
-	height: 600,
-	css: {
-		overflow: 'hidden'
-	}
-});
-
-stack.addDomElementToStack('#rocket');
-rocket = artefact.rocket;
-
-rocket.set({
-	startX: 600,
-	startY: 540,
-	width: 50,
-	height: 100,
-	handleX: 570,
-	handleY: 'center',
-});
+let library = scrawl.library;
 
 
-// Set this tween up as a template which can be cloned but will never itself run
-tween = scrawl.makeTween({
-	name: 'template',
-	duration: 5000,
-	killOnComplete: true,
-	useNewTicker: true,
-	definitions: [
-		{
-			attribute: 'roll',
-			start: 0,
-			end: 65
-		}
-	]
-}).removeFromTicker();
+let report = function () {
+
+	let testTicker = Date.now(),
+		testTime, testNow, text,
+		testMessage = document.querySelector('#reportmessage');
+
+	let artefactnames = library.artefactnames,
+		stacknames = library.stacknames,
+		elementnames = library.elementnames,
+		artefact = library.artefact,
+		stack = library.stack,
+		element = library.element;
+
+	let a, s, el;
+
+	return function () {
+
+		a = Object.keys(artefact);
+		s = Object.keys(stack);
+		el = Object.keys(element);
+
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
+
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+artefact - ${a.length}, ${artefactnames.length}: [${(artefactnames).join(', ')}] 
+stack - ${s.length}, ${stacknames.length}: [${(stacknames).join(', ')}] 
+element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
+	};
+}();
 
 
-// Event listeners
-stopE = (e) => {
-
-	e.preventDefault();
-	e.returnValue = false;
-};
-
-flyRocket = function(e) {
-
-	stopE(e);
-
-	clone = tween.clone({
-
-		commenceAction: function () {
-
-			this.set({
-				targets: rocket.clone()
-			});
-		},
-
-		completeAction: function () {
-
-			this.targets[0].demolish(true);
-		}
-	}).run();
-};
-
-scrawl.addNativeListener('click', flyRocket, stack.domElement);
-
-
-// Animation 
+// Animation loop - can't use .makeRender() in this case because there's no initial stack/canvas arterfact to render. Using .makeAnimation() and .render() - both of which use promises - instead
 scrawl.makeAnimation({
 
-	name: 'testD010Display',
+	name: 'demo-animation',
 
 	fn: function () {
 
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 
 			scrawl.render()
 			.then(() => {
 
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
-
-				let t = Object.keys(library.tween),
-					a = Object.keys(artefact),
-					n = Object.keys(library.animation),
-					k = Object.keys(library.animationtickers),
-					e = Object.keys(library.element);
-
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-				<br />tween - ${t.length}, ${library.tweennames.length}: ${JSON.stringify(library.tweennames)}
-				<br />artefact - ${a.length}, ${library.artefactnames.length}: ${JSON.stringify(library.artefactnames)}
-				<br />element - ${e.length}, ${library.elementnames.length}: ${JSON.stringify(library.elementnames)}
-				<br />tickers - ${k.length}, ${library.animationtickersnames.length}: ${JSON.stringify(library.animationtickersnames)}
-				<br />animation - ${n.length}, ${library.animationnames.length}: ${JSON.stringify(library.animationnames)}`;
-
+				report();
 				resolve(true);
 			})
-			.catch((err) => {
-
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
-
-				resolve(false);
-			});
+			.catch(err => reject(err));
 		});
 	}
 });
+
+
+// User interaction - buttons listener
+let controls = function () {
+
+	// the control buttons are never part of a Scrawl-canvas stack
+	let b1 = document.querySelector('#action_1'),
+		b2 = document.querySelector('#action_2'),
+		b3 = document.querySelector('#action_3'),
+		b4 = document.querySelector('#action_4');
+
+	b1.disabled = '';
+	b2.disabled = 'disabled';
+	b3.disabled = '';
+	b4.disabled = 'disabled';
+
+	let newStack, hostStack;
+
+	return function (e) {
+
+		e.preventDefault();
+		e.returnValue = false;
+		
+		switch (e.target.id) {
+
+			case 'action_1':
+				b1.disabled = 'disabled';
+				b2.disabled = '';
+
+				newStack = scrawl.addStack({
+					host: '#target',
+					name: 'my-new-stack',
+					width: 300,
+					height: 50,
+				});
+
+				break;
+
+			case 'action_2':
+
+				b1.disabled = '';
+				b2.disabled = 'disabled';
+
+				newStack.demolish(true);
+
+				break;
+
+			case 'action_3':
+
+				b3.disabled = 'disabled';
+				b4.disabled = '';
+
+				hostStack = scrawl.addStack({
+					element: '#target',
+				});
+
+				break;
+				
+			case 'action_4':
+
+				if (b1.disabled) {
+
+					b1.disabled = '';
+					b2.disabled = 'disabled';
+				}
+
+				b3.disabled = 'disabled';
+				b4.disabled = 'disabled';
+				
+				hostStack.demolish(true);
+
+				break;
+		}
+	};
+}();
+
+scrawl.addListener('up', controls, '.controls');

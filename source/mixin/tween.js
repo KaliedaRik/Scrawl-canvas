@@ -288,6 +288,7 @@ Overwrites the clone function in mixin/base.js
 			let ticker = animationtickers[this.ticker];
 			delete copied.ticker;
 			copied.cycles = (xt(items.cycles)) ? items.cycles : (ticker) ? ticker.cycles : 1;
+			if (xt(items.duration)) copied.duration = items.duration;
 		}
 
 		let clone = new constructors[this.type](copied);

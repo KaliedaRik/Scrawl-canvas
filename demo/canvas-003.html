@@ -11,7 +11,7 @@
 
   <style>
     .controls {
-      grid-template-columns: 1fr 2fr 3fr;
+      grid-template-columns: 1fr 2fr 1fr 2fr;
     }
   </style>
 
@@ -19,38 +19,58 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 003</h1>
-  <h2>Canvas controller 'fit' attribute</h2>
-  <h3>This canvas is resizable* - drag the bottom right corner to change its dimensions.</h3>
+  <h2>Linear gradients</h2>
 
   <div class="controls">
 
-    <div class="green label">Canvas fit</div>
-    <div class="green">
-      <select class="controlItem" id="fitselect">
-        <option value="none">none</option>
-        <option value="contain">contain</option>
-        <option value="cover">cover</option>
-        <option value="fill">fill</option>
+    <div class="pink label">paletteStart</div>
+    <div class="pink"><input class="controlItem" id="paletteStart" type="range" value="0" min="0" max="999" step="1" /></div>
+
+    <div class="pink label">paletteEnd</div>
+    <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
+
+    <div class="green label">startX</div>
+    <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="blue label">endX</div>
+    <div class="blue"><input class="controlItem" id="endX" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="green label">startY</div>
+    <div class="green"><input class="controlItem" id="startY" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="blue label">endY</div>
+    <div class="blue"><input class="controlItem" id="endY" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="yellow label">Include red</div>
+    <div class="yellow">
+      <select class="controlItem" id="red">
+        <option value="0">false</option>
+        <option value="1">true</option>
       </select>
     </div>
-    <div></div>
+
+    <div class="yellow label">Include blue</div>
+    <div class="yellow">
+        <select class="controlItem" id="blue">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
 
   </div>
 
-  <div id="mystack" data-stack>
-    <canvas id="mycanvas"></canvas>
-  </div>
+  <canvas id="mycanvas" width="600" height="400"></canvas>
 
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Check the various fit modes by which a virtual canvas can be copied into the display canvas</li>
+      <li>Setup a linear gradient, and a block entity which uses the gradient for its fillStyle value</li>
+      <li>Check that we can successfully manipulate the gradient's start and end coordinates</li>
+      <li>Check that we can successfully manipulate the palettes's start and end cursors</li>
+      <li>Check that we can dynamically add and remove color stops</li>
     </ul>
-
-    <h4>*Note</h4>
-    <p>Actually the stack &lt;div> element containing the &lt;canvas> element is resizable. No browser seems to permit resizable canvases (probably for understandable reasons, though I can't find this prohibition documented anywhere). In fact only Firefox seems to allow the div to be resized: Chrome shows the corner dragger but doesn't respond to user interaction; Edge doesn't even go that far.</p>
   </div>
 
   <script src="canvas-003.js" type="module"></script>

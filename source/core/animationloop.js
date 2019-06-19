@@ -6,7 +6,7 @@ import { animation } from "./library.js";
 let animate = [],
 	doAnimation = false,
 	resortBatchAnimations = true,
-	animate_buckets = [];
+	animate_sorted = [];
 
 /*
 
@@ -37,7 +37,7 @@ const sortAnimations = function () {
 			buckets[order].push(obj);
 		});
 
-		animate_buckets = buckets.reduce((a, v) => a.concat(v), []);
+		animate_sorted = buckets.reduce((a, v) => a.concat(v), []);
 	}
 };
 
@@ -50,7 +50,7 @@ const animationLoop = function () {
 
 	if (resortBatchAnimations) sortAnimations();
 
-	animate_buckets.forEach((item) => {
+	animate_sorted.forEach((item) => {
 
 		if (item.fn) promises.push(item.fn());
 	});
@@ -67,6 +67,7 @@ const animationLoop = function () {
 
 */
 const startCoreAnimationLoop = function () {
+
 	doAnimation = true;
 	animationLoop();
 };
@@ -75,6 +76,7 @@ const startCoreAnimationLoop = function () {
 
 */
 const stopCoreAnimationLoop = function () {
+	
 	doAnimation = false;
 };
 

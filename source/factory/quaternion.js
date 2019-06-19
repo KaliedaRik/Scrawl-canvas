@@ -2,7 +2,7 @@
 # Quaternion factory
 */
 import { radian, constructors } from '../core/library.js';
-import { isa_quaternion, isa_vector, xt, xto } from '../core/utilities.js';
+import { isa_quaternion, isa_vector, isa_number, xt, xto } from '../core/utilities.js';
 
 import { requestVector, releaseVector, makeVector } from './vector.js';
 
@@ -95,20 +95,20 @@ P.normalize = function () {
 	let mag = this.getMagnitude(),
 		v = this.v;
 
-	if (mag !== 0) {
+	if (!mag) throw new Error(`${this.name} Quaternion error - normalize() division by zero: ${mag}`);
 
-		this.n /= mag;
-		this.n = (this.n > -0.000001 && this.n < 0.000001) ? 0 : this.n;
+	this.n /= mag;
+	this.n = (this.n > -0.000001 && this.n < 0.000001) ? 0 : this.n;
 
-		v.x /= mag;
-		v.x = (v.x > -0.000001 && v.x < 0.000001) ? 0 : v.x;
+	v.x /= mag;
+	v.x = (v.x > -0.000001 && v.x < 0.000001) ? 0 : v.x;
 
-		v.y /= mag;
-		v.y = (v.y > -0.000001 && v.y < 0.000001) ? 0 : v.y;
+	v.y /= mag;
+	v.y = (v.y > -0.000001 && v.y < 0.000001) ? 0 : v.y;
 
-		v.z /= mag;
-		v.z = (v.z > -0.000001 && v.z < 0.000001) ? 0 : v.z;
-	}
+	v.z /= mag;
+	v.z = (v.z > -0.000001 && v.z < 0.000001) ? 0 : v.z;
+
 	return this;
 };
 
@@ -117,20 +117,14 @@ P.normalize = function () {
 */
 P.set = function (items = {}) {
 
+	if (isa_quaternion(items)) return this.setFromQuaternion(items);
+
+	if (isa_vector(items)) return this.setFromVector(items);
+
+	if (xto(items.pitch, items.yaw, items.roll)) return this.setFromEuler(items);
+
 	let x, y, z, n, v,
 		tv = this.v;
-
-	if (isa_quaternion(items)) {
-		return this.setFromQuaternion(items);
-	}
-
-	if (isa_vector(items)) {
-		return this.setFromVector(items);
-	}
-
-	if (xto(items.pitch, items.yaw, items.roll)) {
-		return this.setFromEuler(items);
-	}
 
 	v = (xt(items.vector) || xt(items.v)) ? (items.vector || items.v) : false;
 	n = (xt(items.scalar) || xt(items.n)) ? (items.scalar || items.n || 0) : false;
@@ -139,11 +133,11 @@ P.set = function (items = {}) {
 	y = (v) ? (v.y || 0) : items.y || false;
 	z = (v) ? (v.z || 0) : items.z || false;
 
-	this.n = (n.toFixed) ? n : this.n;
+	this.n = (isa_number(n)) ? n : this.n;
 
-	tv.x = (x.toFixed) ? x : tv.x;
-	tv.y = (y.toFixed) ? y : tv.y;
-	tv.z = (z.toFixed) ? z : tv.z;
+	tv.x = (isa_number(x)) ? x : tv.x;
+	tv.y = (isa_number(y)) ? y : tv.y;
+	tv.z = (isa_number(z)) ? z : tv.z;
 	
 	return this;
 };
@@ -153,19 +147,16 @@ P.set = function (items = {}) {
 */
 P.setFromQuaternion = function (item) {
 
-	let tv, iv;
+	if (!isa_quaternion(item)) throw new Error(`${this.name} Quaternion error - setFromQuaternion() bad argument: ${item}`);
 
-	if (isa_quaternion(item)) {
-
-		tv = this.v;
+	let tv = this.v,
 		iv = item.v;
-		this.n = item.n;
-		tv.x = iv.x;
-		tv.y = iv.y;
-		tv.z = iv.z;
-		
-		return this;
-	}
+
+	this.n = item.n;
+	tv.x = iv.x;
+	tv.y = iv.y;
+	tv.z = iv.z;
+	
 	return this;
 };
 
@@ -174,31 +165,27 @@ P.setFromQuaternion = function (item) {
 */
 P.quaternionMultiply = function (item) {
 
-	let x1, y1, z1, n1, x2, y2, z2, n2, tv, iv;
+	if (!isa_quaternion(item)) throw new Error(`${this.name} Quaternion error - quaternionMultiply() bad argument: ${item}`);
 
-	if (isa_quaternion(item)) {
+	let tv = this.v,
+		iv = item.v,
 
-		tv = this.v;
-		iv = item.v;
+		n1 = this.n,
+		x1 = tv.x,
+		y1 = tv.y,
+		z1 = tv.z,
 
-		n1 = this.n;
-		x1 = tv.x;
-		y1 = tv.y;
-		z1 = tv.z;
-
-		n2 = item.n;
-		x2 = iv.x;
-		y2 = iv.y;
+		n2 = item.n,
+		x2 = iv.x,
+		y2 = iv.y,
 		z2 = iv.z;
 
-		this.n = (n1 * n2) - (x1 * x2) - (y1 * y2) - (z1 * z2);
+	this.n = (n1 * n2) - (x1 * x2) - (y1 * y2) - (z1 * z2);
 
-		tv.x = (n1 * x2) + (x1 * n2) + (y1 * z2) - (z1 * y2);
-		tv.y = (n1 * y2) + (y1 * n2) + (z1 * x2) - (x1 * z2);
-		tv.z = (n1 * z2) + (z1 * n2) + (x1 * y2) - (y1 * x2);
+	tv.x = (n1 * x2) + (x1 * n2) + (y1 * z2) - (z1 * y2);
+	tv.y = (n1 * y2) + (y1 * n2) + (z1 * x2) - (x1 * z2);
+	tv.z = (n1 * z2) + (z1 * n2) + (x1 * y2) - (y1 * x2);
 
-		return this;
-	}
 	return this;
 };
 
@@ -226,21 +213,17 @@ P.getAngle = function (degree) {
 */
 P.quaternionRotate = function (item) {
 
-	let q4, q5;
+	if (!isa_quaternion(item)) throw new Error(`${this.name} Quaternion error - quaternionRotate() bad argument: ${item}`);
 
-	if (isa_quaternion(item)) {
-
-		q4 = requestQuaternion(item);
+	let q4 = requestQuaternion(item),
 		q5 = requestQuaternion(this);
 
-		this.setFromQuaternion(q4.quaternionMultiply(q5));
+	this.setFromQuaternion(q4.quaternionMultiply(q5));
 
-		releaseQuaternion(q4);
-		releaseQuaternion(q5);
-		
-		return this
-	}
-	return this;
+	releaseQuaternion(q4);
+	releaseQuaternion(q5);
+	
+	return this
 };
 
 /*
@@ -568,6 +551,12 @@ const releaseQuaternion = function (q) {
 	}
 };
 
+const checkQuaternion = function (item) {
+
+	if (item && item.type === 'Quaternion') return item;
+	else return new Quaternion(item);
+};
+
 /*
 ## Exported factory function
 */
@@ -591,4 +580,5 @@ export {
 	makeQuaternion,
 	requestQuaternion,
 	releaseQuaternion,
+	checkQuaternion,
 };

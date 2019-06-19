@@ -2,38 +2,32 @@
 # Base mixin
 */
 import * as library from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, generateUuid, isa_fn, isa_vector, addStrings } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, generateUuid, isa_fn, isa_vector, addStrings, xt } from '../core/utilities.js';
 
-import { makeVector } from '../factory/vector.js';
+// import { makeVector } from '../factory/vector.js';
 
 export default function (P = {}) {
 
 /*
-Define the getters, setters and deltaSetters objects, and the defs object
-*/
-	let protoAttributes = {
-
-/*
 The __defs__ object supplies default values for a Scrawl-canvas object. Setter functions will check to see that a related defs attribute exists before allowing users to update an object attribute. Similarly the getter function will use the defs object to supply default values for an attribute that has not otherwise been set, or has been deleted by a user.
 */
-		defs: {},
+	P.defs = {};
 		
 /*
 The __getters__ object holds a suite of functions for given factory object attributes that need to have their values processed before they can be returned to the user.
 */
-		getters: {},
+	P.getters = {};
 		
 /*
 The __setters__ object holds a suite of functions for given factory object attributes that need to process a new value before setting it to the attribute.
 */
-		setters: {},
+	P.setters = {};
 		
 /*
 The __deltaSetters__ object holds a suite of functions for given factory object attributes that need to process a new value before adding it to the attribute's existing value.
 */
-		deltaSetters: {}
-	};
-	P = mergeOver(P, protoAttributes);
+	P.deltaSetters = {};
+	
 
 /*
 ## Define attributes
@@ -46,26 +40,6 @@ All factories using the base mixin will add these to their prototype objects
 Scrawl-canvas relies on unique __name__ values being present in a factory object for a wide range of functionalities. Most of the library sections store an object by its name value, for example: _scrawl.artefact.myelement_
 */
 		name: '',
-
-/*
-We can store a datetime value, for when the factory object was created, in the __created__ attribute (default: 0-length string).
-*/
-		created: '',
-
-/*
-We can store a datetime value, for when the factory object was last updated, in the __updated__ attribute (default: 0-length string).
-*/
-		updated: '',
-
-/*
-We can store a string value in the __title__ attribute - for use by assistive technology (default: 0-length string).
-*/
-		title: '',
-
-/*
-We can store a string value in the __comment__ attribute - for use by assistive technology (default: 0-length string).
-*/
-		comment: '',
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -81,21 +55,24 @@ Retrieve an attribute value using the __get__ function. While many attributes ca
 */
 	P.get = function (item) {
 
-		let getter = this.getters[item];
+		if (xt(item)) {
 
-		if (getter) return getter.call(this);
+			let getter = this.getters[item];
 
-		else {
+			if (getter) return getter.call(this);
 
-			let def = this.defs[item];
+			else {
 
-			if (typeof def != 'undefined') {
+				let def = this.defs[item];
 
-				let val = this[item];
-				return (typeof val != 'undefined') ? val : def;
+				if (typeof def != 'undefined') {
+
+					let val = this[item];
+					return (typeof val != 'undefined') ? val : def;
+				}
 			}
-			return undef;
 		}
+		return undef;
 	};
 
 /*
@@ -117,7 +94,7 @@ Set an attribute value using the __set__ function. It is extremely important tha
 
 			Object.entries(items).forEach(([key, value]) => {
 
-				if (key !== 'name') {
+				if (key && key !== 'name' && value != null) {
 
 					let predefined = setters[key];
 
@@ -148,7 +125,7 @@ Add a value to an existing attribute value using the __setDelta__ function. It i
 
 			Object.entries(items).forEach(([key, value]) => {
 
-				if (key !== 'name') {
+				if (key && key !== 'name' && value != null) {
 
 					let predefined = setters[key];
 
@@ -193,46 +170,30 @@ Get a record of a factory object using the __saveOut__ function. The object retu
 
 Note: this whole concept needs to be reexamined!
 */
-	P.saveOut = function (asString = false) {
+	// P.saveOut = function (asString = false) {
 
-		let d = this.defs,
-			keys = Object.keys(d),
-			i, iz, item,
-			result = {};
+	// 	let d = this.defs,
+	// 		keys = Object.keys(d),
+	// 		i, iz, item,
+	// 		result = {};
 
-		for(i = 0, iz = keys.length; i < iz; i++){
+	// 	for(i = 0, iz = keys.length; i < iz; i++){
 
-			item = keys[i];
+	// 		item = keys[i];
 
-			switch(item){
+	// 		switch(item){
 
-				case 'name' :
-					result.name = this.name;
+	// 			case 'name' :
+	// 				result.name = this.name;
 
-				default :
-					if(this[item] !== d[item]){
-						result[item] = this[item];
-					}
-			}
-		}
-		return (asString) ? JSON.stringify(result) : result;
-	};
-
-/*
-Functions for checking that a given attribute is a vector or array, and supplying new vectors or arrays if this is not the case.
-*/
-	P.checkVector = function (v) {
-		
-		if (v) {
-
-			if (!isa_vector(this[v])) {
-
-				this[v] = makeVector({
-					name: `${this.name}_${v}`
-				});
-			}
-		}
-	};
+	// 			default :
+	// 				if(this[item] !== d[item]){
+	// 					result[item] = this[item];
+	// 				}
+	// 		}
+	// 	}
+	// 	return (asString) ? JSON.stringify(result) : result;
+	// };
 
 /*
 If the user/coder doesn't supply a name value for a factory function, then Scrawl-canvas will generate a random name for the object to use.
@@ -250,26 +211,25 @@ Many (but not all) factory functions will register their result objects in the s
 */
 	P.register = function () {
 
+		if (!xt(this.name)) throw new Error(`core/base error - register() name not set: ${this}`);
+
 		let arr = library[`${this.lib}names`],
 			mylib = library[this.lib];
 
-		if(this.name){
+		if(this.isArtefact){
 
-			if(this.isArtefact){
-
-				pushUnique(library.artefactnames, this.name);
-				library.artefact[this.name] = this;
-			}
-
-			if(this.isAsset){
-
-				pushUnique(library.assetnames, this.name);
-				library.asset[this.name] = this;
-			}
-
-			pushUnique(arr, this.name);
-			mylib[this.name] = this;
+			pushUnique(library.artefactnames, this.name);
+			library.artefact[this.name] = this;
 		}
+
+		if(this.isAsset){
+
+			pushUnique(library.assetnames, this.name);
+			library.asset[this.name] = this;
+		}
+
+		pushUnique(arr, this.name);
+		mylib[this.name] = this;
 
 		return this;
 	};
@@ -279,26 +239,25 @@ Reverse what register() does
 */
 	P.deregister = function () {
 
+		if (!xt(this.name)) throw new Error(`core/base error - deregister() name not set: ${this}`);
+
 		let arr = library[`${this.lib}names`],
 			mylib = library[this.lib];
 
-		if(this.name){
+		if(this.isArtefact){
 
-			if(this.isArtefact){
-
-				removeItem(library.artefactnames, this.name);
-				delete library.artefact[this.name];
-			}
-
-			if(this.isAsset){
-
-				removeItem(library.assetnames, this.name);
-				delete library.asset[this.name];
-			}
-
-			removeItem(arr, this.name);
-			delete mylib[this.name];
+			removeItem(library.artefactnames, this.name);
+			delete library.artefact[this.name];
 		}
+
+		if(this.isAsset){
+
+			removeItem(library.assetnames, this.name);
+			delete library.asset[this.name];
+		}
+
+		removeItem(arr, this.name);
+		delete mylib[this.name];
 
 		return this;
 	};

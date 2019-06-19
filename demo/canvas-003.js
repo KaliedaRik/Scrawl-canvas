@@ -2,115 +2,121 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
-
-
 // Scene setup
-let artefact = scrawl.library.artefact,
-	stack = artefact.mystack,
-	canvas = artefact.mycanvas,
-	stopE, events;
+let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setBase({
-	width: 800,
-	height: 600,
-	backgroundColor: 'lightblue'
-});
-
-canvas.buildCell({
-	name: 'mycell',
-	width: '50%',
-	height: '50%',
-	startX: 'center',
-	startY: 'center',
-	handleX: 'center',
-	handleY: 'center',
-	roll: 12,
-	scale: 1.2,
-	backgroundColor: 'blue'
-});
-
-// To make the canvas responsive, set its dimensions to (for instance) 100% of its parent stack's dimensions
-canvas.setNow({
-	width: '100%',
-	height: '100%',
-	fit: 'fill',
-});
-
-stack.set({
-	width: 400,
-	height: 400,
+canvas.set({
+	backgroundColor: 'blanchedalmond',
 	css: {
-		margin: '15px 0 0 0',
-		border: '1px solid black',
-		overflow: 'hidden',
-		resize: 'both'
+		border: '1px solid black'
 	}
-}).render()
-.then(() => {
-
-	stack.set({
-
-		// Annoying - having to set a dimension a second time to make sure canvas takes the stack's new dimensions into account
-		width: 400,
-
-		// To make sure the canvas remains responsive, set the stack .actionResize attribute to true
-		actionResize: true,
-	});
-})
-.catch(() => {});
+});
 
 
-// Set the DOM input values
-document.querySelector('#fitselect').value = 'fill';
+// Create the linear gradient
+let graddy = scrawl.makeGradient({
+	name: 'mygradient',
+	endX: '100%',
+});
 
 
-// Event listeners
-stopE = (e) => {
+// Create a block entity which will use the gradient
+scrawl.makeBlock({
+	name: 'myblock',
+	width: '90%',
+	height: '90%',
+	startX: '5%',
+	startY: '5%',
+
+	fillStyle: graddy,
+	strokeStyle: 'coral',
+	lineWidth: 2,
+	method: 'fillDraw',
+});
+
+
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
+
+	let testTicker = Date.now(),
+		testTime, testNow,
+		testMessage = document.querySelector('#reportmessage');
+
+	return function () {
+
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
+
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+Palette - start: ${graddy.get('paletteStart')}; end: ${graddy.get('paletteEnd')}
+Start - x: ${graddy.get('startX')}; y: ${graddy.get('startY')}
+End - x: ${graddy.get('endX')}; y: ${graddy.get('endY')}`;
+	};
+}();
+
+
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
+
+	name: 'demo-animation',
+	target: canvas,
+	afterShow: report,
+});
+
+
+// User interaction - setup form observer functionality
+scrawl.observeAndUpdate({
+
+	event: ['input', 'change'],
+	origin: '.controlItem',
+
+	target: graddy,
+
+	useNativeListener: true,
+	preventDefault: true,
+
+	updates: {
+
+		paletteStart: ['paletteStart', 'int'],
+		paletteEnd: ['paletteEnd', 'int'],
+
+		startX: ['startX', '%'],
+		startY: ['startY', '%'],
+
+		endX: ['endX', '%'],
+		endY: ['endY', '%'],
+	},
+});
+
+let events = (e) => {
 
 	e.preventDefault();
 	e.returnValue = false;
+
+	let val = parseInt(e.target.value, 10);
+
+	switch (e.target.id) {
+
+		case 'red':
+			if (val) graddy.updateColor(350, 'red');
+			else graddy.removeColor(350);
+			break;
+
+		case 'blue':
+			if (val) graddy.updateColor(650, 'blue');
+			else graddy.removeColor(650);
+			break;
+	}
 };
-
-events = (e) => {
-
-	stopE(e);
-	canvas.set({ fit: e.target.value });
-};
-
 scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
-
-// Animation 
-scrawl.makeAnimation({
-
-	name: 'testC003Display',
-	
-	fn: function(){
-		
-		return new Promise((resolve) => {
-
-			scrawl.render()
-			.then(() => {
-
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
-
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-
-				resolve(true);
-			})
-			.catch((err) => {
-
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
-
-				resolve(false);
-			});
-		});
-	}
-});
+// Set the DOM input values
+document.querySelector('#paletteStart').value = 0;
+document.querySelector('#paletteEnd').value = 999;
+document.querySelector('#startX').value = 0;
+document.querySelector('#startY').value = 0;
+document.querySelector('#endX').value = 100;
+document.querySelector('#endY').value = 0;
+document.querySelector('#red').value = 0;
+document.querySelector('#blue').value = 0;

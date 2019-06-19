@@ -2,116 +2,131 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
-
-
 // Scene setup
 let artefact = scrawl.library.artefact,
 	stack = artefact.mystack,
-	element = artefact.myelement;
+	cube = artefact.cube;
 
-element.set({
+
+let faces = scrawl.makeGroup({
+	name: 'faces',
+	host: 'mystack',
+}).addArtefacts('leftface', 'rightface', 'topface', 'bottomface', 'frontface', 'backface');
+
+
+stack.set({
+	perspectiveX: '50%',
+	perspectiveY: '50%',
+	perspectiveZ: 1200
+});
+
+
+cube.set({
+	order: 1,
+	width: 0,
+	height: 0,
 	startX: 'center',
 	startY: 'center',
 	handleX: 'center',
-	handleY: 200,
-	width: 80,
-	height: 30,
+	handleY: 'center',
+	lockTo: 'start',
+	css: {
+		border: '20px solid black',
+	},
+	delta: {
+		roll: 0.4,
+		pitch: 0.8,
+		yaw: 1.2,
+	},
+});
+
+
+faces.setArtefacts({
+	order: 2,
+	width: 200,
+	height: 200,
+	startX: 'center',
+	startY: 'center',
+	handleX: 'center',
+	handleY: 'center',
+	offsetZ: 100,
+	lockTo: 'pivot',
+	pivot: 'cube',
+	addPivotRotation: true,
 	css: {
 		border: '1px solid blue',
-		borderRadius: '50%',
-		backgroundColor: 'lightblue',
-		textAlign: 'center',
-		padding: '10px 0 0 0',
-	}
-}).clone({
-	name: 'mysecondelement',
-	handleY: 150,
-	scale: 0.9,
-	css: {
-		backgroundColor: 'pink'
-	}
-}).clone({
-	name: 'mythirdelement',
-	handleY: 100,
-	scale: 0.8,
-	css: {
-		backgroundColor: 'lightgreen'
+		textAlign: 'center'
 	}
 });
 
 
-// Create and start tweens
-scrawl.makeTween({
-	name: 'myTween',
-	duration: 12000,
-	cycles: 0,
-	targets: element,
-	definitions: [
-		{
-			attribute: 'roll',
-			start: 0,
-			end: 360
-		}
-	]
-
-// This works because the first tween creates its own ticker, then the cloned tween subscribes to that ticker
-}).clone({
-	name: 'myClonedTween',
-	targets: artefact.mysecondelement,
-	definitions: [
-		{
-			attribute: 'roll',
-			start: -20,
-			end: 340
-		}
-	]
-
-// Second clone has its own ticker (useNewTicker: true), which needs to be run separately
-}).run().clone({ 
-	name: 'mySecondClonedTween',
-	targets: artefact.mythirdelement,
-	useNewTicker: true,
-	definitions: [
-		{
-			attribute: 'roll',
-			start: -40,
-			end: 320
-		}
-	]
-}).run(); 
+artefact.frontface.set({
+	css: { backgroundColor: 'rgba(255, 0, 0, 0.4)' },
+});
+artefact.rightface.set({
+	css: { backgroundColor: 'rgba(0, 0, 127, 0.4)' },
+	yaw: 90,
+});
+artefact.topface.set({
+	css: { backgroundColor: 'rgba(0, 255, 0, 0.4)' },
+	pitch: 90,
+});
+artefact.backface.set({
+	css: { backgroundColor: 'rgba(127, 0, 0, 0.4)' },
+	pitch: 180,
+});
+artefact.leftface.set({
+	css: { backgroundColor: 'rgba(0, 0, 255, 0.4)' },
+	yaw: 270,
+});
+artefact.bottomface.set({
+	css: { backgroundColor: 'rgba(0, 127, 0, 0.4)' },
+	pitch: 270,
+});
 
 
-// Animation 
-scrawl.makeAnimation({
+// Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
+let stackCheck = function () {
 
-	name: 'testD008Display',
+	let active = false;
 
-	fn: function () {
+	return function () {
 
-		return new Promise((resolve) => {
+		if (stack.here.active !== active) {
 
-			scrawl.render()
-			.then(() => {
+			active = stack.here.active;
 
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
-
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-
-				resolve(true);
-			})
-			.catch((err) => {
-
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
-
-				resolve(false);
+			cube.set({
+				lockTo: (active) ? 'mouse' : 'start'
 			});
-		});
-	}
+		}
+	};
+}();
+
+
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
+
+	let testTicker = Date.now(),
+		testTime, testNow, text,
+		testMessage = document.querySelector('#reportmessage');
+
+	return function () {
+
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
+
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+	};
+}();
+
+
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
+
+	name: 'demo-animation',
+	target: stack,
+	commence: stackCheck,
+	afterShow: report,
 });

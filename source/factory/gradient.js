@@ -4,7 +4,6 @@
 import { constructors } from '../core/library.js';
 
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
 import stylesMix from '../mixin/styles.js';
 
 /*
@@ -30,7 +29,6 @@ P.isAsset = false;
 Apply mixins to prototype object
 */
 P = baseMix(P);
-P = positionMix(P);
 P = stylesMix(P);
 
 /*
@@ -42,26 +40,39 @@ P = stylesMix(P);
 */
 P.buildStyle = function (cell = {}) {
 	
-	let gradient, engine,
-		sx, sy, ex, ey;
-
 	if (cell) {
 
-		engine = cell.engine;
+		let engine = cell.engine;
 
 		if (engine) {
 
-			sx = this.startX || 0;
-			sy = this.startY || 0;
-			ex = this.endX || 0;
-			ey = this.endY || 0;
-
-			gradient = engine.createLinearGradient(sx, sy, ex, ey);
+			let gradient = engine.createLinearGradient(...this.gradientArgs);
 			
 			return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
 		}
 	}
 	return 'rgba(0,0,0,0)';
+};
+
+/*
+
+*/
+P.updateGradientArgs = function (x, y) {
+
+	let gradientArgs = this.gradientArgs,
+		currentStart = this.currentStart,
+		currentEnd = this.currentEnd;
+
+	let sx = currentStart[0] + x,
+		sy = currentStart[1] + y,
+		ex = currentEnd[0] + x,
+		ey = currentEnd[1] + y;
+
+	// check to correct situation where coordinates represent a '0 x 0' box - which will cause errors in some browsers
+	if (sx === ex && sy === ey) ex++;
+
+	gradientArgs.length = 0;
+	gradientArgs.push(sx, sy, ex, ey);
 };
 
 

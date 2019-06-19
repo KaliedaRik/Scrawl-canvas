@@ -3,11 +3,12 @@
 */
 import { constructors, group, stack, stacknames, element, artefact, artefactnames } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings } from '../core/utilities.js';
-import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/DOM.js';
+import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeGroup } from './group.js';
 import { makeElement } from './element.js';
+import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
@@ -19,51 +20,53 @@ import domMix from '../mixin/dom.js';
 */
 const Stack = function (items = {}) {
 
-	let dims, g;
+	let g, el;
 
 	this.makeName(items.name);
 	this.register();
+	this.initializePositions();
+	this.initializeCascade();
+
+	this.dimensions[0] = 300;
+	this.dimensions[1] = 150;
+
+	this.pathCorners = [];
 	this.css = {};
+	this.here = {};
+	this.perspective = {
+
+		x: '50%',
+		y: '50%',
+		z: 0
+	};
+	this.dirtyPerspective = true;
+
+	this.initializeDomLayout(items);
+
+	g = makeGroup({
+		name: this.name,
+		host: this.name
+	});
+	this.addGroups(g.name);
+
 	this.set(this.defs);
 	this.set(items);
-	this.uuid = generateUuid();
 
-	if (this.domElement) {
+	el = this.domElement;
 
-		// positioning (generally go for relative)
-		this.setPosition();
+	if (el) {
 
-		// identifier
-		this.domElement.setAttribute('data-uuid', this.uuid);
-
-		// listeners
 		if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
 
-		// sort out initial dimensions
-		if (!xto(items.width, items.height)) {
+		if (el.getAttribute('data-group') === 'root') {
 
-			dims = this.domElement.getBoundingClientRect();
-			
-			if(!xt(items.width)) this.width = dims.width;
-			if(!xt(items.height)) this.height = dims.height;
+			pushUnique(rootElements, this.name);
+			setRootElementsSort();
 		}
-		this.dirtyDimensions = true;
-
-		// group
-		g = makeGroup({
-			name: this.name,
-			host: this.name
-		});
-		this.addGroups(g.name);
-
-		// render
-		pushUnique(rootElements, this.name);
-		setRootElementsSort();
 	}
 
-	// correcting initial roll/pitch/yaw zero settings
-	if (!this.roll && !this.pitch && !this.yaw) this.dirtyRotationActive = false;
-
+	this.apply();
+	
 	return this;
 };
 
@@ -97,7 +100,7 @@ let defaultAttributes = {
 /*
 
 */
-	perspective: {x:'50%',y:'50%',z:0},
+	perspective: null,
 
 /*
 
@@ -109,50 +112,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 let G = P.getters,
 	S = P.setters,
 	D = P.deltaSetters;
-
-/*
-
-*/
-S.width = function (item) {
-
-	this.width = (xt(item)) ? item : this.defs.width;
-	this.dimensionsUpdateHelper();
-	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-};
-
-/*
-
-*/
-S.height = function (item) {
-
-	this.height = (xt(item)) ? item : this.defs.height;
-	this.dimensionsUpdateHelper();
-	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-};
-
-/*
-
-*/
-D.width = function (item) {
-
-	this.width = addStrings(this.width, item);
-	this.dimensionsUpdateHelper();
-	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-};
-
-/*
-
-*/
-D.height = function (item) {
-
-	this.height = addStrings(this.height, item);
-	this.dimensionsUpdateHelper();
-	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-};
 
 /*
 
@@ -183,7 +142,6 @@ G.perspectiveZ = function () {
 */
 S.perspectiveX = function (item) {
 
-	this.checkVector('perspective');
 	this.perspective.x = item;
 	this.dirtyPerspective = true;
 };
@@ -193,7 +151,6 @@ S.perspectiveX = function (item) {
 */
 S.perspectiveY = function (item) {
 
-	this.checkVector('perspective');
 	this.perspective.y = item;
 	this.dirtyPerspective = true;
 };
@@ -203,7 +160,6 @@ S.perspectiveY = function (item) {
 */
 S.perspectiveZ = function (item) {
 
-	this.checkVector('perspective');
 	this.perspective.z = item;
 	this.dirtyPerspective = true;
 };
@@ -213,7 +169,6 @@ S.perspectiveZ = function (item) {
 */
 S.perspective = function (item = {}) {
 
-	this.checkVector('perspective');
 	this.perspective.x = (xt(item.x)) ? item.x : this.perspective.x;
 	this.perspective.y = (xt(item.y)) ? item.y : this.perspective.y;
 	this.perspective.z = (xt(item.z)) ? item.z : this.perspective.z;
@@ -225,7 +180,6 @@ S.perspective = function (item = {}) {
 */
 D.perspectiveX = function (item) {
 
-	this.checkVector('perspective');
 	this.perspective.x = addStrings(this.perspective.x, item);
 	this.dirtyPerspective = true;
 };
@@ -235,7 +189,6 @@ D.perspectiveX = function (item) {
 */
 D.perspectiveY = function (item) {
 
-	this.checkVector('perspective');
 	this.perspective.y = addStrings(this.perspective.y, item);
 	this.dirtyPerspective = true;
 };
@@ -248,74 +201,53 @@ D.perspectiveY = function (item) {
 /*
 
 */
-P.dimensionsUpdateHelper = function () {
+P.updateArtefacts = function (items = {}) {
 
-	let groups = this.groups,
-		i, iz, grp;
+	this.groupBuckets.forEach(grp => {
 
-	if (groups) {
+		grp.artefactBuckets.forEach(art => {
 
-		for (i = 0, iz = groups.length; i < iz; i++) {
+			if (items.dirtyScale) art.dirtyScale = true;
+			if (items.dirtyDimensions) art.dirtyDimensions = true;
+			if (items.dirtyLock) art.dirtyLock = true;
+			if (items.dirtyStart) art.dirtyStart = true;
+			if (items.dirtyOffset) art.dirtyOffset = true;
+			if (items.dirtyHandle) art.dirtyHandle = true;
+			if (items.dirtyRotation) art.dirtyRotation = true;
+		})
+	});
+};
 
-			grp = group[groups[i]];
-			
-			if (grp) {
-				grp.setArtefacts({
-					dirtyDimensions: true,
-					dirtyHandle: true,
-					dirtyStart: true,
-				});
-			}
-		}
+P.cleanDimensionsAdditionalActions = function () {
+
+	if (this.groupBuckets) {
+
+		this.updateArtefacts({
+			dirtyDimensions: true,
+		});
 	}
-	
-	if (this.here) {
 
-		this.here.w = this.width;
-		this.here.h = this.height;
-	}
+	this.dirtyDomDimensions = true;
 };
 
 /*
 
 */
-P.setPerspective = function () {
-
-	addDomShowElement(this.name);
-	setDomShowRequired(true);
-};
-
-/*
-
-*/
-P.setPerspectiveNow = function () {
-
-	let style, p,
-		perspective, origin;
+P.cleanPerspective = function () {
 
 	this.dirtyPerspective = false;
 
-	if (this.domElement) {
+	let p = this.perspective;
 
-		style = this.domElement.style;
-		p = this.perspective;
-
-		perspective = `${p.z}px`;
-		origin = `${p.x} ${p.y}`;
-
-		style.webkitPerspectiveOrigin = origin;
-		style.mozPerspectiveOrigin = origin;
-		style.perspectiveOrigin = origin;
-		style.webkitPerspective = perspective;
-		style.mozPerspective = perspective;
-		style.perspective = perspective;
-	}
+	this.domPerspectiveString = `perspective-origin: ${p.x} ${p.y}; perspective: ${p.z}px;`;
+	this.domShowRequired = true;
 };
 
 /*
 
 */
 P.clear = function () {
+
 	return Promise.resolve(true);
 };
 
@@ -326,11 +258,9 @@ P.compile = function () {
 
 	let self = this;
 
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 
 		self.sortGroups();
-
-		if (self.dirtyPerspective) self.setPerspective();
 
 		self.prepareStamp()
 
@@ -344,8 +274,8 @@ P.compile = function () {
 			return Promise.all(promises);
 		})
 		.then(() => resolve(true))
-		.catch((err) => resolve(false));
-	});
+		.catch((err) => reject(false));
+	})
 };
 
 /*
@@ -367,19 +297,19 @@ P.render = function () {
 
 	let self = this;
 
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 
 		self.compile()
 		.then(() => self.show())
 		.then(() => resolve(true))
-		.catch((err) => resolve(false));
+		.catch((err) => reject(false));
 	});
 };
 
 /*
-
+TODO - update in line with stuff in core/document.js addInitialStackElement()
 */
-P.addDomElementToStack = function (search) {
+P.addExistingDomElements = function (search) {
 
 	let elements, el, captured, i, iz;
 
@@ -396,7 +326,10 @@ P.addDomElementToStack = function (search) {
 				captured = makeElement({
 					name: el.id || el.name,
 					domElement: el,
-					group: this.name
+					group: this.name,
+					host: this.name,
+					position: 'absolute',
+					setInitialDimensions: true,
 				});
 
 				if (captured && captured.domElement) this.domElement.appendChild(captured.domElement);
@@ -407,6 +340,43 @@ P.addDomElementToStack = function (search) {
 };
 
 /*
+Takes an 'items' object as an argument. The only required attribute of the argument is __.tag__, which determines the type of element that will be created (for example - setting tag to 'div' will create a new &lt;div> element)
+
+Any other Element artefact attribute can also be included in the argument object, including __.text__ and __.content__ attributes to set the new DOM Element's textContent and innerHTML attributes.
+
+If position and dimension values are not included in the argument, the element will be given default values of [0,0] for start, offset and handle; and dimensions of 100px width and height.
+
+The new element will also default to a CSS box-sizing style value of 'border-box', unless the argument's __.boxSizing__ attribute has been set to 'content-box' - this will override any 'borderBox' attribute value in the argument's __.css__ object (if one has been included)
+*/
+P.addNewElement = function (items = {}) {
+
+	if (items.tag) {
+
+		items.domElement = document.createElement(items.tag);
+		items.domElement.setAttribute('data-group', this.name);
+		if (!xt(items.group)) items.group = this.name;
+		items.host = this.name;
+
+		if (!items.position) items.position = 'absolute';
+		if (!xt(items.width)) items.width = 100;
+		if (!xt(items.height)) items.height = 100;
+
+		let myElement = makeElement(items);
+
+		if (myElement && myElement.domElement) {
+
+			if (!xt(items.boxSizing)) myElement.domElement.style.boxSizing = 'border-box';
+
+			this.domElement.appendChild(myElement.domElement);
+		}
+
+		return myElement;
+	}
+	return false;
+};
+
+/*
+TODO - review and recode
 
 */
 P.demolish = function (removeFromDom = false) {
@@ -427,6 +397,8 @@ P.demolish = function (removeFromDom = false) {
 
 	if (el && removeFromDom) el.parentNode.removeChild(el);
 
+	// also needs to remove itself from subscribe arrays in pivot, mimic, path artefacts
+
 	removeItem(uiSubscribedElements, name);
 
 	delete stack[name];
@@ -442,9 +414,19 @@ P.demolish = function (removeFromDom = false) {
 };
 
 /*
+
+*/
+// P.getArtefactAtCursor = function () {
+
+// 	return group[this.name].getArtefactAt(this.here);
+// };
+
+
+/*
 ## Exported factory function
 */
 const makeStack = function (items) {
+
 	return new Stack(items);
 };
 

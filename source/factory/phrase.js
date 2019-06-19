@@ -2,13 +2,13 @@
 # Phrase factory
 */
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
+import { scrawlCanvasHold } from '../core/document.js';
 import { mergeOver, 
 	xt, 
 	defaultNonReturnFunction, 
 	ensurePositiveFloat, 
 	ensureFloat, 
-	ensureString, 
-	removeCharFromString } from '../core/utilities.js';
+	ensureString } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -22,19 +22,15 @@ import filterMix from '../mixin/filter.js';
 /*
 Constants used by Phrase entitys
 */
-const tDimsCalc = document.createElement('div');
-tDimsCalc.style.padding = 0;
-tDimsCalc.style.border = 0;
-tDimsCalc.style.margin = 0;
-tDimsCalc.style.height = 'auto';
-tDimsCalc.style.lineHeight = 1;
-tDimsCalc.style.width = '200em';
-tDimsCalc.style.boxSizing = 'border-box';
-tDimsCalc.style.position = 'absolute';
-tDimsCalc.style.top = '-5000px';
-tDimsCalc.style.left = '-5000px';
-tDimsCalc.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
-document.body.appendChild(tDimsCalc);
+const fontHeightCalculator = document.createElement('div');
+fontHeightCalculator.style.padding = 0;
+fontHeightCalculator.style.border = 0;
+fontHeightCalculator.style.margin = 0;
+fontHeightCalculator.style.height = 'auto';
+fontHeightCalculator.style.lineHeight = 1;
+fontHeightCalculator.style.boxSizing = 'border-box';
+fontHeightCalculator.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
+scrawlCanvasHold.appendChild(fontHeightCalculator);
 
 const textEntityConverter = document.createElement('textarea');
 
@@ -61,6 +57,7 @@ const Phrase = function (items = {}) {
 
 	this.dirtyText = true;
 	this.dirtyFont = true;
+	this.dirtyPathObject = true;
 
 	return this;
 };
@@ -91,19 +88,19 @@ let defaultAttributes = {
 
 */
 	text: '',
-	textPositions: [],
+	textPositions: null,
 
 /*
 
 */
-	textLines: [],
-	textLineWidths: [],
-	textLineWords: [],
+	textLines: null,
+	textLineWidths: null,
+	textLineWords: null,
 
 	treatWordAsGlyph: false,
 
-	textGlyphs: [],
-	textGlyphWidths: [],
+	textGlyphs: null,
+	textGlyphWidths: null,
 
 /*
 Glyphs (individual letters) can be individually styled by adding a styling object to the __glyphStyles__ array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.
@@ -189,49 +186,59 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+Overwrites mixin/position.js function
 */
-S.handleX = function (item) {
+S.handleX = function (coord) {
 
-	this.checkVector('handle');
-	this.handle.x = item;
+	if (coord != null) {
+
+		this.handle[0] = coord;
+		this.dirtyHandle = true;
+		this.dirtyText = true;
+		this.dirtyPathObject = true;
+	}
+};
+
+S.handleY = function (coord) {
+
+	if (coord != null) {
+
+		this.handle[1] = coord;
+		this.dirtyHandle = true;
+		this.dirtyText = true;
+		this.dirtyPathObject = true;
+	}
+};
+
+S.handle = function (x, y) {
+
+	this.setCoordinateHelper('handle', x, y);
 	this.dirtyHandle = true;
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
 };
 
-/*
+D.handleX = function (coord) {
 
-*/
-S.handleY = function (item) {
-
-	this.checkVector('handle');
-	this.handle.y = item;
+	let c = this.handle;
+	c[0] = addStrings(c[0], coord);
 	this.dirtyHandle = true;
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
 };
 
-/*
+D.handleY = function (coord) {
 
-*/
-S.handle = function (item = {}) {
-
-	this.checkVector('handle');
-	this.handle.x = (xt(item.x)) ? item.x : this.handle.x;
-	this.handle.y = (xt(item.y)) ? item.y : this.handle.y;
+	let c = this.handle;
+	c[1] = addStrings(c[1], coord);
 	this.dirtyHandle = true;
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
 };
 
-/*
+D.handle = function (x, y) {
 
-*/
-S.textPath = function (item) {
-
-	this.textPath = item;
-
+	this.setDeltaCoordinateHelper('handle', x, y);
 	this.dirtyHandle = true;
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
@@ -368,6 +375,15 @@ S.family = function (item) {
 /*
 Handling text updates
 */
+S.textPath = function (item) {
+
+	this.textPath = item;
+
+	this.dirtyHandle = true;
+	this.dirtyText = true;
+	this.dirtyPathObject = true;
+};
+
 S.text = function (item) {
 
 	this.text = ensureString(item);
@@ -389,43 +405,43 @@ Handling text width - overwrites functions defined in mixin/entity.js
 */
 S.width = function (item) {
 
-	this.width = (xt(item)) ? item : this.defs.width;
+	this.dimensions[0] = item;
 
 	this.dirtyDimensions = true;
 	this.dirtyHandle = true;
 	this.dirtyPathObject = true;
-	this.dirtyPivoted = true;
 	this.dirtyText = true;
 };
 D.width = function (item) {
 
-	this.width = addStrings(this.width, item);
+	let c = this.dimensions;
+	c[0] = addStrings(c[0], item);
 
 	this.dirtyDimensions = true;
 	this.dirtyHandle = true;
 	this.dirtyPathObject = true;
-	this.dirtyPivoted = true;
 	this.dirtyText = true;
 };
 
 S.scale = function (item) {
 
-	this.scale = ensurePositiveFloat(item);
+	this.scale = item;
 
+	this.dirtyDimensions = true;
+	this.dirtyHandle = true;
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 	this.dirtyScale = true;
-	this.dirtyPivoted = true;
 };
 D.scale = function (item) {
 
-	this.scale += ensureFloat(item);
-	if (this.scale < 0) this.scale = 0;
+	this.scale += item;
 
+	this.dirtyDimensions = true;
+	this.dirtyHandle = true;
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 	this.dirtyScale = true;
-	this.dirtyPivoted = true;
 };
 
 /*
@@ -535,7 +551,7 @@ P.getTextPath = function () {
 
 		path = this.textPath = artefact[this.textPath];
 
-		if (path.type === 'Shape' && path.useAsPath) path.subscribers.push(this.name);
+		if (path.type === 'Shape' && path.useAsPath) path.pathed.push(this.name);
 		else {
 
 			path = this.path = false;
@@ -626,8 +642,9 @@ P.calculateTextPositions = function (mytext) {
 		fontLibrary = {},
 		fontArray = [];
 
-	let scale = this.scale,
-		width = this.localWidth * scale,
+	let scale = this.currentScale,
+		dims = this.currentDimensions,
+		width = dims[0] * scale,
 		treatWordAsGlyph = this.treatWordAsGlyph,
 		lineHeight = this.lineHeight,
 		justify = this.justify,
@@ -781,8 +798,8 @@ P.calculateTextPositions = function (mytext) {
 	// - all lines in a multiline Phrase will use the maximum text height value, even if they don't include the biggest value
 	fontArray.forEach(font => {
 
-		tDimsCalc.style.font = font;
-		item = tDimsCalc.clientHeight;
+		fontHeightCalculator.style.font = font;
+		item = fontHeightCalculator.clientHeight;
 		fontLibrary[font] = item;
 	});
 
@@ -898,19 +915,19 @@ P.calculateTextPositions = function (mytext) {
 	if (!path) {
 
 		// 7. calculate localHeight
-		this.localHeight = (((textLines.length - 1) * maxHeight) * lineHeight) + maxHeight;
+		if (scale <= 0) scale = 1;
+		dims[1] = ((((textLines.length - 1) * maxHeight) * lineHeight) + maxHeight) / scale;
 
 		this.cleanHandle();
 		this.dirtyHandle = false;
 		handle = this.currentHandle;
 		
-		handleX = -handle.x * scale;
-		handleY = -handle.y;
+		handleX = -handle[0] * scale;
+		handleY = -handle[1] * scale;
 
 		// 8. we should now be in a position where we can calculate each glyph's startXY values
 
 		// - we have 2 non-path scenarios: full-justified text; and regular text
-
 
 		// Scenario 1: justify === 'full'
 		if (justify === 'full') {
@@ -1004,6 +1021,7 @@ P.calculateGlyphPathPositions = function () {
 		distance, posArray, i, iz, width,
 		justify = this.justify,
 		loop = this.textPathLoop;
+// console.log('calculateGlyphPathPositions', textPos)
 
 	for (i = 0, iz = textPos.length; i < iz; i++) {
 
@@ -1067,27 +1085,14 @@ P.cleanPathObject = function () {
 	let p = this.pathObject = new Path2D();
 	
 	let handle = this.currentHandle,
-		scale = this.scale,
-		x = -handle.x * scale,
-		y = -handle.y,
-		w = this.localWidth * scale,
-		h = this.localHeight;
+		dims = this.currentDimensions,
+		scale = this.currentScale,
+		x = -handle[0] * scale,
+		y = -handle[1] * scale,
+		w = dims[0] * scale,
+		h = dims[1] * scale;
 
 	p.rect(x, y, w, h);
-};
-
-/*
-
-*/
-P.prepareStamp = function() {
-
-	if (this.mimic) this.prepareMimicStamp();
-
-	if (this.dirtyDimensions) this.cleanDimensions();
-	if (this.dirtyStart) this.cleanStart();
-	if (this.dirtyOffset || this.dirtyScale || this.pivot) this.cleanOffset();
-	if (this.dirtyPathObject) this.cleanPathObject();
-	if (this.dirtyPivoted) this.updatePivotSubscribers();
 };
 
 /*
@@ -1120,9 +1125,11 @@ P.regularStampSynchronousActions = function () {
 			pos = this.textPositions;
 
 			let item, pathData,
-				aPR = this.addPathRoll;
+				addTextPathRoll = this.addTextPathRoll,
+				aPR = this.addPathRotation,
+				cr = this.currentRotation;
 
-			this.addPathRoll = this.addTextPathRoll;
+			this.addPathRotation = addTextPathRoll;
 
 			for (i = 0, iz = pos.length; i < iz; i++) {
 
@@ -1131,6 +1138,7 @@ P.regularStampSynchronousActions = function () {
 				pathData = item[10];
 
 				this.currentPathData = pathData;
+				if (addTextPathRoll) this.currentRotation = pathData.angle;
 
 				dest.rotateDestination(engine, pathData.x, pathData.y, this);
 
@@ -1138,7 +1146,8 @@ P.regularStampSynchronousActions = function () {
 				stamper[method](engine, this, data);
 			}
 
-			this.addPathRoll = aPR;
+			this.addPathRotation = aPR;
+			this.currentRotation = cr;
 		}
 
 		else {
@@ -1258,7 +1267,8 @@ P.stamper = {
 P.drawBoundingBox = function (engine) {
 
 	let handle = this.currentHandle,
-		scale = this.scale,
+		dims = this.currentDimensions,
+		scale = this.currentScale,
 		floor = Math.floor,
 		ceil = Math.ceil;
 
@@ -1270,7 +1280,7 @@ P.drawBoundingBox = function (engine) {
 	engine.shadowOffsetX = 0;
 	engine.shadowOffsetY = 0;
 	engine.shadowBlur = 0;
-	engine.strokeRect(floor(-handle.x * scale), floor(-handle.y), ceil(this.localWidth * scale), ceil(this.localHeight));
+	engine.strokeRect(floor(-handle[0] * scale), floor(-handle[1] * scale), ceil(dims[0] * scale), ceil(dims[1] * scale));
 	engine.restore();
 };
 
@@ -1279,15 +1289,13 @@ P.drawBoundingBox = function (engine) {
 */
 P.performRotation = function (engine) {
 
-	let dest = this.currentHost, 
-		x, y;
+	let dest = this.currentHost;
 
 	if (dest) {
 
-		x = this.updateStampX();
-		y = this.updateStampY();
+		let stamp = this.currentStampPosition;
 
-		dest.rotateDestination(engine, x, y, this);
+		dest.rotateDestination(engine, stamp[0], stamp[1], this);
 	}
 };
 

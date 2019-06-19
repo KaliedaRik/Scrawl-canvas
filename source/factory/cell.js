@@ -1,11 +1,12 @@
 /*
 # Cell factory
 */
-import { artefact, radian, constructors, styles, stylesnames, cell, cellnames } from '../core/library.js';
+import { artefact, asset, radian, constructors, styles, stylesnames, cell, cellnames } from '../core/library.js';
 import { convertLength, generateUuid, isa_canvas, mergeOver, xt, xtGet } from '../core/utilities.js';
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
+import { makeCoordinate } from './coordinate.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
 
 import baseMix from '../mixin/base.js';
@@ -21,26 +22,28 @@ const Cell = function (items = {}) {
 
 	this.makeName(items.name);
 
+	if (!items.isPool) this.register();
+
+	this.initializePositions();
+	this.initializeCascade();
+
 	if (!isa_canvas(items.element)) {
 
 		let mycanvas = document.createElement('canvas');
 		mycanvas.id = this.name;
 
-		// TODO: consider whether a cell can (and should be able to) take % dimensions
-		mycanvas.width = xtGet(items.width, this.defs.width);
-		mycanvas.height = xtGet(items.height, this.defs.height);
+		mycanvas.width = 300;
+		mycanvas.height = 150;
 		items.element = mycanvas;
 	}
 
 	this.installElement(items.element);
 
 	if (items.isPool) this.set(this.poolDefs) 
-	else {
-		this.register();
-		this.set(this.defs);
-	}
+	else this.set(this.defs);
 
 	this.set(items);
+
 	this.state.setStateFromEngine(this.engine);
 
 	if (!items.isPool) {
@@ -51,8 +54,10 @@ const Cell = function (items = {}) {
 		});
 	}
 
-	this.sourceLoaded = true;
 	this.subscribers = [];
+	this.sourceNaturalDimensions = makeCoordinate();
+
+	this.sourceLoaded = true;
 
 	return this;
 };
@@ -99,21 +104,6 @@ let defaultAttributes = {
 
 */
 	controller: null,
-
-/*
-
-*/
-	destination: null,
-
-/*
-
-*/
-	width: 300,
-
-/*
-
-*/
-	height: 100,
 
 /*
 
@@ -173,12 +163,7 @@ let defaultAttributes = {
 /*
 
 */
-	sourceNaturalWidth: 0,
-
-/*
-
-*/
-	sourceNaturalHeight: 0,
+	sourceNaturalDimensions: null,
 
 /*
 
@@ -247,7 +232,7 @@ P.get = function (item) {
 */
 G.width = function () {
 
-	return this.localWidth || this.element.getAttribute('width');
+	return this.currentDimensions[0] || this.element.getAttribute('width');
 };
 
 /*
@@ -255,7 +240,7 @@ G.width = function () {
 */
 G.height = function () {
 
-	return this.localHeight || this.element.getAttribute('height');
+	return this.currentDimensions[1] || this.element.getAttribute('height');
 };
 
 S.source = function () {};
@@ -265,7 +250,7 @@ S.source = function () {};
 */
 S.width = function (item) {
 
-	this.width = item;
+	this.dimensions[0] = item;
 	this.dirtyDimensions = true;
 };
 
@@ -274,7 +259,7 @@ S.width = function (item) {
 */
 S.height = function (item) {
 
-	this.height = item;
+	this.dimensions[1] = item;
 	this.dirtyDimensions = true;
 };
 
@@ -361,7 +346,7 @@ Overrides mixin/asset.js function
 */
 P.checkSource = function (width, height) {
 
-	if (this.localWidth !== width || this.localHeight !== height) this.notifySubscribers();
+	if (this.currentDimensions[0] !== width || this.currentDimensions[1] !== height) this.notifySubscribers();
 };
 
 /*
@@ -369,7 +354,7 @@ Used when a cell is the source for a pattern style
 */
 P.getData = function (entity, cell, isFill) {
 
-	this.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
+	this.checkSource(this.sourceNaturalDimensions[0], this.sourceNaturalDimensions[1]);
 
 	return this.buildStyle(cell);
 };
@@ -396,13 +381,24 @@ P.buildStyle = function (mycell = {}) {
 	return 'rgba(0,0,0,0)';
 };
 
+P.cleanDimensionsAdditionalActions = function() {
+
+	if (this.element) {
+
+		let dims = this.currentDimensions;
+
+		this.element.width = dims[0];
+		this.element.height = dims[1];
+	}
+};
+
 /*
 Overrides mixin/asset.js function
 */
 P.notifySubscriber = function (sub) {
 
-	sub.sourceNaturalWidth = this.localWidth;
-	sub.sourceNaturalHeight = this.localHeight;
+	sub.sourceNaturalDimensions[0] = this.currentDimensions[0];
+	sub.sourceNaturalDimensions[1] = this.currentDimensions[1];
 	sub.sourceLoaded = true;
 	sub.dirtyImage = true;
 };
@@ -693,10 +689,10 @@ P.clear = function () {
 		let engine = self.engine,
 			bgc = self.backgroundColor;
 
-		self.renderPrecheck();
+		self.prepareStamp();
 
-		let w = self.localWidth,
-			h = self.localHeight;
+		let w = self.currentDimensions[0],
+			h = self.currentDimensions[1];
 
 		engine.setTransform(1,0,0,1,0,0);
 
@@ -730,7 +726,7 @@ P.compile = function(){
 	return new Promise((resolve) => {
 
 		self.sortGroups();
-		self.renderPrecheck();
+		self.prepareStamp();
 
 		let promises = [];
 
@@ -757,166 +753,137 @@ P.show = function () {
 	return new Promise((resolve) => {
 
 		// get the destination cell's canvas context
-		let engine = (self.destination) ? self.destination.engine : false,
-			currentHandle, scale, width, height,
-			temp, fit, pasteX, pasteY, pasteWidth, pasteHeight, relWidth, relHeight, state,
-			floor = Math.floor;
+		let host = self.getHost(),
+			engine = (host && host.engine) ? host.engine : false;
 
 		if (engine) {
 
-			temp = [];
-			scale = self.scale;
+			let floor = Math.floor,
+				scale = self.currentScale,
+				currentDimensions = self.currentDimensions,
+				curWidth = floor(currentDimensions[0]),
+				curHeight = floor(currentDimensions[1]),
+				hostDimensions = host.currentDimensions,
+				destWidth = hostDimensions[0],
+				destHeight = hostDimensions[1],
+				composite = self.composite,
+				alpha = self.alpha,
+				controller = self.controller,
+				element = self.element,
+				paste;
 
+			engine.save();
+			engine.setTransform(1, 0, 0, 1, 0, 0);
+				
 			if (self.isBase) {
 
+				if (!self.basePaste) self.basePaste = [];
+				paste = self.basePaste;
+
 				// copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller's fit attribute requirements
-				self.renderPrecheck();
+				self.prepareStamp();
 
-				state = self.destination.state;
+				engine.globalCompositeOperation = 'source-over';
+				engine.globalAlpha = 1;
+				engine.clearRect(0, 0, destWidth, destHeight);
 
-				if (state.globalCompositeOperation !== self.composite) {
+				engine.globalCompositeOperation = composite;
+				engine.globalAlpha = alpha;
 
-					state.globalCompositeOperation = self.composite;
-					engine.globalCompositeOperation = self.composite;
-				}
-
-				if (state.globalAlpha !== self.alpha) {
-
-					state.globalAlpha = self.alpha;
-					engine.globalAlpha = self.alpha;
-				}
-
-				engine.setTransform(1, 0, 0, 1, 0, 0);
-
-				fit = (self.controller) ? self.controller.fit : 'none';
-				width = floor(self.localWidth);
-				height = floor(self.localHeight);
+				let fit = (controller) ? controller.fit : 'none',
+					relWidth, relHeight;
 				
 				switch (fit) {
 
 					case 'contain' :
-
 						// base must copy into display resized, centered, letterboxing if necessary, maintaining aspect ratio
-						relWidth = self.destinationWidth / (width || 1);
-						relHeight = self.destinationHeight / (height || 1);
+						relWidth = destWidth / (curWidth || 1);
+						relHeight = destHeight / (curHeight || 1);
 
 						if (relWidth > relHeight) {
 
-							pasteWidth = floor(width * relHeight);
-							pasteHeight = floor(height * relHeight);
-							pasteY = 0;
-							pasteX = floor((self.destinationWidth - (width * relHeight)) / 2);
+							paste[0] = floor((destWidth - (curWidth * relHeight)) / 2);
+							paste[1] = 0;
+							paste[2] = floor(curWidth * relHeight);
+							paste[3] = floor(curHeight * relHeight);
 						}
 						else {
 
-							pasteWidth = floor(width * relWidth);
-							pasteHeight = floor(height * relWidth);
-							pasteX = 0;
-							pasteY = floor((self.destinationHeight - (height * relWidth)) / 2);
+							paste[0] = 0;
+							paste[1] = floor((destHeight - (curHeight * relWidth)) / 2);
+							paste[2] = floor(curWidth * relWidth);
+							paste[3] = floor(curHeight * relWidth);
 						}
-
-						engine.drawImage(self.element, 0, 0, width, height, pasteX, pasteY, pasteWidth, pasteHeight);
 						break;
 
 					case 'cover' :
-
 						// base must copy into display resized, centered, leaving no letterbox area, maintaining aspect ratio
-						relWidth = self.destinationWidth / (width || 1);
-						relHeight = self.destinationHeight / (height || 1);
+						relWidth = destWidth / (curWidth || 1);
+						relHeight = destHeight / (curHeight || 1);
 
 						if (relWidth < relHeight) {
 
-							pasteWidth = floor(width * relHeight);
-							pasteHeight = floor(height * relHeight);
-							pasteY = 0;
-							pasteX = floor((self.destinationWidth - (width * relHeight)) / 2);
+							paste[0] = floor((destWidth - (curWidth * relHeight)) / 2);
+							paste[1] = 0;
+							paste[2] = floor(curWidth * relHeight);
+							paste[3] = floor(curHeight * relHeight);
 						}
 						else{
 
-							pasteWidth = floor(width * relWidth);
-							pasteHeight = floor(height * relWidth);
-							pasteX = 0;
-							pasteY = floor((self.destinationHeight - (height * relWidth)) / 2);
+							paste[0] = 0;
+							paste[1] = floor((destHeight - (curHeight * relWidth)) / 2);
+							paste[2] = floor(curWidth * relWidth);
+							paste[3] = floor(curHeight * relWidth);
 						}
-
-						engine.drawImage(self.element, 0, 0, width, height, pasteX, pasteY, pasteWidth, pasteHeight);
 						break;
 
 					case 'fill' :
-
 						// base must copy into display resized, distorting the aspect ratio as necessary
-						pasteWidth = floor(self.destinationWidth);
-						pasteHeight = floor(self.destinationHeight);
-
-						engine.drawImage(self.element, 0, 0, width, height, 0, 0, pasteWidth, pasteHeight);
+						paste[0] = 0;
+						paste[1] = 0;
+						paste[2] = floor(destWidth);
+						paste[3] = floor(destHeight);
 						break;
 
 					case 'none' :
 					default :
-
 						// base copies into display as-is, centred, maintaining aspect ratio
-						pasteX = floor((self.destinationWidth - width) / 2);
-						pasteY = floor((self.destinationHeight - height) / 2);
-
-						engine.drawImage(self.element, 0, 0, width, height, pasteX, pasteY, width, height);
+						paste[0] = floor((destWidth - curWidth) / 2);
+						paste[1] = floor((destHeight - curHeight) / 2);
+						paste[2] = curWidth;
+						paste[3] = curHeight;
 				}
 			}
 			else if (scale > 0) {
 
-				// cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockXto and lockYto; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path eltity. If pivoted to the mouse, they will use the base canvas's .here attribute, which takes into account differences between the base and display canvas dimensions.
+				if (!self.paste) self.paste = [];
+				paste = self.paste;
 
-				currentHandle = self.currentHandle;
+				// cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockTo; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path entity. If pivoted to the mouse, they will use the base canvas's .here attribute, which takes into account differences between the base and display canvas dimensions.
 
-				self.renderPrecheck();
-				temp = self.showHelper(engine);
+				self.prepareStamp();
 
-				self.updateStampX();
-				self.updateStampY();
+				engine.globalCompositeOperation = composite;
+				engine.globalAlpha = alpha;
 
-				self.rotateDestination(engine, self.stampX, self.stampY);
+				let handle = self.currentStampHandlePosition,
+					stamp = self.currentStampPosition;
 
-				width = floor(self.localWidth);
-				height = floor(self.localHeight);
-				pasteX = floor(-currentHandle.x * scale);
-				pasteY = floor(-currentHandle.y * scale);
-				pasteWidth = floor(width * scale);
-				pasteHeight = floor(height * scale);
+				paste[0] = floor(-handle[0] * scale);
+				paste[1] = floor(-handle[1] * scale);
+				paste[2] = floor(curWidth * scale);
+				paste[3] = floor(curHeight * scale);
 
-				engine.drawImage(self.element, 0, 0, width, height, pasteX, pasteY, pasteWidth, pasteHeight);
+				self.rotateDestination(engine, stamp[0], stamp[1]);
 			}
 
-			if (xt(temp[0])) engine.globalCompositeOperation = temp[0];
-
-			if (xt(temp[1])) engine.globalAlpha = temp[1];
+			engine.drawImage(element, 0, 0, curWidth, curHeight, ...paste);
+			engine.restore();
 
 			resolve(true);
 		}
 		else resolve(false);
 	});
-};
-
-/*
-
-*/
-P.showHelper = function (engine) {
-
-	let dState = this.destination.state, 
-		dComposite, dAlpha;
-
-	if (dState.globalCompositeOperation !== this.composite) {
-
-		dComposite = dState.globalCompositeOperation;
-		engine.globalCompositeOperation = this.composite;
-	}
-
-	if (dState.globalAlpha !== this.alpha) {
-
-		dAlpha = dState.globalAlpha;
-		engine.globalAlpha = this.alpha;
-	}
-
-	engine.setTransform(1, 0, 0, 1, 0, 0);
-	return [dComposite, dAlpha];
 };
 
 /*
@@ -935,7 +902,7 @@ P.applyFilters = function () {
 			oldAlpha = engine.globalAlpha,
 			image, worker;
 
-		image = engine.getImageData(0, 0, self.localWidth, self.localHeight);
+		image = engine.getImageData(0, 0, self.currentDimensions[0], self.currentDimensions[1]);
 		worker = requestFilterWorker();
 
 		actionFilterWorker(worker, {
@@ -969,47 +936,128 @@ P.applyFilters = function () {
 /*
 
 */
-P.renderPrecheck = function () {
+P.getHost = function () {
 
-	let d = this.destination,
-		dw, dh;
+	if (this.currentHost) return this.currentHost;
+	else if (this.host) {
 
-	dw = dh = 0;
+		let host = asset[this.host] || artefact[this.host];
 
-	if (d) {
-
-		dw = d.localWidth || d.width || 0,
-		dh = d.localHeight || d.height || 0;
+		if (host) this.currentHost = host;
+		
+		return (host) ? this.currentHost : currentCorePosition;
 	}
+	return currentCorePosition;
+};
 
-	if (this.dirtyDimensions || this.destinationWidth !== dw || this.destinationHeight !== dh) {
+/*
 
-		if (dw && dh) this.cleanDimensions(dw, dh);
-	}
+*/
+P.updateBaseHere = function (controllerHere, fit) {
 
-	if (this.localizeHere) this.updateHere();
+	if (this.isBase) {
 
-	if (!this.isBase) {
+		if (!this.here) this.here = {};
 
-		if (this.dirtyStart) this.cleanStart();
-		if (this.dirtyHandle) this.cleanHandle();
+		let here = this.here,
+			dims = this.currentDimensions;
+
+		let active = controllerHere.active;
+
+		if (dims[0] !== controllerHere.w || dims[1] !== controllerHere.h) {
+
+			if (!this.basePaste) this.basePaste = [];
+
+			let pasteX = this.basePaste[0];
+
+			let localWidth = dims[0],
+				localHeight = dims[1],
+				remoteWidth = controllerHere.w,
+				remoteHeight = controllerHere.h,
+				remoteX = controllerHere.x,
+				remoteY = controllerHere.y;
+
+			let relWidth = localWidth / remoteWidth || 1,
+				relHeight = localHeight / remoteHeight || 1,
+				round = Math.round,
+				offsetX, offsetY;
+
+			here.w = localWidth;
+			here.h = localHeight;
+
+			switch (fit) {
+
+				case 'contain' :
+				case 'cover' :
+
+					if (pasteX) {
+
+						offsetX = (remoteWidth - (localWidth / relHeight)) / 2;
+
+						here.x = round((remoteX - offsetX) * relHeight);
+						here.y = round(remoteY * relHeight);
+					}
+					else {
+
+						offsetY = (remoteHeight - (localHeight / relWidth)) / 2;
+
+						here.x = round(remoteX * relWidth);
+						here.y = round((remoteY - offsetY) * relWidth);
+					}
+					break;
+
+				case 'fill' :
+					here.x = round(remoteX * relWidth);
+					here.y = round(remoteY * relHeight);
+					break;
+
+				case 'none' :
+				default :
+					offsetX = (remoteWidth - localWidth) / 2;
+					offsetY = (remoteHeight - localHeight) / 2;
+
+					here.x = round(remoteX - offsetX);
+					here.y = round(remoteY - offsetY);
+			}
+
+			if (here.x < 0 || here.x > localWidth) active = false;
+			if (here.y < 0 || here.y > localHeight) active = false;
+
+			here.active = active;
+		}
+		else {
+
+			here.x = controllerHere.x;
+			here.y = controllerHere.y;
+			here.w = controllerHere.w;
+			here.h = controllerHere.h;
+			here.active = active;
+		}
+		controllerHere.baseActive = active;
 	}
 };
 
 /*
 
 */
-P.cleanDimensions = function (w, h) {
+P.prepareStamp = function () {
 
-	this.dirtyDimensions = false;
+	if (this.dirtyScale) this.cleanScale();
+	if (this.dirtyDimensions) this.cleanDimensions();
+	if (this.dirtyLock) this.cleanLock();
+	if (this.dirtyStart) this.cleanStart();
+	if (this.dirtyOffset) this.cleanOffset();
+	if (this.dirtyHandle) this.cleanHandle();
+	if (this.dirtyRotation) this.cleanRotation();
 
-	let d = this.destination;
+	if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
 
-	this.destinationWidth = (xt(w)) ? w : d.localWidth || d.width || 0;
-	this.destinationHeight = (xt(h)) ? h : d.localHeight || d.height || 0;
+		this.dirtyStampPositions = true;
+		this.dirtyStampHandlePositions = true;
+	}
 
-	this.element.width = this.localWidth = convertLength(this.width, this.destinationWidth);
-	this.element.height = this.localHeight = convertLength(this.height, this.destinationHeight);
+	if (this.dirtyStampPositions) this.cleanStampPositions();
+	if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 };
 
 /*
@@ -1018,8 +1066,10 @@ P.cleanDimensions = function (w, h) {
 P.updateHere = function () {
 
 	let d = this.controller,
-		rx, ry, dHere, here,
+		rx, ry, dHere, here, 
 		round = Math.round;
+
+	let [w, h] = this.currentDimensions;
 
 	if (d && d.here) {
 
@@ -1027,43 +1077,16 @@ P.updateHere = function () {
 
 		dHere = d.here;
 		here = this.here;
-		rx = this.localWidth / dHere.w;
-		ry = this.localHeight / dHere.h;
+		rx = w / dHere.w;
+		ry = h / dHere.h;
 
 		here.xRatio = rx;
 		here.x = round(dHere.x * rx);
 		here.yRatio = ry;
 		here.y = round(dHere.y * ry);
+		here.w = w;
+		here.h = h;
 	}
-};
-
-/*
-
-*/
-P.cleanStart = function () {
-
-	this.dirtyStart = false;
-
-	let w, h;
-
-	if (this.destination) {
-
-		w = (this.destination.localWidth) ? this.destination.localWidth : this.destination.width || 0;
-		h = (this.destination.localHeight) ? this.destination.localHeight : this.destination.height || 0;
-		
-		this.cleanVectorParameter('currentStart', this.start, w, h);
-	}
-	else this.cleanVectorParameter('currentStart', this.start, 0, 0);
-};
-
-/*
-
-*/
-P.cleanHandle = function () {
-
-	this.dirtyHandle = false;
-
-	this.cleanVectorParameter('currentHandle', this.handle, this.localWidth, this.localHeight);
 };
 
 /*
@@ -1072,49 +1095,31 @@ P.cleanHandle = function () {
 P.rotateDestination = function (engine, x, y, entity) {
 
 	let self = (entity) ? entity : this,
-		reverse, upend, cos, sin,
-		rotation = 0, 
-		pivot = (self.pivot) ? artefact[self.pivot] : false, 
-		rotateOnPivot, pivotRoll, addPivotHandle, ph, addPathRoll, pathRoll;
+		mimic = self.mimic,
+		reverse, upend,
+		rotation = self.currentRotation;
 
-	reverse = (self.flipReverse) ? -1 : 1;
-	upend = (self.flipUpend) ? -1 : 1;
-	rotateOnPivot = self.rotateOnPivot;
-	addPivotHandle = self.addPivotHandle;
-	pathRoll = (self.addPathRoll && self.currentPathData && self.currentPathData.angle) ? self.currentPathData.angle : 0;
+	if (mimic && mimic.name && self.useMimicFlip) {
 
-	if (pivot && addPivotHandle) {
-
-		ph = pivot.currentHandle;
-		pivotRoll = pivot.roll;
-
-		engine.setTransform(reverse, 0, 0, upend, x, y);
-		engine.rotate(pivotRoll * radian);
-		
-		if (!rotateOnPivot) rotation -= pivotRoll;
-
-		if (self.lockXTo === 'pivot') engine.translate(-ph.x, 0);
-		if (self.lockYTo === 'pivot') engine.translate(0, -ph.y);
-
-		rotation += self.roll + pathRoll;
-
-		if (rotation) engine.rotate(rotation * radian);
+		reverse = (mimic.flipReverse) ? -1 : 1;
+		upend = (mimic.flipUpend) ? -1 : 1;
 	}
 	else {
 
-		rotation += self.roll + pathRoll;
-
-		if (pivot && rotateOnPivot) rotation += pivot.roll;
-
-		if (rotation) {
-
-			rotation *= radian;
-			cos = Math.cos(rotation);
-			sin = Math.sin(rotation);
-			engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), x, y);
-		}
-		else engine.setTransform(reverse, 0, 0, upend, x, y);
+		reverse = (self.flipReverse) ? -1 : 1;
+		upend = (self.flipUpend) ? -1 : 1;
 	}
+
+	if (rotation) {
+
+		rotation *= radian;
+
+		let cos = Math.cos(rotation),
+			sin = Math.sin(rotation);
+
+		engine.setTransform((cos * reverse), (sin * reverse), (-sin * upend), (cos * upend), x, y);
+	}
+	else engine.setTransform(reverse, 0, 0, upend, x, y);
 
 	return this;
 };

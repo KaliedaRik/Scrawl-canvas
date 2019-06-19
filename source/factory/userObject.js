@@ -31,14 +31,15 @@ let P = UserObject.prototype = Object.create(Object.prototype);
 */
 P.set = function (items = {}) {
 
-	let keys = Object.keys(items),
-		i, iz, key;
+	Object.entries(items).forEach(([key, value]) => this[key] = items[key]);
+	// let keys = Object.keys(items),
+	// 	i, iz, key;
 
-	for (i = 0, iz = keys.length; i < iz; i++) {
+	// for (i = 0, iz = keys.length; i < iz; i++) {
 
-		key = keys[i];
-		this[key] = items[key];
-	}
+	// 	key = keys[i];
+	// 	this[key] = items[key];
+	// }
 };
 
 /*

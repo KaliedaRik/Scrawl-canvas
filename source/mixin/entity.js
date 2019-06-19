@@ -4,10 +4,10 @@
 import * as library from '../core/library.js';
 import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
 	generateUuid, isa_fn, mergeOver, xt, addStrings } from '../core/utilities.js';
-import { currentGroup } from '../core/DOM.js';
+import { currentGroup } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
-import { makePoint } from '../factory/point.js';
+// import { makePoint } from '../factory/point.js';
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from '../factory/filter.js';
@@ -25,11 +25,6 @@ All factories using the position mixin will add these to their prototype objects
 
 */
 		method: 'fill',
-
-/*
-
-*/
-		group: '',
 
 /*
 
@@ -75,10 +70,6 @@ All factories using the position mixin will add these to their prototype objects
 
 */
 		lockFillStyleToEntity: false,
-
-/*
-
-*/
 		lockStrokeStyleToEntity: false,
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
@@ -93,22 +84,6 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
-	G.width = function () {
-
-		return this.localWidth;
-	};
-
-/*
-
-*/
-	G.height = function () {
-
-		return this.localHeight;
-	};
-
-/*
-
-*/
 	G.group = function () {
 
 		return (this.group) ? this.group.name : '';
@@ -117,94 +92,18 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
-	G.collisionPoints = function () {
+	// G.collisionPoints = function () {
 
-		return this.getCollisionPointCoordinates();
-	};
-
-/*
-
-*/
-	S.width = function (item) {
-
-		this.width = (xt(item)) ? item : this.defs.width;
-
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-		this.dirtyPathObject = true;
-		this.dirtyPivoted = true;
-	};
+	// 	return this.getCollisionPointCoordinates();
+	// };
 
 /*
 
 */
-	S.height = function (item) {
-		
-		this.height = (xt(item)) ? item : this.defs.height;
+	// S.collisionPoints = function (item) {
 
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-		this.dirtyPathObject = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	S.scale = function (item) {
-
-		this.scale = (xt(item)) ? item : this.defs.scale;
-
-		this.dirtyPathObject = true;
-		this.dirtyScale = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	S.collisionPoints = function (item) {
-
-		this.addCollisionPoints(item);
-	};
-
-/*
-ISSUE - stack elements get given a group String for this attribute; here we're just assigning the entire group object
-- they need to be brought more into alignment!
-*/
-	S.group = function (item) {
-
-		let g;
-
-		if(this.group) this.group.removeArtefacts(this.name);
-
-		if (item) {
-
-			if (item.substring) {
-
-				g = library.group[item];
-
-				if (g) this.group = g;
-			}
-			else if (item.type === 'Group') this.group = item;
-			else this.group = null;
-		}
-
-		if (this.group) this.group.addArtefacts(this.name);
-	};
-			
-/*
-
-*/
-	S.roll = function (item) {
-
-		if (item.toFixed) {
-
-			if (item < -360 || item > 360) item = item % 360;
-
-			this.roll = item;
-		}
-	};
+	// 	this.addCollisionPoints(item);
+	// };
 
 /*
 
@@ -215,85 +114,10 @@ ISSUE - stack elements get given a group String for this attribute; here we're j
 		this.lockStrokeStyleToEntity = item;
 	};
 
-/*
-
-*/
-	D.width = function (item) {
-
-		this.width = addStrings(this.width, item);
-
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-		this.dirtyPathObject = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	D.height = function (item) {
-
-		this.height = addStrings(this.height, item);
-
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-		this.dirtyPathObject = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	D.scale = function (item) {
-
-		this.scale = addStrings(this.scale, item);
-
-		this.dirtyPathObject = true;
-		this.dirtyScale = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	D.roll = function (item) {
-
-		let r; 
-
-		if (item.toFixed) {
-
-			r = this.roll + item;
-			
-			if (r < -360 || r > 360) r = r % 360;
-
-			this.roll = r;
-		}
-	};
 
 /*
 ## Define functions to be added to the factory prototype
 */
-
-/*
-
-*/
-	P.getHostDimensions = function () {
-
-		if (this.group && this.group.host) {
-
-			let h = library.cell[this.group.host];
-
-			if (h) {
-
-				return {
-					w: h.localWidth,
-					h: h.localHeight
-				};
-			}
-		}
-		console.log(this.name, 'unable to get host dimensions - returning default 100 x 100');
-		return {w: 100, h: 100};
-	};
 
 /*
 Overwrites function defined in mixin/base.js - takes into account State object attributes
@@ -342,7 +166,7 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 
 			Object.entries(items).forEach(([key, value]) => {
 
-				if (key !== 'name') {
+				if (key && key !== 'name' && value != null) {
 
 					let predefined = setters[key],
 						stateFlag = false;
@@ -377,7 +201,7 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 
 			Object.entries(items).forEach(([key, value]) => {
 
-				if (key !== 'name') {
+				if (key && key !== 'name' && value != null) {
 
 					let predefined = setters[key],
 						stateFlag = false;
@@ -404,6 +228,8 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 
 		this.makeName(items.name);
 		this.register();
+		this.initializePositions();
+
 		this.set(this.defs);
 
 		this.state = makeState();
@@ -413,14 +239,6 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 		this.set(items);
 
 		this.midInitActions(items);
-		
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-		this.dirtyStart = true;
-
-		this.dirtyPathObject = true;
-
-		this.dirtyRotation = null;
 	};
 
 /*
@@ -464,20 +282,26 @@ Overwrites the clone function in mixin/base.js
 		else myCloneState = mergeOver({}, this.state);
 		delete this.state;
 
-		if (this.asset || this.source) {
+		let tempAsset = this.asset, 
+			tempSource = this.source, 
+			tempPivot = this.pivot, 
+			tempMimic = this.mimic, 
+			tempPath = this.path;
 
-			let tempAsset = this.asset,
-				tempSource = this.source;
+		if (tempAsset && tempAsset.name) this.asset = tempAsset.name;
+		if (tempPivot && tempPivot.name) this.pivot = tempPivot.name;
+		if (tempMimic && tempMimic.name) this.mimic = tempMimic.name;
+		if (tempPath && tempPath.name) this.path = tempPath.name;
 
-			this.asset = tempAsset.name;
-			this.source = tempSource.name;
+		delete this.source;
 
-			copied = JSON.parse(JSON.stringify(this));
+		copied = JSON.parse(JSON.stringify(this));
 
-			this.asset = tempAsset;
-			this.source = tempSource;
-		}
-		else copied = JSON.parse(JSON.stringify(this));
+		if (tempAsset) this.asset = tempAsset;
+		if (tempSource) this.source = tempSource;
+		if (tempPivot) this.pivot = tempPivot;
+		if (tempMimic) this.mimic = tempMimic;
+		if (tempPath) this.path = tempPath;
 
 		copied.name = (items.name) ? items.name : generateUuid();
 
@@ -515,101 +339,101 @@ Overwrites the clone function in mixin/base.js
 /*
 This is a null function required by entitys to match a function used by DOM elements
 */
-	P.makeCollidable = defaultThisReturnFunction;
+	// P.makeCollidable = defaultThisReturnFunction;
 
 /*
 This is a null function required by entitys to match a function used by DOM elements
 */
-	P.getBox = defaultFalseReturnFunction;
+	// P.getBox = defaultFalseReturnFunction;
 
 /*
 Replicates and adapts function defined in mixin.dom.js
 */
-	P.addCollisionPoints = function (...args) {
+	// P.addCollisionPoints = function (...args) {
 
-		let pointMaker = function (item) {
+	// 	let pointMaker = function (item) {
 
-			return makePoint({
-				name: `${this.name}_cp_${item}`,
-				pivot: this.name,
-				group: this.group
-			});
-		};
+	// 		return makePoint({
+	// 			name: `${this.name}_cp_${item}`,
+	// 			pivot: this.name,
+	// 			group: this.group
+	// 		});
+	// 	};
 
-		let collisionPoints = this.collisionPoints = [],
-			pointsArray = new Set();
+	// 	let collisionPoints = this.collisionPoints = [],
+	// 		pointsArray = new Set();
 
-		args.forEach(arg => {
+	// 	args.forEach(arg => {
 
-			if (arg != null && arg.substring) {
+	// 		if (arg != null && arg.substring) {
 
-				arg = arg.toLowerCase();
+	// 			arg = arg.toLowerCase();
 
-				switch (arg) {
+	// 			switch (arg) {
 
-					case 'corners' :
-						pointsArray.add('ne').add('nw').add('sw').add('se');
-						break;
+	// 				case 'corners' :
+	// 					pointsArray.add('ne').add('nw').add('sw').add('se');
+	// 					break;
 
-					case 'edges' :
-						pointsArray.add('n').add('w').add('s').add('e');
-						break;
+	// 				case 'edges' :
+	// 					pointsArray.add('n').add('w').add('s').add('e');
+	// 					break;
 
-					case 'border' :
-						pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e');
-						break;
+	// 				case 'border' :
+	// 					pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e');
+	// 					break;
 
-					case 'center' :
-						pointsArray.add('c');
-						break;
+	// 				case 'center' :
+	// 					pointsArray.add('c');
+	// 					break;
 
-					case 'all' :
-						pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e').add('c');
-						break;
+	// 				case 'all' :
+	// 					pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e').add('c');
+	// 					break;
 
-					case 'ne' :
-					case 'e' :
-					case 'se' :
-					case 's' :
-					case 'sw' :
-					case 'w' :
-					case 'nw' :
-					case 'n' :
-						pointsArray.add(arg);
-						break;
-				}
-			}
-		});
+	// 				case 'ne' :
+	// 				case 'e' :
+	// 				case 'se' :
+	// 				case 's' :
+	// 				case 'sw' :
+	// 				case 'w' :
+	// 				case 'nw' :
+	// 				case 'n' :
+	// 					pointsArray.add(arg);
+	// 					break;
+	// 			}
+	// 		}
+	// 	});
 
-		let topArray = ['ne', 'n', 'nw'],
-			middleArray = ['e', 'w', 'c'],
-			leftArray = ['nw', 'w', 'sw'],
-			centerArray = ['n', 's', 'c'];
+	// 	let topArray = ['ne', 'n', 'nw'],
+	// 		middleArray = ['e', 'w', 'c'],
+	// 		leftArray = ['nw', 'w', 'sw'],
+	// 		centerArray = ['n', 's', 'c'];
 
-		pointsArray.forEach(val => {
+	// 	pointsArray.forEach(val => {
 
-			let point = pointMaker(val);
+	// 		let point = pointMaker(val);
 
-			if (topArray.indexOf(val) >= 0) point.set({ offsetY: 'top' });
-			else if (middleArray.indexOf(val) >= 0) point.set({ offsetY: 'center' });
-			else point.set({ offsetY: 'bottom' });
+	// 		if (topArray.indexOf(val) >= 0) point.set({ offsetY: 'top' });
+	// 		else if (middleArray.indexOf(val) >= 0) point.set({ offsetY: 'center' });
+	// 		else point.set({ offsetY: 'bottom' });
 
-			if (leftArray.indexOf(val) >= 0) point.set({ offsetX: 'left' });
-			else if (centerArray.indexOf(val) >= 0) point.set({ offsetX: 'center' });
-			else point.set({ offsetX: 'right' });
+	// 		if (leftArray.indexOf(val) >= 0) point.set({ offsetX: 'left' });
+	// 		else if (centerArray.indexOf(val) >= 0) point.set({ offsetX: 'center' });
+	// 		else point.set({ offsetX: 'right' });
 
-			collisionPoints.push(point);
-		});
-		return this;
-	};
+	// 		collisionPoints.push(point);
+	// 	});
+	// 	return this;
+	// };
 
 /*
 NEEDS coding up
 */
-	P.getCollisionPointCoordinates = function (host) {
+	// P.getCollisionPointCoordinates = function (host) {
 
-		return false;
-	};
+	// 	return false;
+	// };
 
 /*
 CURRENTLY does not support filters on entitys
@@ -635,99 +459,35 @@ CURRENTLY does not support filters on entitys
 */
 	P.prepareStamp = function() {
 
-		if (this.mimic) this.prepareMimicStamp();
+		if (this.dirtyHost) {
 
+			this.dirtyHost = false;
+			this.dirtyDimensions = true;
+		}
+
+		if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
+
+		if (this.dirtyScale) this.cleanScale();
 		if (this.dirtyDimensions) this.cleanDimensions();
+		if (this.dirtyLock) this.cleanLock();
 		if (this.dirtyStart) this.cleanStart();
+		if (this.dirtyOffset) this.cleanOffset();
 		if (this.dirtyHandle) this.cleanHandle();
-		if (this.dirtyOffset || this.dirtyScale || this.pivot) this.cleanOffset();
+		if (this.dirtyRotation) this.cleanRotation();
+
+		if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+
+			this.dirtyStampPositions = true;
+			this.dirtyStampHandlePositions = true;
+		}
+
+		if (this.dirtyStampPositions) this.cleanStampPositions();
+		if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
+
 		if (this.dirtyPathObject) this.cleanPathObject();
-		if (this.dirtyPivoted) this.updatePivotSubscribers();
-	};
 
-/*
-Overwrites mixin/position.js function
-*/
-	P.prepareMimicStampRotation = function (mimic) {
-
-		if (xt(mimic.roll)) this.roll = mimic.roll;
-	};
-
-/*
-
-*/
-	P.cleanHandle = function () {
-
-		if (this.localWidth && this.localHeight) {
-
-			this.dirtyPathObject = true;
-			this.dirtyHandle = false;
-
-			this.cleanVectorParameter('currentHandle', this.handle, this.localWidth, this.localHeight);
-		}
-	};
-
-/*
-
-*/
-	P.cleanOffset = function () {
-
-		this.dirtyOffset = false;
-		this.dirtyScale = false;
-
-		let dims = this.cleanOffsetHelper();
-
-		this.cleanVectorParameter('currentOffset', this.offset, dims[0], dims[1]);
-	};
-
-/*
-
-*/
-	P.cleanStart = function () {
-
-		let host = this.currentHost;
-
-		if (host) {
-
-			this.dirtyStart = false;
-
-			this.cleanVectorParameter('currentStart', this.start, host.localWidth, host.localHeight);
-		}
-	};
-
-/*
-
-*/
-	P.cleanDimensions = function () {
-
-		let host = this.currentHost,
-			w, h, mw, mh;
-
-		if (host) {
-
-			this.dirtyDimensions = false;
-
-			w = this.width;
-			h = this.height;
-
-			if (w.substring) this.localWidth = (parseFloat(w) / 100) * host.localWidth;
-			else this.localWidth = w;
-
-			if (h.substring) this.localHeight = (parseFloat(h) / 100) * host.localHeight;
-			else this.localHeight = h;
-
-			if (this.mimic) {
-
-				mw = this.mimicPaddingWidth;
-				mh = this.mimicPaddingHeight
-
-				if (mw.substring) this.localMimicPaddingWidth = (parseFloat(mw) / 100) * host.localWidth;
-				else this.localMimicPaddingWidth = mw;
-
-				if (mh.substring) this.localMimicPaddingHeight = (parseFloat(mh) / 100) * host.localHeight;
-				else this.localMimicPaddingHeight = mh;
-			}
-		}
+		// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
+		if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 	};
 
 /*
@@ -738,57 +498,62 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 /*
 
 */
-	P.stamper = {
+	P.draw = function (engine) {
 
-		draw: function (engine, entity) {
-
-			engine.stroke(entity.pathObject);
-		},
-
-		fill: function (engine, entity) {
-
-			engine.fill(entity.pathObject, entity.winding);
-		},
-
-		drawFill: function (engine, entity) {
-
-			engine.stroke(entity.pathObject);
-			entity.currentHost.clearShadow();
-			engine.fill(entity.pathObject, entity.winding);
-		},
-
-		fillDraw: function (engine, entity) {
-
-			engine.stroke(entity.pathObject);
-			entity.currentHost.clearShadow();
-			engine.fill(entity.pathObject, entity.winding);
-			engine.stroke(entity.pathObject);
-		},
-
-		floatOver: function (engine, entity) {
-
-			engine.stroke(entity.pathObject);
-			engine.fill(entity.pathObject, entity.winding);
-		},
-
-		sinkInto: function (engine, entity) {
-
-			engine.fill(entity.pathObject, entity.winding);
-			engine.stroke(entity.pathObject);
-		},
-
-		clear: function (engine, entity) {
-
-			let gco = engine.globalCompositeOperation;
-
-			engine.globalCompositeOperation = 'destination-out';
-			engine.fill(entity.pathObject, entity.winding);
-			
-			engine.globalCompositeOperation = gco;
-		},	
-
-		none: function (engine, entity) {},	
+		engine.stroke(this.pathObject);
 	};
+
+	P.fill = function (engine) {
+
+		engine.fill(this.pathObject, this.winding);
+	};
+
+	P.drawFill = function (engine) {
+
+		let p = this.pathObject;
+
+		engine.stroke(p);
+		this.currentHost.clearShadow();
+		engine.fill(p, this.winding);
+	};
+
+	P.fillDraw = function (engine) {
+
+		let p = this.pathObject;
+
+		engine.stroke(p);
+		this.currentHost.clearShadow();
+		engine.fill(p, this.winding);
+		engine.stroke(p);
+	};
+
+	P.floatOver = function (engine) {
+
+		let p = this.pathObject;
+
+		engine.stroke(p);
+		engine.fill(p, this.winding);
+	};
+
+	P.sinkInto = function (engine) {
+
+		let p = this.pathObject;
+
+		engine.fill(p, this.winding);
+		engine.stroke(p);
+	};
+
+	P.clear = function (engine) {
+
+		let gco = engine.globalCompositeOperation;
+
+		engine.globalCompositeOperation = 'destination-out';
+		engine.fill(this.pathObject, this.winding);
+		
+		engine.globalCompositeOperation = gco;
+	};
+
+	P.none = function (engine) {}
 
 /*
 
@@ -808,82 +573,92 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 */
 	P.filteredStamp = function(){
 
+		// Clean and sort the Entity-level filters before sending them to the filter worker for application
+		if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+
 		let self = this;
 
-		if (this.dirtyFilters) this.cleanFilters();
+		return new Promise((resolve, reject) => {
 
-		return new Promise((resolve) => {
-
-			let oldHost, oldElement, oldEngine, oldComposite, oldAlpha, host, 
-				hostElement, hostEngine, hostState, oldFastStamp,
-				image, w, h, worker;
-
+			// An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the entity's composite and alpha values
 			let cleanup = function () {
 
 				releaseFilterWorker(worker);
-				oldEngine.globalCompositeOperation = self.filterComposite || 'source-over';
-				oldEngine.globalAlpha = self.filterAlpha || 1;
-				oldEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-				oldEngine.drawImage(hostElement, 0, 0);
-				releaseCell(host);
+				currentEngine.save();
+				
+				currentEngine.globalCompositeOperation = self.filterComposite;
+				currentEngine.globalAlpha = self.filterAlpha;
+				currentEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-				oldEngine.globalCompositeOperation = oldComposite;
-				oldEngine.globalAlpha = oldAlpha;
-				self.currentHost = oldHost;
-				self.fastStamp = oldFastStamp;
+				currentEngine.drawImage(filterElement, 0, 0);
+				
+				releaseCell(filterHost);
+
+				currentEngine.restore();
 			};
 
-			oldHost = self.currentHost;
-			oldElement = oldHost.element;
-			oldEngine = oldHost.engine;
-			oldComposite = oldEngine.globalCompositeOperation;
-			oldAlpha = oldEngine.globalAlpha;
+			// save current host data into a set of vars, ready for restoration after web worker completes or fails
+			let currentHost = self.currentHost,
+				currentElement = currentHost.element,
+				currentEngine = currentHost.engine,
+				currentDimensions = currentHost.currentDimensions;
 
-			host = self.currentHost = requestCell();
-			hostElement = host.element;
-			hostEngine = host.engine;
-			hostState = host.state;
+			// get and prepare a blank canvas for the filter operations
+			let filterHost = self.currentHost = requestCell(),
+				filterElement = filterHost.element,
+				filterEngine = filterHost.engine;
 
-			w = host.width = hostElement.width = oldHost.localWidth;
-			h = host.height = hostElement.height = oldHost.localHeight;
+			let w = filterElement.width = currentDimensions[0],
+				h = filterElement.height = currentDimensions[1];
 
-			oldFastStamp = self.fastStamp;
+			// Switch off fast stamp
+			let oldFastStamp = self.fastStamp;
 			self.fastStamp = false;
 
+			// stamp the entity onto the blank canvas
 			self.regularStampSynchronousActions();
 
+			// if we're using the entity as a stencil, copy the entity cell's current display over the entity in the blank canvas
 			if (self.isStencil) {
 
-				// This is where we copy over the current canvas to the new canvas using appropriate gco
-				hostState.globalCompositeOperation = hostEngine.globalCompositeOperation = 'source-in';
-				hostState.globalAlpha = hostEngine.globalAlpha = 1;
-				hostEngine.setTransform(1, 0, 0, 1, 0, 0);
-				hostEngine.drawImage(oldElement, 0, 0);
+				filterEngine.save();
+				filterEngine.globalCompositeOperation = 'source-in';
+				filterEngine.globalAlpha = 1;
+				filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+				filterEngine.drawImage(currentElement, 0, 0);
+				filterEngine.restore();
 			} 
 
 			// At this point we will send the contents of the host canvas over to the web worker, alongside details of the filters we wish to apply to it
-			image = hostEngine.getImageData(0, 0, w, h);
-			worker = requestFilterWorker();
+			filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+			let myimage = filterEngine.getImageData(0, 0, w, h),
+				worker = requestFilterWorker();
 
 			actionFilterWorker(worker, {
-				image: image,
+				image: myimage,
 				filters: self.currentFilters
 			})
-			.then((image) => {
+			.then(img => {
 
-				if (image) {
+				// handle the web worker response
+				if (img) {
 
-					hostEngine.putImageData(image, 0, 0);
+					filterEngine.globalCompositeOperation = 'source-over';
+					filterEngine.globalAlpha = 1;
+					filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+					filterEngine.putImageData(img, 0, 0);
+
 					cleanup();
 					resolve(true);
 				}
-				else throw 'image issue';
+				else throw new Error('image issue');
 			})
 			.catch((err) => {
 
 				cleanup();
-				resolve(false);
+				reject(false);
 			});
 		});
 	};
@@ -895,14 +670,14 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 
 		let self = this;
 
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 
 			if (self.currentHost) {
 
 				self.regularStampSynchronousActions();
 				resolve(true);
 			}
-			resolve(false);
+			reject(false);
 		});
 	};
 
@@ -911,20 +686,20 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 */
 	P.regularStampSynchronousActions = function () {
 
-		let dest = this.currentHost, 
-			engine, x, y;
+		let dest = this.currentHost;
 
 		if (dest) {
 
-			engine = dest.engine;
-			x = this.updateStampX();
-			y = this.updateStampY();
+			let engine = dest.engine,
+				stamp = this.currentStampPosition,
+				x = stamp[0],
+				y = stamp[1];
 
 			dest.rotateDestination(engine, x, y, this);
 
 			if (!this.fastStamp) dest.setEngine(this);
 
-			this.stamper[this.method](engine, this);
+			this[this.method](engine);
 		}
 	};
 
@@ -933,38 +708,43 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 */
 	P.checkHit = function (items = {}) {
 
-		let dest = this.currentHost;
+		let tests = (!Array.isArray(items)) ?  [items] : items;
 
-		if (dest) {
+		let mycell = requestCell(),
+			engine = mycell.engine,
+			stamp = this.currentStampPosition,
+			x = stamp[0],
+			y = stamp[1],
+			tx, ty;
 
-			let tests = (!Array.isArray(items)) ?  [items] : items;
+		if (this.dirtyPathObject) this.cleanPathObject();
 
-			let engine = dest.engine,
-				x = this.updateStampX(),
-				y = this.updateStampY(),
-				tx, ty;
+		if (tests.some(test => {
 
-			if (this.dirtyPathObject) this.cleanPathObject();
+			if (Object.prototype.toString.call(test) !== '[object Object]') return false;
 
-			dest.rotateDestination(engine, x, y, this);
+			tx = test.x;
+			ty = test.y;
 
-			if (tests.some(test => {
+			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
-				if (Object.prototype.toString.call(test) !== '[object Object]') return false;
+			mycell.rotateDestination(engine, x, y, this);
 
-				tx = test.x;
-				ty = test.y;
+			return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
 
-				if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+		}, this)) {
 
-				return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
+			releaseCell(mycell);
 
-			}, this)) return {
+			return {
 				x: tx,
 				y: ty,
 				artefact: this
 			};
 		}
+		
+		releaseCell(mycell);
+		
 		return false;
 	};
 

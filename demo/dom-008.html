@@ -19,10 +19,16 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 008</h1>
-  <h2>Clone a DOM element, and a tween</h2>
+  <h2>3d animated cube</h2>
 
   <div id="mystack" data-stack>
-    <div id="myelement"><a href="https://en.wikipedia.org/wiki/Boat" target="_blank" rel="noopener noreferrer">BOAT</a></div>
+    <div id="cube"></div>
+    <div class="cubeface" id="frontface">FRONT</div>
+    <div class="cubeface" id="rightface">RIGHT</div>
+    <div class="cubeface" id="topface">TOP</div>
+    <div class="cubeface" id="backface">BACK</div>
+    <div class="cubeface" id="bottomface">BOTTOM</div>
+    <div class="cubeface" id="leftface">LEFT</div>
   </div>
 
   <p id="reportmessage"></p>
@@ -30,9 +36,9 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Clone a stack element and add it to the stack</li>
-      <li>Clone a tween, letting the tween subscribe to the original tween's ticker</li>
-      <li>Clone a tween, making it create its own associated ticker</li>
+      <li>Pivot stack elements to another element, and add translate values to each to form a cube</li>
+      <li>Animate the cube by animating just the one element to which the others are pivoted</li>
+      <li>(Cube animations up to scrawl v7 relied on direct manipulation of quaternions in user code; this should all be hidden in v8, leaving the user able to animate the cube entirely via rotation attributes - pitch, yaw, roll)</li>
     </ul>
   </div>
 

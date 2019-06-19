@@ -8,11 +8,68 @@
   <title>Demo Canvas 007</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 007</h1>
-  <h2>Drag-and-drop Block and Wheel entitys</h2>
+  <h2>Apply filters at the entity, group and cell level</h2>
+
+  <div class="controls">
+
+    <div class="green label">Select filter</div>
+    <div class="green">
+      <select class="controlItem" id="filter">
+        <option value="">none</option>
+        <option value="blue">blue</option>
+        <option value="blur">blur</option>
+        <option value="brightness">brightness</option>
+        <option value="channels">channels</option>
+        <option value="channelstep">channelstep</option>
+        <option value="cyan">cyan</option>
+        <option value="chroma">chroma</option>
+        <option value="grayscale">grayscale</option>
+        <option value="green">green</option>
+        <option value="invert">invert</option>
+        <option value="magenta">magenta</option>
+        <option value="matrix">matrix</option>
+        <option value="matrix5">matrix5</option>
+        <option value="notblue">notblue</option>
+        <option value="notgreen">notgreen</option>
+        <option value="notred">notred</option>
+        <option value="pixelate">pixelate</option>
+        <option value="red">red</option>
+        <option value="saturation">saturation</option>
+        <option value="sepia">sepia</option>
+        <option value="tint">tint</option>
+        <option value="threshold">threshold</option>
+        <option value="yellow">yellow</option>
+        <option value="totalRed">User-Defined totalRed</option>
+        <option value="totalRed,pixelate">UD totalRed + pixelate</option>
+        <option value="sepia,venetianBlinds">sepia + UD venetianBlinds</option>
+      </select>
+    </div>
+
+    <div class="green label">Apply filter to</div>
+    <div class="green">
+      <select class="controlItem" id="target">
+        <option value="">none</option>
+        <option value="block1">block1</option>
+        <option value="block2">block2</option>
+        <option value="wheel1">wheel1</option>
+        <option value="wheel2">wheel2</option>
+        <option value="group">group</option>
+        <option value="cell">cell</option>
+      </select>
+    </div>
+
+  </div>
 
   <canvas id="mycanvas" width="400" height="400"></canvas>
 
@@ -21,9 +78,19 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Setup block and wheel entitys for drag-and-drop operations</li>
-      <li>Check that when the drag operation starts, the entity does not suddenly jump</li>
-      <li>Check that when the drag operation ends, the entity does not suddenly jump</li>
+      <li>Create and clone block and wheel entitys with no name attribute, and dimensions in %strings</li>
+      <li>Create a selection of filters for testing</li>
+      <li>Check that the selected filter applies correctly to the selected entity only</li>
+      <li>Make sure the filter correctly covers animated entitys (when selected), and no other part of the canvas</li>
+      <li>Check that when the filter is applied to the group, all entitys (but not the cell) are affected</li>
+      <li>Check that when the filter is applied to the cell, the entire canvas is affected</li>
+    </ul>
+
+    <h4>Notes</h4>
+    <ul>
+      <li>The gray areas when chroma filter is applied at the group level is expected behaviour - all entitys get filtered at the same time, thus when a pixel is removed the underlying color will be the cell's background color</li>
+      <li>The blur filter is generally much slower than other filters, particularly in Edge. Entitys and groups that need to be blurred will be more efficient if blurred once and the result captured as an image for use in a Picture entity.</li>
+      <li>Similarly with the matrix filters (though they are a lot faster than blur)</li>
     </ul>
   </div>
 

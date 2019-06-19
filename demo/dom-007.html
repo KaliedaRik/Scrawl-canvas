@@ -8,24 +8,46 @@
   <title>Demo DOM 007</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .make_round {
+      border-radius: 50%;
+      border: 5px solid lightgray;
+    }
+    .make_blue {
+      border: 5px solid blue;
+    }
+    .make_red {
+      border: 5px solid red;
+    }
+  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 007</h1>
-  <h2>DOM tween stress test (using &lt;img> element)</h2>
-  <h3>Click on star field to add more stars</h3>
+  <h2>Animate a DOM element using the delta attribute object<br />Dynamically change classes on a DOM element</h2>
+  <h3>This stack is resizable - drag the bottom right corner to change its dimensions.</h3>
 
-  <div id="porthole" data-stack></div>
-  <div id="starHold"></div>
+  <div id="mystack" data-stack>
+    <div id="leftbox" class="make_target"></div>
+    <div id="rightbox" class="make_target"></div>
+    <img id="flower" src="img/iris.png" alt="Picture of an iris flower" class="make_round" />
+  </div>
 
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create and run many tweens/tickers, each associated with a single stack element</li>
-      <li>Test to see how many tweens a browser can run at a reasonable speed</li>
-      <li>(This is the same test as 006, the only difference being that the tweens are animating img elements)</li>
+      <li>Animate a stack element via delta attributes</li>
+      <li>Dynamically reverse-sign specified delta attributes</li>
+      <li>Check that % string attributes work correctly, including when added together via delta functionality</li>
+      <li>Check that stacks and their elements respond correctly to resize actions</li>
+      <li>(Delta animations in Scrawl-canvas v7 needed to be called explicitly as part of a user's display cycle animation; v8 automates this process as part of the display cycle)</li>
+    </ul><ul>
+      <li>Create and populate a non-visible Group object, to contain artefacts for collision detection work.</li>
+      <li>Test stack element checkHit functionality</li>
+      <li>Dynamically change a stack element's CSS classes, adding and removing them as necessary</li>
     </ul>
   </div>
 

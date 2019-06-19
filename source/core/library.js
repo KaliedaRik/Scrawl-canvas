@@ -5,7 +5,13 @@
 /*
 
 */
-const version = '8.0.0';
+const version = '8.0.0 alpha';
+
+/*
+
+*/
+const anchor = {};
+const anchornames = [];
 
 /*
 
@@ -60,11 +66,6 @@ const entitynames = [];
 */
 const filter = {};
 const filternames = [];
-
-/*
-
-*/
-const userFilter = {};
 
 /*
 
@@ -148,7 +149,6 @@ export {
 	entitynames,
 	filter,
 	filternames,
-	userFilter,
 	fontattribute,
 	fontattributenames,
 	group,

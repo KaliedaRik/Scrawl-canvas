@@ -12,20 +12,24 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 005</h1>
-  <h2>Wheel entity (make, clone, method)</h2>
+  <h2>Cell-locked, and Entity-locked, gradients<br />Animating gradients by delta, and by tween</h2>
+  <h3>Drag and drop the entitys around the canvas</h3>
 
-  <canvas id="mycanvas" width="650" height="350"></canvas>
+  <canvas id="mycanvas" width="600" height="600"></canvas>
 
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
+    <p>Drag and drop the entitys to test that their gradients change and animate as expected</p>
+
     <ul>
-      <li>Create a wheel entity</li>
-      <li>Clone a wheel</li>
-      <li>Position the wheel on the canvas</li>
-      <li>Change the state of a subset of wheels sharing the same state object</li>
-      <li>Check the various drawing methods available to the wheel</li>
+      <li>Setup a a variety of linear and radial gradients</li>
+      <li>Create and clone block and wheel entitys to use the gradients in various ways</li>
+      <li>Check that the gradients appear in the entitys as expected - in particular that entity-locked gradients are completely displayed within their entity</li>
+      <li>For Cell-locked gradients, check that when a drag operation starts, the gradient changes to match it's entity's position in the cell</li>
+      <li>For Entity-locked gradients, check that the gradient remains stable within the entity when the drag operation starts and ends</li>
+      <li>Check that gradient animation actions operate as expected</li>
     </ul>
   </div>
 

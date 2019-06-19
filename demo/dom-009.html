@@ -10,20 +10,76 @@
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
-    #mystack {
-      width: 500px;
-      height: 500px;
+    .make_round {
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+    .make_opaque {
+      opacity: 1;
     }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 009</h1>
-  <h2>Tween actions on a DOM element</h2>
-  <h3>Click on the animation to make the boat reverse direction</h3>
+  <h2>Stop and restart the main animation loop; add and remove event listener<br />Retrieve all artefacts at a given coordinate</h2>
+  <h3>Move mouse cursor over circles to make them opaque (when animation loop is active)<br />Click on the stack element to change direction of rotation (when stack listener is active)</h3>
 
   <div id="mystack" data-stack>
-    <div id="myelement"></div>
+    <div id="f_0" class="make_round"></div>
+    <div id="f_1" class="make_round"></div>
+    <div id="f_2" class="make_round"></div>
+    <div id="f_3" class="make_round"></div>
+    <div id="f_4" class="make_round"></div>
+    <div id="f_5" class="make_round"></div>
+    <div id="f_6" class="make_round"></div>
+    <div id="f_7" class="make_round"></div>
+    <div id="f_8" class="make_round"></div>
+    <div id="f_9" class="make_round"></div>
+    <div id="f_10" class="make_round"></div>
+    <div id="f_11" class="make_round"></div>
+    <div id="f_12" class="make_round"></div>
+    <div id="f_13" class="make_round"></div>
+    <div id="f_14" class="make_round"></div>
+    <div id="f_15" class="make_round"></div>
+    <div id="f_16" class="make_round"></div>
+    <div id="f_17" class="make_round"></div>
+    <div id="f_18" class="make_round"></div>
+    <div id="f_19" class="make_round"></div>
+    <div id="f_20" class="make_round"></div>
+    <div id="f_21" class="make_round"></div>
+    <div id="f_22" class="make_round"></div>
+    <div id="f_23" class="make_round"></div>
+    <div id="f_24" class="make_round"></div>
+    <div id="f_25" class="make_round"></div>
+    <div id="f_26" class="make_round"></div>
+    <div id="f_27" class="make_round"></div>
+    <div id="f_28" class="make_round"></div>
+    <div id="f_29" class="make_round"></div>
+    <div id="f_30" class="make_round"></div>
+    <div id="f_31" class="make_round"></div>
+    <div id="f_32" class="make_round"></div>
+    <div id="f_33" class="make_round"></div>
+    <div id="f_34" class="make_round"></div>
+    <div id="f_35" class="make_round"></div>
+    <div id="f_36" class="make_round"></div>
+    <div id="f_37" class="make_round"></div>
+    <div id="f_38" class="make_round"></div>
+    <div id="f_39" class="make_round"></div>
+    <div id="f_40" class="make_round"></div>
+    <div id="f_41" class="make_round"></div>
+    <div id="f_42" class="make_round"></div>
+    <div id="f_43" class="make_round"></div>
+    <div id="f_44" class="make_round"></div>
+    <div id="f_45" class="make_round"></div>
+    <div id="f_46" class="make_round"></div>
+    <div id="f_47" class="make_round"></div>
+    <div id="f_48" class="make_round"></div>
+    <div id="f_49" class="make_round"></div>
+    <button class="controls" id="start_animation">Start animation loop</button>
+    <button class="controls" id="stop_animation">Stop animation loop</button>
+    <button class="controls" id="start_listeners">Add stack listeners</button>
+    <button class="controls" id="stop_listeners">Remove stack listeners</button>
   </div>
 
   <p id="reportmessage"></p>
@@ -31,9 +87,14 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Manipulate a tween while it is running, forcing it to stop, reverse and resume its animation</li>
-      <li>Add action objects to the tween's ticker</li>
-      <li>Check that action objects behave correctly, dependent on to current animation direction of the tween</li>
+      <li>Test manipulation of a set of stack entitys via their group</li>
+      <li>Test Group.getAllArtefactsAt functionality</li>
+      <li>Create and use a scrawl Color object to generate randomized color strings in a restricted range of colors</li>
+    </ul>
+    <ul>
+      <li>Move artefacts from one group object to another</li>
+      <li>Start, stop and restart the core animation loop</li>
+      <li>Dynamically add/remove event listeners to/from the stack</li>
     </ul>
   </div>
 

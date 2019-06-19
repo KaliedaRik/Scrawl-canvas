@@ -3,8 +3,9 @@
 
 Note: this mixin needs to be applied after the position mixin in order to work properly
 */
-import { addStrings, defaultNonReturnFunction, mergeOver, xt } from '../core/utilities.js';
+import { addStrings, defaultNonReturnFunction, mergeOver, xt, mergeDiscard } from '../core/utilities.js';
 
+import { makeCoordinate } from '../factory/coordinate.js';
 import { makePalette } from '../factory/palette.js';
 
 export default function (P = {}) {
@@ -19,13 +20,13 @@ All factories using the position mixin will add these to their prototype objects
 /*
 (Radial)Gradient styles uses the position mixin to supply attributes and functions for handling the gradient's start and end coordinates.
 */
-		end: {},
-		currentEnd: {},
+		start: null,
+		end: null,
 
 /*
 Every gradient requires a palette of color stop instructions
 */
-		palette: {},
+		palette: null,
 
 /*
 We don't need to use the entire palette when building a context gradient; we can restrict the palette using these start and end attributes
@@ -50,146 +51,121 @@ The cyclePalette attribute tells the Palette object how to handle situations whe
 		D = P.deltaSetters;
 
 /*
-Delete a bunch of attributes and functions previously set by the position mixin, not required by a styles object
-*/
-	delete P.defs.mimic;
-	delete P.defs.handle;
-	delete P.defs.currentHandle;
-	delete P.defs.visibility;
-	delete P.defs.order;
-	delete P.defs.width;
-	delete P.defs.height;
-	delete P.defs.roll;
-	delete P.defs.scale;
-	delete G.handleX;
-	delete G.handleY;
-	delete S.handleX;
-	delete S.handleY;
-	delete S.handle;
-	delete S.width;
-	delete S.height;
-	delete S.roll;
-	delete S.scale;
-	delete S.mimic;
-	delete D.handleX;
-	delete D.handleY;
-	delete D.width;
-	delete D.height;
-	delete D.roll;
-	delete D.scale;
-	delete P.cleanHandle;
-	delete P.cleanStart;
-	delete P.getHere;
-	delete P.getStart;
-
-/*
 
 */
+	G.startX = function () {
+
+		return this.currentStart[0];
+	};
+
+	G.startY = function () {
+
+		return this.currentStart[1];
+	};
+
+
 	G.endX = function () {
 
-		this.checkVector('end');
-		return this.end.x;
+		return this.currentEnd[0];
 	};
 
-/*
-
-*/
 	G.endY = function () {
 
-		this.checkVector('end');
-		return this.end.y;
+		return this.currentEnd[1];
 	};
 
 /*
 
 */
-	S.startX = function (item) {
+	S.startX = function (coord) {
 
-		this.checkVector('start');
-		this.start.x = item;
+		if (coord != null) {
+
+			this.start[0] = coord;
+			this.dirtyStart = true;
+		}
+	};
+
+	S.startY = function (coord) {
+
+		if (coord != null) {
+
+			this.start[1] = coord;
+			this.dirtyStart = true;
+		}
+	};
+
+	S.start = function (x, y) {
+
+		this.setCoordinateHelper('start', x, y);
+		this.dirtyStart = true;
+	};
+
+	D.startX = function (coord) {
+
+		let c = this.start;
+		c[0] = addStrings(c[0], coord);
+		this.dirtyStart = true;
+	};
+
+	D.startY = function (coord) {
+
+		let c = this.start;
+		c[1] = addStrings(c[1], coord);
+		this.dirtyStart = true;
+	};
+
+	D.start = function (x, y) {
+
+		this.setDeltaCoordinateHelper('start', x, y);
+		this.dirtyStart = true;
 	};
 
 /*
 
 */
-	S.startY = function (item) {
+	S.endX = function (coord) {
 
-		this.checkVector('start');
-		this.start.y = item;
+		if (coord != null) {
+
+			this.end[0] = coord;
+			this.dirtyEnd = true;
+		}
 	};
 
-/*
+	S.endY = function (coord) {
 
-*/
-	S.start = function (item = {}) {
+		if (coord != null) {
 
-		this.checkVector('start');
-		this.start.x = (xt(item.x)) ? item.x : this.start.x;
-		this.start.y = (xt(item.y)) ? item.y : this.start.y;
+			this.end[1] = coord;
+			this.dirtyEnd = true;
+		}
 	};
 
-/*
+	S.end = function (x, y) {
 
-*/
-	S.endX = function (item) {
-
-		this.checkVector('end');
-		this.end.x = item;
+		this.setCoordinateHelper('end', x, y);
+		this.dirtyEnd = true;
 	};
 
-/*
+	D.endX = function (coord) {
 
-*/
-	S.endY = function (item) {
-
-		this.checkVector('end');
-		this.end.y = item;
+		let c = this.end;
+		c[0] = addStrings(c[0], coord);
+		this.dirtyEnd = true;
 	};
 
-/*
+	D.endY = function (coord) {
 
-*/
-	S.end = function (item = {}) {
-
-		this.checkVector('end');
-		this.end.x = (xt(item.x)) ? item.x : this.end.x;
-		this.end.y = (xt(item.y)) ? item.y : this.end.y;
+		let c = this.end;
+		c[1] = addStrings(c[1], coord);
+		this.dirtyEnd = true;
 	};
 
-/*
+	D.end = function (x, y) {
 
-*/
-	D.startX = function (item) {
-
-		this.checkVector('start');
-		this.start.x = addStrings(this.start.x, item);
-	};
-
-/*
-
-*/
-	D.startY = function (item) {
-
-		this.checkVector('start');
-		this.start.y = addStrings(this.start.y, item);
-	};
-	
-/*
-
-*/
-	D.endX = function (item) {
-
-		this.checkVector('end');
-		this.end.x = addStrings(this.end.x, item);
-	};
-	
-/*
-
-*/
-	D.endY = function (item) {
-
-		this.checkVector('end');
-		this.end.y = addStrings(this.end.y, item);
+		this.setDeltaCoordinateHelper('end', x, y);
+		this.dirtyEnd = true;
 	};
 
 /*
@@ -213,9 +189,6 @@ Delete a bunch of attributes and functions previously set by the position mixin,
 		}
 	};
 
-/*
-
-*/
 	S.paletteEnd = function (item) {
 
 		if (item.toFixed) {
@@ -226,9 +199,6 @@ Delete a bunch of attributes and functions previously set by the position mixin,
 		}
 	};
 
-/*
-
-*/
 	D.paletteStart = function (item) {
 
 		let p;
@@ -247,9 +217,6 @@ Delete a bunch of attributes and functions previously set by the position mixin,
 		}
 	};
 
-/*
-
-*/
 	D.paletteEnd = function (item) {
 
 		let p;
@@ -267,6 +234,15 @@ Delete a bunch of attributes and functions previously set by the position mixin,
 			this.paletteEnd = p;
 		}
 	};
+
+/*
+
+*/
+	S.delta = function (items = {}) {
+
+		if (items) this.delta = mergeDiscard(this.delta, items);
+	};
+
 
 /*
 ## Define functions to be added to the factory prototype
@@ -318,7 +294,7 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 
 			Object.entries(items).forEach(([key, value]) => {
 
-				if (key !== 'name') {
+				if (key && key !== 'name' && value != null) {
 
 					let predefined = setters[key],
 						paletteFlag = false;
@@ -339,12 +315,103 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 	};
 
 /*
+Overwrites function defined in mixin/base.js - takes into account Palette object attributes
+*/
+	P.setDelta = function (items = {}) {
+
+		if (items) {
+
+			let setters = this.deltaSetters,
+				defs = this.defs,
+				palette = this.palette,
+				paletteSetters = (palette) ? palette.deltaSetters : {},
+				paletteDefs = (palette) ? palette.defs : {};
+
+			Object.entries(items).forEach(([key, value]) => {
+
+				if (key && key !== 'name' && value != null) {
+
+					let predefined = setters[key],
+						paletteFlag = false;
+
+					if (!predefined) {
+
+						predefined = paletteSetters[key];
+						paletteFlag = true;
+					}
+
+					if (predefined) predefined.call(paletteFlag ? this.palette : this, value);
+					else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+					else if (typeof paletteDefs[key] !== 'undefined') palette[key] = addStrings(this[key], value);
+				}
+			}, this);
+		}
+		return this;
+	};
+
+/*
+
+*/
+	P.setCoordinateHelper = function (label, x, y) {
+
+		let c = this[label];
+
+		if (Array.isArray(x)) {
+
+			c[0] = x[0];
+			c[1] = x[1];
+		}
+		else {
+
+			c[0] = x;
+			c[1] = y;
+		}
+	};
+
+	P.setDeltaCoordinateHelper = function (label, x, y) {
+
+		let c = this[label],
+			myX = c[0],
+			myY = c[1];
+
+		if (Array.isArray(x)) {
+
+			c[0] = addStrings(myX, x[0]);
+			c[1] = addStrings(myY, x[1]);
+		}
+		else {
+
+			c[0] = addStrings(myX, x);
+			c[1] = addStrings(myY, y);
+		}
+	};
+
+/*
+
+*/
+	P.updateByDelta = function () {
+
+		this.setDelta(this.delta);
+
+		return this;
+	};
+
+/*
 
 */
 	P.stylesInit = function (items = {}) {
 
 		this.makeName(items.name);
 		this.register();
+
+		this.gradientArgs = [];
+
+		this.start = makeCoordinate();
+		this.end = makeCoordinate();
+
+		this.currentStart = makeCoordinate();
+		this.currentEnd = makeCoordinate();
+
 		this.set(this.defs);
 
 		this.palette = makePalette({
@@ -388,29 +455,45 @@ This is where we have to calculate all the stuff necessary to get the ctx gradie
 */
 	P.cleanStyle = function (entity = {}, cell = {}, isFill) {
 
-		let w, h;
+		let dims, w, h, scale;
 
-		if (isFill && entity.lockFillStyleToEntity) {
+		if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
 
-			w = (entity.localWidth * entity.scale) || 0; 
-			h = (entity.localHeight * entity.scale) || 0; 
-		}
-		else if (!isFill && entity.lockStrokeStyleToEntity) {
+			dims = entity.currentDimensions;
+			scale = entity.currentScale;
 
-			w = (entity.localWidth * entity.scale) || 0; 
-			h = (entity.localHeight * entity.scale) || 0; 
+			w = dims[0] * scale; 
+			h = dims[1] * scale; 
 		}
 		else {
 
-			w = cell.localWidth || 0; 
-			h = cell.localHeight || 0; 
+			dims = cell.currentDimensions;
+			w = dims[0]; 
+			h = dims[1]; 
 		}
 
-		if (w && h) {
+		this.cleanPosition(this.currentStart, this.start, [w, h]);
+		this.cleanPosition(this.currentEnd, this.end, [w, h]);
+		this.cleanRadius(w);
+	};
 
-			this.cleanVectorParameter('currentStart', this.start, w, h);
-			this.cleanVectorParameter('currentEnd', this.end, w, h);
-			this.cleanRadius(w);
+/*
+
+*/
+	P.cleanPosition = function (current, source, dimensions) {
+
+		let val, dim;
+
+		for (let i = 0; i < 2; i++) {
+
+			val = source[i];
+			dim = dimensions[i];
+
+			if (val.toFixed) current[i] = val;
+			else if (val === 'left' || val === 'top') current[i] = 0;
+			else if (val === 'right' || val === 'bottom') current[i] = dim;
+			else if (val === 'center') current[i] = dim / 2;
+			else current[i] = (parseFloat(val) / 100) * dim;
 		}
 	};
 
@@ -419,49 +502,28 @@ This is where we have to calculate all the stuff necessary to get the ctx gradie
 */
 	P.finalizeCoordinates = function (entity = {}, isFill) {
 
-		let p = entity.pivot || false,
-			cs = this.currentStart,
-			ce = this.currentEnd,
-			ech = entity.currentHandle,
-			eScale = entity.scale,
-			pch, pScale, correctX, correctY;
+		let currentStart = this.currentStart,
+			currentEnd = this.currentEnd,
+			entityStampPosition = entity.currentStampPosition,
+			entityStampHandlePosition = entity.currentStampHandlePosition,
+			entityScale = entity.currentScale,
+			correctX, correctY;
 
-		// The entity stamp will have shifted the canvas grid prior to setting the style on the canvas engine
-		if (p) {
+		if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
 
-			pch = p.currentHandle;
-			pScale = p.scale;
-		}
-
-		if (isFill && entity.lockFillStyleToEntity) {
-
-			correctX = -(ech.x * eScale) || 0; 
-			correctY = -(ech.y * eScale) || 0; 
-		}
-		else if (!isFill && entity.lockStrokeStyleToEntity) {
-
-			correctX = -(ech.x * eScale) || 0; 
-			correctY = -(ech.y * eScale) || 0; 
+			correctX = -(entityStampHandlePosition[0] * entityScale) || 0; 
+			correctY = -(entityStampHandlePosition[1] * entityScale) || 0; 
 		}
 		else {
 
-			correctX = -entity.stampX || 0; 
-			correctY = -entity.stampY || 0; 
-		}
-
-		if (p && entity.addPivotHandle) {
-
-			if (entity.lockXTo === 'pivot') correctX -= (pch.x * pScale);
-			if (entity.lockYTo === 'pivot') correctY -= (pch.y * pScale);
+			correctX = -entityStampPosition[0] || 0; 
+			correctY = -entityStampPosition[1] || 0; 
 		}
 
 		if (entity.flipReverse) correctX = -correctX;
 		if (entity.flipUpend) correctY = -correctY;
 
-		this.startX = cs.x + correctX;
-		this.startY = cs.y + correctY;
-		this.endX = ce.x + correctX;
-		this.endY = ce.y + correctY;
+		this.updateGradientArgs(correctX, correctY);
 	};
 
 /*

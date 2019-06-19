@@ -2,136 +2,171 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
-
-
 // Scene setup
-let artefact = scrawl.library.artefact,
-	porthole = artefact.porthole,
-	starling, addStars, stopE, makeStars,
-	starCount = 0,
-	addNumber = 100;
+let canvas = scrawl.library.artefact.mycanvas;
 
-porthole.set({
-	backgroundColor: 'black',
-	css: {
-		borderRadius: '50%'
-	}
+
+// Import image from DOM, and create Picture entity using it
+scrawl.importDomImage('.flowers');
+
+let piccy = scrawl.makePicture({
+
+	name: 'myFlower',
+	asset: 'iris',
+
+	width: 200,
+	height: 200,
+
+	startX: 300,
+	startY: 200,
+	handleX: 100,
+	handleY: 100,
+
+	copyWidth: 200,
+	copyHeight: 200,
+	copyStartX: 100,
+	copyStartY: 100,
+
+	lineWidth: 10,
+	strokeStyle: 'gold',
+
+	order: 1,
+	method: 'drawFill',
+
 });
 
-starling = scrawl.makeWheel({
-	name: 'starling',
-	radius: 3,
-	handleX: 'center',
-	handleY: 'center',
+// Create a second Picture entity, this time pulling in the image dynamically
+piccy.clone({
+
+	name: 'myFactory',
+	imageSource: 'img/canalFactory-800.png',
+
+	width: 600,
+	height: 400,
+
+	startX: 0,
+	startY: 0,
+	handleX: 0,
+	handleY: 0,
+
+	copyWidth: 600,
+	copyHeight: 400,
+	copyStartX: 150,
+	copyStartY: 0,
+
+	order: 0,
 	method: 'fill',
-	fillStyle: 'white',
 });
 
-makeStars = function (buildNumber) {
 
-	let star, i,
-		r1, v, duration, scale;
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
 
-	for (i = 0; i < buildNumber; i++) {
-		starCount++;
+	let testTicker = Date.now(),
+		testTime, testNow,
+		testMessage = document.querySelector('#reportmessage');
 
-		star = starling.clone({
-			name: `star_${starCount}`,
-			fastStamp: true,
-			sharedState: true,
-		});
+	return function () {
 
-		r1 = Math.random();
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
 
-		v = scrawl.requestVector({
-			x: 1
-		}).rotate(Math.random() * 360).scalarMultiply(300);
-
-		duration = Math.round((r1 * 3000) + 2000);
-		scale = Math.round((1 - r1) * 0.9) + 0.6;
-
-		scrawl.makeTween({
-			name: star.name,
-			targets: star,
-			duration: duration,
-			cycles: 0,
-			definitions: [{
-				attribute: 'startX',
-				integer: true,
-				start: 300,
-				end: 300 + v.x
-			}, {
-				attribute: 'startY',
-				integer: true,
-				start: 300,
-				end: 300 + v.y
-			}, {
-				attribute: 'scale',
-				start: 0.5,
-				end: scale
-			}]
-		}).run();
-
-		scrawl.releaseVector(v);
-	}
-
-	starling.set({
-		fillStyle: `rgb(${Math.floor(Math.random() * 55) + 200}, ${Math.floor(Math.random() * 55) + 200}, ${Math.floor(Math.random() * 55) + 200})`
-	});
-}
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+	};
+}();
 
 
-// Event listeners
-stopE = (e) => {
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
 
-	e.preventDefault();
-	e.returnValue = false;
-};
-
-addStars = (e) => {
-
-	stopE(e);
-	makeStars(addNumber);
-};
-
-scrawl.addNativeListener('click', addStars, porthole.domElement);
-
-// Generate the initial stars
-makeStars(100);
-
-
-// Animation 
-scrawl.makeAnimation({
-
-	name: 'testC008Display',
-	
-	fn: function(){
-		
-		return new Promise((resolve) => {
-
-			scrawl.render()
-			.then(() => {
-
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
-
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-				<br />Stars: ${starCount}`;
-
-				resolve(true);
-			})
-			.catch((err) => {
-
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
-
-				resolve(false);
-			});
-		});
-	}
+	name: 'demo-animation',
+	target: canvas,
+	afterShow: report,
 });
+
+
+// User interaction - setup form observer functionality
+scrawl.observeAndUpdate({
+
+	event: ['input', 'change'],
+	origin: '.controlItem',
+
+	target: piccy,
+
+	useNativeListener: true,
+	preventDefault: true,
+
+	updates: {
+
+		copy_start_xPercent: ['copyStartX', '%'],
+		copy_start_xAbsolute: ['copyStartX', 'round'],
+
+		copy_start_yPercent: ['copyStartY', '%'],
+		copy_start_yAbsolute: ['copyStartY', 'round'],
+
+		copy_dims_widthPercent: ['copyWidth', '%'],
+		copy_dims_widthAbsolute: ['copyWidth', 'round'],
+
+		copy_dims_heightPercent: ['copyHeight', '%'],
+		copy_dims_heightAbsolute: ['copyHeight', 'round'],
+
+		paste_dims_widthPercent: ['width', '%'],
+		paste_dims_widthAbsolute: ['width', 'round'],
+
+		paste_dims_heightPercent: ['height', '%'],
+		paste_dims_heightAbsolute: ['height', 'round'],
+
+		paste_start_xPercent: ['startX', '%'],
+		paste_start_xAbsolute: ['startX', 'round'],
+		paste_start_xString: ['startX', 'raw'],
+
+		paste_start_yPercent: ['startY', '%'],
+		paste_start_yAbsolute: ['startY', 'round'],
+		paste_start_yString: ['startY', 'raw'],
+
+		paste_handle_xPercent: ['handleX', '%'],
+		paste_handle_xAbsolute: ['handleX', 'round'],
+		paste_handle_xString: ['handleX', 'raw'],
+
+		paste_handle_yPercent: ['handleY', '%'],
+		paste_handle_yAbsolute: ['handleY', 'round'],
+		paste_handle_yString: ['handleY', 'raw'],
+
+		roll: ['roll', 'float'],
+		scale: ['scale', 'float'],
+
+		upend: ['flipUpend', 'boolean'],
+		reverse: ['flipReverse', 'boolean'],
+	},
+});
+
+// Setup form
+document.querySelector('#copy_start_xPercent').value = 25;
+document.querySelector('#copy_start_yPercent').value = 25;
+document.querySelector('#copy_dims_widthPercent').value = 50;
+document.querySelector('#copy_dims_widthAbsolute').value = 200;
+document.querySelector('#copy_start_xAbsolute').value = 100;
+document.querySelector('#copy_start_yAbsolute').value = 100;
+document.querySelector('#copy_dims_heightPercent').value = 50;
+document.querySelector('#copy_dims_heightAbsolute').value = 200;
+document.querySelector('#paste_dims_widthPercent').value = 33;
+document.querySelector('#paste_dims_widthAbsolute').value = 200;
+document.querySelector('#paste_dims_heightPercent').value = 50;
+document.querySelector('#paste_dims_heightAbsolute').value = 200;
+document.querySelector('#paste_start_xPercent').value = 50;
+document.querySelector('#paste_start_yPercent').value = 50;
+document.querySelector('#paste_handle_xPercent').value = 50;
+document.querySelector('#paste_handle_yPercent').value = 50;
+document.querySelector('#paste_start_xAbsolute').value = 300;
+document.querySelector('#paste_start_yAbsolute').value = 200;
+document.querySelector('#paste_handle_xAbsolute').value = 100;
+document.querySelector('#paste_handle_yAbsolute').value = 100;
+document.querySelector('#paste_start_xString').options.selectedIndex = 1;
+document.querySelector('#paste_start_yString').options.selectedIndex = 1;
+document.querySelector('#paste_handle_xString').options.selectedIndex = 1;
+document.querySelector('#paste_handle_yString').options.selectedIndex = 1;
+document.querySelector('#roll').value = 0;
+document.querySelector('#scale').value = 1;
+document.querySelector('#upend').options.selectedIndex = 0;
+document.querySelector('#reverse').options.selectedIndex = 0;

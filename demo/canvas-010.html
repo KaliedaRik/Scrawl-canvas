@@ -11,70 +11,129 @@
 
   <style>
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
     }
   </style>
-
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 010</h1>
-  <h2>Linear gradients</h2>
+  <h2>Use video source for Picture entitys</h2>
+  <h3>Click or tap on the canvas to start video play</h3>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
 
   <div class="controls">
 
-    <div class="pink label">paletteStart</div>
-    <div class="pink"><input class="controlItem" id="paletteStart" type="range" value="0" min="0" max="999" step="1" /></div>
+    <div class="pink label">Copy Starts ('n%')</div>
+    <div class="pink">X: <input class="controlItem" id="copy_start_xPercent" type="range" value="25" min="-5" max="105" step="1" /></div>
+    <div class="pink">Y: <input class="controlItem" id="copy_start_yPercent" type="range" value="25" min="-5" max="105" step="1" /></div>
 
-    <div class="pink label">paletteEnd</div>
-    <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
+    <div class="lavender label">Copy Width</div>
+    <div class="lavender">'n%' <input class="controlItem" id="copy_dims_widthPercent" type="range" value="50" min="0" max="105" step="1" /></div>
+    <div class="lavender">n <input class="controlItem" id="copy_dims_widthAbsolute" type="range" value="200" min="0" max="405" step="1" /></div>
 
-    <div class="green label">startX</div>
-    <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="pink label">Copy Starts (n)</div>
+    <div class="pink">X: <input class="controlItem" id="copy_start_xAbsolute" type="range" value="100" min="-5" max="405" step="1" /></div>
+    <div class="pink">Y: <input class="controlItem" id="copy_start_yAbsolute" type="range" value="100" min="-5" max="405" step="1" /></div>
 
-    <div class="blue label">endX</div>
-    <div class="blue"><input class="controlItem" id="endX" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="lavender label">Copy Height</div>
+    <div class="lavender">'n%' <input class="controlItem" id="copy_dims_heightPercent" type="range" value="50" min="0" max="105" step="1" /></div>
+    <div class="lavender">n <input class="controlItem" id="copy_dims_heightAbsolute" type="range" value="200" min="0" max="405" step="1" /></div>
 
-    <div class="green label">startY</div>
-    <div class="green"><input class="controlItem" id="startY" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="yellow label">Paste Width</div>
+    <div class="yellow">'n%' <input class="controlItem" id="paste_dims_widthPercent" type="range" value="33" min="0" max="120" step="1" /></div>
+    <div class="yellow">n <input class="controlItem" id="paste_dims_widthAbsolute" type="range" value="200" min="0" max="500" step="1" /></div>
 
-    <div class="blue label">endY</div>
-    <div class="blue"><input class="controlItem" id="endY" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="yellow label">Paste Height</div>
+    <div class="yellow">'n%' <input class="controlItem" id="paste_dims_heightPercent" type="range" value="50" min="0" max="120" step="1" /></div>
+    <div class="yellow">n <input class="controlItem" id="paste_dims_heightAbsolute" type="range" value="200" min="0" max="500" step="1" /></div>
 
-    <div class="yellow label">Include red</div>
+    <div class="blue label">Paste Starts ('n%')</div>
+    <div class="blue">X: <input class="controlItem" id="paste_start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="paste_start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="green label">Paste Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="paste_handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="paste_handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="blue label">Paste Starts (n)</div>
+    <div class="blue">X: <input class="controlItem" id="paste_start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
+    <div class="blue">Y: <input class="controlItem" id="paste_start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
+
+    <div class="green label">Paste Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="paste_handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="paste_handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+
+    <div class="blue label">Paste Starts ('str')</div>
+    <div class="blue">X: <select class="controlItem" id="paste_start_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="blue">Y: <select class="controlItem" id="paste_start_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="green label">Paste Handles ('str')</div>
+    <div class="green">X: <select class="controlItem" id="paste_handle_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="green">Y: <select class="controlItem" id="paste_handle_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0" max="2" step="0.01" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-upend</div>
     <div class="yellow">
-      <select class="controlItem" id="red">
+      <select class="controlItem" id="upend">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
     </div>
+    <div class="yellow">&nbsp;</div>
 
-    <div class="yellow label">Include blue</div>
+    <div class="yellow label">Flip-reverse</div>
     <div class="yellow">
-        <select class="controlItem" id="blue">
-          <option value="0">false</option>
-          <option value="1">true</option>
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
       </select>
     </div>
+    <div class="yellow">&nbsp;</div>
 
   </div>
-
-  <canvas id="mycanvas" width="400" height="400"></canvas>
-
-  <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Setup a linear gradient, and a block entity which uses the gradient for its fillStyle value</li>
-      <li>Check that we can successfully manipulate the gradient's start and end coordinates</li>
-      <li>Check that we can successfully manipulate the palettes's start and end cursors</li>
-      <li>Check that we can dynamically add and remove color stops</li>
+      <li>Same checks as for Demo Canvas 009</li>
+      <li>Check to see that video play starts in both Picture entitys when user clicks on canvas</li>
     </ul>
-
-    <h4>Note that:</h4>
-    <p>Demos canvas-010 and canvas-011 are not working in Edge, which is weird given that other gradient demos (-012 to -015) work fine.</p>
   </div>
+
+  <video preload="metadata" class="myvideo" id="waves">
+    <source src="img/Sea - 4006.mp4" type="video/mp4">
+  </video>
 
   <script src="canvas-010.js" type="module"></script>
 

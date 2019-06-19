@@ -5,30 +5,167 @@ scrawl.setScrawlPath('/source');
 // Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setNow({
-	width: 400,
-	height: 200,
-	fit: 'fill',
-	backgroundColor: 'lightgreen',
-	css: {
-		border: '1px solid green'
-	}
-});
-
-canvas.buildCell({
-	name: 'mycell',
-	width: '50%',
-	height: '50%',
-	startX: 'center',
-	startY: 'center',
-	handleX: 'center',
-	handleY: 'center',
-	roll: 15,
-	scale: 1.39,
-	backgroundColor: 'blue'
+canvas.setBase({
+	backgroundColor: 'aliceblue'
 });
 
 
-// Trigger a display cycle
-canvas.render()
-.catch(function(){});
+// Create and clone block entitys
+scrawl.makeBlock({
+	name: 'myblock-fill',
+	width: 100,
+	height: 100,
+	startX: 25,
+	startY: 25,
+
+	fillStyle: 'green',
+	strokeStyle: 'gold',
+
+	lineWidth: 6,
+	lineJoin: 'round',
+	shadowOffsetX: 4,
+	shadowOffsetY: 4,
+	shadowBlur: 2,
+	shadowColor: 'black',
+
+}).clone({
+	name: 'myblock-draw',
+	startX: 175,
+	method: 'draw',
+	sharedState: true
+
+}).clone({
+	name: 'myblock-drawFill',
+	startX: 325,
+	method: 'drawFill',
+
+}).clone({
+	name: 'myblock-fillDraw',
+	startX: 475,
+	method: 'fillDraw',
+	sharedState: true
+
+}).clone({
+	name: 'myblock-floatOver',
+	startY: 175,
+	method: 'floatOver'
+
+}).clone({
+	name: 'myblock-sinkInto',
+	startX: 325,
+	method: 'sinkInto',
+	sharedState: true
+
+}).clone({
+	name: 'myblock-clear',
+	startX: 175,
+	method: 'clear'
+});
+
+
+// Create and clone Wheel entitys
+scrawl.makeWheel({
+	name: 'mywheel-fill',
+	radius: 50,
+	startAngle: 15,
+	endAngle: -15,
+	includeCenter: true,
+
+	startX: 475,
+	startY: 475,
+
+	fillStyle: 'purple',
+	strokeStyle: 'gold',
+
+	lineWidth: 6,
+	lineJoin: 'round',
+	shadowOffsetX: 4,
+	shadowOffsetY: 4,
+	shadowBlur: 2,
+	shadowColor: 'black'
+
+}).clone({
+	name: 'mywheel-draw',
+	startX: 325,
+	method: 'draw',
+	sharedState: true
+
+}).clone({
+	name: 'mywheel-drawFill',
+	startX: 175,
+	method: 'drawFill',
+
+}).clone({
+	name: 'mywheel-fillDraw',
+	startX: 25,
+	method: 'fillDraw',
+	sharedState: true
+
+}).clone({
+	name: 'mywheel-floatOver',
+	startY: 325,
+	method: 'floatOver'
+
+}).clone({
+	name: 'mywheel-sinkInto',
+	startX: 175,
+	method: 'sinkInto',
+	sharedState: true
+
+}).clone({
+	name: 'mywheel-clear',
+	startX: 325,
+	method: 'clear'
+});
+
+
+// Change the fill and stroke styles on one of the blocks, and one of the wheels, and any entitys sharing their respective states
+scrawl.library.artefact['myblock-fillDraw'].set({
+	fillStyle: 'blue',
+	strokeStyle: 'coral'
+});
+
+// Entitys can be found in both the 'artefact' and 'entity' sections of the library
+scrawl.library.entity['mywheel-fillDraw'].set({
+	fillStyle: 'blue',
+	strokeStyle: 'coral'
+});
+
+
+// Create the drag-and-drop zone
+let current = scrawl.makeDragZone({
+
+	zone: canvas,
+	endOn: ['up', 'leave'],
+	exposeCurrentArtefact: true,
+});
+
+
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
+
+	let testTicker = Date.now(),
+		testTime, testNow, dragging,
+		testMessage = document.querySelector('#reportmessage');
+
+	return function () {
+
+		dragging = current();
+
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
+
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
+	};
+}();
+
+
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
+
+	name: 'demo-animation',
+	target: canvas,
+	afterShow: report,
+});

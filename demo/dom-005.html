@@ -8,31 +8,22 @@
   <title>Demo DOM 005</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
-
-  <style>
-    #mystack {
-      width: 500px;
-      height: 500px;
-    }
-  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 005</h1>
-  <h2>Simple tween of an element in a stack</h2>
+  <h2>DOM tween stress test</h2>
+  <h3>Click on star field to add more stars</h3>
 
-  <div id="mystack" data-stack>
-    <div id="myelement"></div>
-  </div>
+  <div id="porthole" data-stack></div>
 
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create a tween and its associated ticker, describing changes to several attributes</li>
-      <li>Subscribe an artefact (a stack element) to the tween</li>
-      <li>Animate the tween in an endless loop</li>
+      <li>Create and run many tweens/tickers, each associated with a single stack element</li>
+      <li>Test to see how many tweens a browser can run at a reasonable speed</li>
     </ul>
   </div>
 

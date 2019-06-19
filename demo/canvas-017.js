@@ -2,256 +2,203 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
+// Setup
+let canvas = scrawl.library.artefact.mycanvas;
 
 
-// Get image from DOM
-scrawl.importDomImage('.flowers');
+// Create Phrase entity
+let lorem = scrawl.makePhrase({
 
-// Create Picture entity
-let piccy = scrawl.makePicture({
-
-	name: 'myFlower',
-	asset: 'iris',
-
-	width: 200,
-	height: 200,
+	name: 'myPhrase',
 
 	startX: 300,
 	startY: 200,
-	handleX: 100,
-	handleY: 100,
+	handleX: '50%',
+	handleY: '50%',
+	width: '50%',
 
-	copyWidth: 200,
-	copyHeight: 200,
-	copyStartX: 100,
-	copyStartY: 100,
+	text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
+	font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
-	lineWidth: 10,
+	fillStyle: '#003399',
 
-	order: 1,
-	method: 'drawFill',
-
-});
-
-piccy.clone({
-
-	name: 'myFactory',
-	imageSource: 'img/canalFactory-800.png',
-
-	width: 600,
-	height: 400,
-
-	startX: 0,
-	startY: 0,
-	handleX: 0,
-	handleY: 0,
-
-	copyWidth: 600,
-	copyHeight: 400,
-	copyStartX: 150,
-	copyStartY: 0,
-
-	order: 0,
 	method: 'fill',
+	showBoundingBox: true,
 });
 
-// Event listeners
-let stopE = (e) => {
 
-	e.preventDefault();
-	e.returnValue = false;
-};
+// Setup some glyph styles on various parts of the phrase text
+lorem.setGlyphStyles({
 
-let events = (e) => {
+	defaults: true
+}, 70, 126, 158).setGlyphStyles({
 
-	let items = {};
+	fill: 'black'
+}, 12).setGlyphStyles({
 
-	stopE(e);
+	style: 'italic'
+}, 22).setGlyphStyles({
 
-	switch (e.target.id) {
+	style: 'normal'
+}, 30).setGlyphStyles({
 
-		case 'copy_start_xPercent':
-			items.copyStartX = e.target.value + '%';
-			break;
+	variant: 'small-caps'
+}, 42).setGlyphStyles({
 
-		case 'copy_start_yPercent':
-			items.copyStartY = e.target.value + '%';
-			break;
+	variant: 'normal'
+}, 52).setGlyphStyles({
 
-		case 'copy_dims_widthPercent':
-			items.copyWidth = e.target.value + '%';
-			break;
+	weight: 'bold'
+}, 67, 92, 155).setGlyphStyles({
 
-		case 'copy_dims_widthAbsolute':
-			items.copyWidth = Math.round(e.target.value);
-			break;
+	weight: 'normal'
+}, 95).setGlyphStyles({
 
-		case 'copy_start_xAbsolute':
-			items.copyStartX = Math.round(e.target.value);
-			break;
+	highlight: true
+}, 106).setGlyphStyles({
 
-		case 'copy_start_yAbsolute':
-			items.copyStartY = Math.round(e.target.value);
-			break;
+	highlight: false
+}, 118).setGlyphStyles({
 
-		case 'copy_dims_heightPercent':
-			items.copyHeight = e.target.value + '%';
-			break;
+	underline: true
+}, 140).setGlyphStyles({
 
-		case 'copy_dims_heightAbsolute':
-			items.copyHeight = Math.round(e.target.value);
-			break;
+	underline: false
+}, 148).setGlyphStyles({
 
-		case 'paste_dims_widthPercent':
-			items.width = e.target.value + '%';
-			break;
+	overline: true
+}, 102).setGlyphStyles({
 
-		case 'paste_dims_widthAbsolute':
-			items.width = Math.round(e.target.value);
-			break;
+	overline: false
+}, 114).setGlyphStyles({
 
-		case 'paste_dims_heightPercent':
-			items.height = e.target.value + '%';
-			break;
+	size: '24px'
+}, 123).setGlyphStyles({
 
-		case 'paste_dims_heightAbsolute':
-			items.height = Math.round(e.target.value);
-			break;
+	space: 10
+}, 132).setGlyphStyles({
 
-		case 'paste_start_xPercent':
-			items.startX = e.target.value + '%';
-			break;
+	space: 0
+}, 135).setGlyphStyles({
 
-		case 'paste_start_yPercent':
-			items.startY = e.target.value + '%';
-			break;
+	family: 'monospace'
+}, 149);
 
-		case 'paste_handle_xPercent':
-			items.handleX = e.target.value + '%';
-			break;
 
-		case 'paste_handle_yPercent':
-			items.handleY = e.target.value + '%';
-			break;
+// Add a pivoted Wheel entity
+scrawl.makeWheel({
 
-		case 'paste_start_xAbsolute':
-			items.startX = Math.round(e.target.value);
-			break;
+	method: 'fillDraw',
+	fillStyle: 'gold',
+	strokeStyle: 'darkblue',
 
-		case 'paste_start_yAbsolute':
-			items.startY = Math.round(e.target.value);
-			break;
+	radius: 5,
+	handleX: 'center',
+	handleY: 'center',
 
-		case 'paste_handle_xAbsolute':
-			items.handleX = Math.round(e.target.value);
-			break;
+	pivot: 'myPhrase',
+	lockTo: 'pivot',
+});
 
-		case 'paste_handle_yAbsolute':
-			items.handleY = Math.round(e.target.value);
-			break;
 
-		case 'paste_start_xString':
-			items.startX = e.target.value;
-			break;
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
 
-		case 'paste_start_yString':
-			items.startY = e.target.value;
-			break;
+	let testTicker = Date.now(),
+		testTime, testNow, dragging,
+		testMessage = document.querySelector('#reportmessage');
 
-		case 'paste_handle_xString':
-			items.handleX = e.target.value;
-			break;
+	return function () {
 
-		case 'paste_handle_yString':
-			items.handleY = e.target.value;
-			break;
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
 
-		case 'roll':
-			items.roll = parseFloat(e.target.value);
-			break;
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+	};
+}();
 
-		case 'scale':
-			items.scale = parseFloat(e.target.value);
-			break;
 
-		case 'upend':
-			items.flipUpend = (e.target.value === '1') ? true : false;
-			break;
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
 
-		case 'reverse':
-			items.flipReverse = (e.target.value === '1') ? true : false;
-			break;
-	}
+	name: 'demo-animation',
+	target: canvas,
+	afterShow: report,
+});
 
-	piccy.set(items);
-};
 
-scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
+// User interaction - setup form observer functionality
+scrawl.observeAndUpdate({
+
+	event: ['input', 'change'],
+	origin: '.controlItem',
+
+	target: lorem,
+
+	useNativeListener: true,
+	preventDefault: true,
+
+	updates: {
+
+		absoluteWidth: ['width', 'round'],
+
+		start_xPercent: ['startX', '%'],
+		start_xAbsolute: ['startX', 'round'],
+		start_xString: ['startX', 'raw'],
+
+		start_yPercent: ['startY', '%'],
+		start_yAbsolute: ['startY', 'round'],
+		start_yString: ['startY', 'raw'],
+
+		handle_xPercent: ['handleX', '%'],
+		handle_xAbsolute: ['handleX', 'round'],
+		handle_xString: ['handleX', 'raw'],
+
+		handle_yPercent: ['handleY', '%'],
+		handle_yAbsolute: ['handleY', 'round'],
+		handle_yString: ['handleY', 'raw'],
+
+		roll: ['roll', 'float'],
+		scale: ['scale', 'float'],
+
+		upend: ['flipUpend', 'boolean'],
+		reverse: ['flipReverse', 'boolean'],
+
+		overline: ['overlinePosition', 'float'],
+		letterSpacing: ['letterSpacing', 'float'],
+		lineHeight: ['lineHeight', 'float'],
+		justify: ['justify', 'raw'],
+		family: ['family', 'raw'],
+
+		size_string: ['size', 'raw'],
+		size_px: ['size', 'px'],
+	},
+});
 
 
 // Setup form
-document.querySelector('#copy_start_xPercent').value = 25;
-document.querySelector('#copy_start_yPercent').value = 25;
-document.querySelector('#copy_dims_widthPercent').value = 50;
-document.querySelector('#copy_dims_widthAbsolute').value = 200;
-document.querySelector('#copy_start_xAbsolute').value = 100;
-document.querySelector('#copy_start_yAbsolute').value = 100;
-document.querySelector('#copy_dims_heightPercent').value = 50;
-document.querySelector('#copy_dims_heightAbsolute').value = 200;
-document.querySelector('#paste_dims_widthPercent').value = 33;
-document.querySelector('#paste_dims_widthAbsolute').value = 200;
-document.querySelector('#paste_dims_heightPercent').value = 50;
-document.querySelector('#paste_dims_heightAbsolute').value = 200;
-document.querySelector('#paste_start_xPercent').value = 50;
-document.querySelector('#paste_start_yPercent').value = 50;
-document.querySelector('#paste_handle_xPercent').value = 50;
-document.querySelector('#paste_handle_yPercent').value = 50;
-document.querySelector('#paste_start_xAbsolute').value = 300;
-document.querySelector('#paste_start_yAbsolute').value = 200;
-document.querySelector('#paste_handle_xAbsolute').value = 100;
-document.querySelector('#paste_handle_yAbsolute').value = 100;
-document.querySelector('#paste_start_xString').options.selectedIndex = 1;
-document.querySelector('#paste_start_yString').options.selectedIndex = 1;
-document.querySelector('#paste_handle_xString').options.selectedIndex = 1;
-document.querySelector('#paste_handle_yString').options.selectedIndex = 1;
+document.querySelector('#start_xPercent').value = 50;
+document.querySelector('#start_yPercent').value = 50;
+document.querySelector('#handle_xPercent').value = 50;
+document.querySelector('#handle_yPercent').value = 50;
+document.querySelector('#start_xAbsolute').value = 300;
+document.querySelector('#start_yAbsolute').value = 200;
+document.querySelector('#handle_xAbsolute').value = 100;
+document.querySelector('#handle_yAbsolute').value = 100;
+document.querySelector('#start_xString').options.selectedIndex = 1;
+document.querySelector('#start_yString').options.selectedIndex = 1;
+document.querySelector('#handle_xString').options.selectedIndex = 1;
+document.querySelector('#handle_yString').options.selectedIndex = 1;
 document.querySelector('#roll').value = 0;
 document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
-
-
-// Animation 
-scrawl.makeAnimation({
-
-	name: 'testC017Display',
-	
-	fn: function(){
-		
-		return new Promise((resolve) => {
-
-			scrawl.render()
-			.then(() => {
-
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
-
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-				assets: ${scrawl.library.assetnames.length}; artefacts: ${scrawl.library.artefactnames.length}`;
-
-				resolve(true);
-			})
-			.catch((err) => {
-
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
-
-				resolve(false);
-			});
-		});
-	}
-});
+document.querySelector('#overline').value = 0.1;
+document.querySelector('#absoluteWidth').value = 300;
+document.querySelector('#lineHeight').value = 1.5;
+document.querySelector('#letterSpacing').value = 0;
+document.querySelector('#justify').options.selectedIndex = 0;
+document.querySelector('#family').options.selectedIndex = 0;
+document.querySelector('#size_px').value = 16;
+document.querySelector('#size_string').options.selectedIndex = 4;

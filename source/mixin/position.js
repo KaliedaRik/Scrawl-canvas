@@ -2,9 +2,10 @@
 # Position mixin
 */
 import { artefact, group } from '../core/library.js';
-import { defaultNonReturnFunction, mergeOver, mergeInto, isa_obj, xt, xta, addStrings, xtGet, pushUnique, removeItem } from '../core/utilities.js';
+import { defaultNonReturnFunction, mergeOver, mergeInto, mergeDiscard, isa_obj, isa_number, xt, xta, addStrings, xtGet, pushUnique, removeItem } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
+import { makeCoordinate, checkCoordinate } from '../factory/coordinate.js';
 export default function (P = {}) {
 
 /*
@@ -17,100 +18,90 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
-		lockXTo: 'start',
+		scale: 1,
 
 /*
 
 */
-		lockYTo: 'start',
+		dimensions: null,
+		actionResize: false,
 
 /*
 
 */
-		mimic: '',
+		start: null,
 
 /*
 
 */
-		mimicPaddingWidth: 0,
-		mimicPaddingHeight: 0,
-		localMimicPaddingWidth: 0,
-		localMimicPaddingHeight: 0,
+		handle: null,
 
 /*
 
 */
-		start: {},
+		offset: null,
 
 /*
 
 */
-		currentStart: {},
-
-/*
-
-*/
-		handle: {},
-
-/*
-
-*/
-		currentHandle: {},
-
-/*
-
-*/
-		offset: {},
-
-/*
-
-*/
-		currentOffset: {},
-
-/*
-
-*/
-		dragOffset: {},
+		isBeingDragged: false,
 
 /*
 
 */
 		pivot: '',
+		pivoted: null,
 
-/*
-
-*/
-		pivoted: {},
-
-/*
-
-*/
 		addPivotHandle: false,
-
-/*
-
-*/
-		rotateOnPivot: false,
-
-/*
-
-*/
-		roll: 0,
+		addPivotOffset: true,
+		addPivotRotation: false,
 
 /*
 
 */
 		path: '',
 
-/*
-
-*/
 		pathPosition: 0,
 
+		addPathHandle: false,
+		addPathOffset: true,
+		addPathRotation: false,
+
+		controlSubscriber: null,
+		startControlSubscriber: null,
+		endControlSubscriber: null,
+		endSubscriber: null,
+
 /*
 
 */
-		addPathRoll: false,
+		mimic: '',
+		mimicked: null,
+
+		useMimicDimensions: false,
+		useMimicScale: false,
+		useMimicStart: false,
+		useMimicHandle: false,
+		useMimicOffset: false,
+		useMimicRotation: false,
+		useMimicFlip: false,
+
+		addOwnDimensionsToMimic: false,
+		addOwnScaleToMimic: false,
+		addOwnStartToMimic: false,
+		addOwnHandleToMimic: false,
+		addOwnOffsetToMimic: false,
+		addOwnRotationToMimic: false,
+
+/*
+
+*/
+		lockTo: null,
+
+/*
+
+*/
+		roll: 0,
 
 /*
 
@@ -125,22 +116,17 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
-		width: 0,
+		delta: null,
 
 /*
 
 */
-		height: 0,
+		host: null,
 
 /*
 
 */
-		scale: 1,
-
-/*
-
-*/
-		delta: {},
+		group: null,
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -156,253 +142,335 @@ All factories using the position mixin will add these to their prototype objects
 */
 	G.startX = function () {
 
-		this.checkVector('start');
-		return this.start.x;
+		return this.currentStart[0];
 	};
 
-/*
-
-*/
 	G.startY = function () {
 
-		this.checkVector('start');
-		return this.start.y;
+		return this.currentStart[1];
 	};
 
-/*
-
-*/
 	G.handleX = function () {
 
-		this.checkVector('handle');
-		return this.handle.x;
+		return this.currentHandle[0];
 	};
 	
-/*
-
-*/
 	G.handleY = function () {
 
-		this.checkVector('handle');
-		return this.handle.y;
+		return this.currentHandle[1];
 	};
 
-/*
-
-*/
 	G.offsetX = function () {
 
-		this.checkVector('offset');
-		return this.offset.x;
+		return this.currentOffset[0];
 	};
 
-/*
-
-*/
 	G.offsetY = function () {
 
-		this.checkVector('offset');
-		return this.offset.y;
+		return this.currentOffset[1];
 	};
 
-/*
-
-*/
 	G.dragOffsetX = function () {
 
-		this.checkVector('dragOffset');
-		return this.dragOffset.x;
+		return this.dragOffset[0];
 	};
 
-/*
-
-*/
 	G.dragOffsetY = function () {
 
-		this.checkVector('dragOffset');
-		return this.dragOffset.y;
+		return this.dragOffset[1];
+	};
+
+	G.width = function () {
+
+		return this.currentDimensions[0];
+	};
+
+	G.height = function () {
+
+		return this.currentDimensions[1];
 	};
 
 /*
 
 */
-	S.startX = function (item) {
+	S.width = function (val) {
 
-		this.checkVector('start');
-		this.start.x = item;
+		if (val != null) {
+
+			this.dimensions[0] = val;
+			this.dirtyDimensions = true;
+		}
+	};
+
+	S.height = function (val) {
+
+		if (val != null) {
+
+			this.dimensions[1] = val;
+			this.dirtyDimensions = true;
+		}
+	};
+
+	S.dimensions = function (w, h) {
+
+		this.setCoordinateHelper('dimensions', w, h);
+		this.dirtyDimensions = true;
+	};
+
+	D.width = function (val) {
+
+		let c = this.dimensions;
+		c[0] = addStrings(c[0], val);
+		this.dirtyDimensions = true;
+	};
+
+	D.height = function (val) {
+
+		let c = this.dimensions;
+		c[1] = addStrings(c[1], val);
+		this.dirtyDimensions = true;
+	};
+
+	D.dimensions = function (w, h) {
+
+		this.setDeltaCoordinateHelper('dimensions', w, h);
+		this.dirtyDimensions = true;
+	}
+
+/*
+
+*/
+	S.startX = function (coord) {
+
+		if (coord != null) {
+
+			this.start[0] = coord;
+			this.dirtyStart = true;
+		}
+	};
+
+	S.startY = function (coord) {
+
+		if (coord != null) {
+
+			this.start[1] = coord;
+			this.dirtyStart = true;
+		}
+	};
+
+	S.start = function (x, y) {
+
+		this.setCoordinateHelper('start', x, y);
+		this.dirtyStart = true;
+	};
+
+	D.startX = function (coord) {
+
+		let c = this.start;
+		c[0] = addStrings(c[0], coord);
+		this.dirtyStart = true;
+	};
+
+	D.startY = function (coord) {
+
+		let c = this.start;
+		c[1] = addStrings(c[1], coord);
+		this.dirtyStart = true;
+	};
+
+	D.start = function (x, y) {
+
+		this.setDeltaCoordinateHelper('start', x, y);
 		this.dirtyStart = true;
 	};
 
 /*
 
 */
-	S.startY = function (item) {
+	S.handleX = function (coord) {
 
-		this.checkVector('start');
-		this.start.y = item;
-		this.dirtyStart = true;
+		if (coord != null) {
+
+			this.handle[0] = coord;
+			this.dirtyHandle = true;
+		}
 	};
 
-/*
+	S.handleY = function (coord) {
 
-*/
-	S.start = function (item = {}) {
+		if (coord != null) {
 
-		this.checkVector('start');
-		this.start.x = (xt(item.x)) ? item.x : this.start.x;
-		this.start.y = (xt(item.y)) ? item.y : this.start.y;
-		this.dirtyStart = true;
+			this.handle[1] = coord;
+			this.dirtyHandle = true;
+		}
 	};
 
-/*
+	S.handle = function (x, y) {
 
-*/
-	S.handleX = function (item) {
+		this.setCoordinateHelper('handle', x, y);
+		this.dirtyHandle = true;
+	};
 
-		this.checkVector('handle');
-		this.handle.x = item;
+	D.handleX = function (coord) {
+
+		let c = this.handle;
+		c[0] = addStrings(c[0], coord);
+		this.dirtyHandle = true;
+	};
+
+	D.handleY = function (coord) {
+
+		let c = this.handle;
+		c[1] = addStrings(c[1], coord);
+		this.dirtyHandle = true;
+	};
+
+	D.handle = function (x, y) {
+
+		this.setDeltaCoordinateHelper('handle', x, y);
 		this.dirtyHandle = true;
 	};
 
 /*
 
 */
-	S.handleY = function (item) {
+	S.offsetX = function (coord) {
 
-		this.checkVector('handle');
-		this.handle.y = item;
-		this.dirtyHandle = true;
+		if (coord != null) {
+
+			this.offset[0] = coord;
+			this.dirtyOffset = true;
+		}
+	};
+
+	S.offsetY = function (coord) {
+
+		if (coord != null) {
+
+			this.offset[1] = coord;
+			this.dirtyOffset = true;
+		}
+	};
+
+	S.offset = function (x, y) {
+
+		this.setCoordinateHelper('offset', x, y);
+		this.dirtyOffset = true;
+	};
+
+	D.offsetX = function (coord) {
+
+		let c = this.offset;
+		c[0] = addStrings(c[0], coord);
+		this.dirtyOffset = true;
+	};
+
+	D.offsetY = function (coord) {
+
+		let c = this.offset;
+		c[1] = addStrings(c[1], coord);
+		this.dirtyOffset = true;
+	};
+
+	D.offset = function (x, y) {
+
+		this.setDeltaCoordinateHelper('offset', x, y);
+		this.dirtyOffset = true;
 	};
 
 /*
-
+We absolutely do not want users messing around with dragOffset values
 */
-	S.handle = function (item = {}) {
-
-		this.checkVector('handle');
-		this.handle.x = (xt(item.x)) ? item.x : this.handle.x;
-		this.handle.y = (xt(item.y)) ? item.y : this.handle.y;
-		this.dirtyHandle = true;
-	};
+	S.dragOffsetX = defaultNonReturnFunction;
+	S.dragOffsetY = defaultNonReturnFunction;
+	S.dragOffset = defaultNonReturnFunction;
+	D.dragOffsetX = defaultNonReturnFunction;
+	D.dragOffsetY = defaultNonReturnFunction;
+	D.dragOffset = defaultNonReturnFunction;
 
 /*
 
 */
 	S.pivot = function (item) {
 
-		let p;
+		let oldPivot = this.pivot,
+			newPivot = (item.substring) ? artefact[item] : item,
+			name = this.name;
 
-		if (this.pivot !== item) {
+		if (newPivot && newPivot.name) {
 
-			if (this.pivot) {
+			if (oldPivot && oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
 
-				p = artefact[this.pivot];
-				if (p) {
+			pushUnique(newPivot.pivoted, name);
 
-					if( !p.pivoted) p.pivoted = [];
-					removeItem(p.pivoted, this.name);
-				}
-			}
-			if (item) {
-
-				p = artefact[item];
-				if (p) {
-
-					if (!p.pivoted) p.pivoted = [];
-					pushUnique(p.pivoted, this.name);
-				}
-			}
+			this.pivot = newPivot;
+			this.dirtyStampPositions = true;
+			this.dirtyStampHandlePositions = true;
 		}
-		this.pivot = item
 	};
 
 /*
 
 */
-	S.offsetX = function (item) {
+	S.path = function (item) {
 
-		this.checkVector('offset');
-		this.offset.x = item;
-		this.dirtyOffset = true;
+		let oldPath = this.path,
+			newPath = (item.substring) ? artefact[item] : item,
+			name = this.name;
+
+		if (newPath && newPath.name && newPath.useAsPath) {
+
+			if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
+
+			pushUnique(newPath.pathed, name);
+
+			this.path = newPath;
+			this.dirtyStampPositions = true;
+			this.dirtyStampHandlePositions = true;
+		}
+	};
+
+	S.pathPosition = function (item) {
+
+		if (item < 0) item = Math.abs(item);
+		if (item > 1) item = item % 1;
+
+		this.pathPosition = parseFloat(item.toFixed(6));
+		this.dirtyStampPositions = true;
+		this.dirtyStampHandlePositions = true;
+	};
+
+	D.pathPosition = function (item) {
+
+		let pos = this.pathPosition + item
+
+		if (pos < 0) pos += 1;
+		if (pos > 1) pos = pos % 1;
+
+		this.pathPosition = parseFloat(pos.toFixed(6));
+		this.dirtyStampPositions = true;
+		this.dirtyStampHandlePositions = true;
 	};
 
 /*
 
 */
-	S.offsetY = function (item) {
+	S.mimic = function (item) {
 
-		this.checkVector('offset');
-		this.offset.y = item;
-		this.dirtyOffset = true;
-	};
+		let oldMimic = this.mimic,
+			newMimic = (item.substring) ? artefact[item] : item,
+			name = this.name;
 
-/*
+		if (newMimic && newMimic.name) {
 
-*/
-	S.offset = function (item = {}) {
+			if (oldMimic && oldMimic.name !== newMimic.name) removeItem(oldMimic.mimicked, name);
 
-		this.checkVector('offset');
-		this.offset.x = (xt(item.x)) ? item.x : this.offset.x;
-		this.offset.y = (xt(item.y)) ? item.y : this.offset.y;
-		this.dirtyOffset = true;
-	};
+			pushUnique(newMimic.mimicked, name);
 
-/*
-
-*/
-	S.dragOffsetX = defaultNonReturnFunction;
-	S.dragOffsetY = defaultNonReturnFunction;
-	S.dragOffset = defaultNonReturnFunction;
-
-/*
-
-*/
-	S.width = function (item) {
-
-		this.width = item;
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	S.height = function (item) {
-
-		this.height = item;
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	S.mimicPadding = function (item) {
-
-		this.mimicPaddingWidth = item;
-		this.mimicPaddingHeight = item;
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	S.mimicPaddingWidth = function (item) {
-
-		this.mimicPaddingWidth = item;
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	S.mimicPaddingHeight = function (item) {
-
-		this.mimicPaddingHeight = item;
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
+			this.mimic = newMimic;
+			this.dirtyStampPositions = true;
+			this.dirtyStampHandlePositions = true;
+		}
 	};
 
 /*
@@ -410,8 +478,29 @@ All factories using the position mixin will add these to their prototype objects
 */
 	S.lockTo = function (item) {
 
-		this.lockXTo = item;
-		this.lockYTo = item;
+		if (Array.isArray(item)) {
+
+			this.lockTo[0] = item[0];
+			this.lockTo[1] = item[1];
+		}
+		else {
+
+			this.lockTo[0] = item;
+			this.lockTo[1] = item;
+		}
+		this.dirtyLock = true;
+	};
+
+	S.lockXTo = function (item) {
+
+		this.lockTo[0] = item;
+		this.dirtyLock = true;
+	};
+
+	S.lockYTo = function (item) {
+
+		this.lockTo[1] = item;
+		this.dirtyLock = true;
 	};
 
 /*
@@ -419,7 +508,17 @@ All factories using the position mixin will add these to their prototype objects
 */
 	S.roll = function (item) {
 
+		if (!isa_number(item)) throw new Error(`mixin/position error - S.roll() argument not a number: ${item}`);
+
 		this.roll = item;
+		this.dirtyRotation = true;
+	};
+
+	D.roll = function (item) {
+
+		if (!isa_number(item)) throw new Error(`mixin/position error - D.roll() argument not a number: ${item}`);
+		
+		this.roll += item;
 		this.dirtyRotation = true;
 	};
 
@@ -428,237 +527,297 @@ All factories using the position mixin will add these to their prototype objects
 */
 	S.scale = function (item) {
 
+		if (!isa_number(item)) throw new Error(`mixin/position error - S.scale() argument not a number: ${item}`);
+		
 		this.scale = item;
 		this.dirtyScale = true;
-		this.dirtyPivoted = true;
 	};
 
-/*
-Overwrites the old delta object with a new one, thus no practical way of resetting a subset of existing attributes in the delta object with new values
-*/
-	S.delta = function (item) {
+	D.scale = function (item) {
 
-		this.delta = isa_obj(item) ? item : {};
-	};
-
-/*
-
-*/
-	D.startX = function (item) {
-
-		this.checkVector('start');
-		this.start.x = addStrings(this.start.x, item);
-		this.dirtyStart = true;
+		if (!isa_number(item)) throw new Error(`mixin/position error - D.scale() argument not a number: ${item}`);
+		
+		this.scale += item;
+		this.dirtyScale = true;
 	};
 
 /*
 
 */
-	D.startY = function (item) {
+	S.delta = function (items = {}) {
 
-		this.checkVector('start');
-		this.start.y = addStrings(this.start.y, item);
-		this.dirtyStart = true;
+		if (items) this.delta = mergeDiscard(this.delta, items);
 	};
 
 /*
 
 */
-	D.start = function (item = {}) {
+	S.host = function (item) {
 
-		this.checkVector('start');
-		this.start.x = (xt(item.x)) ? addStrings(this.start.x, item) : this.start.x;
-		this.start.y = (xt(item.y)) ? addStrings(this.start.y, item) : this.start.y;
-		this.dirtyStart = true;
-	};
+		if (item) {
 
-/*
+			let host = artefact[item];
 
-*/
-	D.handleX = function (item) {
+			if (host && host.here) this.host = host.name;
+			else this.host = item;
+		}
+		else this.host = '';
 
-		this.checkVector('handle');
-		this.handle.x = addStrings(this.handle.x, item);
+		this.dirtyDimensions = true;
 		this.dirtyHandle = true;
-	};
-
-/*
-
-*/
-	D.handleY = function (item) {
-
-		this.checkVector('handle');
-		this.handle.y = addStrings(this.handle.y, item);
-		this.dirtyHandle = true;
-	};
-
-/*
-
-*/
-	D.handle = function (item = {}) {
-
-		this.checkVector('handle');
-		this.handle.x = (xt(item.x)) ? addStrings(this.handle.x, item) : this.handle.x;
-		this.handle.y = (xt(item.y)) ? addStrings(this.handle.y, item) : this.handle.y;
-		this.dirtyHandle = true;
-	};
-
-/*
-
-*/
-	D.offsetX = function (item) {
-
-		this.checkVector('offset');
-		this.offset.x = addStrings(this.offset.x, item);
+		this.dirtyStart = true;
 		this.dirtyOffset = true;
 	};
 
 /*
 
 */
-	D.offsetY = function (item) {
+	S.group = function (item) {
 
-		this.checkVector('offset');
-		this.offset.y = addStrings(this.offset.y, item);
+		let g;
+
+		if (item) {
+
+			if (this.group && this.group.type === 'Group') this.group.removeArtefacts(this.name);
+
+			if (item.substring) {
+
+				g = group[item];
+
+				if (g) this.group = g;
+				else this.group = item;
+			}
+			else this.group = item;
+		}
+
+		if (this.group && this.group.type === 'Group') this.group.addArtefacts(this.name);
+	};
+
+/*
+
+*/
+	S.addPivotHandle = function (item) {
+
+		this.addPivotHandle = item;
+		this.dirtyHandle = true;
+	};
+
+	S.addPivotOffset = function (item) {
+
+		this.addPivotOffset = item;
 		this.dirtyOffset = true;
 	};
 
-/*
+	S.addPivotRotation = function (item) {
 
-*/
-	D.offset = function (item = {}) {
-
-		this.checkVector('offset');
-		this.offset.x = (xt(item.x)) ? addStrings(this.offset.x, item) : this.offset.x;
-		this.offset.y = (xt(item.y)) ? addStrings(this.offset.y, item) : this.offset.y;
-		this.dirtyOffset = true;
-	};
-
-/*
-
-*/
-	D.dragOffsetX = defaultNonReturnFunction;
-	D.dragOffsetY = defaultNonReturnFunction;
-	D.dragOffset = defaultNonReturnFunction;
-
-/*
-
-*/
-	D.width = function (item) {
-
-		this.width = addStrings(this.width, item);
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	D.height = function (item) {
-
-		this.height = addStrings(this.height, item);
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	D.mimicPadding = function (item) {
-
-		let d = addStrings(this.mimicPadding, item);
-
-		this.mimicPaddingWidth = d;
-		this.mimicPaddingHeight = d;
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	D.mimicPaddingWidth = function (item) {
-
-		this.mimicPaddingWidth = addStrings(this.mimicPadding, item);
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	D.mimicPaddingHeight = function (item) {
-
-		this.mimicPaddingHeight = addStrings(this.mimicPadding, item);
-		this.dirtyDimensions = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	D.roll = function (item) {
-
-		this.roll += item;
+		this.addPivotRotation = item;
 		this.dirtyRotation = true;
 	};
 
-/*
+	S.addPathHandle = function (item) {
 
-*/
-	D.scale = function (item) {
-
-		this.scale += item;
-		this.dirtyScale = true;
-		this.dirtyPivoted = true;
+		this.addPathHandle = item;
+		this.dirtyHandle = true;
 	};
 
+	S.addPathOffset = function (item) {
+
+		this.addPathOffset = item;
+		this.dirtyOffset = true;
+	};
+
+	S.addPathRotation = function (item) {
+
+		this.addPathRotation = item;
+		this.dirtyRotation = true;
+	};
+
+	S.useMimicDimensions = function (item) {
+
+		this.useMimicDimensions = item;
+		this.dirtyDimensions = true;
+	};
+
+	S.useMimicScale = function (item) {
+
+		this.useMimicScale = item;
+		this.dirtyScale = true;
+	};
+
+	S.useMimicStart = function (item) {
+
+		this.useMimicStart = item;
+		this.dirtyStart = true;
+	};
+
+	S.useMimicHandle = function (item) {
+
+		this.useMimicHandle = item;
+		this.dirtyHandle = true;
+	};
+
+	S.useMimicOffset = function (item) {
+
+		this.useMimicOffset = item;
+		this.dirtyOffset = true;
+	};
+
+	S.useMimicRotation = function (item) {
+
+		this.useMimicRotation = item;
+		this.dirtyRotation = true;
+	};
+
+	S.addOwnDimensionsToMimic = function (item) {
+
+		this.addOwnDimensionsToMimic = item;
+		this.dirtyDimensions = true;
+	};
+
+	S.addOwnScaleToMimic = function (item) {
+
+		this.addOwnScaleToMimic = item;
+		this.dirtyScale = true;
+	};
+
+	S.addOwnStartToMimic = function (item) {
+
+		this.addOwnStartToMimic = item;
+		this.dirtyStart = true;
+	};
+
+	S.addOwnHandleToMimic = function (item) {
+
+		this.addOwnHandleToMimic = item;
+		this.dirtyHandle = true;
+	};
+
+	S.addOwnOffsetToMimic = function (item) {
+
+		this.addOwnOffsetToMimic = item;
+		this.dirtyOffset = true;
+	};
+
+	S.addOwnRotationToMimic = function (item) {
+
+		this.addOwnRotationToMimic = item;
+		this.dirtyRotation = true;
+	};
+			
 /*
 ## Define functions to be added to the factory prototype
 */
 
+	P.getBasicData = function () {
+
+		return {
+			w: this.currentDimensions[0],
+			h: this.currentDimensions[1],
+
+			roll: this.currentRoll,
+			scale: this.currentScale,
+			visibility: this.visibility,
+
+			x: this.currentStampPosition[0],
+			y: this.currentStampPosition[1],
+			startX: this.currentStart[0],
+			startY: this.currentStart[1],
+			offsetX: this.currentOffset[0],
+			offsetY: this.currentOffset[1],
+			handleX: this.currentHandle[0],
+			handleY: this.currentHandle[1],
+
+			pivot: (this.pivot) ? this.pivot.name : false,
+			path: (this.path) ? this.path.name : false,
+			mimic: (this.mimic) ? this.mimic.name : false,
+
+			lockX: this.lockTo[0],
+			lockY: this.lockTo[1],
+			isBeingDragged: this.isBeingDragged
+		}
+	}
+
 /*
 
 */
-	P.setDeltaValues = function (items, method) {
+	P.initializePositions = function () {
 
-		method = (method.substring) ? method.toLowerCase() : 'replace';
-		items = isa_obj(items) ? items : {};
+		this.dimensions = makeCoordinate();
+		this.start = makeCoordinate();
+		this.handle = makeCoordinate();
+		this.offset = makeCoordinate();
 
-		let delta = this.delta;
+		this.currentDimensions = makeCoordinate();
+		this.currentStart = makeCoordinate();
+		this.currentHandle = makeCoordinate();
+		this.currentOffset = makeCoordinate();
 
-		switch (method) {
+		this.currentDragOffset = makeCoordinate();
+		this.currentDragCache = makeCoordinate();
+		this.currentStartCache = makeCoordinate();
 
-			case 'into' :
-				// Merges new data __into__ the old data - new attributes added, old attributes unchanged
-				delta = mergeInto(delta, items);
-				break;
+		this.currentStampPosition = makeCoordinate();
+		this.currentStampHandlePosition = makeCoordinate();
 
-			case 'over' :
-				// Merges new data __over__ the old data - new attributes added, old attributes overwritten
-				delta = mergeOver(delta, items);
-				break;
+		this.delta = {};
 
-			case 'reverse' :
-				// Iterates through argument object, which contains key:true values, reversing the sign on those key attributes
-				let keys = Object.keys(items);
+		this.lockTo = ['start', 'start'];
 
-				keys.forEach(key => {
+		this.pivoted = [];
+		this.mimicked = [];
 
-					let item = delta[key];
+		this.controlSubscriber = [];
+		this.startControlSubscriber = [];
+		this.endControlSubscriber = [];
+		this.endSubscriber = [];
 
-					if (items[key] && xt(item)) {
+		this.dirtyScale = true;
+		this.dirtyDimensions = true;
+		this.dirtyLock = true;
+		this.dirtyStart = true;
+		this.dirtyOffset = true;
+		this.dirtyHandle = true;
+		this.dirtyRotation = true;
 
-						if (item.substring) delta[key] = -(parseFloat(item)) + '%';
-						else delta[key] = -item;
-					}
-				});
-				break;
+		this.initializeDomPositions();
+	};
 
-			case 'replace' :
-				// Overwrites the old delta object with a new one
-				delta = items;
-				break;
+	P.initializeDomPositions = defaultNonReturnFunction;
+
+/*
+
+*/
+	P.setCoordinateHelper = function (label, x, y) {
+
+		let c = this[label];
+
+		if (Array.isArray(x)) {
+
+			c[0] = x[0];
+			c[1] = x[1];
+		}
+		else {
+
+			c[0] = x;
+			c[1] = y;
+		}
+	};
+
+	P.setDeltaCoordinateHelper = function (label, x, y) {
+
+		let c = this[label],
+			myX = c[0],
+			myY = c[1];
+
+		if (Array.isArray(x)) {
+
+			c[0] = addStrings(myX, x[0]);
+			c[1] = addStrings(myY, x[1]);
+		}
+		else {
+
+			c[0] = addStrings(myX, x);
+			c[1] = addStrings(myY, y);
 		}
 	};
 
@@ -667,7 +826,8 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 */
 	P.updateByDelta = function () {
 
-		if (this.delta) this.setDelta(this.delta);
+		this.setDelta(this.delta);
+
 		return this;
 	};
 
@@ -676,454 +836,686 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 */
 	P.reverseByDelta = function () {
 
-		let temp, keys, key, i, iz, d, item;
+		let temp = {};
+		
+		Object.entries(this.delta).forEach(([key, val]) => {
 
-		if (this.delta) {
+			if (val.substring) val = -(parseFloat(val)) + '%';
+			else val = -val;
 
-			let delta = this.delta,
-				temp = {},
-				keys = Object.keys(delta);
-			
-			keys.forEach(key => {
+			temp[key] = val;
+		});
 
-				let item = delta[key];
+		this.setDelta(temp);
 
-				if (item.substring) item = -(parseFloat(item)) + '%';
-				else item = -item;
-
-				temp[key] = item;
-			});
-
-			this.setDelta(temp);
-		}
 		return this;
 	};
 
 /*
 
 */
-	P.cleanVectorParameter = function (currentLabel, external, width, height) {
+	P.setDeltaValues = function (items = {}) {
 
-		let dim, def, current;
+		let delta = this.delta, 
+			oldVal, action;
 
-		let getResult = {
-			left: () => 0,
-			top: () => 0,
-			right: () => dim,
-			bottom: () => dim,
-			center: () => dim / 2,
-			percent: () => (parseFloat(def) / 100) * dim
-		};
+		Object.entries(items).forEach(([key, requirement]) => {
 
-		if (xta(currentLabel, external, width, height)) {
+			if (xt(delta[key])) {
 
-			this.checkVector(currentLabel);
-			current = this[currentLabel];
+				// TODO - the idea is that we can do things like 'add:1', 'subtract:5', 'multiply:6', 'divide:3.4', etc
+				// - for this to work, we need to do do work here to split the val string on the ':'
+				// - for now, just do reverse and zero numbers
 
-			def = xtGet(external.x, false);
+				action = requirement;
 
-			if (def.toFixed) current.x = def;
-			else if (def.substring) {
+				oldVal = delta[key];
 
-				dim = width;
+				switch (action) {
 
-				if (getResult[def]) current.x = getResult[def]();
-				else current.x = getResult.percent();
+					case 'reverse' :
+						if (oldVal.toFixed) delta[key] = -oldVal;
+						// TODO: reverse String% (and em, etc) values
+						break;
+
+					case 'zero' :
+						if (oldVal.toFixed) delta[key] = 0;
+						// TODO: zero String% (and em, etc) values
+						break;
+
+					case 'add' :
+						break;
+
+					case 'subtract' :
+						break;
+
+					case 'multiply' :
+						break;
+
+					case 'divide' :
+						break;
+				}
 			}
-
-			def = xtGet(external.y, false);
-
-			if (def.toFixed) current.y = def;
-			else if (def.substring){
-
-				dim = height;
-
-				if (getResult[def]) current.y = getResult[def]();
-				else current.y = getResult.percent();
-			}
-		}
+		})
+		return this;
 	};
 
 /*
 
 */
-	P.cleanHandle = function () {
+	P.getHost = function () {
 
-		this.cleanVectorParameter('currentHandle', this.handle, this.localWidth, this.localHeight);
-	};
+		if (this.currentHost) return this.currentHost;
+		else if (this.host) {
 
-/*
+			let host = artefact[this.host];
 
-*/
-	P.cleanStart = function () {
+			if (host) {
 
-		let here = this.getHere();
-
-		if (here) this.cleanVectorParameter('currentStart', this.start, here.w, here.h);
-	};
-
-/*
-
-*/
-	P.updatePivotSubscribers = function () {
-
-		this.dirtyPivoted = false;
-
-		let pivoted = this.pivoted;
-
-		if (pivoted && pivoted.length) {
-
-			pivoted.forEach(name => {
-
-				item = artefact[name];
-
-				if (item) item.dirtyOffset = true;
-			});
-		}
-	};
-
-/*
-
-*/
-	P.cleanOffsetHelper = function () {
-
-		let w, h,
-			pivot = this.pivot;
-
-		w = this.localWidth;
-		h = this.localHeight;
-
-		if (pivot) {
-
-			pivot = artefact[pivot];
-			
-			if (pivot) {
-
-				if (pivot.dirtyDimensions) pivot.cleanDimensions();
-
-				w = (pivot.localWidth || parseFloat(pivot.width) || 0) * pivot.scale;
-				h = (pivot.localHeight || parseFloat(pivot.height) || 0) * pivot.scale;
+				this.currentHost = host;
+				this.dirtyHost = true;
+				return this.currentHost;
 			}
 		}
-		return [w, h];
+		return currentCorePosition;
 	};
 
 /*
+The __here__ parameter is owned by Canvas, Stack and (if enabled) Element artefacts and is set on them by calling the core/userInteraction.js updateUiSubscribedElement() function - thus not defined or updated by the artefact itself.
+
+    here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}
+
+
+Cell assets also have a __here__ parameter, defined and updated by themselves with reference to their current Canvas host
+
+    here {x, y, w, h, xRatio, yRatio}
+
+NOTE: Canvas, Stack, Element (if enabled) and Cell all need to create their .here attribute immediately after they first calculate their currentDimensions Coordinate, which needs to happen as part of the constructor!
 
 */
 	P.getHere = function () {
 
-		return (this.currentHost && this.currentHost.here) ? this.currentHost.here : currentCorePosition;
+		let host = this.getHost();
+
+		if (host) {
+
+			if (host.here) return host.here;
+			else if (host.currentDimensions) {
+
+				let dims = host.currentDimensions;
+
+				if (dims) {
+
+					return {
+						w: dims[0],
+						h: dims[1]
+					}
+				}
+			}
+		}
+		return currentCorePosition;
 	};
 
 /*
 
 */
-	P.getStart = function () {
+	P.cleanPosition = function (current, source, dimensions) {
 
-		return {
-			x: this.currentStart.x, 
-			y: this.currentStart.y
-		};
+		let val, dim;
+
+		for (let i = 0; i < 2; i++) {
+
+			val = source[i];
+			dim = dimensions[i];
+
+			if (val.toFixed) current[i] = val;
+			else if (val === 'left' || val === 'top') current[i] = 0;
+			else if (val === 'right' || val === 'bottom') current[i] = dim;
+			else if (val === 'center') current[i] = dim / 2;
+			else current[i] = (parseFloat(val) / 100) * dim;
+		}
 	};
+
+/*
+
+*/
+	P.cleanScale = function () {
+
+		this.dirtyScale = false;
+
+		let scale,
+			myscale = this.scale,
+			mimic = this.mimic,
+			oldScale = this.currentScale;
+
+		if(mimic && this.useMimicScale) {
+
+			if (mimic.currentScale) {
+
+				scale = mimic.currentScale;
+
+				if (this.addOwnScaleToMimic) scale += myscale;
+			}
+			else {
+
+				scale = myscale;
+				this.dirtyMimicScale = true;
+			}
+		}
+		else scale = myscale;
+
+		this.currentScale = scale;
+
+		this.dirtyDimensions = true;
+		this.dirtyHandle = true;
+
+		if (oldScale !== this.currentScale) this.dirtyPositionSubscribers = true;
+	};
+
+/*
+Dimensions DO scale - but scaling happens elsewhere
+*/
+	P.cleanDimensions = function () {
+
+		this.dirtyDimensions = false;
+
+		let host = this.getHost(),
+			dims = this.dimensions,
+			curDims = this.currentDimensions;
+
+		if (host) {
+
+			let hostDims = (host.currentDimensions) ? host.currentDimensions : [host.w, host.h];
+
+			let [w, h] = dims,
+				oldW = curDims[0],
+				oldH = curDims[1];
+
+			if (w.substring) w = (parseFloat(w) / 100) * hostDims[0];
+
+			if (h.substring) {
+
+				if (h === 'auto') h = 0;
+				else h = (parseFloat(h) / 100) * hostDims[1];
+			}
+
+			let mimic = this.mimic,
+				mimicDims;
+
+			if (mimic && mimic.name && this.useMimicDimensions) mimicDims = mimic.currentDimensions;
+
+			if (mimicDims) {
+
+				curDims[0] = (this.addOwnDimensionsToMimic) ? mimicDims[0] + w : mimicDims[0];
+				curDims[1] = (this.addOwnDimensionsToMimic) ? mimicDims[1] + h : mimicDims[1];
+			}
+			else {
+
+				curDims[0] = w;
+				curDims[1] = h;
+			}
+
+			this.cleanDimensionsAdditionalActions();
+
+			this.dirtyStart = true;
+			this.dirtyHandle = true;
+			this.dirtyOffset = true;
+
+			if (oldW !== curDims[0] || oldH !== curDims[1]) this.dirtyPositionSubscribers = true;
+		}
+		else this.dirtyDimensions = true;
+	};
+
+/*
+This function gets overwritten by various (but not all) relevant factory files
+*/
+	P.cleanDimensionsAdditionalActions = defaultNonReturnFunction;
+
+/*
+
+*/
+	P.cleanLock = function () {
+
+		this.dirtyLock = false;
+
+		this.dirtyStart = true;
+		this.dirtyHandle = true;
+	};
+
+/*
+Start does NOT scale
+*/
+	P.cleanStart = function () {
+
+		this.dirtyStart = false;
+
+		let here = this.getHere();
+
+		if (xt(here)) {
+
+			if (xta(here.w, here.h)) {
+
+				this.cleanPosition(this.currentStart, this.start, [here.w, here.h]);
+				this.dirtyStampPositions = true;
+			}
+			else this.dirtyStart = true;
+		}
+		else this.dirtyStart = true;
+	};
+
+/*
+Offset does NOT scale
+*/
+	P.cleanOffset = function () {
+
+		this.dirtyOffset = false;
+
+		let here = this.getHere();
+
+		if (xt(here)) {
+
+			if (xta(here.w, here.h)) {
+
+				this.cleanPosition(this.currentOffset, this.offset, [here.w, here.h]);
+				this.dirtyStampPositions = true;
+			}
+			else this.dirtyOffset = true;
+		}
+		else this.dirtyOffset = true;
+	};
+
+/*
+Handle DOES scale - but scaling happens elsewhere
+*/
+	P.cleanHandle = function () {
+
+		this.dirtyHandle = false;
+
+		let current = this.currentHandle;
+
+		this.cleanPosition(current, this.handle, this.currentDimensions);
+		this.dirtyStampHandlePositions = true;
+	};
+
+/*
+
+*/
+	P.cleanRotation = function () {
+
+		this.dirtyRotation = false;
+
+		let roll,
+			myroll = this.roll,
+			oldRoll = this.currentRotation,
+			path = this.path,
+			mimic = this.mimic,
+			pivot = this.pivot,
+			lock = this.lockTo;
+
+		if (path && lock.indexOf('path') >= 0) {
+
+			roll = myroll;
+
+			if (this.addPathRotation) {
+
+				let pathData = this.getPathData();
+
+				if (pathData) roll += pathData.angle;
+			}
+
+		}
+		else if (mimic && this.useMimicRotation && lock.indexOf('mimic') >= 0) {
+
+			if (xt(mimic.currentRotation)) {
+
+				roll = mimic.currentRotation;
+
+				if (this.addOwnRotationToMimic) roll += myroll;
+			}
+			else this.dirtyMimicRotation = true;
+		} 
+		else {
+
+			roll = myroll;
+
+			if (pivot && this.addPivotRotation && lock.indexOf('pivot') >= 0) {
+
+				if (xt(pivot.currentRotation)) roll += pivot.currentRotation;
+				else this.dirtyPivotRotation = true;
+			}
+			
+		}
+
+		this.currentRotation = roll;
+
+		if (roll !== oldRoll) this.dirtyPositionSubscribers = true;
+	};
+
+/*
+__stampPosition__ represents the combination of start and offset positions to determine where the top left corner of any artefact should be placed. It represents the real __rotation-reflection point__ around which the artefact will display.
+
+Note that the calculation does not take into account _handle_ values, which get applied after the canvas grid is setup for the stamp operation
+
+DOM artefacts will also take handle values into consideration after the fact
+
+The X and Y coordinates are handled separately, and are dependant on the the lock set for each. Lock values can be: 'start' (the default for each coordinate), 'mouse' (to lock to the mouse cursor), 'pivot', 'path', and 'mimic'.
+
+Artefacts that are currently in 'drag' mode (whose lock values are temporarily overridden) also need to take into account the drag offset values.
+
+Rotation and flip attributes are handled separately, alongside handle values, as part of the actual stamp operation
+*/
+	P.cleanStampPositions = function () {
+
+		this.dirtyStampPositions = false;
+
+		let lockArray = this.lockTo,
+			localLockArray = [],
+			lock, i, coord, here, pathData,
+			hereFlag = false,
+			stamp = this.currentStampPosition,
+			oldX = stamp[0],
+			oldY = stamp[1],
+			start = this.currentStart,
+			offset = this.currentOffset,
+			isBeingDragged = this.isBeingDragged,
+			drag = this.currentDragOffset,
+			cache = this.currentStartCache,
+			pivot = this.pivot,
+			path = this.path,
+			mimic = this.mimic;
+
+		if (isBeingDragged) {
+
+			localLockArray = ['mouse', 'mouse'];
+			hereFlag = true;
+		}
+		else {
+				
+			for (i = 0; i < 2; i++) {
+
+				lock = lockArray[i];
+
+				if (lock === 'pivot' && !pivot) lock = 'start';
+				else if (lock === 'path' && !path) lock = 'start';
+				else if (lock === 'mimic' && !mimic) lock = 'start';
+
+				if (lock === 'mouse') hereFlag = true;
+
+				localLockArray[i] = lock;
+			}
+		}
+
+		if (hereFlag) here = this.getHere();
+
+		for (i = 0; i < 2; i++) {
+
+			lock = localLockArray[i];
+
+			switch (lock) {
+
+				case 'pivot' :
+					coord = pivot.currentStampPosition[i];
+
+					if (!this.addPivotOffset) coord -= pivot.currentOffset[i];
+
+					coord += offset[i];
+
+					break;
+
+				case 'path' :
+					pathData = this.getPathData();
+
+					if (pathData) {
+
+						coord = (i) ? pathData.y : pathData.x;
+
+						if (!this.addPathOffset) coord -= path.currentOffset[i];
+					}
+					else coord = start[i] + offset[i];
+
+					break;
+
+				case 'mimic' :
+					if (this.useMimicStart || this.useMimicOffset) {
+
+						coord = mimic.currentStampPosition[i];
+
+						if (this.useMimicStart && this.addOwnStartToMimic) coord += start[i];
+						if (this.useMimicOffset && this.addOwnOffsetToMimic) coord += offset[i];
+
+						if (!this.useMimicStart) coord = coord - mimic.currentStart[i] + start[i];
+						if (!this.useMimicOffset) coord = coord - mimic.currentOffset[i] + offset[i];
+					}
+					else coord = start[i] + offset[i];
+
+					break;
+
+				case 'mouse' :
+					coord = (i === 0) ? here.x : here.y;
+
+					if (isBeingDragged) {
+
+						cache[i] = coord;
+						coord += drag[i];
+					}
+					coord += offset[i];
+
+					break;
+
+				default :
+					coord = start[i] + offset[i];
+			}
+			stamp[i] = coord;
+		}
+		this.cleanStampPositionsAdditionalActions()
+
+		if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;
+	};
+
+	P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;
+
+/*
+Note - scaling does not take place here - it needs to be handled elsewhere
+
+* DOM elements (stack, element, canvas) do it in the CSS transform string
+* Entities do it as part of each entity's 'path' calculation (I think)
+*/
+	P.cleanStampHandlePositions = function () {
+
+		this.dirtyStampHandlePositions = false;
+
+		let lockArray = this.lockTo,
+			lock, i, coord, here, myscale,
+			stampHandle = this.currentStampHandlePosition,
+			oldX = stampHandle[0],
+			oldY = stampHandle[1],
+			handle = this.currentHandle,
+			pivot = this.pivot,
+			path = this.path,
+			mimic = this.mimic;
+
+		for (i = 0; i < 2; i++) {
+
+			lock = lockArray[i];
+
+			if (lock === 'pivot' && !pivot) lock = 'start';
+			if (lock === 'path' && !path) lock = 'start';
+			if (lock === 'mimic' && !mimic) lock = 'start';
+
+			coord = handle[i];
+
+			switch (lock) {
+
+				case 'pivot' :
+					if (this.addPivotHandle) coord += pivot.currentHandle[i];
+					break;
+
+				case 'path' :
+					if (this.addPathHandle) coord += path.currentHandle[i];
+					break;
+
+				case 'mimic' :
+					if (this.useMimicHandle) {
+
+						coord = mimic.currentHandle[i];
+
+						if (this.addOwnHandleToMimic) coord += handle[i];
+					}
+					break;
+			}
+			stampHandle[i] = coord;
+		}
+		if (this.type === 'Shape') {
+
+			let box = this.localBox;
+			stampHandle[0] += box[0];
+			stampHandle[1] += box[1];
+		}
+
+		if (oldX !== stampHandle[0] || oldY !== stampHandle[1]) this.dirtyPositionSubscribers = true;
+
+		if (this.domElement && this.collides) this.dirtyPathObject = true;
+	};
+
+/*
+
+*/
+	P.updatePositionSubscribers = function () {
+
+		this.dirtyPositionSubscribers = false;
+
+		if (this.pivoted && this.pivoted.length) this.updatePivotSubscribers();
+		if (this.mimicked && this.mimicked.length) this.updateMimicSubscribers();
+		if (this.pathed && this.pathed.length) this.updatePathSubscribers();
+		if (this.controlSubscriber && this.controlSubscriber.length) this.updateControlSubscribers();
+		if (this.startControlSubscriber && this.startControlSubscriber.length) this.updateStartControlSubscribers();
+		if (this.endControlSubscriber && this.endControlSubscriber.length) this.updateEndControlSubscribers();
+		if (this.endSubscriber && this.endSubscriber.length) this.updateEndSubscribers();
+
+	};
+
+	P.updateControlSubscribers = function () {
+
+		this.controlSubscriber.forEach(name => {
+
+			let instance = artefact[name];
+
+			if (instance) instance.dirtyControl = true;
+		});
+	};
+
+	P.updateStartControlSubscribers = function () {
+
+		this.startControlSubscriber.forEach(name => {
+
+			let instance = artefact[name];
+
+			if (instance) instance.dirtyStartControl = true;
+		});
+	};
+
+	P.updateEndControlSubscribers = function () {
+
+		this.endControlSubscriber.forEach(name => {
+
+			let instance = artefact[name];
+
+			if (instance) instance.dirtyEndControl = true;
+		});
+	};
+
+	P.updateEndSubscribers = function () {
+
+		this.endSubscriber.forEach(name => {
+
+			let instance = artefact[name];
+
+			if (instance) instance.dirtyEnd = true;
+		});
+	};
+
+	P.updatePivotSubscribers = function () {
+
+		this.pivoted.forEach(name => {
+
+			let instance = artefact[name];
+
+			if (instance) {
+
+				instance.dirtyStart = true;
+				if (instance.addPivotHandle) instance.dirtyHandle = true;
+				if (instance.addPivotOffset) instance.dirtyOffset = true;
+				if (instance.addPivotRotation) instance.dirtyRotation = true;
+			}
+		});
+	};
+/*
+
+*/
+	P.updateMimicSubscribers = function () {
+
+		this.mimicked.forEach(name => {
+
+			let instance = artefact[name];
+
+			if (instance) {
+
+				if (instance.useMimicStart) instance.dirtyStart = true;
+				if (instance.useMimicHandle) instance.dirtyHandle = true;
+				if (instance.useMimicOffset) instance.dirtyOffset = true;
+				if (instance.useMimicRotation) instance.dirtyRotation = true;
+				if (instance.useMimicScale) instance.dirtyScale = true;
+				if (instance.useMimicDimensions) instance.dirtyDimensions = true;
+			}
+		});
+	};
+
+/*
+This is just a holding function. The real function is in factory/shape.js as only shapes have to worry about updating their path subscribers
+*/
+	P.updatePathSubscribers = function () {};
 
 /*
 
 */
 	P.getPathData = function () {
 
-		let pathPos = this.pathPosition;
+		let pathPos = this.pathPosition,
+			path = this.path,
+			currentPathData;
 
-		if (this.currentPathData && this.currentPathPosition === pathPos) return this.currentPathData;
-		else {
+		if (path) {
 
-			let path = this.path;
+			currentPathData = path.getPathPositionData(pathPos);
 
-			if (path && path.substring) {
+			if (this.addPathRotation) this.dirtyRotation = true;
 
-				path = this.path = artefact[this.path];
-
-				if (path.type === 'Shape' && path.useAsPath) path.subscribers.push(this.name);
-				else {
-
-					path = this.path = false;
-				}
-			}
-			if (path) {
-
-				this.currentPathData = path.getPathPositionData(pathPos);
-				this.currentPathPosition = pathPos;
-				return this.currentPathData;
-			}
+			return currentPathData;
 		}
 		return false;
 	};
 
-/*
-
-*/
-	P.updateStampX = function () {
-
-		let lock = this.lockXTo,
-			cs = this.currentStart,
-			ct = this.currentOffset,
-			dt = this.dragOffset,
-			pivot, path, pathData, here, host,
-			z = cs.x;
-
-		if (lock !== 'start') {
-
-			switch (lock) {
-
-				case 'pivot' :
-					if (this.pivot) {
-
-						pivot = artefact[this.pivot];
-
-						if (pivot) z = pivot.stampX;
-					}
-					break;
-
-				case 'path' :
-					if (this.path) {
-
-						pathData = this.getPathData();
-
-						if (pathData) z = pathData.x;
-					}
-					break;
-
-				case 'mouse' :
-					host = this.currentHost || this.destination || false;
-
-					if (host) {
-
-						here = host.here;
-
-						if (here) {
-
-							z = here.x;
-
-							if (this.localDrag) {
-
-								this.oldX = z;
-								z += dt.x;
-							}
-						}
-					}
-					break;
-			}
-		}
-
-		this.stampX = z;
-		return z + ct.x;
-	};
-
-/*
-
-*/
-	P.updateStampY = function () {
-
-		let lock = this.lockYTo,
-			cs = this.currentStart,
-			ct = this.currentOffset,
-			dt = this.dragOffset,
-			pivot, path, pathData, here, host,
-			z = cs.y;
-
-		if (lock !== 'start') {
-
-			switch (lock) {
-
-				case 'pivot' :
-					if (this.pivot) {
-
-						pivot = artefact[this.pivot];
-						
-						if (pivot) z = pivot.stampY;
-					}
-					break;
-
-				case 'path' :
-					if (this.path) {
-
-						pathData = this.getPathData();
-
-						if (pathData) z = pathData.y;
-					}
-					break;
-
-				case 'mouse' :
-					host = this.currentHost || this.destination || false;
-
-					if (host) {
-
-						here = host.here;
-
-						if (here) {
-
-							z = here.y;
-
-							if (this.localDrag) {
-
-								this.oldY = z;
-								z += dt.y;
-							}
-						}
-					}
-					break;
-			}
-		}
-
-		this.stampY = z;
-		return z + ct.y;
-	};
-
-/*
-
-*/
-	P.prepareMimicStamp = function () {
-
-		let mimic = artefact[this.mimic];
-
-		if (mimic) {
-
-			this.mimicType = mimic.type;
-
-			if (this.position !== mimic.position) this.prepareMimicStampPosition(mimic);
-
-			if (this.localWidth !== mimic.localWidth || this.localHeight !== mimic.localHeight) this.prepareMimicStampDimensions(mimic);
-
-			if (this.roll !== mimic.roll || this.pitch !== mimic.pitch || this.yaw !== mimic.yaw) this.prepareMimicStampRotation(mimic);
-
-			if (this.scale !== mimic.scale) this.prepareMimicStampScale(mimic);
-
-			this.prepareMimicStampStart(mimic);
-		}
-		else this.mimicType = '';
-	};
-
-/*
-
-*/
-	P.prepareMimicStampPosition = function (mimic) {
-
-		if (xt(mimic.position)) {
-
-			this.position = mimic.position;
-			this.dirtyPosition = true;
-			this.setPosition();
-		}
-	};
-
-/*
-
-*/
-	P.prepareMimicStampScale = function (mimic) {
-
-		if (xt(mimic.scale)) {
-
-			this.localScale = this.scale;
-			this.scale = mimic.scale;
-		}
-	};
-
-/*
-
-*/
-	P.prepareMimicStampDimensions = function (mimic) {
-
-		let updatedWidth, updatedHeight;
-
-		if (xt(mimic.localWidth)) {
-
-			updatedWidth = mimic.localWidth;
-
-			this.width = updatedWidth;
-			this.localWidth = updatedWidth;
-		}
-
-		if (xt(mimic.localHeight)) {
-
-			updatedHeight = mimic.localHeight;
-
-			this.height = updatedHeight;
-			this.localHeight = updatedHeight;
-		}
-
-		if (mimic.type !== 'Phrase') this.dirtyDimensions = true;
-	};
-
-/*
-
-*/
-	P.prepareMimicStampRotation = function (mimic) {
-
-		if (xt(mimic.roll)) this.roll = mimic.roll;
-		if (xt(mimic.pitch)) this.pitch = mimic.pitch;
-		if (xt(mimic.yaw)) this.yaw = mimic.yaw;
-
-		if (xt(this.dirtyRotation)) {
-
-			this.dirtyRotationActive = true;
-			this.dirtyRotation = true;
-			this.cleanRotation();
-		}
-	};
-
-/*
-
-*/
-	P.prepareMimicStampStart = function (mimic) {
-
-		if (xt(mimic.start) && mimic.start.type === 'Vector'){
-
-			this.checkVector('start');
-			this.start.x = mimic.start.x;
-			this.start.y = mimic.start.y;
-			this.dirtyStart = true;
-		}
-
-		if (xt(mimic.handle) && mimic.handle.type === 'Vector'){
-
-			this.checkVector('handle');
-			this.handle.x = mimic.handle.x;
-			this.handle.y = mimic.handle.y;
-			this.dirtyHandle = true;
-		}
-
-		if (xt(mimic.flipUpend)) this.flipUpend = mimic.flipUpend;
-		if (xt(mimic.flipReverse)) this.flipReverse = mimic.flipReverse;
-
-		if (xt(mimic.lockXTo)) this.lockXTo = mimic.lockXTo;
-		if (xt(mimic.lockXTo)) this.lockYTo = mimic.lockYTo;
-	};
-
-/*
 
 /*
 
 */
 	P.pickupArtefact = function (items = {}) {
 
-		this.oldLockXTo = this.lockXTo;
-		this.oldLockYTo = this.lockYTo;
-		this.lockXTo = 'mouse';
-		this.lockYTo = 'mouse';
+		let {x, y} = items;
 
-		this.checkVector('dragOffset');
-		this.oldDragOffsetX = this.dragOffset.x;
-		this.oldDragOffsetY = this.dragOffset.y;
-		this.dragOffset.x = this.currentStart.x - items.x;
-		this.dragOffset.y = this.currentStart.y - items.y;
+		if (xta(x, y)) {
 
-		this.localDrag = true;
-		this.order += 9999;
+			this.isBeingDragged = true;
+			this.currentDragCache.set(this.currentDragOffset);
+			this.currentDragOffset.set(this.currentStart).subtract([x, y]);
 
-		if (isa_obj(this.group)) this.group.batchResort = true;
-		else if (group[this.group]) group[this.group].batchResort = true;
+			this.order += 9999;
 
-		if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
+			this.group.batchResort = true;
+
+			if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
+
+		}
 
 		return this;
 	};
@@ -1133,29 +1525,18 @@ Overwrites the old delta object with a new one, thus no practical way of resetti
 */
 	P.dropArtefact = function () {
 
-		this.start.x = this.oldX + this.dragOffset.x;
-		this.start.y = this.oldY + this.dragOffset.y;
-		delete this.oldX;
-		delete this.oldY;
-
+		this.start.set(this.currentStartCache).add(this.currentDragOffset);
 		this.dirtyStart = true;
-		this.lockXTo = this.oldLockXTo;
-		this.lockYTo = this.oldLockYTo;
-		delete this.oldLockXTo;
-		delete this.oldLockYTo;
 
-		this.dragOffset.x = this.oldDragOffsetX;
-		this.dragOffset.y = this.oldDragOffsetY;
-		delete this.oldDragOffsetX;
-		delete this.oldDragOffsetY;
+		this.currentDragOffset.set(this.currentDragCache);
 
-		this.localDrag = false;
 		this.order = (this.order >= 9999) ? this.order - 9999 : 0;
 
-		if (isa_obj(this.group)) this.group.batchResort = true;
-		else if (group[this.group]) group[this.group].batchResort = true;
+		this.group.batchResort = true;
 
 		if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
+
+		this.isBeingDragged = false;
 
 		return this;
 	};

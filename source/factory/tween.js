@@ -1,7 +1,7 @@
 /*
 # Tween factory
 */
-import { constructors, animationtickers } from '../core/library.js';
+import { constructors, animationtickers, radian } from '../core/library.js';
 import { mergeOver, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
@@ -18,15 +18,15 @@ const Tween = function (items = {}) {
 
 	this.makeName(items.name);
 	this.register();
+
 	this.set(this.defs);
 	this.set(items);
 
 	this.setDefinitionsValues();
+
 	this.status = 'before';
 	this.calculateEffectiveTime();
 	this.calculateEffectiveDuration();
-
-	this.setObject = {};
 
 	if (animationtickers[items.ticker]) this.addToTicker(items.ticker);
 	else {
@@ -95,11 +95,6 @@ let defaultAttributes = {
 /*
 
 */
-	setObject: null,
-
-/*
-
-*/
 	killOnComplete: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -121,7 +116,6 @@ G.definitions = function() {
 S.definitions = function (item) {
 
 	this.definitions = [].concat(item);
-	this.setObject = {};
 	this.setDefinitionsValues();
 };
 
@@ -204,20 +198,21 @@ P.calculateEffectiveDuration = function (item) {
 		calculatedDur = convertTime(tweenDuration),
 		cDur = calculatedDur[1],
 		cType = calculatedDur[0],
-		ticker, 
+		ticker = this.ticker,
+		myticker, 
 		tickerDuration = 0;
 
 	this.effectiveDuration = 0;
 
 	if (cType === '%') {
 	
-		if (this.ticker) {
+		if (ticker) {
 	
-			ticker = animationtickers[this.ticker];
+			myticker = animationtickers[ticker];
 	
-			if (ticker) {
+			if (myticker) {
 	
-				tickerDuration = ticker.effectiveDuration;
+				tickerDuration = myticker.effectiveDuration;
 				this.effectiveDuration = tickerDuration * (cDur / 100);
 			}
 		}
@@ -235,34 +230,37 @@ P.update = function (items = {}) {
 	let starts, ends,
 		tick = items.tick || 0,
 		revTick = items.reverseTick || 0,
-		status = 'running';
+		status = 'running',
+		effectiveTime = this.effectiveTime,
+		effectiveDuration = this.effectiveDuration,
+		reversed = this.reversed;
 
 	// Should we do work for this tween?
-	if (!this.reversed) {
+	if (!reversed) {
 
-		starts = this.effectiveTime;
-		ends = this.effectiveTime + this.effectiveDuration;
+		starts = effectiveTime;
+		ends = effectiveTime + effectiveDuration;
 
 		if (tick < starts) status = 'before';
 		else if (tick > ends) status = 'after';
 	}
 	else {
 
-		starts = this.effectiveTime + this.effectiveDuration;
-		ends = this.effectiveTime;
+		starts = effectiveTime + effectiveDuration;
+		ends = effectiveTime;
 
 		if (revTick > starts) status = 'after';
 		else if (revTick < ends) status = 'before';
 	}
 
 	// For tweens with a duration > 0
-	if (this.effectiveDuration) {
+	if (effectiveDuration) {
 
 		if (status === 'running' || status !== this.status) {
 
 			this.status = status;
 			this.doSimpleUpdate(items);
-			this.updateCleanup(items.next);
+			if (!items.next) this.status = (reversed) ? 'before' : 'after';
 		}
 	}
 	// For tweens with a duration == 0
@@ -272,13 +270,13 @@ P.update = function (items = {}) {
 
 			this.status = status;
 			this.doSimpleUpdate(items);
-			this.updateCleanup(items.next);
+			if (!items.next) this.status = (reversed) ? 'before' : 'after';
 		}
 	}
 
 	if (items.willLoop) {
 
-		if (this.reverseOnCycleEnd) this.reversed = !this.reversed;
+		if (this.reverseOnCycleEnd) this.reversed = !reversed;
 		else this.status = 'before';
 	}
 
@@ -293,42 +291,47 @@ P.doSimpleUpdate = function (items = {}) {
 	let starts = this.effectiveTime,
 		effectiveTick,
 		actions = this.engineActions,
-		i, iz, j, jz, def, progress,
-		setObj = this.setObject;
+		effectiveDuration = this.effectiveDuration,
+		status = this.status,
+		definitions = this.definitions,
+		targets = this.targets,
+		action = this.action,
+		i, iz, j, jz, progress,
+		setObj = {};
 
 	effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
 
-	if (this.effectiveDuration && this.status === 'running') progress = effectiveTick / this.effectiveDuration;
-	else progress = (this.status === 'after') ? 1 : 0;
+	if (effectiveDuration && status === 'running') progress = effectiveTick / effectiveDuration;
+	else progress = (status === 'after') ? 1 : 0;
 
-	for (i = 0, iz = this.definitions.length; i < iz; i++) {
+	let def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute;
 
-		def = this.definitions[i];
+	for (i = 0, iz = definitions.length; i < iz; i++) {
 
-		if (def.engine.substring) def.value = actions[def.engine](def.effectiveStart, def.effectiveChange, progress);
-		else def.value = def.engine(def.effectiveStart, def.effectiveChange, progress);
+		def = definitions[i];
+		engine = def.engine;
+		effectiveStart = def.effectiveStart;
+		effectiveChange = def.effectiveChange;
+		int = def.integer;
+		suffix = def.suffix;
+		attribute = def.attribute;
 
-		if (def.integer) def.value = Math.round(def.value);
+		if (engine.substring) val = actions[engine](effectiveStart, effectiveChange, progress);
+		else val = engine(effectiveStart, effectiveChange, progress);
 
-		if (def.suffix) def.value += def.suffix;
+		if (int) val = Math.round(val);
 
-		setObj[def.attribute] = def.value;
+		if (suffix) val += suffix;
+
+		setObj[attribute] = val;
 	}
 
-	for (j = 0, jz = this.targets.length; j < jz; j++) {
+	for (j = 0, jz = targets.length; j < jz; j++) {
 
-		this.targets[j].set(setObj);
+		targets[j].set(setObj);
 	}
 
-	if (this.action) this.action();
-};
-
-/*
-
-*/
-P.updateCleanup = function (item) {
-
-	if (!item) this.status = (this.reversed) ? 'before' : 'after';
+	if (action) action();
 };
 
 /*
@@ -339,12 +342,12 @@ P.engineActions = {
 	out: function (start, change, position) {
 		
 		let temp = 1 - position;
-		return (start + change) + (Math.cos((position * 90) * my.work.radian) * -change);
+		return (start + change) + (Math.cos((position * 90) * radian) * -change);
 	},
 
 	in : function (start, change, position) {
 
-		return start + (Math.sin((position * 90) * my.work.radian) * change);
+		return start + (Math.sin((position * 90) * radian) * change);
 	},
 
 	easeIn: function (start, change, position) {
@@ -438,18 +441,20 @@ P.engineActions = {
 */
 P.setDefinitionsValues = function () {
 
-	let i, iz, temp, def;
+	let i, iz, temp, def,
+		parseDefinitionsValue = this.parseDefinitionsValue,
+		definitions = this.definitions;
 
-	for (i = 0, iz = this.definitions.length; i < iz; i++) {
+	for (i = 0, iz = definitions.length; i < iz; i++) {
 
-		def = this.definitions[i];
+		def = definitions[i];
 
 		if (def) {
 
-			temp = this.parseDefinitionsValue(def.start);
+			temp = parseDefinitionsValue(def.start);
 			def.effectiveStart = temp[1];
 			def.suffix = temp[0];
-			temp = this.parseDefinitionsValue(def.end);
+			temp = parseDefinitionsValue(def.end);
 			def.effectiveEnd = temp[1];
 			
 			if (!xt(def.engine)) def.engine = 'linear';
@@ -495,6 +500,17 @@ P.run = function () {
 		t.run();
 	}
 	return this;
+};
+
+/*
+
+*/
+P.isRunning = function () {
+
+	let tick = animationtickers[this.ticker];
+
+	if (tick) return tick.isRunning();
+	return false;
 };
 
 /*

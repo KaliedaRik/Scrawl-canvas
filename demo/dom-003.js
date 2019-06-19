@@ -2,194 +2,164 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
-
-
-// Scene setup
+// Scene setup - create some useful variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
 	stack = artefact.mystack,
-	element = artefact.myelement,
-	stopE, events;
+	current, here;
 
-stack.set({
-	perspectiveZ: 1200
-});
 
-element.set({
-	startX: 250,
-	startY: 250,
-	handleX: 125,
-	handleY: 125,
-	width: 250,
-	height: 250,
-	roll: 10,
-	pitch: 20,
-	yaw: 30
+// Create a new group to which we can assign the artefacts we want to drag around the stack
+let hitGroup = scrawl.makeGroup({
+
+	name: 'my-hit-group',
+	host: stack.name,
 });
 
 
-// Set the DOM input values
-document.querySelector('#dims_widthPercent').value = 50;
-document.querySelector('#dims_heightPercent').value = 50;
-document.querySelector('#dims_widthAbsolute').value = 250;
-document.querySelector('#dims_heightAbsolute').value = 250;
-document.querySelector('#start_xPercent').value = 50;
-document.querySelector('#start_yPercent').value = 50;
-document.querySelector('#start_xAbsolute').value = 250;
-document.querySelector('#start_yAbsolute').value = 250;
-document.querySelector('#start_xString').options.selectedIndex = 1;
-document.querySelector('#start_yString').options.selectedIndex = 1;
-document.querySelector('#handle_xPercent').value = 50;
-document.querySelector('#handle_yPercent').value = 50;
-document.querySelector('#handle_xAbsolute').value = 125;
-document.querySelector('#handle_yAbsolute').value = 125;
-document.querySelector('#handle_xString').options.selectedIndex = 1;
-document.querySelector('#handle_yString').options.selectedIndex = 1;
-document.querySelector('#roll').value = 10;
-document.querySelector('#pitch').value = 20;
-document.querySelector('#yaw').value = 30;
-document.querySelector('#scale').value = 1;
+// Generate new (DOM) element artefacts and add them to the stack via our new group
+stack.addNewElement({
 
+	name: 'basic-square',
+	group: 'my-hit-group',
+	tag: 'div',
 
-// Event listeners
-stopE = (e) => {
+	collides: true,
 
-	e.preventDefault();
-	e.returnValue = false;
-};
+	text: 'Default square <div>',
 
-events = (e) => {
+	css: {
+		border: '1px solid black',
+		padding: '1em',
+		textAlign: 'center',
+	},
 
-	let items = {};
+}).clone({
 
-	stopE(e);
+	name: 'oval',
 
-	switch (e.target.id) {
+	startX: 150,
+	startY: 50,
+	width: 150,
+	height: 'auto',
 
-		case 'start_xPercent':
-			items.startX = e.target.value + '%';
-			break;
+	classes: 'circle',
+	text: 'Oval <div> with added class',
 
-		case 'start_yPercent':
-			items.startY = e.target.value + '%';
-			break;
+	css: {
+		font: '12px monospace',
+	},
+});
 
-		case 'start_xAbsolute':
-			items.startX = Math.round(e.target.value);
-			break;
+// Clones will create literal clones of the element they are cloning. Thus cannot clone an element and attempt to change its tag value at the same time.
+stack.addNewElement({
 
-		case 'start_yAbsolute':
-			items.startY = Math.round(e.target.value);
-			break;
+	name: 'list',
+	group: hitGroup.name,
+	tag: 'ul',
 
-		case 'start_xString':
-			items.startX = e.target.value;
-			break;
+	width: '25%',
+	height: 80,
+	startX: 400,
+	startY: 120,
+	handleX: 'center',
+	handleY: 'center',
+	roll: 30,
+	collides: true,
 
-		case 'start_yString':
-			items.startY = e.target.value;
-			break;
+	classes: 'red-text',
 
-		case 'dims_widthPercent':
-			items.width = e.target.value + '%';
-			break;
+	content: `<li>unordered list</li>
+<li>with several</li>
+<li>bullet points</li>`,
 
-		case 'dims_heightPercent':
-			items.height = e.target.value + '%';
-			break;
-
-		case 'dims_widthAbsolute':
-			items.width = Math.round(e.target.value);
-			break;
-
-		case 'dims_heightAbsolute':
-			items.height = Math.round(e.target.value);
-			break;
-
-		case 'handle_xPercent':
-			items.handleX = e.target.value + '%';
-			break;
-
-		case 'handle_yPercent':
-			items.handleY = e.target.value + '%';
-			break;
-
-		case 'handle_xAbsolute':
-			items.handleX = Math.round(e.target.value);
-			break;
-
-		case 'handle_yAbsolute':
-			items.handleY = Math.round(e.target.value);
-			break;
-
-		case 'handle_xString':
-			items.handleX = e.target.value;
-			break;
-
-		case 'handle_yString':
-			items.handleY = e.target.value;
-			break;
-
-		case 'roll':
-			items.roll = parseFloat(e.target.value);
-			break;
-
-		case 'pitch':
-			items.pitch = parseFloat(e.target.value);
-			break;
-
-		case 'yaw':
-			items.yaw = parseFloat(e.target.value);
-			break;
-
-		case 'scale':
-			items.scale = parseFloat(e.target.value);
-			break;
-	}
-
-	element.set(items);
-};
-
-scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
-
-
-// Animation 
-scrawl.makeAnimation({
-
-	name: 'testD003Display',
+	css: {
+		font: '12px fantasy',
+		paddingInlineStart: '20px',
+		paddingTop: '0.5em',
+		margin: '0',
+		border: '1px solid red',
+	},
 	
-	fn: function(){
-		
-		return new Promise((resolve) => {
+}).clone({
 
-			element.set({
-				lockTo: (stack.here.active) ? 'mouse' : 'start'
-			});
+	name: 'list-no-border',
 
-			scrawl.render()
-			.then(() => {
+	startY: 250,
+	scale: 1.25,
 
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
+	css: {
+		border: 0,
+	},
+});
 
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}<br />
-				lock to: ${element.lockXTo}; width: ${element.width}; height: ${element.height}<br />
-				startX: ${element.start.x}; startY: ${element.start.y}; handleX: ${element.handle.x}; handleY: ${element.handle.y}<br />
-				scale: ${element.scale}; roll: ${element.roll}&deg;; pitch: ${element.pitch}&deg;; yaw: ${element.yaw}&deg;`;
 
-				resolve(true);
-			})
-			.catch((err) => {
+// Generate more elements - these ones won't be draggable: instead we will pivot them to the element artefacts generated above
+stack.addNewElement({
 
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
+	name: 'pivot-1',
+	tag: 'div',
 
-				resolve(false);
-			});
-		});
-	}
+	width: 12,
+	height: 12,
+	handleX: 'center',
+	handleY: 'center',
+
+	pivot: 'basic-square',
+	lockTo: 'pivot',
+	order: 1,
+
+	css: {
+		backgroundColor: 'blue',
+	},
+
+}).clone({
+
+	name: 'pivot-2',
+	pivot: 'oval',
+
+}).clone({
+
+	name: 'pivot-3',
+	pivot: 'list',
+
+}).clone({
+
+	name: 'pivot-4',
+	pivot: 'list-no-border',
+});
+
+
+// Create the drag-and-drop zone
+scrawl.makeDragZone({
+
+	zone: stack,
+	collisionGroup: hitGroup,
+	endOn: ['up', 'leave'],
+});
+
+
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
+
+	let testTicker = Date.now(),
+		testTime, testNow,
+		testMessage = document.querySelector('#reportmessage');
+
+	return function () {
+
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
+
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+	};
+}();
+
+
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
+
+	name: 'demo-animation',
+	target: stack,
+	afterShow: report,
 });

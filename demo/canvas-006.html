@@ -8,66 +8,22 @@
   <title>Demo Canvas 006</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
-
-  <style>
-    .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
-    }
-  </style>
-
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 006</h1>
-  <h2>Position entitys using start, pivot or mouse</h2>
+  <h2>Canvas tween stress test</h2>
+  <h3>Click on porthole to increase number of star tweens</h3>
 
-  <div class="controls">
-
-    <div class="blue label">Block lock for X</div>
-    <div class="blue">
-      <select class="controlItem" id="lock_x">
-        <option value="start">start</option>
-        <option value="pivot">pivot</option>
-        <option value="mouse">mouse</option>
-      </select>
-    </div>
-
-    <div class="blue label">Block lock for Y</div>
-    <div class="blue">
-      <select class="controlItem" id="lock_y">
-        <option value="start">start</option>
-        <option value="pivot">pivot</option>
-        <option value="mouse">mouse</option>
-      </select>
-    </div>
-
-    <div class="green label">Add pivot handle to Block</div>
-    <div class="green">
-      <select class="controlItem" id="handle">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-
-    <div class="green label">Roll Block with Wheel</div>
-    <div class="green">
-      <select class="controlItem" id="roll">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-
-  </div>
-
-  <canvas id="mycanvas" width="400" height="400"></canvas>
+  <canvas id="porthole" width="600" height="600"></canvas>
 
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Check the operation of position lock values for x and y coordinates of an entity</li>
-      <li>Pivot is to an entity with an elongated handle.x value and roll animation</li>
+      <li>Create and run many tweens/tickers, each associated with its own entity</li>
+      <li>Test to see how many tweens a browser can run at a reasonable speed</li>
     </ul>
   </div>
 

@@ -22,14 +22,25 @@ Examples:
 */
 const addStrings = (current, delta) => {
 
-	let stringFlag = (current.substring || delta.substring) ? true : false;
+	if (!xt(delta)) throw new Error(`core/utilities addStrings() error - no delta argument supplied ${current}, ${delta}`);
 
-	if (current.toFixed) current += (delta.toFixed) ? delta : parseFloat(delta);
-	else current = parseFloat(current) + ((delta.toFixed) ? delta : parseFloat(delta));
+	if ((delta != null)) {
 
-	return (stringFlag) ? current + '%' : current;
+		let stringFlag = (current.substring || delta.substring) ? true : false;
+
+		if (isa_number(current)) current += (isa_number(delta) ? delta : parseFloat(delta));
+		else current = parseFloat(current) + (isa_number(delta) ? delta : parseFloat(delta));
+
+		return (stringFlag) ? current + '%' : current;
+	}
+	return current;
 };
 
+const capitalize = (s) => {
+
+	if (typeof s !== 'string') return ''
+	return s.charAt(0).toUpperCase() + s.slice(1)
+}
 /*
 __convertLength__ takes a value, checks if it is a percent value and - if true - returns a value relative to the supplied length; otherwise returns the value as a number
 
@@ -43,8 +54,12 @@ Examples:
 */
 const convertLength = (val, len) => {
 
-	if(val.toFixed) return val;
-	else{
+	if (!xt(val)) throw new Error(`core/base error - convertLength() bad value argument: ${val}`);
+	if (!isa_number(len)) throw new Error(`core/base error - convertLength() bad length argument: ${len}`);
+
+	if (isa_number(val)) return val;
+
+	else {
 
 		switch(val){
 
@@ -60,7 +75,11 @@ const convertLength = (val, len) => {
 				return len / 2;
 
 			default :
-				return (parseFloat(val) / 100) * len;
+				val = parseFloat(val);
+
+				if (!isa_number(val)) throw new Error(`core/base error - convertLength() value converst to NaN: ${val}`);
+
+				return ( val / 100) * len;
 		}
 	}
 };
@@ -86,32 +105,33 @@ const convertTime = (item) => {
 
 	let a, timeUnit, timeValue;
 
-	if (xt(item) && item != null) {
+	if (!xt(item)) throw new Error(`core/utilities convertTime() error - no argument supplied`);
 
-		if (item.toFixed) return ['ms', item];
+	if (isa_number(item)) return ['ms', item];
 
-		a = item.match(/^\d+\.?\d*(\D*)/);
-		timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
-		
-		switch (timeUnit) {
+	if (!item.substring) throw new Error(`core/utilities convertTime() error - invalid argument: ${item}`);
 
-			case 's':
-				timeValue = parseFloat(item) * 1000;
-				break;
+	a = item.match(/^\d+\.?\d*(\D*)/);
+	timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
+	
+	timeValue = parseFloat(item);
 
-			case '%':
-				timeValue = parseFloat(item);
-				break;
+	if (!isa_number(timeValue)) throw new Error(`core/base error - convertTime() argument converts to NaN: ${item}`);
 
-			default:
-				timeUnit = 'ms';
-				timeValue = parseFloat(item);
-		}
-		
-		return [timeUnit, timeValue];
+	switch (timeUnit) {
+
+		case 's':
+			timeValue *= 1000;
+			break;
+
+		case '%':
+			break;
+
+		default:
+			timeUnit = 'ms';
 	}
-
-	return ['error', 0];
+	
+	return [timeUnit, timeValue];
 };
 
 /*
@@ -128,7 +148,7 @@ const defaultFalseReturnFunction = () => { return false; };
 const ensureInteger = (val) => {
 
 	val = parseInt(val, 10);
-	if (!val.toFixed || isNaN(val)) val = 0;
+	if (!isa_number(val)) val = 0;
 	return val;
 };
 
@@ -138,7 +158,7 @@ const ensureInteger = (val) => {
 const ensurePositiveInteger = (val) => {
 
 	val = parseInt(val, 10);
-	if (!val.toFixed || isNaN(val)) val = 0;
+	if (!isa_number(val)) val = 0;
 	return Math.abs(val);
 };
 
@@ -148,8 +168,11 @@ const ensurePositiveInteger = (val) => {
 const ensureFloat = (val, precision) => {
 
 	val = parseFloat(val);
-	if (!val.toFixed || isNaN(val)) val = 0;
-	return (xt(precision)) ? parseFloat(val.toFixed(precision)) : val;
+
+	if (!isa_number(val)) val = 0;
+	if (!isa_number(precision)) precision = 0;
+
+	return parseFloat(val.toFixed(precision));
 };
 
 /*
@@ -158,8 +181,11 @@ const ensureFloat = (val, precision) => {
 const ensurePositiveFloat = (val, precision) => {
 
 	val = parseFloat(val);
-	if (!val.toFixed || isNaN(val)) val = 0;
-	return (xt(precision)) ? Math.abs(parseFloat(val.toFixed(precision))) : Math.abs(val);
+
+	if (!isa_number(val)) val = 0;
+	if (!isa_number(precision)) precision = 0;
+
+	return Math.abs(parseFloat(val.toFixed(precision)));
 };
 
 /*
@@ -178,19 +204,12 @@ http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 const generateUuid = () => {
 
 	function s4() {
+
 		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 	}
 
 	return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 };
-
-/*
-__getSafeObject__ helps us avoid errors when accessing object attributes
-
-Note - trying to deprecate this utility
-*/ 
-const safeObject = {};
-const getSafeObject = item => (Object.prototype.toString.call(item) === '[object Object]') ? item : safeObject;
 
 /*
 __isa_canvas__ checks to make sure the argument is a DOM &lt;canvas> element
@@ -216,6 +235,11 @@ const isa_fn = item => (typeof item === 'function') ? true : false;
 __isa_img__ checks to make sure the argument is a DOM &lt;img> element
 */ 
 const isa_img = item => (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
+
+/*
+__isa_img__ checks to make sure the argument is a DOM &lt;img> element
+*/ 
+const isa_number = item => (typeof item != 'undefined' && item.toFixed && !Number.isNaN(item)) ? true : false;
 
 /*
 __isa_obj__ checks to make sure the argument is a JavaScript Object
@@ -277,6 +301,8 @@ Example:
 */
 const mergeInto = (original, additional) => {
 
+	if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeInto() error - insufficient arguments supplied ${original}, ${additional}`);
+
 	for (let key in additional) {
 
 		if (additional.hasOwnProperty(key) && typeof original[key] == 'undefined') original[key] = additional[key];
@@ -297,10 +323,35 @@ Example:
 */
 const mergeOver = (original, additional) => {
 
+	if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeOver() error - insufficient arguments supplied ${original}, ${additional}`);
+
 	for (let key in additional) {
 
 		if (additional.hasOwnProperty(key)) original[key] = additional[key];
 	}
+	return original;
+};
+
+/*
+__mergeDiscard__ iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they havbe been set to null in the additional object
+
+Example:
+
+    var original = { name: 'Peter', age: 42, job: 'lawyer' };
+    var additional = { age: 32, job: null, pet: 'cat' };
+    scrawl.utils.mergeOver(original, additional);
+    
+    -> { name: 'Peter', age: 32, pet: 'cat' }
+*/
+const mergeDiscard = (original, additional) => {
+
+	if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeDiscard() error - insufficient arguments supplied ${original}, ${additional}`);
+
+	Object.entries(additional).forEach(([key, val]) => {
+
+		if (val === null) delete original[key];
+		else original[key] = additional[key];
+	});
 	return original;
 };
 
@@ -319,22 +370,13 @@ Example:
 */
 const pushUnique = (myArray, potentialMember) => {
 
-	if (xta(myArray, potentialMember) && Array.isArray(myArray)) {
+	if (!xta(myArray, potentialMember)) throw new Error(`core/utilities pushUnique() error - insufficient arguments supplied ${myArray}, ${potentialMember}`);
 
-		if (myArray.indexOf(potentialMember) < 0) myArray.push(potentialMember);
-	}
+	if (!Array.isArray(myArray)) throw new Error(`core/utilities pushUnique() error - argument not an array ${myArray}`);
+
+	if (myArray.indexOf(potentialMember) < 0) myArray.push(potentialMember);
+
 	return myArray;
-};
-
-/*
-
-*/
-const removeCharFromString = (str, pos) => {
-
-	let start = str.substring(0, pos),
-		end = str.substring(pos + 1, str.length);
-
-	return (start + end);
 };
 
 /*
@@ -351,12 +393,14 @@ Example:
 */
 const removeItem = (myArray, unwantedMember) => {
 
-	if (xta(myArray, unwantedMember) && Array.isArray(myArray)) {
+	if (!xta(myArray, unwantedMember)) throw new Error(`core/utilities removeItem() error - insufficient arguments supplied ${myArray}, ${unwantedMember}`);
 
-		let index = myArray.indexOf(unwantedMember);
+	if (!Array.isArray(myArray)) throw new Error(`core/utilities removeItem() error - argument not an array ${myArray}`);
 
-		if (index >= 0) myArray.splice(index, 1);
-	}
+	let index = myArray.indexOf(unwantedMember);
+
+	if (index >= 0) myArray.splice(index, 1);
+
 	return myArray;
 };
 
@@ -383,6 +427,7 @@ const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true 
 export {
 	addStrings,
 	convertLength,
+	capitalize,
 	convertTime,
 	defaultNonReturnFunction,
 	defaultArgReturnFunction,
@@ -394,22 +439,22 @@ export {
 	ensurePositiveFloat,
 	ensureString,
 	generateUuid,
-	getSafeObject,
 	isa_canvas,
 	isa_dom,
 	isa_engine,
 	isa_fn,
 	isa_img,
+	isa_number,
 	isa_obj,
 	isa_quaternion,
 	isa_str,
 	isa_vector,
 	isa_video,
 	locateTarget,
+	mergeDiscard,
 	mergeInto,
 	mergeOver,
 	pushUnique,
-	removeCharFromString,
 	removeItem,
 	xt,
 	xta,

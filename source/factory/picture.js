@@ -7,6 +7,8 @@ import { mergeOver, xt, xta, addStrings } from '../core/utilities.js';
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
 
+import { makeCoordinate } from './coordinate.js';
+
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
 import entityMix from '../mixin/entity.js';
@@ -18,7 +20,32 @@ import filterMix from '../mixin/filter.js';
 */
 const Picture = function (items = {}) {
 
+	this.copyStart = makeCoordinate();
+	this.currentCopyStart = makeCoordinate();
+
+	this.copyDimensions = makeCoordinate();
+	this.currentCopyDimensions = makeCoordinate();
+
+	this.copyArray = [];
+	this.pasteArray = [];
+
 	this.entityInit(items);
+
+	if (!items.copyStart) {
+
+		if (!items.copyStartX) this.copyStart[0] = 0;
+		if (!items.copyStartY) this.copyStart[1] = 0;
+	}
+
+	if (!items.copyDimensions) {
+
+		if (!items.copyWidth) this.copyDimensions[0] = 1;
+		if (!items.copyHeight) this.copyDimensions[1] = 1;
+	}
+
+	this.dirtyCopyStart = true;
+	this.dirtyCopyDimensions = true;
+	this.dirtyImage = true;
 
 	return this;
 };
@@ -49,32 +76,8 @@ let defaultAttributes = {
 /*
 
 */
-	copyStart: {},
-
-/*
-
-*/
-	currentCopyStart: {},
-
-/*
-
-*/
-	copyWidth: 0,
-
-/*
-
-*/
-	copyHeight: 0,
-
-/*
-
-*/
-	currentCopyWidth: 0,
-
-/*
-
-*/
-	currentCopyHeight: 0,
+	copyStart: null,
+	copyDimensions: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -87,125 +90,113 @@ let G = P.getters,
 */
 G.copyStartX = function () {
 
-	this.checkVector('copyStart');
-	return this.copyStart.x;
+	return this.currentCopyStart[0];
 };
 
-/*
-
-*/
 G.copyStartY = function () {
 
-	this.checkVector('copyStart');
-	return this.copyStart.y;
+	return this.currentCopyStart[1];
 };
 
-/*
+S.copyStartX = function (coord) {
 
-*/
-S.copyStartX = function (item) {
+	if (coord != null) {
 
-	this.checkVector('copyStart');
-	this.copyStart.x = item;
+		this.copyStart[0] = coord;
+		this.dirtyCopyStart = true;
+	}
+};
+
+S.copyStartY = function (coord) {
+
+	if (coord != null) {
+
+		this.copyStart[1] = coord;
+		this.dirtyCopyStart = true;
+	}
+};
+
+S.copyStart = function (x, y) {
+
+	this.setCoordinateHelper('copyStart', x, y);
 	this.dirtyCopyStart = true;
-	this.dirtyImage = true;
 };
 
-/*
+D.copyStartX = function (coord) {
 
-*/
-S.copyStartY = function (item) {
-
-	this.checkVector('copyStart');
-	this.copyStart.y = item;
+	let c = this.copyStart;
+	c[0] = addStrings(c[0], coord);
 	this.dirtyCopyStart = true;
-	this.dirtyImage = true;
 };
 
-/*
+D.copyStartY = function (coord) {
 
-*/
-S.copyStart = function (item = {}) {
-
-	this.checkVector('copyStart');
-	this.copyStart.x = (xt(item.x)) ? item.x : this.copyStart.x;
-	this.copyStart.y = (xt(item.y)) ? item.y : this.copyStart.y;
+	let c = this.copyStart;
+	c[1] = addStrings(c[1], coord);
 	this.dirtyCopyStart = true;
-	this.dirtyImage = true;
+};
+
+D.copyStart = function (x, y) {
+
+	this.setDeltaCoordinateHelper('copyStart', x, y);
+	this.dirtyCopyStart = true;
 };
 
 /*
 
 */
-S.copyWidth = function (item) {
+G.copyWidth = function () {
 
-	this.copyWidth = item;
+	return this.currentCopyDimensions[0];
+};
+
+G.copyHeight = function () {
+
+	return this.currentCopyDimensions[1];
+};
+
+S.copyWidth = function (val) {
+
+	if (val != null) {
+
+		this.copyDimensions[0] = val;
+		this.dirtyCopyDimensions = true;
+	}
+};
+
+S.copyHeight = function (val) {
+
+	if (val != null) {
+
+		this.copyDimensions[1] = val;
+		this.dirtyCopyDimensions = true;
+	}
+};
+
+S.copyDimensions = function (w, h) {
+
+	this.setCoordinateHelper('copyDimensions', w, h);
 	this.dirtyCopyDimensions = true;
-	this.dirtyImage = true;
 };
 
-/*
+D.copyWidth = function (val) {
 
-*/
-S.copyHeight = function (item) {
-
-	this.copyHeight = item;
+	let c = this.copyDimensions;
+	c[0] = addStrings(c[0], val);
 	this.dirtyCopyDimensions = true;
-	this.dirtyImage = true;
 };
 
-/*
+D.copyHeight = function (val) {
 
-*/
-D.copyStartX = function (item) {
-
-	this.checkVector('copyStart');
-	this.copyStart.x = addStrings(this.copyStart.x, item);
-	this.dirtyCopyStart = true;
-	this.dirtyImage = true;
-};
-
-/*
-
-*/
-D.copyStartY = function (item) {
-
-	this.checkVector('copyStart');
-	this.copyStart.y = addStrings(this.copyStart.y, item);
-	this.dirtyCopyStart = true;
-	this.dirtyImage = true;
-};
-
-/*
-
-*/
-D.copyStart = function (item = {}) {
-
-	this.checkVector('copyStart');
-	this.copyStart.x = (xt(item.x)) ? addStrings(this.copyStart.x, item) : this.copyStart.x;
-	this.copyStart.y = (xt(item.y)) ? addStrings(this.copyStart.y, item) : this.copyStart.y;
-	this.dirtyCopyStart = true;
-	this.dirtyImage = true;
-};
-
-/*
-
-*/
-D.copyWidth = function (item) {
-
-	this.copyWidth = addStrings(this.copyWidth, item);
+	let c = this.copyDimensions;
+	c[1] = addStrings(c[1], val);
 	this.dirtyCopyDimensions = true;
-	this.dirtyImage = true;
 };
 
-/*
+D.copyDimensions = function (w, h) {
 
-*/
-D.copyHeight = function (item) {
-
-	this.copyHeight = addStrings(this.copyHeight, item);
+	this.setDeltaCoordinateHelper('copyDimensions', w, h);
 	this.dirtyCopyDimensions = true;
-	this.dirtyImage = true;
 };
 
 
@@ -279,7 +270,7 @@ P.set = function (items = {}) {
 				else if (settableImageAssetAtributes.indexOf(key) >= 0) source[key.substring(6)] = value
 			}
 
-			else if (key !== 'name') {
+			else if (key && key !== 'name' && value != null) {
 
 				let predefined = setters[key],
 					stateFlag = false;
@@ -304,34 +295,28 @@ P.set = function (items = {}) {
 */
 P.cleanImage = function () {
 
-	let start, x, y, w, h,
-		natWidth = this.sourceNaturalWidth,
+	let natWidth = this.sourceNaturalWidth,
 		natHeight = this.sourceNaturalHeight;
 
 	if (xta(natWidth, natHeight)) {
 
 		this.dirtyImage = false;
 
-		if (this.dirtyCopyStart) this.cleanCopyStart();
+		let start = this.currentCopyStart,
+			x = start[0],
+			y = start[1];
 
-		start = this.currentCopyStart;
-		x = start.x;
-		y = start.y;
+		let dims = this.currentCopyDimensions,
+			w = dims[0],
+			h = dims[1];
 
-		if (this.dirtyCopyDimensions) this.cleanCopyDimensions();
+		if (x + w > natWidth) start[0] = natWidth - w;
+		if (y + h > natHeight) start[1] = natHeight - h;
 
-		w = this.currentCopyWidth;
-		h = this.currentCopyHeight;
+		let copyArray = this.copyArray;
 
-		if (x + w > natWidth) start.x = natWidth - w;
-		if (y + h > natHeight) start.y = natHeight - h;
-
-		this.copyObject = {
-			x: start.x,
-			y: start.y,
-			w: w,
-			h: h
-		};
+		copyArray.length = 0;
+		copyArray.push(start[0], start[1], w, h);
 	}
 };
 
@@ -340,32 +325,31 @@ P.cleanImage = function () {
 */
 P.cleanCopyStart = function () {
 
-	let start = this.copyStart,
-		width = this.sourceNaturalWidth,
-		height = this.sourceNaturalHeight,
-		current, x, y;
+	let width = this.sourceNaturalWidth,
+		height = this.sourceNaturalHeight;
 
 	if (xta(width, height)) {
 
 		this.dirtyCopyStart = false;
 
-		this.cleanVectorParameter('currentCopyStart', start, width, height);
+		this.cleanPosition(this.currentCopyStart, this.copyStart, [width, height]);
 
-		current = this.currentCopyStart;
-		x = current.x;
-		y = current.y;
+		let current = this.currentCopyStart,
+			x = current[0],
+			y = current[1];
 
 		if (x < 0 || x > width) {
 
-			if (x < 0) current.x = 0;
-			else current.x = width - 1;
+			if (x < 0) current[0] = 0;
+			else current[0] = width - 1;
 		}
 
 		if (y < 0 || y > height) {
 
-			if (y < 0) current.y = 0;
-			else current.y = height - 1;
+			if (y < 0) current[1] = 0;
+			else current[1] = height - 1;
 		}
+		this.dirtyImage = true;
 	}
 };
 
@@ -374,33 +358,39 @@ P.cleanCopyStart = function () {
 */
 P.cleanCopyDimensions = function () {
 
-	let width = this.copyWidth, 
-		height = this.copyHeight,
-		natWidth = this.sourceNaturalWidth,
-		natHeight = this.sourceNaturalHeight,
-		currentWidth, currentHeight;
+	let natWidth = this.sourceNaturalWidth,
+		natHeight = this.sourceNaturalHeight;
 
-	this.dirtyCopyDimensions = false;
+	if (xta(natWidth, natHeight)) {
 
-	if (width.substring) this.currentCopyWidth = (parseFloat(width) / 100) * natWidth;
-	else this.currentCopyWidth = width;
+		this.dirtyCopyDimensions = false;
 
-	if (height.substring) this.currentCopyHeight = (parseFloat(height) / 100) * natHeight;
-	else this.currentCopyHeight = height;
+		let dims = this.copyDimensions,
+			currentDims = this.currentCopyDimensions,
+			width = dims[0], 
+			height = dims[1];
 
-	currentWidth = this.currentCopyWidth;
-	currentHeight = this.currentCopyHeight;
+		if (width.substring) currentDims[0] = (parseFloat(width) / 100) * natWidth;
+		else currentDims[0] = width;
 
-	if (currentWidth <= 0 || currentWidth > natWidth) {
+		if (height.substring) currentDims[1] = (parseFloat(height) / 100) * natHeight;
+		else currentDims[1] = height;
 
-		if (currentWidth <= 0) this.currentCopyWidth = 1;
-		else this.currentCopyWidth = natWidth;
-	}
+		let currentWidth = currentDims[0],
+			currentHeight = currentDims[1];
 
-	if (currentHeight <= 0 || currentHeight > natHeight) {
+		if (currentWidth <= 0 || currentWidth > natWidth) {
 
-		if (currentHeight <= 0) this.currentCopyHeight = 1;
-		else this.currentCopyHeight = natHeight;
+			if (currentWidth <= 0) currentDims[0] = 1;
+			else currentDims[0] = natWidth;
+		}
+
+		if (currentHeight <= 0 || currentHeight > natHeight) {
+
+			if (currentHeight <= 0) currentDims[1] = 1;
+			else currentDims[1] = natHeight;
+		}
+		this.dirtyImage = true;
 	}
 };
 
@@ -413,15 +403,34 @@ P.prepareStamp = function() {
 
 	if (this.dirtyDimensions || this.dirtyHandle || this.dirtyScale) this.dirtyPaste = true;
 
-	if (this.dirtyDimensions) this.cleanDimensions();
-	if (this.dirtyStart) this.cleanStart();
-	if (this.dirtyHandle) this.cleanHandle();
-	if (this.dirtyOffset || this.dirtyScale || this.pivot) this.cleanOffset();
-	if (this.dirtyPathObject) this.cleanPathObject();
-	if (this.dirtyPivoted) this.updatePivotSubscribers();
+	if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
+	if (this.dirtyScale) this.cleanScale();
+	if (this.dirtyDimensions) this.cleanDimensions();
+	if (this.dirtyLock) this.cleanLock();
+	if (this.dirtyStart) this.cleanStart();
+	if (this.dirtyOffset) this.cleanOffset();
+	if (this.dirtyHandle) this.cleanHandle();
+	if (this.dirtyRotation) this.cleanRotation();
+
+	if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+
+		this.dirtyStampPositions = true;
+		this.dirtyStampHandlePositions = true;
+	}
+
+	if (this.dirtyStampPositions) this.cleanStampPositions();
+	if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
+
+	if (this.dirtyCopyStart) this.cleanCopyStart();
+	if (this.dirtyCopyDimensions) this.cleanCopyDimensions();
 	if (this.dirtyImage) this.cleanImage();
 	if (this.dirtyPaste) this.preparePasteObject();
+
+	if (this.dirtyPathObject) this.cleanPathObject();
+
+	// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
+	if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 };
 
 /*
@@ -429,19 +438,23 @@ P.prepareStamp = function() {
 */
 P.preparePasteObject = function () {
 
-	let handle, scale;
-
 	this.dirtyPaste = false;
 
-	handle = this.currentHandle;
-	scale = this.scale;
+	let handle = this.currentStampHandlePosition,
+		dims = this.currentDimensions,
+		scale = this.currentScale;
 
-	this.pasteObject = {
-		x: -handle.x * scale,
-		y: -handle.y * scale,
-		w: this.localWidth * scale,
-		h: this.localHeight * scale,
-	};
+	let x = -handle[0] * scale,
+		y = -handle[1] * scale,
+		w = dims[0] * scale,
+		h = dims[1] * scale;
+
+	let pasteArray = this.pasteArray;
+
+	pasteArray.length = 0;
+	pasteArray.push(x, y, w, h);
+
+	this.dirtyPathObject = true;
 };
 
 /*
@@ -449,27 +462,13 @@ P.preparePasteObject = function () {
 */
 P.cleanPathObject = function () {
 
-	let p, obj;
-
 	this.dirtyPathObject = false;
 
-	if (!this.pasteObject) this.preparePasteObject();
+	if (!this.pasteArray) this.preparePasteObject();
 
-	p = this.pathObject = new Path2D();
-	obj = this.pasteObject;
-	
-	p.rect(obj.x, obj.y, obj.w, obj.h);
-};
+	let p = this.pathObject = new Path2D();
 
-/*
-
-*/
-P.fill = function (engine) {
-
-	let copy = this.copyObject,
-		paste = this.pasteObject;
-
-	engine.drawImage(this.source, copy.x, copy.y, copy.w, copy.h, paste.x, paste.y, paste.w, paste.h);
+	p.rect(...this.pasteArray);
 };
 
 /*
@@ -477,65 +476,40 @@ P.fill = function (engine) {
 */
 P.draw = function (engine) {
 
-	let paste = this.pasteObject;
-
-	engine.strokeRect(paste.x, paste.y, paste.w, paste.h);
+	engine.stroke(this.pathObject);
 };
 
-/*
+P.fill = function (engine) {
 
-*/
-P.stamper = {
-
-	draw: function (engine, entity) {
-
-		entity.draw(engine);
-	},
-
-	fill: function (engine, entity) {
-
-		entity.fill(engine);
-	},
-
-	drawFill: function (engine, entity) {
-
-		entity.draw(engine);
-		entity.currentHost.clearShadow();
-		entity.fill(engine);
-	},
-
-	fillDraw: function (engine, entity) {
-
-		entity.draw(engine);
-		entity.currentHost.clearShadow();
-		entity.fill(engine);
-		entity.draw(engine);
-	},
-
-	floatOver: function (engine, entity) {
-
-		entity.draw(engine);
-		entity.fill(engine);
-	},
-
-	sinkInto: function (engine, entity) {
-
-		entity.fill(engine);
-		entity.draw(engine);
-	},
-
-	clear: function (engine, entity) {
-
-		let gco = engine.globalCompositeOperation;
-
-		engine.globalCompositeOperation = 'destination-out';
-		engine.fill(entity.pathObject, entity.winding);
-		
-		engine.globalCompositeOperation = gco;
-	},	
-
-	none: function (engine, entity) {},	
+	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
+
+P.drawFill = function (engine) {
+
+	engine.stroke(this.pathObject);
+	this.currentHost.clearShadow();
+	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+};
+
+P.fillDraw = function (engine) {
+
+	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+	this.currentHost.clearShadow();
+	engine.stroke(this.pathObject);
+};
+
+P.floatOver = function (engine) {
+
+	engine.stroke(this.pathObject);
+	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+};
+
+P.sinkInto = function (engine) {
+
+	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+	engine.stroke(this.pathObject);
+};
+
 
 /*
 video actions

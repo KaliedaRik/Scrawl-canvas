@@ -85,6 +85,15 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 	};
 
 /*
+
+*/
+	P.initializeCascade = function () {
+
+		this.groups = [];
+		this.groupBuckets = [];
+	};
+
+/*
 Groups should be added to, and removed from, the controller object using the __addGroups__ and __removeGroups__ functions. The argument can be one or more group object's name attribute, or the group object(s) itself.
 */
 	P.addGroups = function (...args) {

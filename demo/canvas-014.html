@@ -12,7 +12,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 014</h1>
-  <h2>Animate gradient by delta values</h2>
+  <h2>Line, quadratic and bezier Shapes - control lock alternatives</h2>
 
   <canvas id="mycanvas" width="600" height="600"></canvas>
 
@@ -21,10 +21,8 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Setup a radial gradient which includes a delta object to manipulate its palette's start end end cursor</li>
-      <li>Setup a block entity to display the gradient</li>
-      <li>During the animation, the center of the gradient should gradually change color as each hoop builds and wanes (in Scrawl-canvas versions prior to v8 this would jump between black and the full color as each color stop moved away from position 0)</li>
-      <li>During the animation, the color beyond the outer radius should gradually change color as each hoop builds and wanes (in Scrawl-canvas versions prior to v8 this would jump between black and the full color as each color stop moved towards position 1)</li>
+      <li>Create linear, quadratic and bezier Shape entitys</li>
+      <li>Position them on the canvas by a variety of different means - (draggable) pivots, paths, mouse</li>
     </ul>
   </div>
 

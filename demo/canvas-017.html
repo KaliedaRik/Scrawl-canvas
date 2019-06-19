@@ -18,7 +18,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 017</h1>
-  <h2>Picture entity position; manipulate copy attributes</h2>
+  <h2>Phrase entity - test lineHeight, letterSpacing and justify attributes<br />.setGlyphStyles() functionality</h2>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
@@ -26,68 +26,96 @@
 
   <div class="controls">
 
-    <div class="pink label">Copy Starts ('n%')</div>
-    <div class="pink">X: <input class="controlItem" id="copy_start_xPercent" type="range" value="25" min="-5" max="105" step="1" /></div>
-    <div class="pink">Y: <input class="controlItem" id="copy_start_yPercent" type="range" value="25" min="-5" max="105" step="1" /></div>
+    <div class="lavender label">Line height</div>
+    <div class="lavender"><input class="controlItem" id="lineHeight" type="range" value="1.5" min="-1" max="3" step="0.01" /></div>
+    <div class="lavender">&nbsp;</div>
 
-    <div class="lavender label">Copy Width</div>
-    <div class="lavender">'n%' <input class="controlItem" id="copy_dims_widthPercent" type="range" value="50" min="0" max="105" step="1" /></div>
-    <div class="lavender">n <input class="controlItem" id="copy_dims_widthAbsolute" type="range" value="200" min="0" max="405" step="1" /></div>
+    <div class="lavender label">Letter spacing</div>
+    <div class="lavender"><input class="controlItem" id="letterSpacing" type="range" value="0" min="-10" max="30" step="0.1" /></div>
+    <div class="lavender">&nbsp;</div>
 
-    <div class="pink label">Copy Starts (n)</div>
-    <div class="pink">X: <input class="controlItem" id="copy_start_xAbsolute" type="range" value="100" min="-5" max="405" step="1" /></div>
-    <div class="pink">Y: <input class="controlItem" id="copy_start_yAbsolute" type="range" value="100" min="-5" max="405" step="1" /></div>
+    <div class="lavender label">Justify</div>
+    <div class="lavender">
+      <select class="controlItem" id="justify">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+        <option value="full">full</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
 
-    <div class="lavender label">Copy Height</div>
-    <div class="lavender">'n%' <input class="controlItem" id="copy_dims_heightPercent" type="range" value="50" min="0" max="105" step="1" /></div>
-    <div class="lavender">n <input class="controlItem" id="copy_dims_heightAbsolute" type="range" value="200" min="0" max="405" step="1" /></div>
+    <div class="lavender label">Font family</div>
+    <div class="lavender">
+      <select class="controlItem" id="family">
+        <option value="'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif">sans-serif</option>
+        <option value="'Lucida Bright', 'Lucida Fax', Palatino, 'Palatino Linotype', Palladio, 'URW Palladio', serif">serif</option>
+        <option value="'Fira Mono', 'DejaVu Sans Mono', Menlo, Consolas, 'Liberation Mono', Monaco, 'Lucida Console', monospace">monospace</option>
+        <option value="'Brush Script MT', 'Brush Script Std', 'Lucida Calligraphy', 'Lucida Handwriting', 'Apple Chancery', cursive">cursive</option>
+        <option value="Papyrus, Herculanum, 'Party LET', 'Curlz MT', Harrington, fantasy">fantasy</option>
+        <option value="system-ui">system-ui</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
 
-    <div class="yellow label">Paste Width</div>
-    <div class="yellow">'n%' <input class="controlItem" id="paste_dims_widthPercent" type="range" value="33" min="0" max="120" step="1" /></div>
-    <div class="yellow">n <input class="controlItem" id="paste_dims_widthAbsolute" type="range" value="200" min="0" max="500" step="1" /></div>
+    <div class="lavender label">Font size</div>
+    <div class="lavender">
+      <select class="controlItem" id="size_string">
+        <option value="smaller">smaller</option>
+        <option value="xx-small">xx-small</option>
+        <option value="x-small">x-small</option>
+        <option value="small">small</option>
+        <option value="medium">medium</option>
+        <option value="large">large</option>
+        <option value="x-large">x-large</option>
+        <option value="xx-large">xx-large</option>
+        <option value="larger">larger</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
 
-    <div class="yellow label">Paste Height</div>
-    <div class="yellow">'n%' <input class="controlItem" id="paste_dims_heightPercent" type="range" value="50" min="0" max="120" step="1" /></div>
-    <div class="yellow">n <input class="controlItem" id="paste_dims_heightAbsolute" type="range" value="200" min="0" max="500" step="1" /></div>
+    <div class="lavender label">Font size (px)</div>
+    <div class="lavender"><input class="controlItem" id="size_px" type="range" value="16" min="8" max="32" step="0.2" /></div>
+    <div class="lavender">&nbsp;</div>
 
-    <div class="blue label">Paste Starts ('n%')</div>
-    <div class="blue">X: <input class="controlItem" id="paste_start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
-    <div class="blue">Y: <input class="controlItem" id="paste_start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="blue label">Starts ('n%')</div>
+    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
 
-    <div class="green label">Paste Handles ('n%')</div>
-    <div class="green">X: <input class="controlItem" id="paste_handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
-    <div class="green">Y: <input class="controlItem" id="paste_handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green label">Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
 
-    <div class="blue label">Paste Starts (n)</div>
-    <div class="blue">X: <input class="controlItem" id="paste_start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
-    <div class="blue">Y: <input class="controlItem" id="paste_start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
+    <div class="blue label">Starts (n)</div>
+    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
 
-    <div class="green label">Paste Handles (n)</div>
-    <div class="green">X: <input class="controlItem" id="paste_handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
-    <div class="green">Y: <input class="controlItem" id="paste_handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+    <div class="green label">Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
 
-    <div class="blue label">Paste Starts ('str')</div>
-    <div class="blue">X: <select class="controlItem" id="paste_start_xString">
+    <div class="blue label">Starts ('str')</div>
+    <div class="blue">X: <select class="controlItem" id="start_xString">
         <option value="left">left</option>
         <option value="center">center</option>
         <option value="right">right</option>
       </select>
     </div>
-    <div class="blue">Y: <select class="controlItem" id="paste_start_yString">
+    <div class="blue">Y: <select class="controlItem" id="start_yString">
         <option value="top">top</option>
         <option value="center">center</option>
         <option value="bottom">bottom</option>
       </select>
     </div>
 
-    <div class="green label">Paste Handles ('str')</div>
-    <div class="green">X: <select class="controlItem" id="paste_handle_xString">
+    <div class="green label">Handles ('str')</div>
+    <div class="green">X: <select class="controlItem" id="handle_xString">
         <option value="left">left</option>
         <option value="center">center</option>
         <option value="right">right</option>
       </select>
     </div>
-    <div class="green">Y: <select class="controlItem" id="paste_handle_yString">
+    <div class="green">Y: <select class="controlItem" id="handle_yString">
         <option value="top">top</option>
         <option value="center">center</option>
         <option value="bottom">bottom</option>
@@ -99,7 +127,7 @@
     <div class="yellow">&nbsp;</div>
 
     <div class="yellow label">Scale</div>
-    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0" max="2" step="0.01" /></div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.02" /></div>
     <div class="yellow">&nbsp;</div>
 
     <div class="yellow label">Flip-upend</div>
@@ -120,24 +148,26 @@
     </div>
     <div class="yellow">&nbsp;</div>
 
+    <div class="pink label">Overline</div>
+    <div class="pink"><input class="controlItem" id="overline" type="range" value="0.10" min="-0.2" max="1.2" step="0.01" /></div>
+    <div class="pink">&nbsp;</div>
+
+    <div class="pink label">Width (n)</div>
+    <div class="pink"><input class="controlItem" id="absoluteWidth" type="range" value="300" min="100" max="500" step="1" /></div>
+    <div class="pink">&nbsp;</div>
   </div>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Import an image loaded via the DOM (on page load) into Scrawl-canvas</li>
-      <li>Create a Picture entity using the imported image</li>
-      <li>Display the Picture entity on a canvas</li>
-      <li>Check that the entity location and dimensions attributes (start, handle, width, height) work as expected</li>
-      <li>Check that the entity manipulation attributes (roll, scale, flip) work as expected</li>
-      <li>Check that altering the entity's copy attributes (copyStart, copyWidth, copyHeight) perform as expected, and that the code correctly compensates when the user attempts to copy from outside the image assets natural dimensions - in particular, the image should not stretch when the copy attributes abut or cross the image asset's dimension boundaries</li>
-    </ul>
-    <ul>
-      <li>Import an image dynamically by defining and displaying a Picture entity with an imageSource attribute</li>
+      <li>Create a Phrase entity</li>
+      <li>Display the Phrase entity on a canvas</li>
+      <li>Check that Phrase.setGlyphStyles() functionality works as expected</li>
+      <li>Check that Phrase justification functionality works as expected</li>
+      <li>Check that Phrase line height functionality works as expected</li>
+      <li>Check that Phrase letter spacing functionality works as expected</li>
     </ul>
   </div>
-
-  <img id="iris" src="img/iris.png" class="flowers" />
 
   <script src="canvas-017.js" type="module"></script>
 

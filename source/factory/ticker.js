@@ -162,22 +162,23 @@ S.subscribers = function (item) {
 */
 S.duration = function (item) {
 
-	let i, iz, o;
+	let i, iz, target,
+		subscribers = this.subscribers;
 
 	this.duration = item;
 	this.setEffectiveDuration();
 
-	if(xt(this.subscribers)){
+	if(xt(subscribers)){
 
-		for (i = 0, iz = this.subscribers.length; i < iz; i++) {
+		for (i = 0, iz = subscribers.length; i < iz; i++) {
 		
-			o = tween[this.subscribers[i]];
+			target = tween[subscribers[i]];
 
-			if (o) {
+			if (target) {
 
-				o.calculateEffectiveTime();
+				target.calculateEffectiveTime();
 
-				if (o.type === 'Tween') o.calculateEffectiveDuration();
+				if (target.type === 'Tween') target.calculateEffectiveDuration();
 			}
 		}
 	}
@@ -266,18 +267,19 @@ P.unsubscribe = function (items) {
 */
 P.recalculateEffectiveDuration = function() {
 
-	let i, iz, obj, durationValue, duration = 0;
+	let i, iz, obj, durationValue, 
+		subscribers = this.subscribers,
+		duration = 0;
 
 	if (!this.duration) {
 
-		for (i = 0, iz = this.subscribers.length; i < iz; i++) {
+		for (i = 0, iz = subscribers.length; i < iz; i++) {
 
-			obj = tween[this.subscribers[i]];
+			obj = tween[subscribers[i]];
 			durationValue = obj.getEndTime();
 
 			if (durationValue > duration) duration = durationValue;
 		}
-
 		this.effectiveDuration = duration;
 	}
 	// Shouldn't cause an infinite loop ...
@@ -339,8 +341,6 @@ P.sortSubscribers = function () {
 */
 P.fn = function (reverseOrder) {
 
-	let i, iz, subs, sub, eTime, now, e;
-	
 	let result = {
 		tick: 0,
 		reverseTick: 0,
@@ -350,46 +350,63 @@ P.fn = function (reverseOrder) {
 
 	reverseOrder = xt(reverseOrder) ? reverseOrder : false;
 
-	if (this.active && this.startTime) {
+	let i, iz, subs, sub, eTime, now, e,
+		active = this.active,
+		startTime = this.startTime,
+		currentTime, tick,
+		cycles = this.cycles,
+		cycleCount = this.cycleCount,
+		effectiveDuration = this.effectiveDuration,
+		eventChoke = this.eventChoke;
+	
+	if (active && startTime) {
 
-		if (!this.cycles || this.cycleCount < this.cycles) {
+		if (!cycles || cycleCount < cycles) {
 
-			this.currentTime = Date.now();
-			this.tick = this.currentTime - this.startTime;
+			currentTime = this.currentTime = Date.now();
+			tick = this.tick = currentTime - startTime;
 
-			if (!this.cycles || this.cycleCount + 1 < this.cycles) {
+			if (!cycles || cycleCount + 1 < cycles) {
 
-				if (this.tick >= this.effectiveDuration) {
+				if (tick >= effectiveDuration) {
 
-					this.tick = 0;
+					tick = this.tick = 0;
 					this.startTime = this.currentTime;
-					result.tick = this.effectiveDuration;
+					result.tick = effectiveDuration;
 					result.reverseTick = 0;
 					result.willLoop = true;
 
-					if (this.cycles) this.cycleCount++;
+					if (cycles) {
+
+						cycleCount++;
+						this.cycleCount = cycleCount;
+					}
 				}
 				else {
 
-					result.tick = this.tick;
-					result.reverseTick = this.effectiveDuration - this.tick;
+					result.tick = tick;
+					result.reverseTick = effectiveDuration - tick;
 				}
 				result.next = true;
 			}
 			else {
 
-				if (this.tick >= this.effectiveDuration) {
+				if (tick >= effectiveDuration) {
 
-					result.tick = this.effectiveDuration;
+					result.tick = effectiveDuration;
 					result.reverseTick = 0;
-					this.active = false;
+					active = this.active = false;
 					
-					if (this.cycles) this.cycleCount++;
+					if (cycles) {
+
+						cycleCount++
+						this.cycleCount = cycleCount;
+					}
 				}
 				else {
 
-					result.tick = this.tick;
-					result.reverseTick = this.effectiveDuration - this.tick;
+					result.tick = tick;
+					result.reverseTick = effectiveDuration - tick;
 					result.next = true;
 				}
 			}
@@ -400,22 +417,20 @@ P.fn = function (reverseOrder) {
 
 				for (i = subs.length - 1; i >= 0; i--) {
 
-					sub = tween[subs[i]];
-					sub.update(result);
+					tween[subs[i]].update(result);
 				}
 			}
 			else{
 
 				for (i = 0, iz = subs.length; i < iz; i++) {
 
-					sub = tween[subs[i]];
-					sub.update(result);
+					tween[subs[i]].update(result);
 				}
 			}
 
-			if (this.eventChoke) {
+			if (eventChoke) {
 
-				eTime = this.lastEvent + this.eventChoke;
+				eTime = this.lastEvent + eventChoke;
 				now = Date.now();
 
 				if (eTime < now) {
@@ -426,9 +441,9 @@ P.fn = function (reverseOrder) {
 				}
 			}
 
-			if (!this.active) this.halt();
+			if (!active) this.halt();
 
-			if (this.killOnComplete && this.cycleCount >= this.cycles) this.killTweens(true);
+			if (this.killOnComplete && cycleCount >= cycles) this.killTweens(true);
 		}
 	}
 };
@@ -497,6 +512,14 @@ P.run = function () {
 	}
 
 	return this;
+};
+
+/*
+
+*/
+P.isRunning = function () {
+
+	return this.active;
 };
 
 /*

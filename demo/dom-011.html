@@ -10,18 +10,44 @@
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
-    #imagestore, img {
-      height: 0px;
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
     }
   </style>
+
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 011</h1>
-  <h2>Position DOM element - drag-and-drop</h2>
+  <h2>Canvas controller 'fit' attribute; Cell positioning (mouse)</h2>
+  <h3>This canvas is resizable* - drag the bottom right corner to change its dimensions.</h3>
+
+  <div class="controls">
+
+    <div class="green label">Canvas fit</div>
+    <div class="green">
+      <select class="controlItem" id="fitselect">
+        <option value="none">none</option>
+        <option value="contain">contain</option>
+        <option value="cover">cover</option>
+        <option value="fill">fill</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Stack width</div>
+    <div class="yellow">
+      <select class="controlItem" id="stackwidth">
+        <option value="thin">200px</option>
+        <option value="square">400px</option>
+        <option value="wide">600px</option>
+        <option value="massive">1000px</option>
+      </select>
+    </div>
+
+  </div>
 
   <div id="mystack" data-stack>
-    <div id="myelement">Click and drag this element</div>
+    <canvas id="mycanvas"></canvas>
   </div>
 
   <p id="reportmessage"></p>
@@ -29,12 +55,18 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Add Scrawl-canvas listeners to the stack to detect mouse and touch interactions</li>
-      <li>Drag and drop a stack element within that stack (clicking on the element outside the stack has no effect)</li>
-      <li>Check that when drag starts, and ends, the element does not 'jump'</li>
-      <li>Check that dragging a rotating element does not disturb the point around which the element rotates</li>
+      <li>Check the various fit modes by which the base (hidden) canvas can be copied over to its display canvas</li>
+      <li>Check the canvas responds to changes in its container stack's dimensions</li>
+      <li>Check that the darker blue 'cell' canvas correctly tracks the mouse cursor when it hovers over the stack element, with no errors in positioning whatever the setting of the canvas object's 'fit' attribute</li>
     </ul>
+
+    <h4>*Note</h4>
+    <p>We cannot directly resize the DOM canvas element using typical HTML functionality (for instance the ability to resize a textarea input in a form by dragging its bottom right corner) - the canvas element's bitmap and CSS dimensions are different attributes which do not play nicely together. Thus browsers will ignore any attempt to attach a draggable resize widget to the canvas element (using the CSS 'resize' property).</p>
+
+    <p>To overcome this issue we enclose the canvas element in a Scrawl-canvas stack element, add the resize property to that, and set the canvas dimensions to 100% of the Stack's dimensions. Even so, only Firefox seems to allow the canvas element to be resized dynamically using this fix; Chrome, for instance, shows the corner resize dragger as expected, but doesn't respond to user interaction.</p>
   </div>
+
+  <p>Exposing the hidden canvases (cells), for development purposes only:</p>
 
   <script src="dom-011.js" type="module"></script>
 

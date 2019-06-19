@@ -12,22 +12,24 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 001</h1>
-  <h2>Canvas discovery</h2>
+  <h2>Block and wheel entitys (make, clone, method)<br />Drag and drop block and wheel entitys</h2>
 
-  <!-- the width and height values set dimensions for both display and base canvases; subsequent changes to the display canvas dimensions will not affect the dimensions of the base canvas -->
-  <canvas id="mycanvas" width="1000" height="500"></canvas>
+  <canvas id="mycanvas" width="600" height="600"></canvas>
 
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Discover and prepare canvas elements in the DOM on load</li>
-      <li>Resize the visible canvas element, leaving its virtual canvas with the existing dimensions</li>
-      <li>Set the background color of the canvas</li>
-      <li>Add a new cell to the canvas</li>
-      <li>Position the cell on the canvas, including rotation and scaling</li>
-      <li>Perform a canvas display cycle</li>
+      <li>Create block and wheel entitys</li>
+      <li>Clone the entitys</li>
+      <li>Position the entitys on the canvas</li>
+      <li>Change the state of a subset of entitys sharing the same state object</li>
+      <li>Check the various drawing methods available to the entitys</li>
+    </ul>
+    <ul>
+      <li>Check that when a drag operation starts, the dragged entity does not suddenly jump</li>
+      <li>Check that when a drag operation ends, the dragged entity does not suddenly jump</li>
     </ul>
   </div>
 

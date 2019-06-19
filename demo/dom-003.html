@@ -13,106 +13,37 @@
     #mystack {
       width: 500px;
       height: 500px;
+      perspective: 1200px;
     }
 
-    #myelement {
-      border: 1px solid blue;
+    .red-text {
+      color: red;
+      background-color: lavender;
     }
 
-    .controls {
-      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    .circle {
+      border-radius: 50%;
+      background-color: pink;
     }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 003</h1>
-  <h2>Position an element within a stack</h2>
+  <h2>Dynamically create and clone Element artefacts; drag and drop elements around a Stack</h2>
+  <h3>Drag and drop elements around the Stack</h3>
 
-  <div id="mystack" data-stack>
-    <p id="myelement">This element can be positioned within the stack element using scrawl positioning</p>
-  </div>
+  <div id="mystack" data-stack></div>
 
   <p id="reportmessage"></p>
-
-  <div class="controls">
-
-    <div class="pink label">Width</div>
-    <div class="pink">'n%' <input class="controlItem" id="dims_widthPercent" type="range" value="0" min="0" max="120" step="1" /></div>
-    <div class="pink">n <input class="controlItem" id="dims_widthAbsolute" type="range" value="0" min="0" max="600" step="10" /></div>
-
-    <div class="pink label">Height</div>
-    <div class="pink">'n%' <input class="controlItem" id="dims_heightPercent" type="range" value="0" min="0" max="120" step="1" /></div>
-    <div class="pink">n <input class="controlItem" id="dims_heightAbsolute" type="range" value="0" min="0" max="600" step="10" /></div>
-
-    <div class="blue label">Starts ('n%')</div>
-    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
-    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
-
-    <div class="green label">Handles ('n%')</div>
-    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
-    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
-
-    <div class="blue label">Starts (n)</div>
-    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="0" min="-20" max="620" step="5" /></div>
-    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="0" min="-20" max="620" step="5" /></div>
-
-    <div class="green label">Handles (n)</div>
-    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="0" min="-100" max="300" step="1" /></div>
-    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="0" min="-100" max="300" step="1" /></div>
-
-    <div class="blue label">Starts ('str')</div>
-    <div class="blue">X: <select class="controlItem" id="start_xString">
-        <option value="left">left</option>
-        <option value="center">center</option>
-        <option value="right">right</option>
-      </select>
-    </div>
-    <div class="blue">Y: <select class="controlItem" id="start_yString">
-        <option value="top">top</option>
-        <option value="center">center</option>
-        <option value="bottom">bottom</option>
-      </select>
-    </div>
-
-    <div class="green label">Handles ('str')</div>
-    <div class="green">X: <select class="controlItem" id="handle_xString">
-        <option value="left">left</option>
-        <option value="center">center</option>
-        <option value="right">right</option>
-      </select>
-    </div>
-    <div class="green">Y: <select class="controlItem" id="handle_yString">
-        <option value="top">top</option>
-        <option value="center">center</option>
-        <option value="bottom">bottom</option>
-      </select>
-    </div>
-
-    <div class="yellow label">Roll</div>
-    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Pitch</div>
-    <div class="yellow"><input class="controlItem" id="pitch" type="range" value="0" min="0" max="360" step="1" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Yaw</div>
-    <div class="yellow"><input class="controlItem" id="yaw" type="range" value="0" min="0" max="360" step="1" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Scale</div>
-    <div class="yellow"><input class="controlItem" id="scale" type="range" value="0" min="0" max="2" step="0.01" /></div>
-    <div class="yellow">&nbsp;</div>
-
-  </div>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Dynamically set a stack element's width, height, start and handle attributes, both for absolute number and conditional string percentage values</li>
-      <li>Dynamically set a stack element's scale and rotation attributes</li>
-      <li>Ensure these values are respected when element tracks the mouse cursor</li>
+      <li>Create, and clone, elements - adding them dynamically to the stack environment</li>
+      <li>Check that elements can be created with CSS attributes</li>
+      <li>Check that elements can be created with HTML class values</li>
+      <li>Check that elements can be dragged and dropped around the stack environment, taking into account their current rotation values</li>
     </ul>
   </div>
 

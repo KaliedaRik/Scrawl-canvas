@@ -60,6 +60,7 @@ code {
 #reportmessage {
 	padding: 1em;
 	background-color: rgba(0, 120, 0, .4);
+	white-space: pre-wrap;
 }
 
 [data-stack] {

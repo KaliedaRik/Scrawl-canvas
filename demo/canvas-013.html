@@ -12,24 +12,19 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 013</h1>
-  <h2>Entity-locked gradients</h2>
-  <h3>Drag and drop the entitys around the canvas</h3>
+  <h2>Defined Shape entitys - Defined Shape entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral</h2>
 
-  <canvas id="mycanvas" width="600" height="600"></canvas>
+  <canvas id="mycanvas" width="600" height="1800"></canvas>
 
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
-    <p>Drag and drop the entitys to test that their gradients change in line with the underlying entity-locked gradient (which is shared by all these entitys)</p>
-
     <ul>
-      <li>Setup a linear gradient</li>
-      <li>Create and clone block and wheel entitys, each using the gradient as a fill; lock the fill to the entity</li>
-      <li>The cloned entitys should include a roll delta</li>
-      <li>The gradient should fit inside each entity, taking into account that entity's scale</li>
-      <li>Check that when the drag operation starts, the gradient remains static within the entity (the yellow line should bisect each entity)</li>
-      <li>Check that when the drag operation ends, the gradient remains static within the entity</li>
+      <li>Create a set of defined Shape entitys</li>
+      <li>Clone and amend them</li>
+      <li>Position them on the canvas</li>
+      <li>Animate entitys along their paths</li>
     </ul>
   </div>
 

@@ -4,9 +4,11 @@
 import { constructors, artefact, group } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, isa_obj, isa_fn, isa_quaternion, xt, addStrings, xta } from '../core/utilities.js';
 import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
-import { addDomShowElement, setDomShowRequired } from '../core/DOM.js';
+import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
+import { requestCell, releaseCell } from '../factory/cell.js';
+
 
 export default function (P = {}) {
 
@@ -20,32 +22,7 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 
 */
-		width: 300,
-
-/*
-
-*/
-		height: 150,
-
-/*
-
-*/
-		localWidth: 300,
-
-/*
-
-*/
-		localHeight: 150,
-
-/*
-
-*/
 		domElement: '',
-
-/*
-
-*/
-		uuid: '',
 
 /*
 
@@ -58,19 +35,17 @@ All factories using the dom mixin will add these to their prototype objects
 		yaw: 0,
 
 /*
-
+Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d box (as such) to act as a length for relative N% strings (and 'front', 'center', 'back' strings would be equally nonsensical)
 */
-		group: '',
+		offsetZ: 0,
 
 /*
 
 */
+		collides: false,
+		pathCorners: null,
+		collisionPath: null,
 		collisionPoints: null,
-
-/*
-
-*/
-		checkHitMethod: 'box',
 
 /*
 
@@ -80,7 +55,13 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 
 */
-		currentTransform: '',
+		classes: '',
+
+/*
+
+*/
+		currentTransformString: '',
+		currentTransformOriginString: '',
 
 /*
 
@@ -96,86 +77,15 @@ All factories using the dom mixin will add these to their prototype objects
 
 */
 		trackHere: false,
-
-/*
-
-*/
-		collides: false,
-
-/*
-
-*/
-		actionResize: false,
-
-/*
-
-*/
-		dirtyDimensions: true,
-
-/*
-
-*/
-		dirtyHandle: true,
-
-/*
-
-*/
-		dirtyStart: true,
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
+
 
 /*
 ## Define getter, setter and deltaSetter functions
 */
-	let G = P.getters,
-		S = P.setters,
+	let S = P.setters,
 		D = P.deltaSetters;
-
-/*
-
-*/
-	G.width = function () {
-
-		if (!xt(this.width)) {
-
-			let w = this.domElement.style.width;
-			this.width = (xt(w)) ? parseFloat(w) : this.defs.width;
-		}
-		return this.width;
-	};
-
-/*
-
-*/
-	G.height = function () {
-
-		if (!xt(this.height)) {
-
-			let h = this.domElement.style.height;
-
-			if (h === 'auto') h = '0';
-
-			this.height = (xt(h)) ? parseFloat(h) : this.defs.height;
-		}
-		return this.height;
-	};
-
-/*
-
-*/
-	G.offsetZ = function () {
-
-		this.checkVector('offset');
-		return this.offset.z;
-	};
-
-/*
-
-*/
-	G.collisionPoints = function (item) {
-
-		return this.getCollisionPointCoordinates();
-	};
 
 /*
 
@@ -191,40 +101,16 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 
 */
-	S.collides = function (item) {
+	S.actionResize = function (item) {
 
-		if (item) this.makeCollidable();
-		this.collides = item;
-	};
+		this.actionResize = item;
 
-/*
+		if (item) {
 
-*/
-	S.collisionPoints = function (item) {
-
-		this.addCollisionPoints(item);
-	};
-
-/*
-
-*/
-	S.width = function (item) {
-
-		this.width = (xt(item)) ? item : this.defs.width;
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	S.height = function (item) {
-
-		this.height = (xt(item)) ? item : this.defs.height;
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-		this.dirtyPivoted = true;
+			this.prepareStamp();
+			domShow(this.name);
+			this.triggerResizeCascade();
+		}
 	};
 
 /*
@@ -239,37 +125,28 @@ All factories using the dom mixin will add these to their prototype objects
 /*
 
 */
-	S.offsetZ = function (item) {
-
-		this.checkVector('offset');
-		this.offset.z = item;
-		this.dirtyOffset = true;
-	};
-
-/*
-
-*/
-	S.offset = function (item = {}) {
-
-		this.checkVector('offset');
-		this.offset.x = (xt(item.x)) ? item.x : this.offset.x;
-		this.offset.y = (xt(item.y)) ? item.y : this.offset.y;
-		this.offset.z = (xt(item.z)) ? item.z : this.offset.z;
-		this.dirtyOffset = true;
-	};
-
-/*
-
-*/
 	S.visibility = function (item) {
 
-		if (this.visibility !== item) {
+		this.visibility = item;
+		this.dirtyVisibility = true;
+	};
 
-			this.visibility = item;
+/*
 
-			addDomShowElement(this.name);
-			setDomShowRequired(true);
-		}
+*/
+	S.offsetZ = function (item) {
+
+		this.offsetZ = item;
+		this.dirtyOffsetZ = true;
+	};
+
+/*
+
+*/
+	D.offsetZ = function (item) {
+
+		this.offsetZ += item;
+		this.dirtyOffsetZ = true;
 	};
 
 /*
@@ -279,7 +156,6 @@ All factories using the dom mixin will add these to their prototype objects
 
 		this.roll = this.checkRotationAngle(item);
 		this.dirtyRotation = true;
-		this.dirtyRotationActive = true;
 	};
 
 /*
@@ -289,7 +165,6 @@ All factories using the dom mixin will add these to their prototype objects
 
 		this.pitch = this.checkRotationAngle(item);
 		this.dirtyRotation = true;
-		this.dirtyRotationActive = true;
 	};
 
 /*
@@ -299,38 +174,6 @@ All factories using the dom mixin will add these to their prototype objects
 
 		this.yaw = this.checkRotationAngle(item);
 		this.dirtyRotation = true;
-		this.dirtyRotationActive = true;
-	};
-
-/*
-
-*/
-	S.addPivotHandle = function (item) {
-
-		this.addPivotHandle = item;
-		this.dirtyHandle = true;
-	};
-
-/*
-
-*/
-	D.width = function (item) {
-
-		this.width = addStrings(this.width, item);
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-		this.dirtyPivoted = true;
-	};
-
-/*
-
-*/
-	D.height = function (item) {
-
-		this.height = addStrings(this.height, item);
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-		this.dirtyPivoted = true;
 	};
 
 /*
@@ -340,7 +183,6 @@ All factories using the dom mixin will add these to their prototype objects
 
 		this.roll = this.checkRotationAngle(this.roll + item);
 		this.dirtyRotation = true;
-		this.dirtyRotationActive = true;
 	};
 
 /*
@@ -350,7 +192,6 @@ All factories using the dom mixin will add these to their prototype objects
 
 		this.pitch = this.checkRotationAngle(this.pitch + item);
 		this.dirtyRotation = true;
-		this.dirtyRotationActive = true;
 	};
 
 /*
@@ -360,7 +201,6 @@ All factories using the dom mixin will add these to their prototype objects
 
 		this.yaw = this.checkRotationAngle(this.yaw + item);
 		this.dirtyRotation = true;
-		this.dirtyRotationActive = true;
 	};
 
 /*
@@ -371,59 +211,35 @@ All factories using the dom mixin will add these to their prototype objects
 		this.css = (this.css) ? mergeOver(this.css, item) : item;
 
 		this.dirtyCss = true;
-		addDomShowElement(this.name);
-		setDomShowRequired(true);
 	};
 
 /*
 
 */
-	S.group = function (item) {
+	S.classes = function (item) {
 
-		let grp = group[item],
-			old;
+		this.classes = item;
 
-		if (grp) {
-
-			old = grp[this.group];
-
-			if (old) old.removeArtefacts(this.name);
-
-			grp.addArtefacts(this.name);
-			this.group = item;
-		}
+		this.dirtyClasses = true;
 	};
 
 /*
 
 */
-	P.setNow = function (items) {
+	S.collides = function (item) {
 
-		this.set(items);
-		this.prepareStamp();
-		return this;
+		this.collides = item;
+
+		if (item) this.dirtyPathObject = true;
 	};
 
 /*
 
 */
-	P.setDeltaNow = function (items) {
+	S.domAttributes = function (item) {
 
-		this.setDelta(items);
-		this.prepareStamp();
-		return this;
-	};
-
-/*
-
-*/
-	P.getDimensions = function () {
-
-		return {
-			w: this.localWidth,
-			h: this.localHeight
-		}
-	};
+		this.updateDomAttributes(item);
+	}
 
 /*
 
@@ -445,12 +261,38 @@ Overwrites the clone function in mixin/base.js
 		let self = this,
 			regex = /^(local|dirty|current)/;
 
-		let currentHost = this.currentHost;
-		delete this.currentHost;
+		let host = this.currentHost || artefact[this.host];
+		this.currentHost = null;
+
+		let grp = this.group;
+		this.group = grp.name;
+
+		let corners = this.pathCorners;
+		this.pathCorners = null;
+
+		let points = this.collisionPoints;
+		this.collisionPoints = null;
+
+		let tempPivot = this.pivot, 
+			tempMimic = this.mimic, 
+			tempPath = this.path;
+
+		if (tempPivot && tempPivot.name) this.pivot = tempPivot.name;
+		if (tempMimic && tempMimic.name) this.mimic = tempMimic.name;
+		if (tempPath && tempPath.name) this.path = tempPath.name;
 
 		let copied = JSON.parse(JSON.stringify(this));
+
+		if (tempPivot) this.pivot = tempPivot;
+		if (tempMimic) this.mimic = tempMimic;
+		if (tempPath) this.path = tempPath;
+
 		copied.name = (items.name) ? items.name : generateUuid();
-		this.currentHost = currentHost;
+
+		this.currentHost = host;
+		this.group = grp;
+		this.pathCorners = corners;
+		this.collisionPoints = points;
 
 		Object.entries(this).forEach(([key, value]) => {
 
@@ -462,8 +304,6 @@ Overwrites the clone function in mixin/base.js
 
 			copied.domElement = this.domElement.cloneNode(true);
 			copied.domElement.id = copied.name;
-			
-			let host = artefact[this.group];
 
 			if (host && host.domElement) host.domElement.appendChild(copied.domElement);
 		}
@@ -471,9 +311,9 @@ Overwrites the clone function in mixin/base.js
 		let clone = new constructors[this.type](copied);
 		clone.set(items);
 
-		let grp = group[this.group];
+		if (grp) grp.addArtefacts(clone);
 
-		if(grp) grp.addArtefacts(clone);
+		// TODO - generate clone collisionPoints to match existing points, unless items includes CP date in which case use that instead
 
 		return clone;
 	};
@@ -485,12 +325,17 @@ Overwrites the clone function in mixin/base.js
 
 		if (item.substring) {
 
-			let el = this.domElement;
+			let classes = this.classes;
 
-			if (!el.className.length) el.className = item;
-			else if (' ' === el.className[el.className.length - 1]) el.className += item;
-			else el.className += ` ${item}`;
+			classes += ` ${item}`;
+			classes = classes.trim();
+			classes = classes.replace(/[\s\uFEFF\xA0]+/g, ' ');
 
+			if (classes !== this.classes) {
+
+				this.classes = classes;
+				this.dirtyClasses = true;
+			}
 		}
 		return this;
 	};
@@ -502,119 +347,58 @@ Overwrites the clone function in mixin/base.js
 
 		if (item.substring) {
 
-			let el = this.domElement,
-				eClass = el.className,
-				classes = item.split();
+			let classes = this.classes,
+				targets = item.split(),
+				search;
 
-			classes.forEach(cls => {
+			targets.forEach(cls => {
 
-				let search = new RegExp(' ?' + cls + ' ?');
-				eClass = eClass.replace(search, ' ');
+				search = new RegExp(' ?' + cls + ' ?');
+				classes = classes.replace(search, ' ');
+				classes = classes.trim();
+				classes = classes.replace(/[\s\uFEFF\xA0]+/g, ' ');
 			});
 
-			el.className = eClass;
-		}
-		return this;
-	};
+			if (classes !== this.classes) {
 
-/*
-
-*/
-	P.makeCollidable = function () {
-
-		this.collides = true;
-		this.addCollisionPoints('corners');
-		return this;
-	};
-
-/*
-Items argument is either an xy coordinate object, or an array of such objects. A hit will return the hit object with x, y and artefact attributes
-*/
-	P.checkHit = function (items, host) {
-
-		if (xt(host) && this.collides) {
-
-			if (this.checkHitMethod === 'box') {
-
-				let box = this.box,
-					xMin, yMin, xMax, yMax, x, y;
-
-				if (!box || this.dirtyBox) {
-
-					this.dirtyBox = false;
-					box = this.box = this.getBox(host);
-				}
-
-				if (box) {
-
-					xMin = box[0];
-					yMin = box[1];
-					xMax = box[2];
-					yMax = box[3];
-
-					items = [].concat(items);
-
-					if (items.some(item => {
-
-						item = isa_obj(item) ? item : {};
-
-						x = item.x;
-						y = item.y;
-
-						return (xta(x, y) && x >= xMin && x <= xMax && y >= yMin && y <= yMax);
-
-					})) return {
-						x: x,
-						y: y,
-						artefact: this
-					};
-				}
+				this.classes = classes;
+				this.dirtyClasses = true;
 			}
 		}
-		return false;
+		return this;
 	};
 
 /*
 
 */
-	P.getBox = function (host) {
+	P.updateDomAttributes = function (items, value) {
 
-		let collisionPoints = this.collisionPoints || [];
+		if (this.domElement) {
 
-		if (collisionPoints.length) {
+			let el = this.domElement;
 
-			let xMin = 999999, yMin = 999999, xMax = -999999, yMax = -999999,
-				round = Math.round,
-				tx, ty;
+			if (items.substring && xt(value)) {
 
-			let here = isa_obj(host.here) ? host.here : {},
-				x = currentCorePosition.scrollX - (here.offsetX || 0),
-				y = currentCorePosition.scrollY - (here.offsetY || 0);
+				if (value) el.setAttribute(items, value);
+				else el.removeAttribute(items);
+			}
+			else if (isa_obj(items)) {
 
-			collisionPoints.forEach(point => {
+				Object.entries(items).forEach(([item, val]) => {
 
-				let client = point.getClientRects();
-				client = client[0];
+					if (val) el.setAttribute(item, val);
+					else el.removeAttribute(item);
+				});
+			}
 
-				if (client) {
-
-					tx = round(client.left + x);
-					ty = round(client.top + y);
-					xMin = (xMin > tx) ? tx : xMin;
-					xMax = (xMax < tx) ? tx : xMax;
-					yMin = (yMin > ty) ? ty : yMin;
-					yMax = (yMax < ty) ? ty : yMax;
-				}
-			});
-			return [xMin, yMin, xMax, yMax];
 		}
-		else return false
+		return this;
 	};
 
 /*
 
 */
-	P.addCollisionPoints = function (...args) {
+	P.addPathCorners = function () {
 
 		let pointMaker = function () {
 
@@ -627,228 +411,389 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 			return p;
 		};
 
-		let collisionPoints = this.collisionPoints = [],
-			element = this.domElement;
+		let tl = pointMaker(),
+			tr = pointMaker(),
+			br = pointMaker(),
+			bl = pointMaker();
 
-		if (element) {
+		tl.style.top = '0%';
+		tl.style.left = '0%';
 
-			let pointsArray = new Set();
+		tr.style.top = '0%';
+		tr.style.left = '100%';
 
-			args.forEach(item => {
+		br.style.top = '100%';
+		br.style.left = '100%';
 
-				if (item.substring) {
+		bl.style.top = '100%';
+		bl.style.left = '0%';
 
-					item = item.toLowerCase();
+		let el = this.domElement;
 
-					switch (item) {
+		el.appendChild(tl);
+		el.appendChild(tr);
+		el.appendChild(br);
+		el.appendChild(bl);
 
-						case 'corners' :
-							pointsArray.add('ne').add('nw').add('sw').add('se');
-							break;
+		this.pathCorners.push(tl);
+		this.pathCorners.push(tr);
+		this.pathCorners.push(br);
+		this.pathCorners.push(bl);
 
-						case 'edges' :
-							pointsArray.add('n').add('w').add('s').add('e');
-							break;
-
-						case 'border' :
-							pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e');
-							break;
-
-						case 'center' :
-							pointsArray.add('c');
-							break;
-
-						case 'all' :
-							pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e').add('c');
-							break;
-
-						case 'ne' :
-						case 'e' :
-						case 'se' :
-						case 's' :
-						case 'sw' :
-						case 'w' :
-						case 'nw' :
-						case 'n' :
-							pointsArray.add(item);
-							break;
-					}
-				}
-			});
-
-			let topArray = ['ne', 'n', 'nw'],
-				middleArray = ['e', 'w', 'c'],
-				leftArray = ['nw', 'w', 'sw'],
-				centerArray = ['n', 's', 'c'];
-
-			pointsArray.forEach(val => {
-
-				let point = pointMaker();
-
-				if (topArray.indexOf(val) >= 0) point.style.top = '0%';
-				else if (middleArray.indexOf(val) >= 0) point.style.top = '50%';
-				else point.style.top = '100%';
-
-				if (leftArray.indexOf(val) >= 0) point.style.left = '0%';
-				else if (centerArray.indexOf(val) >= 0) point.style.left = '50%';
-				else point.style.left = '100%';
-
-				element.appendChild(point);
-				collisionPoints.push(point);
-			});
-		}
 		return this;
 	};
 
 /*
 
 */
-	P.getCollisionPointCoordinates = function (host) {
+	P.cleanPathObject = function () {
 
-		let cPoints = this.collisionPoints,
-			here = isa_obj(host.here) ? host.here : {},
+		this.dirtyPathObject = false;
+
+		if (!this.pathCorners.length) this.addPathCorners();
+
+		let here = this.getHere(),
 			x = currentCorePosition.scrollX - (here.offsetX || 0),
 			y = currentCorePosition.scrollY - (here.offsetY || 0),
 			round = Math.round,
-			results = [];
+			results = [],
+			client;
 
-		this.collisionPoints.forEach((point) => {
+		this.pathCorners.forEach(point => {
 
-			let client = point.getClientRects();
+			client = point.getClientRects();
 			client = client[0];
 			
-			if (client) results.push([
-				round(client.left + x),
-				round(client.top + y)
-			]);
+			if (client) results.push(round(client.left + x), round(client.top + y));
+			else results.push(0, 0);
 		});
-		return results;
+
+		let p = this.pathObject = new Path2D();
+		p.moveTo(results[0], results[1]);
+		p.lineTo(results[2], results[3]);
+		p.lineTo(results[4], results[5]);
+		p.lineTo(results[6], results[7]);
+		p.closePath();
 	};
 
 /*
 
 */
-	P.setPosition = function () {
+	P.checkHit = function (items = {}) {
 
-		addDomShowElement(this.name);
-		setDomShowRequired(true);
+		if (!this.collides || !this.domElement) return false;
+
+		let tests = (!Array.isArray(items)) ?  [items] : items;
+
+		let mycell = requestCell(),
+			engine = mycell.engine,
+			tx, ty;
+
+		this.cleanPathObject();
+
+		if (tests.some(test => {
+
+			if (Object.prototype.toString.call(test) !== '[object Object]') return false;
+
+			tx = test.x;
+			ty = test.y;
+
+			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+
+			// this measures against a flat, unrotated host (usually a stack artefact) - if we want to measure against a rotated host (roll) then we will need to do some stuff to the engine. I have no clue about how to handle a Stack that has been rotated around pitch or yaw.
+			return engine.isPointInPath(this.pathObject, tx, ty);
+
+		}, this)) {
+
+			releaseCell(mycell);
+
+			return {
+				x: tx,
+				y: ty,
+				artefact: this
+			};
+		}
+		
+		releaseCell(mycell);
+		
+		return false;
 	};
 
 /*
 
 */
-	P.setPositionNow = function () {
+	// P.addCollisionPoints = function (...args) {
 
-		this.domElement.style.position = this.position;
-		this.dirtyPosition = false;
-	};
+	// 	let pointMaker = function () {
+
+	// 		let p = document.createElement('div');
+
+	// 		p.style.width = 0;
+	// 		p.style.height = 0;
+	// 		p.style.position = 'absolute';
+
+	// 		return p;
+	// 	};
+
+	// 	let collisionPoints = this.collisionPoints = [],
+	// 		element = this.domElement;
+
+	// 	if (element) {
+
+	// 		let pointsArray = new Set();
+
+	// 		args.forEach(item => {
+
+	// 			if (item.substring) {
+
+	// 				item = item.toLowerCase();
+
+	// 				switch (item) {
+
+	// 					case 'corners' :
+	// 						pointsArray.add('ne').add('nw').add('sw').add('se');
+	// 						break;
+
+	// 					case 'edges' :
+	// 						pointsArray.add('n').add('w').add('s').add('e');
+	// 						break;
+
+	// 					case 'border' :
+	// 						pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e');
+	// 						break;
+
+	// 					case 'center' :
+	// 						pointsArray.add('c');
+	// 						break;
+
+	// 					case 'all' :
+	// 						pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e').add('c');
+	// 						break;
+
+	// 					case 'ne' :
+	// 					case 'e' :
+	// 					case 'se' :
+	// 					case 's' :
+	// 					case 'sw' :
+	// 					case 'w' :
+	// 					case 'nw' :
+	// 					case 'n' :
+	// 						pointsArray.add(item);
+	// 						break;
+	// 				}
+	// 			}
+	// 		});
+
+	// 		let topArray = ['ne', 'n', 'nw'],
+	// 			middleArray = ['e', 'w', 'c'],
+	// 			leftArray = ['nw', 'w', 'sw'],
+	// 			centerArray = ['n', 's', 'c'];
+
+	// 		pointsArray.forEach(val => {
+
+	// 			let point = pointMaker();
+
+	// 			if (topArray.indexOf(val) >= 0) point.style.top = '0%';
+	// 			else if (middleArray.indexOf(val) >= 0) point.style.top = '50%';
+	// 			else point.style.top = '100%';
+
+	// 			if (leftArray.indexOf(val) >= 0) point.style.left = '0%';
+	// 			else if (centerArray.indexOf(val) >= 0) point.style.left = '50%';
+	// 			else point.style.left = '100%';
+
+	// 			element.appendChild(point);
+	// 			collisionPoints.push(point);
+	// 		});
+	// 	}
+	// 	return this;
+	// };
 
 /*
 
 */
-	P.cleanDimensions = function () {
+	// P.getCollisionPointCoordinates = function (host) {
 
-		let here = this.getHere();
+	// 	let cPoints = this.collisionPoints,
+	// 		here = isa_obj(host.here) ? host.here : {},
+	// 		x = currentCorePosition.scrollX - (here.offsetX || 0),
+	// 		y = currentCorePosition.scrollY - (here.offsetY || 0),
+	// 		round = Math.round,
+	// 		results = [];
 
-		if (this.width.toFixed) this.localWidth = this.width;
-		else this.localWidth = (parseFloat(this.width) / 100) * here.w;
+	// 	this.collisionPoints.forEach((point) => {
 
-		if (this.height.toFixed) this.localHeight = this.height;
-		else if (this.height === 'auto') this.localHeight = 0;
-		else this.localHeight = (parseFloat(this.height) / 100) * here.h;
-	};
+	// 		let client = point.getClientRects();
+	// 		client = client[0];
+			
+	// 		if (client) results.push([
+	// 			round(client.left + x),
+	// 			round(client.top + y)
+	// 		]);
+	// 	});
+	// 	return results;
+	// };
 
 /*
 
 */
 	P.cleanRotation = function () {
 
-		let r;
+		this.dirtyRotation = false;
 
-		if (!this.rotation) this.rotation = makeQuaternion();
-		else if (!isa_quaternion(this.rotation)) this.rotation = makeQuaternion(this.rotation);
+		if (!this.rotation || !isa_quaternion(this.rotation)) this.rotation = makeQuaternion();
 
-		r = this.rotation;
+		if (!this.currentRotation || !isa_quaternion(this.rotation)) this.currentRotation = makeQuaternion();
 
-		r.setFromEuler({
+		let calculatedRotation = this.rotation;
+
+		calculatedRotation.setFromEuler({
 			pitch: this.pitch || 0,
 			yaw: this.yaw || 0,
 			roll: this.roll || 0,
 		});
 
-		if (r.getMagnitude() !== 1) r.normalize();
+		if (calculatedRotation.getMagnitude() !== 1) calculatedRotation.normalize();
+
+		let processedRotation = requestQuaternion(),
+			path = this.path,
+			mimic = this.mimic,
+			pivot = this.pivot,
+			lock = this.lockTo;
+
+		if (path && lock.indexOf('path') >= 0) {
+
+			processedRotation.set(calculatedRotation);
+			// TODO check to see if path roll needs to be added
+
+		}
+		else if (mimic && this.useMimicRotation && lock.indexOf('mimic') >= 0) {
+
+			if (xt(mimic.currentRotation)) {
+
+				processedRotation.set(mimic.currentRotation);
+				if (this.addOwnRotationToMimic) processedRotation.quaternionRotate(calculatedRotation);
+			}
+			else this.dirtyMimicRotation = true;
+		} 
+		else {
+
+			processedRotation.set(calculatedRotation);
+
+			if (pivot && this.addPivotRotation && lock.indexOf('pivot') >= 0) {
+
+				if (xt(pivot.currentRotation)) processedRotation.quaternionRotate(pivot.currentRotation);
+				else this.dirtyPivotRotation = true;
+			}
+		}
+
+		this.currentRotation.set(processedRotation);
+
+		releaseQuaternion(processedRotation);
+
+		this.dirtyPositionSubscribers = true;
 	};
 
 /*
 
 */
-	P.cleanOffset = function () {
+	P.cleanOffsetZ = function () {
 
-		let dims = this.cleanOffsetHelper();
-
-		this.cleanVectorParameter('currentOffset', this.offset, dims[0], dims[1]);
-
-		if (this.offset.z.toFixed) this.currentOffset.z = this.offset.z;
-
-		this.dirtyOffset = false;
-		this.dirtyScale = false;
+		// nothing to do here - function only exists in case we need to do stuff in future Scrawl-canvas version
+		this.dirtyOffsetZ = false;
 	};
 
 /*
 
 */
-	P.prepareStamp = function () {
+	P.cleanContent = function () {
 
-		if (this.domElement) {
+		this.dirtyContent = false;
 
-			if (this.mimic) this.prepareMimicStamp();
-			else this.prepareDefaultStamp();
-		}
+		let el = this.domElement;
 
-		if (this.dirtyPivoted) this.updatePivotSubscribers();
-
-		if (this.dirtyOffset || this.dirtyScale || this.pivot) {
-
-			this.cleanOffset();
-			this.dirtyBox = true;
-		}
-
-		if (this.actionResize) this.checkForResize();
+		if (el) this.dirtyDimensions = true;
 	};
 
 /*
 
 */
-	P.prepareDefaultStamp = function () {
+	P.initializeDomLayout = function (items) {
 
-		if (this.dirtyPosition) {
+		let el = items.domElement,
+			elStyle = el.style;
 
-			this.setPosition();
-			this.dirtyBox = true;
-		}
+		if (el && items.setInitialDimensions) {
 
-		if (this.dirtyDimensions) {
+			let dims = el.getBoundingClientRect(),
+				trans = el.style.transform,
+				transOrigin = el.style.transformOrigin,
+				host = false,
+				hostDims;
 
-			this.cleanDimensions();
-			this.dirtyBox = true;
-		}
+			if (items && items.host) {
 
-		if (this.dirtyRotation) {
+				host = items.host;
 
-			this.cleanRotation();
-			this.dirtyBox = true;
-		}
+				if (host.substring && artefact[host]) host = artefact[host];
+			}
 
-		if (this.dirtyStart) {
+			// TODO - discover scale
 
-			this.cleanStart();
-			this.dirtyBox = true;
-		}
+			// discover dimensions (width, height)
+			this.currentDimensions[0] = dims.width;
+			this.currentDimensions[1] = dims.height;
+			items.width = dims.width;
+			items.height = dims.height;
 
-		if (this.dirtyHandle) {
+			// recover classes already assigned to the element
+			if (el.className) items.classes = el.className;
 
-			this.cleanHandle();
-			this.dirtyBox = true;
+			// go with lock defaults - no work required
+
+			// discover start (boundingClientRect - will be the difference between this object and its host (parent) object 'top' and 'left' values)
+			if (host && host.domElement) {
+
+				hostDims = host.domElement.getBoundingClientRect();
+
+				if (hostDims) {
+
+					items.startX = dims.left - hostDims.left;
+					items.startY = dims.top - hostDims.top;
+				}
+			}
+
+
+			// TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?
+
+			// TODO discover handle (transform, transformOrigin)
+
+			// TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
+
+			// for Stack artefacts only, discover perspective and perspective-origin values
+			if (this.type === 'Stack') {
+
+				// TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
+				if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
+
+					// TODO - this isn't working! 
+					items.perspectiveZ = (xt(elStyle.perspective) && elStyle.perspective) ? parseFloat(elStyle.perspective) : 0;
+				}
+
+				let perspectiveOrigin = elStyle.perspectiveOrigin;
+
+				if (perspectiveOrigin.length) {
+
+					perspectiveOrigin = perspectiveOrigin.split(' ');
+
+					if (perspectiveOrigin.length > 0 && !xt(items.perspective) && !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[0];
+
+					if (!xt(items.perspective) && !xt(items.perspectiveY)) {
+
+						if (perspectiveOrigin.length > 1) items.perspectiveY = perspectiveOrigin[1];
+						else items.perspectiveY = perspectiveOrigin[0];
+					}
+				}
+			}
 		}
 	};
 
@@ -857,39 +802,85 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 */
 	P.checkForResize = function () {
 
-		let element = this.domElement,
-			elementStyle = this.domElement.style;
+		let el = this.domElement;
 
-		let elementWidth = elementStyle.width || element.width;
-		this.width = (xt(elementWidth)) ? parseFloat(elementWidth) : this.defs.width;
+		if (el) {
 
-		let elementHeight = elementStyle.height || element.height;
+			let dims = el.getBoundingClientRect(),
+				flag = false;
 
-		if (elementHeight === 'auto') elementHeight = 0;
+			if (this.currentDimensions[0] !== dims.width) {
 
-		this.height = (xt(elementHeight)) ? parseFloat(elementHeight) : this.defs.height;
-
-		if (this.width !== this.localWidth || this.height !== this.localHeight) {
-
-			this.localWidth = this.width;
-			this.localHeight = this.height;
-
-			if (this.groups) {
-
-				this.groups.forEach((grp) => {
-
-					let item = group[grp];
-
-					if (item) item.setArtefacts({
-						dirtyDimensions: true,
-						dirtyHandle: true,
-						dirtyStart: true
-					});
-				});
+				this.dimensions[0] = this.currentDimensions[0] = dims.width;
+				flag = true;
 			}
+
+			if (this.currentDimensions[1] !== dims.height) {
+
+				this.dimensions[1] = this.currentDimensions[1] = dims.height;
+				flag = true;
+			}
+
+			if (flag && (this.type === 'Stack')) this.triggerResizeCascade();
 		}
 	};
 
+	P.triggerResizeCascade = function () {
+
+		let gBucket = this.groupBuckets,
+			aBucket;
+
+		if (gBucket && gBucket.length) {
+
+			gBucket.forEach(grp => {
+
+				aBucket = grp.artefactBuckets;
+
+				if (aBucket && aBucket.length) {
+
+					aBucket.forEach(art => {
+
+						if (art) {
+
+							art.dirtyDimensions = true;
+						}
+					})
+				}
+			})
+		}
+	};
+
+/*
+
+*/
+	P.prepareStamp = function () {
+
+		if (this.actionResize) this.checkForResize();
+
+		if (this.dirtyContent) this.cleanContent();
+		if (this.dirtyScale) this.cleanScale();
+		if (this.dirtyDimensions) this.cleanDimensions();
+		if (this.dirtyLock) this.cleanLock();
+		if (this.dirtyStart) this.cleanStart();
+		if (this.dirtyOffset) this.cleanOffset();
+		if (this.dirtyOffsetZ) this.cleanOffsetZ();
+		if (this.dirtyHandle) this.cleanHandle();
+		if (this.dirtyRotation) this.cleanRotation();
+
+		if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+
+			this.dirtyStampPositions = true;
+			this.dirtyStampHandlePositions = true;
+		}
+
+		if (this.dirtyStampPositions) this.cleanStampPositions();
+		if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
+	};
+
+	P.cleanStampPositionsAdditionalActions = function () {
+
+		if (this.domElement && this.collides) this.dirtyPathObject = true;
+	};
 /*
 
 */
@@ -897,98 +888,73 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 
 		let self = this;
 
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 
-			let cs, ch, ct, dt, a,
-				trans, origin, scale,
-				newtransform, newtransformArray,
-				pivot, here, path, pathStart,
-				rotor, rv, rx, ry, rz, ra, x, y, z,
-				notifyForShow = false;
+			// do not process if the DOM element is missing
+			if (!self.domElement) reject(false);
 
-			if (self.domElement) {
+			// calculate transform strings on each iteration
+			let [stampX, stampY] = self.currentStampPosition,
+				[handleX, handleY] = self.currentStampHandlePosition,
+				scale = self.currentScale;
 
-				if (self.mimic) {
+			let rotation = self.currentRotation,
+				v, vx, vy, vz, angle;
 
-					if (self.dirtyStart) self.cleanStart();
-					if (self.dirtyHandle) self.cleanHandle();
-				}
+			let nTransformOrigin = `${handleX}px ${handleY}px 0`,
+				nTransform = `translate(${stampX - handleX}px,${stampY - handleY}px)`;
 
-				cs = self.currentStart;
-				ch = self.currentHandle;
-				ct = self.currentOffset;
-				dt = self.dragOffset;
-				newtransform = '';
+			if (self.yaw || self.pitch || self.roll || (self.pivot && self.addPivotRotation) || (self.mimic && self.useMimicRotation) || (self.path && self.addPathRotation)) {
 
-				if (self.pivot) pivot = artefact[self.pivot];
+				v = rotation.v;
+				vx = v.x;
+				vy = v.y;
+				vz = v.z;
+				angle = rotation.getAngle(false);
 
-				here = self.getHere();
-				scale = self.scale;
-
-				if (self.dirtyDimensions) notifyForShow = true;
-
-				if (pivot && self.addPivotHandle) {
-
-					if (self.lockXTo === 'pivot') {
-
-						ch.x = pivot.currentHandle.x;
-						self.dirtyHandle = true;
-					}
-
-					if (self.lockYTo === 'pivot') {
-
-						ch.y = pivot.currentHandle.y;
-						self.dirtyHandle = true;
-					}
-				}
-
-				if (self.dirtyHandle) {
-
-					self.transformOrigin = `${ch.x}px ${ch.y}px 0`;
-					notifyForShow = true;
-				}
-
-				x = self.updateStampX() - ch.x || 0;
-				y = self.updateStampY() - ch.y || 0;
-				z = ct.z;
-				
-				if (self.dirtyRotationActive || self.rotateOnPivot) {
-
-					if (self.rotateOnPivot) rotor = requestQuaternion(self.rotation).quaternionRotate(pivot.rotation);
-					else if (self.dirtyRotation) rotor = requestQuaternion(self.rotation);
-					else rotor = false;
-
-					if (rotor) {
-
-						rv = rotor.v;
-						ra = rotor.getAngle(false);
-						newtransform = `translate(${x}px,${y}px) rotate3d(${rv.x},${rv.y},${rv.z},${ra}rad) translateZ(${z}px) scale(${scale},${scale})`;
-						releaseQuaternion(rotor);
-					}
-					else {
-
-						newtransformArray = self.currentTransform.split(' ');
-						newtransform = `translate(${x}px,${y}px) ${newtransformArray[1]} translateZ(${z}px) scale(${scale},${scale})`;
-					}
-				}
-				else newtransform = `translate(${x}px,${y}px) scale(${scale},${scale})`;
-
-				if (!self.currentTransform || self.currentTransform !== newtransform) {
-
-					self.currentTransform = newtransform;
-					self.dirtyTransform = true;
-					notifyForShow = true;
-				}
-
-				self.dirtyStart = false;
-				self.dirtyRotation = false;
-				self.dirtyOffset = false;
-				if (notifyForShow) {
-
-					addDomShowElement(this.name);
-					setDomShowRequired(true);
-				}
+				nTransform += ` rotate3d(${vx},${vy},${vz},${angle}rad)`;
 			}
+
+			if (self.offsetZ) nTransform += ` translateZ(${self.offsetZ}px)`;
+
+			if (scale !== 1) nTransform += ` scale(${scale},${scale})`;
+
+			if (nTransform !== self.currentTransformString) {
+
+				self.currentTransformString = nTransform;
+				self.dirtyTransform = true;
+			}
+
+			if (nTransformOrigin !== self.currentTransformOriginString) {
+
+				self.currentTransformOriginString = nTransformOrigin;
+				self.dirtyTransformOrigin = true;
+			}
+
+			// determine whether there is a need to trigger a redraw of the DOM element
+			if (self.dirtyTransform || self.dirtyPerspective || self.dirtyPosition || self.dirtyDomDimensions || self.dirtyTransformOrigin || self.dirtyVisibility || self.dirtyCss || self.dirtyClasses || self.domShowRequired) {
+
+				addDomShowElement(self.name);
+				setDomShowRequired(true);
+			}
+
+			// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
+			if (self.dirtyPositionSubscribers) self.updatePositionSubscribers();
+
+			// if this artefact's pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration
+			if(self.dirtyMimicRotation || self.dirtyPivotRotation) {
+
+				self.dirtyMimicRotation = false;
+				self.dirtyPivotRotation = false;
+				self.dirtyRotation = true;
+			}
+
+			if(self.dirtyMimicScale) {
+
+				self.dirtyMimicScale = false;
+				self.dirtyScale = true;
+			}
+
 			resolve(true);
 		});
 	};
@@ -997,7 +963,11 @@ Items argument is either an xy coordinate object, or an array of such objects. A
 
 */
 	P.apply = function() {
+
 		applyCoreResizeListener();
+
+		this.prepareStamp();
+		domShow(this.name);
 	};
 
 	return P;

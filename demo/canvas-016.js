@@ -2,439 +2,177 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
+// Setup
+let canvas = scrawl.library.artefact.mycanvas;
 
 
-// Scene setup
-let lib = scrawl.library,
-	canvas = lib.artefact.mycanvas,
-	base = canvas.base,
-	group = lib.group[base.name],
-	stopE, events, currentTarget, currentFilter,
-	block1, block2, wheel1, wheel2;
+// Create Phrase entity
+let lorem = scrawl.makePhrase({
 
-canvas.set({
-	fit: 'fill',
-	backgroundColor: 'lightgray',
-	css: {
-		border: '1px solid black'
-	}
+	name: 'myPhrase',
+	order: 1,
+
+	startX: 300,
+	startY: 200,
+	handleX: '50%',
+	handleY: '50%',
+	width: '50%',
+
+	text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
+	font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
+
+	fillStyle: 'darkgreen',
+
+	method: 'fill',
+	showBoundingBox: true,
 });
 
-scrawl.makeGradient({
-	name: 'linear1',
-	endX: '100%',
-})
-.updateColor(0, 'pink')
-.updateColor(999, 'darkgreen');
 
-scrawl.makeGradient({
-	name: 'linear2',
-	endX: '100%',
-})
-.updateColor(0, 'darkblue')
-.updateColor(999, 'white');
+// Add a background entity which will mimic the Phrase entity
+scrawl.makeBlock({
 
-scrawl.makeGradient({
-	name: 'linear3',
-	endX: '100%',
-})
-.updateColor(0, 'yellow')
-.updateColor(999, 'purple');
+	name: 'writing-paper',
+	order: 0,
 
-scrawl.makeGradient({
-	name: 'linear4',
-	endX: '100%',
-})
-.updateColor(0, 'black')
-.updateColor(999, 'coral');
+	width: 20,
+	height: 20,
+	handleX: 10,
+	handleY: 10,
 
-block1 = scrawl.makeBlock({
-	name: 'b1',
-	width: '70%',
-	height: '70%',
-	startX: '5%',
-	startY: '5%',
-	fillStyle: 'linear1',
-	lockFillStyleToEntity: true,
-	strokeStyle: 'coral',
-	lineWidth: 4,
+	fillStyle: 'rgb(240, 245, 255)',
 	method: 'fillDraw',
+
+	mimic: 'myPhrase',
+	lockTo: 'mimic',
+
+	useMimicDimensions: true,
+	useMimicScale: true,
+	useMimicStart: true,
+	useMimicHandle: true,
+	useMimicOffset: true,
+	useMimicRotation: true,
+	useMimicFlip: true,
+
+	addOwnDimensionsToMimic: true,
+	addOwnScaleToMimic: false,
+	addOwnStartToMimic: false,
+	addOwnHandleToMimic: true,
+	addOwnOffsetToMimic: false,
+	addOwnRotationToMimic: false,
 });
 
-block2 = block1.clone({
-	name: 'b2',
-	startX: '45%',
-	startY: '47%',
+scrawl.makeWheel({
+
+	fillStyle: 'red',
+	radius: 5,
+	pivot: 'myPhrase',
+	lockTo: 'pivot',
 	handleX: 'center',
 	handleY: 'center',
-	scale: 0.5,
-	fillStyle: 'linear2',
-	strokeStyle: 'red',
-	delta: {
-		roll: -0.5
+
+	order: 2,
+});
+
+
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
+
+	let testTicker = Date.now(),
+		testTime, testNow, dragging,
+		testMessage = document.querySelector('#reportmessage');
+
+	return function () {
+
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
+
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+	};
+}();
+
+
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
+
+	name: 'demo-animation',
+	target: canvas,
+	afterShow: report,
+});
+
+
+// User interaction - setup form observer functionality
+scrawl.observeAndUpdate({
+
+	event: ['input', 'change'],
+	origin: '.controlItem',
+
+	target: lorem,
+
+	useNativeListener: true,
+	preventDefault: true,
+
+	updates: {
+
+		relativeWidth: ['width', '%'],
+		absoluteWidth: ['width', 'round'],
+
+		start_xPercent: ['startX', '%'],
+		start_xAbsolute: ['startX', 'round'],
+		start_xString: ['startX', 'raw'],
+
+		start_yPercent: ['startY', '%'],
+		start_yAbsolute: ['startY', 'round'],
+		start_yString: ['startY', 'raw'],
+
+		handle_xPercent: ['handleX', '%'],
+		handle_xAbsolute: ['handleX', 'round'],
+		handle_xString: ['handleX', 'raw'],
+
+		handle_yPercent: ['handleY', '%'],
+		handle_yAbsolute: ['handleY', 'round'],
+		handle_yString: ['handleY', 'raw'],
+
+		roll: ['roll', 'float'],
+		scale: ['scale', 'float'],
+
+		upend: ['flipUpend', 'boolean'],
+		reverse: ['flipReverse', 'boolean'],
+
+		weight: ['weight', 'raw'],
+		style: ['style', 'raw'],
+		variant: ['variant', 'raw'],
+		family: ['family', 'raw'],
+
+		size_string: ['size', 'raw'],
+		size_px: ['size', 'px'],
 	},
-	order: 1,
 });
 
-wheel1 = scrawl.makeWheel({
-	name: 'w1',
-	radius: '20%',
-	startX: '70%',
-	startY: '30%',
-	fillStyle: 'linear3',
-	lockFillStyleToEntity: true,
-	strokeStyle: 'orange',
-	lineWidth: 4,
-	method: 'fillDraw',
-});
-
-wheel2 = wheel1.clone({
-	name: 'w2',
-	startX: '32%',
-	startY: '82%',
-	handleX: '15%',
-	scale: 0.7,
-	fillStyle: 'linear4',
-	strokeStyle: 'lightblue',
-	delta: {
-		roll: 1
-	},
-	order: 1,
-});
-
-
-// Define filters, starting with grayscale filter
-scrawl.makeFilter({
-	name: 'grayscale',
-	method: 'grayscale'
-
-// sepia filter
-}).clone({
-	name: 'sepia',
-	method: 'sepia'
-
-// invert filter
-}).clone({
-	name: 'invert',
-	method: 'invert'
-
-// red filter
-}).clone({
-	name: 'red',
-	method: 'red'
-
-//green filter
-}).clone({
-	name: 'green',
-	method: 'green'
-
-// blue filter
-}).clone({
-	name: 'blue',
-	method: 'blue'
-
-// notred filter
-}).clone({
-	name: 'notred',
-	method: 'notred'
-
-// notgreen filter
-}).clone({
-	name: 'notgreen',
-	method: 'notgreen'
-
-// notblue filter
-}).clone({
-	name: 'notblue',
-	method: 'notblue'
-
-// cyan filter
-}).clone({
-	name: 'cyan',
-	method: 'cyan'
-
-// magenta filter
-}).clone({
-	name: 'magenta',
-	method: 'magenta'
-
-// yellow filter
-}).clone({
-	name: 'yellow',
-	method: 'yellow'
-
-// chroma filter
-}).clone({
-	name: 'chroma',
-	method: 'chroma',
-	ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]]
-
-// brightness filter
-}).clone({
-	name: 'brightness',
-	method: 'brightness',
-	level: 0.5
-
-// saturation filter
-}).clone({
-	name: 'saturation',
-	method: 'saturation',
-	level: 1.4
-
-// threshhold filter
-}).clone({
-	name: 'threshold',
-	method: 'threshold',
-	level: 127
-
-// channels filter
-}).clone({
-	name: 'channels',
-	method: 'channels',
-	red: 0.4,
-	green: 0.8,
-	blue: 0.6
-
-// channelstep filter
-}).clone({
-	name: 'channelstep',
-	method: 'channelstep',
-	red: 64,
-	green: 64,
-	blue: 64
-
-// tint filter
-}).clone({
-	name: 'tint',
-	method: 'tint',
-	redInRed: 0.5,
-	redInGreen: 1,
-	redInBlue: 0.9,
-	greenInRed: 0,
-	greenInGreen: 0.3,
-	greenInBlue: 0.8,
-	blueInRed: 0.8,
-	blueInGreen: 0.8,
-	blueInBlue: 0.4
-
-// pixellate filter
-}).clone({
-	name: 'pixelate',
-	method: 'pixelate',
-	tileWidth: 20,
-	tileHeight: 20,
-	offsetX: 8,
-	offsetY: 8
-
-// blur filter
-}).clone({
-	name: 'blur',
-	method: 'blur',
-	radius: 20,
-	shrinkingRadius: true,
-	includeAlpha: true,
-	passes: 3
-
-// matrix filter
-}).clone({
-	name: 'matrix',
-	method: 'matrix',
-	includeAlpha: false,
-	weights: [-1, -1, 0, -1, 1, 1, 0, 1, 1]
-
-// matrix5 filter
-}).clone({
-	name: 'matrix5',
-	method: 'matrix5',
-	includeAlpha: false,
-	weights: [-1, -1, -1, -1, 0, -1, -1, -1, 0, 1, -1, -1, 0, 1, 1, -1, 0, 1, 1, 1, 0, 1, 1, 1, 1]
-
-// first user-defined filter
-}).clone({
-	name: 'ud1',
-	method: false,
-	returnCacheArray: true,
-	userFilter: 'ud1'
-
-// second user-defined filter - same as first, but with added grayscale
-}).clone({
-	name: 'ud2',
-	method: 'grayscale',
-
-// third user-defined filter
-}).clone({
-	name: 'ud3',
-	level: 9,
-	method: 'sepia',
-	userFilter: 'ud3',
-	returnLocalDimensions: true
-});
-
-// user-defined filter function, for use with first and second user-defined filters
-lib.userFilter.ud1 = function (image, vars, dims, cache) {
-
-	let i, iz, 
-		data = image.data;
-
-	// set all red channel values to 255
-	for (i = 0, iz = cache.length; i < iz; i++) {
-
-		data[cache[i]] = 255;
-	}
-
-	return image;
-};
-
-// user-defined filter function, for use with third user-defined filter
-lib.userFilter.ud3 = function (image, vars, dims, cache) {
-
-	let i, iz, j, jz,
-		data = image.data,
-		level = vars.level,
-		halfLevel = level / 2,
-		w = image.width * 4,
-		yw, action, pos;
-
-	// venetian blinds
-	for (i = dims.y, iz = dims.y + dims.h; i < iz; i++) {
-
-		action = (i % level > halfLevel) ? true : false;
-
-		if (action) {
-
-			yw = (i * w) + 3;
-			
-			for (j = dims.x, jz = dims.x + dims.w; j < jz; j ++) {
-
-				pos = yw + (j * 4);
-				data[pos] = 0;
-			}
-		}
-	}
-
-	return image;
-};
-
-
-// Set the DOM input values
-document.querySelector('#target').value = '';
-document.querySelector('#filter').value = '';
-
-
-// Event listeners
-stopE = (e) => {
-
-	e.preventDefault();
-	e.returnValue = false;
-};
-
-events = (e) => {
-
-	let action = false,
-		val, oldFilter;
-
-	stopE(e);
-
-	switch (e.target.id) {
-
-		case 'target':
-			val = e.target.value;
-
-			if (val !== currentTarget) {
-
-				oldFilter = currentFilter;
-				currentTarget = val;
-				action = true;
-			}
-			break;
-
-		case 'filter':
-			val = e.target.value;
-
-			if(val !== currentFilter){
-
-				oldFilter = currentFilter;
-				currentFilter = val;
-				action = true;
-			}
-			break;
-	}
-
-	if (action) {
-
-		if (oldFilter) {
-
-			base.removeFilters(oldFilter);
-			group.removeFilters(oldFilter);
-			group.removeFiltersFromEntitys(oldFilter);
-		}
-
-		if (currentTarget && currentFilter) {
-
-			switch (currentTarget) {
-
-				case 'block1' :
-					block1.addFilters(currentFilter);
-					break;
-
-				case 'block2' :
-					block2.addFilters(currentFilter);
-					break;
-
-				case 'wheel1' :
-					wheel1.addFilters(currentFilter);
-					break;
-
-				case 'wheel2' :
-					wheel2.addFilters(currentFilter);
-					break;
-
-				case 'group' :
-					group.addFilters(currentFilter);
-					break;
-
-				case 'cell' :
-					base.addFilters(currentFilter);
-					break;
-			}
-		}
-	}
-};
-
-scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
-
-
-// Animation 
-scrawl.makeAnimation({
-
-	name: 'testC016Display',
-	
-	fn: function(){
-		
-		return new Promise((resolve) => {
-
-			canvas.render()
-			.then(() => {
-
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
-
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-
-				resolve(true);
-			})
-			.catch((err) => {
-
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
-
-				resolve(false);
-			});
-		});
-	}
-});
+// Setup form
+document.querySelector('#start_xPercent').value = 50;
+document.querySelector('#start_yPercent').value = 50;
+document.querySelector('#handle_xPercent').value = 50;
+document.querySelector('#handle_yPercent').value = 50;
+document.querySelector('#start_xAbsolute').value = 300;
+document.querySelector('#start_yAbsolute').value = 200;
+document.querySelector('#handle_xAbsolute').value = 100;
+document.querySelector('#handle_yAbsolute').value = 100;
+document.querySelector('#start_xString').options.selectedIndex = 1;
+document.querySelector('#start_yString').options.selectedIndex = 1;
+document.querySelector('#handle_xString').options.selectedIndex = 1;
+document.querySelector('#handle_yString').options.selectedIndex = 1;
+document.querySelector('#roll').value = 0;
+document.querySelector('#scale').value = 1;
+document.querySelector('#upend').options.selectedIndex = 0;
+document.querySelector('#reverse').options.selectedIndex = 0;
+document.querySelector('#relativeWidth').value = 50;
+document.querySelector('#absoluteWidth').value = 300;
+document.querySelector('#weight').options.selectedIndex = 0;
+document.querySelector('#style').options.selectedIndex = 0;
+document.querySelector('#variant').options.selectedIndex = 0;
+document.querySelector('#family').options.selectedIndex = 0;
+document.querySelector('#size_px').value = 16;
+document.querySelector('#size_string').options.selectedIndex = 4;
+
+console.log(scrawl.library.entity)

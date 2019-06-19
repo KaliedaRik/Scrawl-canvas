@@ -16,21 +16,20 @@ let report = document.querySelector('#reportmessage');
 // Animation
 scrawl.makeAnimation({
 
-	name: 'templateAnimation',
+	name: 'demo-animation',
 
 	fn: function () {
 
 		return new Promise((resolve) => {
 
 			// If all modules load and run correctly, we should see data appear in the web page
-			report.innerHTML = `
-				cursor x: ${scrawl.currentCorePosition.x}<br />
-				cursor y: ${scrawl.currentCorePosition.y}<br />
-				browser width: ${scrawl.currentCorePosition.w}<br />
-				browser height: ${scrawl.currentCorePosition.h}<br />
-				scroll x: ${scrawl.currentCorePosition.scrollX}<br />
-				scroll y: ${scrawl.currentCorePosition.scrollY}<br />
-				cursor type: ${scrawl.currentCorePosition.type}`;
+			report.textContent = `cursor x: ${scrawl.currentCorePosition.x}
+cursor y: ${scrawl.currentCorePosition.y}
+browser width: ${scrawl.currentCorePosition.w}
+browser height: ${scrawl.currentCorePosition.h}
+scroll x: ${scrawl.currentCorePosition.scrollX}
+scroll y: ${scrawl.currentCorePosition.scrollY}
+cursor type: ${scrawl.currentCorePosition.type}`;
 
 			resolve(true);
 		});

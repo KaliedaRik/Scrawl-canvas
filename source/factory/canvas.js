@@ -2,12 +2,13 @@
 # Canvas factory
 */
 import { cell, constructors } from '../core/library.js';
-import { rootElements, setRootElementsSort, setCurrentCanvas, domShow } from '../core/DOM.js';
+import { rootElements, setRootElementsSort, setCurrentCanvas, domShow } from '../core/document.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
+import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
@@ -18,38 +19,38 @@ import domMix from '../mixin/dom.js';
 */
 const Canvas = function (items = {}) {
 
-	let dims, cellArgs, parent;
+	let g, el;
 
 	this.makeName(items.name);
 	this.register();
+	this.initializePositions();
+
+	this.dimensions[0] = 300;
+	this.dimensions[1] = 150;
+
+	this.pathCorners = [];
 	this.css = {};
+	this.here = {};
+	this.perspective = {
+
+		x: '50%',
+		y: '50%',
+		z: 0
+	};
+	this.dirtyPerspective = true;
+
+	this.initializeDomLayout(items);
+
 	this.set(this.defs);
 	this.set(items);
-	this.uuid = generateUuid();
 
-	if (this.domElement) {
+	this.cleanDimensions();
 
-		// discover whether the canvas is a child of a stack element
-		this.group = items.group || '';
+	el = this.domElement;
 
-		// positioning
-		this.setPosition();
-
-		// identifier
-		this.domElement.setAttribute('data-uuid', this.uuid);
+	if (el) {
 
 		if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
-
-		// sort out initial dimensions
-		if (!xt(items.width, items.height)) {
-
-			dims = this.domElement.getBoundingClientRect();
-
-			if (!xt(items.width)) this.width = this.localWidth = dims.width;
-			if (!xt(items.height)) this.height = this.localHeight = dims.height;
-		}
-
-		this.dirtyDimensions = true;
 
 		this.engine = this.domElement.getContext('2d');
 
@@ -67,14 +68,14 @@ const Canvas = function (items = {}) {
 		let cellArgs = {
 			name: `${this.name}_base`,
 			element: false,
-			width: this.localWidth,
-			height: this.localHeight,
+			width: this.currentDimensions[0],
+			height: this.currentDimensions[1],
 			cleared: true,
 			compiled: true,
 			shown: false,
 			isBase: true,
 			localizeHere: true,
-			destination: this,
+			host: this.name,
 			controller: this,
 			order: 10,
 		};
@@ -85,9 +86,8 @@ const Canvas = function (items = {}) {
 		setRootElementsSort();
 	}
 
-	// correcting initial roll/pitch/yaw zero settings
-	if (!this.roll && !this.pitch && !this.yaw) this.dirtyRotationActive = false;
-
+	this.apply();
+	
 	return this;
 };
 
@@ -140,86 +140,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 let G = P.getters,
 	S = P.setters,
 	D = P.deltaSetters;
-
-/*
-
-*/
-G.width = function () {
-
-	if (!xt(this.width)) {
-
-		let w = this.domElement.width;
-
-		this.width = (xt(w)) ? parseFloat(w) : this.defs.width;
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-	}
-	return this.width;
-};
-
-/*
-
-*/
-G.height = function () {
-
-	if (!xt(this.height)) {
-
-		let h = this.domElement.height;
-
-		this.height = (xt(h)) ? parseFloat(h) : this.defs.height;
-		this.dirtyDimensions = true;
-		this.dirtyHandle = true;
-	}
-	return this.height;
-};
-
-/*
-
-*/
-S.width = function (item) {
-
-	this.width = (xt(item)) ? item : this.defs.width;
-
-	this.dimensionsUpdateHelper('width');
-	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-};
-
-/*
-
-*/
-S.height = function (item) {
-
-	this.height = (xt(item)) ? item : this.defs.height;
-
-	this.dimensionsUpdateHelper('height');
-	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-};
-
-/*
-
-*/
-D.width = function (item) {
-
-	this.width = addStrings(this.width, item);
-
-	this.dimensionsUpdateHelper('width');
-	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-};
-
-/*
-
-*/
-D.height = function (item) {
-
-	this.height = addStrings(this.height, item);
-
-	this.dimensionsUpdateHelper('height');
-	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-};
 
 /*
 
@@ -312,32 +232,9 @@ D.alpha = function(item) {
 /*
 
 */
-P.dimensionsUpdateHelper = function (dim) {
+P.setAsCurrentCanvas = function () {
 
-	let here = this.getHere(),
-		w, h;
-
-	if (dim === 'width') {
-
-		w = (here) ? here.w : this.defaultAttributes.width;
-		this.localWidth = (this.width.substring) ? (parseFloat(this.width) / 100) * w : this.width;
-	}
-	else if (dim === 'height') {
-
-		h = (here) ? here.h : this.defaultAttributes.height;
-		this.localHeight = (this.height.substring) ? (parseFloat(this.height) / 100) * h : this.height;
-	}
-
-	if (this.base) this.base.dirtyDimensions = true;
-};
-
-/*
-
-*/
-P.setNow = function (items) {
-
-	this.set(items);
-	this.setNowHelper();
+	if (this.base) setCurrentCanvas(this);
 	return this;
 };
 
@@ -357,25 +254,6 @@ P.setBase = function (items) {
 /*
 
 */
-P.setAsCurrentCanvas = function () {
-
-	if (this.base) setCurrentCanvas(this);
-	return this;
-};
-
-/*
-
-*/
-P.deltaSetNow = function (items) {
-
-	this.deltaSet(items);
-	this.setNowHelper();
-	return this;
-};
-
-/*
-
-*/
 P.deltaSetBase = function (items) {
 
 	if (this.base) {
@@ -389,12 +267,9 @@ P.deltaSetBase = function (items) {
 /*
 
 */
-P.setNowHelper = function () {
+P.updateBaseHere = function () {
 
-	this.cleanCells();
-	this.base.renderPrecheck(this);
-
-	this.cells.forEach(mycell => cell[mycell].renderPrecheck(this), this);
+	this.base.updateBaseHere(this.here, this.fit);
 };
 
 /*
@@ -402,17 +277,40 @@ P.setNowHelper = function () {
 */
 P.setBaseHelper = function () {
 
+	let items = {};
+
+	if (this.base.dirtyScale) items.dirtyScale = true;
+	if (this.base.dirtyDimensions) items.dirtyDimensions = true;
+	if (this.base.dirtyLock) items.dirtyLock = true;
+	if (this.base.dirtyStart) items.dirtyStart = true;
+	if (this.base.dirtyOffset) items.dirtyOffset = true;
+	if (this.base.dirtyHandle) items.dirtyHandle = true;
+	if (this.base.dirtyRotation) items.dirtyRotation = true;
+
 	this.cleanCells();
-	this.base.renderPrecheck(this);
+	this.base.prepareStamp();
 
-	this.cells.forEach(item => {
+	this.updateCells(items);
+};
 
-		let mycell = cell[item];
+/*
+
+*/
+P.updateCells = function (items = {}) {
+
+	this.cells.forEach(name => {
+
+		let mycell = cell[name];
 
 		if (mycell) {
 
-			mycell.dirtyStart = true;
-			mycell.dirtyHandle = true;
+			if (items.dirtyScale) mycell.dirtyScale = true;
+			if (items.dirtyDimensions) mycell.dirtyDimensions = true;
+			if (items.dirtyLock) mycell.dirtyLock = true;
+			if (items.dirtyStart) mycell.dirtyStart = true;
+			if (items.dirtyOffset) mycell.dirtyOffset = true;
+			if (items.dirtyHandle) mycell.dirtyHandle = true;
+			if (items.dirtyRotation) mycell.dirtyRotation = true;
 		}
 	});
 };
@@ -422,16 +320,27 @@ P.setBaseHelper = function () {
 */
 P.buildCell = function (items = {}) {
 
-	let destination = items.destination || false;
+	let host = items.host || false;
 
-	if (!destination) items.destination = this.base;
-	else if (destination.substring) items.destination = cell[destination] || this.base;
+	if (!host) items.host = this.base.name;
 
 	let mycell = makeCell(items);
 	
 	this.addCell(mycell);
 	this.cleanCells();
 	return mycell;
+};
+
+P.cleanDimensionsAdditionalActions = function () {
+
+	if (this.cells) {
+
+		this.updateCells({
+			dirtyDimensions: true,
+		});
+	}
+
+	this.dirtyDomDimensions = true;
 };
 
 /*
@@ -444,7 +353,7 @@ P.addCell = function (item) {
 	if (item) {
 
 		pushUnique(this.cells, item);
-		cell[item].renderPrecheck(this);
+		cell[item].prepareStamp();
 		this.dirtyCells = true;
 	}
 	return item;
@@ -621,14 +530,6 @@ P.cleanCells = function () {
 	this.cellBatchesClear = [].concat(tempClear);
 	this.cellBatchesCompile = tempCompile.reduce((a, v) => a.concat(v), []);
 	this.cellBatchesShow = tempShow.reduce((a, v) => a.concat(v), []);
-
-	if (this.dirtyDimensions) {
-
-		this.dirtyDimensions = false;
-
-		this.domElement.setAttribute('width', this.localWidth);
-		this.domElement.setAttribute('height', this.localHeight);
-	}
 };
 
 

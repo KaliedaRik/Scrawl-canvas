@@ -9,14 +9,23 @@ import positionMix from '../mixin/position.js';
 import entityMix from '../mixin/entity.js';
 import filterMix from '../mixin/filter.js';
 
+
 /*
 ## Block constructor
 */
 const Block = function (items = {}) {
 
 	this.entityInit(items);
+
+	if (!items.dimensions) {
+
+		if (!items.width) this.currentDimensions[0] = this.dimensions[0] = 10;
+		if (!items.height) this.currentDimensions[1] = this.dimensions[1] = 10;
+	}
+
 	return this;
 };
+
 
 /*
 ## Block object prototype setup
@@ -27,6 +36,7 @@ P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 
+
 /*
 Apply mixins to prototype object
 */
@@ -35,22 +45,6 @@ P = positionMix(P);
 P = entityMix(P);
 P = filterMix(P);
 
-/*
-## Define default attributes
-*/
-let defaultAttributes = {
-
-/*
-
-*/
-	width: 10,
-
-/*
-
-*/
-	height: 10,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Define prototype functions
@@ -65,31 +59,14 @@ P.cleanPathObject = function () {
 
 	let p = this.pathObject = new Path2D();
 	
-	let handle = this.currentHandle,
-		scale = this.scale,
-		mimic = this.mimic, 
-		x, y, w, h;
+	let handle = this.currentStampHandlePosition,
+		scale = this.currentScale,
+		dims = this.currentDimensions;
 
-	if (mimic) {
-
-		let mPhrase = (this.mimicType === 'Phrase'),
-			mWidth = this.localMimicPaddingWidth,
-			mHeight = this.localMimicPaddingHeight;
-
-		x = (-handle.x * scale) - mWidth;
-		y = (mPhrase) ? -handle.y - mHeight : (-handle.y * scale) - mHeight;
-
-		w = (this.localWidth * scale) + (mWidth * 2);
-		h = (mPhrase) ? this.localHeight + (mHeight * 2) : (this.localHeight * scale) + (mHeight * 2);
-	}
-	else {
-
-		x = -handle.x * scale;
-		y = -handle.y * scale;
-
-		w = this.localWidth * scale;
-		h = this.localHeight * scale;
-	}
+	let x = -handle[0] * scale,
+		y = -handle[1] * scale,
+		w = dims[0] * scale,
+		h = dims[1] * scale;
 
 	p.rect(x, y, w, h);
 };

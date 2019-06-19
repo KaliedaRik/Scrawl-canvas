@@ -2,153 +2,121 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
-
-
 // Scene setup
-let artefact = scrawl.library.artefact,
-	canvas = artefact.mycanvas,
-	stopE, events,
-	blocky, wheely,
-	lockx = 'start',
-	locky = 'start';
+let porthole = scrawl.library.artefact.porthole;
 
-canvas.set({
-	fit: 'fill',
+porthole.set({
+	backgroundColor: 'black',
 	css: {
-		border: '1px solid black'
+		borderRadius: '50%'
 	}
-}).setBase({
-	width: 1000,
-	height: 1000,
-	backgroundColor: 'lightgray'
 });
 
-blocky = scrawl.makeBlock({
-	name: 'myblock',
-	width: 200,
-	height: 200,
-	startX: 120,
-	startY: 120,
+
+// Star generation functionality
+let starling = scrawl.makeWheel({
+	name: 'starling',
+	radius: 3,
 	handleX: 'center',
 	handleY: 'center',
-
-	lockTo: 'start',
-
-	pivot: 'mywheel',
-
-	fillStyle: 'blue',
-	strokeStyle: 'gold',
-	lineWidth: 6,
-	method: 'fillDraw',
+	method: 'fill',
+	fillStyle: 'white',
 });
 
-wheely = scrawl.makeWheel({
-	name: 'mywheel',
-	radius: 60,
-	startX: 'center',
-	startY: 'center',
-	handleX: 350,
-	order: 1,
+let starCount = 0,
+	addNumber = 100;
 
-	delta: {
-		roll: 0.6
-	},
+let makeStars = function (buildNumber) {
 
-	fillStyle: 'red',
-	method: 'fillDraw',
+	let star, i, myRandom, 
+		v = scrawl.requestVector();
+
+	for (i = 0; i < buildNumber; i++) {
+
+		starCount++;
+
+		star = starling.clone({
+			name: `star_${starCount}`,
+			fastStamp: true,
+			sharedState: true,
+		});
+
+		myRandom = Math.random();
+
+		v.setXY(1, 0).rotate(Math.random() * 360).scalarMultiply(300);
+
+		scrawl.makeTween({
+			name: star.name,
+
+			targets: star,
+			duration: Math.round((myRandom * 3000) + 2000),
+			cycles: 0,
+
+			definitions: [{
+				attribute: 'startX',
+				integer: true,
+				start: 300,
+				end: 300 + v.x
+			}, {
+				attribute: 'startY',
+				integer: true,
+				start: 300,
+				end: 300 + v.y
+			}, {
+				attribute: 'scale',
+				start: 0.5,
+				end: Math.round((1 - myRandom) * 0.9) + 0.6,
+			}]
+		}).run();
+
+	}
+
+	scrawl.releaseVector(v);
+
+	// Change the color of the stars each time the user clicks on the porthole
+	starling.set({
+		fillStyle: `rgb(${Math.floor(Math.random() * 55) + 200}, ${Math.floor(Math.random() * 55) + 200}, ${Math.floor(Math.random() * 55) + 200})`
+	});
+};
+
+// Generate the initial stars
+makeStars(100);
+
+
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
+
+	let testTicker = Date.now(),
+		testTime, testNow, dragging,
+		testMessage = document.querySelector('#reportmessage');
+
+	return function () {
+
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
+
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+Stars: ${starCount}`;
+	};
+}();
+
+
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
+
+	name: 'demo-animation',
+	target: porthole,
+	afterShow: report,
 });
-
-// Set the DOM input values
-document.querySelector('#lock_x').value = 'start';
-document.querySelector('#lock_y').value = 'start';
-document.querySelector('#roll').value = 0;
-document.querySelector('#handle').value = 0;
 
 
 // Event listeners
-stopE = (e) => {
+let addStars = (e) => {
 
 	e.preventDefault();
 	e.returnValue = false;
+
+	makeStars(addNumber);
 };
-
-events = (e) => {
-
-	let items = {};
-
-	stopE(e);
-
-	switch (e.target.id) {
-
-		case 'lock_x':
-			lockx = e.target.value;
-			items.lockXTo = lockx;
-			break;
-
-		case 'lock_y':
-			locky = e.target.value;
-			items.lockYTo = locky;
-			break;
-
-		case 'roll':
-			items.rotateOnPivot = (e.target.value === '1') ? true : false;
-			break;
-
-		case 'handle':
-			items.addPivotHandle = (e.target.value === '1') ? true : false;
-			break;
-	}
-	blocky.set(items);
-};
-
-scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
-
-
-// Animation 
-scrawl.makeAnimation({
-
-	name: 'testC006Display',
-	
-	fn: function(){
-		
-		return new Promise((resolve) => {
-
-			if (lockx === 'mouse') {
-
-				blocky.set({
-					lockXTo: (canvas.here.active) ? 'mouse' : 'start',
-				});
-			}
-
-			if (locky === 'mouse') {
-
-				blocky.set({
-					lockYTo: (canvas.here.active) ? 'mouse' : 'start'
-				});
-			}
-
-			scrawl.render()
-			.then(() => {
-
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
-
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-
-				resolve(true);
-			})
-			.catch((err) => {
-
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
-
-				resolve(false);
-			});
-		});
-	}
-});
+scrawl.addNativeListener('click', addStars, porthole.domElement);

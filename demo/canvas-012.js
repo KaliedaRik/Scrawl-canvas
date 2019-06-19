@@ -2,139 +2,174 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
+// Create Shape entity
+let arrow = scrawl.makeShape({
 
+	name: 'myArrow',
 
-// Scene setup
-let lib = scrawl.library,
-	canvas = lib.artefact.mycanvas,
-	cell = canvas.base,
-	group = lib.group[cell.name],
-	stopE, startDrag, endDrag, current;
+	pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
-canvas.set({
-	fit: 'fill',
-	backgroundColor: 'lightgray',
-	css: {
-		border: '1px solid black'
-	}
+	startX: 300,
+	startY: 200,
+	handleX: '50%',
+	handleY: '50%',
+
+	scale: 0.2,
+	scaleOutline: false,
+
+	lineWidth: 10,
+	lineJoin: 'round',
+
+	fillStyle: 'lightgreen',
+
+	method: 'fill',
+
+	showBoundingBox: true,
+	useAsPath: true,
+	precision: 2,
 });
 
-scrawl.makeGradient({
-	name: 'linear',
-	endX: '100%',
-})
-.updateColor(0, 'blue')
-.updateColor(495, 'red')
-.updateColor(500, 'yellow')
-.updateColor(505, 'red')
-.updateColor(999, 'green');
-
-scrawl.makeBlock({
-	name: 'static_block',
-	width: 150,
-	height: 150,
-	startX: 150,
-	startY: 150,
+// Create Wheel entity to pivot to the arrow
+scrawl.makeWheel({
+	fillStyle: 'blue',
+	radius: 5,
 	handleX: 'center',
 	handleY: 'center',
-	fillStyle: 'linear',
-	strokeStyle: 'coral',
-	lineWidth: 6,
-	method: 'fillDraw',
-}).clone({
-	name: 'rolling_block',
+	pivot: 'myArrow',
+	lockTo: 'pivot',
+});
+
+// Create the wheel entitys that will use the arrow as their path
+let myWheel = scrawl.makeWheel({
+	fillStyle: 'red',
+	radius: 3,
+
+	roll: -90,
+
+	startAngle: 90,
+	endAngle: -90,
+
+	path: 'myArrow',
+	pathPosition: 0,
+	addPathRotation: true,
+	lockTo: 'path',
+
+	handleX: 'center',
+	handleY: 'center',
+
 	delta: {
-		roll: 0.5
+		pathPosition: 0.0008,
+	}
+});
+
+for (let i = 0.01; i < 1; i += 0.01) {
+
+	let col;
+
+	if (i < 0.2) col = 'red';
+	else if (i < 0.4) col = 'orange';
+	else if (i < 0.6) col = 'darkgreen';
+	else if (i < 0.8) col = 'blue';
+	else col = 'purple';
+
+	myWheel.clone({
+		pathPosition: i,
+		fillStyle: col,
+	});
+}
+
+
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
+
+	let testTicker = Date.now(),
+		testTime, testNow,
+		testMessage = document.querySelector('#reportmessage');
+
+	return function () {
+
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
+
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+Shape path length: ${arrow.length}`;
+	};
+}();
+
+
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
+
+	name: 'demo-animation',
+	target: scrawl.library.artefact.mycanvas,
+	afterShow: report,
+});
+
+
+// User interaction - setup form observer functionality
+scrawl.observeAndUpdate({
+
+	event: ['input', 'change'],
+	origin: '.controlItem',
+
+	target: arrow,
+
+	useNativeListener: true,
+	preventDefault: true,
+
+	updates: {
+
+		start_xPercent: ['startX', '%'],
+		start_xAbsolute: ['startX', 'round'],
+		start_xString: ['startX', 'raw'],
+
+		start_yPercent: ['startY', '%'],
+		start_yAbsolute: ['startY', 'round'],
+		start_yString: ['startY', 'raw'],
+
+		handle_xPercent: ['handleX', '%'],
+		handle_xAbsolute: ['handleX', 'round'],
+		handle_xString: ['handleX', 'raw'],
+
+		handle_yPercent: ['handleY', '%'],
+		handle_yAbsolute: ['handleY', 'round'],
+		handle_yString: ['handleY', 'raw'],
+
+		offset_xPercent: ['offsetX', '%'],
+		offset_xAbsolute: ['offsetX', 'round'],
+
+		offset_yPercent: ['offsetY', '%'],
+		offset_yAbsolute: ['offsetY', 'round'],
+
+		roll: ['roll', 'float'],
+		scale: ['scale', 'float'],
+
+		upend: ['flipUpend', 'boolean'],
+		reverse: ['flipReverse', 'boolean'],
 	},
-	scale: 1.2,
-	startY: 450,
 });
 
-scrawl.makeWheel({
-	name: 'static_wheel',
-	radius: 75,
-	startX: 450,
-	startY: 150,
-	fillStyle: 'linear',
-	strokeStyle: 'coral',
-	lineWidth: 6,
-	method: 'fillDraw',
-}).clone({
-	name: 'rolling_wheel',
-	delta: {
-		roll: -0.5
-	},
-	scale: 1.2,
-	lineDash: [4, 4],
-	startY: 450,
-});
+// Setup form
+document.querySelector('#start_xPercent').value = 50;
+document.querySelector('#start_yPercent').value = 50;
+document.querySelector('#handle_xPercent').value = 50;
+document.querySelector('#handle_yPercent').value = 50;
+document.querySelector('#start_xAbsolute').value = 300;
+document.querySelector('#start_yAbsolute').value = 200;
+document.querySelector('#handle_xAbsolute').value = 100;
+document.querySelector('#handle_yAbsolute').value = 100;
+document.querySelector('#start_xString').options.selectedIndex = 1;
+document.querySelector('#start_yString').options.selectedIndex = 1;
+document.querySelector('#handle_xString').options.selectedIndex = 1;
+document.querySelector('#handle_yString').options.selectedIndex = 1;
+document.querySelector('#offset_xPercent').value = 0;
+document.querySelector('#offset_yPercent').value = 0;
+document.querySelector('#offset_xAbsolute').value = 0;
+document.querySelector('#offset_yAbsolute').value = 0;
+document.querySelector('#roll').value = 0;
+document.querySelector('#scale').value = 0.2;
+document.querySelector('#upend').options.selectedIndex = 0;
+document.querySelector('#reverse').options.selectedIndex = 0;
 
 
-// Event listeners
-stopE = (e) => {
-
-	e.preventDefault();
-	e.returnValue = false;
-};
-
-startDrag = (e) => {
-
-	stopE(e);
-	
-	if (canvas.here.active) {
-
-		current = group.getArtefactAt(cell.here);
-		
-		if (current.artefact) current.artefact.pickupArtefact(current);
-	}
-};
-
-endDrag = (e) => {
-
-	stopE(e);
-
-	if (current) {
-
-		current.artefact.dropArtefact();
-		current = false;
-	}
-};
-
-scrawl.addListener('down', startDrag, canvas.domElement);
-scrawl.addListener(['up', 'leave'], endDrag, canvas.domElement);
-
-
-// Animation 
-scrawl.makeAnimation({
-
-	name: 'testC012Display',
-	
-	fn: function(){
-		
-		return new Promise((resolve) => {
-
-			scrawl.render()
-			.then(() => {
-
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
-
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-
-				resolve(true);
-			})
-			.catch((err) => {
-
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
-
-				resolve(false);
-			});
-		});
-	}
-});

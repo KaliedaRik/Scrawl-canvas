@@ -2,7 +2,7 @@
 # Group factory
 */
 import { constructors, cell, artefact, group, groupnames, entity } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
 
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
 import { requestCell, releaseCell } from './cell.js';
@@ -17,10 +17,11 @@ const Group = function (items = {}) {
 
 	this.makeName(items.name);
 	this.register();
-	this.set(this.defs);
 
 	this.artefacts = [];
 	this.artefactBuckets = [];
+
+	this.set(this.defs);
 	this.set(items);
 
 	return this;
@@ -91,10 +92,12 @@ let G = P.getters,
 	S = P.setters;
 
 G.artefacts = function () {
+
 	return [].concat(this.artefacts);
 };
 
 S.artefacts = function (item) {
+
 	this.artefacts = [];
 	this.addArtefacts(item);
 };
@@ -104,17 +107,22 @@ S.host = function (item) {
 	let host = this.getHost(item);
 
 	if (host && host.addGroups) {
+		
 		this.host = item;
 		host.addGroups(this.name);
+
+		this.dirtyHost = true;
 	}
 };
 
 S.order = function (item) {
 
-	let host = this.getHost(item);
+	let host = this.getHost(this.host);
 
 	this.order = item;
-	if(host){
+
+	if (host) {
+
 		host.set({
 			batchResort: true
 		});
@@ -130,42 +138,10 @@ S.order = function (item) {
 */
 P.getHost = function (item) {
 
-	return artefact[item] || cell[item] || null;
-};
+	let host = this.currentHost;
 
-/*
-The Display Cycle is mediated through Groups - these Group functions control display functionality via a series of Promise cascades which in turn allow individual artefacts to make use of web workers, where appropriate, to achieve their stamping functionality - for example when they need to apply image filters to their output.
-*/
-P.stamp = function () {
-
-	let self = this;
-
-	return new Promise((resolve) => {
-
-		let filterCell;
-
-		if (self.visibility) {
-
-			filterCell = self.checkForFilters();
-			self.sortArtefacts();
-
-			self.prepareStamp(filterCell);
-
-			self.stampAction()
-			.then((res) => {
-
-				if (filterCell) {
-
-					self.applyFilters(filterCell)
-					.then((res) => resolve(true))
-					.catch((err) => resolve(false));
-				}
-				else resolve(true);
-			})
-			.catch((err) => resolve(false));
-		}
-		else resolve(true);
-	});
+	if (host && item === host.name) return host;
+	else return artefact[item] || cell[item] || null;
 };
 
 /*
@@ -193,93 +169,69 @@ P.forceStamp = function () {
 };
 
 /*
-
+The Display Cycle is mediated through Groups - these Group functions control display functionality via a series of Promise cascades which in turn allow individual artefacts to make use of web workers, where appropriate, to achieve their stamping functionality - for example when they need to apply image filters to their output.
 */
-P.applyFilters = function (myCell) {
+P.stamp = function () {
+
+	// Check we have a host of some sort (either a Stack artefact or a Cell asset)
+	if (this.dirtyHost || !this.currentHost) {
+
+		this.dirtyHost = false;
+
+		let currentHost = this.getHost(this.host);
+
+		if (currentHost) this.currentHost = currentHost;
+		else this.dirtyHost = true;
+	}
 
 	let self = this;
 
-	if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+	return new Promise((resolve, reject) => {
 
-	return new Promise((resolve) => {
+		if (self.visibility) {
 
-		let oldHost = self.getHost(self.host),
-			oldElement = oldHost.element,
-			oldEngine = oldHost.engine,
-			oldComposite = oldEngine.globalCompositeOperation,
-			oldAlpha = oldEngine.globalAlpha,
+			let currentHost = self.currentHost;
 
-			host = myCell,
-			hostElement = host.element,
-			hostEngine = host.engine,
-			hostState = host.state,
+			if (currentHost) {
 
-			image, worker;
+				// Check if artefacts need to be sorterd and, if yes, sort them by their order attribute
+				self.sortArtefacts();
 
-		let cleanup = function () {
+				// Check to see if there is a Group filter in place and, if yes, pull a Cell aset from the pool
+				let filterCell = (self.filters && self.filters.length) ? requestCell() : false;
 
-			releaseFilterWorker(worker);
-			
-			oldEngine.globalCompositeOperation = self.filterComposite || 'source-over';
-			oldEngine.globalAlpha = self.filterAlpha || 1;
-			oldEngine.setTransform(1, 0, 0, 1, 0, 0);
+				// Setup the pool Cell, if required
+				if (filterCell && filterCell.element) {
 
-			oldEngine.drawImage(hostElement, 0, 0);
-			
-			releaseCell(host);
+					let dims = currentHost.currentDimensions;
 
-			oldEngine.globalCompositeOperation = oldComposite;
-			oldEngine.globalAlpha = oldAlpha;
-		};
+					if (dims) {
 
-		if (self.isStencil) {
-			
-			// this is where we copy over the current canvas to the new canvas using appropriate gco
-			hostState.globalCompositeOperation = hostEngine.globalCompositeOperation = 'source-in';
-			hostState.globalAlpha = hostEngine.globalAlpha = 1;
-			hostEngine.setTransform(1, 0, 0, 1, 0, 0);
-			hostEngine.drawImage(oldElement, 0, 0);
-		} 
+						filterCell.element.width = dims[0];
+						filterCell.element.height = dims[1];
+					}
+				}
 
-		// at this point we will send the contents of the host canvas over to the web worker, alongside details of the filters we wish to apply to it
-		image = hostEngine.getImageData(0, 0, host.width, host.height);
-		worker = requestFilterWorker();
+				// Prepare the Group's artefacts for the forthcoming stamp activity
+				self.prepareStamp(filterCell);
 
-		actionFilterWorker(worker, {
-			image: image,
-			filters: self.currentFilters
-		})
-		.then((img) => {
-
-			if (img) {
-				hostEngine.putImageData(img, 0, 0);
-				cleanup();
-				resolve(true);
+				// Get the Group's artefacts to stamp themselves on the current host
+				self.stampAction(filterCell)
+				.then(res => resolve(true))
+				.catch(err => reject(false));
 			}
-			else throw 'image issue';
-		})
-		.catch((err) => {
 
-			cleanup();
-			resolve(false);
-		});
+			// Bale out of the stamp functionality if the Group has no host on which to perform its actions
+			else resolve(false);
+		}
+
+		// Bale out of the stamp functionality if the Group is not visible
+		else resolve(false);
 	});
 };
 
 /*
 
-*/
-P.checkForFilters = function () {
-
-	if(this.filters && this.filters.length){
-		return requestCell();
-	}
-	return false;
-};
-
-/*
-REPLACE call to bucketSort with own functionality here
-- the key is that artefactBuckets MUST be a flat array
 */
 P.sortArtefacts = function () {
 
@@ -309,35 +261,38 @@ P.sortArtefacts = function () {
 */
 P.prepareStamp = function (myCell) {
 
-	let artefactBuckets = this.artefactBuckets,
-		host = this.getHost(this.host);
+	let host = this.currentHost;
 
-	if (myCell && myCell.element) {
+	if (myCell) host = myCell;
 
-		myCell.width = myCell.element.width = host.localWidth;
-		myCell.height = myCell.element.height = host.localHeight;
-	}
+	this.artefactBuckets.forEach(art => {
 
-	artefactBuckets.forEach(item => {
+		if (art.lib === 'entity') {
+			
+			if (!art.currentHost || art.currentHost.name !== host.name) {
 
-		item.currentHost = (myCell && item.lib === 'entity') ? myCell : host;
-		item.updateByDelta();
-		item.prepareStamp();
+				art.currentHost = host;
+				if (!myCell) art.dirtyHost = true;
+			}
+		}
+		art.updateByDelta();
+		art.prepareStamp();
 	});
 };
 
 /*
 
 */
-P.stampAction = function () {
+P.stampAction = function (myCell) {
 
-	let artefactBuckets = this.artefactBuckets;
+	let self = this;
 
+	// Doing it this way to ensure that each artefact completes its stamp action before the next one starts - performed as a promise so that if the artefact needs to filter its output it can use the (asynchronous) filter worker. This function is essentially a cascade of promises which collapse into resolution once all the artefacts have been actioned
 	let next = (counter) => {
 
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 
-			let art = artefactBuckets[counter];
+			let art = self.artefactBuckets[counter];
 
 			if (art && art.stamp) {
 
@@ -345,16 +300,122 @@ P.stampAction = function () {
 				.then(() => {
 
 					next(counter + 1)
-					.then(() => resolve(true))
-					.catch(() => resolve(false));
+					.then(res => resolve(true))
+					.catch(err => reject(false));
 				})
-				.catch((err) => resolve(false));
+				.catch(err => reject(false));
 			}
-			else resolve(true)
+
+			// The else branch should only trigger once all the artefacts have been processed. At this point we should be okay to action any Group-level filters on the (entity) artefact output
+			else {
+
+				if (myCell) {
+
+					self.applyFilters(myCell)
+					.then(res => resolve(true))
+					.catch(err => reject(false));
+				}
+
+				// Terminate the cascade and start the resolution collapse
+				else resolve(true);
+			}
 		});
 	};
 
+	// Start the artefact stamp cascade
 	return next(0);
+};
+
+/*
+
+*/
+P.applyFilters = function (myCell) {
+
+	// Clean and sort the Group-level filters before sending them to the filter worker for application
+	if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+
+	let self = this;
+
+	return new Promise((resolve, reject) => {
+
+		// Determine if we have all the required resources to perform the filter operation and, if not, clean up and resolve
+		let currentHost = self.currentHost,
+			filterHost = myCell;
+
+		if (!currentHost || !filterHost) {
+
+			if (filterHost) releaseCell(filterHost);
+			reject(false);
+		}
+
+		// An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the Group's composite and alpha values
+		let cleanup = function () {
+
+			releaseFilterWorker(worker);
+
+			currentEngine.save();
+			
+			currentEngine.globalCompositeOperation = self.filterComposite;
+			currentEngine.globalAlpha = self.filterAlpha;
+			currentEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+			currentEngine.drawImage(filterElement, 0, 0);
+			
+			releaseCell(filterHost);
+
+			currentEngine.restore();
+		};
+
+		// Get handles to current and filter cell elements and engines
+		let currentElement = currentHost.element,
+			currentEngine = currentHost.engine;
+
+		let filterElement = filterHost.element,
+			filterEngine = filterHost.engine;
+
+		// Action a request to use the filtered artefacts as a stencil
+		if (self.isStencil) {
+			
+			filterEngine.save();
+			filterEngine.globalCompositeOperation = 'source-in';
+			filterEngine.globalAlpha = 1;
+			filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+			filterEngine.drawImage(currentElement, 0, 0);
+			filterEngine.restore();
+		} 
+
+		// At this point we will send the contents of the filterHost canvas over to the web worker, alongside details of the filters we wish to apply to it
+		filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+		let myimage = filterEngine.getImageData(0, 0, filterElement.width, filterElement.height),
+			worker = requestFilterWorker();
+
+		actionFilterWorker(worker, {
+			image: myimage,
+			filters: self.currentFilters,
+		})
+		.then(img => {
+
+			// Copy the filter worker's output back onto the filterHost canvas
+			if (img) {
+
+				filterEngine.globalCompositeOperation = 'source-over';
+				filterEngine.globalAlpha = 1;
+				filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+				filterEngine.putImageData(img, 0, 0);
+
+				// On success, cleanup and resolve
+				cleanup();
+				resolve(true);
+			}
+			else throw new Error('image issue');
+		})
+		.catch(err => {
+
+			cleanup();
+			reject(false);
+		});
+	});
 };
 
 /*
@@ -498,31 +559,24 @@ P.cascadeAction = function (items, action) {
 /*
 
 */
-P.setDeltaValues = function (items, method) {
+P.setDeltaValues = function (items = {}) {
 
-	this.artefacts.forEach(name => {
+	this.artefactBuckets.forEach(art => art.setDeltaValues(items));
 
-		let art = artefact[name];
-
-		if (art && art.setDeltaValues) art.setDeltaValues(items, method);
-	});
 	return this;
 };
 
 /*
 
 */
-P.addFiltersToEntitys = function () {
+P.addFiltersToEntitys = function (...args) {
 
-	if (this.filters) {
+	this.artefacts.forEach(name => {
 
-		this.artefacts.forEach(name => {
-
-			let ent = entity[name];
-			
-			if (ent && ent.addFilters) ent.addFilters.apply(ent, arguments);
-		});
-	}
+		let ent = entity[name];
+		
+		if (ent && ent.addFilters) ent.addFilters(args);
+	});
 	return this;
 };
 
@@ -531,15 +585,26 @@ P.addFiltersToEntitys = function () {
 */
 P.removeFiltersFromEntitys = function (...args) {
 
-	if (this.filters) {
+	this.artefacts.forEach(name => {
 
-		this.artefacts.forEach(name => {
+		let ent = entity[name];
 
-			let ent = entity[name];
+		if (ent && ent.removeFilters) ent.removeFilters(args);
+	});
+	return this;
+};
 
-			if (ent && ent.removeFilters) ent.removeFilters.apply(ent, arguments);
-		});
-	}
+/*
+
+*/
+P.clearFiltersFromEntitys = function () {
+
+	this.artefacts.forEach(name => {
+
+		let ent = entity[name];
+
+		if (ent && ent.clearFilters) ent.clearFilters();
+	});
 	return this;
 };
 
@@ -615,7 +680,7 @@ P.getAllArtefactsAt = function (items) {
 				if (resultNames.indexOf(hit.name) < 0) {
 
 					resultNames.push(hit.name);
-					results.push(hit);
+					results.push(result);
 				}
 			}
 		}

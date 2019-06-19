@@ -12,23 +12,25 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 009</h1>
-  <h2>Canvas tween stress test (single entity)</h2>
-  <h3>Click on porthole to increase number of star tweens</h3>
+  <h2>Pattern styles; use a canvas cell as a source for an animated pattern</h2>
 
-  <canvas id="porthole" width="600" height="600"></canvas>
+  <canvas id="mycanvas" width="600" height="400"></canvas>
 
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create a single wheel entity</li>
-      <li>Create and run many tweens/tickers, each associated with a user object</li>
-      <li>Setup the display cycle so that it is broken into separate clear, compile and show steps</li>
-      <li>In the compile step, update the entity by each user object and stamp it manually on the canvas</li>
-      <li>Test to see how many tweens a browser can run at a reasonable speed</li>
+      <li>Create/clone various Pattern styles, using DOM images, and loading images</li>
+      <li>Create/clone Block entitys to use the Patterns</li>
+      <li>Create a new cell and add it to the canvas</li>
+      <li>Animate a pattern-filled block in the new cell</li>
+      <li>Use the new cell as the source for a Pattern style</li>
     </ul>
   </div>
+
+  <img src="img/brick.png" id="brick" class="mypatterns" />
+  <img src="img/leaves.png" id="leaves" class="mypatterns" />
 
   <script src="canvas-009.js" type="module"></script>
 

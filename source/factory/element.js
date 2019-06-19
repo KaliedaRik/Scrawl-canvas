@@ -14,40 +14,41 @@ import domMix from '../mixin/dom.js';
 */
 const Element = function (items = {}) {
 	
-	let dims;
+	let el = items.domElement;
 
 	this.makeName(items.name);
 	this.register();
-	this.css = {};
-	this.set(this.defs);
-	this.set(items);
-	this.uuid = generateUuid();
 
-	if(this.domElement){
+	if (el) {
 
-		// positioning (generally go for absolute)
-		this.setPosition();
-
-		// identifier
-		this.domElement.setAttribute('data-uuid', this.uuid);
-
-		// listeners
-		if(this.trackHere) pushUnique(uiSubscribedElements, this.name);
-
-		// sort out initial dimensions
-		if (!xt(items.width, items.height)) {
-
-			dims = this.domElement.getBoundingClientRect();
-			
-			if (!xt(items.width)) this.width = dims.width;
-			if (!xt(items.height)) this.height = dims.height;
-		}
-		this.dirtyDimensions = true;
+		// Scrawl-canvas does not retain an Element's textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes __.text__ (for textContent, which automatically escapes all HTML-related tags and entities) and __.content__ (which should respect HTML tags and entities) 
+		if (items.text) el.textContent = items.text;
+		else if (items.content) el.innerHTML = items.content;
 	}
 
-	// correcting initial roll/pitch/yaw zero settings
-	if (!this.roll && !this.pitch && !this.yaw) this.dirtyRotationActive = false;
+	this.initializePositions();
+	this.dimensions[0] = this.dimensions[1] = 100;
 
+	this.pathCorners = [];
+	this.css = {};
+	this.here = {};
+
+	this.initializeDomLayout(items);
+
+	this.set(this.defs);
+	this.set(items);
+
+	el = this.domElement;
+
+	if (el) {
+
+		el.id = this.name;
+
+		if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
+	}
+
+	this.apply();
+	
 	return this;
 };
 
@@ -60,6 +61,7 @@ P.lib = 'element';
 P.isArtefact = true;
 P.isAsset = false;
 
+
 /*
 Apply mixins to prototype object
 */
@@ -67,9 +69,34 @@ P = baseMix(P);
 P = positionMix(P);
 P = domMix(P);
 
+let S = P.setters;
+
+S.text = function (item) {
+
+	if (this.domElement) {
+
+		this.domElement.textContent = item;
+		this.dirtyContent = true;
+	}
+};
+
+S.content = function (item) {
+
+	if (this.domElement) {
+
+		this.domElement.innerHTML = item;
+		this.dirtyContent = true;
+	}
+};
+
 /*
 ## Define prototype functions
 */
+
+P.cleanDimensionsAdditionalActions = function () {
+
+	this.dirtyDomDimensions = true;
+};
 
 /*
 
@@ -78,11 +105,16 @@ P.demolish = function (removeFromDom = false) {
 
 	let el = this.domElement,
 		name = this.name,
-		g = group[this.group];
+		g = this.group;
 
 	if (g) g.removeArtefacts(name);
 
 	if (el && removeFromDom) el.parentNode.removeChild(el);
+
+	// also needs to remove itself from subscribe arrays in pivot, mimic, path artefacts
+	if (this.pivot) removeItem(this.pivot.pivoted, this.name);
+	if (this.path) removeItem(this.path.pathed, this.name);
+	if (this.mimic) removeItem(this.mimic.mimicked, this.name);
 
 	removeItem(uiSubscribedElements, name);
 

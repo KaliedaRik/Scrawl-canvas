@@ -1,7 +1,7 @@
 /*
 # Filter factory
 */
-import { constructors, userFilter } from '../core/library.js';
+import { constructors } from '../core/library.js';
 import { mergeOver } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
@@ -56,6 +56,17 @@ The following methods require the __level__ attribute:
     brightness, saturation, threshold
 */
 	level: 0,
+
+
+/*
+The threshhold filter will default to setting (desaturated) pixels below a given level (0 - 255) to black, and those above the level to white. These colours can be changed by using the __low__ and __high__ channel attributes
+*/
+	lowRed: 0,
+	lowGreen: 0,
+	lowBlue: 0,
+	highRed: 255,
+	highGreen: 255,
+	highBlue: 255,
 
 /*
 The channels and channelstep methods make use of the __red__, __green__ and __blue__ attributes
@@ -133,21 +144,19 @@ The __ranges__ attribute - used by the __chroma__ method - needs to be an array 
 	ranges: null,
 
 /*
-User-defined filters cannot be processed by the filters web worker, even though they are passed into the worker alongside the other filters. Processing of the user-defined filter will take place once the web worker completes its work. User-defined images _may_ set their method attribute to a pre-defined filter name (for instance 'grayscale') to ensure the web worker pre-processes the ImageData object accordingly; if no pre-processing is required the method attribute can be set to false.
-
-When set to true the __returnLocalDimensions__ flag will result in the filter worker returning a _localDimensions_ object with x, y, w and h attributes; these can be used to extract the filtered area from the returned ImageData object, for instance to create a Picture entity from the filtered entity, group or cell - this is useful in particular for entitys requiring a slower, static filter within a wider animation.
+The user-defined filter should be set as a a string of the function's contents (the bits between the { curly braces }). The function can take no arguments, and can only use variables defined above (or the udn attributes below). The function can use 'self' variables supplied by the web worker - see the worker/filter.js for more information
 */
-	returnLocalDimensions: false,
-
-/*
-Similarly, the filter can request the filter worker returns its _cache_ array, which contains the (linear) positions of all pixels in the ImageData data object that have an alpha value > 0
-*/
-	returnCacheArray: false,
-
-/*
-The user-defined filter should be set as an anonymous function on the __userFilter__ attribute. The function will take four arguments - _image_, _filter_, (for the attributes it holds), _cache_ (if requested) and _localDimensions_ (if requested) which can be used to help the filter further manipulate the ImageData object. The function __must__ return the ImageData object as its only output!
-*/
-	userFilter: null,
+	userDefined: '',
+	udVariable0: '',
+	udVariable1: '',
+	udVariable2: '',
+	udVariable3: '',
+	udVariable4: '',
+	udVariable5: '',
+	udVariable6: '',
+	udVariable7: '',
+	udVariable8: '',
+	udVariable9: '',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -197,22 +206,7 @@ const actionFilterWorker = function (worker, items) {
 
 		worker.onmessage = (e) => {
 
-			if (e && e.data && e.data.image) {
-
-				let data = e.data,
-					filters = data.filters;
-
-				filters.forEach(fltr => {
-
-					if (fltr.userFilter) {
-
-						let func = userFilter[fltr.userFilter];
-
-						if (func) data.image = func(data.image, fltr, data.localDimensions, data.cache);
-					}
-				});
-				resolve(data.image);
-			}
+			if (e && e.data && e.data.image) resolve(e.data.image);
 			else resolve(false);
 		};
 

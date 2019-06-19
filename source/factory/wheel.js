@@ -2,9 +2,9 @@
 # Wheel factory
 */
 import { constructors, radian } from '../core/library.js';
-import { mergeOver, xt, xto } from '../core/utilities.js';
+import { mergeOver, xt, xto, ensureFloat } from '../core/utilities.js';
 
-import { makePoint } from './point.js';
+// import { makePoint } from './point.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
@@ -16,8 +16,9 @@ import filterMix from '../mixin/filter.js';
 */
 const Wheel = function (items = {}) {
 
+	if (!xto(items.dimensions, items.width, items.height,items.radius)) items.radius = 5;
+
 	this.entityInit(items);
-	this.defaultHandles(items);
 
 	return this;
 };
@@ -47,42 +48,19 @@ let defaultAttributes = {
 /*
 
 */
-	width: 20,
-
-/*
-
-*/
-	height: 20,
-
-/*
-
-*/
-	radius: 10,
-
-/*
-
-*/
 	startAngle: 0,
-
-/*
-
-*/
 	endAngle: 360,
 
 /*
 
 */
-	closed: true,
-
-/*
-
-*/
 	includeCenter: false,
+	clockwise: true,
 
 /*
 
 */
-	clockwise: true,
+	closed: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -93,140 +71,125 @@ let G = P.getters,
 /*
 
 */
-S.width = function (item) {
+S.width = function (val) {
 
-	this.width = this.height = (xt(item)) ? item : this.defs.width;
+	if (val != null) {
+
+		let dims = this.dimensions;
+
+		dims[0] = dims[1] = val;
+		this.dimensionsHelper();
+	}
+};
+
+S.height = function (val) {
+
+	if (val != null) {
+
+		let dims = this.dimensions;
+
+		dims[0] = dims[1] = val;
+		this.dimensionsHelper();
+	}
+};
+
+S.dimensions = function (w, h) {
+
+	this.setCoordinateHelper('dimensions', w, h);
 	this.dimensionsHelper();
 };
 
-/*
+D.width = function (val) {
 
-*/
-S.height = function (item) {
+	let dims = this.dimensions;
 
-	this.width = this.height = (xt(item)) ? item : this.defs.height;
+	dims[0] = dims[1] = addStrings(dims[0], val);
 	this.dimensionsHelper();
 };
 
-/*
+D.height = function (val) {
 
-*/
-S.scale = function (item) {
+	let dims = this.dimensions;
 
-	this.scale = (xt(item)) ? item : this.defs.scale;
-	this.dirtyScale = true;
-	this.dirtyPivoted = true;
-	this.dirtyPathObject = true;
+	dims[0] = dims[1] = addStrings(dims[0], val);
+	this.dimensionsHelper();
 };
 
+D.dimensions = function (w, h) {
+
+	this.setDeltaCoordinateHelper('dimensions', w, h);
+	this.dimensionsHelper();
+}
+
 /*
 
 */
-S.radius = function (item) {
+S.radius = function (val) {
 
-	this.radius = (xt(item)) ? item : this.defs.radius;
+	this.radius = val;
+	this.radiusHelper();
+};
+
+D.radius = function (val) {
+
+	this.radius = addStrings(this.radius, val);
 	this.radiusHelper();
 };
 
 /*
 
 */
-S.startAngle = function (item) {
+S.startAngle = function (val) {
 
-	this.startAngle = (xt(item)) ? item : this.defs.startAngle;
+	this.startAngle = ensureFloat(val, 4);
 	this.dirtyPathObject = true;
 };
 
-/*
+S.endAngle = function (val) {
 
-*/
-S.endAngle = function (item) {
-
-	this.endAngle = (xt(item)) ? item : this.defs.endAngle;
+	this.endAngle = ensureFloat(val, 4);
 	this.dirtyPathObject = true;
 };
 
-/*
+D.startAngle = function (val) {
 
-*/
-S.closed = function (item) {
-
-	this.closed = (xt(item)) ? item : this.defs.closed;
+	this.startAngle += ensureFloat(val, 4);
 	this.dirtyPathObject = true;
 };
 
-/*
+D.endAngle = function (val) {
 
-*/
-S.includeCenter = function (item) {
-
-	this.includeCenter = (xt(item)) ? item : this.defs.includeCenter;
+	this.endAngle += ensureFloat(val, 4);
 	this.dirtyPathObject = true;
 };
-
 /*
 
 */
-S.clockwise = function (item) {
+S.closed = function (bool) {
 
-	this.clockwise = (xt(item)) ? item : this.defs.clockwise;
-	this.dirtyPathObject = true;
+	if(xt(bool)) {
+
+		this.closed = !!bool;
+		this.dirtyPathObject = true;
+	}
 };
 
-/*
+S.includeCenter = function (bool) {
 
-*/
-D.width = function (item) {
+	if(xt(bool)) {
 
-	this.width = this.height = addStrings(this.width, item);
-	this.dimensionsHelper();
+		this.includeCenter = !!bool;
+		this.dirtyPathObject = true;
+	}
 };
 
-/*
+S.clockwise = function (bool) {
 
-*/
-D.height = function (item) {
+	if(xt(bool)) {
 
-	this.width = this.height = addStrings(this.height, item);
-	this.dimensionsHelper();
-};
-
-/*
-
-*/
-D.scale = function (item) {
-
-	this.scale += item;
-	this.dirtyScale = true;
-	this.dirtyPivoted = true;
-	this.dirtyPathObject = true;
-};
-
-/*
-
-*/
-D.radius = function (item) {
-
-	this.radius += item;
-	this.radiusHelper();
-};
-
-/*
-
-*/
-D.startAngle = function (item) {
-
-	this.startAngle += item;
-	this.dirtyPathObject = true;
-};
-
-/*
-
-*/
-D.endAngle = function (item) {
-
-	this.endAngle += item;
-	this.dirtyPathObject = true;
+		this.clockwise = !!bool;
+		this.dirtyPathObject = true;
+	}
 };
 
 
@@ -234,84 +197,54 @@ D.endAngle = function (item) {
 ## Define prototype functions
 */
 
-/*
-
-*/
-P.defaultHandles = function (items) {
-
-	let iHandle = items.handle || {};
-
-	if (!xto(iHandle.x, items.handleX)) {
-
-		this.set({
-			handleX: 'center',
-		});
-	}
-	if (!xto(iHandle.y, items.handleY)) {
-
-		this.set({
-			handleY: 'center',
-		});
-	}
-};
-
 P.dimensionsHelper = function () {
 
-	if (this.width.substring) this.radius = `${(parseFloat(this.width) / 2)}%`;
-	else this.radius = (this.width / 2);
+	let width = this.dimensions[0];
+
+	if (width.substring) this.radius = `${(parseFloat(width) / 2)}%`;
+	else this.radius = (width / 2);
 
 	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-	this.dirtyPathObject = true;
-	this.dirtyPivoted = true;
 };
 
 P.radiusHelper = function () {
 
-	if (this.radius.substring) this.width = this.height = (parseFloat(this.radius) * 2) + '%';
-	else this.width = this.height = (this.radius * 2);
+	let radius = this.radius,
+		dims = this.dimensions;
+
+	if (radius.substring) dims[0] = dims[1] = (parseFloat(radius) * 2) + '%';
+	else dims[0] = dims[1] = (radius * 2);
 
 	this.dirtyDimensions = true;
-	this.dirtyHandle = true;
-	this.dirtyPathObject = true;
-	this.dirtyPivoted = true;
 };
 
-P.cleanDimensions = function () {
+P.cleanDimensionsAdditionalActions = function () {
 
-	// the radius only references the width of the canvas, never the height;
-	let host = this.currentHost,
-		w, r;
+	let radius = this.radius,
+		dims = this.currentDimensions,
+		calculatedRadius = (radius.substring) ? (parseFloat(radius) / 100) * dims[0] : radius;
 
-	if (host) {
+	if (dims[0] !== calculatedRadius * 2) {
 
-		this.dirtyDimensions = false;
-		w = this.width;
-
-		if (w.substring) this.localWidth = this.localHeight = (parseFloat(w) / 100) * host.localWidth;
-		else this.localWidth = this.localHeight = w;
-	
-		r = this.radius;
-
-		if (r.substring) this.localRadius = (parseFloat(r) / 100) * host.localWidth;
-		else this.localRadius = r;
+		dims[1] = dims[0];
+		this.currentRadius = dims[0] / 2;
 	}
+	else this.currentRadius = calculatedRadius;
 };
 
 P.cleanPathObject = function () {
 
-	let p, handle, trans, scale, x, y, radius, starts, ends;
-
 	this.dirtyPathObject = false;
 
-	p = this.pathObject = new Path2D();
-	handle = this.currentHandle;
-	scale = this.scale;
-	radius = this.localRadius * scale;
-	x = radius - (handle.x * scale);
-	y = radius - (handle.y * scale);
-	starts = this.startAngle * radian;
-	ends = this.endAngle * radian;
+	let p = this.pathObject = new Path2D();
+
+	let handle = this.currentStampHandlePosition,
+		scale = this.currentScale,
+		radius = this.currentRadius * scale,
+		x = radius - (handle[0] * scale),
+		y = radius - (handle[1] * scale),
+		starts = this.startAngle * radian,
+		ends = this.endAngle * radian;
 
 	p.arc(x, y, radius, starts, ends, !this.clockwise);
 
@@ -323,61 +256,61 @@ P.cleanPathObject = function () {
 	else if (this.closed) p.closePath();
 };
 
-P.finalizeCollisionPoints = function (pointsArray) {
+// P.finalizeCollisionPoints = function (pointsArray) {
 
-	let cp = this.collisionPoints,
-		i, iz, item, pt;
+// 	let cp = this.collisionPoints,
+// 		i, iz, item, pt;
 
-	for (i = 0, iz = pointsArray.length; i < iz; i++) {
+// 	for (i = 0, iz = pointsArray.length; i < iz; i++) {
 
-		item = pointsArray[i];
+// 		item = pointsArray[i];
 		
-		pt = makePoint({
-			name: `${this.name}_cp_${item}`,
-			pivot: this.name,
-			group: this.group
-		});
+// 		pt = makePoint({
+// 			name: `${this.name}_cp_${item}`,
+// 			pivot: this.name,
+// 			group: this.group
+// 		});
 
-		switch (item) {
+// 		switch (item) {
 
-			case 'ne' :
-				cp.push(pt.set({offsetX: '85%', offsetY: '15%'}));
-				break;
+// 			case 'ne' :
+// 				cp.push(pt.set({offsetX: '85%', offsetY: '15%'}));
+// 				break;
 
-			case 'n' :
-				cp.push(pt.set({offsetX: '50%', offsetY: '0%'}));
-				break;
+// 			case 'n' :
+// 				cp.push(pt.set({offsetX: '50%', offsetY: '0%'}));
+// 				break;
 
-			case 'nw' :
-				cp.push(pt.set({offsetX: '15%', offsetY: '15%'}));
-				break;
+// 			case 'nw' :
+// 				cp.push(pt.set({offsetX: '15%', offsetY: '15%'}));
+// 				break;
 
-			case 'w' :
-				cp.push(pt.set({offsetX: '0%', offsetY: '50%'}));
-				break;
+// 			case 'w' :
+// 				cp.push(pt.set({offsetX: '0%', offsetY: '50%'}));
+// 				break;
 
-			case 'sw' :
-				cp.push(pt.set({offsetX: '15%', offsetY: '85%'}));
-				break;
+// 			case 'sw' :
+// 				cp.push(pt.set({offsetX: '15%', offsetY: '85%'}));
+// 				break;
 
-			case 's' :
-				cp.push(pt.set({offsetX: '50%', offsetY: '100%'}));
-				break;
+// 			case 's' :
+// 				cp.push(pt.set({offsetX: '50%', offsetY: '100%'}));
+// 				break;
 
-			case 'se' :
-				cp.push(pt.set({offsetX: '85%', offsetY: '85%'}));
-				break;
+// 			case 'se' :
+// 				cp.push(pt.set({offsetX: '85%', offsetY: '85%'}));
+// 				break;
 
-			case 'e' :
-				cp.push(pt.set({offsetX: '100%', offsetY: '50%'}));
-				break;
+// 			case 'e' :
+// 				cp.push(pt.set({offsetX: '100%', offsetY: '50%'}));
+// 				break;
 
-			case 'c' :
-				cp.push(pt.set({offsetX: '50%', offsetY: '50%'}));
-				break;
-		}
-	}
-};
+// 			case 'c' :
+// 				cp.push(pt.set({offsetX: '50%', offsetY: '50%'}));
+// 				break;
+// 		}
+// 	}
+// };
 
 
 /*

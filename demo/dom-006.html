@@ -8,23 +8,42 @@
   <title>Demo DOM 006</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #mystack {
+      width: 500px;
+      height: 500px;
+    }
+  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 006</h1>
-  <h2>DOM tween stress test (using &lt;div> element)</h2>
-  <h3>Click on star field to add more stars</h3>
+  <h2>Tween actions on a DOM element</h2>
+  <h3>Click on the animation to make the boat reverse direction</h3>
 
-  <div id="porthole" data-stack></div>
-  <div id="starHold"></div>
+  <div id="mystack" data-stack>
+    <div id="myelement"></div>
+  </div>
 
   <p id="reportmessage"></p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create and run many tweens/tickers, each associated with a single stack element</li>
-      <li>Test to see how many tweens a browser can run at a reasonable speed</li>
+      <li>Clone a stack element and add it to the stack</li>
+      <li>Clone a tween, letting the tween subscribe to the original tween's ticker</li>
+      <li>Clone a tween, making it create its own associated ticker</li>
+      <li>Manipulate a tween while it is running, forcing it to stop, reverse and resume its animation</li>
+      <li>Add action objects to the tween's ticker</li>
+      <li>Check that action objects behave correctly, dependent on the current animation direction of the tween:</li>
+      <ul>
+        <li>The largest boat will change colours as it circles</li>
+        <li>The middle boat will follow the largest boat, but will not change colour</li>
+        <li>The smallest boat will circle slightly faster than the other two boats</li>
+        <li>On reversing, the smallest boat will halt while the other two boats reverse direction</li>
+      </ul>
+
     </ul>
   </div>
 

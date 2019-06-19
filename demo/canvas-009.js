@@ -2,158 +2,163 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
-// Time display variables
-let testTicker = Date.now(),
-	testTime, testNow, 
-	testMessage = document.querySelector('#reportmessage');
-
-
 // Scene setup
-let artefact = scrawl.library.artefact,
-	porthole = artefact.porthole,
-	wormhole = porthole.base,
-	starling, addStars, stopE, makeStars,
-	starBag = [],
-	changeFlag = true,
-	starCount = 0,
-	addNumber = 100;
+let canvas = scrawl.library.artefact.mycanvas;
 
-porthole.set({
-	backgroundColor: 'black',
-	css: {
-		borderRadius: '50%'
-	}
+
+// Get images from DOM
+scrawl.importDomImage('.mypatterns');
+
+
+// Create Pattern styles using imported images
+scrawl.makePattern({
+
+	name: 'brick-pattern',
+	asset: 'brick',
+
+}).clone({
+
+	name: 'leaves-pattern',
+	asset: 'leaves',
+
 });
 
-starling = scrawl.makeWheel({
-	name: 'starling',
-	radius: 3,
+// Create Pattern styles dynamically
+scrawl.makePattern({
+
+	name: 'water-pattern',
+	imageSource: 'img/water.png',
+
+}).clone({
+
+	name: 'marble-pattern',
+	imageSource: 'img/marble.png',
+
+});
+
+// Create a canvas-based Cell pattern
+canvas.buildCell({
+
+	name: 'cell-pattern',
+
+	width: 50,
+	height: 50,
+
+	backgroundColor: 'lightblue',
+
+	shown: false,
+});
+
+canvas.base.set({
+
+	compileOrder: 1,
+});
+
+// Create a Block entity to display in the new Cell pattern
+scrawl.makeBlock({
+
+	name: 'cell-pattern-block',
+	group: 'cell-pattern',
+
+	width: 40,
+	height: 40,
+
+	startX: 'center',
+	startY: 'center',
+
 	handleX: 'center',
 	handleY: 'center',
+
 	method: 'fill',
-	fillStyle: 'white',
+
+	fillStyle: 'water-pattern',
+
+	delta: {
+		roll: -0.3
+	},
 });
 
-makeStars = function (buildNumber) {
 
-	let star, i,
-		r1, v, duration, scale;
+// Create Block entitys for the main display
+scrawl.makeBlock({
 
-	for (i = 0; i < buildNumber; i++) {
+	name: 'water-in-leaves',
+	group: canvas.base.name,
 
-		// Rather than tween the entity object directly, we can supply the tween with a Scrawl userobject to hold the tween results, and then apply those changes to a single entity as part of the display cycle. Userobjects are not stored in the Scrawl library, so need to be captured in array in our code.
-		star = scrawl.makeUserObject({});
-		starBag.push(star);
-		starCount++;
+	width: '40%',
+	height: '40%',
 
-		r1 = Math.random();
+	startX: '25%',
+	startY: '25%',
 
-		v = scrawl.requestVector({
-			x: 1
-		}).rotate(Math.random() * 360).scalarMultiply(300);
+	handleX: 'center',
+	handleY: 'center',
 
-		duration = Math.round((r1 * 3000) + 2000);
-		scale = Math.round((1 - r1) * 0.9) + 0.6;
+	lineWidth: 20,
+	lineJoin: 'round',
 
-		scrawl.makeTween({
-			name: `star_${starCount}`,
-			targets: star,
-			duration: duration,
-			cycles: 0,
-			definitions: [{
-				attribute: 'startX',
-				integer: true,
-				start: 300,
-				end: 300 + v.x
-			}, {
-				attribute: 'startY',
-				integer: true,
-				start: 300,
-				end: 300 + v.y
-			}, {
-				attribute: 'scale',
-				start: 0.5,
-				end: scale
-			}]
-		}).run();
+	method: 'sinkInto',
 
-		scrawl.releaseVector(v);
-	}
+	fillStyle: 'cell-pattern',
+	strokeStyle: 'leaves-pattern',
 
-	starling.set({
-		fillStyle: `rgb(${Math.floor(Math.random() * 55) + 200}, ${Math.floor(Math.random() * 55) + 200}, ${Math.floor(Math.random() * 55) + 200})`
-	});
-}
+	shadowOffsetX: 5,
+	shadowOffsetY: 5,
+	shadowBlur: 3,
+	shadowColor: 'black',
 
+}).clone({
 
-// Event listeners
-stopE = (e) => {
+	name: 'leaves-in-brick',
 
-	e.preventDefault();
-	e.returnValue = false;
-};
+	startX: '75%',
 
-addStars = (e) => {
+	fillStyle: 'leaves-pattern',
+	strokeStyle: 'brick-pattern',
 
-	stopE(e);
-	makeStars(addNumber);
-};
-
-scrawl.addNativeListener('click', addStars, porthole.domElement);
-
-// Generate the initial stars
-makeStars(100);
-
-
-// Animation 
-scrawl.makeAnimation({
-
-	name: 'testC009Display',
+}).clone({
 	
-	fn: function(){
-		
-		return new Promise((resolve) => {
+	name: 'brick-in-marble',
 
-			// Rather than render the canvas, we can break it down into its three constituent parts (clear, compile, show) - this allows us to have greater control over the compile step. Each of the three steps returns a Promise function.
-			porthole.clear()
-			.then(() => {
+	startY: '75%',
 
-				// When the entity fastStamp attribute is true, the entity will bypass checking for changes to the canvas's context engine
-				if (changeFlag) starling.fastStamp = false;
+	fillStyle: 'brick-pattern',
+	strokeStyle: 'marble-pattern',
 
-				// Normally the compile cascade will stamp an entity onto the canvas once. We use just the one entity for this scene, stamping it onto the canvas many times over using its simpleStamp function.
-				starBag.forEach(shiny => starling.simpleStamp(wormhole, shiny));
-				return true;
-			})
-			.then(() => {
+}).clone({
+	
+	name: 'marble-in-water',
 
-				// Switching on the entity fastStamp attribute on helps speed up the display cycle.
-				if (changeFlag) {
+	startX: '25%',
 
-					starling.fastStamp = true;
-					changeFlag = false;
-				}
+	fillStyle: 'marble-pattern',
+	strokeStyle: 'water-pattern',
 
-				return porthole.show();
-			})
-			.then(() => {
+});
 
-				testNow = Date.now();
-				testTime = testNow - testTicker;
-				testTicker = testNow;
 
-				testMessage.innerHTML = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-				<br />Stars: ${starCount}`;
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
 
-				resolve(true);
-			})
-			.catch((err) => {
+	let testTicker = Date.now(),
+		testTime, testNow,
+		testMessage = document.querySelector('#reportmessage');
 
-				testTicker = Date.now();
-				testMessage.innerHTML = (err.substring) ? err : JSON.stringify(err);
+	return function () {
 
-				resolve(false);
-			});
-		});
-	}
+		testNow = Date.now();
+		testTime = testNow - testTicker;
+		testTicker = testNow;
+
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+	};
+}();
+
+
+// Create the Animation loop which will run the Display cycle
+scrawl.makeRender({
+
+	name: 'demo-animation',
+	target: canvas,
+	afterShow: report,
 });
