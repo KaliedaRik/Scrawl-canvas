@@ -19,6 +19,12 @@ import { makeAnimation } from "../factory/animation.js";
 /*
 ## Core DOM element discovery and management
 */
+
+/*
+Stack artefacts can be nested within each other, and canvas artefacts can also be nested inside a stack. A Display cycle can be triggered on a given Stack or Canvas artefact at any time (but usually as part of an animation loop); as part of that loop a stack artefact will also trigger a Display cycle on any child stacks.
+
+The __rootElements__ array keeps track of all 'root' stack artefacts, and also includes all canvas artefacts, whether they're part of a stack or not.
+*/
 let rootElements = [],
 	rootElements_sorted = [];
 
@@ -50,7 +56,7 @@ const sortRootElements = function () {
 };
 
 /*
-
+Create a __stack__ artefact wrapper for a given stack element.
 */
 const addInitialStackElement = function (el) {
 
@@ -86,14 +92,14 @@ const addInitialStackElement = function (el) {
 };
 
 /*
-
+Helper function
 */
 const processNewStackChildren = function (el, name) {
 
 	let hostDims = el.getBoundingClientRect(),
 		y = 0;
 
-	// only go down one level of hierarchy here; stacks don't do hierarchies, only interested in knowing about immediate child elements
+	// Only go down one level of hierarchy here; stacks don't do hierarchies, only interested in knowing about immediate child elements
 	Array.from(el.children).forEach(child => {
 	
 		if (child.getAttribute('data-stack') == null && !isa_canvas(child)) {
@@ -129,7 +135,7 @@ const processNewStackChildren = function (el, name) {
 };
 
 /*
-create __canvas__ wrappers and controllers for a given canvas element.
+Create a __canvas__ artefact wrapper for a given canvas element.
 */
 const addInitialCanvasElement = function (el) {
 
@@ -150,9 +156,6 @@ const addInitialCanvasElement = function (el) {
 		el.id = myname;
 	}
 
-	// console.log('addInitialCanvasElement called on', el)
-	// let mygroup = el.getAttribute('data-group');
-
 	return makeCanvas({
 		name: myname,
 		domElement: el,
@@ -164,6 +167,9 @@ const addInitialCanvasElement = function (el) {
 };
 
 /*
+Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them. 
+
+Will also create wrappers for all _direct child elements__ (one level down) within the stack and create appropriate wrappers (Stack, Canvas, Element) for them.
 
 */
 const getStacks = function () {
@@ -172,7 +178,7 @@ const getStacks = function () {
 };
 
 /*
-Parse the DOM, looking for &lt;canvas> elements; then create __cell__ wrappers and __pad__ controllers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.
+Parse the DOM, looking for &lt;canvas> elements; then create __Canvas__ artefact and __Cell__ asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.
 */ 
 const getCanvases = function () {
 
@@ -198,6 +204,8 @@ const addCanvas = function (items = {}) {
 
 /*
 Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__
+
+Note: need to write a demo to test this functionality
 */
 let currentCanvas = null,
 	currentGroup = null;
@@ -343,6 +351,8 @@ The functions all takes the following arguments:
 * __evt__ - String name of the event ('move', 'down', 'up', 'enter', 'leave'), or an array of such strings
 * __fn__ - the function to be called when the event listener(s) trigger
 * __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String; these elements need to be registered in the Scrawl-canvas library beforehend (done automatically for stack and canvas elements)
+
+Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
 */
 const addListener = function (evt, fn, targ) {
 
@@ -367,6 +377,11 @@ const removeListener = function (evt, fn, targ) {
 	actionListener(evt, fn, targ, 'removeEventListener');
 };
 
+/*
+Because devices and browsers differ in their approach to user interaction (mouse vs pointer vs touch), the actual functionality for adding and removing the event listeners associated with each approach is handled by dedicated actionXXXListener functions
+
+TODO: code up the functionality to manage touch events
+*/
 const actionListener = function (evt, fn, targ, action) {
 
 	let events = [].concat(evt),
@@ -462,6 +477,8 @@ The function requires three arguments:
 * __evt__ - String name of the event ('click', 'input', 'change', etc), or an array of such strings
 * __fn__ - the function to be called when the event listener(s) trigger
 * __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String
+
+Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
 */
 const addNativeListener = function (evt, fn, targ) {
 
@@ -509,18 +526,20 @@ const actionNativeListener = function (evt, fn, targ, action) {
 /*
 ## Scrawl-canvas display cycle
 
-Scrawl-canvas breaks down the display cycle into three parts: __clear__; __compile__; and __show__. These can be triggered either as a single, combined __render__ operation, or separately as-and-when needed.
+Scrawl-canvas breaks down the Display cycle into three parts: __clear__; __compile__; and __show__. These can be triggered either as a single, combined __render__ operation, or separately as-and-when needed.
 
 The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element's controller's __order__ attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value
 
 Each display cycle function returns a Promise object which will resolve as true if the function completes successfully; false otherwise. These promises will never reject
+
+Note that Scrawl-canvas supplies a convenience function - __makeRender()__ - for automating the process of creating an animation object to handle the Display cycle
 */
 
 /*
 ### Clear
 
-* for a canvas, clear its display (reset all pixels to 0, or the designated background color) ready for it to be redrawn
-* for a stack element - no action required
+* For canvas artefacts, clear its Cell assets' display (reset all pixels to 0, or the designated background color) ready for them to be redrawn
+* For stack artefacts - no action required
 */
 const clear = function (...items) {
 
@@ -531,8 +550,8 @@ const clear = function (...items) {
 /*
 ### Compile
 
-* for both canvas and stack elements, perform necessary entity/element positional calculations
-* for a canvas, stamp associated entitys onto the canvas
+* For both canvas and stack artefacts, perform necessary entity/element positional calculations
+* Additionally for canvas artefacts, stamp associated entitys onto the canvas's constituent cell assets
 */
 const compile = function (...items) {
 
@@ -543,8 +562,8 @@ const compile = function (...items) {
 /*
 ### Show
 
-* stamp additional 'layer' canvases onto the base canvas, then copy the base canvas onto the display canvas
-* for a stack element - no action required
+* For canvas artefacts, stamp additional 'layer' canvases onto the base canvas, then copy the base canvas onto the display canvas
+* For stack artefacts - invoke the __domShow__ function, if any of its constituent elements require DOM-related updating
 */
 const show = function (...items) {
 
@@ -555,7 +574,7 @@ const show = function (...items) {
 /*
 ### Render
 
-* orchestrate the clear, compile and show actions on each stack and canvas DOM element
+* Orchestrate the clear, compile and show actions on each stack and canvas DOM element
 */
 const render = function (...items) {
 
@@ -572,9 +591,6 @@ const displayCycleHelper = function (items) {
 	else if (rootElementsSort) sortRootElements();
 };
 
-/*
-
-*/
 const displayCycleBatchProcess = function (method) {
 
 	return new Promise((resolve, reject) => {
@@ -606,12 +622,21 @@ We can also add in user-composed __display cycle hook functions__ which will run
 * afterCompile
 * afterShow
 * error
+
+Returns the Animation object, through which the render functionality can be halted, resumed, and/or killed
 */
 const makeRender = function (items = {}) {
 
-	if (!items || !items.target) return false;
+	if (!items) return false;
 
-	let target = (items.target.substring) ? artefact[items.target] : items.target;
+	let target;
+
+	if (!items.target) target = {
+		clear: clear,
+		compile: compile,
+		show: show
+	};
+	else target = (items.target.substring) ? artefact[items.target] : items.target;
 
 	if (!target.clear || !target.compile || !target.show) return false;
 
@@ -625,7 +650,6 @@ const makeRender = function (items = {}) {
 
 		name: items.name || '',
 		order: items.order || 1,
-		// delay: true,
 		
 		fn: function() {
 			
@@ -650,7 +674,13 @@ const makeRender = function (items = {}) {
 };
 
 /*
+Scrawl-canvas batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don't maintain a full/comprehensive 'shadow' or 'virtual' DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.
 
+The decision on whether to update a DOM element is mediated through a suite of 'dirty' flags assigned on the Scrawl-canvas artefact object which wraps each DOM element. As part of the compile component of the Scrawl-canvas Display cycle, the code will take a decision on whether the DOM element needs to be updated and insert the artefact's name in the __domShowElements__ array, and set the __domShowRequired__ flag to true, which will then trigger the __domShow()__ function to run at the end of each Display cycle.
+
+The domShow() function is exported, and can be triggered for any DOM-related artefact at any time by invoking it with the artefact's name as the function's argument.
+
+The order in which DOM elements get updated is determined by the __order__ attributes set on the Stack artefact, on Group objects, and (least important) on the element artefact.
 */
 const domShowElements = [];
 const addDomShowElement = function (item = '') {
@@ -793,7 +823,7 @@ const domShow = function (singleArtefact = '') {
 			}
 		}
 	}
-}
+};
 
 /*
 Used by Scrawl-canvas worker functionality to locate worker-related javascript files on the server
@@ -804,7 +834,7 @@ const setScrawlPath = function (url) {
 };
 
 /*
-Create a holding area within the DOM but very offscreen, which can be used by (for example) the Phrase entity for calculating font heights
+Create a holding area within the DOM (but very offscreen) which can be used by (for example) the Phrase entity for calculating font heights
 */
 let scrawlCanvasHold = document.createElement('div');
 scrawlCanvasHold.style.padding = 0;

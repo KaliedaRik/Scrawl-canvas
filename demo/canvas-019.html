@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 019</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 019</h1>
+  <h2>Artefact collision detection</h2>
+  <h3>Drag and drop the artefacts around the canvas</h3>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="lavender label">Track artefact</div>
+    <div class="lavender">
+      <select class="controlItem" id="artefact">
+        <option value="block">Block</option>
+        <option value="phrase">Phrase</option>
+        <option value="picture">Picture</option>
+        <option value="bezier">Shape - bezier</option>
+        <option value="oval">Shape - oval</option>
+        <option value="circle">Wheel - circle</option>
+        <option value="dome">Wheel - dome</option>
+        <option value="pie">Wheel - pie</option>
+        <option value="slice">Wheel - slice</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Collision sensitivity</div>
+    <div class="lavender">X: <input class="controlItem" id="sensitivity" type="range" value="50" min="10" max="200" step="1" /></div>
+    <div class="lavender">&nbsp</div>
+
+    <div class="green label">Handles</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+
+    <div class="green label">Offset</div>
+    <div class="green">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.02" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <p>Drag and drop the entitys to test their sensors correctly collide with underlying entitys</p>
+
+    <ul>
+      <li>Create a set of blocks to act as the grid over which the test entitys will be dragged</li>
+      <li>Create a variety of test entitys of differing types</li>
+      <li>Perform between-group collision checks between test and grid groups, updating colliding grid entitys to show that they are in collision</li>
+      <li>Drag and drop the test entitys across the canvas, to check that test entity sensors are correctly positioned and the between-group collision detection works as expected</li>
+      <li>Vary the collective attributes of the test entitys (handle, offset, rotation, scale, flip) to make sure each entity's sensors correctly account for these changes</li>
+    </ul>
+  </div>
+
+  <script src="canvas-019.js" type="module"></script>
+
+</body>
+
+</html>

@@ -405,6 +405,8 @@ P.prepareStamp = function() {
 
 	if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
+	if (this.dirtyRotation) this.dirtyCollision = true;
+
 	if (this.dirtyScale) this.cleanScale();
 	if (this.dirtyDimensions) this.cleanDimensions();
 	if (this.dirtyLock) this.cleanLock();
@@ -427,7 +429,11 @@ P.prepareStamp = function() {
 	if (this.dirtyImage) this.cleanImage();
 	if (this.dirtyPaste) this.preparePasteObject();
 
-	if (this.dirtyPathObject) this.cleanPathObject();
+	if (this.dirtyPathObject) {
+
+		this.cleanPathObject();
+		this.dirtyCollision = true;
+	}
 
 	// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
 	if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();

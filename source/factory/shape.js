@@ -1041,14 +1041,16 @@ P.getLinearAngle = function (t, sx, sy, ex, ey) {
 */
 P.getPathPositionData = function (pos) {
 
-	if (pos.toFixed) {
+	if (xt(pos) && pos.toFixed) {
 
 		let remainder = pos % 1,
 			unitPartials = this.unitPartials,
 			previousLen = 0, 
 			stoppingLen, myLen, i, iz, unit, species;
 
-		if (pos === 0 || pos === 1) remainder = pos;
+		// ... because sometimes everything doesn't all add up to 1
+		if (pos === 0) remainder = 0;
+		else if (pos === 1) remainder = 0.9999;
 
 		// 1. determine the pertinent subpath to use for calculation
 		for (i = 0, iz = unitPartials.length; i < iz; i++) {
@@ -1229,6 +1231,35 @@ P.cleanControl = function (label) {
 };
 
 /*
+Overwrites mixin/position.js function
+*/
+P.calculateSensors = function () {
+
+	let sensorSpacing = this.sensorSpacing || 50,
+		length = this.length,
+		segments = parseInt(length / sensorSpacing, 10),
+		pos = 0,
+		data, i, iz;
+
+	if (segments < 4) segments = 4;
+
+	let segmentLength = 1 / segments;
+
+	let sensors = this.currentSensors;
+	sensors.length = 0;
+
+	data = this.getPathPositionData(0);
+	sensors.push([data.x, data.y]);
+	
+	for (i = 0; i < segments; i++) {
+
+		pos += segmentLength;
+		data = this.getPathPositionData(pos);
+		sensors.push([data.x, data.y]);
+	}
+};
+
+/*
 
 */
 P.getControlPathData = function (path, label, capLabel) {
@@ -1310,6 +1341,7 @@ P.prepareStamp = function() {
 	if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
 
 		this.dirtyPathObject = true;
+		this.dirtyCollision = true;
 
 		if (this.useStartAsControlPoint && this.dirtyStart) {
 
@@ -1324,6 +1356,7 @@ P.prepareStamp = function() {
 	if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
 
 		this.dirtyStampPositions = true;
+		this.dirtyCollision = true;
 
 		if (this.useStartAsControlPoint) {
 
@@ -1331,6 +1364,15 @@ P.prepareStamp = function() {
 			this.dirtyPathObject = true;
 			this.pathCalculatedOnce = false;
 		}
+	}
+
+	if (this.dirtyRotation || this.dirtyOffset) this.dirtyCollision = true;
+
+	if (this.dirtyCollision && !this.useAsPath) {
+
+		this.useAsPath = true;
+		this.dirtyPathObject = true;
+		this.pathCalculatedOnce = false;
 	}
 
 	if (this.dirtyScale) this.cleanScale();
@@ -1387,6 +1429,8 @@ P.cleanDimensions = function () {
 P.calculateLocalPath = function (d) {
 
 	let res;
+
+	if (this.collides) this.useAsPath = true;
 
 	if (!this.pathCalculatedOnce) {
 

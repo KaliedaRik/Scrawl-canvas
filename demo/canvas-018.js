@@ -206,7 +206,7 @@ let report = function () {
 scrawl.makeRender({
 
 	name: 'demo-animation',
-	target: canvas,
+	// target: canvas,
 	afterShow: report,
 });
 
@@ -271,5 +271,3 @@ document.querySelector('#overline').value = 0.1;
 document.querySelector('#letterSpacing').value = 0;
 document.querySelector('#family').options.selectedIndex = 0;
 document.querySelector('#size_px').value = 16;
-
-console.log(scrawl.library.entity)

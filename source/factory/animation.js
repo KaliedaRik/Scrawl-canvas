@@ -44,7 +44,7 @@ P = baseMix(P);
 let defaultAttributes = {
 
 /*
-
+Determines the order in which animation functions - which are promises - will be actioned during the Display cycle. Higher order animations will be processed after lower order animations
 */
 	order: 1,
 
@@ -60,7 +60,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 */
 
 /*
-
+Start the animation, if it is not already running
 */
 P.run = function () {
 
@@ -70,7 +70,7 @@ P.run = function () {
 };
 
 /*
-
+Returns true if animation is running; false otherwise
 */
 P.isRunning = function () {
 
@@ -78,7 +78,7 @@ P.isRunning = function () {
 };
 
 /*
-
+Stop the animation, if it is already running
 */
 P.halt = function () {
 
@@ -88,7 +88,7 @@ P.halt = function () {
 };
 
 /*
-
+Stop the animation if it is already running, and remove it from the Scrawl-canvas library
 */
 P.kill = function () {
 
@@ -102,15 +102,21 @@ P.kill = function () {
 
 /*
 ## Exported factory function
+
+The factory takes a single object argument which includes the following attributes:
+
+* __name__ (optional) - String - default: random UUID String generated at time of object construction
+* __order__ (optional) - Number - default: 10
+* __delay__ (optional) - Boolean - default: false
+* __fn__ (required) - Promise-based Function - default: blank non-return function (will break the Animation loop!)
+
+Note: by default, animations start running as soon as they are created. To prevent this include a __delay__ attribute, set to true, in the argument object.
 */
 const makeAnimation = function (items) {
 	
 	return new Animation(items);
 };
 
-/*
-Also store constructor in library - clone functionality expects to find it there
-*/
 constructors.Animation = Animation;
 
 export {

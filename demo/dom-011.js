@@ -27,7 +27,7 @@ canvas.set({
 	width: '100%',
 	height: '100%',
 
-	// The 'fit' attribute comes into play when the displayed canvas element and its hidden canvas companion have different dimensions. The hidden canvas is copied over to the displayed canvas at the end of every display cycle.
+	// The 'fit' attribute comes into play when the displayed canvas element and its hidden canvas companion (the base canvas) have different dimensions. The hidden canvas is copied over to the displayed canvas at the end of every display cycle.
 
 	// We can influence how this copy happens by setting the 'fit' attribute to an appropriate String value ('fill', 'contain', 'cover', or 'none'). These replicate the effect of the CSS object-fit property (see https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
 	fit: 'fill',
@@ -61,7 +61,7 @@ let cell = canvas.buildCell({
 });
 
 
-// Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
+// Function to check whether mouse cursor is over the canvas element within the stack, and lock the element artefact accordingly
 let check = function () {
 
 	let active = false,
@@ -99,26 +99,12 @@ let report = function () {
 }();
 
 
-/// Animation object - not using scrawl.makeRender() in this instance because we need to render both the stack and the canvas - functionality is for stacks to render the positioning of constituent artefacts, but won't do anything to trigger canvas composition. Instead, we'll use the more generic scrawl.render() function which calls the display cycle on both stacks and canvases; there's also scrawl.clear, scrawl.compile and scrawl.show functions for more fine-grained control of the display cycle when using this approach to construct the Animation/Display cycle.
-scrawl.makeAnimation({
+// Create the Animation loop which will run the Display cycle. Note that we don't have to define a target - useful for when we want to cascade through multiple stacks (which don't themselves trigger canvas redraws, just canvas positioning) and multiple canvases
+scrawl.makeRender({
 
 	name: 'demo-animation',
-	
-	fn: function(){
-		
-		return new Promise((resolve, reject) => {
-
-			check();
-
-			scrawl.render()
-			.then(() => {
-
-				report();
-				resolve(true);
-			})
-			.catch(err => reject(false));
-		});
-	}
+	commence: check,
+	afterShow: report,
 });
 
 

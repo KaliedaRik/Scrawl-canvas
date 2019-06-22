@@ -331,9 +331,18 @@ const observeAndUpdate = function (items = {}) {
 
 				if (actionFlag) {
 
-					target.set({
-						[actionAttribute]: val
-					})
+					if (target.type === 'Group') {
+
+						target.setArtefacts({
+							[actionAttribute]: val
+						});
+					}
+					else {
+
+						target.set({
+							[actionAttribute]: val
+						});
+					}
 				}
 			}
 		}

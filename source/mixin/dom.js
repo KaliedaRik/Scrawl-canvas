@@ -474,6 +474,8 @@ Overwrites the clone function in mixin/base.js
 		p.lineTo(results[4], results[5]);
 		p.lineTo(results[6], results[7]);
 		p.closePath();
+
+		// this.dirtyCollision = true;
 	};
 
 /*
@@ -485,11 +487,15 @@ Overwrites the clone function in mixin/base.js
 
 		let tests = (!Array.isArray(items)) ?  [items] : items;
 
+		if (this.dirtyCollision || !this.pathObject) {
+
+			this.cleanPathObject();
+			this.cleanCollisionData();
+		}
+
 		let mycell = requestCell(),
 			engine = mycell.engine,
 			tx, ty;
-
-		this.cleanPathObject();
 
 		if (tests.some(test => {
 
@@ -500,7 +506,6 @@ Overwrites the clone function in mixin/base.js
 
 			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
-			// this measures against a flat, unrotated host (usually a stack artefact) - if we want to measure against a rotated host (roll) then we will need to do some stuff to the engine. I have no clue about how to handle a Stack that has been rotated around pitch or yaw.
 			return engine.isPointInPath(this.pathObject, tx, ty);
 
 		}, this)) {
@@ -518,120 +523,6 @@ Overwrites the clone function in mixin/base.js
 		
 		return false;
 	};
-
-/*
-
-*/
-	// P.addCollisionPoints = function (...args) {
-
-	// 	let pointMaker = function () {
-
-	// 		let p = document.createElement('div');
-
-	// 		p.style.width = 0;
-	// 		p.style.height = 0;
-	// 		p.style.position = 'absolute';
-
-	// 		return p;
-	// 	};
-
-	// 	let collisionPoints = this.collisionPoints = [],
-	// 		element = this.domElement;
-
-	// 	if (element) {
-
-	// 		let pointsArray = new Set();
-
-	// 		args.forEach(item => {
-
-	// 			if (item.substring) {
-
-	// 				item = item.toLowerCase();
-
-	// 				switch (item) {
-
-	// 					case 'corners' :
-	// 						pointsArray.add('ne').add('nw').add('sw').add('se');
-	// 						break;
-
-	// 					case 'edges' :
-	// 						pointsArray.add('n').add('w').add('s').add('e');
-	// 						break;
-
-	// 					case 'border' :
-	// 						pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e');
-	// 						break;
-
-	// 					case 'center' :
-	// 						pointsArray.add('c');
-	// 						break;
-
-	// 					case 'all' :
-	// 						pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e').add('c');
-	// 						break;
-
-	// 					case 'ne' :
-	// 					case 'e' :
-	// 					case 'se' :
-	// 					case 's' :
-	// 					case 'sw' :
-	// 					case 'w' :
-	// 					case 'nw' :
-	// 					case 'n' :
-	// 						pointsArray.add(item);
-	// 						break;
-	// 				}
-	// 			}
-	// 		});
-
-	// 		let topArray = ['ne', 'n', 'nw'],
-	// 			middleArray = ['e', 'w', 'c'],
-	// 			leftArray = ['nw', 'w', 'sw'],
-	// 			centerArray = ['n', 's', 'c'];
-
-	// 		pointsArray.forEach(val => {
-
-	// 			let point = pointMaker();
-
-	// 			if (topArray.indexOf(val) >= 0) point.style.top = '0%';
-	// 			else if (middleArray.indexOf(val) >= 0) point.style.top = '50%';
-	// 			else point.style.top = '100%';
-
-	// 			if (leftArray.indexOf(val) >= 0) point.style.left = '0%';
-	// 			else if (centerArray.indexOf(val) >= 0) point.style.left = '50%';
-	// 			else point.style.left = '100%';
-
-	// 			element.appendChild(point);
-	// 			collisionPoints.push(point);
-	// 		});
-	// 	}
-	// 	return this;
-	// };
-
-/*
-
-*/
-	// P.getCollisionPointCoordinates = function (host) {
-
-	// 	let cPoints = this.collisionPoints,
-	// 		here = isa_obj(host.here) ? host.here : {},
-	// 		x = currentCorePosition.scrollX - (here.offsetX || 0),
-	// 		y = currentCorePosition.scrollY - (here.offsetY || 0),
-	// 		round = Math.round,
-	// 		results = [];
-
-	// 	this.collisionPoints.forEach((point) => {
-
-	// 		let client = point.getClientRects();
-	// 		client = client[0];
-			
-	// 		if (client) results.push([
-	// 			round(client.left + x),
-	// 			round(client.top + y)
-	// 		]);
-	// 	});
-	// 	return results;
-	// };
 
 /*
 
@@ -856,6 +747,9 @@ Overwrites the clone function in mixin/base.js
 	P.prepareStamp = function () {
 
 		if (this.actionResize) this.checkForResize();
+
+		// cleanPathObject is mostly irrelevant to DOM elements, only used when doing collision detection
+		if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyCollision = true;
 
 		if (this.dirtyContent) this.cleanContent();
 		if (this.dirtyScale) this.cleanScale();

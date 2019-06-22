@@ -263,6 +263,25 @@ scrawl.makeDragZone({
 });
 
 
+// Function to check whether mouse cursor is over canvas, and lock the arrow's end point accordingly
+let mouseCheck = function () {
+
+	let active = false;
+
+	return function () {
+
+		if (canvas.here.active !== active) {
+
+			active = canvas.here.active;
+
+			arrow.set({
+				endLockTo: (active) ? 'mouse' : 'path'
+			});
+		}
+	};
+}();
+
+
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -286,5 +305,6 @@ scrawl.makeRender({
 
 	name: 'demo-animation',
 	target: canvas,
+	commence: mouseCheck,
 	afterShow: report,
 });

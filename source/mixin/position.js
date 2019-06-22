@@ -127,6 +127,12 @@ All factories using the position mixin will add these to their prototype objects
 
 */
 		group: null,
+
+/*
+
+*/
+		collides: false,
+		sensorSpacing: 50,
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -387,6 +393,21 @@ We absolutely do not want users messing around with dragOffset values
 	D.dragOffsetX = defaultNonReturnFunction;
 	D.dragOffsetY = defaultNonReturnFunction;
 	D.dragOffset = defaultNonReturnFunction;
+
+/*
+
+*/
+	S.sensorSpacing = function (val) {
+
+		this.sensorSpacing = val;
+		this.dirtyCollision = true;
+	};
+
+	D.sensorSpacing = function (val) {
+
+		this.sensorSpacing += val;
+		this.dirtyCollision = true;
+	};
 
 /*
 
@@ -1297,6 +1318,7 @@ Rotation and flip attributes are handled separately, alongside handle values, as
 
 						cache[i] = coord;
 						coord += drag[i];
+						this.dirtyCollision = true;
 					}
 					coord += offset[i];
 
@@ -1375,6 +1397,126 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 		if (oldX !== stampHandle[0] || oldY !== stampHandle[1]) this.dirtyPositionSubscribers = true;
 
 		if (this.domElement && this.collides) this.dirtyPathObject = true;
+	};
+
+/*
+
+*/
+	P.cleanCollisionData = function () {
+
+		if (!this.currentCollisionRadius) this.currentCollisionRadius = 0;
+		if (!this.currentSensors) this.currentSensors = [];
+
+		if (this.dirtyCollision) {
+
+			this.dirtyCollision = false;
+
+			this.calculateCollisionRadius();
+			
+			if (this.collides) this.calculateSensors();
+		}
+
+		return [this.currentCollisionRadius, this.currentSensors];
+	};
+
+/*
+
+*/
+	P.calculateCollisionRadius = function () {
+
+		let stamp = this.currentStampPosition,
+			handle = this.currentStampHandlePosition,
+			dims = this.currentDimensions,
+			scale = this.currentScale;
+
+		let radii = [],
+			sx = stamp[0],
+			sy = stamp[1],
+			lx = (sx - (handle[0] * scale)),
+			ty = (sy - (handle[1] * scale)),
+			rx = lx + (dims[0] * scale),
+			by = ty + (dims[1] * scale);
+
+		// fails for Elements whose computed height is 0 (because: 'auto'?)
+		radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - ty) * (sy - ty))));
+		radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - by) * (sy - by))));
+		radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - by) * (sy - by))));
+		radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - ty) * (sy - ty))));
+
+		// we can use this to calculate whether two given artefacts are capable of intersecting, before proceeding to check if they do intersect (assuming they can)
+		this.currentCollisionRadius = Math.ceil(Math.max(...radii));
+	};
+
+	P.calculateSensors = function () {
+
+		let stamp = this.currentStampPosition,
+			handle = this.currentStampHandlePosition,
+			dims = this.currentDimensions,
+			scale = this.currentScale,
+			upend = this.flipUpend,
+			reverse = this.flipReverse;
+
+		let rotate = function(x, y, angle, sx, sy) {
+
+			let arr = [0, 0];
+
+			arr[0] = Math.atan2(y, x);
+			arr[0] += (angle * 0.01745329251);
+			arr[1] = Math.sqrt((x * x) + (y * y));
+
+			return [Math.round(arr[1] * Math.cos(arr[0])) + sx, Math.round(arr[1] * Math.sin(arr[0])) + sy];
+		};
+
+		let sensors = this.currentSensors;
+		sensors.length = 0;
+
+		let roll = this.roll,
+			sx = stamp[0],
+			sy = stamp[1],
+			handleX = (reverse) ? -handle[0] * scale : handle[0] * scale,
+			handleY = (upend) ? -handle[1] * scale : handle[1] * scale,
+			lx = -handleX,
+			ty = -handleY,
+			width = dims[0] * scale,
+			height = dims[1] * scale,
+			rx = (reverse) ? lx - width : lx + width,
+			by = (upend) ? ty - height : ty + height;
+
+		sensors.push(rotate(lx, ty, roll, sx, sy));
+		sensors.push(rotate(rx, ty, roll, sx, sy));
+		sensors.push(rotate(rx, by, roll, sx, sy));
+		sensors.push(rotate(lx, by, roll, sx, sy));
+
+		let sensorSpacing = this.sensorSpacing || 50,
+			widthSensors = parseInt(width / sensorSpacing, 10),
+			heightSensors = parseInt(height / sensorSpacing, 10),
+			partial, place, i, iz;
+
+		if (widthSensors) {
+
+			let partial = width / (widthSensors + 1),
+				place = lx;
+
+			for (i = 0; i < widthSensors; i++) {
+
+				place += (reverse) ? -partial : partial;
+				sensors.push(rotate(place, ty, roll, sx, sy));
+				sensors.push(rotate(place, by, roll, sx, sy));
+			}
+		}
+
+		if (heightSensors) {
+
+			let partial = height / (heightSensors + 1),
+				place = ty;
+
+			for (i = 0; i < heightSensors; i++) {
+
+				place += (upend) ? -partial : partial;
+				sensors.push(rotate(lx, place, roll, sx, sy));
+				sensors.push(rotate(rx, place, roll, sx, sy));
+			}
+		}
 	};
 
 /*

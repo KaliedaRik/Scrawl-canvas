@@ -217,7 +217,7 @@ P.stamp = function () {
 
 				// Get the Group's artefacts to stamp themselves on the current host
 				self.stampAction(filterCell)
-				.then(res => resolve(true))
+				.then(res => resolve(self.name))
 				.catch(err => reject(false));
 			}
 
@@ -628,7 +628,19 @@ P.demolishGroup = function (removeFromDom) {
 };
 
 /*
-The __getArtefactAt__ function checks to see if any of the group object's artefacts are located at the supplied coordinates in the argument object. The first artefact to report back as being at that coordinate will be returned by the function; where no artefacts are present at that coordinate the function returns false. The artefact with the highest order attribute value will be returned first. This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
+The __getArtefactAt__ function checks to see if any of the group object's artefacts are located at the supplied coordinates in the argument object. 
+
+The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function. 
+
+Where no artefacts are present at that coordinate the function returns false.
+
+A __hit report__ is a Javascript object with the following attributes:
+
+* .x - the x coordinate supplied in this functions argument object
+* .y - the y coordinate supplied in this functions argument object
+* .artefact - the Scrawl-canvas artefact object reporting the hit
+
+This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
 */
 P.getArtefactAt = function (items) {
 
@@ -652,9 +664,9 @@ P.getArtefactAt = function (items) {
 };
 
 /*
-The __getAllArtefactsAt__ function returns all of the group object's artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first. The function will always return an array of artefact objects.
+The __getAllArtefactsAt__ function returns an array of hit reports from all of the group object's artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.
 
-There's scope here to use a Set?
+The function will always return an array of hit reports, or an empty array if no hits are reported.
 */
 P.getAllArtefactsAt = function (items) {
 
@@ -686,6 +698,75 @@ P.getAllArtefactsAt = function (items) {
 		}
 	}
 	return results;
+};
+
+/*
+The __getArtefactCollisions__ function returns an array of hit reports from all of the group object's artefacts which are currently in collision with the __sensor__ coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.
+
+The argument must be either the artefact object itself, or its String name.
+*/
+P.getArtefactCollisions = function (art) {
+
+	// return empty array if no argument, or the argument is not an artefact, or the group is empty
+	if (!art || !art.isArtefact || !this.artefactBuckets.length) return [];
+
+	if (art.substring) art = artefact[art];
+
+	// Return empty array if the artefact argument has not been setup to check for collisions
+	if (!art.collides) return [];
+
+	let host = artefact[this.host],
+		artBuckets = this.artefactBuckets,
+		targets = [],
+		target, i, iz;
+
+	// Get entity collision data
+	let [entityRadius, entitySensors] = art.cleanCollisionData();
+
+	// Winnow step 1: don't check the entity itself, or any missing or malformed artefacts in the group
+	for (i = 0, iz = artBuckets.length; i < iz; i++) {
+
+		target = artBuckets[i];
+
+		if (!target || !target.cleanCollisionData || art.name === target.name) targets.push(false);
+		else targets.push(target);
+	}
+
+	// Winnow step 2: exclude all targets outside the artefact/target collision radius
+	let [entityStampX, entityStampY] = art.currentStampPosition;
+
+	let combinedRadius, targetData, dx, dy, dh;
+
+	for (i = 0, iz = targets.length; i < iz; i++) {
+
+		target = targets[i];
+
+		if (target) {
+
+			let [targetStampX, targetStampY] = target.currentStampPosition;
+
+			targetData = target.cleanCollisionData();
+			combinedRadius = entityRadius + targetData[0];
+
+			dx = entityStampX - targetStampX;
+			dy = entityStampY - targetStampY;
+			dh = Math.sqrt((dx * dx) + (dy + dy));
+
+			if (dh > combinedRadius) targets[i] = false;
+		}
+	}
+
+	// Winnow step 3: perform hit checks on remaining targets - this will not retrieve targets entirely inside the artefact
+	for (i = 0, iz = targets.length; i < iz; i++) {
+
+		target = targets[i];
+
+		if (target) targets[i] = target.checkHit(entitySensors);
+	}
+
+	// return filtered results
+	return targets.filter(target => !!target);
+
 };
 
 /*

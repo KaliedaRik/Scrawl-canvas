@@ -45,7 +45,7 @@ P = tweenMix(P);
 let defaultAttributes = {
 
 /*
-
+__revert__ - a function that is triggered when a tween is running in reverse direction. Should be a counterpart to the __action__ function (defined in mixin/tween.js) to reverse the actions performed by that function.
 */
 	revert: null
 };
@@ -54,9 +54,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 let G = P.getters,
 	S = P.setters;
 
-/*
-
-*/
 S.revert = function (item) {
 
 	this.revert = item;
@@ -64,9 +61,6 @@ S.revert = function (item) {
 	if (typeof this.revert !== 'function') this.revert = defaultNonReturnFunction;
 };
 
-/*
-
-*/
 S.triggered = function (item) {
 
 	if (this.triggered !== item) {
@@ -84,7 +78,7 @@ S.triggered = function (item) {
 */
 
 /*
-
+Overrides the set() functionality defined in mixin/base.js
 */
 P.set = function (items = {}) {
 
@@ -117,14 +111,14 @@ P.set = function (items = {}) {
 
 
 /*
-
+Ticker-related help function
 */
 P.getEndTime = function () {
 	return this.effectiveTime;
 };
 
 /*
-
+The __update__ function checks to see if the action (or revert) functions need to be invoked, and invokes them as-and-when required.
 */
 P.update = function (items) {
 

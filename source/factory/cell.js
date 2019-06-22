@@ -721,26 +721,44 @@ P.clear = function () {
 */
 P.compile = function(){
 
+	this.sortGroups();
+	this.prepareStamp();
+
 	let self = this;
 
-	return new Promise((resolve) => {
+	// Doing it this way to ensure that each group completes its stamp action before the next one starts
+	let next = (counter) => {
 
-		self.sortGroups();
-		self.prepareStamp();
+		return new Promise((resolve, reject) => {
 
-		let promises = [];
+			let grp = self.groupBuckets[counter];
 
-		self.groupBuckets.forEach(mygroup => promises.push(mygroup.stamp()));
+			if (grp && grp.stamp) {
 
-		Promise.all(promises)
-		.then((res) => {
+				grp.stamp()
+				.then(res => {
 
-			if (self.filters && self.filters.length) return self.applyFilters();
-			else return true;
-		})
-		.then(() => resolve(true))
-		.catch(() => resolve(false));
-	});
+					next(counter + 1)
+					.then(res => resolve(true))
+					.catch(err => reject(false));
+				})
+				.catch(err => reject(false));
+			}
+
+			// The else branch should only trigger once all the groups have been processed. At this point we should be okay to action any Cell-level filters on the output
+			else {
+
+				if (self.filters && self.filters.length) {
+
+					self.applyFilters()
+					.then(res => resolve(true))
+					.catch(err => reject(false));
+				}
+				else resolve(true);
+			}
+		});
+	};
+	return next(0);
 };
 
 /*

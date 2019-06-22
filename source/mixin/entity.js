@@ -3,11 +3,10 @@
 */
 import * as library from '../core/library.js';
 import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
-	generateUuid, isa_fn, mergeOver, xt, addStrings } from '../core/utilities.js';
+	generateUuid, isa_fn, mergeOver, xt, xta, addStrings } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
-// import { makePoint } from '../factory/point.js';
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from '../factory/filter.js';
@@ -39,12 +38,7 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
-		collisionPoints: null,
-
-/*
-
-*/
-		checkHitMethod: 'path',
+		// checkHitMethod: 'path',
 
 /*
 
@@ -92,26 +86,28 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
-	// G.collisionPoints = function () {
-
-	// 	return this.getCollisionPointCoordinates();
-	// };
-
-/*
-
-*/
-	// S.collisionPoints = function (item) {
-
-	// 	this.addCollisionPoints(item);
-	// };
-
-/*
-
-*/
 	S.lockStylesToEntity = function (item) {
 
 		this.lockFillStyleToEntity = item;
 		this.lockStrokeStyleToEntity = item;
+	};
+
+/*
+
+*/
+	S.flipUpend = function (item) {
+
+		if (item !== this.flipUpend) this.dirtyCollision = true;
+		this.flipUpend = item;
+	};
+
+/*
+
+*/
+	S.flipReverse = function (item) {
+
+		if (item !== this.flipReverse) this.dirtyCollision = true;
+		this.flipReverse = item;
 	};
 
 
@@ -337,105 +333,6 @@ Overwrites the clone function in mixin/base.js
 	};
 
 /*
-This is a null function required by entitys to match a function used by DOM elements
-*/
-	// P.makeCollidable = defaultThisReturnFunction;
-
-/*
-This is a null function required by entitys to match a function used by DOM elements
-*/
-	// P.getBox = defaultFalseReturnFunction;
-
-/*
-Replicates and adapts function defined in mixin.dom.js
-*/
-	// P.addCollisionPoints = function (...args) {
-
-	// 	let pointMaker = function (item) {
-
-	// 		return makePoint({
-	// 			name: `${this.name}_cp_${item}`,
-	// 			pivot: this.name,
-	// 			group: this.group
-	// 		});
-	// 	};
-
-	// 	let collisionPoints = this.collisionPoints = [],
-	// 		pointsArray = new Set();
-
-	// 	args.forEach(arg => {
-
-	// 		if (arg != null && arg.substring) {
-
-	// 			arg = arg.toLowerCase();
-
-	// 			switch (arg) {
-
-	// 				case 'corners' :
-	// 					pointsArray.add('ne').add('nw').add('sw').add('se');
-	// 					break;
-
-	// 				case 'edges' :
-	// 					pointsArray.add('n').add('w').add('s').add('e');
-	// 					break;
-
-	// 				case 'border' :
-	// 					pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e');
-	// 					break;
-
-	// 				case 'center' :
-	// 					pointsArray.add('c');
-	// 					break;
-
-	// 				case 'all' :
-	// 					pointsArray.add('ne').add('nw').add('sw').add('se').add('n').add('w').add('s').add('e').add('c');
-	// 					break;
-
-	// 				case 'ne' :
-	// 				case 'e' :
-	// 				case 'se' :
-	// 				case 's' :
-	// 				case 'sw' :
-	// 				case 'w' :
-	// 				case 'nw' :
-	// 				case 'n' :
-	// 					pointsArray.add(arg);
-	// 					break;
-	// 			}
-	// 		}
-	// 	});
-
-	// 	let topArray = ['ne', 'n', 'nw'],
-	// 		middleArray = ['e', 'w', 'c'],
-	// 		leftArray = ['nw', 'w', 'sw'],
-	// 		centerArray = ['n', 's', 'c'];
-
-	// 	pointsArray.forEach(val => {
-
-	// 		let point = pointMaker(val);
-
-	// 		if (topArray.indexOf(val) >= 0) point.set({ offsetY: 'top' });
-	// 		else if (middleArray.indexOf(val) >= 0) point.set({ offsetY: 'center' });
-	// 		else point.set({ offsetY: 'bottom' });
-
-	// 		if (leftArray.indexOf(val) >= 0) point.set({ offsetX: 'left' });
-	// 		else if (centerArray.indexOf(val) >= 0) point.set({ offsetX: 'center' });
-	// 		else point.set({ offsetX: 'right' });
-
-	// 		collisionPoints.push(point);
-	// 	});
-	// 	return this;
-	// };
-
-/*
-NEEDS coding up
-*/
-	// P.getCollisionPointCoordinates = function (host) {
-
-	// 	return false;
-	// };
-
-/*
 CURRENTLY does not support filters on entitys
 */
 	P.simpleStamp = function (host, changes = {}) {
@@ -467,6 +364,9 @@ CURRENTLY does not support filters on entitys
 
 		if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
+		if (this.dirtyRotation) this.dirtyCollision = true;
+
+
 		if (this.dirtyScale) this.cleanScale();
 		if (this.dirtyDimensions) this.cleanDimensions();
 		if (this.dirtyLock) this.cleanLock();
@@ -484,7 +384,11 @@ CURRENTLY does not support filters on entitys
 		if (this.dirtyStampPositions) this.cleanStampPositions();
 		if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
-		if (this.dirtyPathObject) this.cleanPathObject();
+		if (this.dirtyPathObject) {
+
+			this.cleanPathObject();
+			this.dirtyCollision = true;
+		}
 
 		// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
 		if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
@@ -706,7 +610,13 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 /*
 
 */
-	P.checkHit = function (items = {}) {
+	P.checkHit = function (items = []) {
+
+		if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
+
+			this.cleanPathObject();
+			this.cleanCollisionData();
+		}
 
 		let tests = (!Array.isArray(items)) ?  [items] : items;
 
@@ -717,14 +627,19 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 			y = stamp[1],
 			tx, ty;
 
-		if (this.dirtyPathObject) this.cleanPathObject();
-
 		if (tests.some(test => {
 
-			if (Object.prototype.toString.call(test) !== '[object Object]') return false;
+			if (Array.isArray(test)) {
 
-			tx = test.x;
-			ty = test.y;
+				tx = test[0];
+				ty = test[1];
+			}
+			else if (xta(test, test.x, test.y)) {
+
+				tx = test.x;
+				ty = test.y;
+			}
+			else return false;
 
 			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
