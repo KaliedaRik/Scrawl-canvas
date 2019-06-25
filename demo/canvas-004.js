@@ -35,7 +35,7 @@ scrawl.makeBlock({
 	fillStyle: graddy,
 	strokeStyle: 'coral',
 	lineWidth: 2,
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 });
 
 

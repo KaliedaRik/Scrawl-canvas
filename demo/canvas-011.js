@@ -6,7 +6,7 @@ scrawl.setScrawlPath('/source');
 let canvas = scrawl.library.artefact.mycanvas;
 
 scrawl.library.canvas.mycanvas.set({
-	backgroundColor: 'lightgray',
+	backgroundColor: 'lightblue',
 	css: {
 		border: '1px solid black'
 	}
@@ -355,31 +355,31 @@ scrawl.makeShape({
 	showBoundingBox: false,
 
 }).clone({
-	name: 'japan_drawFill',
+	name: 'japan_drawAndFill',
 	startX: 500,
-	method: 'drawFill',
+	method: 'drawAndFill',
 
 }).clone({
-	name: 'japan_fillDraw',
+	name: 'japan_fillAndDraw',
 	startX: 350,
-	method: 'fillDraw',
-	sharedState: true
+	method: 'fillAndDraw',
+	sharedState: true,
 
 }).clone({
-	name: 'japan_floatOver',
+	name: 'japan_drawThenFill',
 	startX: 50,
 	startY: 170,
-	method: 'floatOver'
+	method: 'drawThenFill',
 
 }).clone({
-	name: 'japan_sinkInto',
+	name: 'japan_fillThenDraw',
 	startX: 200,
-	method: 'sinkInto',
+	method: 'fillThenDraw',
 
 }).clone({
 	name: 'japan_clear',
 	startX: 350,
-	method: 'clear'
+	method: 'clear',
 });
 
 scrawl.makeWheel({
@@ -394,9 +394,9 @@ scrawl.makeWheel({
 });
 
 // Change the fill and stroke styles on one of the blocks, and any block sharing that block's state
-scrawl.library.artefact.japan_fillDraw.set({
+scrawl.library.artefact.japan_fillAndDraw.set({
 	fillStyle: 'blue',
-	strokeStyle: 'coral'
+	strokeStyle: 'coral',
 });
 
 

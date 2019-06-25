@@ -275,7 +275,9 @@ P.prepareStamp = function (myCell) {
 				if (!myCell) art.dirtyHost = true;
 			}
 		}
-		art.updateByDelta();
+
+		if (!art.noDeltaUpdates) art.updateByDelta();
+
 		art.prepareStamp();
 	});
 };
@@ -644,7 +646,7 @@ This function forms part of the Scrawl-canvas library's __drag-and-drop__ functi
 */
 P.getArtefactAt = function (items) {
 
-	let host = artefact[this.host],
+	let myCell = requestCell(),
 		artBuckets = this.artefactBuckets;
 
 	this.sortArtefacts();
@@ -655,11 +657,13 @@ P.getArtefactAt = function (items) {
 		
 		if (art) {
 
-			let result = art.checkHit(items, host);
+			let result = art.checkHit(items, myCell);
 
 			if (result) return result;
 		}
 	}
+
+	releaseCell(myCell);
 	return false;
 };
 
@@ -670,7 +674,7 @@ The function will always return an array of hit reports, or an empty array if no
 */
 P.getAllArtefactsAt = function (items) {
 
-	let host = artefact[this.host],
+	let myCell = requestCell(),
 		artBuckets = this.artefactBuckets,
 		resultNames = [],
 		results = [];
@@ -683,7 +687,7 @@ P.getAllArtefactsAt = function (items) {
 		
 		if (art) {
 
-			let result = art.checkHit(items, host);
+			let result = art.checkHit(items, myCell);
 			
 			if (result && result.artefact) {
 
@@ -697,6 +701,8 @@ P.getAllArtefactsAt = function (items) {
 			}
 		}
 	}
+
+	releaseCell(myCell);
 	return results;
 };
 
@@ -750,23 +756,26 @@ P.getArtefactCollisions = function (art) {
 
 			dx = entityStampX - targetStampX;
 			dy = entityStampY - targetStampY;
-			dh = Math.sqrt((dx * dx) + (dy + dy));
+			dh = Math.sqrt((dx * dx) + (dy * dy));
 
 			if (dh > combinedRadius) targets[i] = false;
 		}
 	}
 
 	// Winnow step 3: perform hit checks on remaining targets - this will not retrieve targets entirely inside the artefact
+	let myCell = requestCell();
+
 	for (i = 0, iz = targets.length; i < iz; i++) {
 
 		target = targets[i];
 
-		if (target) targets[i] = target.checkHit(entitySensors);
+		if (target) targets[i] = target.checkHit(entitySensors, myCell);
 	}
 
 	// return filtered results
-	return targets.filter(target => !!target);
+	releaseCell(myCell);
 
+	return targets.filter(target => !!target);
 };
 
 /*

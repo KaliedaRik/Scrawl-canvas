@@ -55,7 +55,7 @@ let block1 = scrawl.makeBlock({
 	lockFillStyleToEntity: true,
 	strokeStyle: 'coral',
 	lineWidth: 4,
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 });
 
 let block2 = block1.clone({
@@ -84,7 +84,7 @@ let wheel1 = scrawl.makeWheel({
 	lockFillStyleToEntity: true,
 	strokeStyle: 'orange',
 	lineWidth: 4,
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 });
 
 let wheel2 = wheel1.clone({

@@ -455,24 +455,27 @@ P.cleanPathObject = function () {
 
 	this.dirtyPathObject = false;
 
-	let p = this.pathObject = new Path2D();
+	if (!this.noPathUpdates || !this.pathObject) {
 
-	let handle = this.currentStampHandlePosition,
-		scale = this.currentScale,
-		radius = this.currentRadius * scale,
-		x = radius - (handle[0] * scale),
-		y = radius - (handle[1] * scale),
-		starts = this.startAngle * radian,
-		ends = this.endAngle * radian;
+		let p = this.pathObject = new Path2D();
 
-	p.arc(x, y, radius, starts, ends, !this.clockwise);
+		let handle = this.currentStampHandlePosition,
+			scale = this.currentScale,
+			radius = this.currentRadius * scale,
+			x = radius - (handle[0] * scale),
+			y = radius - (handle[1] * scale),
+			starts = this.startAngle * radian,
+			ends = this.endAngle * radian;
 
-	if (this.includeCenter) {
+		p.arc(x, y, radius, starts, ends, !this.clockwise);
 
-		p.lineTo(x, y);
-		p.closePath();
+		if (this.includeCenter) {
+
+			p.lineTo(x, y);
+			p.closePath();
+		}
+		else if (this.closed) p.closePath();
 	}
-	else if (this.closed) p.closePath();
 };
 
 
@@ -515,9 +518,14 @@ The factory takes a single object argument which includes the following attribut
 
 * __delta__ - Javascript Object with deltaSettable key:value attributes - default: {}
 
-* __method__ - String ('fill', 'draw', 'fillDraw', 'drawFill', 'floatOver', 'sinkInto', 'clear', 'none') - default: 'fill'
+* __method__ - String ('fill', 'draw', 'fillAndDraw', 'drawAndFill', 'drawThenFill', 'fillThenDraw', 'clear', 'none') - default: 'fill'
 
-* __fastStamp__ - Boolean - default: false
+* __noUserInteraction__ - Boolean - default: false
+* __noDeltaUpdates__ - Boolean - default: false
+* __noPositionDependencies__ - Boolean - default: false
+* __noCanvasEngineUpdates__ - Boolean - default: false
+* __noFilters__ - Boolean - default: false
+* __noPathUpdates__ - Boolean - default: false
 
 * __fillStyle__ - various (see factory/state.js) - default: 'rgba(0,0,0,1)',
 * __strokeStyle__ - various (see factory/state.js) - default: 'rgba(0,0,0,1)',

@@ -88,7 +88,7 @@ lorem.setGlyphStyles({
 // Add a pivoted Wheel entity
 scrawl.makeWheel({
 
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 	fillStyle: 'gold',
 	strokeStyle: 'darkblue',
 

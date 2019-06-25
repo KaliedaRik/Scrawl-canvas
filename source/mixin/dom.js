@@ -7,8 +7,6 @@ import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } fr
 import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
-import { requestCell, releaseCell } from '../factory/cell.js';
-
 
 export default function (P = {}) {
 
@@ -302,8 +300,12 @@ Overwrites the clone function in mixin/base.js
 
 		if (this.domElement) {
 
-			copied.domElement = this.domElement.cloneNode(true);
-			copied.domElement.id = copied.name;
+			let newbie = copied.domElement = this.domElement.cloneNode(true);
+			newbie.id = copied.name;
+
+			let kids = newbie.querySelectorAll('[data-corner-div="sc"]');
+
+			kids.forEach(kid => newbie.removeChild(kid));
 
 			if (host && host.domElement) host.domElement.appendChild(copied.domElement);
 		}
@@ -312,8 +314,6 @@ Overwrites the clone function in mixin/base.js
 		clone.set(items);
 
 		if (grp) grp.addArtefacts(clone);
-
-		// TODO - generate clone collisionPoints to match existing points, unless items includes CP date in which case use that instead
 
 		return clone;
 	};
@@ -400,46 +400,54 @@ Overwrites the clone function in mixin/base.js
 */
 	P.addPathCorners = function () {
 
-		let pointMaker = function () {
+		if (!this.noUserInteraction) {
 
-			let p = document.createElement('div');
+			let pointMaker = function () {
 
-			p.style.width = 0;
-			p.style.height = 0;
-			p.style.position = 'absolute';
+				let p = document.createElement('div');
 
-			return p;
-		};
+				p.style.width = 0;
+				p.style.height = 0;
+				p.style.position = 'absolute';
 
-		let tl = pointMaker(),
-			tr = pointMaker(),
-			br = pointMaker(),
-			bl = pointMaker();
+				return p;
+			};
 
-		tl.style.top = '0%';
-		tl.style.left = '0%';
+			let tl = pointMaker(),
+				tr = pointMaker(),
+				br = pointMaker(),
+				bl = pointMaker();
 
-		tr.style.top = '0%';
-		tr.style.left = '100%';
+			tl.style.top = '0%';
+			tl.style.left = '0%';
+			tl.setAttribute('data-corner-div', 'sc');
 
-		br.style.top = '100%';
-		br.style.left = '100%';
+			tr.style.top = '0%';
+			tr.style.left = '100%';
+			tr.setAttribute('data-corner-div', 'sc');
 
-		bl.style.top = '100%';
-		bl.style.left = '0%';
+			br.style.top = '100%';
+			br.style.left = '100%';
+			br.setAttribute('data-corner-div', 'sc');
 
-		let el = this.domElement;
+			bl.style.top = '100%';
+			bl.style.left = '0%';
+			bl.setAttribute('data-corner-div', 'sc');
 
-		el.appendChild(tl);
-		el.appendChild(tr);
-		el.appendChild(br);
-		el.appendChild(bl);
+			let el = this.domElement;
 
-		this.pathCorners.push(tl);
-		this.pathCorners.push(tr);
-		this.pathCorners.push(br);
-		this.pathCorners.push(bl);
+			el.appendChild(tl);
+			el.appendChild(tr);
+			el.appendChild(br);
+			el.appendChild(bl);
 
+			this.pathCorners.push(tl);
+			this.pathCorners.push(tr);
+			this.pathCorners.push(br);
+			this.pathCorners.push(bl);
+
+			if (!this.currentCornersData) this.currentCornersData = [];
+		}
 		return this;
 	};
 
@@ -450,78 +458,141 @@ Overwrites the clone function in mixin/base.js
 
 		this.dirtyPathObject = false;
 
-		if (!this.pathCorners.length) this.addPathCorners();
+		if (!this.noUserInteraction) {
 
-		let here = this.getHere(),
-			x = currentCorePosition.scrollX - (here.offsetX || 0),
-			y = currentCorePosition.scrollY - (here.offsetY || 0),
-			round = Math.round,
-			results = [],
-			client;
+			if (!this.pathCorners.length) this.addPathCorners();
 
-		this.pathCorners.forEach(point => {
+			let here = this.getHere(),
+				x = currentCorePosition.scrollX - (here.offsetX || 0),
+				y = currentCorePosition.scrollY - (here.offsetY || 0),
+				round = Math.round,
+				results = [],
+				client;
 
-			client = point.getClientRects();
-			client = client[0];
-			
-			if (client) results.push(round(client.left + x), round(client.top + y));
-			else results.push(0, 0);
-		});
+			this.pathCorners.forEach(point => {
 
-		let p = this.pathObject = new Path2D();
-		p.moveTo(results[0], results[1]);
-		p.lineTo(results[2], results[3]);
-		p.lineTo(results[4], results[5]);
-		p.lineTo(results[6], results[7]);
-		p.closePath();
+				client = point.getClientRects();
+				client = client[0];
+				
+				if (client) results.push(round(client.left + x), round(client.top + y));
+				else results.push(0, 0);
+			});
 
-		// this.dirtyCollision = true;
+			let p = this.pathObject = new Path2D();
+			p.moveTo(results[0], results[1]);
+			p.lineTo(results[2], results[3]);
+			p.lineTo(results[4], results[5]);
+			p.lineTo(results[6], results[7]);
+			p.closePath();
+
+			if (!this.currentCornersData) this.currentCornersData = [];
+
+			let cornerData = this.currentCornersData;
+			cornerData.length = 0;
+			cornerData.push(...results);
+		}
 	};
 
 /*
-
+Overwrites mixin/position.js function
 */
-	P.checkHit = function (items = {}) {
+	P.calculateSensors = function () {
 
-		if (!this.collides || !this.domElement) return false;
+		if (!this.noUserInteraction) {
 
-		let tests = (!Array.isArray(items)) ?  [items] : items;
+			let [_tlx, _tly, _trx, _try, _brx, _bry, _blx, _bly] = this.currentCornersData;
 
-		if (this.dirtyCollision || !this.pathObject) {
+			let sensors = this.currentSensors;
+			sensors.length = 0;
 
-			this.cleanPathObject();
-			this.cleanCollisionData();
+			sensors.push([_tlx, _tly]);
+			sensors.push([_trx, _try]);
+			sensors.push([_brx, _bry]);
+			sensors.push([_blx, _bly]);
+
+			let sensorSpacing = this.sensorSpacing || 50,
+				topLengthX = _tlx - _trx,
+				topLengthY = _tly - _try,
+				topLength = Math.sqrt((topLengthX * topLengthX) + (topLengthY * topLengthY)),
+				topSensors = parseInt(topLength / sensorSpacing, 10) - 1,
+
+				rightLengthX = _trx - _brx,
+				rightLengthY = _try - _bry,
+				rightLength = Math.sqrt((rightLengthX * rightLengthX) + (rightLengthY * rightLengthY)),
+				rightSensors = parseInt(rightLength / sensorSpacing, 10) - 1,
+
+				bottomLengthX = _brx - _blx,
+				bottomLengthY = _bry - _bly,
+				bottomLength = Math.sqrt((bottomLengthX * bottomLengthX) + (bottomLengthY * bottomLengthY)),
+				bottomSensors = parseInt(bottomLength / sensorSpacing, 10) - 1,
+
+				leftLengthX = _blx - _tlx,
+				leftLengthY = _bly - _tly,
+				leftLength =  Math.sqrt((leftLengthX * leftLengthX) + (leftLengthY * leftLengthY)),
+				leftSensors = parseInt(leftLength / sensorSpacing, 10) - 1;
+
+			let partX, partY, dx, dy, i;
+
+			if (topSensors > 0) {
+
+				partX = _trx;
+				partY = _try;
+				dx = topLengthX / (topSensors + 1);
+				dy = topLengthY / (topSensors + 1);
+
+				for (i = 0; i < topSensors; i++) {
+
+					partX += dx;
+					partY += dy;
+					sensors.push([partX, partY]);
+				}
+			}
+
+			if (rightSensors > 0) {
+
+				partX = _brx;
+				partY = _bry;
+				dx = rightLengthX / (rightSensors + 1);
+				dy = rightLengthY / (rightSensors + 1);
+
+				for (i = 0; i < rightSensors; i++) {
+
+					partX += dx;
+					partY += dy;
+					sensors.push([partX, partY]);
+				}
+			}
+
+			if (bottomSensors > 0) {
+
+				partX = _blx;
+				partY = _bly;
+				dx = bottomLengthX / (bottomSensors + 1);
+				dy = bottomLengthY / (bottomSensors + 1);
+
+				for (i = 0; i < bottomSensors; i++) {
+
+					partX += dx;
+					partY += dy;
+					sensors.push([partX, partY]);
+				}
+			}
+
+			if (leftSensors > 0) {
+
+				partX = _tlx;
+				partY = _tly;
+				dx = leftLengthX / (leftSensors + 1);
+				dy = leftLengthY / (leftSensors + 1);
+
+				for (i = 0; i < leftSensors; i++) {
+
+					partX += dx;
+					partY += dy;
+					sensors.push([partX, partY]);
+				}
+			}
 		}
-
-		let mycell = requestCell(),
-			engine = mycell.engine,
-			tx, ty;
-
-		if (tests.some(test => {
-
-			if (Object.prototype.toString.call(test) !== '[object Object]') return false;
-
-			tx = test.x;
-			ty = test.y;
-
-			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
-
-			return engine.isPointInPath(this.pathObject, tx, ty);
-
-		}, this)) {
-
-			releaseCell(mycell);
-
-			return {
-				x: tx,
-				y: ty,
-				artefact: this
-			};
-		}
-		
-		releaseCell(mycell);
-		
-		return false;
 	};
 
 /*
@@ -748,8 +819,11 @@ Overwrites the clone function in mixin/base.js
 
 		if (this.actionResize) this.checkForResize();
 
-		// cleanPathObject is mostly irrelevant to DOM elements, only used when doing collision detection
-		if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyCollision = true;
+		if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
+
+			this.dirtyPathObject = true;
+			this.dirtyCollision = true;
+		}
 
 		if (this.dirtyContent) this.cleanContent();
 		if (this.dirtyScale) this.cleanScale();
@@ -769,6 +843,8 @@ Overwrites the clone function in mixin/base.js
 
 		if (this.dirtyStampPositions) this.cleanStampPositions();
 		if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
+
+		if (this.dirtyPathObject) this.cleanPathObject();
 	};
 
 	P.cleanStampPositionsAdditionalActions = function () {
@@ -861,7 +937,10 @@ Overwrites the clone function in mixin/base.js
 		applyCoreResizeListener();
 
 		this.prepareStamp();
-		domShow(this.name);
+
+		this.stamp()
+		.then(() => domShow(this.name))
+		.catch(() => {});
 	};
 
 	return P;

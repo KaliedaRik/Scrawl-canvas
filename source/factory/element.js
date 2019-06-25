@@ -75,7 +75,13 @@ S.text = function (item) {
 
 	if (this.domElement) {
 
-		this.domElement.textContent = item;
+		let el = this.domElement,
+			kids = el.querySelectorAll('[data-corner-div="sc"]');
+
+		el.textContent = item;
+
+		kids.forEach(kid => el.appendChild(kid));
+
 		this.dirtyContent = true;
 	}
 };
@@ -84,7 +90,13 @@ S.content = function (item) {
 
 	if (this.domElement) {
 
-		this.domElement.innerHTML = item;
+		let el = this.domElement,
+			kids = el.querySelectorAll('[data-corner-div="sc"]');
+
+		el.innerHTML = item;
+
+		kids.forEach(kid => el.appendChild(kid));
+
 		this.dirtyContent = true;
 	}
 };

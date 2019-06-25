@@ -31,6 +31,7 @@ stack.addNewElement({
 		border: '1px solid black',
 		padding: '1em',
 		textAlign: 'center',
+		cursor: 'grab',
 	},
 
 }).clone({
@@ -64,6 +65,7 @@ stack.addNewElement({
 	handleX: 'center',
 	handleY: 'center',
 	roll: 30,
+
 	collides: true,
 
 	classes: 'red-text',
@@ -78,6 +80,7 @@ stack.addNewElement({
 		paddingTop: '0.5em',
 		margin: '0',
 		border: '1px solid red',
+		cursor: 'grab',
 	},
 	
 }).clone({

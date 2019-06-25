@@ -48,26 +48,26 @@ scrawl.makePhrase({
 	method: 'draw',
 
 }).clone({
-	name: 'myphrase_drawFill',
+	name: 'myphrase_drawAndFill',
 	startX: '84%',
-	method: 'drawFill',
+	method: 'drawAndFill',
 
 }).clone({
-	name: 'myphrase_fillDraw',
+	name: 'myphrase_fillAndDraw',
 	startX: '62%',
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 	sharedState: true
 
 }).clone({
-	name: 'myphrase_floatOver',
+	name: 'myphrase_drawThenFill',
 	startX: '14%',
 	startY: '67%',
-	method: 'floatOver'
+	method: 'drawThenFill'
 
 }).clone({
-	name: 'myphrase_sinkInto',
+	name: 'myphrase_fillThenDraw',
 	startX: '38%',
-	method: 'sinkInto',
+	method: 'fillThenDraw',
 
 }).clone({
 	name: 'myphrase_clear',
@@ -92,7 +92,7 @@ scrawl.makePhrase({
 
 
 // Change the fill and stroke styles on one of the phrase entitys, and any entity sharing that phrase's state
-scrawl.library.artefact.myphrase_fillDraw.set({
+scrawl.library.artefact.myphrase_fillAndDraw.set({
 	fillStyle: 'blue',
 	strokeStyle: 'coral'
 });

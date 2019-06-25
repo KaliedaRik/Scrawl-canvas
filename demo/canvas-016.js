@@ -40,7 +40,7 @@ scrawl.makeBlock({
 	handleY: 10,
 
 	fillStyle: 'rgb(240, 245, 255)',
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 	mimic: 'myPhrase',
 	lockTo: 'mimic',

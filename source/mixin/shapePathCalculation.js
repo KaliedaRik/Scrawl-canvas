@@ -394,6 +394,7 @@ export default function (d, scale, start, useAsPath, precision) {
 						units[i] = ['unknown', x, y];
 				}
 			}
+			else units[i] = [`no-points-${c}`, x, y];
 		}
 
 		returnObject.units = units;

@@ -65,7 +65,7 @@ const Stack = function (items = {}) {
 		}
 	}
 
-	this.apply();
+	// this.apply();
 	
 	return this;
 };
@@ -214,6 +214,8 @@ P.updateArtefacts = function (items = {}) {
 			if (items.dirtyOffset) art.dirtyOffset = true;
 			if (items.dirtyHandle) art.dirtyHandle = true;
 			if (items.dirtyRotation) art.dirtyRotation = true;
+			if (items.dirtyPathObject) art.dirtyPathObject = true;
+			if (items.dirtyCollision) art.dirtyCollision = true;
 		})
 	});
 };
@@ -241,6 +243,15 @@ P.cleanPerspective = function () {
 
 	this.domPerspectiveString = `perspective-origin: ${p.x} ${p.y}; perspective: ${p.z}px;`;
 	this.domShowRequired = true;
+
+	if (this.groupBuckets) {
+
+		this.updateArtefacts({
+			dirtyHandle: true,
+			dirtyPathObject: true,
+			dirtyCollision: true,
+		});
+	}
 };
 
 /*

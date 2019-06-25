@@ -38,7 +38,7 @@ let myblock = scrawl.makeBlock({
 
 	fillStyle: 'darkblue',
 	strokeStyle: 'gold',
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 	lineWidth: 6,
 	lineJoin: 'round',
@@ -66,7 +66,7 @@ let mywheel = scrawl.makeWheel({
 
 	fillStyle: 'purple',
 	strokeStyle: 'gold',
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 	lineWidth: 6,
 	lineJoin: 'round',

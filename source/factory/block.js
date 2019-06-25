@@ -57,18 +57,21 @@ P.cleanPathObject = function () {
 
 	this.dirtyPathObject = false;
 
-	let p = this.pathObject = new Path2D();
-	
-	let handle = this.currentStampHandlePosition,
-		scale = this.currentScale,
-		dims = this.currentDimensions;
+	if (!this.noPathUpdates || !this.pathObject) {
 
-	let x = -handle[0] * scale,
-		y = -handle[1] * scale,
-		w = dims[0] * scale,
-		h = dims[1] * scale;
+		let p = this.pathObject = new Path2D();
+		
+		let handle = this.currentStampHandlePosition,
+			scale = this.currentScale,
+			dims = this.currentDimensions;
 
-	p.rect(x, y, w, h);
+		let x = -handle[0] * scale,
+			y = -handle[1] * scale,
+			w = dims[0] * scale,
+			h = dims[1] * scale;
+
+		p.rect(x, y, w, h);
+	}
 };
 
 
@@ -104,9 +107,14 @@ The factory takes a single object argument which includes the following attribut
 
 * __delta__ - Javascript Object with deltaSettable key:value attributes - default: {}
 
-* __method__ - String ('fill', 'draw', 'fillDraw', 'drawFill', 'floatOver', 'sinkInto', 'clear', 'none') - default: 'fill'
+* __method__ - String ('fill', 'draw', 'fillAndDraw', 'drawAndFill', 'drawThenFill', 'fillThenDraw', 'clear', 'none') - default: 'fill'
 
-* __fastStamp__ - Boolean - default: false
+* __noUserInteraction__ - Boolean - default: false
+* __noDeltaUpdates__ - Boolean - default: false
+* __noPositionDependencies__ - Boolean - default: false
+* __noCanvasEngineUpdates__ - Boolean - default: false
+* __noFilters__ - Boolean - default: false
+* __noPathUpdates__ - Boolean - default: false
 
 * __fillStyle__ - various (see factory/state.js) - default: 'rgba(0,0,0,1)',
 * __strokeStyle__ - various (see factory/state.js) - default: 'rgba(0,0,0,1)',

@@ -39,6 +39,12 @@ let makeStars = function (buildNumber) {
 			handleX: 'center',
 			handleY: 'center',
 
+			noUserInteraction: true,
+			noDeltaUpdates: true,
+			noPositionDependencies: true,
+			noFilters: true,
+			noPathUpdates: true,
+
 			css: {
 				backgroundColor: 'white',
 				borderRadius: '50%'

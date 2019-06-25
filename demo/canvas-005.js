@@ -104,7 +104,7 @@ scrawl.makeBlock({
 		roll: 0.5
 	},
 
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 }).clone({
 	name: 'entity-locked-block',
@@ -149,7 +149,7 @@ scrawl.makeWheel({
 		roll: -0.5
 	},
 
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 }).clone({
 	name: 'entity-locked-wheel',
@@ -262,3 +262,5 @@ scrawl.makeRender({
 	commence: animateGradients,
 	afterShow: report,
 });
+
+console.log(scrawl.library)

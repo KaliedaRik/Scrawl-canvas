@@ -5,7 +5,10 @@ import { artefact, group } from '../core/library.js';
 import { defaultNonReturnFunction, mergeOver, mergeInto, mergeDiscard, isa_obj, isa_number, xt, xta, addStrings, xtGet, pushUnique, removeItem } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
+import { makeAnchor } from '../factory/anchor.js';
 import { makeCoordinate, checkCoordinate } from '../factory/coordinate.js';
+import { requestCell, releaseCell } from '../factory/cell.js';
+
 export default function (P = {}) {
 
 /*
@@ -131,8 +134,36 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
+		anchor: null,
+
+/*
+
+*/
 		collides: false,
 		sensorSpacing: 50,
+
+/*
+Animation speed - Scrawl-canvas assumes that an artefact will be "ready for anything". However if we know beforehand that an artefact will not be requiring certain functionalities, we can switch them off, which will help make the artefact render more quickly. These __noXXX__ flags include:
+
+* __noUserInteraction__ - switch off basic collision functionality (used by 'drag-and-drop') and ongoing update calculations
+
+* __noDeltaUpdates__ - switch off the automatic application of delta attribute values as part of each iteration of the Display cycle
+
+* __noPositionDependencies__ - short-circuit the position calculations associated with pivot, mimic, path and mouse positioning
+
+* __noCanvasEngineUpdates__ - specifically for canvas entity artefacts, skip updating the CanvasRenderingContext2D with the entity's styling attributes - meaning that the entity will use the previously rendered entity's styling
+
+* __noFilters__ - skip the checks for, and application of, filters to the canvas entity artefact - even if filters have been added to the entity
+
+* __noPathUpdates__ - only calculate the artefact's path once - this disables updates to the artefact's handle and scale attributes 
+
+*/
+		noUserInteraction: false,
+		noDeltaUpdates: false,
+		noPositionDependencies: false,
+		noCanvasEngineUpdates: false,
+		noFilters: false,
+		noPathUpdates: false,
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -194,6 +225,107 @@ All factories using the position mixin will add these to their prototype objects
 	G.height = function () {
 
 		return this.currentDimensions[1];
+	};
+
+/*
+
+*/
+	G.anchorDescription = function () {
+
+		if (this.anchor) return this.anchor.get('description');
+		return '';
+	};
+	G.anchorType = function () {
+
+		if (this.anchor) return this.anchor.get('type');
+		return '';
+	};
+	G.anchorTarget = function () {
+
+		if (this.anchor) return this.anchor.get('target');
+		return '';
+	};
+	G.anchorRel = function () {
+
+		if (this.anchor) return this.anchor.get('rel');
+		return '';
+	};
+	G.anchorReferrerPolicy = function () {
+
+		if (this.anchor) return this.anchor.get('referrerpolicy');
+		return '';
+	};
+	G.anchorPing = function () {
+
+		if (this.anchor) return this.anchor.get('ping');
+		return '';
+	};
+	G.anchorHreflang = function () {
+
+		if (this.anchor) return this.anchor.get('hreflang');
+		return '';
+	};
+	G.anchorHref = function () {
+
+		if (this.anchor) return this.anchor.get('href');
+		return '';
+	};
+	G.anchorDownload = function () {
+
+		if (this.anchor) return this.anchor.get('download');
+		return '';
+	};
+
+	S.anchorDescription = function (item) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		if (this.anchor) this.anchor.setters.description(item);
+	};
+	S.anchorType = function (item) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		if (this.anchor) this.anchor.setters.anchorType(item);
+	};
+	S.anchorTarget = function (item) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		if (this.anchor) this.anchor.setters.target(item);
+	};
+	S.anchorRel = function (item) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		if (this.anchor) this.anchor.setters.rel(item);
+	};
+	S.anchorReferrerPolicy = function (item) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		if (this.anchor) this.anchor.setters.referrerpolicy(item);
+	};
+	S.anchorPing = function (item) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		if (this.anchor) this.anchor.setters.ping(item);
+	};
+	S.anchorHreflang = function (item) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		if (this.anchor) this.anchor.setters.hreflang(item);
+	};
+	S.anchorHref = function (item) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		if (this.anchor) this.anchor.setters.href(item);
+	};
+	S.anchorDownload = function (item) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		if (this.anchor) this.anchor.setters.download(item);
+	};
+
+	S.anchor = function (items = {}) {
+
+		if (!this.anchor) this.buildAnchor(items);
+		else this.anchor.set(items);
 	};
 
 /*
@@ -1229,105 +1361,117 @@ Rotation and flip attributes are handled separately, alongside handle values, as
 
 		this.dirtyStampPositions = false;
 
-		let lockArray = this.lockTo,
-			localLockArray = [],
-			lock, i, coord, here, pathData,
-			hereFlag = false,
-			stamp = this.currentStampPosition,
-			oldX = stamp[0],
-			oldY = stamp[1],
+		let stamp = this.currentStampPosition,
 			start = this.currentStart,
-			offset = this.currentOffset,
-			isBeingDragged = this.isBeingDragged,
-			drag = this.currentDragOffset,
-			cache = this.currentStartCache,
-			pivot = this.pivot,
-			path = this.path,
-			mimic = this.mimic;
+			oldX = stamp[0],
+			oldY = stamp[1];
 
-		if (isBeingDragged) {
+		if (this.noPositionDependencies) {
 
-			localLockArray = ['mouse', 'mouse'];
-			hereFlag = true;
+			stamp[0] = start[0];
+			stamp[1] = start[1];
 		}
 		else {
-				
+
+			let lockArray = this.lockTo,
+				localLockArray = [],
+				lock, i, coord, here, pathData,
+				hereFlag = false,
+				stamp = this.currentStampPosition,
+				oldX = stamp[0],
+				oldY = stamp[1],
+				offset = this.currentOffset,
+				isBeingDragged = this.isBeingDragged,
+				drag = this.currentDragOffset,
+				cache = this.currentStartCache,
+				pivot = this.pivot,
+				path = this.path,
+				mimic = this.mimic;
+
+			if (isBeingDragged) {
+
+				localLockArray = ['mouse', 'mouse'];
+				hereFlag = true;
+			}
+			else {
+					
+				for (i = 0; i < 2; i++) {
+
+					lock = lockArray[i];
+
+					if (lock === 'pivot' && !pivot) lock = 'start';
+					else if (lock === 'path' && !path) lock = 'start';
+					else if (lock === 'mimic' && !mimic) lock = 'start';
+
+					if (lock === 'mouse') hereFlag = true;
+
+					localLockArray[i] = lock;
+				}
+			}
+
+			if (hereFlag) here = this.getHere();
+
 			for (i = 0; i < 2; i++) {
 
-				lock = lockArray[i];
+				lock = localLockArray[i];
 
-				if (lock === 'pivot' && !pivot) lock = 'start';
-				else if (lock === 'path' && !path) lock = 'start';
-				else if (lock === 'mimic' && !mimic) lock = 'start';
+				switch (lock) {
 
-				if (lock === 'mouse') hereFlag = true;
+					case 'pivot' :
+						coord = pivot.currentStampPosition[i];
 
-				localLockArray[i] = lock;
+						if (!this.addPivotOffset) coord -= pivot.currentOffset[i];
+
+						coord += offset[i];
+
+						break;
+
+					case 'path' :
+						pathData = this.getPathData();
+
+						if (pathData) {
+
+							coord = (i) ? pathData.y : pathData.x;
+
+							if (!this.addPathOffset) coord -= path.currentOffset[i];
+						}
+						else coord = start[i] + offset[i];
+
+						break;
+
+					case 'mimic' :
+						if (this.useMimicStart || this.useMimicOffset) {
+
+							coord = mimic.currentStampPosition[i];
+
+							if (this.useMimicStart && this.addOwnStartToMimic) coord += start[i];
+							if (this.useMimicOffset && this.addOwnOffsetToMimic) coord += offset[i];
+
+							if (!this.useMimicStart) coord = coord - mimic.currentStart[i] + start[i];
+							if (!this.useMimicOffset) coord = coord - mimic.currentOffset[i] + offset[i];
+						}
+						else coord = start[i] + offset[i];
+
+						break;
+
+					case 'mouse' :
+						coord = (i === 0) ? here.x : here.y;
+
+						if (isBeingDragged) {
+
+							cache[i] = coord;
+							coord += drag[i];
+							this.dirtyCollision = true;
+						}
+						coord += offset[i];
+
+						break;
+
+					default :
+						coord = start[i] + offset[i];
+				}
+				stamp[i] = coord;
 			}
-		}
-
-		if (hereFlag) here = this.getHere();
-
-		for (i = 0; i < 2; i++) {
-
-			lock = localLockArray[i];
-
-			switch (lock) {
-
-				case 'pivot' :
-					coord = pivot.currentStampPosition[i];
-
-					if (!this.addPivotOffset) coord -= pivot.currentOffset[i];
-
-					coord += offset[i];
-
-					break;
-
-				case 'path' :
-					pathData = this.getPathData();
-
-					if (pathData) {
-
-						coord = (i) ? pathData.y : pathData.x;
-
-						if (!this.addPathOffset) coord -= path.currentOffset[i];
-					}
-					else coord = start[i] + offset[i];
-
-					break;
-
-				case 'mimic' :
-					if (this.useMimicStart || this.useMimicOffset) {
-
-						coord = mimic.currentStampPosition[i];
-
-						if (this.useMimicStart && this.addOwnStartToMimic) coord += start[i];
-						if (this.useMimicOffset && this.addOwnOffsetToMimic) coord += offset[i];
-
-						if (!this.useMimicStart) coord = coord - mimic.currentStart[i] + start[i];
-						if (!this.useMimicOffset) coord = coord - mimic.currentOffset[i] + offset[i];
-					}
-					else coord = start[i] + offset[i];
-
-					break;
-
-				case 'mouse' :
-					coord = (i === 0) ? here.x : here.y;
-
-					if (isBeingDragged) {
-
-						cache[i] = coord;
-						coord += drag[i];
-						this.dirtyCollision = true;
-					}
-					coord += offset[i];
-
-					break;
-
-				default :
-					coord = start[i] + offset[i];
-			}
-			stamp[i] = coord;
 		}
 		this.cleanStampPositionsAdditionalActions()
 
@@ -1346,47 +1490,57 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 
 		this.dirtyStampHandlePositions = false;
 
-		let lockArray = this.lockTo,
-			lock, i, coord, here, myscale,
-			stampHandle = this.currentStampHandlePosition,
-			oldX = stampHandle[0],
-			oldY = stampHandle[1],
+		let stampHandle = this.currentStampHandlePosition,
 			handle = this.currentHandle,
-			pivot = this.pivot,
-			path = this.path,
-			mimic = this.mimic;
+			oldX = stampHandle[0],
+			oldY = stampHandle[1];
 
-		for (i = 0; i < 2; i++) {
+		if (this.noPositionDependencies) {
 
-			lock = lockArray[i];
-
-			if (lock === 'pivot' && !pivot) lock = 'start';
-			if (lock === 'path' && !path) lock = 'start';
-			if (lock === 'mimic' && !mimic) lock = 'start';
-
-			coord = handle[i];
-
-			switch (lock) {
-
-				case 'pivot' :
-					if (this.addPivotHandle) coord += pivot.currentHandle[i];
-					break;
-
-				case 'path' :
-					if (this.addPathHandle) coord += path.currentHandle[i];
-					break;
-
-				case 'mimic' :
-					if (this.useMimicHandle) {
-
-						coord = mimic.currentHandle[i];
-
-						if (this.addOwnHandleToMimic) coord += handle[i];
-					}
-					break;
-			}
-			stampHandle[i] = coord;
+			stampHandle[0] = handle[0];
+			stampHandle[1] = handle[1];
 		}
+		else {
+
+			let lockArray = this.lockTo,
+				lock, i, coord, here, myscale,
+				pivot = this.pivot,
+				path = this.path,
+				mimic = this.mimic;
+
+			for (i = 0; i < 2; i++) {
+
+				lock = lockArray[i];
+
+				if (lock === 'pivot' && !pivot) lock = 'start';
+				if (lock === 'path' && !path) lock = 'start';
+				if (lock === 'mimic' && !mimic) lock = 'start';
+
+				coord = handle[i];
+
+				switch (lock) {
+
+					case 'pivot' :
+						if (this.addPivotHandle) coord += pivot.currentHandle[i];
+						break;
+
+					case 'path' :
+						if (this.addPathHandle) coord += path.currentHandle[i];
+						break;
+
+					case 'mimic' :
+						if (this.useMimicHandle) {
+
+							coord = mimic.currentHandle[i];
+
+							if (this.addOwnHandleToMimic) coord += handle[i];
+						}
+						break;
+				}
+				stampHandle[i] = coord;
+			}
+		}
+		
 		if (this.type === 'Shape') {
 
 			let box = this.localBox;
@@ -1407,13 +1561,16 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 		if (!this.currentCollisionRadius) this.currentCollisionRadius = 0;
 		if (!this.currentSensors) this.currentSensors = [];
 
-		if (this.dirtyCollision) {
+		if (!this.noUserInteraction) {
 
-			this.dirtyCollision = false;
+			if (this.dirtyCollision) {
 
-			this.calculateCollisionRadius();
-			
-			if (this.collides) this.calculateSensors();
+				this.dirtyCollision = false;
+
+				this.calculateCollisionRadius();
+
+				if (this.collides) this.calculateSensors();
+			}
 		}
 
 		return [this.currentCollisionRadius, this.currentSensors];
@@ -1424,99 +1581,169 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 */
 	P.calculateCollisionRadius = function () {
 
-		let stamp = this.currentStampPosition,
-			handle = this.currentStampHandlePosition,
-			dims = this.currentDimensions,
-			scale = this.currentScale;
+		if (!this.noUserInteraction) {
 
-		let radii = [],
-			sx = stamp[0],
-			sy = stamp[1],
-			lx = (sx - (handle[0] * scale)),
-			ty = (sy - (handle[1] * scale)),
-			rx = lx + (dims[0] * scale),
-			by = ty + (dims[1] * scale);
+			let stamp = this.currentStampPosition,
+				handle = this.currentStampHandlePosition,
+				dims = this.currentDimensions,
+				scale = this.currentScale;
 
-		// fails for Elements whose computed height is 0 (because: 'auto'?)
-		radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - ty) * (sy - ty))));
-		radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - by) * (sy - by))));
-		radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - by) * (sy - by))));
-		radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - ty) * (sy - ty))));
+			let radii = [],
+				sx = stamp[0],
+				sy = stamp[1],
+				lx = (sx - (handle[0] * scale)),
+				ty = (sy - (handle[1] * scale)),
+				rx = lx + (dims[0] * scale),
+				by = ty + (dims[1] * scale);
 
-		// we can use this to calculate whether two given artefacts are capable of intersecting, before proceeding to check if they do intersect (assuming they can)
-		this.currentCollisionRadius = Math.ceil(Math.max(...radii));
+			// fails for Elements whose computed height is 0 (because: 'auto'?)
+			radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - ty) * (sy - ty))));
+			radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - by) * (sy - by))));
+			radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - by) * (sy - by))));
+			radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - ty) * (sy - ty))));
+
+			// we can use this to calculate whether two given artefacts are capable of intersecting, before proceeding to check if they do intersect (assuming they can)
+			this.currentCollisionRadius = Math.ceil(Math.max(...radii));
+		}
 	};
 
 	P.calculateSensors = function () {
 
-		let stamp = this.currentStampPosition,
-			handle = this.currentStampHandlePosition,
-			dims = this.currentDimensions,
-			scale = this.currentScale,
-			upend = this.flipUpend,
-			reverse = this.flipReverse;
+		if (!this.noUserInteraction) {
 
-		let rotate = function(x, y, angle, sx, sy) {
+			let stamp = this.currentStampPosition,
+				handle = this.currentStampHandlePosition,
+				dims = this.currentDimensions,
+				scale = this.currentScale,
+				upend = this.flipUpend,
+				reverse = this.flipReverse;
 
-			let arr = [0, 0];
+			let rotate = function(x, y, angle, sx, sy) {
 
-			arr[0] = Math.atan2(y, x);
-			arr[0] += (angle * 0.01745329251);
-			arr[1] = Math.sqrt((x * x) + (y * y));
+				let arr = [0, 0];
 
-			return [Math.round(arr[1] * Math.cos(arr[0])) + sx, Math.round(arr[1] * Math.sin(arr[0])) + sy];
-		};
+				arr[0] = Math.atan2(y, x);
+				arr[0] += (angle * 0.01745329251);
+				arr[1] = Math.sqrt((x * x) + (y * y));
 
-		let sensors = this.currentSensors;
-		sensors.length = 0;
+				return [Math.round(arr[1] * Math.cos(arr[0])) + sx, Math.round(arr[1] * Math.sin(arr[0])) + sy];
+			};
 
-		let roll = this.roll,
-			sx = stamp[0],
-			sy = stamp[1],
-			handleX = (reverse) ? -handle[0] * scale : handle[0] * scale,
-			handleY = (upend) ? -handle[1] * scale : handle[1] * scale,
-			lx = -handleX,
-			ty = -handleY,
-			width = dims[0] * scale,
-			height = dims[1] * scale,
-			rx = (reverse) ? lx - width : lx + width,
-			by = (upend) ? ty - height : ty + height;
+			let sensors = this.currentSensors;
+			sensors.length = 0;
 
-		sensors.push(rotate(lx, ty, roll, sx, sy));
-		sensors.push(rotate(rx, ty, roll, sx, sy));
-		sensors.push(rotate(rx, by, roll, sx, sy));
-		sensors.push(rotate(lx, by, roll, sx, sy));
+			let roll = this.roll,
+				sx = stamp[0],
+				sy = stamp[1],
+				handleX = (reverse) ? -handle[0] * scale : handle[0] * scale,
+				handleY = (upend) ? -handle[1] * scale : handle[1] * scale,
+				lx = -handleX,
+				ty = -handleY,
+				width = dims[0] * scale,
+				height = dims[1] * scale,
+				rx = (reverse) ? lx - width : lx + width,
+				by = (upend) ? ty - height : ty + height;
 
-		let sensorSpacing = this.sensorSpacing || 50,
-			widthSensors = parseInt(width / sensorSpacing, 10),
-			heightSensors = parseInt(height / sensorSpacing, 10),
-			partial, place, i, iz;
+			sensors.push(rotate(lx, ty, roll, sx, sy));
+			sensors.push(rotate(rx, ty, roll, sx, sy));
+			sensors.push(rotate(rx, by, roll, sx, sy));
+			sensors.push(rotate(lx, by, roll, sx, sy));
 
-		if (widthSensors) {
+			let sensorSpacing = this.sensorSpacing || 50,
+				widthSensors = parseInt(width / sensorSpacing, 10),
+				heightSensors = parseInt(height / sensorSpacing, 10),
+				partial, place, i, iz;
 
-			let partial = width / (widthSensors + 1),
-				place = lx;
+			if (widthSensors) {
 
-			for (i = 0; i < widthSensors; i++) {
+				let partial = width / (widthSensors + 1),
+					place = lx;
 
-				place += (reverse) ? -partial : partial;
-				sensors.push(rotate(place, ty, roll, sx, sy));
-				sensors.push(rotate(place, by, roll, sx, sy));
+				for (i = 0; i < widthSensors; i++) {
+
+					place += (reverse) ? -partial : partial;
+					sensors.push(rotate(place, ty, roll, sx, sy));
+					sensors.push(rotate(place, by, roll, sx, sy));
+				}
+			}
+
+			if (heightSensors) {
+
+				let partial = height / (heightSensors + 1),
+					place = ty;
+
+				for (i = 0; i < heightSensors; i++) {
+
+					place += (upend) ? -partial : partial;
+					sensors.push(rotate(lx, place, roll, sx, sy));
+					sensors.push(rotate(rx, place, roll, sx, sy));
+				}
 			}
 		}
+	};
 
-		if (heightSensors) {
+/*
 
-			let partial = height / (heightSensors + 1),
-				place = ty;
+*/
+	P.checkHit = function (items = [], mycell) {
 
-			for (i = 0; i < heightSensors; i++) {
+		if (this.noUserInteraction) return false;
 
-				place += (upend) ? -partial : partial;
-				sensors.push(rotate(lx, place, roll, sx, sy));
-				sensors.push(rotate(rx, place, roll, sx, sy));
-			}
+		if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
+
+			this.cleanPathObject();
+			this.cleanCollisionData();
 		}
+
+		let tests = (!Array.isArray(items)) ?  [items] : items,
+			poolCellFlag = false;
+
+		if (!mycell) {
+
+			mycell = requestCell();
+			poolCellFlag = true;
+		}
+
+		let engine = mycell.engine,
+			stamp = this.currentStampPosition,
+			x = stamp[0],
+			y = stamp[1],
+			tx, ty;
+
+		if (tests.some(test => {
+
+			if (Array.isArray(test)) {
+
+				tx = test[0];
+				ty = test[1];
+			}
+			else if (xta(test, test.x, test.y)) {
+
+				tx = test.x;
+				ty = test.y;
+			}
+			else return false;
+
+			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+
+			mycell.rotateDestination(engine, x, y, this);
+
+			return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
+
+		}, this)) {
+
+			if (poolCellFlag) releaseCell(mycell);
+
+			return {
+				x: tx,
+				y: ty,
+				artefact: this
+			};
+		}
+		
+		if (poolCellFlag) releaseCell(mycell);
+		
+		return false;
 	};
 
 /*
@@ -1681,6 +1908,34 @@ This is just a holding function. The real function is in factory/shape.js as onl
 		this.isBeingDragged = false;
 
 		return this;
+	};
+
+/*
+
+*/
+	P.buildAnchor = function (items = {}) {
+
+		if (this.anchor) this.anchor.demolish();
+
+		if (!items.name) items.name = `${this.name}-anchor`;
+		if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
+
+		this.anchor = makeAnchor(items);
+	};
+
+	P.rebuildAnchor = function () {
+
+		if (this.anchor) this.anchor.build();
+	};
+
+	P.demolishAnchor = function () {
+
+		if (this.anchor) this.anchor.demolish();
+	};
+
+	P.clickAnchor = function () {
+
+		if (this.anchor) this.anchor.click();
 	};
 
 	return P;

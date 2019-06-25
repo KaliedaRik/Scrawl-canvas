@@ -131,6 +131,8 @@ const xcss = new Set(['alignContent', 'alignItems', 'alignSelf', 'animation', 'a
 
 export {
 	version,
+	anchor,
+	anchornames,
 	animation,
 	animationnames,
 	asset,

@@ -31,7 +31,7 @@ let piccy = scrawl.makePicture({
 	strokeStyle: 'gold',
 
 	order: 1,
-	method: 'drawFill',
+	method: 'drawAndFill',
 
 });
 

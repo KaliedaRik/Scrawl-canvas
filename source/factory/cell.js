@@ -1108,6 +1108,43 @@ P.updateHere = function () {
 };
 
 /*
+Returns an array of entity Objects responding 'true' to a checkHit call on them, for the Cell's current .here attribute coordinates.
+
+Used in particular with Canvas.cascadeEventAction() function
+*/
+P.getEntityHits = function () {
+
+	let response = [],
+		results = [],
+		resultNames = [];
+
+	if (this.groupBuckets) {
+
+		this.groupBuckets.forEach(grp => {
+
+			if (grp.visibility) results.push(grp.getAllArtefactsAt(this.here));
+		}, this);
+	}
+
+	if (results.length) {
+
+		results = results.reduce((a, v) => a.concat(v), []);
+
+		results.forEach(item => {
+
+			let art = item.artefact;
+
+			if (art.visibility && resultNames.indexOf(art.name) < 0) {
+
+				resultNames.push(art.name);
+				response.push(art);
+			}
+		})
+	}
+	return response;
+};
+
+/*
 
 */
 P.rotateDestination = function (engine, x, y, entity) {

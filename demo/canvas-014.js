@@ -28,7 +28,7 @@ scrawl.makeWheel({
 	fillStyle: 'blue',
 	strokeStyle: 'darkgray',
 	lineWidth: 2,
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 }).clone({
 	name: 'pin-2',

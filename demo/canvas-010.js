@@ -33,7 +33,7 @@ let viddyOne = scrawl.makePicture({
 	strokeStyle: 'lightgreen',
 
 	order: 1,
-	method: 'drawFill',
+	method: 'drawAndFill',
 
 });
 

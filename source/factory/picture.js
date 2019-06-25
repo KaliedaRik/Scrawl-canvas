@@ -470,11 +470,14 @@ P.cleanPathObject = function () {
 
 	this.dirtyPathObject = false;
 
-	if (!this.pasteArray) this.preparePasteObject();
+	if (!this.noPathUpdates || !this.pathObject) {
 
-	let p = this.pathObject = new Path2D();
+		if (!this.pasteArray) this.preparePasteObject();
 
-	p.rect(...this.pasteArray);
+		let p = this.pathObject = new Path2D();
+
+		p.rect(...this.pasteArray);
+	}
 };
 
 /*
@@ -490,27 +493,28 @@ P.fill = function (engine) {
 	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
-P.drawFill = function (engine) {
+P.drawAndFill = function (engine) {
 
 	engine.stroke(this.pathObject);
 	this.currentHost.clearShadow();
 	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
-P.fillDraw = function (engine) {
+P.fillAndDraw = function (engine) {
 
-	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+	engine.stroke(this.pathObject);
 	this.currentHost.clearShadow();
+	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 	engine.stroke(this.pathObject);
 };
 
-P.floatOver = function (engine) {
+P.drawThenFill = function (engine) {
 
 	engine.stroke(this.pathObject);
 	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
-P.sinkInto = function (engine) {
+P.fillThenDraw = function (engine) {
 
 	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 	engine.stroke(this.pathObject);

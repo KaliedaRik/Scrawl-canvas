@@ -38,22 +38,12 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
-		// checkHitMethod: 'path',
-
-/*
-
-*/
 		flipReverse: false,
 
 /*
 
 */
 		flipUpend: false,
-
-/*
-
-*/
-		fastStamp: false,
 
 /*
 
@@ -65,6 +55,14 @@ All factories using the position mixin will add these to their prototype objects
 */
 		lockFillStyleToEntity: false,
 		lockStrokeStyleToEntity: false,
+
+/*
+
+*/
+		onEnter: null,
+		onLeave: null,
+		onDown: null,
+		onUp: null,
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -232,6 +230,11 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 
 		if (!items.group) items.group = currentGroup;
 
+		this.onEnter = defaultNonReturnFunction;
+		this.onLeave = defaultNonReturnFunction;
+		this.onDown = defaultNonReturnFunction;
+		this.onUp = defaultNonReturnFunction;
+
 		this.set(items);
 
 		this.midInitActions(items);
@@ -291,6 +294,9 @@ Overwrites the clone function in mixin/base.js
 
 		delete this.source;
 
+		let tempPathObject = this.pathObject;
+		delete this.pathObject;
+
 		copied = JSON.parse(JSON.stringify(this));
 
 		if (tempAsset) this.asset = tempAsset;
@@ -298,6 +304,8 @@ Overwrites the clone function in mixin/base.js
 		if (tempPivot) this.pivot = tempPivot;
 		if (tempMimic) this.mimic = tempMimic;
 		if (tempPath) this.path = tempPath;
+
+		this.pathObject = tempPathObject;
 
 		copied.name = (items.name) ? items.name : generateUuid();
 
@@ -412,7 +420,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 		engine.fill(this.pathObject, this.winding);
 	};
 
-	P.drawFill = function (engine) {
+	P.drawAndFill = function (engine) {
 
 		let p = this.pathObject;
 
@@ -421,7 +429,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 		engine.fill(p, this.winding);
 	};
 
-	P.fillDraw = function (engine) {
+	P.fillAndDraw = function (engine) {
 
 		let p = this.pathObject;
 
@@ -431,7 +439,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 		engine.stroke(p);
 	};
 
-	P.floatOver = function (engine) {
+	P.drawThenFill = function (engine) {
 
 		let p = this.pathObject;
 
@@ -439,7 +447,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 		engine.fill(p, this.winding);
 	};
 
-	P.sinkInto = function (engine) {
+	P.fillThenDraw = function (engine) {
 
 		let p = this.pathObject;
 
@@ -466,7 +474,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 
 		if (this.visibility) {
 
-			if (this.filters && this.filters.length) return this.filteredStamp();
+			if (!this.noFilters && this.filters && this.filters.length) return this.filteredStamp();
 			else return this.regularStamp();
 		}
 		else return Promise.resolve(false);
@@ -500,6 +508,8 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 				releaseCell(filterHost);
 
 				currentEngine.restore();
+
+				self.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
 			};
 
 			// save current host data into a set of vars, ready for restoration after web worker completes or fails
@@ -517,8 +527,8 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 				h = filterElement.height = currentDimensions[1];
 
 			// Switch off fast stamp
-			let oldFastStamp = self.fastStamp;
-			self.fastStamp = false;
+			let oldNoCanvasEngineUpdates = self.noCanvasEngineUpdates;
+			self.noCanvasEngineUpdates = false;
 
 			// stamp the entity onto the blank canvas
 			self.regularStampSynchronousActions();
@@ -601,66 +611,10 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 
 			dest.rotateDestination(engine, x, y, this);
 
-			if (!this.fastStamp) dest.setEngine(this);
+			if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
 			this[this.method](engine);
 		}
-	};
-
-/*
-
-*/
-	P.checkHit = function (items = []) {
-
-		if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
-
-			this.cleanPathObject();
-			this.cleanCollisionData();
-		}
-
-		let tests = (!Array.isArray(items)) ?  [items] : items;
-
-		let mycell = requestCell(),
-			engine = mycell.engine,
-			stamp = this.currentStampPosition,
-			x = stamp[0],
-			y = stamp[1],
-			tx, ty;
-
-		if (tests.some(test => {
-
-			if (Array.isArray(test)) {
-
-				tx = test[0];
-				ty = test[1];
-			}
-			else if (xta(test, test.x, test.y)) {
-
-				tx = test.x;
-				ty = test.y;
-			}
-			else return false;
-
-			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
-
-			mycell.rotateDestination(engine, x, y, this);
-
-			return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
-
-		}, this)) {
-
-			releaseCell(mycell);
-
-			return {
-				x: tx,
-				y: ty,
-				artefact: this
-			};
-		}
-		
-		releaseCell(mycell);
-		
-		return false;
 	};
 
 	return P;

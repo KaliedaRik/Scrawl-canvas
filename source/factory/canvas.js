@@ -1,8 +1,8 @@
 /*
 # Canvas factory
 */
-import { cell, constructors } from '../core/library.js';
-import { rootElements, setRootElementsSort, setCurrentCanvas, domShow } from '../core/document.js';
+import { cell, constructors, artefact } from '../core/library.js';
+import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
@@ -42,6 +42,9 @@ const Canvas = function (items = {}) {
 	this.initializeDomLayout(items);
 
 	this.set(this.defs);
+
+	if (!items.label) items.label = `${this.name} canvas element`;
+
 	this.set(items);
 
 	this.cleanDimensions();
@@ -84,6 +87,25 @@ const Canvas = function (items = {}) {
 		// even if it is a child of a stack element, it needs to be recorded as a 'rootElement'
 		pushUnique(rootElements, this.name);
 		setRootElementsSort();
+
+		// Accessibility
+		if (!el.getAttribute('role')) el.setAttribute('role', 'img');
+
+		let ariaLabel = document.createElement('div');
+		ariaLabel.id = `${this.name}-ARIA-label`;
+		ariaLabel.textContent = this.label;
+		this.ariaLabelElement = ariaLabel;
+		scrawlCanvasHold.appendChild(ariaLabel);
+		el.setAttribute('aria-labelledby', ariaLabel.id);
+
+		let ariaDescription = document.createElement('div');
+		ariaDescription.id = `${this.name}-ARIA-description`;
+		ariaDescription.textContent = this.description;
+		this.ariaDescriptionElement = ariaDescription;
+		scrawlCanvasHold.appendChild(ariaDescription);
+		el.setAttribute('aria-describedby', ariaDescription.id);
+
+		this.cleanAria();
 	}
 
 	this.apply();
@@ -112,25 +134,38 @@ P = domMix(P);
 */
 let defaultAttributes = {
 
-	/*
-	TO TEST - position needs to change to 'absolute' when Canvas element is an artefact associated with a stack. But canvas elements can also be created independently of any stack, in which case position:relative should suffice
-	*/
+/*
+TO TEST - position needs to change to 'absolute' when Canvas element is an artefact associated with a stack. But canvas elements can also be created independently of any stack, in which case position:relative should suffice
+*/
 	position: 'relative',
 
-	/*
+/*
 
-	*/
+*/
 	trackHere: true,
 
-	/*
+/*
 
-	*/
+*/
 	dirtyCells: true,
 
-	/*
+/*
 
-	*/
+*/
 	fit: 'none',
+
+/*
+Accessibility attributes
+
+* __title__ attribute is applied to the &lt;canvas> element's 'title' attribute, and will appear as a tooltip when the user hovers over the canvas
+
+* __label__ and __description__ attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas> element using 'aria-labelledby' and 'aria-describedby' attributes
+
+If no label value is supplied to the canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual .set() functionality.
+*/
+	title: '',
+	label: '',
+	description: '',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -198,6 +233,27 @@ S.backgroundColor = function (item) {
 			backgroundColor: item
 		});
 	}
+};
+
+/*
+
+*/
+S.title = function (item) {
+
+	this.title = item;
+	this.dirtyAria = true;
+};
+
+S.label = function (item) {
+
+	this.label = item;
+	this.dirtyAria = true;
+};
+
+S.description = function (item) {
+
+	this.description = item;
+	this.dirtyAria = true;
 };
 
 /*
@@ -464,6 +520,9 @@ P.show = function(){
 		.then(() => {
 
 			domShow();
+
+			if (this.dirtyAria) this.cleanAria();
+
 			resolve(true);
 		})
 		.catch(() => resolve(false));
@@ -531,6 +590,121 @@ P.cleanCells = function () {
 	this.cellBatchesCompile = tempCompile.reduce((a, v) => a.concat(v), []);
 	this.cellBatchesShow = tempShow.reduce((a, v) => a.concat(v), []);
 };
+
+/*
+Trigger event action responses in (visible) entitys at the current mouse/touch 
+
+Trigger event action responses in (visible) entitys at the current canvas element _here_ attribute coordinates
+
+* Available cascadeEventAction arguments are: 'enter', 'leave', 'down', or 'up'
+
+* A 'move' argument can also be used, which will trigger enter and leave actions on the entitys, as appropriate to each
+
+Function returns an Array of name Strings for the entitys at the current mouse cursor coordinates 
+*/
+P.cascadeEventAction = function (action) {
+
+	if (!this.currentActiveEntityNames) this.currentActiveEntityNames = [];
+
+	let currentActiveEntityNames = this.currentActiveEntityNames,
+		testActiveEntityObjects = [],
+		testActiveEntityNames = [],
+		newActiveEntityObjects = [],
+		newActiveEntityNames = [],
+		knownActiveEntityObjects = [],
+		knownActiveEntityNames = [];
+
+	// 1. Find all entitys currently colliding with the mouse/touch coordinate over the canvas
+	this.cells.forEach(name => {
+
+		let myCell = cell[name];
+
+		if (myCell && (myCell.shown || myCell.isBase)) testActiveEntityObjects.push(myCell.getEntityHits());
+	});
+
+	testActiveEntityObjects = testActiveEntityObjects.reduce((a, v) => a.concat(v), []);
+
+	// 2. Process the returned test results
+	testActiveEntityObjects.forEach(item => {
+
+		let name = item.name;
+
+		if (testActiveEntityNames.indexOf(name) < 0) {
+
+			testActiveEntityNames.push(name);
+
+			if (currentActiveEntityNames.indexOf(name) < 0) {
+
+				newActiveEntityObjects.push(item);
+				newActiveEntityNames.push(name);
+			}
+			else {
+
+				knownActiveEntityObjects.push(item);
+				knownActiveEntityNames.push(name);
+			}
+		}
+	});
+
+	let currentActiveEntityObjects = newActiveEntityObjects.concat(knownActiveEntityObjects);
+
+	// 3. Trigger the required action on each affected entity
+	let doLeave = function () {
+
+		if (currentActiveEntityNames.length) {
+
+			newActiveEntityNames.forEach(name => removeItem(currentActiveEntityNames, name));
+			knownActiveEntityNames.forEach(name => removeItem(currentActiveEntityNames, name));
+
+			currentActiveEntityNames.forEach(name => {
+
+				let myArt = artefact[name];
+
+				if (myArt) myArt.onLeave();
+			});
+		}
+	};
+
+	switch (action) {
+
+		case 'down' :
+			currentActiveEntityObjects.forEach(art => art.onDown());
+			break;
+
+		case 'up' :
+			currentActiveEntityObjects.forEach(art => art.onUp());
+			break;
+
+		case 'enter' :
+			newActiveEntityObjects.forEach(art => art.onEnter());
+			break;
+
+		case 'leave' :
+			doLeave();
+			break;
+
+		case 'move' :
+			doLeave();
+			newActiveEntityObjects.forEach(art => art.onEnter());
+			break;
+	}
+
+	// 4. Cleanup and return
+	this.currentActiveEntityNames = newActiveEntityNames.concat(knownActiveEntityNames);
+
+	return this.currentActiveEntityNames;
+};
+
+/*
+
+*/
+P.cleanAria = function () {
+
+	this.dirtyAria = false;
+	this.domElement.setAttribute('title', this.title);
+	this.ariaLabelElement.textContent = this.label;
+	this.ariaDescriptionElement.textContent = this.description;
+}
 
 
 /*

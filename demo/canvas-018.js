@@ -59,7 +59,7 @@ scrawl.makePhrase({
 	handleX: 'center',
 	handleY: 'center',
 
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 	justify: 'center',
 	lineHeight: 1,

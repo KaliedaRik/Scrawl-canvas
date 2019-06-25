@@ -19,7 +19,7 @@ canvas.set({
 scrawl.makeOval({
 	name: 'circle',
 	fillStyle: 'lightGreen',
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 	startX: 20,
 	startY: 20,
 	radius: 40,
@@ -63,7 +63,7 @@ scrawl.makeRectangle({
 	rectangleHeight: 80,
 	radius: '50%',
 	fillStyle: 'lightblue',
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 	showBoundingBox: true,
 	useAsPath: true,
@@ -188,7 +188,7 @@ scrawl.makeBezier({
 scrawl.makeTetragon({
 	name: 'square',
 	fillStyle: 'lightGreen',
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 	startX: 20,
 	startY: 750,
 	radius: 40,
@@ -229,7 +229,7 @@ scrawl.makePolygon({
 	sideLength: 60,
 	sides: 3,
 	fillStyle: 'lightblue',
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 	showBoundingBox: true,
 	useAsPath: true,
@@ -260,7 +260,7 @@ scrawl.makeStar({
 	radius2: 50,
 	points: 5,
 	fillStyle: 'linen',
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 
 	showBoundingBox: true,
 	useAsPath: true,

@@ -834,7 +834,7 @@ const setScrawlPath = function (url) {
 };
 
 /*
-Create a holding area within the DOM (but very offscreen) which can be used by (for example) the Phrase entity for calculating font heights
+Holding area - mainly for ARIA content, but also used by Phrase entity for font height calculations
 */
 let scrawlCanvasHold = document.createElement('div');
 scrawlCanvasHold.style.padding = 0;
@@ -846,6 +846,15 @@ scrawlCanvasHold.style.position = 'absolute';
 scrawlCanvasHold.style.top = '-5000px';
 scrawlCanvasHold.style.left = '-5000px';
 document.body.appendChild(scrawlCanvasHold);
+
+/*
+Navigation area - canvas anchor links
+*/
+let scrawlNavigationHold = document.createElement('nav');
+scrawlNavigationHold.style.position = 'absolute';
+scrawlNavigationHold.style.top = '-5000px';
+scrawlNavigationHold.style.left = '-5000px';
+document.body.prepend(scrawlNavigationHold);
 
 export {
 	getCanvases,
@@ -878,5 +887,7 @@ export {
 	domShow,
 
 	setScrawlPath,
+	
 	scrawlCanvasHold,
+	scrawlNavigationHold,
 };

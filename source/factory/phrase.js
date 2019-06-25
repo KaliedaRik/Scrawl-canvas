@@ -1066,33 +1066,36 @@ P.postCloneActions = function (clone, items) {
 };
 
 /*
-Fonts don't have accessible paths...
+Fonts don't have accessible paths
 */
 P.cleanPathObject = function () {
 
 	this.dirtyPathObject = false;
 
-	if (this.dirtyFont && this.fontAttributes) {
+	if (!this.noPathUpdates || !this.pathObject) {
+		
+		if (this.dirtyFont && this.fontAttributes) {
 
-		this.dirtyFont = false;
-		this.fontAttributes.buildFont(this.scale);
-		this.dirtyText = true;
+			this.dirtyFont = false;
+			this.fontAttributes.buildFont(this.scale);
+			this.dirtyText = true;
+		}
+		if (this.dirtyText) this.buildText();
+
+		if (this.dirtyHandle) this.cleanHandle();
+
+		let p = this.pathObject = new Path2D();
+		
+		let handle = this.currentHandle,
+			dims = this.currentDimensions,
+			scale = this.currentScale,
+			x = -handle[0] * scale,
+			y = -handle[1] * scale,
+			w = dims[0] * scale,
+			h = dims[1] * scale;
+
+		p.rect(x, y, w, h);
 	}
-	if (this.dirtyText) this.buildText();
-
-	if (this.dirtyHandle) this.cleanHandle();
-
-	let p = this.pathObject = new Path2D();
-	
-	let handle = this.currentHandle,
-		dims = this.currentDimensions,
-		scale = this.currentScale,
-		x = -handle[0] * scale,
-		y = -handle[1] * scale,
-		w = dims[0] * scale,
-		h = dims[1] * scale;
-
-	p.rect(x, y, w, h);
 };
 
 /*
@@ -1110,7 +1113,7 @@ P.regularStampSynchronousActions = function () {
 
 		engine = dest.engine;
 
-		if (!this.fastStamp) dest.setEngine(this);
+		if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
 		if (this.method === 'none') {
 
@@ -1228,26 +1231,27 @@ P.stamper = {
 
 		engine.fillText(...data);
 	},
-	drawFill: function (engine, entity, data) { 
+	drawAndFill: function (engine, entity, data) { 
 
 		engine.strokeText(...data);
 		entity.currentHost.clearShadow();
 		engine.fillText(...data);
 		entity.currentHost.restoreShadow(entity);
 	},
-	fillDraw: function (engine, entity, data) { 
+	fillAndDraw: function (engine, entity, data) { 
 
-		engine.fillText(...data);
+		engine.strokeText(...data);
 		entity.currentHost.clearShadow();
+		engine.fillText(...data);
 		engine.strokeText(...data);
 		entity.currentHost.restoreShadow(entity);
 	},
-	floatOver: function (engine, entity, data) { 
+	drawThenFill: function (engine, entity, data) { 
 
 		engine.strokeText(...data);
 		engine.fillText(...data);
 	},
-	sinkInto: function (engine, entity, data) { 
+	fillThenDraw: function (engine, entity, data) { 
 
 		engine.fillText(...data);
 		engine.strokeText(...data);

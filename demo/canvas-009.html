@@ -12,7 +12,8 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 009</h1>
-  <h2>Pattern styles; use a canvas cell as a source for an animated pattern</h2>
+  <h2>Pattern styles; Entity web link anchors; Dynamic accessibility</h2>
+  <h3>Move cursor over canvas to see dynamic hover and accessibility functionality<br />Click on an entity to open a new web page</h3>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
@@ -26,6 +27,17 @@
       <li>Create a new cell and add it to the canvas</li>
       <li>Animate a pattern-filled block in the new cell</li>
       <li>Use the new cell as the source for a Pattern style</li>
+    </ul>
+
+    <p>Additionally, using this demo to check zoned canvas User Interactions</p>
+    <ul>
+      <li>Define onEnter and onLeave functions on the first defined block, to change its linewidth attribute when the mouse cursor hovers over it</li>
+      <li>Check that the functionality works by moving the cursor over and away from the top-left-hand block</li>
+      <li>Check that the onEnter and onLeave functions successfully clone to the other block entitys</li>
+    </ul>
+    <ul>
+      <li>Define anchor objects fort each entity, and functionality to action mouse clicks on them</li>
+      <li>Check that clicking on an entity results in an appropriate Wikipedia page opening in a newe browser tab</li>
     </ul>
   </div>
 

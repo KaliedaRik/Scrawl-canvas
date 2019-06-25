@@ -1401,17 +1401,20 @@ P.cleanPathObject = function () {
 
 	this.dirtyPathObject = false;
 
-	this.calculateLocalPath(this.pathDefinition);
-	this.cleanStampPositionsAdditionalActions();
+	if (!this.noPathUpdates || !this.pathObject) {
 
-	if (this.dirtyDimensions) this.cleanDimensions();
-	if (this.dirtyHandle) this.cleanHandle();
-	if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
+		this.calculateLocalPath(this.pathDefinition);
+		this.cleanStampPositionsAdditionalActions();
 
-	let handle = this.currentStampHandlePosition,
-		controlledLine = this.controlledLineOffset;
+		if (this.dirtyDimensions) this.cleanDimensions();
+		if (this.dirtyHandle) this.cleanHandle();
+		if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
-	this.pathObject = new Path2D(`m${-handle[0] + controlledLine[0]},${-handle[1] + controlledLine[1]}${this.localPath}`);
+		let handle = this.currentStampHandlePosition,
+			controlledLine = this.controlledLineOffset;
+
+		this.pathObject = new Path2D(`m${-handle[0] + controlledLine[0]},${-handle[1] + controlledLine[1]}${this.localPath}`);
+	}
 };
 
 /*
@@ -1571,7 +1574,7 @@ P.fill = function (engine) {
 	if (this.showBoundingBox) this.drawBoundingBox(engine);
 },
 
-P.drawFill = function (engine) {
+P.drawAndFill = function (engine) {
 
 	let p = this.pathObject;
 
@@ -1581,7 +1584,7 @@ P.drawFill = function (engine) {
 	if (this.showBoundingBox) this.drawBoundingBox(engine);
 },
 
-P.fillDraw = function (engine) {
+P.fillAndDraw = function (engine) {
 
 	let p = this.pathObject;
 
@@ -1592,7 +1595,7 @@ P.fillDraw = function (engine) {
 	if (this.showBoundingBox) this.drawBoundingBox(engine);
 },
 
-P.floatOver = function (engine) {
+P.drawThenFill = function (engine) {
 
 	let p = this.pathObject;
 
@@ -1601,7 +1604,7 @@ P.floatOver = function (engine) {
 	if (this.showBoundingBox) this.drawBoundingBox(engine);
 },
 
-P.sinkInto = function (engine) {
+P.fillThenDraw = function (engine) {
 
 	let p = this.pathObject;
 

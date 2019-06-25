@@ -35,25 +35,25 @@ scrawl.makeBlock({
 	sharedState: true
 
 }).clone({
-	name: 'myblock-drawFill',
+	name: 'myblock-drawAndFill',
 	startX: 325,
-	method: 'drawFill',
+	method: 'drawAndFill',
 
 }).clone({
-	name: 'myblock-fillDraw',
+	name: 'myblock-fillAndDraw',
 	startX: 475,
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 	sharedState: true
 
 }).clone({
-	name: 'myblock-floatOver',
+	name: 'myblock-drawThenFill',
 	startY: 175,
-	method: 'floatOver'
+	method: 'drawThenFill'
 
 }).clone({
-	name: 'myblock-sinkInto',
+	name: 'myblock-fillThenDraw',
 	startX: 325,
-	method: 'sinkInto',
+	method: 'fillThenDraw',
 	sharedState: true
 
 }).clone({
@@ -91,25 +91,25 @@ scrawl.makeWheel({
 	sharedState: true
 
 }).clone({
-	name: 'mywheel-drawFill',
+	name: 'mywheel-drawAndFill',
 	startX: 175,
-	method: 'drawFill',
+	method: 'drawAndFill',
 
 }).clone({
-	name: 'mywheel-fillDraw',
+	name: 'mywheel-fillAndDraw',
 	startX: 25,
-	method: 'fillDraw',
+	method: 'fillAndDraw',
 	sharedState: true
 
 }).clone({
-	name: 'mywheel-floatOver',
+	name: 'mywheel-drawThenFill',
 	startY: 325,
-	method: 'floatOver'
+	method: 'drawThenFill'
 
 }).clone({
-	name: 'mywheel-sinkInto',
+	name: 'mywheel-fillThenDraw',
 	startX: 175,
-	method: 'sinkInto',
+	method: 'fillThenDraw',
 	sharedState: true
 
 }).clone({
@@ -120,13 +120,13 @@ scrawl.makeWheel({
 
 
 // Change the fill and stroke styles on one of the blocks, and one of the wheels, and any entitys sharing their respective states
-scrawl.library.artefact['myblock-fillDraw'].set({
+scrawl.library.artefact['myblock-fillAndDraw'].set({
 	fillStyle: 'blue',
 	strokeStyle: 'coral'
 });
 
 // Entitys can be found in both the 'artefact' and 'entity' sections of the library
-scrawl.library.entity['mywheel-fillDraw'].set({
+scrawl.library.entity['mywheel-fillAndDraw'].set({
 	fillStyle: 'blue',
 	strokeStyle: 'coral'
 });

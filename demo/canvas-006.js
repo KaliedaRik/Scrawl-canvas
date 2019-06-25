@@ -21,6 +21,14 @@ let starling = scrawl.makeWheel({
 	handleY: 'center',
 	method: 'fill',
 	fillStyle: 'white',
+
+	noDeltaUpdates: true,
+	noPositionDependencies: true,
+	noFilters: true,
+	noUserInteraction: true,
+
+	// temp - just to see that it works
+	// noPathUpdates: true,
 });
 
 let starCount = 0,
@@ -37,7 +45,7 @@ let makeStars = function (buildNumber) {
 
 		star = starling.clone({
 			name: `star_${starCount}`,
-			fastStamp: true,
+			noCanvasEngineUpdates: true,
 			sharedState: true,
 		});
 
