@@ -281,10 +281,19 @@ P.reverse = function () {
 */
 const vectorPool = [];
 
+let vectorPoolCount = 0;
+
+const vectorPoolLength = function () {
+
+	return `${vectorPool.length} (from ${vectorPoolCount} generated)`;
+}
+
 const requestVector = function (x, y, z) {
 
 	if (!vectorPool.length) {
 		vectorPool.push(new Vector());
+
+		vectorPoolCount++;
 	}
 
 	let v = vectorPool.shift();
@@ -323,4 +332,5 @@ export {
 	requestVector,
 	releaseVector,
 	checkVector,
+	vectorPoolLength,
 };

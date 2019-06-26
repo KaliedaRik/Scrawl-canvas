@@ -30,11 +30,13 @@ cell.set({
 });
 
 
+// Make a separate collisions group for our element
 let testers = scrawl.makeGroup({
 
 	name: 'testers',
 	host: 'mystack',
 });
+
 
 // Setup the main element
 element.set({
@@ -114,6 +116,7 @@ let checkHits = function () {
 			fillStyle: baseColor
 		}));
 
+		// BUG: for some reason, the getArtefactCollisions function is interfering with the drag zone functionality - meaning that when it is running, we can't drag our element around the stack/canvas. Comment it out and the drag functionality works fine.
 		hits = grid.getArtefactCollisions(element);
 
 		hits.forEach(hit => hit.artefact.set({
@@ -130,13 +133,29 @@ let report = function () {
 		testTime, testNow,
 		testMessage = document.querySelector('#reportmessage');
 
+	// BUG: the final positioning, dimensions, scaling etc of DOM elements often don't settle down until after the first Display cycle completes, by which time certain internal structures (such as, in this case, the sensor coordinates for our element) have been set to old values. Which for this demo means that the element sensor data doesn't translate over to the canvas until after a user interaction of some sort brings everything back into synchronicity
+
+	// The simplest way to correct this BUG (for now) is to a pply a .set() call on the element, changing one attribute a small amount. We only need to do this once, after the first Display cycle has completed.
+	let firstRun = true;
+
 	return function () {
+
+		if (firstRun) {
+
+			element.set({
+				roll: 11,
+			});
+
+			firstRun = false;
+		}
 
 		testNow = Date.now();
 		testTime = testNow - testTicker;
 		testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+Element corner data: ${element.currentCornersData.join()}
+Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
 	};
 }();
 
@@ -204,9 +223,5 @@ document.querySelector('#pitch').value = 20;
 document.querySelector('#yaw').value = 30;
 document.querySelector('#scale').value = 1;
 document.querySelector('#perspective').value = 1200;
-
-
-// Trigger a click event to show the initial sensor positions - ack! not working!
-// element.domElement.click();
 
 console.log(scrawl.library)

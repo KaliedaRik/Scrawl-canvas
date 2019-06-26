@@ -18,13 +18,14 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 
 ### ROADMAP - Summer 2019:
 
-1. Tabbing through portions of the canvas display
-* decide whether it's worth the effort (eg if there's more than one anchor in the canvas)
-* if yes, how to achieve it?
+1. Tabbing through portions of the canvas display (DONE)
+* Using the tab key on demo Canvas-009 - the anchor links show up (in Chrome on MacOS) and, when then pressing the return button, the relevant link opens in a new browser tab/window.
+* I don't think I need to do more than this at the moment. Tabbing should be restricted to things users can do like filling in a form or clicking a button.
+* Creating canvas-based forms - we don't need to do this because we can use regular HTML form elements in a Scrawl-canvas stack which, as part of the DOM, should be tabbable in the normal way. We should be able to add canvas-based decoration to form elements by creating entitys and telling them to mimic the form elements ... may be worth creating a form-based demo for testing some subtle canvas animation effects? For example tying onfocus/onblur event listeners to the form elements, which will in turn trigger Scrawl-canvas tweens eg moving an arrow to point to the currently focussed element?
 
-2. Analytics
-* should be able to plug in eg Google Analytics using existing functionality such as tween actions, canvas.cascadeEventAction, etc
-* see what else could be added? Is there a need to centralize/coordinate reporting, or can that be left to the user?
+2. Analytics (DONE)
+* Adapted demo Canvas-009 to use (development version of) Google Analytics; created a named tracker (to see if I could); and sent GA hits as part of the existing onAction hook functions to measure when mouse cursor starts/ends hovering over a block entity, and when user clicks on the block to open a Wikipedia web page.
+* Also added functionality so we can capture canvas-related link clicks performed via assistive technology eg tab/return keystrokes.
 
 3. Text manipulation
 * is there a need for users to be able to copy/paste text from/to Phrase entitys? If yes, how to do it?

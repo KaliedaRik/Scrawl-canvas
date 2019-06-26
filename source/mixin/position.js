@@ -1689,10 +1689,9 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 
 		if (this.noUserInteraction) return false;
 
-		if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
+		if (!this.pathObject || this.dirtyPathObject) {
 
 			this.cleanPathObject();
-			this.cleanCollisionData();
 		}
 
 		let tests = (!Array.isArray(items)) ?  [items] : items,

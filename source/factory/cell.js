@@ -1183,6 +1183,12 @@ P.rotateDestination = function (engine, x, y, entity) {
 ## Cell pool
 */
 const cellPool = [];
+let cellPoolCount = 0;
+
+const cellPoolLength = function () {
+
+	return `${cellPool.length} (from ${cellPoolCount} generated)`;
+}
 
 /*
 
@@ -1195,6 +1201,7 @@ const requestCell = function () {
 			name: `pool_${generateUuid()}`,
 			isPool: true
 		}));
+		cellPoolCount++;
 	}
 
 	return cellPool.shift();
@@ -1223,6 +1230,7 @@ Also store constructor in library - clone functionality expects to find it there
 constructors.Cell = Cell;
 
 export {
+	cellPoolLength,
 	makeCell,
 	requestCell,
 	releaseCell,

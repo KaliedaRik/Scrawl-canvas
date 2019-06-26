@@ -309,6 +309,9 @@ Overwrites the clone function in mixin/base.js
 
 		copied.name = (items.name) ? items.name : generateUuid();
 
+		if (this.anchor && this.anchor.clickAction) copied.anchor.clickAction = this.anchor.clickAction;
+		if (items.anchor) copied.anchor = mergeOver(copied.anchor, items.anchor);
+
 		this.group = grp;
 		this.currentHost = host;
 

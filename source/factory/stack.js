@@ -424,14 +424,6 @@ P.demolish = function (removeFromDom = false) {
 	return true;
 };
 
-/*
-
-*/
-// P.getArtefactAtCursor = function () {
-
-// 	return group[this.name].getArtefactAt(this.here);
-// };
-
 
 /*
 ## Exported factory function

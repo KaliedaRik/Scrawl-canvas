@@ -659,7 +659,11 @@ P.getArtefactAt = function (items) {
 
 			let result = art.checkHit(items, myCell);
 
-			if (result) return result;
+			if (result) {
+
+				releaseCell(myCell);
+				return result;
+			}
 		}
 	}
 
@@ -721,8 +725,7 @@ P.getArtefactCollisions = function (art) {
 	// Return empty array if the artefact argument has not been setup to check for collisions
 	if (!art.collides) return [];
 
-	let host = artefact[this.host],
-		artBuckets = this.artefactBuckets,
+	let artBuckets = this.artefactBuckets,
 		targets = [],
 		target, i, iz;
 

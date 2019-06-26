@@ -287,6 +287,9 @@ Overwrites the clone function in mixin/base.js
 
 		copied.name = (items.name) ? items.name : generateUuid();
 
+		if (this.anchor && this.anchor.clickAction) copied.anchor.clickAction = this.anchor.clickAction;
+		if (items.anchor) copied.anchor = mergeOver(copied.anchor, items.anchor);
+
 		this.currentHost = host;
 		this.group = grp;
 		this.pathCorners = corners;
@@ -469,6 +472,9 @@ Overwrites the clone function in mixin/base.js
 				results = [],
 				client;
 
+			if (!this.currentCornersData) this.currentCornersData = [];
+			let cornerData = this.currentCornersData;
+
 			this.pathCorners.forEach(point => {
 
 				client = point.getClientRects();
@@ -485,9 +491,6 @@ Overwrites the clone function in mixin/base.js
 			p.lineTo(results[6], results[7]);
 			p.closePath();
 
-			if (!this.currentCornersData) this.currentCornersData = [];
-
-			let cornerData = this.currentCornersData;
 			cornerData.length = 0;
 			cornerData.push(...results);
 		}
@@ -938,8 +941,15 @@ Overwrites mixin/position.js function
 
 		this.prepareStamp();
 
+		let self = this;
+
 		this.stamp()
-		.then(() => domShow(this.name))
+		.then(() => {
+
+			domShow(self.name);
+			self.dirtyPathObject = true;
+			self.cleanPathObject();
+		})
 		.catch(() => {});
 	};
 

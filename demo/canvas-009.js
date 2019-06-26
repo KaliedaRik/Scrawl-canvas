@@ -2,6 +2,25 @@ import scrawl from '../source/scrawl.js'
 scrawl.setScrawlPath('/source');
 
 
+/*
+Google Analytics code - loaded in the normal way through markup in the canvas-009.html file (lines 11-21)
+
+Create a new tracker to handle canvas interaction, and set some attributes on it. 
+
+We can then incorporate the tracker's functionality in our various hook functions defined further down in this script
+*/ 
+let ga = window[window['GoogleAnalyticsObject'] || 'ga'],
+	myTracker;
+
+ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
+
+ga(function() {
+	myTracker = ga.getByName('demoCanvasTracker');
+	myTracker.set('transport', 'beacon');
+	myTracker.set('campaignKeyword', 'Scrawl-canvas demo');
+});
+
+
 // Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
@@ -107,35 +126,56 @@ scrawl.makeBlock({
 	shadowBlur: 3,
 	shadowColor: 'black',
 
-	// Defining an anchor (href) link which can be tied to user interaction (in this case, mouse clicks) through events defined further down in this script
+	// Defining an anchor (href) link which can be tied to user interaction (in this case, mouse clicks on the canvas element) through events defined further down in this script
 	anchor: {
+		name: 'wikipedia-water-link',
 		href: 'https://en.wikipedia.org/wiki/Water',
 		description: 'Link to the Wikipedia article on water (opens in new tab)',
+
+		/*
+		The clickAction attribute is a fallback, for cases where the user 'clicks' on the anchor element hidden at the top of the web page using the keyboard (tab, return) or other assistive technology, rather than by clicking on the canvas block entity itself.
+
+		The function returns a string which Scrawl-canvas will add to the anchor's 'onclick' attribute when it creates the anchor element dynamically and adds it to the DOM.
+		*/
+		clickAction: function () {
+			return `ga('send', 'event', 'Outbound link', 'click', '${this.href}')`;
+		},
 	},
 
 	// Defining additional accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas> element. Note that 'this' refers to the entity object
 	onEnter: function () {
+
 		this.set({
 			lineWidth: 30,
 		});
+
 		canvas.set({
 			title: `${this.name} tile`,
 			label: this.get('anchorDescription'),
 		});
+
+		myTracker.send('event', 'Canvas Entity', 'hover start', `${this.name} ${this.type}`);
 	},
 
 	onLeave: function () {
+
 		this.set({
 			lineWidth: 20,
 		});
+
 		canvas.set({
 			title: '',
 			label: `${canvas.name} canvas element`,
 		});
+
+		myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
 	},
 
-	// Used by the click event, below
+	// Used by the Scrawl-canvas click event, below
 	onUp: function () {
+
+		myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.anchor.href}`);
+
 		this.clickAnchor();
 	},
 
@@ -149,6 +189,7 @@ scrawl.makeBlock({
 	strokeStyle: 'brick-pattern',
 
 	anchor: {
+		name: 'wikipedia-leaf-link',
 		href: 'https://en.wikipedia.org/wiki/Leaf',
 		description: 'Link to the Wikipedia article on leaves (opens in new tab)',
 	},
@@ -163,6 +204,7 @@ scrawl.makeBlock({
 	strokeStyle: 'marble-pattern',
 
 	anchor: {
+		name: 'wikipedia-brick-link',
 		href: 'https://en.wikipedia.org/wiki/Brick',
 		description: 'Link to the Wikipedia article on bricks (opens in new tab)',
 	},
@@ -177,6 +219,7 @@ scrawl.makeBlock({
 	strokeStyle: 'water-pattern',
 
 	anchor: {
+		name: 'wikipedia-marble-link',
 		href: 'https://en.wikipedia.org/wiki/Marble',
 		description: 'Link to the Wikipedia article on marble (opens in new tab)',
 	},
@@ -231,7 +274,8 @@ let report = function () {
 		testTicker = testNow;
 
 		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Hits: ${interactionResults}`;
+Hits: ${interactionResults}
+Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
 	};
 }();
 
@@ -243,3 +287,5 @@ scrawl.makeRender({
 	target: canvas,
 	afterShow: report,
 });
+
+console.log(scrawl.library);

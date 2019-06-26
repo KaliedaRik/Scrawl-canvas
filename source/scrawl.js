@@ -1,7 +1,7 @@
 /*
 # Scrawl-canvas
 
-### Version 8.0.0 (alpha) - 19 June 2019
+### Version 8.0.0 (alpha) - 25 June 2019
 
 ---------------------------------------------------------------------------------
 The MIT License (MIT)
@@ -90,7 +90,13 @@ import {
 	requestCoordinate, 
 	releaseCoordinate,
 	checkCoordinate,
+	coordinatePoolLength,
 } from './factory/coordinate.js';
+
+
+import { 
+	cellPoolLength,
+} from './factory/cell.js';
 
 
 import { 
@@ -137,6 +143,7 @@ import {
 	requestQuaternion, 
 	releaseQuaternion,
 	checkQuaternion,
+	quaternionPoolLength,
 } from './factory/quaternion.js';
 
 
@@ -181,6 +188,7 @@ import {
 	requestVector, 
 	releaseVector,
 	checkVector,
+	vectorPoolLength,
 } from './factory/vector.js';
 
 
@@ -257,6 +265,10 @@ export default {
 	makeBlock,
 
 
+	// factory/cell.js
+	cellPoolLength,
+
+
 	// factory/color.js
 	// colorList,
 	makeColor,
@@ -266,6 +278,7 @@ export default {
 	requestCoordinate, 
 	releaseCoordinate,
 	checkCoordinate,
+	coordinatePoolLength,
 
 
 	// factory/filter.js
@@ -305,6 +318,7 @@ export default {
 	requestQuaternion, 
 	releaseQuaternion,
 	checkQuaternion,
+	quaternionPoolLength,
 
 
 	// factory/radialGradient.js
@@ -343,6 +357,7 @@ export default {
 	requestVector, 
 	releaseVector,
 	checkVector,
+	vectorPoolLength,
 
 
 	// factory/videoAsset.js

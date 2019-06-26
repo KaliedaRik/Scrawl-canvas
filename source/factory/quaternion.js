@@ -528,6 +528,12 @@ P.getEulerRoll = function () {
 ## Quaternion pool - an attempt to reuse quaternions rather than constantly creating and deleting them
 */
 const quaternionPool = [];
+let quaternionPoolCount = 0;
+
+const quaternionPoolLength = function () {
+
+	return `${quaternionPool.length} (from ${quaternionPoolCount} generated)`;
+};
 
 const requestQuaternion = function (items) {
 
@@ -535,6 +541,8 @@ const requestQuaternion = function (items) {
 		quaternionPool.push(makeQuaternion({
 			name: 'pool'
 		}));
+
+		quaternionPoolCount++;
 	}
 
 	let q = quaternionPool.shift();
@@ -581,4 +589,5 @@ export {
 	requestQuaternion,
 	releaseQuaternion,
 	checkQuaternion,
+	quaternionPoolLength,
 };

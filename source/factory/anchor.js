@@ -64,6 +64,11 @@ Scrawl-canvas will build a link element and add it to the DOM, then invoke a cli
 	rel: 'noreferrer',
 	target: '_blank',
 	anchorType: '',
+
+/*
+	
+*/
+	clickAction: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -124,6 +129,12 @@ S.description = function (item) {
 	if (this.domElement) this.domElement.textContent = item;
 };
 
+S.clickAction = function (item) {
+
+	this.clickAction = item;
+	if (this.domElement) this.domElement.setAttribute('onclick', item());
+};
+
 
 /*
 ## Define prototype functions
@@ -148,6 +159,8 @@ P.build = function () {
 	if (this.rel) link.setAttribute('rel', this.rel);
 	if (this.target) link.setAttribute('target', this.target);
 	if (this.anchorType) link.setAttribute('type', this.anchorType);
+
+	if (this.clickAction) link.setAttribute('onclick', this.clickAction());
 
 	if (this.description) link.textContent = this.description;
 

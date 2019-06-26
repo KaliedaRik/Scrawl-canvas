@@ -270,11 +270,18 @@ P.reverse = function () {
 ## Coordinate pool - an attempt to reuse quaternions rather than constantly creating and deleting them
 */
 const coordinatePool = [];
+let coordinatePoolCount = 0;
+
+const coordinatePoolLength = function () {
+
+	return `${coordinatePool.length} (from ${coordinatePoolCount} generated)`;
+}
 
 const requestCoordinate = function (items, y) {
 
 	if (!coordinatePool.length) {
 		coordinatePool.push(new Coordinate());
+		coordinatePoolCount++;
 	}
 
 	let coordinate = coordinatePool.shift();
@@ -313,4 +320,5 @@ export {
 	requestCoordinate,
 	releaseCoordinate,
 	checkCoordinate,
+	coordinatePoolLength,
 };

@@ -146,7 +146,8 @@ let report = function () {
 		testTicker = testNow;
 
 		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Hits: ${targetsLength}`;
+Hits: ${targetsLength}
+Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
 	};
 }();
 

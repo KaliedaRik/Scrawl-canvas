@@ -34,7 +34,8 @@ let report = function () {
 		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 artefact - ${a.length}, ${artefactnames.length}: [${(artefactnames).join(', ')}] 
 stack - ${s.length}, ${stacknames.length}: [${(stacknames).join(', ')}] 
-element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
+element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]
+Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
 	};
 }();
 

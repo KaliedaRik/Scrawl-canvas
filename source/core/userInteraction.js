@@ -1,7 +1,7 @@
 /*
 # Core user interaction
 */
-// import { artefact } from "./library.js";
+
 import * as library from "./library.js";
 import { xt, xta, isa_dom, isa_fn, defaultNonReturnFunction } from "./utilities.js";
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "./document.js";
@@ -393,13 +393,23 @@ const makeDragZone = function (items = {}) {
 
 	if (target.type === 'Stack') {
 
-		coordinateSource = (items.coodinateSource) ? items.coordinateSource : target.here;
-		collisionGroup = (collisionGroup) ? collisionGroup : target.group;
+		coordinateSource = items.coordinateSource;
+		if (!coordinateSource) coordinateSource = target.here;
+
+		collisionGroup = items.collisionGroup;
+		if (!collisionGroup) collisionGroup = library.group[target.name];
+		else if (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
 	}
 	else if (target.type === 'Canvas') {
 
-		coordinateSource = (items.coodinateSource) ? items.coordinateSource : target.base.here;
-		collisionGroup = (collisionGroup) ? collisionGroup : library.group[target.base.name];
+		coordinateSource = items.coordinateSource;
+
+		// Generally the system won't have had time to establish target.base.here, if the dragzone is defined as part of setup before a Display cycle haas completed - so the test gets repeated in the pickup function below, to capture those cases
+		if (!coordinateSource) coordinateSource = target.base.here;
+
+		collisionGroup = items.collisionGroup;
+		if (!collisionGroup) collisionGroup = library.group[target.base.name];
+		else if (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
 	}
 
 	if (!xta(targetElement, collisionGroup)) return false;
