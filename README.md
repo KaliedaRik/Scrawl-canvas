@@ -53,6 +53,7 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 * in a way that will allow 3rd parties to develop and share stuff easily
 * CRITICAL to get this right - can become a USP for the library
 * also start thinking about how best to export stuff in a way that makes importing it into React/Vue/etc dead easy
+* also an opportunity to think about making an npm repository, and how the library code can be included in toolchains eg WebPack?
 
 9. I want to add in some simple-to-use zoom and (parallax) scrolling capability
 * because v7 can do this and I don't want to lose it
