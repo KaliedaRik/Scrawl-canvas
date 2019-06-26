@@ -95,6 +95,15 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 
 ## DEVELOPMENT
 
+To get the library running locally (for development), just clone it into a project folder somewhere on your local
+
+No development toolchain. Code needs to be legible and well formatted. Function names, arguments, attributes etc need to be given meaningful names, etc.
+
+Testing is via the demos. To run the demos, cd into the project folder and run __http-server__, then navigate to (eg) http://localhost:8080/demo/index.html - note that caching should be switched off in the browsers developer console; everything gets loaded as modules and browsers will do whatever they can to download modules just once.
+
+
+### Current and previous versions
+
 VERSION 8.0.0 alpha (in development)
 * GitHub branch: v8-alpha
 
