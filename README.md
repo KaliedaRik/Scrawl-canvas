@@ -2,10 +2,10 @@
 
 Version 8.0.0 (alpha) - 25 June 2019
 
-Scrawl-canvas is  JavaScript library which adds an API for handling and manipulating 
-HTML5 <canvas> elements in the DOM.
+Scrawl-canvas is  JavaScript library which adds an API for handling and manipulating HTML5 &lt;canvas> elements in the DOM.
 
 Developed by Rik Roots: rik.roots@rikworks.co.uk
+
 Scrawl-canvas website: http://scrawl.rikweb.org.uk (currently running on Scrawl-canvas v6)
 
 
@@ -13,13 +13,10 @@ Scrawl-canvas website: http://scrawl.rikweb.org.uk (currently running on Scrawl-
 
 Recoded from scratch! Modular code pattern with import/export - no need to worry about loading js files anymore
 
-No longer supports IE browsers. Edge support will hopefully come back online later in 2019 once it releases the new blink/v8 build
+No longer supports IE browsers. Edge support will hopefully come back online later in 2019 once MS releases the new blink/v8 build
 
 
 ### ROADMAP - Summer 2019:
-
-... beyond fixing all the TODO statements in the code ...
-* in particular get demo DOM-013 working properly
 
 1. Tabbing through portions of the canvas display
 * decide whether it's worth the effort (eg if there's more than one anchor in the canvas)
@@ -98,60 +95,59 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 ## DEVELOPMENT
 
 VERSION 8.0.0 alpha (in development)
-GitHub branch: v8-alpha
+* GitHub branch: v8-alpha
 
 
 VERSION 7.0.0 released 26 June 2017
-GitHub branches: v7, develop
-
+* GitHub branches: v7, develop
 * Breaking changes to the scrawl filters and color systems
 * Improvements and speed enhancements to core functionality
 
 
 VERSION 6.0.1 released 14 January 2017
-GitHub branches: v6, master
-
+* GitHub branches: v6, master
 * Breaking changes to the scrawl tweening system
 
-v6.0.0 uploaded 4 January 2017
+Older versions
+* v6.0.0 uploaded 4 January 2017
 
-v5.0.5 uploaded 17 December 2016
-v5.0.4 uploaded 14 February 2016
-v5.0.3 uploaded 2 December 2015
-v5.0.2 uploaded 30 November 2015
-v5.0.1 uploaded 28 November 2015
-v5.0.0 uploaded 26 November 2015
+* v5.0.5 uploaded 17 December 2016
+* v5.0.4 uploaded 14 February 2016
+* v5.0.3 uploaded 2 December 2015
+* v5.0.2 uploaded 30 November 2015
+* v5.0.1 uploaded 28 November 2015
+* v5.0.0 uploaded 26 November 2015
 
-v4.3.0 uploaded 19 July 2015
-v4.2.2 uploaded 28 June 2015
-v4.2.1 uploaded 4 May 2015
-v4.2.0 uploaded 29 March 2015
-v4.1.0 uploaded 25 January 2015
-v4.0.0 uploaded 7 January 2015
+* v4.3.0 uploaded 19 July 2015
+* v4.2.2 uploaded 28 June 2015
+* v4.2.1 uploaded 4 May 2015
+* v4.2.0 uploaded 29 March 2015
+* v4.1.0 uploaded 25 January 2015
+* v4.0.0 uploaded 7 January 2015
 
-v3.1.7 uploaded 5 August 2014
-v3.1.6 uploaded 3 August 2014
-v3.1.5 uploaded 30 July 2014
-v3.1.4 uploaded 7 July 2014
-v3.1.3 uploaded 9 May 2014
-v3.1.2 uploaded 9 May 2014
-v3.1.1 uploaded 30 April 2014
-v3.1.0 uploaded 22 April 2014
-v3.0.0 uploaded 5 April 2014
+* v3.1.7 uploaded 5 August 2014
+* v3.1.6 uploaded 3 August 2014
+* v3.1.5 uploaded 30 July 2014
+* v3.1.4 uploaded 7 July 2014
+* v3.1.3 uploaded 9 May 2014
+* v3.1.2 uploaded 9 May 2014
+* v3.1.1 uploaded 30 April 2014
+* v3.1.0 uploaded 22 April 2014
+* v3.0.0 uploaded 5 April 2014
 
-v2.02 uploaded 18 March 2014
-v2.01 uploaded 17 March 2014
-v2.00 uploaded 2 March 2014
+* v2.02 uploaded 18 March 2014
+* v2.01 uploaded 17 March 2014
+* v2.00 uploaded 2 March 2014
 
-v1.04 uploaded 29 November 2013
-v1.03 uploaded 28 November 2013
-v1.02 uploaded 24 November 2013
-v1.01 uploaded 6 November 2013
-v1.00 uploaded 30 October 2013
+* v1.04 uploaded 29 November 2013
+* v1.03 uploaded 28 November 2013
+* v1.02 uploaded 24 November 2013
+* v1.01 uploaded 6 November 2013
+* v1.00 uploaded 30 October 2013
 
-v0.300 uploaded 20 August 2013
-v0.200(beta) uploaded 21 May 2013
-v0.02(beta) uploaded 27 April 2013
-v0.01(beta) uploaded 30 March 2013
-v0.002(alpha) uploaded 5 March 2013
+* v0.300 uploaded 20 August 2013
+* v0.200(beta) uploaded 21 May 2013
+* v0.02(beta) uploaded 27 April 2013
+* v0.01(beta) uploaded 30 March 2013
+* v0.002(alpha) uploaded 5 March 2013
 
