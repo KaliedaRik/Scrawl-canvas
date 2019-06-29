@@ -196,6 +196,7 @@ import {
 	makeVideoAsset,
 	importDomVideo,
 	importVideo,
+	importMediaStream,
 } from './factory/videoAsset.js';
 
 
@@ -364,6 +365,7 @@ export default {
 	makeVideoAsset,
 	importDomVideo,
 	importVideo,
+	importMediaStream,
 
 
 	// factory/wheel.js

@@ -2,7 +2,7 @@
 # VideoAsset factory
 */
 import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, generateUuid, xt } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -235,6 +235,78 @@ const importDomVideo = function (query) {
 };
 
 /*
+TODO - extend functionality so users can manipulate the mediaStream via the Picture entity using it as its asset
+*/
+const importMediaStream = function (items = {}) {
+
+	// Setup the constraints object with user-supplied data in the items argument
+	let constraints = {};
+
+	// For proof-of-concept, only interested in wheter to include or exclude audio in the capture
+	constraints.audio = (xt(items.audio)) ? items.audio : true;
+
+	// For video, limiting functionality to accepting user values for video width and height (as minDIMENSION, maxDIMENSION and the ideal DIMENSION, and a preference for which camera to use - where applicable
+	constraints.video = {};
+	
+	let width = constraints.video.width = {};
+	if (items.minWidth) width.min = items.minWidth;
+	if (items.maxWidth) width.max = items.maxWidth;
+	width.ideal = (items.width) ? items.width : 1280;
+	
+	let height = constraints.video.height = {};
+	if (items.minHeight) height.min = items.minHeight;
+	if (items.maxHeight) height.max = items.maxHeight;
+	height.ideal = (items.height) ? items.height : 720;
+
+	// For mobile devices etc - values can be 'user' or 'environment'
+	if (items.facing) constraints.video.facingMode = items.facing;
+	
+	// We need a video element to receive the media stream
+	let name = items.name || generateUuid();
+
+	let el = document.createElement('video');
+
+	let vid = makeVideoAsset({
+		name: name,
+		source: el,
+	});
+
+	return new Promise((resolve, reject) => {
+
+		navigator.mediaDevices.getUserMedia(constraints)
+		.then(mediaStream => {
+
+			let actuals = mediaStream.getVideoTracks(),
+				data;
+
+			if (Array.isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
+
+			el.id = vid.name;
+
+			if (data) {
+
+				el.width = data.width;
+				el.height = data.height;
+			}
+
+			el.srcObject = mediaStream;
+
+			el.onloadedmetadata = function (e) {
+
+				el.play();
+			}
+
+			resolve(vid);
+		})
+		.catch (err => {
+
+			console.log(err.message);
+			resolve(vid);
+		});
+	});
+};
+
+/*
 Import video from wherever
 
 Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.mp4' - in which case Scrawl-canvas:
@@ -402,13 +474,12 @@ const settableVideoAssetAtributes = [
 ## Exported factory function
 */
 const makeVideoAsset = function (items) {
+
 	return new VideoAsset(items);
 };
 
-/*
-Also store constructor in library - clone functionality expects to find it there
-*/
 constructors.VideoAsset = VideoAsset;
+
 
 export {
 	makeVideoAsset,
@@ -418,6 +489,8 @@ export {
 
 	importDomVideo,
 	importVideo,
+
+	importMediaStream,
 };
 
 

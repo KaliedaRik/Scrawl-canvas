@@ -33,7 +33,7 @@ let viddyOne = scrawl.makePicture({
 	strokeStyle: 'lightgreen',
 
 	order: 1,
-	method: 'drawAndFill',
+	method: 'drawThenFill',
 
 });
 
@@ -51,6 +51,70 @@ let viddyTwo = scrawl.makePicture({
 	order: 0,
 	method: 'fill',
 });
+
+
+// Display a media stream in a Picture entity
+// - note that importMediaStream is promise-based
+let viddyThree;
+
+scrawl.importMediaStream({
+	audio: false,
+})
+.then(myface => {
+
+	viddyThree = scrawl.makePicture({
+
+		name: 'mediastream-video',
+		asset: myface.name,
+
+		startX: '20%',
+		startY: '20%',
+		handleX: 'center',
+		handleY: 'center',
+
+		width: '40%',
+		height: '40%',
+
+		copyWidth: '100%',
+		copyHeight: '100%',
+
+		lineWidth: 6,
+		strokeStyle: 'pink',
+
+		order: 0,
+		method: 'drawThenFill',
+	});
+
+	scrawl.observeAndUpdate({
+
+		event: ['input', 'change'],
+		origin: '.controlItem',
+
+		target: viddyThree,
+
+		useNativeListener: true,
+		preventDefault: true,
+
+		updates: {
+
+			copy_start_xPercent: ['copyStartX', '%'],
+			copy_start_xAbsolute: ['copyStartX', 'round'],
+
+			copy_start_yPercent: ['copyStartY', '%'],
+			copy_start_yAbsolute: ['copyStartY', 'round'],
+
+			copy_dims_widthPercent: ['copyWidth', '%'],
+			copy_dims_widthAbsolute: ['copyWidth', 'round'],
+
+			copy_dims_heightPercent: ['copyHeight', '%'],
+			copy_dims_heightAbsolute: ['copyHeight', 'round'],
+
+			upend: ['flipUpend', 'boolean'],
+			reverse: ['flipReverse', 'boolean'],
+		},
+	});
+})
+.catch(err => console.log(err.message));
 
 
 // Function to display frames-per-second data, and other information relevant to the demo

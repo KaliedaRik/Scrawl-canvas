@@ -18,7 +18,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 010</h1>
-  <h2>Use video source for Picture entitys</h2>
+  <h2>Use video sources and media streams for Picture entitys</h2>
   <h3>Click or tap on the canvas to start video play</h3>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
@@ -128,6 +128,13 @@
     <ul>
       <li>Same checks as for Demo Canvas 009</li>
       <li>Check to see that video play starts in both Picture entitys when user clicks on canvas</li>
+    </ul>
+
+    <h4>For the media stream</h4>
+    <ul>
+      <li>Check that the media stream loads (if browser/device supports it)</li>
+      <li>In cases where browser/device doesn't support media streams, check that the failure is captured and handled gracefully (TODO)</li>
+      <li>Check that the Picture entity using the media stream for its asset can manipulate its dimensions, copy dimensions, positioning (eg flip), etc.</li>
     </ul>
   </div>
 
