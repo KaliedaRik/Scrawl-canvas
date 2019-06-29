@@ -32,14 +32,14 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 * Adapted demo Canvas-016 to expose the text held in a Phrase entity to the wider DOM, to make it easier to access for people not able to view the canvas element (for whatever reason).
 * I dont think there is a need for users to be able to directly copy/paste text from/to Phrase entitys, or to edit text in-place - so I won't consider such interactive text manipulation any further, unless someone can come up with a compelling use case for such functionality to be added to the library.
 
-4. Review processes for dismantling/deleting everything (ONGOING)
+4. Canvas dynamic generation (adding to page and/or stack), canvas cloning (DONE)
+* Canvas generation and takedown done - demo DOM-012 written to test
+* Decided against implementing canvas cloning - too much of an edge case.
+
+5. Review processes for dismantling/deleting everything (ONGOING)
 * Stack, Canvas, Cell, Group, Element, Tween, Ticker - all seem to dismantle themselves without damaging the Scrawl-canvas environment
 * Still need to check entity, asset, styling and various other objects
 * Need to review objects (such as Tickers/Tweens) to make sure they don't choke when their target gets removed from Scrawl-canvas
-
-5. Canvas dynamic generation (adding to page and/or stack), canvas cloning
-* code up demo DOM-012 to test functionality
-* also need to make sure we're making good use of current canvas/group stuff
 
 6. Generate Images and/or Picture entitys from other entitys, groups, cells, etc
 * at the same time think about colour detection? Though bit of an edge case, tbh
