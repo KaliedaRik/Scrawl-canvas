@@ -191,58 +191,7 @@ const getCanvases = function () {
 };
 
 /*
-Programmatically add Scrawl-canvas stack and canvas elements to the DOM document
-
-TODO - add a canvas element to the DOM document programmatically
-*/
-const addCanvas = function (items = {}) {
-
-	// will need to automatically set the new canvas as the currentCanvas and currentGroup
-	// to maintain previous functionality
-	return true;
-};
-
-/*
-Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__
-
-Note: need to write a demo to test this functionality
-*/
-let currentCanvas = null,
-	currentGroup = null;
-
-const setCurrentCanvas = function (item) {
-
-	let changeFlag = false;
-
-	if (item) {
-
-		if (item.substring) {
-
-			let mycanvas = canvas[item];
-
-			if (mycanvas) {
-				currentCanvas = mycanvas;
-				changeFlag = true;	
-			}
-		}
-		else if (item.type === 'Canvas') {
-
-			currentCanvas = item;	
-			changeFlag = true;	
-		} 
-	}
-
-	if (changeFlag && currentCanvas.base) {
-
-		let mygroup = group[currentCanvas.base.name];
-
-		if (mygroup) currentGroup = mygroup;
-	}
-};
-
-/*
-Use __addStack__ to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element
-items object should include 
+Use __addStack__ to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include 
 
 * __element__ - the DOM element to be the stack - if not present, will autogenerate a div element
 * __host__ - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element's current place or, failing all else, add the stack to the end of the document body
@@ -334,6 +283,118 @@ const addStack = function (items = {}) {
 	// tidy up and complete
 	rootElementsSort = true;
 	return mystack;
+};
+
+/*
+Use __addCanvas__ to add a Scrawl-canvas canvas element to a web page. The items argument should include 
+
+* __host__ - the host element, either as the DOM element itself, or some sort of CSS search string, or a Scrawl-canvas Stack entity. If no host is supplied, Scrawl-canvas will add the new canvas element to the DOM document body; in all cases, the new canvas element is appended at the end of the host element (or DOM document)
+* __name__ - String identifier for the element; will generate a random name for the canvas if no name is supplied.
+* any other regular Scrawl-canvas Canvas artefact attribute
+
+By default, Scrawl-canvas will setup the new Canvas as the 'current canvas', and will add mouse/pointer tracking functionality to it. If no dimensions are supplied then the Canvas will default to 300px wide and 150px high.
+*/
+const addCanvas = function (items = {}) {
+
+console.log('addCanvas', items.host)
+	let el = document.createElement('canvas'),
+		myname = (items.name) ? items.name : generateUuid(),
+		host = items.host,
+		mygroup = 'root',
+		width = items.width || 300,
+		height = items.height || 150,
+		position = 'relative';
+
+	if (host.substring) {
+
+		let temphost = artefact[host];
+
+		if (!temphost && host) host = document.querySelector(host);
+		else host = temphost;
+	}
+
+console.log(host);
+	if (host) {
+
+		if (host.type === 'Stack') {
+
+			mygroup = host.name;
+			position = 'absolute';
+			host = host.domElement;
+		}
+		else if (!isa_dom(host)) host = document.body;
+	}
+	else host = document.body;
+
+	el.id = myname;
+	el.setAttribute('data-group', mygroup);
+	el.width = width;
+	el.height = height;
+	el.style.position = position;
+
+	host.appendChild(el);
+
+	let mycanvas = makeCanvas({
+		name: myname,
+		domElement: el,
+		group: mygroup,
+		host: mygroup,
+		position: position,
+		setInitialDimensions: false,
+		setAsCurrentCanvas: (xt(items.setAsCurrentCanvas)) ? items.setAsCurrentCanvas : true,
+		trackHere: (xt(items.trackHere)) ? items.trackHere : true,
+	});
+
+	delete items.group;
+	delete items.host;
+	delete items.name;
+	delete items.element;
+	delete items.position;
+	delete items.setInitialDimensions;
+	delete items.setAsCurrentCanvas;
+	delete items.trackHere;
+
+	mycanvas.set(items);
+
+	return mycanvas;
+};
+
+/*
+Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__
+
+Note: need to write a demo to test this functionality
+*/
+let currentCanvas = null,
+	currentGroup = null;
+
+const setCurrentCanvas = function (item) {
+
+	let changeFlag = false;
+
+	if (item) {
+
+		if (item.substring) {
+
+			let mycanvas = canvas[item];
+
+			if (mycanvas) {
+				currentCanvas = mycanvas;
+				changeFlag = true;	
+			}
+		}
+		else if (item.type === 'Canvas') {
+
+			currentCanvas = item;	
+			changeFlag = true;	
+		} 
+	}
+
+	if (changeFlag && currentCanvas.base) {
+
+		let mygroup = group[currentCanvas.base.name];
+
+		if (mygroup) currentGroup = mygroup;
+	}
 };
 
 /*

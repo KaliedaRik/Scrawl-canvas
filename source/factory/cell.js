@@ -1,7 +1,7 @@
 /*
 # Cell factory
 */
-import { artefact, asset, radian, constructors, styles, stylesnames, cell, cellnames } from '../core/library.js';
+import { artefact, asset, radian, constructors, styles, stylesnames, cell, cellnames, group } from '../core/library.js';
 import { convertLength, generateUuid, isa_canvas, mergeOver, xt, xtGet } from '../core/utilities.js';
 
 import { makeGroup } from './group.js';
@@ -1053,6 +1053,19 @@ P.updateBaseHere = function (controllerHere, fit) {
 		}
 		controllerHere.baseActive = active;
 	}
+};
+
+P.demolishCell = function () {
+
+	if (this.controller) this.controller.removeCell(this.name);
+
+	let grp = group[this.name];
+
+	if (grp) grp.demolishGroup();
+
+	this.deregister();
+
+	return true;
 };
 
 /*

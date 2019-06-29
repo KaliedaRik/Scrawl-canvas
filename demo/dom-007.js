@@ -184,3 +184,5 @@ scrawl.makeRender({
 	target: stack,
 	afterShow: report,
 });
+
+console.log(scrawl.library)

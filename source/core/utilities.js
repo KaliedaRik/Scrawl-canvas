@@ -143,7 +143,7 @@ const defaultThisReturnFunction = function () { return this; };
 const defaultFalseReturnFunction = () => { return false; };
 
 /*
-
+Return the value provided if it is an integer number and, if it isn't, return 0
 */ 
 const ensureInteger = (val) => {
 
@@ -153,7 +153,7 @@ const ensureInteger = (val) => {
 };
 
 /*
-
+Return the value provided if it is a positive integer number and, if it isn't, return 0
 */ 
 const ensurePositiveInteger = (val) => {
 
@@ -163,7 +163,7 @@ const ensurePositiveInteger = (val) => {
 };
 
 /*
-
+Return the value provided as a floating point number of given precision; return 0 if not a number
 */ 
 const ensureFloat = (val, precision) => {
 
@@ -176,7 +176,7 @@ const ensureFloat = (val, precision) => {
 };
 
 /*
-
+Return the value provided as a positive floating point number of given precision; return 0 if not a number
 */ 
 const ensurePositiveFloat = (val, precision) => {
 
@@ -222,7 +222,7 @@ __isa_dom__ checks to make sure the argument is a DOM element of some sort
 const isa_dom = item => (item && item.querySelector && item.dispatchEvent) ? true : false;
 
 /*
-__isa_engine__ checks to make sure the argument is a &lt;canvas> element's contenxt engine'
+__isa_engine__ checks to make sure the argument is a &lt;canvas> element's context engine'
 */ 
 const isa_engine = item => (item && item.quadraticCurveTo) ? true : false;
 
@@ -237,7 +237,7 @@ __isa_img__ checks to make sure the argument is a DOM &lt;img> element
 const isa_img = item => (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
 
 /*
-__isa_img__ checks to make sure the argument is a DOM &lt;img> element
+__isa_number__ checks to make sure the argument is true number (excluding NaN)
 */ 
 const isa_number = item => (typeof item != 'undefined' && item.toFixed && !Number.isNaN(item)) ? true : false;
 

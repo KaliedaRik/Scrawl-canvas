@@ -37,8 +37,8 @@ import {
 
 import { 
 	addStack,
-// 	addCanvas,
-// 	setCurrentCanvas,
+	addCanvas,
+	setCurrentCanvas,
 	addListener,
 	removeListener,
 	addNativeListener,
@@ -239,8 +239,8 @@ export default {
 
 	// core/document.js
 	addStack,
-	// addCanvas,
-	// setCurrentCanvas,
+	addCanvas,
+	setCurrentCanvas,
 	addListener,
 	removeListener,
 	addNativeListener,

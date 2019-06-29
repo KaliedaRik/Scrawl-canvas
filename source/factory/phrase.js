@@ -5,7 +5,6 @@ import { constructors, cell, cellnames, styles, stylesnames, artefact } from '..
 import { scrawlCanvasHold } from '../core/document.js';
 import { mergeOver, 
 	xt, 
-	defaultNonReturnFunction, 
 	ensurePositiveFloat, 
 	ensureFloat, 
 	ensureString } from '../core/utilities.js';
@@ -101,6 +100,11 @@ let defaultAttributes = {
 
 	textGlyphs: null,
 	textGlyphWidths: null,
+
+/*
+Accessibility feature - when __exposeText__ is set to true, Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. The element - a div - is attached to the canvas element's textHold element, which immediately follows that element and has zero dimensions, so its contents don't interfere with the flow of the rest of the DOM content.
+*/
+	exposeText: false,
 
 /*
 Glyphs (individual letters) can be individually styled by adding a styling object to the __glyphStyles__ array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.
@@ -569,6 +573,28 @@ P.buildText = function () {
 	this.dirtyText = false;
 	this.text = this.convertTextEntityCharacters(this.text);
 	this.calculateTextPositions(this.text);
+
+	if (this.exposeText) {
+
+		if (!this.exposedTextHold) {
+
+			let myhold = document.createElement('div');
+			myhold.id = `${this.name}-text-hold`;
+			this.exposedTextHold = myhold;
+			this.exposedTextHoldAttached = false;
+		}
+
+		this.exposedTextHold.textContent = this.text;
+
+		if (!this.exposedTextHoldAttached) {
+
+			if(this.currentHost && this.currentHost.controller && this.currentHost.controller.textHold) {
+
+				this.currentHost.controller.textHold.appendChild(this.exposedTextHold);
+				this.exposedTextHoldAttached = true;
+			}
+		}
+	}
 };
 
 /*

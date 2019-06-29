@@ -21,7 +21,7 @@ ga(function() {
 });
 
 
-// Scene setup
+// Canvas work - scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 
@@ -98,7 +98,7 @@ scrawl.makeBlock({
 });
 
 
-// Create Block entitys for the main display
+// Main canvas display - create Block entitys which will use the patterns defined above
 scrawl.makeBlock({
 
 	name: 'water-in-leaves',
@@ -126,56 +126,69 @@ scrawl.makeBlock({
 	shadowBlur: 3,
 	shadowColor: 'black',
 
-	// Defining an anchor (href) link which can be tied to user interaction (in this case, mouse clicks on the canvas element) through events defined further down in this script
+	/*
+	Include an anchor (href) link which can be tied to user interaction (in this case, mouse clicks on the canvas element) through events defined further down in this script.
+
+	ALWAYS include a description! We will be using the anchor's description string later as part of our asistive technology solution for this demo.
+	*/ 
 	anchor: {
 		name: 'wikipedia-water-link',
 		href: 'https://en.wikipedia.org/wiki/Water',
 		description: 'Link to the Wikipedia article on water (opens in new tab)',
 
 		/*
-		The clickAction attribute is a fallback, for cases where the user 'clicks' on the anchor element hidden at the top of the web page using the keyboard (tab, return) or other assistive technology, rather than by clicking on the canvas block entity itself.
+		The clickAction attribute captures both Scrawl-canvas trigger clicks and also non-mouse 'clicks' on the anchor element hidden at the top of the web page, for example using the keyboard (tab, return) or other assistive technology.
 
 		The function returns a string which Scrawl-canvas will add to the anchor's 'onclick' attribute when it creates the anchor element dynamically and adds it to the DOM.
 		*/
 		clickAction: function () {
-			return `ga('send', 'event', 'Outbound link', 'click', '${this.href}')`;
+
+			return `ga('demoCanvasTracker.send', 'event', 'Outbound link', 'click', '${this.href}')`;
 		},
 	},
 
-	// Defining additional accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas> element. Note that 'this' refers to the entity object
+	// Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas> element. Note that 'this' refers to the entity object, meaning the functions can be safely cloned into other entitys.
 	onEnter: function () {
 
+		// Update the block entity's visual display
 		this.set({
 			lineWidth: 30,
 		});
 
+		// This is where we update the accessibility information tied to the canvas element. We're using the anchor attribute object's description value to supply details of what actions will happen when the user clicks on the canvas while the mouse is over the block entity.
 		canvas.set({
 			title: `${this.name} tile`,
 			label: this.get('anchorDescription'),
 		});
 
+		// Track the action in Google Analytics
 		myTracker.send('event', 'Canvas Entity', 'hover start', `${this.name} ${this.type}`);
 	},
 
 	onLeave: function () {
 
+		// Reset the block entity's visual display
 		this.set({
 			lineWidth: 20,
 		});
 
+		// Reset the accessibility information tied to the canvas element.
 		canvas.set({
 			title: '',
 			label: `${canvas.name} canvas element`,
 		});
 
+		// Track the action in Google Analytics
 		myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
 	},
 
-	// Used by the Scrawl-canvas click event, below
+	// Used by the Scrawl-canvas click event, below. This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor's clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology
 	onUp: function () {
 
+		// Track the action in Google Analytics
 		myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.anchor.href}`);
 
+		// Trigger the click event on the anchor element we added to the DOM
 		this.clickAnchor();
 	},
 
@@ -287,5 +300,3 @@ scrawl.makeRender({
 	target: canvas,
 	afterShow: report,
 });
-
-console.log(scrawl.library);

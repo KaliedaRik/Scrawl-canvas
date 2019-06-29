@@ -113,7 +113,19 @@ let defaultAttributes = {
 /*
 
 */
-	eventChoke: 0
+	eventChoke: 0,
+
+/*
+Hook functions that can be invoked at the end of each relevant operation
+*/
+	onRun: null,
+	onHalt: null,
+	onResume: null,
+	onReverse: null,
+	onSeekTo: null,
+	onSeekFor: null,
+	onComplete: null,
+	onReset: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -509,6 +521,8 @@ P.run = function () {
 
 		pushUnique(tickerAnimations, this.name);
 		tickerAnimationsFlag = true;
+
+		if (typeof this.onRun === 'function') this.onRun();
 	}
 
 	return this;
@@ -541,6 +555,8 @@ P.reset = function () {
 	this.fn(true);
 	this.active = false;
 
+	if (typeof this.onReset === 'function') this.onReset();
+
 	return this;
 };
 
@@ -562,6 +578,8 @@ P.complete = function () {
 
 	this.fn();
 	this.active = false;
+
+	if (typeof this.onComplete === 'function') this.onComplete();
 
 	return this;
 };
@@ -589,6 +607,8 @@ P.reverse = function (resume = false) {
 	
 	if (resume) this.resume();
 
+	if (typeof this.onResume === 'function') this.onResume();
+
 	return this;
 };
 
@@ -600,6 +620,9 @@ P.halt = function () {
 	this.active = false;
 	pushUnique(tickerAnimations, this.name);
 	tickerAnimationsFlag = true;
+
+	if (typeof this.onHalt === 'function') this.onHalt();
+
 	return this;
 };
 
@@ -620,8 +643,10 @@ P.resume = function () {
 		this.active = true;
 		pushUnique(tickerAnimations, this.name);
 		tickerAnimationsFlag = true;
-	}
 
+		if (typeof this.onResume === 'function') this.onResume();
+
+	}
 	return this;
 };
 
@@ -646,6 +671,8 @@ P.seekTo = function (milliseconds, resume = false) {
 
 	this.fn(backwards);
 	this.active = false;
+
+	if (typeof this.onSeekTo === 'function') this.onSeekTo();
 
 	if (resume) this.resume();
 
@@ -673,6 +700,8 @@ P.seekFor = function (milliseconds, resume = false) {
 
 	this.fn(backwards);
 	this.active = false;
+
+	if (typeof this.onSeekFor === 'function') this.onSeekFor();
 
 	if (resume) this.resume();
 

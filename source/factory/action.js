@@ -119,14 +119,25 @@ P.getEndTime = function () {
 
 /*
 The __update__ function checks to see if the action (or revert) functions need to be invoked, and invokes them as-and-when required.
+
+ISSUE: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. All other %times appear to work as expected. Thus I don't consider this to be a show stopper.
 */
 P.update = function (items) {
 
-	if (this.reversed) {
+	let reversed = this.reversed,
+		effectiveTime = this.effectiveTime,
+		triggered = this.triggered,
+		reverseOnCycleEnd = this.reverseOnCycleEnd,
+		tick = items.tick,
+		reverseTick = items.reverseTick,
+		willLoop = items.willLoop,
+		next = items.next;
 
-		if (items.reverseTick >= this.effectiveTime) {
+	if (reversed) {
 
-			if (!this.triggered) {
+		if (reverseTick >= effectiveTime) {
+
+			if (!triggered) {
 
 				this.action();
 				this.triggered = true;
@@ -134,7 +145,7 @@ P.update = function (items) {
 		}
 		else {
 
-			if (this.triggered) {
+			if (triggered) {
 
 				this.revert();
 				this.triggered = false;
@@ -142,9 +153,9 @@ P.update = function (items) {
 		}
 	}
 	else {
-		if (items.tick >= this.effectiveTime) {
+		if (tick >= effectiveTime) {
 
-			if (!this.triggered) {
+			if (!triggered) {
 
 				this.action();
 				this.triggered = true;
@@ -152,7 +163,7 @@ P.update = function (items) {
 		}
 		else {
 
-			if (this.triggered) {
+			if (triggered) {
 
 				this.revert();
 				this.triggered = false;
@@ -160,16 +171,8 @@ P.update = function (items) {
 		}
 	}
 
-	if (this.reverseOnCycleEnd && items.willLoop) {
+	if (willLoop) this.triggered = !this.triggered;
 
-		if (items.next) this.reversed = !this.reversed;
-		else {
-
-			this.reversed = false;
-			this.triggered = false;
-		}
-	}
-	
 	return true;
 };
 

@@ -3,7 +3,7 @@
 */
 import { cell, constructors, artefact } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, removeItem, xt, defaultThisReturnFunction } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeState } from './state.js';
@@ -91,6 +91,19 @@ const Canvas = function (items = {}) {
 		// Accessibility
 		if (!el.getAttribute('role')) el.setAttribute('role', 'img');
 
+		let textHold = document.createElement('div');
+		textHold.id = `${this.name}-text-hold`;
+		textHold.style.width = '0px';
+		textHold.style.height = '0px';
+		textHold.style.maxWidth = '0px';
+		textHold.style.maxHeight = '0px';
+		textHold.style.border = '0px';
+		textHold.style.padding = '0px';
+		textHold.style.margin = '0px';
+		textHold.style.overflow = 'hidden';
+		this.textHold = textHold;
+		el.parentNode.insertBefore(textHold, el.nextSibling);
+
 		let ariaLabel = document.createElement('div');
 		ariaLabel.id = `${this.name}-ARIA-label`;
 		ariaLabel.textContent = this.label;
@@ -109,6 +122,8 @@ const Canvas = function (items = {}) {
 	}
 
 	this.apply();
+
+	if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
 	
 	return this;
 };
@@ -282,8 +297,28 @@ D.alpha = function(item) {
 };
 
 /*
+
+*/
+S.trackHere = function(bool) {
+
+	if (xt(bool)) {
+
+		if (bool) pushUnique(uiSubscribedElements, this.name);
+		else removeItem(uiSubscribedElements, this.name);
+
+		this.trackHere = bool;
+	}
+};
+
+
+/*
 ## Define prototype functions
 */
+
+/*
+Decided against canvas cloning - too much of an edge case to be worth the code.
+*/
+P.clone = defaultThisReturnFunction;
 
 /*
 
@@ -437,6 +472,10 @@ Assume that killing a cell involves also killing its associated group(s) and any
 */
 P.killCell = function (item) {
 
+	let mycell = (item.substring) ? cell[item] : item;
+
+	if (mycell) mycell.demolishCell();
+
 	this.dirtyCells = true;
 	return this;
 };
@@ -444,10 +483,37 @@ P.killCell = function (item) {
 /*
 TODO - code up this functionality
 
-Will meed to kill all cells associated with the visible canvas - except for che displayed cell?
-- Makes no sense NOT to remove the canvas from the DOM - with no cells, it is a broken thing anyway
+In the DOM, we need to:
+- remove the canvas element
+- remove all the ARIA elements associated with it
+- remove the textHold element associated with it
+
+In Scrawl-canvas, we need to:
+- remove the base cell associated with the canvas
+	- which probably needs functionality coded up in factory/Cell.js
+	- see if we need to add in checks for the existence of the object in tweens and pivot/mimic positioning functionality
+- remove the canvas object from the library (artefact, canvas) - see if we need to overwrite core/base.js function
 */
-P.demolish = function (removeFromDom) {
+P.demolish = function () {
+
+	removeItem(uiSubscribedElements, this.name);
+
+	removeItem(rootElements, this.name);
+	setRootElementsSort();
+
+	let el = this.domElement,
+		textHold = this.textHold,
+		ariaLabel = this.ariaLabelElement,
+		ariaDescription = this.ariaDescriptionElement;
+
+	textHold.parentNode.removeChild(textHold);
+	ariaLabel.parentNode.removeChild(ariaLabel);
+	ariaDescription.parentNode.removeChild(ariaDescription);
+	el.parentNode.removeChild(el);
+
+	this.killCell(this.base);
+
+	this.deregister();
 
 	return true;
 };

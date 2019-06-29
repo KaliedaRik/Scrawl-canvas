@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 012</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .control_panel {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      margin-bottom: 1em;
+    }
+
+    button {
+      justify-self: stretch;
+      align-self: stretch;
+      text-align: center;
+      padding: 1em;
+    }
+
+    #target {
+      background-color: #b8ffb8;
+      margin-bottom: 1em;
+
+    }
+
+    ['data-stack'] {
+      border: 1px solid red;
+      min-height: 20px;
+    }
+
+    #not-a-stack {
+      padding: 1em;
+      margin: 1em 0;
+      border: 1px solid blue;
+      background-color: aliceblue;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 012</h1>
+  <h2>Add and remove (demolish) Scrawl-canvas canvas elements programmatically</h2>
+
+  <div class="control_panel">
+    <button class="controls" id="action_1">1. Generate new canvas and add it to stack &lt;div></button>
+    <button class="controls" id="action_2" disabled>2. Demolish canvas 1</button>
+    <button class="controls" id="action_3">3. Demolish stack &lt;div> element</button>
+    <button class="controls" id="action_4">4. Generate new canvas and add it to normal &lt;div></button>
+  </div>
+
+  <div id="mystack"  data-stack>
+    <p id="p1">This is the &lt;div> element stack which will host the canvas created by <b>Button 1</b>.</p>
+    <p name="p2"><b>Button 2</b> removes the Button 1 canvas, wherever it is placed on the page.</p>
+    <p>Clicking <b>Button 3</b> will delete the stack and, if present, the canvas. After clicking Button 3, creating a canvas with Button 1 will force that canvas to be added to the end of the web page.</p>
+  </div>
+
+  <div id="not-a-stack">Clicking on <b>Button 4</b> creates a new canvas and adds it randomly to either this normal (not a Scrawl-canvas stack) &lt;div> element, or to the end of the web page.</div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Turn a DOM element into a Scrawl-canvas stack programmatically</li>
+      <li>Create a Scrawl-canvas stack and add it to the DOM</li>
+      <li>Create a Scrawl-canvas stack inside another stack</li>
+      <li>Dynamically remove and delete a Scrawl-canvas stack from the DOM</li>
+    </ul>
+  </div>
+
+  <script src="dom-012.js" type="module"></script>
+
+</body>
+
+</html>

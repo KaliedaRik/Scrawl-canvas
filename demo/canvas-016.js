@@ -25,6 +25,9 @@ let lorem = scrawl.makePhrase({
 
 	method: 'fill',
 	showBoundingBox: true,
+
+	// Use the exposeText attribute to expose the entity's text to the DOM, to make it accessible to people not able to view the canvas (for whatever reason)
+	exposeText: true,
 });
 
 

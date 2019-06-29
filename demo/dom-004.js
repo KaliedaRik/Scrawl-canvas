@@ -106,3 +106,5 @@ let flyRocket = function(e) {
 };
 
 scrawl.addNativeListener('click', flyRocket, stack.domElement);
+
+console.log(scrawl.library)

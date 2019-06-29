@@ -217,3 +217,5 @@ scrawl.makeRender({
 	commence: mouseCheck,
 	afterShow: report,
 });
+
+console.log(scrawl.library);

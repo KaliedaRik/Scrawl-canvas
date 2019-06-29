@@ -96,6 +96,16 @@ let defaultAttributes = {
 
 */
 	killOnComplete: false,
+
+/*
+Hook functions that can be invoked at the end of each relevant operation
+*/
+	onRun: null,
+	onHalt: null,
+	onResume: null,
+	onReverse: null,
+	onSeekTo: null,
+	onSeekFor: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -138,6 +148,7 @@ S.completeAction = function (item) {
 
 	if (typeof this.completeAction !== 'function') this.completeAction = defaultNonReturnFunction;
 };
+
 
 /*
 ## Define prototype functions
@@ -496,8 +507,11 @@ P.run = function () {
 	let t = animationtickers[this.ticker];
 
 	if (t) {
+
 		this.commenceAction();
 		t.run();
+
+		if (typeof this.onRun === 'function') this.onRun();
 	}
 	return this;
 };
@@ -520,8 +534,12 @@ P.halt = function() {
 
 	let t = animationtickers[this.ticker];
 
-	if (t) t.halt();
+	if (t) {
 
+		t.halt();
+
+		if (typeof this.onHalt === 'function') this.onHalt();
+	}
 	return this;
 };
 
@@ -532,8 +550,12 @@ P.reverse = function() {
 
 	let t = animationtickers[this.ticker];
 
-	if (t) t.reverse();
+	if (t) {
 
+		t.reverse();
+
+		if (typeof this.onReverse === 'function') this.onReverse();
+	}
 	return this;
 };
 
@@ -544,8 +566,12 @@ P.resume = function() {
 
 	let t = animationtickers[this.ticker];
 
-	if (t) t.resume();
+	if (t) {
 
+		t.resume();
+
+		if (typeof this.onResume === 'function') this.onResume();
+	}
 	return this;
 };
 
@@ -556,8 +582,12 @@ P.seekTo = function(milliseconds) {
 
 	let t = animationtickers[this.ticker];
 
-	if (t) t.seekTo(milliseconds);
+	if (t) {
 
+		t.seekTo(milliseconds);
+
+		if (typeof this.onSeekTo === 'function') this.onSeekTo();
+	}
 	return this;
 };
 
@@ -568,8 +598,12 @@ P.seekFor = function(milliseconds) {
 
 	let t = animationtickers[this.ticker];
 
-	if (t) t.seekFor(milliseconds);
+	if (t) {
 
+		t.seekFor(milliseconds);
+
+		if (typeof this.onSeekFor === 'function') this.onSeekFor();
+	}
 	return this;
 };
 

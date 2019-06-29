@@ -26,16 +26,16 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 2. Analytics (DONE)
 * Adapted demo Canvas-009 to use (development version of) Google Analytics; created a named tracker (to see if I could); and sent GA hits as part of the existing onAction hook functions to measure when mouse cursor starts/ends hovering over a block entity, and when user clicks on the block to open a Wikipedia web page.
 * Also added functionality so we can capture canvas-related link clicks performed via assistive technology eg tab/return keystrokes.
+* Adapted demo DOM-006 to use (development version of) Google Analytics - extended reporting functionality to tweens and tickers, both directly and via tween actions.
 
-3. Text manipulation
-* is there a need for users to be able to copy/paste text from/to Phrase entitys? If yes, how to do it?
-* also an opportunity to consider how best to expose Phrase text to the DOM beyond the canvas
+3. Canvas text manipulation (NOT DOING) and accessibility (DONE)
+* Adapted demo Canvas-016 to expose the text held in a Phrase entity to the wider DOM, to make it easier to access for people not able to view the canvas element (for whatever reason).
+* I dont think there is a need for users to be able to directly copy/paste text from/to Phrase entitys, or to edit text in-place - so I won't consider such interactive text manipulation any further, unless someone can come up with a compelling use case for such functionality to be added to the library.
 
-4. Review processes for dismantling/deleting everything 
-* make sure they work
-* make sure it happens cleanly
-* minimize/eliminate as much leakage as possible
-* also an opportunity to review code/demos for more general memory leaks, efficiency, etc
+4. Review processes for dismantling/deleting everything (ONGOING)
+* Stack, Canvas, Cell, Group, Element, Tween, Ticker - all seem to dismantle themselves without damaging the Scrawl-canvas environment
+* Still need to check entity, asset, styling and various other objects
+* Need to review objects (such as Tickers/Tweens) to make sure they don't choke when their target gets removed from Scrawl-canvas
 
 5. Canvas dynamic generation (adding to page and/or stack), canvas cloning
 * code up demo DOM-012 to test functionality
