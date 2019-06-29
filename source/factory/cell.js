@@ -1225,7 +1225,11 @@ const requestCell = function () {
 */
 const releaseCell = function (c) {
 
-	if (c && c.type === 'Cell') cellPool.push(c.setToDefaults());
+	if (c && c.type === 'Cell') {
+
+		c.engine.setTransform(1,0,0,1,0,0);
+		cellPool.push(c.setToDefaults());
+	}
 };
 
 

@@ -933,6 +933,68 @@ Overwrites mixin/position.js function
 	};
 
 /*
+Overwrites mixin/position.js function
+*/
+	P.checkHit = function (items = [], mycell) {
+
+		if (this.noUserInteraction) return false;
+
+		if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
+
+			this.cleanPathObject();
+			this.dirtyCollision = false;
+		}
+
+		let tests = (!Array.isArray(items)) ?  [items] : items,
+			poolCellFlag = false;
+
+		if (!mycell) {
+
+			mycell = requestCell();
+			poolCellFlag = true;
+		}
+
+		let engine = mycell.engine,
+			stamp = this.currentStampPosition,
+			x = stamp[0],
+			y = stamp[1],
+			tx, ty;
+
+		if (tests.some(test => {
+
+			if (Array.isArray(test)) {
+
+				tx = test[0];
+				ty = test[1];
+			}
+			else if (xta(test, test.x, test.y)) {
+
+				tx = test.x;
+				ty = test.y;
+			}
+			else return false;
+
+			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+
+			return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
+
+		}, this)) {
+
+			if (poolCellFlag) releaseCell(mycell);
+
+			return {
+				x: tx,
+				y: ty,
+				artefact: this
+			};
+		}
+		
+		if (poolCellFlag) releaseCell(mycell);
+		
+		return false;
+	};
+
+/*
 
 */
 	P.apply = function() {

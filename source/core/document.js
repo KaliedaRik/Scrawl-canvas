@@ -296,7 +296,6 @@ By default, Scrawl-canvas will setup the new Canvas as the 'current canvas', and
 */
 const addCanvas = function (items = {}) {
 
-console.log('addCanvas', items.host)
 	let el = document.createElement('canvas'),
 		myname = (items.name) ? items.name : generateUuid(),
 		host = items.host,
@@ -313,7 +312,6 @@ console.log('addCanvas', items.host)
 		else host = temphost;
 	}
 
-console.log(host);
 	if (host) {
 
 		if (host.type === 'Stack') {
