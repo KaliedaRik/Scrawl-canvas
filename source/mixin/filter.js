@@ -79,6 +79,8 @@ Internal housekeeping
 
 		this.dirtyFilters = false;
 
+		if (!this.filters) this.filters = [];
+
 		let myfilters = this.filters,
 			floor = Math.floor,
 			buckets = [];

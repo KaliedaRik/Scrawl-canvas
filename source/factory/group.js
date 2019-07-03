@@ -3,9 +3,11 @@
 */
 import { constructors, cell, artefact, group, groupnames, entity } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
+import { scrawlCanvasHold } from '../core/document.js';
 
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
 import { requestCell, releaseCell } from './cell.js';
+import { importDomImage } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
@@ -198,7 +200,9 @@ P.stamp = function () {
 				self.sortArtefacts();
 
 				// Check to see if there is a Group filter in place and, if yes, pull a Cell aset from the pool
-				let filterCell = (self.filters && self.filters.length) ? requestCell() : false;
+				let filterCell = (self.stashOutput || (!self.noFilters && self.filters && self.filters.length)) ?
+					requestCell() :
+					false;
 
 				// Setup the pool Cell, if required
 				if (filterCell && filterCell.element) {
@@ -217,8 +221,16 @@ P.stamp = function () {
 
 				// Get the Group's artefacts to stamp themselves on the current host
 				self.stampAction(filterCell)
-				.then(res => resolve(self.name))
-				.catch(err => reject(false));
+				.then(res => {
+
+					if (filterCell) releaseCell(filterCell);
+					resolve(self.name);
+				})
+				.catch(err => {
+
+					if (filterCell) releaseCell(filterCell);
+					reject(false)
+				});
 			}
 
 			// Bale out of the stamp functionality if the Group has no host on which to perform its actions
@@ -287,6 +299,8 @@ P.prepareStamp = function (myCell) {
 */
 P.stampAction = function (myCell) {
 
+	if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+
 	let self = this;
 
 	// Doing it this way to ensure that each artefact completes its stamp action before the next one starts - performed as a promise so that if the artefact needs to filter its output it can use the (asynchronous) filter worker. This function is essentially a cascade of promises which collapse into resolution once all the artefacts have been actioned
@@ -313,9 +327,21 @@ P.stampAction = function (myCell) {
 
 				if (myCell) {
 
-					self.applyFilters(myCell)
-					.then(res => resolve(true))
-					.catch(err => reject(false));
+					if (!self.noFilters && self.filters && self.filters.length) {
+
+						self.applyFilters(myCell)
+						.then(img => {
+
+							if (self.stashOutput) self.stashAction(img);
+							resolve(true);
+						})
+						.catch(err => reject(false));
+					}
+					else {
+
+						if (self.stashOutput) self.stashAction(myCell.engine.getImageData(0, 0, myCell.element.width, myCell.element.height));
+						resolve(true);
+					}
 				}
 
 				// Terminate the cascade and start the resolution collapse
@@ -334,8 +360,6 @@ P.stampAction = function (myCell) {
 P.applyFilters = function (myCell) {
 
 	// Clean and sort the Group-level filters before sending them to the filter worker for application
-	if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
-
 	let self = this;
 
 	return new Promise((resolve, reject) => {
@@ -344,11 +368,7 @@ P.applyFilters = function (myCell) {
 		let currentHost = self.currentHost,
 			filterHost = myCell;
 
-		if (!currentHost || !filterHost) {
-
-			if (filterHost) releaseCell(filterHost);
-			reject(false);
-		}
+		if (!currentHost || !filterHost) reject(false);
 
 		// An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the Group's composite and alpha values
 		let cleanup = function () {
@@ -363,8 +383,6 @@ P.applyFilters = function (myCell) {
 
 			currentEngine.drawImage(filterElement, 0, 0);
 			
-			releaseCell(filterHost);
-
 			currentEngine.restore();
 		};
 
@@ -408,7 +426,7 @@ P.applyFilters = function (myCell) {
 
 				// On success, cleanup and resolve
 				cleanup();
-				resolve(true);
+				resolve(img);
 			}
 			else throw new Error('image issue');
 		})
@@ -418,6 +436,85 @@ P.applyFilters = function (myCell) {
 			reject(false);
 		});
 	});
+};
+
+/*
+Internal function - creates an imageAsset object (and an &lt;img> element which gets attached to the DOM document in the scrawlCanvasHold hidden &lt;div> element) from the group's entity's output.
+
+Note that, unlike the equivalent functionality for Cell and entity objects, the Group stashAction functionality seems to be working fine in "real time"
+*/
+P.stashAction = function (img) {
+
+	if (!img) return false;
+
+	this.stashOutput = false;
+	let [x, y, width, height] = this.getCellCoverage(img);
+
+	let myCell = requestCell(),
+		myEngine = myCell.engine,
+		myElement = myCell.element;
+
+	myElement.width = width;
+	myElement.height = height;
+
+	myEngine.putImageData(img, -x, -y);
+
+	this.stashedImageData = myEngine.getImageData(0, 0, width, height);
+
+	if (this.stashOutputAsAsset) {
+
+		this.stashOutputAsAsset = false;
+
+		if (!this.stashedImage) {
+
+			let self = this;
+
+			let newimg = this.stashedImage = document.createElement('img');
+
+			newimg.id = `${this.name}-groupimage`;
+
+			newimg.onload = function () {
+
+				scrawlCanvasHold.appendChild(newimg);
+				importDomImage(`#${newimg.id}`);
+			};
+
+			newimg.src = myElement.toDataURL();
+		}
+		else this.stashedImage.src = myElement.toDataURL();
+	}
+	releaseCell(myCell);
+}
+
+P.getCellCoverage = function (img) {
+
+	let width = img.width,
+		height = img.height,
+		data = img.data,
+		maxX = 0,
+		maxY = 0,
+		minX = width,
+		minY = height,
+		counter = 3,
+		x, y;
+
+	for (y = 0; y < height; y++) {
+
+		for (x = 0; x < width; x++) {
+
+			if (data[counter]) {
+
+				if (minX > x) minX = x;
+				if (maxX < x) maxX = x;
+				if (minY > y) minY = y;
+				if (maxY < y) maxY = y;
+			}
+
+			counter += 4;
+		}
+	}
+	if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
+	else return [0, 0, width, height];
 };
 
 /*

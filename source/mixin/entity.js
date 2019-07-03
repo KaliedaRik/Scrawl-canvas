@@ -4,12 +4,13 @@
 import * as library from '../core/library.js';
 import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
 	generateUuid, isa_fn, mergeOver, xt, xta, addStrings } from '../core/utilities.js';
-import { currentGroup } from '../core/document.js';
+import { currentGroup, scrawlCanvasHold } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from '../factory/filter.js';
+import { importDomImage } from '../factory/imageAsset.js';
 
 export default function (P = {}) {
 
@@ -477,7 +478,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 
 		if (this.visibility) {
 
-			if (!this.noFilters && this.filters && this.filters.length) return this.filteredStamp();
+			if (this.stashOutput || (!this.noFilters && this.filters && this.filters.length)) return this.filteredStamp();
 			else return this.regularStamp();
 		}
 		else return Promise.resolve(false);
@@ -498,7 +499,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 			// An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the entity's composite and alpha values
 			let cleanup = function () {
 
-				releaseFilterWorker(worker);
+				if (worker) releaseFilterWorker(worker);
 
 				currentEngine.save();
 				
@@ -508,10 +509,47 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 
 				currentEngine.drawImage(filterElement, 0, 0);
 				
+				// This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img> elements for use elsewhere in the Scrawl-canvas ecosystem.
+				if (self.stashOutput) {
+
+					self.stashOutput = false;
+
+					let [stashX, stashY, stashWidth, stashHeight] = self.getCellCoverage(filterEngine.getImageData(0, 0, filterElement.width, filterElement.height));
+
+					self.stashedImageData = filterEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+
+					if (self.stashOutputAsAsset) {
+
+						// KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo canvas-020 for a setTimeout-based workaround.
+						self.stashOutputAsAsset = false;
+
+						filterElement.width = stashWidth;
+						filterElement.height = stashHeight;
+						filterEngine.putImageData(self.stashedImageData, 0, 0);
+
+						if (!self.stashedImage) {
+
+							let newimg = self.stashedImage = document.createElement('img');
+
+							newimg.id = `${self.name}-image`;
+
+							newimg.onload = function () {
+
+								scrawlCanvasHold.appendChild(newimg);
+								importDomImage(`#${newimg.id}`);
+							};
+
+							newimg.src = filterElement.toDataURL();
+						}
+						else self.stashedImage.src = filterElement.toDataURL();
+					}
+				}
+		
 				releaseCell(filterHost);
 
 				currentEngine.restore();
 
+				self.currentHost = currentHost;
 				self.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
 			};
 
@@ -522,63 +560,108 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 				currentDimensions = currentHost.currentDimensions;
 
 			// get and prepare a blank canvas for the filter operations
-			let filterHost = self.currentHost = requestCell(),
+			let filterHost = requestCell(),
 				filterElement = filterHost.element,
 				filterEngine = filterHost.engine;
 
-			let w = filterElement.width = currentDimensions[0],
-				h = filterElement.height = currentDimensions[1];
+			self.currentHost = filterHost;
+			
+			let w = filterElement.width = currentDimensions[0] || currentElement.width,
+				h = filterElement.height = currentDimensions[1] || currentElement.height;
 
 			// Switch off fast stamp
 			let oldNoCanvasEngineUpdates = self.noCanvasEngineUpdates;
 			self.noCanvasEngineUpdates = false;
 
-			// stamp the entity onto the blank canvas
+ 			// stamp the entity onto the blank canvas
 			self.regularStampSynchronousActions();
 
-			// if we're using the entity as a stencil, copy the entity cell's current display over the entity in the blank canvas
-			if (self.isStencil) {
-
-				filterEngine.save();
-				filterEngine.globalCompositeOperation = 'source-in';
-				filterEngine.globalAlpha = 1;
-				filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-				filterEngine.drawImage(currentElement, 0, 0);
-				filterEngine.restore();
-			} 
-
 			// At this point we will send the contents of the host canvas over to the web worker, alongside details of the filters we wish to apply to it
-			filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+			let worker, myimage;
 
-			let myimage = filterEngine.getImageData(0, 0, w, h),
-				worker = requestFilterWorker();
+			if (!self.noFilters && self.filters && self.filters.length) {
 
-			actionFilterWorker(worker, {
-				image: myimage,
-				filters: self.currentFilters
-			})
-			.then(img => {
+				// if we're using the entity as a stencil, copy the entity cell's current display over the entity in the blank canvas
+				if (self.isStencil) {
 
-				// handle the web worker response
-				if (img) {
-
-					filterEngine.globalCompositeOperation = 'source-over';
+					filterEngine.save();
+					filterEngine.globalCompositeOperation = 'source-in';
 					filterEngine.globalAlpha = 1;
 					filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-					filterEngine.putImageData(img, 0, 0);
+					filterEngine.drawImage(currentElement, 0, 0);
+					filterEngine.restore();
+				} 
+
+				filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+				myimage = filterEngine.getImageData(0, 0, w, h);
+				worker = requestFilterWorker();
+
+				actionFilterWorker(worker, {
+					image: myimage,
+					filters: self.currentFilters
+				})
+				.then(img => {
+
+					// handle the web worker response
+					if (img) {
+
+						filterEngine.globalCompositeOperation = 'source-over';
+						filterEngine.globalAlpha = 1;
+						filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+						filterEngine.putImageData(img, 0, 0);
+
+						cleanup();
+						resolve(true);
+					}
+					else throw new Error('image issue');
+				})
+				.catch((err) => {
 
 					cleanup();
-					resolve(true);
-				}
-				else throw new Error('image issue');
-			})
-			.catch((err) => {
+					reject(false);
+				});
+			}
+
+			// Where no filter is required, but we still want to stash the results
+			else {
 
 				cleanup();
-				reject(false);
-			});
+				resolve(true);
+			}
 		});
 	};
+
+P.getCellCoverage = function (img) {
+
+	let width = img.width,
+		height = img.height,
+		data = img.data,
+		maxX = 0,
+		maxY = 0,
+		minX = width,
+		minY = height,
+		counter = 3,
+		x, y;
+
+	for (y = 0; y < height; y++) {
+
+		for (x = 0; x < width; x++) {
+
+			if (data[counter]) {
+
+				if (minX > x) minX = x;
+				if (maxX < x) maxX = x;
+				if (minY > y) minY = y;
+				if (maxY < y) maxY = y;
+			}
+
+			counter += 4;
+		}
+	}
+	if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
+	else return [0, 0, width, height];
+};
 
 /*
 

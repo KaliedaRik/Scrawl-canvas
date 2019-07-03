@@ -89,6 +89,7 @@ imageAsset.js and videoAsset.js overwrite this function, thus only put here so c
 		sub.sourceNaturalWidth = this.sourceNaturalWidth;
 		sub.sourceNaturalHeight = this.sourceNaturalHeight;
 		sub.sourceLoaded = this.sourceLoaded;
+		sub.source = this.source;
 		sub.dirtyImage = true;
 		sub.dirtyCopyStart = true;
 		sub.dirtyCopyDimensions = true;

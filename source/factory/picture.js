@@ -399,6 +399,7 @@ Overrides mixin/entity.js
 */
 P.prepareStamp = function() {
 
+	if (this.dirtyAsset) this.cleanAsset();
 	if (this.asset && this.asset.checkSource) this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
 
 	if (this.dirtyDimensions || this.dirtyHandle || this.dirtyScale) this.dirtyPaste = true;

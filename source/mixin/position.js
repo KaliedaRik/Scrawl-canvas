@@ -1701,6 +1701,7 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 
 			mycell = requestCell();
 			poolCellFlag = true;
+// console.log(this.name, this.type, 'checkHit requestCell 1', mycell.name)
 		}
 
 		let engine = mycell.engine,
@@ -1740,7 +1741,11 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 			};
 		}
 		
-		if (poolCellFlag) releaseCell(mycell);
+		if (poolCellFlag) {
+
+// console.log(this.name, this.type, 'checkHit releaseCell 1', mycell.name)
+			releaseCell(mycell);
+		}
 		
 		return false;
 	};

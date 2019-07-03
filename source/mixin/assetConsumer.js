@@ -53,17 +53,33 @@ All factories using the position mixin will add these to their prototype objects
 */
 	S.asset = function (item) {
 
-		let index;
+		let oldAsset = this.asset,
+			newAsset = (item && item.name) ? item.name : item;
 
-		if (item && item.substring) {
+		if (oldAsset && !oldAsset.substring) {
 
-			index = assetnames.indexOf(item);
+			if (oldAsset.name !== newAsset) oldAsset.unsubscribe(this);
+		}
 
-			if (index >= 0) {
+		this.asset = newAsset;
+		this.dirtyAsset = true;
+	};
 
-				if (this.asset) this.asset.unsubscribe(this);
+/*
 
-				asset[assetnames[index]].subscribe(this);
+*/
+	P.cleanAsset = function () {
+
+		let ast = this.asset;
+
+		if (ast && ast.substring) {
+
+			let myAsset = asset[ast];
+
+			if (myAsset) {
+
+				this.dirtyAsset = false;
+				myAsset.subscribe(this);
 			}
 		}
 	};

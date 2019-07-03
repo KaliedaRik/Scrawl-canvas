@@ -92,6 +92,7 @@ P.buildStyle = function (mycell = {}) {
 
 P.getData = function (entity, cell, isFill) {
 
+	if (this.dirtyAsset) this.cleanAsset();
 	this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
 
 	return this.buildStyle(cell);

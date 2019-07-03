@@ -3,11 +3,13 @@
 */
 import { artefact, asset, radian, constructors, styles, stylesnames, cell, cellnames, group } from '../core/library.js';
 import { convertLength, generateUuid, isa_canvas, mergeOver, xt, xtGet } from '../core/utilities.js';
+import { scrawlCanvasHold } from '../core/document.js';
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 import { makeCoordinate } from './coordinate.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
+import { importDomImage } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
@@ -86,89 +88,83 @@ P = filterMix(P);
 let defaultAttributes = {
 
 /*
+The following booleans determine whether a Cell canvas will, clear, compile and/or show itself as part of the Display cycle.
 
-*/
-	element: null,
+* __cleared__ - Clearing the cell wipes it clean ready for new drawing activity - for cells that contain static imagery (such as a background) that only needs to be drawn once during an animation it makes no sense to construct its display on each iteration of the Display cycle. Can also be set to false if the compile step builds on, rather than replaces, the cell's current imagery.
 
-/*
+* __compiled__ - Compiling the cell triggers the 'stamp cascade', where (visible) entitys in (visible) groups assigned to the cell are instructed to stamp themselves onto the cell. Again, set thisto false if the cell's imagery does not need to be redrawn on each iteration of the Display cycle.
 
-*/
-	engine: null,
+* __shown__ - Showing the cell instructs it to stamp itself onto the 'base' cell or, for base cells, to stamp itself onto the display &lt;canvas> element in line with that canvas's wrapper's 'fit' attribute. This can be switched off if the cell is (for instance) being used as an asset source for a Picture entity or Pattern style.
 
-/*
+Note that cells will clear and compile in the order given (ascending) of their __compileOrder__ and __showOrder__ values. Cells sharing a compileOrder or showOrder value will be compiled and shown determined by the order in which they were declared in the script where they were created.
 
-*/
-	state: null,
-
-/*
-
-*/
-	controller: null,
-
-/*
-
+Note that as part of the Display cycle, Scrawl-canvas will complete all tasks of the clear part of the process before moving on to the compile stage, which again will complete before the show stage triggers.
 */
 	cleared: true,
-
-/*
-
-*/
 	compiled: true,
-
-/*
-
-*/
 	shown: true,
 
-/*
-
-*/
 	compileOrder: 0,
-
-/*
-
-*/
 	showOrder: 0,
 
 /*
+By default, cells have a background color of 'rgba(0,0,0,0)' - transparent, which gets applied as the end step in the clear part of the display cycle. Setting the __backgroundColor__ attribute ensures the Cell will use that color instead. Any CSS color String is a valid argument (but not gradients or patterns, which get applied at a later stage in the Display cycle).
 
+Base cells can have this attribute set via their controller Canvas.
 */
 	backgroundColor: '',
 
 /*
+Non-base Cells will stamp themselves onto the 'base' Cell as part of the Display cycle's show stage. We can mediate this action by setting the Cell's __alpha__ and __composite__ attributes to valid Rendering2DContext 'globalAlpha' and 'globalCompositeOperation' values.
 
+We can also scale the Cell's size in the displayed Canvas by setting the __scale__ attribute to an appropriate value.
 */
 	alpha: 1,
-
-/*
-
-*/
+	composite: 'source-over',
 	scale: 1,
 
-/*
-
-*/
-	composite: 'source-over',
 
 /*
-
-*/
-	isBase: false,
-
-/*
-
+__localizeHere__ - when true, Scrawl-canvas will calculate a local .here object for the Cell, which allows mouse cursor movements to be tracked across. In general, only 'base' Cells need this information; set the attribute to false if there is no need for the displayed &lt;canvas> element to have mouse/touch/pointer-based user interaction. 
 */
 	localizeHere: false,
 
 /*
-
-*/
-	sourceNaturalDimensions: null,
-
-/*
-
+Any Cell can be used as an asset by a Pattern styles. The __repeat__ attribute determines how the Pattern will consume the Cell asset.
 */
 	repeat: 'repeat',
+
+/*
+### Scrawl-canvas sets the following attributes automatically; do not change their values!
+
+__isBase__ - Every displayed &lt;canvas> element - wrapped in a Scrawl-canvas Canvas object (factory/canvas.js) - must possess at least one Cell object, known as its 'base' Cell. 
+*/
+	isBase: false,
+
+/*
+__element__ - Equivalent to the Canvas's domElement attribute - a reference link to the &lt;canvas> element object. Cells are canvases which do not get added to the DOM document.
+*/
+	element: null,
+
+/*
+__engine__ - The Cell's &lt;canvas> element's CanvasRenderingContext2D interface/engine.
+*/
+	engine: null,
+
+/*
+__state__ - The Cell's State object (factory/state.js) - see that file for details.
+*/
+	state: null,
+
+/*
+__controller__ - A reference link to the displayed &lt;canvas> element's Scrawl-canvas wrapper (factory/canvas.js) - only 'base' cells require this handle.
+*/
+	controller: null,
+
+/*
+__sourceNaturalDimensions__ - for internal use by Picture entitys and Pattern styles using the Cell as their asset source.
+*/
+	sourceNaturalDimensions: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -178,15 +174,6 @@ Cells don't have a need for these default attributes, which will have been added
 delete P.defs.source;
 delete P.defs.sourceLoaded;
 
-P.poolDefs = {
-	element: null,
-	engine: null,
-	state: null,
-	width: 300,
-	height: 100,
-	alpha: 1,
-	composite: 'source-over',
-}
 
 /*
 ## Define attribute getters and setters
@@ -325,6 +312,76 @@ S.engine = function (item) {};
 Do nothing - the __state__ MUST reflect the state of the Cell's engine
 */
 S.state = function (item) {};
+
+/*
+Stash coordinates and dimensions allow us to store, and export to an image asset, a portion of the Cell's current display which can then be used (for instance) by Pattern styles.
+
+Each of these values can be either absolute px Numbers, or relative (to the Cell's own dimensions) '%' strings
+*/
+S.stashX = function (val) {
+
+	if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
+	this.stashCoordinates[0] = val;
+};
+S.stashY = function (val) {
+
+	if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
+	this.stashCoordinates[1] = val;
+};
+S.stashWidth = function (val) {
+
+	if (!this.stashDimensions) {
+
+		let dims = this.currentDimensions;
+		this.stashDimensions = [dims[0], dims[1]];
+	}
+	this.stashDimensions[0] = val;
+};
+S.stashHeight = function (val) {
+
+	if (!this.stashDimensions) {
+
+		let dims = this.currentDimensions;
+		this.stashDimensions = [dims[0], dims[1]];
+	}
+	this.stashDimensions[1] = val;
+};
+D.stashX = function (val) {
+
+	if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
+
+	let c = this.stashCoordinates;
+	c[0] = addStrings(c[0], val);
+};
+D.stashY = function (val) {
+
+	if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
+
+	let c = this.stashCoordinates;
+	c[1] = addStrings(c[1], val);
+};
+D.stashWidth = function (val) {
+
+	if (!this.stashDimensions) {
+
+		let dims = this.currentDimensions;
+		this.stashDimensions = [dims[0], dims[1]];
+	}
+
+	let c = this.stashDimensions;
+	c[0] = addStrings(c[0], val);
+};
+D.stashHeight = function (val) {
+
+	if (!this.stashDimensions) {
+
+		let dims = this.currentDimensions;
+		this.stashDimensions = [dims[0], dims[1]];
+	}
+
+	let c = this.stashDimensions;
+	c[1] = addStrings(c[1], val);
+};
 
 /*
 
@@ -724,6 +781,8 @@ P.compile = function(){
 	this.sortGroups();
 	this.prepareStamp();
 
+	if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+
 	let self = this;
 
 	// Doing it this way to ensure that each group completes its stamp action before the next one starts
@@ -745,16 +804,26 @@ P.compile = function(){
 				.catch(err => reject(false));
 			}
 
-			// The else branch should only trigger once all the groups have been processed. At this point we should be okay to action any Cell-level filters on the output
+			// The else branch should only trigger once all the groups have been processed. At this point we should be okay to action any Cell-level filters on the output, and stash the output (if required)
 			else {
 
-				if (self.filters && self.filters.length) {
+				if (!self.noFilters && self.filters && self.filters.length) {
 
 					self.applyFilters()
-					.then(res => resolve(true))
+					.then(res => {
+
+// if (this.name === 'mycanvas_base') console.log('start stashOutput - filters route')
+						// if (self.stashOutput) self.stashOutputAction();
+						resolve(true);
+					})
 					.catch(err => reject(false));
 				}
-				else resolve(true);
+				else {
+
+// if (this.name === 'mycanvas_base') console.log('start stashOutput - normal route')
+					// if (self.stashOutput) self.stashOutputAction();
+					resolve(true);
+				}
 			}
 		});
 	};
@@ -877,7 +946,7 @@ P.show = function () {
 				if (!self.paste) self.paste = [];
 				paste = self.paste;
 
-				// cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockTo; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path entity. If pivoted to the mouse, they will use the base canvas's .here attribute, which takes into account differences between the base and display canvas dimensions.
+				// Cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockTo; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path entity, etc. If pivoted to the mouse, they will use the base canvas's .here attribute, which takes into account differences between the base and display canvas dimensions.
 
 				self.prepareStamp();
 
@@ -898,20 +967,25 @@ P.show = function () {
 			engine.drawImage(element, 0, 0, curWidth, curHeight, ...paste);
 			engine.restore();
 
+			if (self.stashOutput) self.stashOutputAction();
 			resolve(true);
 		}
-		else resolve(false);
+		else {
+
+			if (self.stashOutput) self.stashOutputAction();
+			resolve(false);
+		}
 	});
 };
 
 /*
+Internal function - add filters to the Cell's current output.
 
+Filters are applied via a web worker, hence the need to wrap the functionality in a Promise
 */
 P.applyFilters = function () {
 
 	let self = this;
-
-	if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
 	return new Promise(function(resolve){
 
@@ -952,7 +1026,104 @@ P.applyFilters = function () {
 };
 
 /*
+Internal function - stash the Cell's current output. While this function can be called at any time, the simplest way to invoke it is to set the Cell's __stashOutput__ flag to true, which will then invoke this function at the end of the compile step of the Display cycle (after any filters have been applied to the cell display).
 
+The simplest way to set the stashOutput flag is to call __scrawl.createImageFromCell__(cellName_or_cellObject, stashOutputAsAsset_flag) from the user code.
+
+We can limit the area of the cell display to be stashed by setting the Cell's __stashX__, __stashY__, __stashWidth__ and __stashHeight__ values appropriately. These can all be either absolute (positive) number values, or %String number values relative to the Cell element's dimensions.
+
+We store the generated imageData object into the Cell object's __stashedImageData__ attribute.
+
+If we are also stashing an image, an &lt;img> element will be generated and stored in the Cell object's __stashedImage__ attribute. We also generate an imageAsset wrapper for the object that will have the name _cellname+'-image'_, which gets added to the assets section of the Scrawl-canvas library.
+
+KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements
+ANNOYING ISSUE - images generated from cells are (currently) buggy - a timing issue, I think
+*/
+P.stashOutputAction = function () {
+
+	let [cellWidth, cellHeight] = this.currentDimensions,
+		stashCoordinates = this.stashCoordinates,
+		stashDimensions = this.stashDimensions,
+		stashX = (stashCoordinates) ? stashCoordinates[0] : 0, 
+		stashY = (stashCoordinates) ? stashCoordinates[1] : 0, 
+		stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth, 
+		stashHeight = (stashDimensions) ? stashDimensions[1] : cellHeight;
+
+	// Keep the stashed image within bounds of the Cell's dimensions.
+	if (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
+
+		if (stashWidth.substring) stashWidth = (parseFloat(stashWidth) / 100) * cellWidth;
+		if (isNaN(stashWidth) || stashWidth <= 0) stashWidth = 1;
+		if (stashWidth > cellWidth) stashWidth = cellWidth;
+
+		if (stashHeight.substring) stashHeight = (parseFloat(stashHeight) / 100) * cellHeight;
+		if (isNaN(stashHeight) || stashHeight <= 0) stashHeight = 1;
+		if (stashHeight > cellHeight) stashHeight = cellHeight;
+
+		if (stashX.substring) stashX = (parseFloat(stashX) / 100) * cellWidth;
+		if (isNaN(stashX) || stashX < 0) stashX = 0;
+		if (stashX + stashWidth > cellWidth) stashX = cellWidth - stashWidth;
+
+		if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
+		if (isNaN(stashY) || stashY < 0) stashY = 0;
+		if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
+	}
+
+	// Get the imageData object, and stash it
+	this.stashedImageData = this.engine.getImageData(stashX, stashY, stashWidth, stashHeight);
+
+	// Get the dataUrl String, updating the stashed &lt;img> element with it
+	if (this.stashOutputAsAsset) {
+
+		this.stashOutputAsAsset = false;
+
+		let cellFlag = false,
+			sourcecanvas, mycanvas;
+
+		if (stashWidth !== cellWidth || stashHeight !== cellHeight) {
+
+			cellFlag = true;
+			
+			mycanvas = requestCell();
+			sourcecanvas = mycanvas.element;
+
+			sourcecanvas.width = stashWidth;
+			sourcecanvas.height = stashHeight;
+
+			mycanvas.engine.putImageData(this.stashedImageData, 0, 0);
+		}
+		else sourcecanvas = this.element;
+
+		if (!this.stashedImage) {
+
+			let self = this;
+
+			let newimg = this.stashedImage = document.createElement('img');
+
+			newimg.id = `${this.name}-image`;
+
+			newimg.onload = function () {
+
+				scrawlCanvasHold.appendChild(newimg);
+				importDomImage(`#${newimg.id}`);
+			};
+
+			newimg.src = sourcecanvas.toDataURL();
+		}
+		else this.stashedImage.src = sourcecanvas.toDataURL();
+
+		if (cellFlag) {
+
+			releaseCell(mycanvas);
+		}
+	}
+	this.stashOutput = false;
+};
+
+/*
+Internal function - get a reference to the Cell's current host (where it will be stamping itself as part of the Display cycle).
+
+Note that Cells can (in theory: not tested yet) belong to more than one Canvas object Group - they can be used in multiple &lt;canvas> elements, thus the need to check which canvas is the current host at this point in the Display cycle.
 */
 P.getHost = function () {
 
@@ -969,7 +1140,7 @@ P.getHost = function () {
 };
 
 /*
-
+Internal function - keeping the Canvas object's 'base' Cell's .here attribute up-to-date with accurate mouse/pointer/touch cursor data
 */
 P.updateBaseHere = function (controllerHere, fit) {
 
@@ -1055,6 +1226,9 @@ P.updateBaseHere = function (controllerHere, fit) {
 	}
 };
 
+/*
+Remove a Cell object from the Scrawl-canvas ecosystem by invoking its __demolishCell__ function.
+*/
 P.demolishCell = function () {
 
 	if (this.controller) this.controller.removeCell(this.name);
@@ -1069,7 +1243,11 @@ P.demolishCell = function () {
 };
 
 /*
+Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object's base cell's canvas. Will be invoked as part of the Display cycle 'show' functionality.
 
+Cells can emulate (most of) the functionality of entity artefacts, in that they can be positioned (start, handle, offset), rotated, scaled and flipped when they stamp themselves on the base cell. They can also be positioned using pivot, path and mouse functionality, and they can be dragged and dropped across the displayed &lt;canvas> element as part of defined user interaction.
+
+Note that Cells acting as a Canvas object's 'base' cell will position themselves on the displayed Canvas in line with their Canvas controller's 'fit' attribute, disregarding any positional information it may have been given.
 */
 P.prepareStamp = function () {
 
@@ -1092,7 +1270,7 @@ P.prepareStamp = function () {
 };
 
 /*
-
+Internal function - get the Cell to update its .here information
 */
 P.updateHere = function () {
 
@@ -1194,6 +1372,14 @@ P.rotateDestination = function (engine, x, y, entity) {
 
 /*
 ## Cell pool
+
+A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas> element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.
+
+To use a pool cell, request it using the exposed __requestCell__ function.
+
+IT IS IMPERATIVE that requested cells are released once work with them completes, using the __releaseCell__ function. Failure to do this leads to impaired performance as Javascript creates new canvas elements (often in multiples of 60 per second) which need to be garbage collected by the Javascript engine, thus leading to increasingly shoddy performance the longer the animation runs.
+
+The __cellPoolLength__ function (supplied for debugging purposes) returns a string reporting on how many Cell objects are currently held in the pool, and how many have been created since the web page / Javascript first loaded.
 */
 const cellPool = [];
 let cellPoolCount = 0;
@@ -1203,9 +1389,16 @@ const cellPoolLength = function () {
 	return `${cellPool.length} (from ${cellPoolCount} generated)`;
 }
 
-/*
+P.poolDefs = {
+	element: null,
+	engine: null,
+	state: null,
+	width: 300,
+	height: 100,
+	alpha: 1,
+	composite: 'source-over',
+}
 
-*/
 const requestCell = function () {
 
 	if (!cellPool.length) {
@@ -1220,9 +1413,6 @@ const requestCell = function () {
 	return cellPool.shift();
 };
 
-/*
-
-*/
 const releaseCell = function (c) {
 
 	if (c && c.type === 'Cell') {

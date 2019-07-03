@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 020</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    canvas {
+      margin-bottom: 1em;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 020</h1>
+  <h2>Testing createImageFromXXX functionality</h2>
+
+  <div class="controls">
+
+    <div class="green label">Apply filter to</div>
+    <div class="green">
+      <select class="controlItem" id="target">
+        <option value="">none</option>
+        <option value="block1">block1</option>
+        <option value="block2">block2</option>
+        <option value="wheel1">wheel1</option>
+        <option value="wheel2">wheel2</option>
+        <option value="group">group</option>
+        <option value="cell">cell</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+  <canvas id="holdcanvas" width="600" height="100"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create and clone block and wheel entitys</li>
+      <li>Trigger stash functionality on each entity, the entity group and the cell, and display the resulting &lt;img> elements beneath the canvas</li>
+      <li>Repeat each time a selector changes, to check that stashing correctly updates each &lt;img> element</li>
+    </ul>
+  </div>
+
+  <script src="canvas-020.js" type="module"></script>
+
+</body>
+
+</html>

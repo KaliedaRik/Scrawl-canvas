@@ -153,9 +153,7 @@ let report = function () {
 		testTime = testNow - testTicker;
 		testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Element corner data: ${element.currentCornersData.join()}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
 	};
 }();
 
@@ -223,5 +221,3 @@ document.querySelector('#pitch').value = 20;
 document.querySelector('#yaw').value = 30;
 document.querySelector('#scale').value = 1;
 document.querySelector('#perspective').value = 1200;
-
-console.log(scrawl.library)

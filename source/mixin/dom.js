@@ -976,7 +976,7 @@ Overwrites mixin/position.js function
 
 			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
-			return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
+			return engine.isPointInPath(this.pathObject, tx, ty);
 
 		}, this)) {
 
@@ -985,7 +985,7 @@ Overwrites mixin/position.js function
 			return {
 				x: tx,
 				y: ty,
-				artefact: this
+				artefact: this,
 			};
 		}
 		

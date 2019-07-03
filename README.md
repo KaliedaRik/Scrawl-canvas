@@ -41,10 +41,13 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 * Still need to check entity, asset, styling and various other objects
 * Need to review objects (such as Tickers/Tweens) to make sure they don't choke when their target gets removed from Scrawl-canvas
 
-6. Enhance Image/Video functionalities - Picture entity (IN PROGRESS)
+6. Enhance Image/Video functionalities - Picture entity (INITIAL [MVP] WORK DONE)
 * Added a scrawl.importMediaStream() function to make adding mediastream input - for example from a webcam or device camera - (relatively) simple. The mediaStream gets routed to a (non-DOM) video element that can then be used as a Picture entity's 'asset' attribute. Includes rudimentary functionality to request various mediadtream resolutions, whether to use front or back camera on a device, and whether to include audio in the mediastream output. Demo canvas-010 updated to test the new functionality.
-* TODO: generate Images and/or Picture entitys from other entitys, groups and cells.
 * TODO: extend mediastream functionality so user can control the mediastream dynamically via a Picture entity using it as its asset.
+* Added functionality to 'stash' entity, group and cell visual output (on a once-per-request basis) on the affected Scrawl-canvas object. Demo canvas-020 created to test functionality.
+* At the same time (and optionally), the code will generate an &lt;img> element and add it to the DOM, alongside an imageAsset object which can then be used by Picture entitys and Pattern styles.
+* TODO: the current code is not perfect: entitys require a slight delay (eg setTimeout) between making a change - such as adding/removing filters and generating the stash capture; also cell behaviour is erratic and needs to be properly debugged. 
+
 
 7. Animated sprites
 * to replicate and improve on existing functionality in v7

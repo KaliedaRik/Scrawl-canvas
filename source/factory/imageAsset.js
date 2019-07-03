@@ -1,7 +1,7 @@
 /*
 # ImageAsset factory
 */
-import { constructors } from '../core/library.js';
+import { constructors, canvas, cell, group, artefact } from '../core/library.js';
 import { mergeOver, isa_obj } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
@@ -223,173 +223,74 @@ const importDomImage = function (query) {
 				source: item,
 			});
 
-			if (!item.complete) {
+			item.onload = () => {
 
-				item.onload = () => {
-
-					image.set({
-						source: item,
-					});
-				};
-			}
+				image.set({
+					source: item,
+				});
+			};
 		}
 	});
 };
 
 /*
-TODO: code up this functionality - function should be available to users
+We can get cells, groups and entitys to save their output as imagedata, which we can then use to build an asset which in turn can be used by Picture entitys and pattern styles
 */
-const createImageFromCell = function (items) {
+const createImageFromCell = function (item, stashAsAsset = false) {
 
-	return false;
+	let mycell = (item.substring) ? cell[item] || canvas[item] : item;
+
+	if (mycell.type === 'Canvas') mycell = mycell.base;
+
+	if (mycell.type === 'Cell') {
+
+		mycell.stashOutput = true;
+
+		if (stashAsAsset) mycell.stashOutputAsAsset = true;
+	}
 };
 
-/*
-TODO: code up this functionality - function should be available to users
-*/
-const createImageFromGroup = function (items) {
+const createImageFromGroup = function (item, stashAsAsset = false) {
 
-	return false;
+	let mygroup;
+
+	if (item && !item.substring) {
+
+		if (item.type === 'Group') mygroup = item;
+		else if (item.type === 'Cell') mygroup = group[item.name];
+		else if (item.type === 'Canvas') mygroup = group[item.base.name];
+	}
+	else if (item && item.substring) mygroup = group[item];
+
+	if (mygroup) {
+
+		mygroup.stashOutput = true;
+
+		if (stashAsAsset) mygroup.stashOutputAsAsset = true;
+	}
 };
 
-// 		/**
-// A __factory__ function to convert a group of entitys into a single Picture entity
+const createImageFromEntity = function (item, stashAsAsset = false) {
 
-// Argument attributes can include any entity positioning and styling values, alongside the following flag:
+	let myentity = (item.substring) ? artefact[item] : item;
 
-// * __convert__ - when set to true, existing entitys in the group will be deleted; default: false
+	if (myentity.isArtefact) {
 
-// If no name attribute is supplied in the argument object, the new Picture entity will be given the name: GROUPNAME+'_entity'
-// @method Group.convertGroupToPicture
-// @param {Object} items Key:value Object argument for setting attributes
-// @return Picture entity object; false if no entitys contained in group
-// **/
-// 		my.Group.prototype.convertGroupToPicture = function(items) {
-// 			var image,
-// 				cell,
-// 				engine;
-// 			items = my.safeObject(items);
-// 			if (this.entitys.length) {
-// 				cell = my.cell[this.cell];
-// 				engine = my.context[this.cell];
-// 				image = my.prepareConvert(cell, engine, this);
-// 				items.name = items.name || this.name + '_entity';
-// 				items.group = items.group || this.name;
-// 				if (items.convert) {
-// 					my.deleteEntity(this.entitys);
-// 				}
-// 				return my.doConvert(image, items);
-// 			}
-// 			return false;
-// 		};
+		myentity.stashOutput = true;
 
-/*
-TODO: code up this functionality - function should be available to users
-*/
-const createImageFromEntity = function (items) {
-
-	return false;
+		if (stashAsAsset) myentity.stashOutputAsAsset = true;
+	}
 };
 
-// 		/**
-// A __factory__ function to convert a entity into a Picture entity
-
-// Argument attributes can include any entity positioning and styling values, alongside the following flag:
-
-// * __convert__ - when set to true, existing entity will be deleted; default: false
-
-// If no name attribute is supplied in the argument object, the new Picture entity will be given the name: SPRITENAME+'_picture'
-// @method Entity.convertToPicture
-// @param {Object} items Key:value Object argument for setting attributes
-// @return Picture entity object
-// **/
-// 		my.Entity.prototype.convertToPicture = function(items) {
-// 			var image,
-// 				cell,
-// 				engine,
-// 				cellname = my.group[this.group].cell;
-// 			items = my.safeObject(items);
-// 			cell = my.cell[cellname];
-// 			engine = my.context[cellname];
-// 			image = my.prepareConvert(cell, engine, this);
-// 			items.name = items.name || this.name + '_picture';
-// 			items.group = items.group || this.group;
-// 			if (items.convert) {
-// 				my.deleteEntity([this.name]);
-// 			}
-// 			return my.doConvert(image, items);
-// 		};
-
-
-// 		/**
-// Helper function for convert functions
-// @method prepareConvert
-// @return ImageData object
-// @private
-// **/
-// 		my.prepareConvert = function(cell, ctx, obj) {
-// 			var image,
-// 				data,
-// 				left,
-// 				right,
-// 				top,
-// 				bottom,
-// 				pos,
-// 				i,
-// 				iz,
-// 				j,
-// 				jz;
-// 			left = cell.actualWidth;
-// 			right = 0;
-// 			top = cell.actualHeight;
-// 			bottom = 0;
-// 			cell.clear();
-// 			obj.stamp(null, cell.name);
-// 			image = ctx.getImageData(0, 0, cell.actualWidth, cell.actualHeight);
-// 			data = image.data;
-// 			for (i = 0, iz = cell.actualHeight; i < iz; i++) {
-// 				for (j = 0, jz = cell.actualWidth; j < jz; j++) {
-// 					pos = (((i * cell.actualWidth) + j) * 4) + 3;
-// 					if (data[pos] > 0) {
-// 						top = (top > i) ? i : top;
-// 						bottom = (bottom < i) ? i : bottom;
-// 						left = (left > j) ? j : left;
-// 						right = (right < j) ? j : right;
-// 					}
-// 				}
-// 			}
-// 			image = ctx.getImageData(left, top, (right - left + 1), (bottom - top + 1));
-// 			cell.clear();
-// 			return image;
-// 		};
-// 		/**
-// Helper function for convert functions
-// @method doConvert
-// @return Picture entity object
-// @private
-// **/
-// 		my.doConvert = function(image, items) {
-// 			var cv = my.work.imageCanvas;
-// 			cv.width = image.width;
-// 			cv.height = image.height;
-// 			my.work.imageCvx.putImageData(image, 0, 0);
-// 			items.url = cv.toDataURL();
-// 			items.width = image.width;
-// 			items.height = image.height;
-// 			image = my.makeImage(items);
-// 			return my.makePicture(items);
-// 		};
 
 /*
 ## Exported factory function
 */
 const makeImageAsset = function (items) {
+
 	return new ImageAsset(items);
 };
 
-/*
-Also store constructor in library - clone functionality expects to find it there
-*/
 constructors.ImageAsset = ImageAsset;
 
 export {

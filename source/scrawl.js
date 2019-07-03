@@ -77,7 +77,6 @@ import {
 
 import { 
 	makeColor,
-	// colorList,
 } from './factory/color.js';
 
 
@@ -118,9 +117,9 @@ import {
 	makeImageAsset,
 	importImage,
 	importDomImage,
-	// createImageFromCell,
-	// createImageFromGroup,
-	// createImageFromEntity,
+	createImageFromCell,
+	createImageFromGroup,
+	createImageFromEntity,
 } from './factory/imageAsset.js';
 
 
@@ -298,9 +297,9 @@ export default {
 	makeImageAsset,
 	importImage,
 	importDomImage,
-	// createImageFromCell,
-	// createImageFromGroup,
-	// createImageFromEntity,
+	createImageFromCell,
+	createImageFromGroup,
+	createImageFromEntity,
 
 
 	// factory/pattern.js
