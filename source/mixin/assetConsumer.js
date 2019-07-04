@@ -97,7 +97,9 @@ All factories using the position mixin will add these to their prototype objects
 
 			if (myAsset) {
 
-				if (this.asset) this.asset.unsubscribe(this);
+				let oldAsset = this.asset;
+
+				if (oldAsset && oldAsset.unsubscribe) oldAsset.unsubscribe(this);
 			
 				myAsset.subscribe(this);
 			}
@@ -117,7 +119,9 @@ All factories using the position mixin will add these to their prototype objects
 
 			if (myAsset) {
 
-				if (this.asset) this.asset.unsubscribe(this);
+				let oldAsset = this.asset;
+
+				if (oldAsset && oldAsset.unsubscribe) oldAsset.unsubscribe(this);
 			
 				myAsset.subscribe(this);
 			}

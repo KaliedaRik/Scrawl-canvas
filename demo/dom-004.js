@@ -68,8 +68,7 @@ tween - ${t.length}, ${library.tweennames.length}: ${t.join(', ')}
 artefact - ${a.length}, ${library.artefactnames.length}: ${a.join(', ')}
 element - ${e.length}, ${library.elementnames.length}: ${e.join(', ')}
 tickers - ${k.length}, ${library.animationtickersnames.length}: ${k.join(', ')}
-animation - ${n.length}, ${library.animationnames.length}: ${n.join(', ')}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+animation - ${n.length}, ${library.animationnames.length}: ${n.join(', ')}`;
 	};
 }();
 
@@ -104,7 +103,4 @@ let flyRocket = function(e) {
 		}
 	}).run();
 };
-
 scrawl.addNativeListener('click', flyRocket, stack.domElement);
-
-console.log(scrawl.library)

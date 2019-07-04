@@ -147,7 +147,9 @@ let report = function () {
 
 		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 Hits: ${targetsLength}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+Pools - 
+    cell: ${scrawl.cellPoolLength()}
+    quaternion: ${scrawl.quaternionPoolLength()}`;
 	};
 }();
 

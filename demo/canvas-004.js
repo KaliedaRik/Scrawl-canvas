@@ -55,8 +55,7 @@ let report = function () {
 		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 Palette - start: ${graddy.get('paletteStart')}; end: ${graddy.get('paletteEnd')}
 Start - x: ${graddy.get('startX')}; y: ${graddy.get('startY')}; radius: ${graddy.get('startRadius')}
-End - x: ${graddy.get('endX')}; y: ${graddy.get('endY')}; radius: ${graddy.get('endRadius')}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+End - x: ${graddy.get('endX')}; y: ${graddy.get('endY')}; radius: ${graddy.get('endRadius')}`;
 	};
 }();
 

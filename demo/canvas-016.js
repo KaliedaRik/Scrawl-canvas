@@ -90,8 +90,7 @@ let report = function () {
 		testTime = testNow - testTicker;
 		testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
 	};
 }();
 
@@ -106,6 +105,8 @@ scrawl.makeRender({
 
 
 // User interaction - setup form observer functionality
+
+// KNOWN ISSUE: in the mix between updating scale, font size and font family, the height calculation occasionally glitches, giving an incorrect height value for the Phrase entity
 scrawl.observeAndUpdate({
 
 	event: ['input', 'change'],
@@ -178,5 +179,3 @@ document.querySelector('#variant').options.selectedIndex = 0;
 document.querySelector('#family').options.selectedIndex = 0;
 document.querySelector('#size_px').value = 16;
 document.querySelector('#size_string').options.selectedIndex = 4;
-
-console.log(scrawl.library.entity)

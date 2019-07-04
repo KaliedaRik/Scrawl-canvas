@@ -39,8 +39,7 @@ let report = function () {
 artefact - ${a.length}, ${artefactnames.length}: [${(artefactnames).join(', ')}] 
 stack - ${s.length}, ${stacknames.length}: [${(stacknames).join(', ')}] 
 canvas - ${el.length}, ${canvasnames.length}: [${(canvasnames).join(', ')}]
-cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
 	};
 }();
 
@@ -145,7 +144,4 @@ let controls = function () {
 		}
 	};
 }();
-
 scrawl.addListener('up', controls, '.controls');
-
-console.log(scrawl.library)

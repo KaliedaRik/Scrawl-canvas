@@ -233,9 +233,10 @@ let report = function () {
 		testTime = testNow - testTicker;
 		testTicker = testNow;
 
+		dragging = current();
+
 		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
 	};
 }();
 
@@ -263,5 +264,3 @@ scrawl.makeRender({
 	commence: animateGradients,
 	afterShow: report,
 });
-
-console.log(scrawl.library)

@@ -93,8 +93,7 @@ let report = function () {
 		testTicker = testNow;
 
 		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Shape path length: ${arrow.length}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+Shape path length: ${arrow.length}`;
 	};
 }();
 

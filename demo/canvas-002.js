@@ -203,8 +203,7 @@ let report = function () {
 		testTime = testNow - testTicker;
 		testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
 	};
 }();
 
@@ -217,5 +216,3 @@ scrawl.makeRender({
 	commence: mouseCheck,
 	afterShow: report,
 });
-
-console.log(scrawl.library);

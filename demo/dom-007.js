@@ -170,8 +170,7 @@ let report = function () {
 		testTicker = testNow;
 
 		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Current classes: "${flower.get('classes')}"
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+Current classes: "${flower.get('classes')}"`;
 	};
 }();
 
@@ -184,5 +183,3 @@ scrawl.makeRender({
 	target: stack,
 	afterShow: report,
 });
-
-console.log(scrawl.library)
