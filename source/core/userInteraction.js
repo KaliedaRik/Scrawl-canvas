@@ -14,6 +14,8 @@ const uiSubscribedElements = [];
 Scrawl-canvas mouse tracking functionality can be switched off by setting the __scrawl.ui.trackMouse__ flag to false
 */
 let trackMouse = false,
+	// mouseChanged = false,
+	// touchChanged = false;
 	mouseChanged = false;
 
 /*
@@ -62,7 +64,9 @@ const scrollAction = function (e) {
 };
 
 /*
-__moveAction__ function - to check if mouse cursor position has changed; if yes, flag that currentCorePosition object needs to be updated
+__moveAction__ function - to check if mouse cursor position has changed; if yes, update currentCorePosition object and flag that the updated needs to cascade to subscribed elements at the next RAF invocation.
+
+The events that trigger this function (pointermove, pointerup, pointerdown, pointerleave, pointerenter; or mousemove, mouseup, mousedown, mouseleave, mouseenter) are tied to the window object, not to any particular DOM element.
 */
 const moveAction = function (e) {
 
@@ -74,6 +78,33 @@ const moveAction = function (e) {
 		currentCorePosition.x = x;
 		currentCorePosition.y = y;
 		mouseChanged = true;
+	}
+};
+
+/*
+__touchAction__ function - maps touch coordinates to the mouse cursor position (via currentCorePosition) and then immediately invokes a cascade update action to all subscribed elements.
+
+The events that trigger this function (touchstart, touchmove, touchend, touchcancel) are tied to the window object, not to any particular DOM element.
+
+Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.
+*/
+const touchAction = function (e) {
+
+	if (e.type === 'touchstart' || e.type === 'touchmove') {
+
+		if (e.touches && e.touches[0]) {
+
+			let touch = e.touches[0],
+				x = Math.round(touch.pageX),
+				y = Math.round(touch.pageY);
+
+			if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
+				currentCorePosition.type = 'touch';
+				currentCorePosition.x = x;
+				currentCorePosition.y = y;
+				updateUiSubscribedElements();
+			}
+		}
 	}
 };
 
@@ -190,6 +221,11 @@ const actionCoreListeners = function (action) {
 		window[action]('mousedown', moveAction, false);
 		window[action]('mouseleave', moveAction, false);
 		window[action]('mouseenter', moveAction, false);
+
+		window[action]('touchmove', touchAction, false);
+		window[action]('touchstart', touchAction, false);
+		window[action]('touchend', touchAction, false);
+		window[action]('touchcancel', touchAction, false);
 	}
 
 	window[action]('scroll', scrollAction, false);
@@ -404,7 +440,7 @@ const makeDragZone = function (items = {}) {
 
 		coordinateSource = items.coordinateSource;
 
-		// Generally the system won't have had time to establish target.base.here, if the dragzone is defined as part of setup before a Display cycle haas completed - so the test gets repeated in the pickup function below, to capture those cases
+		// Generally the system won't have had time to establish target.base.here, if the dragzone is defined as part of setup before a Display cycle has completed - so the test gets repeated in the pickup function below, to capture those cases
 		if (!coordinateSource) coordinateSource = target.base.here;
 
 		collisionGroup = items.collisionGroup;
@@ -418,8 +454,15 @@ const makeDragZone = function (items = {}) {
 
 	let pickup = function (e) {
 
-		e.preventDefault();
-		e.returnValue = false;
+		if (e.cancelable) {
+			
+			e.preventDefault();
+			e.returnValue = false;
+		}
+
+		let type = e.type;
+
+		if (type === 'touchstart' || type === 'touchcancel') touchAction(e);
 
 		if (!coordinateSource && target.type === 'Canvas') coordinateSource = target.base.here;
 
@@ -430,8 +473,11 @@ const makeDragZone = function (items = {}) {
 
 	let drop = function (e) {
 
-		e.preventDefault();
-		e.returnValue = false;
+		if (e.cancelable) {
+
+			e.preventDefault();
+			e.returnValue = false;
+		}
 
 		if (current) {
 

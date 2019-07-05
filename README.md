@@ -48,8 +48,9 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 * At the same time (and optionally), the code will generate an &lt;img> element and add it to the DOM, alongside an imageAsset object which can then be used by Picture entitys and Pattern styles.
 * TODO: the current code is not perfect: entitys require a slight delay (eg setTimeout) between making a change - such as adding/removing filters and generating the stash capture; also cell behaviour is erratic and needs to be properly debugged. 
 
-7. Touch functionality (IN PROGRESS)
-* need to implement touch functionality to match/replicate existing functionality surrounding user interaction with mouse cursor
+7. Touch functionality (INITIAL [MVP] WORK DONE)
+* Scrawl-canvas will now track (single finger) touch events, for instance as part of a drag-and-drop action across a stack or canvas element. Tested on all demos with drag-and-drop, or mouse tracking, functionality
+* TODO: consider if we need to go further, for example identifying and acting on multiple touch and/or gestures. My current view is that Scrawl-canvas does not need to worry about these, and that they would be much better handled by other JS libraries dedicated to touch functionality - but that does leave the question of how to integrate a 'pinch' gesture into an action to zoom in on a canvas element's contents.
 
 8. Animated sprites
 * to replicate and improve on existing functionality in v7
