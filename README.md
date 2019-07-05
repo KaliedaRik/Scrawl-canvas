@@ -1,6 +1,6 @@
 # SCRAWL-CANVAS Library 
 
-Version 8.0.0 (alpha) - 25 June 2019
+Version 8.0.0 (alpha) - 5 July 2019
 
 Scrawl-canvas is  JavaScript library which adds an API for handling and manipulating HTML5 &lt;canvas> elements in the DOM.
 
