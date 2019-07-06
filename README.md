@@ -90,7 +90,8 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 16. Displacement map filter-like functionality
 * just for the challenge of it
 
-17. Work out how to get and use SVG into the system as assets which can be used by Picture/Pattern etc
+17. SVG as an asset (IN PROGRESS)
+* Work out how to get and use SVG into the system as assets which can be used by Picture/Pattern etc
 * annoying that we can't use &lt;svg> in the same way we can use &lt;img> &lt;video> &lt;canvas> as source assets
 * same situation for &lt;picture> - why can't we just use them as a source asset?
 
