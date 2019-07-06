@@ -134,6 +134,60 @@ stack.addNewElement({
 });
 
 
+/*
+Handle the pre-existing SVG elements that have been automatically imported into the stack
+
+SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt drag-and-drop functionality (because: collision functionality not implemented). We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.
+*/ 
+stack.addNewElement({
+
+	name: 'weather-icon-dragger',
+	tag: 'div',
+
+	width: 40,
+	height: 40,
+
+	startX: 340,
+	startY: 360,
+	handleX: 'center',
+	handleY: 'center',
+
+	group: hitGroup.name,
+	collides: true,
+
+	classes: 'circle',
+	css: {
+		cursor: 'grab',
+		border: '5px solid gold',
+		backgroundColor: 'darkgray',
+	},
+
+}).clone({
+
+	name: 'simple-svg-dragger',
+	startX: 60,
+	startY: 220,
+
+});
+
+artefact.weathericon.set({
+
+	pivot: 'weather-icon-dragger',
+	lockTo: 'pivot',
+	order: 1,
+});
+
+artefact['simple-svg'].set({
+
+	pivot: 'simple-svg-dragger',
+	lockTo: 'pivot',
+	order: 1,
+
+	pitch: 30,
+	yaw: 50,
+});
+
+
 // Create the drag-and-drop zone
 scrawl.makeDragZone({
 

@@ -32,7 +32,7 @@ THE SOFTWARE.
 
 import { 
 	startCoreAnimationLoop, 
-	stopCoreAnimationLoop 
+	stopCoreAnimationLoop,
 } from './core/animationloop.js';
 
 import { 
@@ -66,7 +66,7 @@ import {
 
 
 import { 
-	makeAction 
+	makeAction,
 } from './factory/action.js';
 
 
@@ -99,12 +99,12 @@ import {
 
 
 import { 
-	makeFilter 
+	makeFilter,
 } from './factory/filter.js';
 
 
 import { 
-	makeGradient 
+	makeGradient,
 } from './factory/gradient.js';
 
 
@@ -124,17 +124,17 @@ import {
 
 
 import { 
-	makePattern 
+	makePattern,
 } from './factory/pattern.js';
 
 
 import { 
-	makePhrase 
+	makePhrase,
 } from './factory/phrase.js';
 
 
 import { 
-	makePicture 
+	makePicture,
 } from './factory/picture.js';
 
 
@@ -147,7 +147,7 @@ import {
 
 
 import { 
-	makeRadialGradient 
+	makeRadialGradient,
 } from './factory/radialGradient.js';
 
 
@@ -169,17 +169,17 @@ import {
 
 
 import { 
-	makeTicker 
+	makeTicker,
 } from './factory/ticker.js';
 
 
 import { 
-	makeTween 
+	makeTween,
 } from './factory/tween.js';
 
 
 import { 
-	makeUserObject 
+	makeUserObject,
 } from './factory/userObject.js';
 
 

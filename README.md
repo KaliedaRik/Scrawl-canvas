@@ -52,7 +52,7 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 * Scrawl-canvas will now track (single finger) touch events, for instance as part of a drag-and-drop action across a stack or canvas element. Tested on all demos with drag-and-drop, or mouse tracking, functionality
 * TODO: consider if we need to go further, for example identifying and acting on multiple touch and/or gestures. My current view is that Scrawl-canvas does not need to worry about these, and that they would be much better handled by other JS libraries dedicated to touch functionality - but that does leave the question of how to integrate a 'pinch' gesture into an action to zoom in on a canvas element's contents.
 
-8. Animated sprites
+8. Animated sprites (IN PROGRESS)
 * to replicate and improve on existing functionality in v7
 * maybe see if we can make using sprites similar to using videos?
 * consider usefulness of running sprites using existing tween/ticker/action stuff?
@@ -90,10 +90,9 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 16. Displacement map filter-like functionality
 * just for the challenge of it
 
-17. SVG as an asset (IN PROGRESS)
-* Work out how to get and use SVG into the system as assets which can be used by Picture/Pattern etc
-* annoying that we can't use &lt;svg> in the same way we can use &lt;img> &lt;video> &lt;canvas> as source assets
-* same situation for &lt;picture> - why can't we just use them as a source asset?
+17. SVG as an asset (NOT TAKING FORWARD)
+* Coded up functionality to transform DOM SVG markup into an SvgAsset, which could then be used by Picture entity. While we can do this ok for static SVG, any mistakes in the SVG markup breaks the system. Also, no way to show SVG animations in the canvas in real time
+* This is too much of an edge case to be worth any more effort. SVG elements can already be used in Scrawl-canvas stacks, and we should be able to position and manipulate them in the same ways as any other Element artefact. Demo DOM-003 updated to test importing SVG elements into stacks.
 
 
 ### Roadmap - further ahead:
