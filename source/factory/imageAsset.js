@@ -63,7 +63,6 @@ S.source = function (item = {}) {
 };
 
 
-
 /*
 ## Define prototype functions
 */
@@ -123,7 +122,8 @@ const importImage = function (...args) {
 
 	args.forEach(item => {
 
-		let name, url, className, visibility, parent;
+		let name, url, className, visibility, 
+			parent = false;
 
 		let flag = false;
 
@@ -135,7 +135,7 @@ const importImage = function (...args) {
 			url = item;
 			className = '';
 			visibility = false;
-			parent = null;
+			// parent = null;
 
 			flag = true;
 		}
@@ -150,7 +150,7 @@ const importImage = function (...args) {
 				url = item.src;
 				className = item.className || '';
 				visibility = item.visibility || false;
-				parent = document.querySelector(parent);
+				if (item.parent) parent = document.querySelector(item.parent);
 
 				flag = true;
 			}
@@ -170,13 +170,13 @@ const importImage = function (...args) {
 
 			img.style.display = (visibility) ? 'block' : 'none';
 
+			if (parent) parent.appendChild(img);
+			
 			img.onload = () => {
 
 				image.set({
 					source: img,
 				});
-
-				if (parent) parent.appendChild(img);
 			};
 			
 			img.src = url;

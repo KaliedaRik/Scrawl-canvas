@@ -169,6 +169,11 @@ import {
 
 
 import { 
+	importSprite,
+} from './factory/spriteAsset.js';
+
+
+import { 
 	makeTicker,
 } from './factory/ticker.js';
 
@@ -339,6 +344,10 @@ export default {
 	makeBoxedShape,
 	makePolyline,
 	makeSpiral,
+
+
+	// factory/spriteAsset.js
+	importSprite,
 
 
 	// factory/ticker.js

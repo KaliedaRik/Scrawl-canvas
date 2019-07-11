@@ -400,7 +400,12 @@ Overrides mixin/entity.js
 P.prepareStamp = function() {
 
 	if (this.dirtyAsset) this.cleanAsset();
-	if (this.asset && this.asset.checkSource) this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
+
+	if (this.asset) {
+
+		if (this.asset.type === 'Sprite') this.checkSpriteFrame(this);
+		else this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
+	}
 
 	if (this.dirtyDimensions || this.dirtyHandle || this.dirtyScale) this.dirtyPaste = true;
 
@@ -519,61 +524,6 @@ P.fillThenDraw = function (engine) {
 
 	engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 	engine.stroke(this.pathObject);
-};
-
-
-/*
-video actions
-*/
-P.videoAction = function (action, ...args) {
-
-	let myAsset = this.asset;
-
-	if (myAsset && myAsset.type === 'Video') return myAsset[action](...args);
-};
-
-P.videoPromiseAction = function (action, ...args) {
-
-	let myAsset = this.asset;
-
-	if (myAsset && myAsset.type === 'Video') return myAsset[action](...args);
-	else return Promise.reject('Asset not a video');
-};
-
-P.videoAddTextTrack = function (kind, label, language) {
-	return this.videoAction('addTextTrack', kind, label, language);
-};
-
-P.videoCaptureStream = function () {
-	return this.videoAction('captureStream');
-};
-
-P.videoCanPlayType = function (mytype) {
-	return this.videoAction('canPlayType', mytype);
-};
-
-P.videoFastSeek = function (time) {
-	return this.videoAction('fastSeek', time);
-};
-
-P.videoLoad = function () {
-	return this.videoAction('load');
-};
-
-P.videoPause = function () {
-	return this.videoAction('pause');
-};
-
-P.videoPlay = function () {
-	return this.videoPromiseAction('play');
-};
-
-P.videoSetMediaKeys = function (keys) {
-	return this.videoPromiseAction('setMediaKeys', keys);
-};
-
-P.videoSetSinkId = function () {
-	return this.videoPromiseAction('setSinkId');
 };
 
 
