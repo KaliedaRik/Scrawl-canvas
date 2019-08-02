@@ -632,36 +632,36 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 		});
 	};
 
-P.getCellCoverage = function (img) {
+	P.getCellCoverage = function (img) {
 
-	let width = img.width,
-		height = img.height,
-		data = img.data,
-		maxX = 0,
-		maxY = 0,
-		minX = width,
-		minY = height,
-		counter = 3,
-		x, y;
+		let width = img.width,
+			height = img.height,
+			data = img.data,
+			maxX = 0,
+			maxY = 0,
+			minX = width,
+			minY = height,
+			counter = 3,
+			x, y;
 
-	for (y = 0; y < height; y++) {
+		for (y = 0; y < height; y++) {
 
-		for (x = 0; x < width; x++) {
+			for (x = 0; x < width; x++) {
 
-			if (data[counter]) {
+				if (data[counter]) {
 
-				if (minX > x) minX = x;
-				if (maxX < x) maxX = x;
-				if (minY > y) minY = y;
-				if (maxY < y) maxY = y;
+					if (minX > x) minX = x;
+					if (maxX < x) maxX = x;
+					if (minY > y) minY = y;
+					if (maxY < y) maxY = y;
+				}
+
+				counter += 4;
 			}
-
-			counter += 4;
 		}
-	}
-	if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
-	else return [0, 0, width, height];
-};
+		if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
+		else return [0, 0, width, height];
+	};
 
 /*
 

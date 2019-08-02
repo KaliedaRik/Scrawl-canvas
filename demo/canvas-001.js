@@ -1,5 +1,4 @@
 import scrawl from '../source/scrawl.js'
-scrawl.setScrawlPath('/source');
 
 
 // Scene setup
@@ -170,3 +169,5 @@ scrawl.makeRender({
 	target: canvas,
 	afterShow: report,
 });
+
+console.log(scrawl.library)

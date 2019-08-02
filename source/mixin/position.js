@@ -888,7 +888,7 @@ We absolutely do not want users messing around with dragOffset values
 			lockY: this.lockTo[1],
 			isBeingDragged: this.isBeingDragged
 		}
-	}
+	};
 
 /*
 

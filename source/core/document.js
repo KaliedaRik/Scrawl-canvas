@@ -885,14 +885,6 @@ const domShow = function (singleArtefact = '') {
 };
 
 /*
-Used by Scrawl-canvas worker functionality to locate worker-related javascript files on the server
-*/
-const setScrawlPath = function (url) {
-
-	window.scrawlPath = url;
-};
-
-/*
 Holding area - mainly for ARIA content, but also used by Phrase entity for font height calculations
 */
 let scrawlCanvasHold = document.createElement('div');
@@ -945,8 +937,6 @@ export {
 	setDomShowRequired,
 	domShow,
 
-	setScrawlPath,
-	
 	scrawlCanvasHold,
 	scrawlNavigationHold,
 };

@@ -188,9 +188,11 @@ const releaseFilterWorker = function (f) {
 */
 const buildFilterWorker = function () {
 
+	let path = import.meta.url.slice(0, -('factory/filter.js'.length))
+
 	let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ? 
-		`${window.location.origin}${window.scrawlPath}/worker/filter.js` : 
-		`${window.location.origin}${window.scrawlPath}/worker/filter.js`;
+		`${path}worker/filter.js` : 
+		`${path}worker/filter.js`;
 
 	// chrome does not yet support module
 	// return new Worker(filterUrl, {type: 'module'});

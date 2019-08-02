@@ -79,11 +79,13 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 14. Think about developing a Grid artefact (eg for demos DOM-013, Canvas-019)
 * because the current solution is painfully slow once we get a lot of entity tiles onto the canvas
 
-15. Physics engine
-* because it's in v7 and I don't wanna lose it
-* though tbh it isn't that important
-* one (different) approach might be to add to the 'delta animation' functionality already built in?
-* having particles and springs would make the Net artefact a lot more interesting eg v7 physics net demo 
+15. Physics engine(ON HOLD - MAY DEPRECATE)
+* Particle, Spring and Force code transferred over from v7 and adapted to v8 environment
+* Took the decision to use (2D) coordinate objects rather than (3D) vectors in code
+* New experimental demo Physics-001 coded up, for testing
+* NOT HAPPY WITH THIS CODE - I don't think we need it, and already have too much else going on. If we can replicate some sort of gravity effect in tweens, then why bother with a physics engine? Plus, I've wasted too much time on this already. 
+* For the moment, keeping the physics engine code in the code base (so I don't lose it) - but have commented the relevant import/export statements out of scrawl.js file, and similarly commented out the relevant objects/arrays in core/library.js 
+* If adding a physics library to Scrawl-canvas is a good idea, then probably need someone who has a clue about physics to take the work forward.
 
 16. Displacement map filter-like functionality
 * just for the challenge of it

@@ -2,7 +2,6 @@
 Import Scrawl-canvas. It will auto-initialize the page as soon as it loads.
 */
 import scrawl from '../source/scrawl.js';
-scrawl.setScrawlPath('/source');
 
 
 /*

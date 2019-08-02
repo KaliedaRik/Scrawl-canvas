@@ -79,6 +79,12 @@ const fontattribute = {};
 const fontattributenames = [];
 
 /*
+Objects used as part of the physics engine
+*/
+// const force = {};
+// const forcenames = [];
+	
+/*
 Objects created using the __makeGroup__ factory, and generated as part of the process of creating Stack and Canvas artefacts, and Cell assets.
 */
 const group = {};
@@ -89,6 +95,18 @@ Used internally by Gradient and RadialGradient styles
 */
 const palette = {};
 const palettenames = [];
+	
+/*
+Zero-dimension Artefacts used as part of the physics engine
+*/
+// const particle = {};
+// const particlenames = [];
+	
+/*
+Objects used as part of the physics engine
+*/
+// const spring = {};
+// const springnames = [];
 	
 /*
 Stack element wrappers created during Scrawl-canvas initialization, and created using the __makeStack__ and __addStack__ factories
@@ -153,10 +171,16 @@ export {
 	filternames,
 	fontattribute,
 	fontattributenames,
+	// force,
+	// forcenames,
 	group,
 	groupnames,
 	palette,
 	palettenames,
+	// particle,
+	// particlenames,
+	// spring,
+	// springnames,
 	stack,
 	stacknames,
 	styles,

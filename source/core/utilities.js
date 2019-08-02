@@ -141,6 +141,8 @@ const defaultNonReturnFunction = () => {};
 const defaultArgReturnFunction = (a) => { return a; };
 const defaultThisReturnFunction = function () { return this; };
 const defaultFalseReturnFunction = () => { return false; };
+const defaultZeroReturnFunction = () => { return 0; };
+const defaultBlankStringReturnFunction = () => { return ''; };
 
 /*
 Return the value provided if it is an integer number and, if it isn't, return 0
@@ -333,7 +335,7 @@ const mergeOver = (original, additional) => {
 };
 
 /*
-__mergeDiscard__ iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they havbe been set to null in the additional object
+__mergeDiscard__ iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object
 
 Example:
 
@@ -464,6 +466,8 @@ export {
 	defaultArgReturnFunction,
 	defaultThisReturnFunction,
 	defaultFalseReturnFunction,
+	defaultZeroReturnFunction,
+	defaultBlankStringReturnFunction,
 	ensureInteger,
 	ensurePositiveInteger,
 	ensureFloat,

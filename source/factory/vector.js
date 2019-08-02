@@ -276,6 +276,19 @@ P.reverse = function () {
 	return this;
 };
 
+P.normalize = function() {
+	
+	let val = this.getMagnitude();
+	
+	if (val > 0) {
+		this.x /= val;
+		this.y /= val;
+		this.z /= val;
+	}
+	return this;
+};
+
+
 /*
 ## Vector pool - an attempt to reuse quaternions rather than constantly creating and deleting them
 */
