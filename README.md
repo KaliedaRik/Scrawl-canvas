@@ -62,7 +62,7 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 * also start thinking about how best to export stuff in a way that makes importing it into React/Vue/etc dead easy
 * also an opportunity to think about making an npm repository, and how the library code can be included in toolchains eg WebPack?
 
-10. I want to add in some simple-to-use zoom and (parallax) scrolling capability
+10. Zoom and parallax scrolling capability (IN PROGRESS)
 * because v7 can do this and I don't want to lose it
 
 11. Develop Frame artefact
@@ -79,7 +79,7 @@ No longer supports IE browsers. Edge support will hopefully come back online lat
 14. Think about developing a Grid artefact (eg for demos DOM-013, Canvas-019)
 * because the current solution is painfully slow once we get a lot of entity tiles onto the canvas
 
-15. Physics engine(ON HOLD - MAY DEPRECATE)
+15. Physics engine (ON HOLD - MAY DEPRECATE)
 * Particle, Spring and Force code transferred over from v7 and adapted to v8 environment
 * Took the decision to use (2D) coordinate objects rather than (3D) vectors in code
 * New experimental demo Physics-001 coded up, for testing
