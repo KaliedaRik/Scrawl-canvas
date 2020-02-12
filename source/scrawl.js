@@ -1,7 +1,7 @@
 /*
 # Scrawl-canvas
 
-### Version 8.0.0 (alpha) - 25 June 2019
+### Version 8.0.1 (alpha) - 21 December 2019
 
 ---------------------------------------------------------------------------------
 The MIT License (MIT)
@@ -102,11 +102,6 @@ import {
 } from './factory/filter.js';
 
 
-// import { 
-// 	makeForce,
-// } from './factory/force.js';
-
-
 import { 
 	makeGradient,
 } from './factory/gradient.js';
@@ -125,11 +120,6 @@ import {
 	createImageFromGroup,
 	createImageFromEntity,
 } from './factory/imageAsset.js';
-
-
-// import { 
-// 	makeParticle,
-// } from './factory/particle.js';
 
 
 import { 
@@ -180,11 +170,6 @@ import {
 import { 
 	importSprite,
 } from './factory/spriteAsset.js';
-
-
-// import { 
-// 	makeSpring,
-// } from './factory/spring.js';
 
 
 import { 
@@ -303,10 +288,6 @@ export default {
 	makeFilter,
 
 
-	// factory/force.js
-	// makeForce,
-
-
 	// factory/gradient.js
 	makeGradient,
 
@@ -322,10 +303,6 @@ export default {
 	createImageFromCell,
 	createImageFromGroup,
 	createImageFromEntity,
-
-
-	// factory/particle.js
-	// makeParticle,
 
 
 	// factory/pattern.js
@@ -369,10 +346,6 @@ export default {
 
 	// factory/spriteAsset.js
 	importSprite,
-
-
-	// factory/spring.js
-	// makeSpring,
 
 
 	// factory/ticker.js
