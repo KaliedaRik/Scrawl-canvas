@@ -1682,6 +1682,16 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 		}
 	};
 
+
+/*
+	
+*/
+	P.getSensors = function () {
+
+		let [entityRadius, entitySensors] = this.cleanCollisionData();
+		return entitySensors;
+	}
+
 /*
 
 */
@@ -1701,7 +1711,6 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 
 			mycell = requestCell();
 			poolCellFlag = true;
-// console.log(this.name, this.type, 'checkHit requestCell 1', mycell.name)
 		}
 
 		let engine = mycell.engine,
@@ -1741,11 +1750,7 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 			};
 		}
 		
-		if (poolCellFlag) {
-
-// console.log(this.name, this.type, 'checkHit releaseCell 1', mycell.name)
-			releaseCell(mycell);
-		}
+		if (poolCellFlag) releaseCell(mycell);
 		
 		return false;
 	};

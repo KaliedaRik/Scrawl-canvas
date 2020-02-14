@@ -75,13 +75,18 @@ import {
 
 
 import { 
-	makeColor,
-} from './factory/color.js';
+	makeBlock,
+} from './factory/block.js';
 
 
 import { 
-	makeBlock,
-} from './factory/block.js';
+	cellPoolLength,
+} from './factory/cell.js';
+
+
+import { 
+	makeColor,
+} from './factory/color.js';
 
 
 import { 
@@ -93,11 +98,6 @@ import {
 
 
 import { 
-	cellPoolLength,
-} from './factory/cell.js';
-
-
-import { 
 	makeFilter,
 } from './factory/filter.js';
 
@@ -105,6 +105,11 @@ import {
 import { 
 	makeGradient,
 } from './factory/gradient.js';
+
+
+import { 
+	makeGrid,
+} from './factory/grid.js';
 
 
 import { 
@@ -290,6 +295,10 @@ export default {
 
 	// factory/gradient.js
 	makeGradient,
+
+
+	// factory/grid.js
+	makeGrid,
 
 
 	// factory/group.js

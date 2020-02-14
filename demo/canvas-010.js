@@ -6,10 +6,16 @@ let canvas = scrawl.library.artefact.mycanvas;
 
 
 // Get image from DOM
+
+// When loading video assets from the DOM, note that Scrawl-canvas has to deal with the &lt;video> element operating under normal DOM rules. This means that (in most modern browsers) the video will not fetch anything beyond its metadata until at least 1px height of the video is displayed in the viewport (videos hidden by any CSS rules will not fetch anything until they are made visible).
+
+// The practical implications of this is that any Picture entitys relying on the video as their asset will not display an image until the DOM video element appears in the user's viewport.
+    
+// To make sure the Picture entity displays the video's first frame, we need to explicitly set the DOM element's preload attribute to "auto" 
 scrawl.importDomVideo('.myvideo');
 
 
-// Create Picture entity
+// Create Picture entity from video entity included in the DOM
 let viddyOne = scrawl.makePicture({
 
 	name: 'first-video',
@@ -36,6 +42,7 @@ let viddyOne = scrawl.makePicture({
 
 });
 
+// Create picture entity, explicitly giving it a video source file to load
 let viddyTwo = scrawl.makePicture({
 
 	name: 'second-video',
@@ -52,8 +59,11 @@ let viddyTwo = scrawl.makePicture({
 });
 
 
-// Display a media stream in a Picture entity
-// - note that importMediaStream is promise-based
+// Display a device-based media stream in a Picture entity
+// - Note 1: Users will need to explicitly agree to let Scrawl-canvas 
+//           use the media stream the first time the page loads
+//           (the browser should handle this agreement procedure itself)
+// - Note 2: importMediaStream is promise-based
 let viddyThree;
 
 scrawl.importMediaStream({
@@ -84,6 +94,7 @@ scrawl.importMediaStream({
 		method: 'drawThenFill',
 	});
 
+	// Adding some controls to manipulate the media stream's display
 	scrawl.observeAndUpdate({
 
 		event: ['input', 'change'],
@@ -200,7 +211,7 @@ scrawl.observeAndUpdate({
 });
 
 
-// because many browsers/devices will not allow video to be played
+// Because many browsers/devices will not allow video to be played
 // - until a user interacts with it in some way
 scrawl.addListener('up', function () {
 

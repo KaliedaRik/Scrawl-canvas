@@ -10,37 +10,29 @@ canvas.set({
 
 
 // Setup the background grid
-let baseColor = 'aliceblue',
-	highlightColor = 'red',
-	gridSize = 40;
+let myGrid = scrawl.makeGrid({
 
-let grid = scrawl.makeGroup({
+	name: 'test-grid',
 
-	name: 'grid',
-	host: canvas.base.name,
-	order: 0,
+	width: '100%',
+	height: '100%',
+
+	columns: 60,
+	rows: 40,
+
+	columnGutterWidth: 0,
+	rowGutterWidth: 0,
+
+	tileSources: [
+		{
+			type: 'color',
+			source: 'aliceblue',
+		}, {
+			type: 'color',
+			source: 'red',
+		}
+	]
 });
-
-for (let y = 0; y < 400; y += gridSize) {
-
-	for (let x = 0; x < 600; x += gridSize) {
-
-		scrawl.makeBlock({
-
-			name: `grid-${x / gridSize}-${y / gridSize}`,
-			group: 'grid',
-
-			width: gridSize - 0.5,
-			height: gridSize - 0.5,
-			startX: x,
-			startY: y,
-
-			fillStyle: baseColor,
-
-			method: 'fill',
-		});
-	}
-}
 
 
 // Create test entitys
@@ -212,26 +204,17 @@ let current = scrawl.makeDragZone({
 });
 
 
-// Function to display grid blocks which are currently in collision with the selectedn test entity
+// Function to display grid blocks which are currently in collision with the selected test entity
 let currentEntity = myblock;
 
 let checkHits = function () {
 
-	let hits = [];
+	myGrid.setAllTilesTo(0);
 
-	return function () {
+	let hits = myGrid.checkHit(currentEntity.getSensors());
 
-		hits.forEach(hit => hit.artefact.set({
-			fillStyle: baseColor
-		}));
-
-		hits = grid.getArtefactCollisions(currentEntity);
-
-		hits.forEach(hit => hit.artefact.set({
-			fillStyle: highlightColor
-		}));
-	};
-}();
+	if (hits) myGrid.setTilesTo(hits.tiles, 1);
+};
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -328,3 +311,5 @@ document.querySelector('#roll').value = 0;
 document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
+
+console.log(scrawl.library);

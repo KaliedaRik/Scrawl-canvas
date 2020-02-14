@@ -273,36 +273,40 @@ const importMediaStream = function (items = {}) {
 
 	return new Promise((resolve, reject) => {
 
-		navigator.mediaDevices.getUserMedia(constraints)
-		.then(mediaStream => {
+		if (navigator && navigator.mediaDevices) {
 
-			let actuals = mediaStream.getVideoTracks(),
-				data;
+			navigator.mediaDevices.getUserMedia(constraints)
+			.then(mediaStream => {
 
-			if (Array.isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
+				let actuals = mediaStream.getVideoTracks(),
+					data;
 
-			el.id = vid.name;
+				if (Array.isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
 
-			if (data) {
+				el.id = vid.name;
 
-				el.width = data.width;
-				el.height = data.height;
-			}
+				if (data) {
 
-			el.srcObject = mediaStream;
+					el.width = data.width;
+					el.height = data.height;
+				}
 
-			el.onloadedmetadata = function (e) {
+				el.srcObject = mediaStream;
 
-				el.play();
-			}
+				el.onloadedmetadata = function (e) {
 
-			resolve(vid);
-		})
-		.catch (err => {
+					el.play();
+				}
 
-			console.log(err.message);
-			resolve(vid);
-		});
+				resolve(vid);
+			})
+			.catch (err => {
+
+				console.log(err.message);
+				resolve(vid);
+			});
+		}
+		else reject('Navigator.mediaDevices object not found');
 	});
 };
 
@@ -330,7 +334,7 @@ const importVideo = function (...args) {
 
 	if (args.length) {
 
-		let name, className, visibility, parent, sources;
+		let name, className, visibility, parent, sources, preload;
 
 		let flag = false;
 
@@ -347,6 +351,7 @@ const importVideo = function (...args) {
 			className = '';
 			visibility = false;
 			parent = null;
+			preload = 'auto';
 
 			flag = true;
 		}
@@ -361,6 +366,7 @@ const importVideo = function (...args) {
 			className = firstArg.className || '';
 			visibility = firstArg.visibility || false;
 			parent = document.querySelector(parent);
+			preload = firstArg.preload || 'auto';
 
 			flag = true;
 		}
@@ -381,6 +387,8 @@ const importVideo = function (...args) {
 			vid.style.display = (visibility) ? 'block' : 'none';
 
 			vid.crossOrigin = 'anonymous';
+
+			vid.preload = preload;
 
 			sources.forEach(item => {
 

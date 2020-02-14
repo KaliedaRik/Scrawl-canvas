@@ -5,8 +5,10 @@ import scrawl from '../source/scrawl.js'
 let artefact = scrawl.library.artefact,
 	stack = artefact.mystack,
 	element = artefact.myelement,
-	canvas = artefact.mycanvas,
+	canvas = artefact.mycanvas3,
 	cell = canvas.base;
+
+canvas.setAsCurrentCanvas();
 
 
 // Give the stack element some depth
@@ -19,13 +21,13 @@ stack.set({
 
 canvas.set({
 	width: '100%',
-	height: '100%',
+	height:'100%',
 	backgroundColor: 'black',
 });
 
 cell.set({
 	width: '100%',
-	height: '100%',
+	height:'100%',
 });
 
 
@@ -63,29 +65,36 @@ element.set({
 
 
 // Setup the background grid
-let myGrid = scrawl.makeGrid({
+let baseColor = 'aliceblue',
+	highlightColor = 'red',
+	gridSize = 40;
 
-	name: 'test-grid',
+let grid = scrawl.makeGroup({
 
-	width: 600,
-	height: 400,
-
-	columns: 60,
-	rows: 40,
-
-	columnGutterWidth: 0,
-	rowGutterWidth: 0,
-
-	tileSources: [
-		{
-			type: 'color',
-			source: 'aliceblue',
-		}, {
-			type: 'color',
-			source: 'red',
-		}
-	]
+	name: 'grid',
+	host: cell.name,
 });
+
+for (let y = 0; y < 400; y += gridSize) {
+
+	for (let x = 0; x < 600; x += gridSize) {
+
+		scrawl.makeBlock({
+
+			name: `grid-${x / gridSize}-${y / gridSize}`,
+			group: 'grid',
+
+			width: gridSize - 0.5,
+			height: gridSize - 0.5,
+			startX: x,
+			startY: y,
+
+			fillStyle: baseColor,
+
+			method: 'fill',
+		});
+	}
+}
 
 
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
@@ -100,12 +109,22 @@ scrawl.makeDragZone({
 // Function to display grid blocks which are currently in collision with the element artefact
 let checkHits = function () {
 
-	myGrid.setAllTilesTo(0);
+	let hits = [];
 
-	let hits = myGrid.checkHit(element.getSensors());
+	return function () {
 
-	if (hits) myGrid.setTilesTo(hits.tiles, 1);
-};
+		hits.forEach(hit => hit.artefact.set({
+			fillStyle: baseColor
+		}));
+
+		// BUG: for some reason, the getArtefactCollisions function is interfering with the drag zone functionality - meaning that when it is running, we can't drag our element around the stack/canvas. Comment it out and the drag functionality works fine.
+		hits = grid.getArtefactCollisions(element);
+
+		hits.forEach(hit => hit.artefact.set({
+			fillStyle: highlightColor
+		}));
+	};
+}();
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -113,7 +132,7 @@ let report = function () {
 
 	let testTicker = Date.now(),
 		testTime, testNow,
-		testMessage = document.querySelector('#reportmessage');
+		testMessage = document.querySelector('#reportmessage3');
 
 	// BUG: the final positioning, dimensions, scaling etc of DOM elements often don't settle down until after the first Display cycle completes, by which time certain internal structures (such as, in this case, the sensor coordinates for our element) have been set to old values. Which for this demo means that the element sensor data doesn't translate over to the canvas until after a user interaction of some sort brings everything back into synchronicity
 
@@ -135,19 +154,24 @@ let report = function () {
 		testTime = testNow - testTicker;
 		testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+		testMessage.textContent = `Animation threshhold set to 0.0
+- at least 1px of the stack must be visible for the animation to run
+Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
 	};
 }();
 
 
-// Create the Animation loop which will run the Display cycle
-scrawl.makeRender({
+// Create the Animation loops which will run the Display cycle
+// - stacks do NOT trigger a render cycle on their constituent canvas elements
+// - thus we pass both the stack and canvas artefacts in the target attribute, in an array
+// - as a result, the .makeRender function returns an array of animation objects to match the targets
+let animations = scrawl.makeRender({
 
-	name: 'demo-animation',
+	name: 'demo-animation3',
+	target: [stack, canvas],
 	commence: checkHits,
 	afterShow: report,
 });
-
 
 // User interaction - setup form observer functionality
 scrawl.observeAndUpdate({
@@ -203,3 +227,27 @@ document.querySelector('#pitch').value = 20;
 document.querySelector('#yaw').value = 30;
 document.querySelector('#scale').value = 1;
 document.querySelector('#perspective').value = 1200;
+
+// Switch animation on/off when at least 1px of stack is showing
+// - this is standard ES16 Javascript, not part of Scrawl-canvas
+let observer = new IntersectionObserver((entries, observer) => {
+
+	console.log('observer C starts', animations[0].name, animations[0].isRunning());
+
+	// We're only observing the stack's DOM element here
+	// but we need to switch both the stack and the canvas animation renders on or off
+	entries.forEach(entry => {
+
+		if (entry.isIntersecting) animations.forEach(anim => !anim.isRunning() && anim.run());
+		else if (!entry.isIntersecting) animations.forEach(anim => anim.isRunning() && anim.halt());
+	});
+
+	console.log('observer C completes', animations[0].name, animations[0].isRunning());
+	// The second IntersectionObserver argument is the options object
+	// - passing an empty object will set the threshold value to 0.0
+	// - which means if > 0px of the stack DOM element is visible, the animations will run 
+}, {});
+observer.observe(stack.domElement);
+
+
+console.log('#014c', scrawl.library);

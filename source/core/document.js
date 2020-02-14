@@ -695,9 +695,23 @@ const makeRender = function (items = {}) {
 		compile: compile,
 		show: show
 	};
+	else if (Array.isArray(items.target)) {
+
+		let multiReturn = []
+
+		items.target.forEach(tempTarget => {
+
+			let tempItems = Object.assign({}, items);
+			tempItems.name = `${tempItems.name}_${tempTarget.name}`;
+			tempItems.target = tempTarget;
+			multiReturn.push(makeRender(tempItems));
+		});
+
+		return multiReturn;
+	}
 	else target = (items.target.substring) ? artefact[items.target] : items.target;
 
-	if (!target.clear || !target.compile || !target.show) return false;
+	if (!target || !target.clear || !target.compile || !target.show) return false;
 
 	let commence = (isa_fn(items.commence)) ? items.commence : defaultNonReturnFunction,
 		afterClear = (isa_fn(items.afterClear)) ? items.afterClear : defaultNonReturnFunction,
@@ -709,6 +723,7 @@ const makeRender = function (items = {}) {
 
 		name: items.name || '',
 		order: items.order || 1,
+		delay: items.delay || false,
 		
 		fn: function() {
 			
