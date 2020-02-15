@@ -9,7 +9,6 @@ import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } 
 
 const init = function () {
 
-console.log('starting init');
 	/*
 	## Perform some environment checks - lodge the results in the window object so other parts of the Scrawl-canvas code base can quickly check them
 	*/

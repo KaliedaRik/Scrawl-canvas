@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Canvas 022</title>
+  <title>Demo Canvas 023</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
@@ -17,8 +17,8 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 022</h1>
-  <h2>Grid entity - basic functionality (color, gradients)</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 023</h1>
+  <h2>Grid entity - using picture-based assets (image, video, sprite)</h2>
 
   <div class="controls">
 
@@ -48,20 +48,24 @@
 
     <div class="pink label">Base fill</div>
     <div class="pink"><select class="controlItem" id="baseFill">
-        <option value="blueSource">Blue</option>
-        <option value="redSource">Red</option>
-        <option value="cellGradientSource">Canvas gradient</option>
-        <option value="gridGradientSource">Grid gradient</option>
+        <option value="imageGrid">Image across grid</option>
+        <option value="imageTile">Image in tile</option>
+        <option value="videoGrid">Video across grid</option>
+        <option value="videoTile">Video in tile</option>
+        <option value="spriteGrid">Sprite across grid</option>
+        <option value="spriteTile">Sprite in tile</option>
       </select>
     </div>
     <div class="pink">&nbsp;</div>
 
     <div class="pink label">Highlight fill</div>
     <div class="pink"><select class="controlItem" id="highlightFill">
-        <option value="blueSource">Blue</option>
-        <option value="redSource">Red</option>
-        <option value="cellGradientSource">Canvas gradient</option>
-        <option value="gridGradientSource">Grid gradient</option>
+        <option value="imageGrid">Image across grid</option>
+        <option value="imageTile">Image in tile</option>
+        <option value="videoGrid">Video across grid</option>
+        <option value="videoTile">Video in tile</option>
+        <option value="spriteGrid">Sprite across grid</option>
+        <option value="spriteTile">Sprite in tile</option>
       </select>
     </div>
     <div class="pink">&nbsp;</div>
@@ -71,10 +75,12 @@
         <option value="">Grey</option>
         <option value="base">Base fill</option>
         <option value="highlight">Highlight fill</option>
-        <option value="blueSource">Blue</option>
-        <option value="redSource">Red</option>
-        <option value="cellGradientSource">Canvas gradient</option>
-        <option value="gridGradientSource">Grid gradient</option>
+        <option value="imageGrid">Image across grid</option>
+        <option value="imageTile">Image in tile</option>
+        <option value="videoGrid">Video across grid</option>
+        <option value="videoTile">Video in tile</option>
+        <option value="spriteGrid">Sprite across grid</option>
+        <option value="spriteTile">Sprite in tile</option>
       </select>
     </div>
     <div class="pink">&nbsp;</div>
@@ -180,7 +186,15 @@
     </ul>
   </div>
 
-  <script src="canvas-022.js" type="module"></script>
+  <div style="display: none;">
+    <img id="iris" src="img/iris.png" class="flowers" />
+
+    <video preload="auto" class="myvideo" id="waves">
+      <source src="img/Sea - 4006.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <script src="canvas-023.js" type="module"></script>
 
 </body>
 

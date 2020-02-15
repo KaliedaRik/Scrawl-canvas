@@ -1,8 +1,9 @@
 /*
 # Grid factory
 */
-import { constructors } from '../core/library.js';
+import { constructors, entity } from '../core/library.js';
 import { mergeOver, isa_number, isa_obj, defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
+
 import { requestCell, releaseCell } from './cell.js';
 
 import baseMix from '../mixin/base.js';
@@ -42,6 +43,8 @@ const Grid = function (items = {}) {
 	}
 
 	this.tilePaths = [];
+	this.tileRealCoordinates = [];
+	this.tileVirtualCoordinates = [];
 
 	if (!items.dimensions) {
 
@@ -276,7 +279,9 @@ P.cleanPathObject = function () {
 			colWidth = w / cols,
 			rowHeight = h / rows,
 			paths = this.tilePaths,
-			i, j;
+			real = this.tileRealCoordinates,
+			virtual = this.tileVirtualCoordinates,
+			i, j, cx, cy;
 
 		rowLines.moveTo(x, y);
 		rowLines.lineTo(x + w, y);
@@ -303,6 +308,8 @@ P.cleanPathObject = function () {
 		this.columnLines = colLines;
 
 		paths.length = 0;
+		real.length = 0;
+		virtual.length = 0;
 
 		for (i = 0; i < rows; i++) {
 
@@ -310,10 +317,19 @@ P.cleanPathObject = function () {
 
 				let path = new Path2D();
 
-				path.rect(x + (j * colWidth), y + (i * rowHeight), colWidth, rowHeight);
+				cx = j * colWidth;
+				cy = i * rowHeight;
+
+				path.rect(x + cx, y + cy, colWidth, rowHeight);
 				paths.push(path);
+
+				virtual.push([cx, cy]);
+				real.push([x + cx, y + cy]);
 			}
 		}
+
+		this.currentTileWidth = colWidth;
+		this.currentTileHeight = rowHeight;
 	}
 };
 
@@ -322,59 +338,119 @@ Override entity draw/fill methods
 */
 P.performFill = function (engine) {
 
-
 	// grab the current engine values for various things
 	engine.save();
 
+	let composer = requestCell(),
+		compEngine = composer.engine,
+		compCanvas = composer.element;
 
-	// iterate through the grid's tileSources, setting up the engine appropriately
 	let tileSources = this.tileSources,
 		tileFill = this.tileFill,
 		tilePaths = this.tilePaths,
-		winding = this.winding;
+		tileRealCoords = this.tileRealCoordinates,
+		tileVirtualCoords = this.tileVirtualCoordinates,
+		winding = this.winding,
+		tileWidth = this.currentTileWidth,
+		tileHeight = this.currentTileHeight,
+		scale = this.scale;
 
+	let dims = this.currentDimensions;
+
+	let currentPicture;
+
+	// iterate through the grid's tileSources
 	tileSources.forEach((obj, index) => {
 
+		// - set up the engine fillStyle value (where required)
 		if (obj && obj.type) {
 
 			switch (obj.type) {
 
 				case 'color' :
 
-					if (obj.source && obj.source.substring) {
-
-						engine.fillStyle = obj.source;
-					}
+					engine.fillStyle = obj.source;
 					break;
 
 				case 'cellGradient' :
 
-					if (obj.source) {
-
-						this.lockFillStyleToEntity = false;
-						engine.fillStyle = obj.source.getData(this, this.currentHost, true);
-					}
+					this.lockFillStyleToEntity = false;
+					engine.fillStyle = obj.source.getData(this, this.currentHost, true);
 					break;
 
 				case 'gridGradient' :
 
-					if (obj.source) {
-
-						this.lockFillStyleToEntity = true;
-						engine.fillStyle = obj.source.getData(this, this.currentHost, true);
-					}
+					this.lockFillStyleToEntity = true;
+					engine.fillStyle = obj.source.getData(this, this.currentHost, true);
 					break;
 			}
 		}
 
+		// get an map of tiles using this source
 		let validTiles = tileFill.map(item => item === index ? true : false);
 
-		validTiles.forEach((tile, pos) => {
+		if (validTiles.length) {
 
-			if (tile) {
-				engine.fill(tilePaths[pos], winding);
+			switch (obj.type) {
+
+				// Use pool canvas to compose the output
+				case 'gridPicture' :
+
+					currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
+
+					if (currentPicture.simpleStamp) {
+
+						compCanvas.width = dims[0] * scale;
+						compCanvas.height = dims[1] * scale;
+						compEngine.globalCompositeOperation = 'source-over';
+						compEngine.fillStyle = '#000000';
+
+						validTiles.forEach((tile, pos) => {
+
+							if (tile) compEngine.fillRect(tileVirtualCoords[pos][0], tileVirtualCoords[pos][1], tileWidth, tileHeight);
+						});
+
+						compEngine.globalCompositeOperation = 'source-in';
+
+						currentPicture.simpleStamp(composer, {
+							startX: 0,
+							startY: 0,
+							width: dims[0] * scale,
+							height: dims[1] * scale,
+							method: 'fill'
+						});
+
+						engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
+					}
+					break;
+
+				case 'tilePicture' :
+
+					currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
+
+					if (currentPicture.simpleStamp) {
+
+						compCanvas.width = tileWidth;
+						compCanvas.height = tileHeight;
+						compEngine.globalCompositeOperation = 'source-over';
+
+						currentPicture.simpleStamp(composer, {
+							startX: 0,
+							startY: 0,
+							width: tileWidth,
+							height: tileHeight,
+							method: 'fill'
+						});
+
+						validTiles.forEach((tile, pos) => tile && engine.drawImage(compCanvas, tileRealCoords[pos][0], tileRealCoords[pos][1]));
+					}
+					break;
+
+				default :
+
+					validTiles.forEach((tile, pos) => tile && engine.fill(tilePaths[pos], winding));
 			}
-		});
+		}
 	});
 
 	let gColor = this.gutterColor,
@@ -384,61 +460,111 @@ P.performFill = function (engine) {
 
 	if(xt(gColor)) {
 
-		if (gColor.substring) engine.strokeStyle = this.gutterColor;
-		else {
+		// assign (or construct) the appropriate object to gObject
+		if (gColor.substring) {
 
-			if (isa_obj(gColor)) gObject = gColor;
-			else if (isa_number(gColor) && isa_obj(tileSources[gColor])) gObject = tileSources[gColor];
+			gObject = {
+				type: 'color',
+				source: this.gutterColor
+			};
+		}
+		else if (isa_obj(gColor)) gObject = gColor;
+		else if (isa_number(gColor) && isa_obj(tileSources[gColor])) gObject = tileSources[gColor];
 
-			if (gObject.type) {
+		// set the engine's strokeStyle to the appropriate value (if needed)
+		switch (gObject.type) {
 
-				switch (gObject.type) {
+			case 'cellGradient' :
 
-					case 'color' :
+				this.lockFillStyleToEntity = false;
+				engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
+				break;
 
-						if (gObject.source && gObject.source.substring) {
+			case 'gridGradient' :
 
-							engine.strokeStyle = gObject.source;
+				this.lockFillStyleToEntity = true;
+				engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
+				break;
+
+			case 'color' :
+
+				engine.strokeStyle = gObject.source;
+				break;
+		}
+
+		switch (gObject.type) {
+
+			// Use pool canvas to compose the output
+			// - gridPicture and tilePicture both treated the same
+			case 'gridPicture' :
+			case 'tilePicture' :
+
+				if(gRow || gCol) {
+
+					currentPicture = (gObject.source.substring) ? entity[gObject.source] : gObject.source;
+
+					if (currentPicture.simpleStamp) {
+
+						let handle = this.currentStampHandlePosition,
+							scale = this.currentScale,
+							x = handle[0] * scale,
+							y = handle[1] * scale;
+							
+						compCanvas.width = dims[0] * scale;
+						compCanvas.height = dims[1] * scale;
+						compEngine.globalCompositeOperation = 'source-over';
+						compEngine.strokeStyle = '#000000';
+						compEngine.translate(x, y);
+
+						if (gRow) {
+
+							compEngine.lineWidth = gRow;
+							compEngine.stroke(this.rowLines);
 						}
-						break;
 
-					case 'cellGradient' :
+						if (gCol) {
 
-						if (gObject.source) {
-
-							this.lockFillStyleToEntity = false;
-							engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
+							compEngine.lineWidth = gCol;
+							compEngine.stroke(this.columnLines);
 						}
-						break;
 
-					case 'gridGradient' :
+						compEngine.globalCompositeOperation = 'source-in';
 
-						if (gObject.source) {
+						currentPicture.simpleStamp(composer, {
+							startX: 0,
+							startY: 0,
+							width: dims[0] * scale,
+							height: dims[1] * scale,
+							method: 'fill'
+						});
 
-							this.lockFillStyleToEntity = true;
-							engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
-						}
-						break;
+						engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
+						compEngine.translate(0, 0);
+					}
 				}
-			}
-		}
+				break;
 
+			// we have a color/gradient all set up - stroke the lines directly onto grid
+			default :
 
-		if (gRow) {
+				if (gRow) {
 
-			engine.lineWidth = gRow;
-			engine.stroke(this.rowLines);
-		}
+					engine.lineWidth = gRow;
+					engine.stroke(this.rowLines);
+				}
 
-		if (gCol) {
+				if (gCol) {
 
-			engine.lineWidth = gCol;
-			engine.stroke(this.columnLines);
+					engine.lineWidth = gCol;
+					engine.stroke(this.columnLines);
+				}
 		}
 	}
 
+	releaseCell(composer);
+
 	engine.restore();
-}
+};
 
 /*
 Override entity draw/fill methods
