@@ -20,8 +20,8 @@ let myGrid = scrawl.makeGrid({
 	columns: 60,
 	rows: 40,
 
-	columnGutterWidth: 0,
-	rowGutterWidth: 0,
+	columnGutterWidth: 0.3,
+	rowGutterWidth: 0.3,
 
 	tileSources: [
 		{
@@ -139,6 +139,9 @@ let mybezier = scrawl.makeBezier({
 	lineCap: 'round',
 	strokeStyle: 'orange',
 	method: 'draw',
+
+	boundingBoxColor: 'lightgray',
+	showBoundingBox: true,
 });
 
 let mycircle = scrawl.makeWheel({
@@ -311,5 +314,3 @@ document.querySelector('#roll').value = 0;
 document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
-
-console.log(scrawl.library);

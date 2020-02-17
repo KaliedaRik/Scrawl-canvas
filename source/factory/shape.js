@@ -1228,6 +1228,8 @@ P.cleanControl = function (label) {
 
 	this.dirtySpecies = true;
 	this.dirtyPathObject = true;
+
+	this.updatePathSubscribers();
 };
 
 /*
@@ -1306,6 +1308,7 @@ Overwrites mixin/position.js function
 */
 P.updatePathSubscribers = function () {
 
+// console.log(this.name, 'updatePathSubscribers')
 	this.pathed.forEach(name => {
 
 		let instance = artefact[name];
@@ -1630,17 +1633,6 @@ P.clear = function (engine) {
 */
 P.drawBoundingBox = function (engine) {
 
-	let floor = Math.floor,
-		ceil = Math.ceil;
-
-	let [x, y, w, h] = this.localBox;
-	let [lx, ly] = this.controlledLineOffset;
-	let [hX, hY] = this.currentStampHandlePosition;
-
-	// Pad out excessively thin widths and heights
-	if (w < 20) w = 20;
-	if (h < 20) h = 20;
-
 	engine.save();
 
 	engine.strokeStyle = this.boundingBoxColor;
@@ -1651,9 +1643,30 @@ P.drawBoundingBox = function (engine) {
 	engine.shadowOffsetY = 0;
 	engine.shadowBlur = 0;
 
-	engine.strokeRect(floor(x - hX + lx), floor(y - hY + ly), ceil(w), ceil(h));
+	engine.strokeRect(...this.getBoundingBox());
 
 	engine.restore();
+};
+
+
+/*
+
+*/
+P.getBoundingBox = function () {
+
+	let floor = Math.floor,
+		ceil = Math.ceil;
+
+	let [x, y, w, h] = this.localBox;
+	let [lx, ly] = this.controlledLineOffset;
+	let [hX, hY] = this.currentStampHandlePosition;
+	let [sX, sY] = this.currentStampPosition;
+
+	// Pad out excessively thin widths and heights
+	if (w < 20) w = 20;
+	if (h < 20) h = 20;
+
+	return [floor(x - hX + lx), floor(y - hY + ly), ceil(w), ceil(h), sX, sY];
 };
 
 

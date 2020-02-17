@@ -78,6 +78,10 @@ code {
 	margin-top: 0;
 }
 
+.testinfo li {
+	margin-bottom: 0.5em;
+}
+
 .controls {
   display: grid;
 

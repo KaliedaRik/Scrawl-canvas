@@ -353,11 +353,8 @@ CURRENTLY does not support filters on entitys
 
 			this.currentHost = host;
 			
-			if (changes) {
-
-				this.set(changes);
-				this.prepareStamp();
-			}
+			this.set(changes);
+			this.prepareStamp();
 
 			this.regularStampSynchronousActions();
 		}

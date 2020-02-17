@@ -812,18 +812,11 @@ P.compile = function(){
 					self.applyFilters()
 					.then(res => {
 
-// if (this.name === 'mycanvas_base') console.log('start stashOutput - filters route')
-						// if (self.stashOutput) self.stashOutputAction();
 						resolve(true);
 					})
 					.catch(err => reject(false));
 				}
-				else {
-
-// if (this.name === 'mycanvas_base') console.log('start stashOutput - normal route')
-					// if (self.stashOutput) self.stashOutputAction();
-					resolve(true);
-				}
+				else resolve(true);
 			}
 		});
 	};
@@ -1384,6 +1377,8 @@ The __cellPoolLength__ function (supplied for debugging purposes) returns a stri
 const cellPool = [];
 let cellPoolCount = 0;
 
+const generatedPoolCanvases = [];
+
 const cellPoolLength = function () {
 
 	return `${cellPool.length} (from ${cellPoolCount} generated)`;
@@ -1408,6 +1403,8 @@ const requestCell = function () {
 			isPool: true
 		}));
 		cellPoolCount++;
+
+		generatedPoolCanvases.push(cellPool[0].element)
 	}
 
 	return cellPool.shift();
@@ -1441,4 +1438,6 @@ export {
 	makeCell,
 	requestCell,
 	releaseCell,
+
+	generatedPoolCanvases,
 };

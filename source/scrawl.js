@@ -81,6 +81,7 @@ import {
 
 import { 
 	cellPoolLength,
+	generatedPoolCanvases,
 } from './factory/cell.js';
 
 
@@ -125,6 +126,11 @@ import {
 	createImageFromGroup,
 	createImageFromEntity,
 } from './factory/imageAsset.js';
+
+
+import { 
+	makeLoom,
+} from './factory/loom.js';
 
 
 import { 
@@ -275,6 +281,7 @@ export default {
 
 	// factory/cell.js
 	cellPoolLength,
+	generatedPoolCanvases,
 
 
 	// factory/color.js
@@ -312,6 +319,10 @@ export default {
 	createImageFromCell,
 	createImageFromGroup,
 	createImageFromEntity,
+
+
+	// factory/loom.js
+	makeLoom,
 
 
 	// factory/pattern.js

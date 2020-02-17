@@ -73,8 +73,8 @@ let myGrid = scrawl.makeGrid({
 	columns: 60,
 	rows: 40,
 
-	columnGutterWidth: 0,
-	rowGutterWidth: 0,
+	columnGutterWidth: 0.3,
+	rowGutterWidth: 0.3,
 
 	tileSources: [
 		{
