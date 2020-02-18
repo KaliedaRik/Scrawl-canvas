@@ -21,7 +21,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 024</h1>
-  <h2>Loom entity</h2>
+  <h2>Loom entity functionality</h2>
 
   <canvas id="mycanvas" width="600" height="600"></canvas>
 
@@ -37,9 +37,9 @@
     <div class="blue">start <input class="controlItem" id="toStart" type="range" value="0" min="0" max="1" step="0.01" /></div>
     <div class="blue">end <input class="controlItem" id="toEnd" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
-    <div class="green label">From path only</div>
+    <div class="green label">Sync path cursors</div>
     <div class="green">
-      <select class="controlItem" id="fromOnly">
+      <select class="controlItem" id="sync">
         <option value="0">False</option>
         <option value="1">True</option>
       </select>
@@ -55,17 +55,50 @@
     </div>
     <div class="green">&nbsp;</div>
 
+    <div class="green label">Path cursor loop</div>
+    <div class="green">
+      <select class="controlItem" id="looping">
+        <option value="0">False</option>
+        <option value="1">True</option>
+      </select>
+    </div>
+    <div class="green">&nbsp;</div>
+
     <div class="green label">Animation</div>
     <div class="green">
       <select class="controlItem" id="animation">
         <option value="off">Off</option>
-        <option value="updown">Up-Down</option>
-        <option value="loop">Loop</option>
+        <option value="posDelta">+ve Delta</option>
+        <option value="negDelta">-ve Delta</option>
       </select>
     </div>
     <div class="green">&nbsp;</div>
-    <div class="green">&nbsp;</div>
-    <div class="green">&nbsp;</div>
+
+    <div class="yellow label">Select filter</div>
+    <div class="yellow">
+      <select class="controlItem" id="filter">
+        <option value="">none</option>
+        <option value="cyan">cyan</option>
+        <option value="grayscale">grayscale</option>
+        <option value="pixelate">pixelate</option>
+        <option value="sepia">sepia</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Select method</div>
+    <div class="yellow">
+      <select class="controlItem" id="method">
+        <option value="fill">Fill</option>
+        <option value="draw">Draw</option>
+        <option value="fillAndDraw">Fill and draw</option>
+        <option value="drawAndFill">Draw and fill</option>
+        <option value="fillThenDraw">Fill then draw</option>
+        <option value="drawThenFill">Draw then fill</option>
+        <option value="clear">Clear</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
   </div>
 
   <div class="testinfo">
@@ -76,7 +109,10 @@
       <li>Distort the frame using Wheel entitys acting as pivots for the Shape entitys' start, end and control points</li>
       <li>Create controls for each frame's start and end points; manipulate the display using these controls</li>
       <li>Create a control to switch between horizontal and vertical rendering of the image</li>
-      <li>Create a control to animate the image display along the frame - possible animations to include 'loop' (when a start/end point passes through 1 it becomes 0, and vice versa); and forward/backwards (where animation halts at top or bottom of frame)</li>
+      <li>Create a control to animate the image display along the frame (delta animation)</li>
+      <li>Create a control to test animation looping functionality</li>
+      <li>Create a control to apply filters to the image</li>
+      <li>Create a control to swap between entity rendering methods</li>
     </ul>
   </div>
 

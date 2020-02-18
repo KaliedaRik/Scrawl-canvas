@@ -15,6 +15,24 @@ canvas.set({
 scrawl.importDomImage('.flowers');
 
 
+// Define some filters to play with
+scrawl.makeFilter({
+	name: 'grayscale',
+	method: 'grayscale',
+}).clone({
+	name: 'sepia',
+	method: 'sepia',
+}).clone({
+	name: 'cyan',
+	method: 'cyan',
+}).clone({
+	name: 'pixelate',
+	method: 'pixelate',
+	tileWidth: 8,
+	tileHeight: 8,
+});
+
+
 // Define the artefacts that will be used as pivots and paths before the artefacts that use them as such
 scrawl.makeWheel({
 
@@ -142,7 +160,7 @@ let myLoom = scrawl.makeLoom({
 
 	source: 'myFlower',
 
-	lineWidth: 5,
+	lineWidth: 2,
 	lineCap: 'round',
 	strokeStyle: 'orange',
 
@@ -150,7 +168,13 @@ let myLoom = scrawl.makeLoom({
 	showBoundingBox: true,
 
 	method: 'fillThenDraw',
+
+	onEnter: function () { this.set({ lineWidth: 6 }) },
+	onLeave: function () { this.set({ lineWidth: 2 }) },
 });
+
+let interactions = function () { canvas.cascadeEventAction('move') };
+scrawl.addListener('move', interactions, canvas.domElement);
 
 
 // Create the drag-and-drop zone
@@ -176,7 +200,7 @@ let report = function () {
 		testTime = testNow - testTicker;
 		testTicker = testNow;
 
-		testMessage.textContent = `Loom frame struts - from strut: ${myLoom.fromPathStart}, ${myLoom.fromPathEnd}; to strut: ${myLoom.toPathStart}, ${myLoom.toPathEnd}
+		testMessage.textContent = `Loom frame struts - from strut: ${myLoom.fromPathStart.toFixed(3)}, ${myLoom.fromPathEnd.toFixed(3)}; to strut: ${myLoom.toPathStart.toFixed(3)}, ${myLoom.toPathEnd.toFixed(3)}
 Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
 	};
 }();
@@ -208,22 +232,79 @@ scrawl.observeAndUpdate({
 		fromEnd: ['fromPathEnd', 'float'],
 		toStart: ['toPathStart', 'float'],
 		toEnd: ['toPathEnd', 'float'],
-		fromOnly: ['useFromPathCursorsOnly', 'boolean'],
+		sync: ['synchronizePathCursors', 'boolean'],
+		looping: ['loopPathCursors', 'boolean'],
 		rendering: ['isHorizontalCopy', 'boolean'],
+		method: ['method', 'raw'],
 	},
 });
+
+let updateAnimation = (e) => {
+
+	e.preventDefault();
+	e.returnValue = false;
+
+	let val = e.target.value;
+
+	switch (val) {
+
+		case 'off' :
+			myLoom.set({ delta: {
+				fromPathStart: 0,
+				fromPathEnd: 0,
+				toPathStart: 0,
+				toPathEnd: 0,
+			}});
+			break;
+
+		case 'posDelta' :
+			myLoom.set({ delta: {
+				fromPathStart: 0.002,
+				fromPathEnd: 0.002,
+				toPathStart: 0.002,
+				toPathEnd: 0.002,
+			}});
+			break;
+
+		case 'negDelta' :
+			myLoom.set({ delta: {
+				fromPathStart: -0.002,
+				fromPathEnd: -0.002,
+				toPathStart: -0.002,
+				toPathEnd: -0.002,
+			}});
+			break;
+	}
+};
+scrawl.addNativeListener(['input', 'change'], updateAnimation, '#animation');
+
+let updateFilter = (e) => {
+
+	e.preventDefault();
+	e.returnValue = false;
+
+	let val = e.target.value;
+
+	myLoom.clearFilters();
+
+	if (val) myLoom.addFilters(val);
+};
+scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
 
 // Setup form
 document.querySelector('#fromStart').value = 0;
 document.querySelector('#fromEnd').value = 1;
 document.querySelector('#toStart').value = 0;
 document.querySelector('#toEnd').value = 1;
-document.querySelector('#fromOnly').options.selectedIndex = 0;
+document.querySelector('#sync').options.selectedIndex = 1;
+document.querySelector('#looping').options.selectedIndex = 1;
 document.querySelector('#rendering').options.selectedIndex = 0;
 document.querySelector('#animation').options.selectedIndex = 0;
+document.querySelector('#filter').options.selectedIndex = 0;
+document.querySelector('#method').options.selectedIndex = 4;
 
 console.log(scrawl.library);
 
 // For developers
 // - if we ever need to see what the pool cells are up to, we can output their canvases like this:
-window.setTimeout(() => scrawl.generatedPoolCanvases.forEach(el => document.body.appendChild(el)), 1000);
+// window.setTimeout(() => scrawl.generatedPoolCanvases.forEach(el => document.body.appendChild(el)), 1000);

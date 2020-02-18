@@ -1,18 +1,18 @@
 /*
 # Loom factory
 */
-import { constructors, group, artefact, radian } from '../core/library.js';
-import { defaultNonReturnFunction, generateUuid, isa_fn, mergeOver, xt, xta, addStrings, pushUnique } from '../core/utilities.js';
-import { currentGroup, scrawlCanvasHold } from '../core/document.js';
+import { constructors, group, artefact } from '../core/library.js';
+import { defaultNonReturnFunction, defaultFalseReturnFunction, mergeOver, xt, xta, addStrings, pushUnique, mergeDiscard } from '../core/utilities.js';
+import { currentGroup } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeAnchor } from '../factory/anchor.js';
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from '../factory/filter.js';
-import { importDomImage } from '../factory/imageAsset.js';
 
 import baseMix from '../mixin/base.js';
+import filterMix from '../mixin/filter.js';
 
 
 /*
@@ -33,6 +33,8 @@ const Loom = function (items = {}) {
 	this.onLeave = defaultNonReturnFunction;
 	this.onDown = defaultNonReturnFunction;
 	this.onUp = defaultNonReturnFunction;
+
+	this.delta = {};
 
 	this.set(items);
 
@@ -56,6 +58,7 @@ P.isAsset = false;
 Apply mixins to prototype object
 */
 P = baseMix(P);
+P = filterMix(P);
 
 
 /*
@@ -68,12 +71,16 @@ Position defaults used by Loom
 */
 	visibility: true,
 	order: 0,
+	delta: null,
 	host: null,
 	group: null,
 	anchor: null,
 	collides: false,
 	sensorSpacing: 50,
 
+	noCanvasEngineUpdates: false,
+	noDeltaUpdates: false,
+	noFilters: false,
 /*
 Entity defaults used by Loom
 */
@@ -100,7 +107,8 @@ A loom can set the start and end points on each of its paths, between which the 
 	toPathStart: 0,
 	toPathEnd: 1,
 
-	useFromPathCursorsOnly: false,
+	synchronizePathCursors: true,
+	loopPathCursors: true,
 
 /*
 Copying the source image to the output happens, by default, by rows. To change this to columns set the 'isHorizontalCopy' attribute to false 
@@ -122,6 +130,7 @@ The Picture entity source for this loom. For initialization and/or set, we can s
 Internal attribute - cannot be instantiated or set
 */
 	output: null,
+	targetImage: null,
 
 /**
 The current Frame drawing process often leads to moire interference patterns appearing in the resulting image. Scrawl uses resizing to blur out these patterns. 
@@ -199,6 +208,7 @@ S.source = function (item) {
 };
 
 S.output = defaultNonReturnFunction;
+S.targetImage = defaultNonReturnFunction;
 
 /*
 
@@ -213,9 +223,9 @@ S.isHorizontalCopy = function (item) {
 /*
 
 */
-S.useFromPathCursorsOnly = function (item) {
+S.synchronizePathCursors = function (item) {
 
-	this.useFromPathCursorsOnly = (item) ? true : false;
+	this.synchronizePathCursors = (item) ? true : false;
 
 	if (item) {
 
@@ -229,87 +239,108 @@ S.useFromPathCursorsOnly = function (item) {
 /*
 
 */
+S.loopPathCursors = function (item) {
+
+	this.loopPathCursors = (item) ? true : false;
+
+	if (item) {
+
+		let c,
+			floor = Math.floor;
+
+		c = this.fromPathStart
+		if (c < 0 || c > 1) this.fromPathStart = c - floor(c);
+
+		c = this.fromPathEnd
+		if (c < 0 || c > 1) this.fromPathEnd = c - floor(c);
+
+		c = this.toPathStart
+		if (c < 0 || c > 1) this.toPathStart = c - floor(c);
+
+		c = this.toPathEnd
+		if (c < 0 || c > 1) this.toPathEnd = c - floor(c);
+	}
+
+	this.dirtyOutput = true;
+};
+
+/*
+
+*/
 S.fromPathStart = function (item) {
 
-	if (item < 0 || item > 1) item = (item > 0.5) ? 1 : 0;
-	
+	if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
 	this.fromPathStart = item;
-
-	if (this.useFromPathCursorsOnly) this.toPathStart = item;
-
+	if (this.synchronizePathCursors) this.toPathStart = item;
 	this.dirtyOutput = true;
 };
 S.fromPathEnd = function (item) {
 
-	if (item < 0 || item > 1) item = (item > 0.5) ? 1 : 0;
-
+	if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
 	this.fromPathEnd = item;
-
-	if (this.useFromPathCursorsOnly) this.toPathEnd = item;
-	
+	if (this.synchronizePathCursors) this.toPathEnd = item;
 	this.dirtyOutput = true;
 };
 S.toPathStart = function (item) {
 
-	if (!this.useFromPathCursorsOnly) {
-
-		if (item < 0 || item > 1) item = (item > 0.5) ? 1 : 0;
-		this.toPathStart = item;
-		this.dirtyOutput = true;
-	}
+	if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
+	this.toPathStart = item;
+	if (this.synchronizePathCursors) this.fromPathStart = item;
+	this.dirtyOutput = true;
 };
 S.toPathEnd = function (item) {
 
-	if (!this.useFromPathCursorsOnly) {
-		
-		if (item < 0 || item > 1) item = (item > 0.5) ? 1 : 0;
-		this.toPathEnd = item;
-		this.dirtyOutput = true;
-	}
+	if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
+	this.toPathEnd = item;
+	if (this.synchronizePathCursors) this.fromPathEnd = item;
+	this.dirtyOutput = true;
 };
 D.fromPathStart = function (item) {
 
-	this.fromPathStart += item;
+	let val = this.fromPathStart += item;
 
-	if (this.fromPathStart < 0 || this.fromPathStart > 1) this.fromPathStart = (this.fromPathStart > 0.5) ? 1 : 0;
-
-	if (this.useFromPathCursorsOnly) this.toPathStart = this.fromPathStart;
-
+	if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
+	this.fromPathStart = val;
+	if (this.synchronizePathCursors) this.toPathStart = val;
 	this.dirtyOutput = true;
 };
 D.fromPathEnd = function (item) {
 
-	this.fromPathEnd += item;
+	let val = this.fromPathEnd += item;
 
-	if (this.fromPathEnd < 0 || this.fromPathEnd > 1) this.fromPathEnd = (this.fromPathEnd > 0.5) ? 1 : 0;
-
-	if (this.useFromPathCursorsOnly) this.toPathEnd = this.fromPathEnd;
-
+	if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
+	this.fromPathEnd = val;
+	if (this.synchronizePathCursors) this.toPathEnd = val;
 	this.dirtyOutput = true;
 };
 D.toPathStart = function (item) {
 
-	if (!this.useFromPathCursorsOnly) {
-		
-		this.toPathStart += item;
-		if (this.toPathStart < 0 || this.toPathStart > 1) this.toPathStart = (this.toPathStart > 0.5) ? 1 : 0;
-		this.dirtyOutput = true;
-	}
+	let val = this.toPathStart += item;
+
+	if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
+	this.toPathStart = val;
+	if (this.synchronizePathCursors) this.fromPathStart = val;
+	this.dirtyOutput = true;
 };
 D.toPathEnd = function (item) {
 
-	if (!this.useFromPathCursorsOnly) {
-		
-		this.toPathEnd += item;
-		if (this.toPathEnd < 0 || this.toPathEnd > 1) this.toPathEnd = (this.toPathEnd > 0.5) ? 1 : 0;
-		this.dirtyOutput = true;
-	}
+	let val = this.toPathEnd += item;
+
+	if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
+	this.toPathEnd = val;
+	if (this.synchronizePathCursors) this.fromPathEnd = val;
+	this.dirtyOutput = true;
 };
 
 
 /*
 Copied from position mixin
 */
+S.delta = function (items = {}) {
+
+	if (items) this.delta = mergeDiscard(this.delta, items);
+};
+
 G.anchorDescription = function () {
 
 	if (this.anchor) return this.anchor.get('description');
@@ -522,87 +553,78 @@ P.getSensors = function () {
 
 P.checkHit = function (items = [], mycell) {
 
-	// if (this.noUserInteraction) return false;
+	if (this.noUserInteraction) return false;
 
-	// if (!this.pathObject || this.dirtyPathObject) {
+	let tests = (!Array.isArray(items)) ?  [items] : items,
+		testData, tx, ty, cx, cy, index;
 
-	// 	this.cleanPathObject();
-	// }
+	if (this.targetImage) testData = this.targetImage.data;
 
-	// let tests = (!Array.isArray(items)) ?  [items] : items,
-	// 	poolCellFlag = false;
+	let [x, y, w, h] = this.getBoundingBox();
 
-	// if (!mycell) {
+	if (tests.some(test => {
 
-	// 	mycell = requestCell();
-	// 	poolCellFlag = true;
-	// }
+		if (Array.isArray(test)) {
 
-	// let engine = mycell.engine,
-	// 	stamp = this.currentStampPosition,
-	// 	x = stamp[0],
-	// 	y = stamp[1],
-	// 	tx, ty;
+			tx = test[0];
+			ty = test[1];
+		}
+		else if (xta(test, test.x, test.y)) {
 
-	// if (tests.some(test => {
+			tx = test.x;
+			ty = test.y;
+		}
+		else return false;
 
-	// 	if (Array.isArray(test)) {
+		if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
-	// 		tx = test[0];
-	// 		ty = test[1];
-	// 	}
-	// 	else if (xta(test, test.x, test.y)) {
+		cx = tx - x;
+		cy = ty - y;
 
-	// 		tx = test.x;
-	// 		ty = test.y;
-	// 	}
-	// 	else return false;
+		if (cx < 0 || cx > w || cy < 0 || cy > h) return false; 
 
-	// 	if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+		// Only get the test image when we really, really have to (and do it only once for this test cycle)
+		if (this.dirtyTestImage) this.cleanOutput(true);
 
-	// 	mycell.rotateDestination(engine, x, y, this);
+		index = (((cy * w) + cx) * 4) + 3;
 
-	// 	return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
+		if (testData) return (testData[index] > 0) ? true : false;
+		else return false;
 
-	// }, this)) {
+	}, this)) {
 
-	// 	if (poolCellFlag) releaseCell(mycell);
-
-	// 	return {
-	// 		x: tx,
-	// 		y: ty,
-	// 		artefact: this
-	// 	};
-	// }
-	
-	// if (poolCellFlag) releaseCell(mycell);
-	
+		return {
+			x: tx,
+			y: ty,
+			artefact: this
+		};
+	}
 	return false;
 };
 
 P.buildAnchor = function (items = {}) {
 
-	// if (this.anchor) this.anchor.demolish();
+	if (this.anchor) this.anchor.demolish();
 
-	// if (!items.name) items.name = `${this.name}-anchor`;
-	// if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
+	if (!items.name) items.name = `${this.name}-anchor`;
+	if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
 
-	// this.anchor = makeAnchor(items);
+	this.anchor = makeAnchor(items);
 };
 
 P.rebuildAnchor = function () {
 
-	// if (this.anchor) this.anchor.build();
+	if (this.anchor) this.anchor.build();
 };
 
 P.demolishAnchor = function () {
 
-	// if (this.anchor) this.anchor.demolish();
+	if (this.anchor) this.anchor.demolish();
 };
 
 P.clickAnchor = function () {
 
-	// if (this.anchor) this.anchor.click();
+	if (this.anchor) this.anchor.click();
 };
 
 
@@ -777,100 +799,7 @@ P.midInitActions = defaultNonReturnFunction;
 P.preCloneActions = defaultNonReturnFunction;
 P.postCloneActions = defaultNonReturnFunction;
 
-P.clone = function(items = {}) {
-
-	return false;
-
-	// let regex = /^(local|dirty|current)/,
-	// 	stateDefs = this.state.defs,
-	// 	copied, myCurrentState, myCloneState;
-
-	// let updateCopiedState = (copy, defs, item) => {
-
-	// 	let temp = copy[item];
-	// 	copy[item] = defs[item];
-
-	// 	if (temp) {
-
-	// 		if (temp.substring) copy[item] = temp;
-	// 		else if (temp.name) copy[item] = temp.name;
-	// 	}
-	// };
-
-	// this.preCloneActions();
-
-	// let grp = this.group;
-	// this.group = grp.name;
-	
-	// let host = this.currentHost;
-	// delete this.currentHost;
-
-	// myCurrentState = this.state;
-	// if (items.sharedState) myCloneState = this.state;
-	// else myCloneState = mergeOver({}, this.state);
-	// delete this.state;
-
-	// let tempAsset = this.asset, 
-	// 	tempSource = this.source, 
-	// 	tempPivot = this.pivot, 
-	// 	tempMimic = this.mimic, 
-	// 	tempPath = this.path;
-
-	// if (tempAsset && tempAsset.name) this.asset = tempAsset.name;
-	// if (tempPivot && tempPivot.name) this.pivot = tempPivot.name;
-	// if (tempMimic && tempMimic.name) this.mimic = tempMimic.name;
-	// if (tempPath && tempPath.name) this.path = tempPath.name;
-
-	// delete this.source;
-
-	// let tempPathObject = this.pathObject;
-	// delete this.pathObject;
-
-	// copied = JSON.parse(JSON.stringify(this));
-
-	// if (tempAsset) this.asset = tempAsset;
-	// if (tempSource) this.source = tempSource;
-	// if (tempPivot) this.pivot = tempPivot;
-	// if (tempMimic) this.mimic = tempMimic;
-	// if (tempPath) this.path = tempPath;
-
-	// this.pathObject = tempPathObject;
-
-	// copied.name = (items.name) ? items.name : generateUuid();
-
-	// if (this.anchor && this.anchor.clickAction) copied.anchor.clickAction = this.anchor.clickAction;
-	// if (items.anchor) copied.anchor = mergeOver(copied.anchor, items.anchor);
-
-	// this.group = grp;
-	// this.currentHost = host;
-
-	// this.state = myCurrentState;
-	// if (!items.sharedState) {
-		
-	// 	updateCopiedState(myCloneState, stateDefs, 'fillStyle');
-	// 	updateCopiedState(myCloneState, stateDefs, 'strokeStyle');
-	// 	updateCopiedState(myCloneState, stateDefs, 'shadowColor');
-	// }
-
-	// Object.entries(this).forEach(([key, value]) => {
-
-	// 	if (regex.test(key)) delete copied[key];
-	// 	if (isa_fn(this[key])) copied[key] = this[key];
-	// }, this);
-
-	// if (this.group) copied.group = this.group.name;
-
-	// let clone = new library.constructors[this.type](copied);
-
-	// if (items.sharedState) clone.state = myCloneState;
-	// else clone.set(myCloneState);
-
-	// clone.set(items);
-
-	// this.postCloneActions(clone, items);
-
-	// return clone;
-};
+P.clone = defaultFalseReturnFunction;
 
 P.simpleStamp = function (host, changes = {}) {
 
@@ -891,12 +820,19 @@ P.simpleStamp = function (host, changes = {}) {
 P.prepareStamp = function() {
 
 	if (this.dirtyStart) this.getBoundingBox();
+	
+	if (this.dirtyFilters) {
+
+		this.cleanFilters();
+		this.dirtyOutput = true;
+	}
+	
 	if (this.dirtyOutput) this.cleanOutput();
 };
 
 P.cleanPathObject = function () {};
 
-P.cleanOutput = function () {
+P.cleanOutput = function (saveHitImage = false) {
 
 	let sourceImage = this.source;
 
@@ -943,6 +879,23 @@ P.cleanOutput = function () {
 			outputCanvas.width = outputWidth;
 			outputCanvas.height = outputHeight;
 
+			const cleanup = () => {
+
+				// output result to loom's output, stored in an &lt;img> element
+				this.output.src = outputCanvas.toDataURL();
+
+				this.dirtyTestImage = true;
+				if (saveHitImage) {
+
+					this.dirtyTestImage = false;
+					this.targetImage = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
+				}
+
+				// Release the hounds!
+				releaseCell(sourceCell);
+				releaseCell(outputCell);
+			};
+
 			// Copy image into source cell
 			sourceImage.simpleStamp(sourceCell, {
 				startX: 0,
@@ -957,85 +910,124 @@ P.cleanOutput = function () {
 
 			let magicHorizontalPi = 0.5 * Math.PI,
 				magicVerticalPi = magicHorizontalPi - 1.5708,
-				fCursor, fPartial, tCursor, tPartial;
+
+				loop = this.loopPathCursors,
+
+				fCursor = fPathStart,
+				tCursor = tPathStart,
+				fPartial, tPartial;
 
 			if (isHorizontalCopy) {
 
-				fCursor = fPathStart;
-				fPartial = (fPathEnd - fPathStart) / sourceHeight;
+				if (fPathStart < fPathEnd) fPartial = (fPathEnd - fPathStart) / sourceHeight;
+				else fPartial = (1 - (fPathStart - fPathEnd)) / sourceHeight;
 
-				tCursor = tPathStart;
-				tPartial = (tPathEnd - tPathStart) / sourceHeight;
+				if (tPathStart < tPathEnd) tPartial = (tPathEnd - tPathStart) / sourceHeight;
+				else tPartial = (1 - (tPathStart - tPathEnd)) / sourceHeight;
 
 				for (let i = 0, iz = sourceHeight; i < iz; i++) {
 
-					({x: fx, y: fy} = fPath.getPathPositionData(fCursor));
-					({x: tx, y: ty} = tPath.getPathPositionData(tCursor));
+					if(fCursor >= 0 && fCursor <= 1 && tCursor >= 0 && tCursor <= 1) {
+
+						({x: fx, y: fy} = fPath.getPathPositionData(fCursor));
+						({x: tx, y: ty} = tPath.getPathPositionData(tCursor));
+
+						dx = tx - fx;
+						dy = ty - fy;
+
+						fx -= X;
+						fy -= Y;
+
+						dLength = Math.hypot(dx, dy);
+						dAngle = -Math.atan2(dx, dy) + magicHorizontalPi;
+
+						cos = Math.cos(dAngle);
+						sin = Math.sin(dAngle);
+
+						outputEngine.setTransform(cos, sin, -sin, cos, fx, fy);
+						outputEngine.drawImage(sourceCanvas, 0, i, sourceWidth, 1, 0, 0, dLength, 1);
+					}
 
 					fCursor += fPartial;
-					if (fCursor > 1 || fCursor < 0) (fCursor > 0.5) ? fCursor -= 1 : fCursor += 1;
-
 					tCursor += tPartial;
-					if (tCursor > 1 || tCursor < 0) (tCursor > 0.5) ? tCursor -= 1 : tCursor += 1;
 
-					dx = tx - fx;
-					dy = ty - fy;
+					if (loop) {
 
-					fx -= X;
-					fy -= Y;
+						if (fCursor < 0 || fCursor > 1) {
 
-					dLength = Math.hypot(dx, dy);
-					dAngle = -Math.atan2(dx, dy) + magicHorizontalPi;
+							if (fCursor < 0) fCursor += 1;
+							else fCursor -= 1;
+						}
+						if (tCursor < 0 || tCursor > 1) {
 
-					cos = Math.cos(dAngle);
-					sin = Math.sin(dAngle);
-
-					outputEngine.setTransform(cos, sin, -sin, cos, fx, fy);
-					outputEngine.drawImage(sourceCanvas, 0, i, sourceWidth, 1, 0, 0, dLength, 1);
+							if (tCursor < 0) tCursor += 1;
+							else tCursor -= 1;
+						}
+					} 
 				}
 			}
 			else {
 
-				fCursor = fPathStart;
-				fPartial = (fPathEnd - fPathStart) / sourceWidth;
+				if (fPathStart < fPathEnd) fPartial = (fPathEnd - fPathStart) / sourceWidth;
+				else fPartial = (1 - (fPathStart - fPathEnd)) / sourceWidth;
 
-				tCursor = tPathStart;
-				tPartial = (tPathEnd - tPathStart) / sourceWidth;
+				if (tPathStart < tPathEnd) tPartial = (tPathEnd - tPathStart) / sourceWidth;
+				else tPartial = (1 - (tPathStart - tPathEnd)) / sourceWidth;
 
 				for (let i = 0, iz = sourceWidth; i < iz; i++) {
 
-					({x: fx, y: fy} = fPath.getPathPositionData(fCursor));
-					({x: tx, y: ty} = tPath.getPathPositionData(tCursor));
+					if(fCursor >= 0 && fCursor <= 1 && tCursor >= 0 && tCursor <= 1) {
+
+						({x: fx, y: fy} = fPath.getPathPositionData(fCursor));
+						({x: tx, y: ty} = tPath.getPathPositionData(tCursor));
+
+						dx = tx - fx;
+						dy = ty - fy;
+
+						fx -= X;
+						fy -= Y;
+
+						dLength = Math.hypot(dx, dy);
+						dAngle = -Math.atan2(dx, dy) + magicVerticalPi;
+
+						cos = Math.cos(dAngle);
+						sin = Math.sin(dAngle);
+
+						outputEngine.setTransform(cos, sin, -sin, cos, fx, fy);
+						outputEngine.drawImage(sourceCanvas, i, 0, 1, sourceHeight, 0, 0, 1, dLength);
+					}
+
 					fCursor += fPartial;
 					tCursor += tPartial;
 
-					dx = tx - fx;
-					dy = ty - fy;
+					if (loop) {
 
-					fx -= X;
-					fy -= Y;
+						if (fCursor < 0 || fCursor > 1) {
 
-					dLength = Math.hypot(dx, dy);
-					dAngle = -Math.atan2(dx, dy) + magicVerticalPi;
+							if (fCursor < 0) fCursor += 1;
+							else fCursor -= 1;
+						}
+						if (tCursor < 0 || tCursor > 1) {
 
-					cos = Math.cos(dAngle);
-					sin = Math.sin(dAngle);
-
-					outputEngine.setTransform(cos, sin, -sin, cos, fx, fy);
-					outputEngine.drawImage(sourceCanvas, i, 0, 1, sourceHeight, 0, 0, 1, dLength);
+							if (tCursor < 0) tCursor += 1;
+							else tCursor -= 1;
+						}
+					} 
 				}
 			}
 
 			// Get rid of the ugly lines created in the output image
 			let iFactor = this.interferenceFactor,
 				iLoops = this.interferenceLoops,
+
 				iWidth = Math.ceil(outputWidth * iFactor),
 				iHeight = Math.ceil(outputHeight * iFactor);
 
 			sourceCanvas.width = iWidth;
 			sourceCanvas.height = iHeight;
-			sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
+
 			outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+			sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
 
 			for (let j = 0; j < iLoops; j++) {
 
@@ -1043,12 +1035,61 @@ P.cleanOutput = function () {
 				outputEngine.drawImage(sourceCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
 			}
 
-			// output result to loom's output, stored in an &lt;img> element
-			this.output.src = outputCanvas.toDataURL();
+			if (!this.noFilters && this.filters && this.filters.length) {
 
-			// Release the hounds!
-			releaseCell(sourceCell);
-			releaseCell(outputCell);
+				let currentHost = this.getHost(),
+					prefilterImage;
+
+				// if we're using the entity as a stencil, copy the entity cell's current display over the entity in the blank canvas
+				if (this.isStencil && currentHost.type === 'Cell') {
+
+					sourceCanvas.width = currentHost.element.width;
+					sourceCanvas.height = currentHost.element.height;
+
+					sourceEngine.save();
+					sourceEngine.globalCompositeOperation = 'source-in';
+					sourceEngine.globalAlpha = 1;
+					sourceEngine.setTransform(1, 0, 0, 1, 0, 0);
+					sourceEngine.drawImage(currentHost.element, X, Y);
+					sourceEngine.restore();
+
+					prefilterImage = sourceEngine.getImageData(X, Y, outputWidth, outputHeight);
+				} 
+				else {
+
+					outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+					prefilterImage = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
+				}
+
+				let worker = requestFilterWorker();
+
+				actionFilterWorker(worker, {
+					image: prefilterImage,
+					filters: this.currentFilters
+				})
+				.then(filteredImage => {
+
+					// handle the web worker response
+					if (filteredImage) {
+
+						outputEngine.globalCompositeOperation = 'source-over';
+						outputEngine.globalAlpha = 1;
+						outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+						outputEngine.putImageData(filteredImage, 0, 0);
+
+						releaseFilterWorker(worker);
+						cleanup();
+					}
+					else throw new Error('image issue');
+				})
+				.catch((err) => {
+
+					releaseFilterWorker(worker);
+					console.log(err)
+					cleanup();
+				});
+			}
+			else cleanup();
 		}
 	}
 };
@@ -1199,7 +1240,7 @@ P.clear = function (engine) {
 	engine.globalCompositeOperation = 'destination-out';
 	engine.drawImage(output, x, y);
 	engine.globalCompositeOperation = gco;
-	
+
 	if (this.showBoundingBox) this.drawBoundingBox(engine);
 };
 
