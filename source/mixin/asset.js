@@ -93,6 +93,7 @@ imageAsset.js and videoAsset.js overwrite this function, thus only put here so c
 		sub.dirtyImage = true;
 		sub.dirtyCopyStart = true;
 		sub.dirtyCopyDimensions = true;
+		sub.dirtyImageSubscribers = true;
 	};
 
 /*

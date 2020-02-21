@@ -471,14 +471,30 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 /*
 
 */
-	P.stamp = function () {
+	P.stamp = function (force = false, host, changes) {
+
+		let filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
+
+		if (force) {
+
+			if (host && host.type === 'Cell') this.currentHost = host;
+
+			if (changes) {
+
+				this.set(changes);
+				this.prepareStamp();
+			}
+
+			if (filterTest) return this.filteredStamp();
+			else return this.regularStamp();
+		}
 
 		if (this.visibility) {
 
-			if (this.stashOutput || (!this.noFilters && this.filters && this.filters.length)) return this.filteredStamp();
+			if (this.stashOutput || filterTest) return this.filteredStamp();
 			else return this.regularStamp();
 		}
-		else return Promise.resolve(false);
+		return Promise.resolve(false);
 	};
 
 /*

@@ -1,5 +1,19 @@
 /*
 # Anchor factory
+
+In Scrawl-canvas, an anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in this file. 
+
+Scrawl-canvas uses a mixin (code kept in ./mixin/anchor.js) to add anchor functionality to artefacts - in particular canvas entitys.
+
+This gives us a interactive canvas containing dynamic, clickable regions.
+
+Note that while anchors are primarily for generating URL links to (external site) web pages, they can also be used to trigger any other desired action. This can be achieved by setting the anchor object's __clickAction__ attribute to a function. For instance:
+
++ We can define a clickAction which emits a Google Analytics tracker message before performing the URL navigation (see demo Canvas-009)
+
++ We can suppress the click action (via 'preventDefault') and instead action code supplied by a third party library - though there's usually better ways to achieve this via other Scrawl-canvas functionalities, for instance by using Scrawl-canvas enhanced event listeners or artefact functions (onEnter, onLeave, onDown, onUp).
+
+Details of how to add an anchor to a Scrawl-canvas artefact (including DOM elements in a Scrawl-canvas stack) can be found in the anchor mixin file.
 */
 import { constructors } from '../core/library.js';
 import { scrawlNavigationHold } from '../core/document.js';
@@ -50,7 +64,7 @@ The text that Scrawl-canvas will include between the anchor tags, when building 
 	description: '',
 
 /*
-The following attributes are detailed in https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a
+The following attributes are detailed in https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a - they are (most of) the DOM element's attributes
 
 * the HTML Anchor element 'type' attribute is stored in the Scrawl-canvas Anchor object using the key 'anchorType'
 
@@ -66,7 +80,7 @@ Scrawl-canvas will build a link element and add it to the DOM, then invoke a cli
 	anchorType: '',
 
 /*
-	
+The clickAction is a function which gets attached to the anchor DOM element's __onclick__ attribute. Invoking this function is handled entirely by the browser (as is normal)
 */
 	clickAction: null,
 };
@@ -141,7 +155,11 @@ S.clickAction = function (item) {
 */
 
 /*
+The __build()__ function builds the &lt;a> element and adds it to the DOM
 
+All Scrawl-canvas generated anchor links are kept in a hidden &lt;nav> element (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the body element when it first runs. 
+
+This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)
 */
 P.build = function () {
 
@@ -178,7 +196,7 @@ P.update = function (item) {
 };
 
 /*
-
+To action a user click on an artifact with an associated anchor object, we generate a DOM MouseEvent originating from the anchor element which the browser can act on in the usual manner (browser/device dependent)
 */
 P.click = function () {
 

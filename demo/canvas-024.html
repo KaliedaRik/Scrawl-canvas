@@ -99,6 +99,22 @@
       </select>
     </div>
     <div class="yellow">&nbsp;</div>
+
+    <div class="pink label">Copy Starts ('n%')</div>
+    <div class="pink">X: <input class="controlItem" id="copy_start_xPercent" type="range" value="0" min="-5" max="105" step="1" /></div>
+    <div class="pink">Y: <input class="controlItem" id="copy_start_yPercent" type="range" value="0" min="-5" max="105" step="1" /></div>
+
+    <div class="lavender label">Copy Width</div>
+    <div class="lavender">'n%' <input class="controlItem" id="copy_dims_widthPercent" type="range" value="100" min="0" max="105" step="1" /></div>
+    <div class="lavender">n <input class="controlItem" id="copy_dims_widthAbsolute" type="range" value="400" min="0" max="405" step="1" /></div>
+
+    <div class="pink label">Copy Starts (n)</div>
+    <div class="pink">X: <input class="controlItem" id="copy_start_xAbsolute" type="range" value="0" min="-5" max="405" step="1" /></div>
+    <div class="pink">Y: <input class="controlItem" id="copy_start_yAbsolute" type="range" value="0" min="-5" max="405" step="1" /></div>
+
+    <div class="lavender label">Copy Height</div>
+    <div class="lavender">'n%' <input class="controlItem" id="copy_dims_heightPercent" type="range" value="100" min="0" max="105" step="1" /></div>
+    <div class="lavender">n <input class="controlItem" id="copy_dims_heightAbsolute" type="range" value="400" min="0" max="405" step="1" /></div>
   </div>
 
   <div class="testinfo">
@@ -111,8 +127,9 @@
       <li>Create a control to switch between horizontal and vertical rendering of the image</li>
       <li>Create a control to animate the image display along the frame (delta animation)</li>
       <li>Create a control to test animation looping functionality</li>
-      <li>Create a control to apply filters to the image</li>
       <li>Create a control to swap between entity rendering methods</li>
+      <li>Create a control to apply filters to the Picture entity; check that the Loom entity responds immediately to any updates</li>
+      <li>Create controls for the Picture entity's copy start and dimensions values; check that the Loom entity responds immediately to any updates</li>
     </ul>
   </div>
 

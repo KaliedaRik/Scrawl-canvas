@@ -12,6 +12,7 @@ import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
+import anchorMix from '../mixin/anchor.js';
 import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 
@@ -84,6 +85,7 @@ Apply mixins to prototype object
 */
 P = baseMix(P);
 P = positionMix(P);
+P = anchorMix(P);
 P = cascadeMix(P);
 P = domMix(P);
 

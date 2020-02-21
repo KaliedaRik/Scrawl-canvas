@@ -7,6 +7,7 @@ import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
+import anchorMix from '../mixin/anchor.js';
 import domMix from '../mixin/dom.js';
 
 /*
@@ -67,6 +68,7 @@ Apply mixins to prototype object
 */
 P = baseMix(P);
 P = positionMix(P);
+P = anchorMix(P);
 P = domMix(P);
 
 let S = P.setters;

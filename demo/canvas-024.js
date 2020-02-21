@@ -103,11 +103,10 @@ scrawl.makeQuadratic({
 	endPivot: 'pin-3',
 	endLockTo: 'pivot',
 
-	lineWidth: 0,
-	method: 'draw',
+	method: 'none',
 
+	minimumBoundingBoxDimensions: 0,
 	useAsPath: true,
-	showBoundingBox: true,
 });
 
 let myBez = scrawl.makeBezier({
@@ -127,24 +126,25 @@ let myBez = scrawl.makeBezier({
 	endPivot: 'pin-7',
 	endLockTo: 'pivot',
 
-	lineWidth: 0,
-	method: 'draw',
+	method: 'none',
 
+	minimumBoundingBoxDimensions: 0,
 	useAsPath: true,
-	showBoundingBox: true,
 });
 
 
 // Every Loom needs a source image
-scrawl.makePicture({
+let piccy = scrawl.makePicture({
 
 	name: 'myFlower',
 	asset: 'iris',
 
+	copyStartX: 0,
+	copyStartY: 0,
+
 	copyWidth: '100%',
 	copyHeight: '100%',
 
-	method: 'fill',
 	visibility: false,
 });
 
@@ -215,7 +215,7 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// User interaction - Loom functionality
 scrawl.observeAndUpdate({
 
 	event: ['input', 'change'],
@@ -239,6 +239,7 @@ scrawl.observeAndUpdate({
 	},
 });
 
+// User interaction - delta animation controls handler
 let updateAnimation = (e) => {
 
 	e.preventDefault();
@@ -278,6 +279,7 @@ let updateAnimation = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateAnimation, '#animation');
 
+// User interaction - Picture entity filters
 let updateFilter = (e) => {
 
 	e.preventDefault();
@@ -285,11 +287,38 @@ let updateFilter = (e) => {
 
 	let val = e.target.value;
 
-	myLoom.clearFilters();
+	piccy.clearFilters();
 
-	if (val) myLoom.addFilters(val);
+	if (val) piccy.addFilters(val);
 };
 scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
+
+// User interaction - Picture entity copy start and copy dimensions
+scrawl.observeAndUpdate({
+
+	event: ['input', 'change'],
+	origin: '.controlItem',
+
+	target: piccy,
+
+	useNativeListener: true,
+	preventDefault: true,
+
+	updates: {
+
+		copy_start_xPercent: ['copyStartX', '%'],
+		copy_start_xAbsolute: ['copyStartX', 'round'],
+
+		copy_start_yPercent: ['copyStartY', '%'],
+		copy_start_yAbsolute: ['copyStartY', 'round'],
+
+		copy_dims_widthPercent: ['copyWidth', '%'],
+		copy_dims_widthAbsolute: ['copyWidth', 'round'],
+
+		copy_dims_heightPercent: ['copyHeight', '%'],
+		copy_dims_heightAbsolute: ['copyHeight', 'round'],
+	},
+});
 
 // Setup form
 document.querySelector('#fromStart').value = 0;
@@ -302,6 +331,14 @@ document.querySelector('#rendering').options.selectedIndex = 0;
 document.querySelector('#animation').options.selectedIndex = 0;
 document.querySelector('#filter').options.selectedIndex = 0;
 document.querySelector('#method').options.selectedIndex = 4;
+document.querySelector('#copy_start_xPercent').value = 0;
+document.querySelector('#copy_start_yPercent').value = 0;
+document.querySelector('#copy_dims_widthPercent').value = 100;
+document.querySelector('#copy_dims_widthAbsolute').value = 400;
+document.querySelector('#copy_start_xAbsolute').value = 0;
+document.querySelector('#copy_start_yAbsolute').value = 0;
+document.querySelector('#copy_dims_heightPercent').value = 100;
+document.querySelector('#copy_dims_heightAbsolute').value = 400;
 
 console.log(scrawl.library);
 

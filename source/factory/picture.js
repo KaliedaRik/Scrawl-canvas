@@ -1,9 +1,9 @@
 /*
 # Picture factory
 */
-import { constructors, asset } from '../core/library.js';
+import { constructors, asset, artefact } from '../core/library.js';
 
-import { mergeOver, xt, xta, addStrings } from '../core/utilities.js';
+import { mergeOver, xt, xta, addStrings, pushUnique, removeItem } from '../core/utilities.js';
 
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
@@ -12,6 +12,7 @@ import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
+import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
 import filterMix from '../mixin/filter.js';
@@ -44,6 +45,8 @@ const Picture = function (items = {}) {
 		if (!items.copyHeight) this.copyDimensions[1] = 1;
 	}
 
+	this.imageSubscribers = [];
+
 	this.dirtyCopyStart = true;
 	this.dirtyCopyDimensions = true;
 	this.dirtyImage = true;
@@ -65,6 +68,7 @@ Apply mixins to prototype object
 */
 P = baseMix(P);
 P = positionMix(P);
+P = anchorMix(P);
 P = entityMix(P);
 P = assetConsumerMix(P);
 P = filterMix(P);
@@ -106,6 +110,7 @@ S.copyStartX = function (coord) {
 
 		this.copyStart[0] = coord;
 		this.dirtyCopyStart = true;
+		this.dirtyImageSubscribers = true;
 	}
 };
 
@@ -115,6 +120,7 @@ S.copyStartY = function (coord) {
 
 		this.copyStart[1] = coord;
 		this.dirtyCopyStart = true;
+		this.dirtyImageSubscribers = true;
 	}
 };
 
@@ -122,6 +128,7 @@ S.copyStart = function (x, y) {
 
 	this.setCoordinateHelper('copyStart', x, y);
 	this.dirtyCopyStart = true;
+	this.dirtyImageSubscribers = true;
 };
 
 D.copyStartX = function (coord) {
@@ -129,6 +136,7 @@ D.copyStartX = function (coord) {
 	let c = this.copyStart;
 	c[0] = addStrings(c[0], coord);
 	this.dirtyCopyStart = true;
+	this.dirtyImageSubscribers = true;
 };
 
 D.copyStartY = function (coord) {
@@ -142,6 +150,7 @@ D.copyStart = function (x, y) {
 
 	this.setDeltaCoordinateHelper('copyStart', x, y);
 	this.dirtyCopyStart = true;
+	this.dirtyImageSubscribers = true;
 };
 
 /*
@@ -163,6 +172,7 @@ S.copyWidth = function (val) {
 
 		this.copyDimensions[0] = val;
 		this.dirtyCopyDimensions = true;
+		this.dirtyImageSubscribers = true;
 	}
 };
 
@@ -172,6 +182,7 @@ S.copyHeight = function (val) {
 
 		this.copyDimensions[1] = val;
 		this.dirtyCopyDimensions = true;
+		this.dirtyImageSubscribers = true;
 	}
 };
 
@@ -179,6 +190,7 @@ S.copyDimensions = function (w, h) {
 
 	this.setCoordinateHelper('copyDimensions', w, h);
 	this.dirtyCopyDimensions = true;
+	this.dirtyImageSubscribers = true;
 };
 
 D.copyWidth = function (val) {
@@ -186,6 +198,7 @@ D.copyWidth = function (val) {
 	let c = this.copyDimensions;
 	c[0] = addStrings(c[0], val);
 	this.dirtyCopyDimensions = true;
+	this.dirtyImageSubscribers = true;
 };
 
 D.copyHeight = function (val) {
@@ -193,12 +206,14 @@ D.copyHeight = function (val) {
 	let c = this.copyDimensions;
 	c[1] = addStrings(c[1], val);
 	this.dirtyCopyDimensions = true;
+	this.dirtyImageSubscribers = true;
 };
 
 D.copyDimensions = function (w, h) {
 
 	this.setDeltaCoordinateHelper('copyDimensions', w, h);
 	this.dirtyCopyDimensions = true;
+	this.dirtyImageSubscribers = true;
 };
 
 
@@ -290,6 +305,34 @@ P.set = function (items = {}) {
 		}, this);
 	}
 	return this;
+};
+
+/*
+Overwrites mixin/position.js function
+*/
+P.updateImageSubscribers = function () {
+
+	this.dirtyImageSubscribers = false;
+
+	if (this.imageSubscribers.length) {
+
+		this.imageSubscribers.forEach(name => {
+
+			let instance = artefact[name];
+
+			if (instance) instance.dirtyInput = true;
+		});
+	}
+};
+
+P.imageSubscribe = function (name) {
+
+	if (name && name.substring) pushUnique(this.imageSubscribers, name);
+};
+
+P.imageUnsubscribe = function () {
+
+	if (name && name.substring) removeItem(this.imageSubscribers, name);
 };
 
 /*
@@ -446,6 +489,9 @@ P.prepareStamp = function() {
 
 	// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
 	if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+
+	// specifically for Loom entitys
+	if (this.dirtyImageSubscribers) this.updateImageSubscribers();
 };
 
 /*

@@ -9,6 +9,7 @@ import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
+import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
 import filterMix from '../mixin/filter.js';
 
@@ -72,6 +73,7 @@ Apply mixins to prototype object
 */
 P = baseMix(P);
 P = positionMix(P);
+P = anchorMix(P);
 P = entityMix(P);
 P = filterMix(P);
 
@@ -121,6 +123,11 @@ Useful for development
 	showBoundingBox: false,
 	boundingBoxColor: 'rgba(0,0,0,0.5)',
 
+/*
+Sets a minimum dimensions size (in px) for calculating the bounding box
+*/
+	minimumBoundingBoxDimensions: 20,
+	
 /*
 By default, a Shape entity is just lines on the screen. It needs to be explicitly defined as a 'path' if it is to be used as a path by other artefacts.
 */
@@ -1308,7 +1315,6 @@ Overwrites mixin/position.js function
 */
 P.updatePathSubscribers = function () {
 
-// console.log(this.name, 'updatePathSubscribers')
 	this.pathed.forEach(name => {
 
 		let instance = artefact[name];
@@ -1655,7 +1661,8 @@ P.drawBoundingBox = function (engine) {
 P.getBoundingBox = function () {
 
 	let floor = Math.floor,
-		ceil = Math.ceil;
+		ceil = Math.ceil,
+		minDims = this.minimumBoundingBoxDimensions;
 
 	let [x, y, w, h] = this.localBox;
 	let [lx, ly] = this.controlledLineOffset;
@@ -1663,8 +1670,8 @@ P.getBoundingBox = function () {
 	let [sX, sY] = this.currentStampPosition;
 
 	// Pad out excessively thin widths and heights
-	if (w < 20) w = 20;
-	if (h < 20) h = 20;
+	if (w < minDims) w = minDims;
+	if (h < minDims) h = minDims;
 
 	return [floor(x - hX + lx), floor(y - hY + ly), ceil(w), ceil(h), sX, sY];
 };

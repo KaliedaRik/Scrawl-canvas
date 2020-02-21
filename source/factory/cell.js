@@ -13,6 +13,7 @@ import { importDomImage } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
+import anchorMix from '../mixin/anchor.js';
 import cascadeMix from '../mixin/cascade.js';
 import assetMix from '../mixin/asset.js';
 import filterMix from '../mixin/filter.js';
@@ -78,6 +79,7 @@ Apply mixins to prototype object
 */
 P = baseMix(P);
 P = positionMix(P);
+P = anchorMix(P);
 P = cascadeMix(P);
 P = assetMix(P);
 P = filterMix(P);

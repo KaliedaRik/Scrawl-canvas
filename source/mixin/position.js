@@ -5,7 +5,6 @@ import { artefact, group } from '../core/library.js';
 import { defaultNonReturnFunction, mergeOver, mergeInto, mergeDiscard, isa_obj, isa_number, xt, xta, addStrings, xtGet, pushUnique, removeItem } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
-import { makeAnchor } from '../factory/anchor.js';
 import { makeCoordinate, checkCoordinate } from '../factory/coordinate.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 
@@ -134,7 +133,7 @@ All factories using the position mixin will add these to their prototype objects
 /*
 
 */
-		anchor: null,
+		// anchor: null,
 
 /*
 
@@ -225,107 +224,6 @@ Animation speed - Scrawl-canvas assumes that an artefact will be "ready for anyt
 	G.height = function () {
 
 		return this.currentDimensions[1];
-	};
-
-/*
-
-*/
-	G.anchorDescription = function () {
-
-		if (this.anchor) return this.anchor.get('description');
-		return '';
-	};
-	G.anchorType = function () {
-
-		if (this.anchor) return this.anchor.get('type');
-		return '';
-	};
-	G.anchorTarget = function () {
-
-		if (this.anchor) return this.anchor.get('target');
-		return '';
-	};
-	G.anchorRel = function () {
-
-		if (this.anchor) return this.anchor.get('rel');
-		return '';
-	};
-	G.anchorReferrerPolicy = function () {
-
-		if (this.anchor) return this.anchor.get('referrerpolicy');
-		return '';
-	};
-	G.anchorPing = function () {
-
-		if (this.anchor) return this.anchor.get('ping');
-		return '';
-	};
-	G.anchorHreflang = function () {
-
-		if (this.anchor) return this.anchor.get('hreflang');
-		return '';
-	};
-	G.anchorHref = function () {
-
-		if (this.anchor) return this.anchor.get('href');
-		return '';
-	};
-	G.anchorDownload = function () {
-
-		if (this.anchor) return this.anchor.get('download');
-		return '';
-	};
-
-	S.anchorDescription = function (item) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.description(item);
-	};
-	S.anchorType = function (item) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.anchorType(item);
-	};
-	S.anchorTarget = function (item) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.target(item);
-	};
-	S.anchorRel = function (item) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.rel(item);
-	};
-	S.anchorReferrerPolicy = function (item) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.referrerpolicy(item);
-	};
-	S.anchorPing = function (item) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.ping(item);
-	};
-	S.anchorHreflang = function (item) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.hreflang(item);
-	};
-	S.anchorHref = function (item) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.href(item);
-	};
-	S.anchorDownload = function (item) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.download(item);
-	};
-
-	S.anchor = function (items = {}) {
-
-		if (!this.anchor) this.buildAnchor(items);
-		else this.anchor.set(items);
 	};
 
 /*
@@ -1483,8 +1381,8 @@ Rotation and flip attributes are handled separately, alongside handle values, as
 /*
 Note - scaling does not take place here - it needs to be handled elsewhere
 
-* DOM elements (stack, element, canvas) do it in the CSS transform string
-* Entities do it as part of each entity's 'path' calculation (I think)
++ DOM elements (stack, element, canvas) do it in the CSS transform string
++ Entities do it as part of each entity's 'path' calculation
 */
 	P.cleanStampHandlePositions = function () {
 
@@ -1849,9 +1747,14 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 	};
 
 /*
-This is just a holding function. The real function is in factory/shape.js as only shapes have to worry about updating their path subscribers
+This is a holding function. The real function is in factory/shape.js as only shapes have to worry about updating their path subscribers
 */
-	P.updatePathSubscribers = function () {};
+	P.updatePathSubscribers = defaultNonReturnFunction;
+
+/*
+This is a holding function. The real function is in factory/picture.js as only pictures need to deal with telling subscribers about image update issues
+*/
+	P.updateImageSubscribers = defaultNonReturnFunction;
 
 /*
 
@@ -1917,34 +1820,6 @@ This is just a holding function. The real function is in factory/shape.js as onl
 		this.isBeingDragged = false;
 
 		return this;
-	};
-
-/*
-
-*/
-	P.buildAnchor = function (items = {}) {
-
-		if (this.anchor) this.anchor.demolish();
-
-		if (!items.name) items.name = `${this.name}-anchor`;
-		if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
-
-		this.anchor = makeAnchor(items);
-	};
-
-	P.rebuildAnchor = function () {
-
-		if (this.anchor) this.anchor.build();
-	};
-
-	P.demolishAnchor = function () {
-
-		if (this.anchor) this.anchor.demolish();
-	};
-
-	P.clickAnchor = function () {
-
-		if (this.anchor) this.anchor.click();
 	};
 
 	return P;

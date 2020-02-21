@@ -59,11 +59,14 @@ Replaces the existing filters array with a new filters array. If a string name i
 
 				this.filters = item;
 				this.dirtyFilters = true;
+				this.dirtyImageSubscribers = true;
+		
 			}
 			else if (item.substring) {
 				
 				pushUnique(this.filters, item);	
 				this.dirtyFilters = true;
+				this.dirtyImageSubscribers = true;
 			}
 		}
 	};
@@ -115,6 +118,8 @@ Add one or more filter name strings to the filters array. Filter name strings ca
 		}, this);
 
 		this.dirtyFilters = true;
+		this.dirtyImageSubscribers = true;
+
 		return this;
 	};
 
@@ -135,6 +140,8 @@ Remove one or more filter name strings from the filters array. Filter name strin
 		}, this);
 
 		this.dirtyFilters = true;
+		this.dirtyImageSubscribers = true;
+		
 		return this;
 	};
 
@@ -148,6 +155,8 @@ Clears the filters array
 		this.filters.length = 0;
 
 		this.dirtyFilters = true;
+		this.dirtyImageSubscribers = true;
+		
 		return this;
 	};
 

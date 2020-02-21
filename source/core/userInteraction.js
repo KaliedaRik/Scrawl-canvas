@@ -258,13 +258,13 @@ User interaction to test the demo
 
 Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:
 
-- scrawl.addNativeListener()
-- scrawl.removeNativeListener()
++ scrawl.addNativeListener()
++ scrawl.removeNativeListener()
 
 Then there was the use case for reacting to various mouse (and touch) events, so I bundled all those up into a set of complementary functions:
 
-- scrawl.addListener()
-- scrawl.removeListener()
++ scrawl.addListener()
++ scrawl.removeListener()
 
 Even so, there was still a lot of boilerplate code to write, in particular to listening for user interaction with form elements (which can be anywhere on the web page). So I further factorised that code into an __observeAndUpdate__ function which uses the listener functions internally.
 
