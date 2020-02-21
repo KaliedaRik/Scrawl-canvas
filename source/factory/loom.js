@@ -3,9 +3,7 @@
 */
 import { constructors, artefact } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
-import { mergeOver, mergeDiscard, pushUnique, 
-    defaultNonReturnFunction, defaultFalseReturnFunction, 
-    xta } from '../core/utilities.js';
+import { mergeOver, mergeDiscard, pushUnique, defaultNonReturnFunction, defaultFalseReturnFunction, xta } from '../core/utilities.js';
 
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
@@ -37,6 +35,14 @@ const Loom = function (items = {}) {
 	this.delta = {};
 
 	this.set(items);
+
+    this.fromPathData = [];
+    this.toPathData = [];
+
+    this.watchFromPath = null;
+    this.watchIndex = -1;
+    this.engineInstructions = [];
+    this.engineDeltaLengths = [];
 
 	return this;
 };
@@ -593,7 +599,7 @@ S.source = function (item) {
 S.isHorizontalCopy = function (item) {
 
     this.isHorizontalCopy = (item) ? true : false;
-    this.dirtyOutput = true;
+    this.dirtyPathData = true;
 };
 
 S.synchronizePathCursors = function (item) {
@@ -735,20 +741,22 @@ P.prepareStamp = function() {
         }
     }
 
-    if (this.dirtyPathData || !this.fromPathData) {
+    if (this.dirtyPathData || !this.fromPathData.length) {
 
         this.dirtyPathData = false;
+
+        this.watchIndex = -1;
+        this.engineInstructions.length = 0;
+        this.engineDeltaLengths.length = 0;
 
         let mCeil = Math.ceil,
             mMax = Math.max,
             mMin = Math.min,
             mFloor = Math.floor;
 
-        if (!this.fromPathData) this.fromPathData = [];
         let fromPathData = this.fromPathData;
         fromPathData.length = 0;
 
-        if (!this.toPathData) this.toPathData = [];
         let toPathData = this.toPathData;
         toPathData.length = 0;
 
@@ -789,6 +797,8 @@ P.prepareStamp = function() {
 
             this.fromPathSteps = fPartial / minPartial;
             this.toPathSteps = tPartial / minPartial;
+
+            this.watchFromPath = (this.fromPathSteps === 1) ? true : false;
 
             this.dirtyOutput = true;
         }
@@ -1032,7 +1042,13 @@ P.cleanOutput = function () {
                 isHorizontalCopy = self.isHorizontalCopy,
                 loop = self.loopPathCursors,
 
-                fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin;
+                fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, 
+
+                watchFromPath = self.watchFromPath,
+                watchIndex = self.watchIndex, 
+                engineInstructions = self.engineInstructions,
+                engineDeltaLengths = self.engineDeltaLengths,
+                instruction;
 
             let [startX, startY, outputWidth, outputHeight] = self.getBoundingBox();
 
@@ -1054,47 +1070,97 @@ P.cleanOutput = function () {
             outputEngine.globalAlpha = self.state.globalAlpha;
             outputEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-            for (let i = 0; i < sourceDimension; i++) {
+            if(!engineInstructions.length) {
 
-                if (fCursor < dataLen && tCursor < dataLen && fCursor >= 0 && tCursor >= 0) {
+                for (let i = 0; i < sourceDimension; i++) {
 
-                    [fx, fy] = fromPathData[mFloor(fCursor)];
-                    [tx, ty] = toPathData[mFloor(tCursor)];
+                    if (watchIndex < 0) {
 
-                    dx = tx - fx;
-                    dy = ty - fy;
+                        if (watchFromPath && fCursor < 1) watchIndex = i;
+                        else if (!watchFromPath && tCursor < 1) watchIndex = i;
+                    }
 
-                    dLength = mHypot(dx, dy);
+                    if (fCursor < dataLen && tCursor < dataLen && fCursor >= 0 && tCursor >= 0) {
 
-                    if (isHorizontalCopy) {
+                        [fx, fy] = fromPathData[mFloor(fCursor)];
+                        [tx, ty] = toPathData[mFloor(tCursor)];
 
-                        dAngle = -mAtan2(dx, dy) + magicHorizontalPi;
-                        cos = mCos(dAngle);
-                        sin = mSin(dAngle);
+                        dx = tx - fx;
+                        dy = ty - fy;
 
-                        outputEngine.setTransform(cos, sin, -sin, cos, fx, fy);
-                        outputEngine.drawImage(inputCanvas, 0, i, sourceDimension, 1, 0, 0, dLength, 1);
+                        dLength = mHypot(dx, dy);
+
+                        if (isHorizontalCopy) {
+
+                            dAngle = -mAtan2(dx, dy) + magicHorizontalPi;
+                            cos = mCos(dAngle);
+                            sin = mSin(dAngle);
+
+                            engineInstructions.push([cos, sin, -sin, cos, fx, fy]);
+                            engineDeltaLengths.push(dLength);
+                        }
+                        else {
+
+                            dAngle = -mAtan2(dx, dy) + magicVerticalPi;
+                            cos = mCos(dAngle);
+                            sin = mSin(dAngle);
+
+                            engineInstructions.push([cos, sin, -sin, cos, fx, fy, dLength]);
+                            engineDeltaLengths.push(dLength);
+                        }
                     }
                     else {
 
-                        dAngle = -mAtan2(dx, dy) + magicVerticalPi;
-                        cos = mCos(dAngle);
-                        sin = mSin(dAngle);
+                        engineInstructions.push(false);
+                        engineDeltaLengths.push(false);
+                    }
 
-                        outputEngine.setTransform(cos, sin, -sin, cos, fx, fy);
-                        outputEngine.drawImage(inputCanvas, i, 0, 1, sourceDimension, 0, 0, 1, dLength);
+                    fCursor += fStep;
+                    tCursor += tStep;
+
+                    if (loop) {
+
+                        if (fCursor >= dataLen) fCursor -= dataLen;
+                        if (tCursor >= dataLen) tCursor -= dataLen;
                     }
                 }
-                fCursor += fStep;
-                tCursor += tStep;
-
-                if (loop) {
-
-                    if (fCursor >= dataLen) fCursor -= dataLen;
-                    if (tCursor >= dataLen) tCursor -= dataLen;
-                }
+                if (watchIndex < 0) watchIndex = 0;
+                self.watchIndex = watchIndex;
             }
 
+            if (isHorizontalCopy) {
+
+
+                for (let i = 0; i < sourceDimension; i++) {
+
+                    instruction = engineInstructions[watchIndex];
+
+                    if (instruction) {
+
+                        outputEngine.setTransform(...instruction);
+                        outputEngine.drawImage(inputCanvas, 0, watchIndex, sourceDimension, 1, 0, 0, engineDeltaLengths[watchIndex], 1);
+                    }
+                    watchIndex++;
+
+                    if (watchIndex >= sourceDimension) watchIndex = 0;
+                }
+            }
+            else {
+
+                for (let i = 0; i < sourceDimension; i++) {
+
+                    instruction = engineInstructions[watchIndex];
+
+                    if (instruction) {
+
+                        outputEngine.setTransform(...instruction);
+                        outputEngine.drawImage(inputCanvas, watchIndex, 0, 1, sourceDimension, 0, 0, 1, engineDeltaLengths[watchIndex]);
+                    }
+                    watchIndex++;
+
+                    if (watchIndex >= sourceDimension) watchIndex = 0;
+                }
+            }
 
             let iFactor = self.interferenceFactor,
                 iLoops = self.interferenceLoops,
