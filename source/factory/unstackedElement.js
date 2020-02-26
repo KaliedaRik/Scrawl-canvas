@@ -1,0 +1,305 @@
+/*
+# UnstackedElement factory
+*/
+import { unstackedelement, unstackedelementnames, constructors } from '../core/library.js';
+import { generateUuid, pushUnique, removeItem, xt, isa_obj, isa_boolean, mergeOver } from '../core/utilities.js';
+import { uiSubscribedElements } from '../core/userInteraction.js';
+
+import { makeCanvas } from './canvas.js';
+
+import baseMix from '../mixin/base.js';
+
+/*
+## UnstackedElement constructor
+*/
+const UnstackedElement = function (el) {
+	
+	let name = el.id || el.name;
+
+	this.makeName(name);
+	this.register();
+
+	el.setAttribute('data-scrawl-name', this.name);
+	this.domElement = el;
+
+	this.elementComputedStyles = window.getComputedStyle(el);
+	this.hostStyles = {};
+
+	this.canvasStartX = 0;
+	this.canvasStartY = 0;
+	this.canvasWidth = 0;
+	this.canvasHeight = 0;
+	this.canvasZIndex = 0;
+
+	return this;
+};
+
+/*
+## UnstackedElement object prototype setup
+*/
+let P = UnstackedElement.prototype = Object.create(Object.prototype);
+P.type = 'UnstackedElement';
+P.lib = 'unstackedelement';
+P.isArtefact = false;
+P.isAsset = false;
+
+
+/*
+Apply mixins to prototype object
+*/
+P = baseMix(P);
+
+let defaultAttributes = {
+
+	canvasOnTop: false,
+
+};
+P.defs = mergeOver(P.defs, defaultAttributes);
+
+let G = P.getters,
+	S = P.setters,
+	D = P.deltaSetters;
+
+
+/*
+## Define prototype functions
+*/
+
+/*
+
+*/
+P.demolish = function (removeFromDom = false) {
+
+	// let el = this.domElement,
+	// 	name = this.name,
+	// 	g = this.group;
+
+	// if (g) g.removeArtefacts(name);
+
+	// if (el && removeFromDom) el.parentNode.removeChild(el);
+
+	// // also needs to remove itself from subscribe arrays in pivot, mimic, path artefacts
+	// if (this.pivot) removeItem(this.pivot.pivoted, this.name);
+	// if (this.path) removeItem(this.path.pathed, this.name);
+	// if (this.mimic) removeItem(this.mimic.mimicked, this.name);
+
+	// removeItem(uiSubscribedElements, name);
+
+	// delete element[name];
+	// removeItem(elementnames, name);
+
+	// delete artefact[name];
+	// removeItem(artefactnames, name);
+
+	return true;
+};
+
+/*
+Adds a canvas element to sit behind the element, or in front of it, depending on the setting of the __canvasOnTop__ attribute
+*/
+P.addCanvas = function (items = {}) {
+
+	if (!this.canvas) {
+
+		let canvas = document.createElement('canvas'),
+			el = this.domElement,
+			style = el.style;
+
+		if (style.position === 'static') style.position = 'relative';
+
+		el.prepend(canvas);
+
+		let art = makeCanvas({
+			name: `${this.name}-canvas`,
+			domElement: canvas,
+
+			position: 'absolute',
+		});
+
+		this.canvas = art;
+
+		art.set(items);
+
+		this.updateCanvas()
+
+		return art;
+	}
+};
+
+/*
+DOM element styles that we need to observe for changes, to keep the canvas in step with its element
+*/
+P.includedStyles = ['width', 'height', 'zIndex', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'];
+
+/*
+Included styles that we can transfer directly from DOM element to canvas with no further processing
+*/
+P.mimickedStyles = ['borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'];
+
+/*
+Observer function - runs on every RAF loop (when the DOM element is viewable); aim is to:
+
++ keep canvas dimensions exactly matched with its DOM element's dimensions (including border/padding)
++ position the canvas correctly over/under the DOM element (taking into account border/padding)
++ maintain parity between other DOM element CSS values and those values on the canvas (eg border radius)
+*/
+P.checkElementStyleValues = function () {
+
+	let results = {};
+
+	let el = this.domElement,
+		wrapper = this.canvas;
+
+	if (el && wrapper && wrapper.domElement) {
+
+		let host = this.hostStyles,
+			style = this.elementComputedStyles,
+			canvas = wrapper.domElement,
+			includedStyles = this.includedStyles,
+			mMax = Math.max;
+
+		let {x: elX, y: elY, width: elW, height: elH} = el.getBoundingClientRect();
+		let {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
+
+		includedStyles.forEach(item => {
+
+			switch (item) {
+
+				case 'width' :
+
+					let w = mMax(parseFloat(style.width), elW);
+					if (this.canvasWidth !== w) {
+
+						this.canvasWidth = w;
+						this.dirtyDimensions = true;
+					}
+					break;
+
+				case 'height' :
+
+					let h = mMax(parseFloat(style.height), elH);
+					if (this.canvasHeight !== h) {
+
+						this.canvasHeight = h;
+						this.dirtyDimensions = true;
+					}
+					break;
+
+				case 'zIndex' :
+
+					let z = (style.zIndex === 'auto') ? 0 : parseInt(style.zIndex, 10);
+					z = (this.canvasOnTop) ? z + 1 : z - 1;
+
+					if (this.canvasZIndex !== z) {
+
+						this.canvasZIndex = z;
+						this.dirtyZIndex = true;
+					}
+					break;
+
+				default :
+
+					let hi = host[item],
+						si = style[item];
+
+					if(!xt(hi) || hi !== si) {
+				
+						host[item] = si;
+						results[item] = si;
+					}
+			}
+		});
+
+		let dx = elX - canvasX,
+			dy = elY - canvasY;
+
+		if (dx || dy) {
+
+			this.canvasStartX += dx;
+			this.canvasStartY += dy;
+
+			this.dirtyStart = true;
+		}
+	}
+	return results;
+};
+
+/*
+Perform any updates reported by the observer function
+
+UnstackedElement canvases keep their display and base canvases in dimensional sync - which means that __relatively positioned and dimensioned__ entitys in the canvas (those set with appropriate 'val%' string values) will update in line with changes in the DOM element's width, height, padding and margin values
+*/
+P.updateCanvas = function () {
+
+	if (this.canvas && this.canvas.domElement) {
+
+		let canvas = this.canvas,
+			style = canvas.domElement.style,
+			mimics = this.mimickedStyles,
+			updates = this.checkElementStyleValues();
+
+		for (let [key, value] of Object.entries(updates)) {
+
+			if (mimics.indexOf(key) >= 0) {
+
+				style[key] = value;
+			}
+		}
+
+		if (this.dirtyStart) {
+
+			this.dirtyStart = false;
+
+			canvas.set({
+				startX: this.canvasStartX,
+				startY: this.canvasStartY,
+			});
+		}
+
+		if (this.dirtyDimensions) {
+
+			this.dirtyDimensions = false;
+
+			let w = this.canvasWidth,
+				h = this.canvasHeight;
+
+			canvas.set({
+				width: w,
+				height: h,
+			});
+			canvas.dirtyDimensions = true;
+
+			canvas.base.set({
+				width: w,
+				height: h,
+			});
+			canvas.base.dirtyDimensions = true;
+
+			canvas.cleanDimensions();
+			canvas.base.cleanDimensions();
+		}
+
+		if (this.dirtyZIndex) {
+
+			this.dirtyZIndex = false;
+			style.zIndex = this.canvasZIndex;
+		}
+	}
+};
+
+/*
+## Exported factory function
+*/
+const makeUnstackedElement = function (items) {
+	
+	return new UnstackedElement(items);
+};
+
+/*
+Also store constructor in library - clone functionality expects to find it there
+*/
+constructors.UnstackedElement = UnstackedElement;
+
+export {
+	makeUnstackedElement,
+};

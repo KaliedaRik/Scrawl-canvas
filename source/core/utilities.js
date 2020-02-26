@@ -214,6 +214,11 @@ const generateUuid = () => {
 };
 
 /*
+__isa_boolean__ checks to make sure the argument is a DOM &lt;canvas> element
+*/ 
+const isa_boolean = item => (typeof item === 'boolean') ? true : false;
+
+/*
 __isa_canvas__ checks to make sure the argument is a DOM &lt;canvas> element
 */ 
 const isa_canvas = item => (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
@@ -474,6 +479,7 @@ export {
 	ensurePositiveFloat,
 	ensureString,
 	generateUuid,
+	isa_boolean,
 	isa_canvas,
 	isa_dom,
 	isa_engine,

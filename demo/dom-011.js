@@ -108,31 +108,42 @@ scrawl.makeRender({
 
 
 // Event listeners
-let events = (e) => {
+scrawl.observeAndUpdate({
 
-	e.preventDefault();
-	e.returnValue = false;
+	event: ['input', 'change'],
+	origin: '.controlItem',
 
-	switch (e.target.id) {
+	target: canvas,
 
-		case 'fitselect' :
-			canvas.set({ fit: e.target.value });
-			break;
+	useNativeListener: true,
+	preventDefault: true,
 
-		case 'stackwidth' :
-			let w = e.target.value;
+	updates: {
+		fitselect: ['fit', 'raw'],
+	},
+});
 
-			if (w === 'thin') stack.set({ width: 200 });
-			else if (w === 'square') stack.set({ width: 400 });
-			else if (w === 'wide') stack.set({ width: 600 });
-			else if (w === 'massive') stack.set({ width: 1000 });
-	}
-};
-scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
+scrawl.observeAndUpdate({
+
+	event: ['input', 'change'],
+	origin: '.controlItem',
+
+	target: stack,
+
+	useNativeListener: true,
+	preventDefault: true,
+
+	updates: {
+		width: ['width', 'round'],
+		height: ['height', 'round'],
+	},
+});
+
 
 // Set the DOM input values
 document.querySelector('#fitselect').value = 'fill';
-document.querySelector('#stackwidth').value = 'square';
+document.querySelector('#width').value = '400';
+document.querySelector('#height').value = '400';
 
 
 /*

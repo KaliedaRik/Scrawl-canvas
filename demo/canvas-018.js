@@ -84,7 +84,7 @@ let lorem = scrawl.makePhrase({
 
 	name: 'myPhrase',
 
-	text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
+	text: 'Lorem ipsum har varit standard ända sedan 1500-talet, ___ när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
 	font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
 	fillStyle: '#003399',
@@ -94,6 +94,8 @@ let lorem = scrawl.makePhrase({
 	textPath: 'spiral-path',
 	textPathPosition: 0.9,
 	textPathDirection: 'rtl',
+
+	justify: 'center',
 
 	delta: {
 		textPathPosition: 0.0006,
@@ -254,6 +256,7 @@ scrawl.observeAndUpdate({
 		size_px: ['size', 'px'],
 
 		direction: ['textPathDirection', 'raw'],
+		justify: ['justify', 'raw'],
 	},
 });
 
@@ -267,6 +270,7 @@ document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 1;
 document.querySelector('#direction').options.selectedIndex = 1;
+document.querySelector('#justify').options.selectedIndex = 1;
 document.querySelector('#overline').value = 0.1;
 document.querySelector('#letterSpacing').value = 0;
 document.querySelector('#family').options.selectedIndex = 0;

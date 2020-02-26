@@ -362,7 +362,7 @@ P.deltaSetBase = function (items) {
 */
 P.updateBaseHere = function () {
 
-	this.base.updateBaseHere(this.here, this.fit);
+	if (this.base) this.base.updateBaseHere(this.here, this.fit);
 };
 
 /*

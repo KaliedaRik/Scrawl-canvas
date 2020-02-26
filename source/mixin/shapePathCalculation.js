@@ -4,7 +4,6 @@
 
 export default function (d, scale, start, useAsPath, precision) {
 
-// console.log('shapePathCalculation default called')
 	// setup local variables
 	let points = [],
 		myData = [],

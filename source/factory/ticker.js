@@ -657,7 +657,7 @@ P.seekTo = function (milliseconds, resume = false) {
 
 	let backwards = false;
 
-	milliseconds = __xtGet(milliseconds, 0);
+	milliseconds = xtGet(milliseconds, 0);
 
 	if (this.active) this.halt();
 

@@ -229,3 +229,5 @@ document.querySelector('#pivot_handle').value = 0;
 document.querySelector('#pivot_rotation').value = 0;
 document.querySelector('#mimic_dims').value = 10;
 document.querySelector('#mimic_rotation').value = 0;
+
+console.log(scrawl.library)

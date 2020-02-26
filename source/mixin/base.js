@@ -72,7 +72,7 @@ Retrieve an attribute value using the __get__ function. While many attributes ca
 				}
 			}
 		}
-		return undef;
+		return null;
 	};
 
 /*

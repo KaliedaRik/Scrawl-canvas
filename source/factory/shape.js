@@ -1433,6 +1433,12 @@ P.cleanDimensions = function () {
 
 	this.dirtyDimensions = false;
 	this.dirtyHandle = true;
+
+	this.dirtyStart = true;
+	this.dirtyStartControl = true;
+	this.dirtyEndControl = true;
+	this.dirtyControl = true;
+	this.dirtyEnd = true;
 };
 
 /*
@@ -1839,7 +1845,7 @@ P.makeQuadraticPath = function () {
 
 **/
 P.makeLinearPath = function () {
-	
+
 	let [startX, startY] = this.currentStampPosition;
 	let [endX, endY] = this.currentEnd;
 

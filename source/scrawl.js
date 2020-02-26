@@ -48,6 +48,8 @@ import {
 	show,
 	render,
 	makeRender,
+	makeAnimationObserver,
+	makeComponent,
 } from './core/document.js';
 
 import * as library from './core/library.js';
@@ -222,7 +224,6 @@ import {
 /*
 ## Initialize Scrawl-canvas
 */
-
 import { init } from './core/init.js';
 init();
 
@@ -265,6 +266,8 @@ export default {
 	show,
 	render,
 	makeRender,
+	makeAnimationObserver,
+	makeComponent,
 
 
 	// factory/action.js

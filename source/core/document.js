@@ -6,12 +6,13 @@ Scrawl-canvas breaks down the display cycle into three parts: __clear__; __compi
 The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element's controller's __order__ attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value
 */
 
-import { isa_canvas, generateUuid, isa_fn, isa_dom, pushUnique, removeItem, xt, defaultNonReturnFunction } from "./utilities.js";
-import { artefact, canvas, group, stack, css, xcss } from "./library.js";
+import { isa_canvas, generateUuid, isa_fn, isa_dom, isa_boolean, isa_obj, pushUnique, removeItem, xt, defaultNonReturnFunction } from "./utilities.js";
+import { artefact, canvas, group, stack, unstackedelement, css, xcss } from "./library.js";
 
 import { makeStack } from "../factory/stack.js";
 import { makeElement } from "../factory/element.js";
 import { makeCanvas } from "../factory/canvas.js";
+import { makeUnstackedElement } from "../factory/unstackedElement.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
@@ -102,7 +103,7 @@ const processNewStackChildren = function (el, name) {
 	// Only go down one level of hierarchy here; stacks don't do hierarchies, only interested in knowing about immediate child elements
 	Array.from(el.children).forEach(child => {
 	
-		if (child.getAttribute('data-stack') == null && !isa_canvas(child)) {
+		if (child.getAttribute('data-stack') == null && !isa_canvas(child) && child.tagName !== 'SCRIPT') {
 
 			let dims = child.getBoundingClientRect(),
 				computed = window.getComputedStyle(child);
@@ -748,6 +749,134 @@ const makeRender = function (items = {}) {
 };
 
 /*
+### makeComponent
+*/
+const makeComponent = function (items) {
+
+	let domElement = (isa_dom(items.domElement)) ? items.domElement : false,
+		animationHooks = (isa_obj(items.animationHooks)) ? items.animationHooks : {},
+		canvasSpecs = (isa_obj(items.canvasSpecs)) ? items.canvasSpecs : {},
+		observerSpecs = (isa_obj(items.observerSpecs)) ? items.observerSpecs : {},
+		includeCanvas = (isa_boolean(items.includeCanvas)) ? items.includeCanvas : true;
+
+	if (domElement && domElement.id && artefact[domElement.id]) {
+
+		return makeStackComponent(domElement, canvasSpecs, animationHooks, observerSpecs);
+	}
+	return makeUnstackedComponent(domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas);
+};
+
+/*
+### makeStackComponent
+*/
+const makeStackComponent = function (domElement, canvasSpecs, animationHooks, observerSpecs) {
+
+	let myElement = artefact[domElement.id];
+
+	if (!myElement) return false;
+
+	let myCanvas = myElement.addCanvas(canvasSpecs);
+
+	animationHooks.name = `${myElement.name}-animation`;
+	animationHooks.target = myCanvas;
+
+	let myAnimation = makeRender(animationHooks);
+
+	let observer = new IntersectionObserver((entries, observer) => {
+
+		entries.forEach(entry => {
+
+			if (entry.isIntersecting) !myAnimation.isRunning() && myAnimation.run();
+			else if (!entry.isIntersecting) myAnimation.isRunning() && myAnimation.halt();
+		});
+	}, observerSpecs);
+	observer.observe(myElement.domElement);
+
+	let destroy = () => {
+		observer.disconnect();
+		myAnimation.kill();
+		myCanvas.demolish();
+		myElement.demolish(true);
+	};
+
+	return {
+		element: myElement,
+		canvas: myCanvas,
+		animation: myAnimation,
+		demolish: destroy,
+	};
+};
+
+/*
+### makeUnstackedComponent
+*/
+const makeUnstackedComponent = function (domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas) {
+
+	let myElement,
+		id = domElement.id;
+
+	if (id && unstackedelement[id]) myElement = unstackedelement[id];
+	else myElement = makeUnstackedElement(domElement);
+
+	let myCanvas = (includeCanvas) ? myElement.addCanvas(canvasSpecs) : false;
+
+	animationHooks.name = `${myElement.name}-animation`;
+	if (myCanvas) {
+
+		if (!animationHooks.afterClear) animationHooks.afterClear = () => myElement.updateCanvas();
+		animationHooks.target = myCanvas;
+	}
+
+	let myAnimation = makeRender(animationHooks);
+
+	let observer = new IntersectionObserver((entries, observer) => {
+
+		entries.forEach(entry => {
+
+			if (entry.isIntersecting) !myAnimation.isRunning() && myAnimation.run();
+			else if (!entry.isIntersecting) myAnimation.isRunning() && myAnimation.halt();
+		});
+	}, observerSpecs);
+	observer.observe(myElement.domElement);
+
+	let destroy = () => {
+		observer.disconnect();
+		myAnimation.kill();
+		if (myCanvas) myCanvas.demolish();
+		myElement.demolish(true);
+	};
+
+	return {
+		element: myElement,
+		canvas: myCanvas,
+		animation: myAnimation,
+		demolish: destroy,
+	};
+};
+
+/*
+### makeAnimationObserver
+*/
+const makeAnimationObserver = function (anim, wrapper) {
+
+	if (anim && anim.run && wrapper && wrapper.domElement) {
+
+		let observer = new IntersectionObserver((entries, observer) => {
+
+			entries.forEach(entry => {
+
+				if (entry.isIntersecting) !anim.isRunning() && anim.run();
+				else if (!entry.isIntersecting) anim.isRunning() && anim.halt();
+			});
+		}, {});
+		observer.observe(wrapper.domElement);
+
+		return observer.disconnect;
+	}
+	else return false;
+}
+
+/*
 Scrawl-canvas batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don't maintain a full/comprehensive 'shadow' or 'virtual' DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.
 
 The decision on whether to update a DOM element is mediated through a suite of 'dirty' flags assigned on the Scrawl-canvas artefact object which wraps each DOM element. As part of the compile component of the Scrawl-canvas Display cycle, the code will take a decision on whether the DOM element needs to be updated and insert the artefact's name in the __domShowElements__ array, and set the __domShowRequired__ flag to true, which will then trigger the __domShow()__ function to run at the end of each Display cycle.
@@ -947,6 +1076,8 @@ export {
 	render,
 
 	makeRender,
+	makeAnimationObserver,
+	makeComponent,
 
 	addDomShowElement,
 	setDomShowRequired,

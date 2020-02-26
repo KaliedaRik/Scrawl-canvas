@@ -398,9 +398,10 @@ S.text = function (item) {
 	this.dirtyPathObject = true;
 };
 
+P.permittedJustifications = ['left', 'right', 'center', 'full'];
 S.justify = function (item) {
 
-	this.justify = ensureString(item);
+	if (this.permittedJustifications.indexOf(item) >= 0) this.justify = item;
 	
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
@@ -513,6 +514,29 @@ D.underlinePosition = function (item) {
 
 	this.dirtyPathObject = true;
 	this.dirtyText = true;
+};
+
+// textPathPosition needs to take into account whether the text is looping along the path, or not
+S.textPathPosition = function (item) {
+
+	if (this.textPathLoop) {
+
+		item = Math.abs(item);
+		this.textPathPosition = item - Math.floor(item);
+	}
+	else this.textPathPosition = item;
+};
+
+D.textPathPosition = function (item) {
+
+	let newVal = this.textPathPosition + item;
+
+	if (this.textPathLoop) {
+
+		newVal = Math.abs(newVal);
+		this.textPathPosition = newVal - Math.floor(newVal);
+	}
+	else this.textPathPosition = newVal;
 };
 
 
@@ -1049,18 +1073,16 @@ P.calculateGlyphPathPositions = function () {
 		distance, posArray, i, iz, width,
 		justify = this.justify,
 		loop = this.textPathLoop;
-// console.log('calculateGlyphPathPositions', textPos)
 
 	for (i = 0, iz = textPos.length; i < iz; i++) {
 
 		posArray = textPos[i];
 		width = widths[i];
 
-		// TODO - justify isn't working as I'd like it to (ie stamping glyph so centres middle of glyph on path)
 		if (justify === 'right') posArray[7] = -width;
 		else if (justify === 'center') posArray[7] = -width / 2;
 
-		posArray[10] = path.getPathPositionData(pathPos);
+		posArray[10] = (pathPos <= 1 && pathPos >= 0) ? path.getPathPositionData(pathPos) : false;
 		posArray[9] = width;
 
 		if (direction) pathPos += (width / len);
@@ -1168,13 +1190,16 @@ P.regularStampSynchronousActions = function () {
 
 				pathData = item[10];
 
-				this.currentPathData = pathData;
-				if (addTextPathRoll) this.currentRotation = pathData.angle;
+				if (pathData) {
 
-				dest.rotateDestination(engine, pathData.x, pathData.y, this);
+					this.currentPathData = pathData;
+					if (addTextPathRoll) this.currentRotation = pathData.angle;
 
-				data = preStamper(engine, this, item);
-				stamper[method](engine, this, data);
+					dest.rotateDestination(engine, pathData.x, pathData.y, this);
+
+					data = preStamper(engine, this, item);
+					stamper[method](engine, this, data);
+				}
 			}
 
 			this.addPathRotation = aPR;

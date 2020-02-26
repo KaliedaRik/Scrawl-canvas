@@ -440,14 +440,48 @@ P.buildStyle = function (mycell = {}) {
 	return 'rgba(0,0,0,0)';
 };
 
+P.updateArtefacts = function (items = {}) {
+
+	this.groupBuckets.forEach(grp => {
+
+		grp.artefactBuckets.forEach(art => {
+
+			if (items.dirtyScale) art.dirtyScale = true;
+			if (items.dirtyDimensions) art.dirtyDimensions = true;
+			if (items.dirtyLock) art.dirtyLock = true;
+			if (items.dirtyStart) art.dirtyStart = true;
+			if (items.dirtyOffset) art.dirtyOffset = true;
+			if (items.dirtyHandle) art.dirtyHandle = true;
+			if (items.dirtyRotation) art.dirtyRotation = true;
+			if (items.dirtyPathObject) art.dirtyPathObject = true;
+			if (items.dirtyCollision) art.dirtyCollision = true;
+			// if (items.dirtySpecies && art.type === 'Shape') {
+
+			// 	console.log(art.name, 'applying dirtySpecies flag')
+			// 	art.dirtySpecies = true;
+			// }
+		})
+	});
+};
+
 P.cleanDimensionsAdditionalActions = function() {
 
 	if (this.element) {
 
-		let dims = this.currentDimensions;
+		let [w, h] = this.currentDimensions;
 
-		this.element.width = dims[0];
-		this.element.height = dims[1];
+		this.element.width = w;
+		this.element.height = h;
+
+		if (this.isBase && this.controller) this.controller.updateBaseHere();
+
+		if (this.groupBuckets) {
+
+			this.updateArtefacts({
+				dirtyDimensions: true,
+				// dirtySpecies: true,
+			});
+		}
 	}
 };
 
@@ -1140,7 +1174,6 @@ Internal function - keeping the Canvas object's 'base' Cell's .here attribute up
 P.updateBaseHere = function (controllerHere, fit) {
 
 	if (this.isBase) {
-
 		if (!this.here) this.here = {};
 
 		let here = this.here,

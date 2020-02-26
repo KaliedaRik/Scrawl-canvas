@@ -4,7 +4,7 @@
 import { constructors, group, stack, stacknames, element, artefact, artefactnames } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
-import { uiSubscribedElements } from '../core/userInteraction.js';
+import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 
 import { makeGroup } from './group.js';
 import { makeElement } from './element.js';
@@ -67,7 +67,7 @@ const Stack = function (items = {}) {
 	}
 
 	// this.apply();
-	
+
 	return this;
 };
 
@@ -107,7 +107,13 @@ let defaultAttributes = {
 /*
 
 */
-	trackHere: true
+	trackHere: true,
+
+/*
+
+*/
+	isResponsive: false,
+	containElementsInHeight: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -257,9 +263,55 @@ P.cleanPerspective = function () {
 };
 
 /*
+Scrawl-canvas Stack artefacts cannot have 'String%' dimensions, which means they have absolute dimensions -because everything that relies on 'String%' dimensions needs an absolute (number) value for their calculations at the root, which is the stack. 
+
+But we still need to make Stacks responsive. We do this by checking if the viewport dimensions have changed (a resize action has taken place) and - if yes - update the stack's absolute dimensions accordingly ... if the __isResponsive__ flag has been set to true for the Stack (default is 'false' - may change this in due course).
+
+We call this check in the __clear__ function below, because it's doing nothing else useful at the moment and it makes sense to get updates in place here before everything launches into the compile part of the display cycle
+
+*/
+P.checkResponsive = function () {
+
+	if (this.isResponsive && this.trackHere) {
+
+		// Start keeping track of the viewport dimensions
+		if (!this.currentVportWidth) this.currentVportWidth = currentCorePosition.w;
+		if (!this.currentVportHeight) this.currentVportHeight = currentCorePosition.h;
+
+		// If last display cycle responded to dimension changes, need to finalise height now
+		if (this.dirtyHeight && this.containElementsInHeight) {
+
+			console.log('stack height final fixes need to be done');
+			this.dirtyHeight = false;
+		}
+
+		if (this.currentVportWidth !== currentCorePosition.w) {
+
+			console.log('need to update for resized viewport width');
+			this.currentVportWidth = currentCorePosition.w;
+
+			if (this.containElementsInHeight) {
+
+				// Won't be updated until the next display cycle, but flag it now for action
+				// - needed because text in elements flow as part of normal DOM operations
+				this.dirtyHeight = true;
+			}
+		}
+
+		if (this.currentVportHeight !== currentCorePosition.h) {
+
+			console.log('need to update for resized viewport height');
+			this.currentVportHeight = currentCorePosition.h;
+		}
+	}
+};
+
+/*
 
 */
 P.clear = function () {
+
+	this.checkResponsive();
 
 	return Promise.resolve(true);
 };
