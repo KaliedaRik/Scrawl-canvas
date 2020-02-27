@@ -455,31 +455,42 @@ P.updateArtefacts = function (items = {}) {
 			if (items.dirtyRotation) art.dirtyRotation = true;
 			if (items.dirtyPathObject) art.dirtyPathObject = true;
 			if (items.dirtyCollision) art.dirtyCollision = true;
-			// if (items.dirtySpecies && art.type === 'Shape') {
-
-			// 	console.log(art.name, 'applying dirtySpecies flag')
-			// 	art.dirtySpecies = true;
-			// }
 		})
 	});
 };
 
 P.cleanDimensionsAdditionalActions = function() {
 
-	if (this.element) {
+	let element = this.element;
 
-		let [w, h] = this.currentDimensions;
+	if (element) {
 
-		this.element.width = w;
-		this.element.height = h;
+		let control = this.controller,
+			current = this.currentDimensions,
+			base = this.isBase;
 
-		if (this.isBase && this.controller) this.controller.updateBaseHere();
+		if (base && control && control.isComponent) {
+
+			let controlDims = this.controller.currentDimensions,
+				dims = this.dimensions;
+
+			dims[0] = current[0] = controlDims[0];
+			dims[1] = current[1] = controlDims[1];
+		}
+
+		let [w, h] = current;
+
+		element.width = w;
+		element.height = h;
+
+		this.setEngineFromState(this.engine);
+
+		if (base && control) control.updateBaseHere();
 
 		if (this.groupBuckets) {
 
 			this.updateArtefacts({
 				dirtyDimensions: true,
-				// dirtySpecies: true,
 			});
 		}
 	}
@@ -535,10 +546,18 @@ P.updateControllerCells = function () {
 */
 P.setEngineFromState = function (engine) {
 
-	this.allKeys.forEach(key => this[key] = engine[key], this);
+	let state = this.state;
 
-	this.lineDash = (xt(engine.lineDash)) ? engine.lineDash : [];
-	this.lineDashOffset = xtGet(engine.lineDashOffset, 0);
+	state.allKeys.forEach(key => {
+
+		if (key === 'lineDash') {
+
+			engine.lineDash = state.lineDash;
+			engine.setLineDash(engine.lineDash);
+		}
+		else engine[key] = state[key];
+
+	}, state);
 
 	return this;
 };

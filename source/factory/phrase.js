@@ -1079,6 +1079,8 @@ P.calculateGlyphPathPositions = function () {
 		posArray = textPos[i];
 		width = widths[i];
 
+		// TODO - using non-left justified text buggers up letter kerning along the line
+		// - but left-justified makes the letters lean a little to the left
 		if (justify === 'right') posArray[7] = -width;
 		else if (justify === 'center') posArray[7] = -width / 2;
 

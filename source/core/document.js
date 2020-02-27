@@ -775,6 +775,8 @@ const makeStackComponent = function (domElement, canvasSpecs, animationHooks, ob
 
 	if (!myElement) return false;
 
+	canvasSpecs.isComponent = true;
+
 	let myCanvas = myElement.addCanvas(canvasSpecs);
 
 	animationHooks.name = `${myElement.name}-animation`;
@@ -817,6 +819,8 @@ const makeUnstackedComponent = function (domElement, canvasSpecs, animationHooks
 
 	if (id && unstackedelement[id]) myElement = unstackedelement[id];
 	else myElement = makeUnstackedElement(domElement);
+
+	canvasSpecs.isComponent = true;
 
 	let myCanvas = (includeCanvas) ? myElement.addCanvas(canvasSpecs) : false;
 

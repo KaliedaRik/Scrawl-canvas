@@ -166,9 +166,19 @@ const spotlightText = (el) => {
 			fillStyle: 'lightgray',
 			lockFillStyleToEntity: true,
 
-			lineWidth: 10,
+			method: 'fill', 
+		});
 
-			method: 'fillThenDraw', 
+		scrawl.makeBlock({
+
+			width: '50%',
+			height: '50%',
+			startX: '25%',
+			startY: '25%',
+			globalAlpha: 0.3,
+			strokeStyle: 'lightgreen',
+			lineWidth: 40,
+			method: 'draw',
 		});
 	}
 

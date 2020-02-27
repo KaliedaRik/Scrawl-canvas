@@ -153,50 +153,39 @@ P.addCanvas = function (items = {}) {
 		let canvas = document.createElement('canvas'),
 			el = this.domElement;
 
-		el.parentNode.insertBefore(canvas, this.domElement);
-
 		let rect = el.getBoundingClientRect(),
 			style = window.getComputedStyle(el);
+
+		el.parentNode.insertBefore(canvas, this.domElement);
 
 		let art = makeCanvas({
 			name: `${this.name}-canvas`,
 			domElement: canvas,
 
-			position: "absolute",
+			position: 'absolute',
 
-			width: items.width || rect.width,
-			height: items.height || rect.height,
+			width: rect.width,
+			height: rect.height,
 
-			handleX: items.handleX || 0,
-			handleY: items.handleY || 0,
-
-			offsetX: items.offsetX || 0,
-			offsetY: items.offsetY || 0,
-
-			roll: items.roll || 0,
-			pitch: items.pitch || 0,
-			yaw: items.yaw || 0,
-
-		}).set({
 			mimic: this.name,
 			lockTo: 'mimic',
 			
-			useMimicDimensions: (typeof items.useMimicDimensions === 'boolean') ? items.useMimicDimensions : true,
-			useMimicScale: isa_boolean(items.useMimicScale) ? items.useMimicScale : true,
-			useMimicStart: isa_boolean(items.useMimicStart) ? items.useMimicStart : true,
-			useMimicHandle: isa_boolean(items.useMimicHandle) ? items.useMimicHandle : true,
-			useMimicOffset: isa_boolean(items.useMimicOffset) ? items.useMimicOffset : true,
-			useMimicRotation: isa_boolean(items.useMimicRotation) ? items.useMimicRotation : true,
-			useMimicFlip: false,
+			useMimicDimensions: true,
+			useMimicScale: true,
+			useMimicStart: true,
+			useMimicHandle: true,
+			useMimicOffset: true,
+			useMimicRotation: true,
 
-			addOwnDimensionsToMimic: isa_boolean(items.addOwnDimensionsToMimic) ? items.addOwnDimensionsToMimic : false,
-			addOwnScaleToMimic: isa_boolean(items.addOwnScaleToMimic) ? items.addOwnScaleToMimic : false,
-			addOwnStartToMimic: isa_boolean(items.addOwnStartToMimic) ? items.addOwnStartToMimic : false,
-			addOwnHandleToMimic: isa_boolean(items.addOwnHandleToMimic) ? items.addOwnHandleToMimic : false,
-			addOwnOffsetToMimic: isa_boolean(items.addOwnOffsetToMimic) ? items.addOwnOffsetToMimic : true,
-			addOwnRotationToMimic: isa_boolean(items.addOwnRotationToMimic) ? items.addOwnRotationToMimic : false,
-			actionResize: true,
+			addOwnDimensionsToMimic: false,
+			addOwnScaleToMimic: false,
+			addOwnStartToMimic: false,
+			addOwnHandleToMimic: false,
+			addOwnOffsetToMimic: false,
+			addOwnRotationToMimic: false,
 		});
+
+		art.set(items);
 
 		this.canvas = art;
 

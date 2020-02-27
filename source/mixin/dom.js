@@ -656,6 +656,8 @@ Overwrites mixin/position.js function
 		releaseQuaternion(processedRotation);
 
 		this.dirtyPositionSubscribers = true;
+		
+		if (this.mimicked && this.mimicked.length) this.dirtyMimicRotation = true;
 	};
 
 /*

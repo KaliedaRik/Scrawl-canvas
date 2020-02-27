@@ -1061,6 +1061,8 @@ NOTE: Canvas, Stack, Element (if enabled) and Cell all need to create their .her
 		this.dirtyHandle = true;
 
 		if (oldScale !== this.currentScale) this.dirtyPositionSubscribers = true;
+
+		if (this.mimicked && this.mimicked.length) this.dirtyMimicScale = true;
 	};
 
 /*
@@ -1113,6 +1115,8 @@ Dimensions DO scale - but scaling happens elsewhere
 			this.dirtyOffset = true;
 
 			if (oldW !== curDims[0] || oldH !== curDims[1]) this.dirtyPositionSubscribers = true;
+
+			if (this.mimicked && this.mimicked.length) this.dirtyMimicDimensions = true;
 		}
 		else this.dirtyDimensions = true;
 	};
@@ -1169,6 +1173,8 @@ Offset does NOT scale
 
 				this.cleanPosition(this.currentOffset, this.offset, [here.w, here.h]);
 				this.dirtyStampPositions = true;
+
+				if (this.mimicked && this.mimicked.length) this.dirtyMimicOffset = true;
 			}
 			else this.dirtyOffset = true;
 		}
@@ -1186,6 +1192,8 @@ Handle DOES scale - but scaling happens elsewhere
 
 		this.cleanPosition(current, this.handle, this.currentDimensions);
 		this.dirtyStampHandlePositions = true;
+
+		if (this.mimicked && this.mimicked.length) this.dirtyMimicHandle = true;
 	};
 
 /*
@@ -1240,6 +1248,8 @@ Handle DOES scale - but scaling happens elsewhere
 		this.currentRotation = roll;
 
 		if (roll !== oldRoll) this.dirtyPositionSubscribers = true;
+
+		if (this.mimicked && this.mimicked.length) this.dirtyMimicRotation = true;
 	};
 
 /*
@@ -1730,6 +1740,12 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 */
 	P.updateMimicSubscribers = function () {
 
+		let DMH = this.dirtyMimicHandle;
+		let DMO = this.dirtyMimicOffset;
+		let DMR = this.dirtyMimicRotation;
+		let DMS = this.dirtyMimicScale;
+		let DMD = this.dirtyMimicDimensions;
+
 		this.mimicked.forEach(name => {
 
 			let instance = artefact[name];
@@ -1737,13 +1753,19 @@ Note - scaling does not take place here - it needs to be handled elsewhere
 			if (instance) {
 
 				if (instance.useMimicStart) instance.dirtyStart = true;
-				if (instance.useMimicHandle) instance.dirtyHandle = true;
-				if (instance.useMimicOffset) instance.dirtyOffset = true;
-				if (instance.useMimicRotation) instance.dirtyRotation = true;
-				if (instance.useMimicScale) instance.dirtyScale = true;
-				if (instance.useMimicDimensions) instance.dirtyDimensions = true;
+				if (DMH && instance.useMimicHandle) instance.dirtyHandle = true;
+				if (DMO && instance.useMimicOffset) instance.dirtyOffset = true;
+				if (DMR && instance.useMimicRotation) instance.dirtyRotation = true;
+				if (DMS && instance.useMimicScale) instance.dirtyScale = true;
+				if (DMD && instance.useMimicDimensions) instance.dirtyDimensions = true;
 			}
 		});
+
+		this.dirtyMimicHandle = false;
+		this.dirtyMimicOffset = false;
+		this.dirtyMimicRotation = false;
+		this.dirtyMimicScale = false;
+		this.dirtyMimicDimensions = false;
 	};
 
 /*

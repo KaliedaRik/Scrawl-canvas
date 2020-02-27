@@ -183,6 +183,11 @@ If no label value is supplied to the canvas factory (as part of the function's a
 	title: '',
 	label: '',
 	description: '',
+
+/*
+Set to true if canvas is being used as part of a Scrawl-canvas component
+*/
+	isComponent: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
