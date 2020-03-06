@@ -1,5 +1,7 @@
 /*
 # Loom factory
+
+TODO - documentation
 */
 import { constructors, artefact } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
@@ -473,42 +475,7 @@ P.setDeltaValues = function (items = {}) {
 };
 
 /*
-Retrieve basic data about the Loom
-*/
-P.getBasicData = function () {
-
-    return {
-        w: this.boundingBox[2],
-        h: this.boundingBox[3],
-
-        roll: 0,
-        scale: 1,
-        visibility: this.visibility,
-
-        x: this.boundingBox[0],
-        y: this.boundingBox[1],
-        startX: this.boundingBox[0],
-        startY: this.boundingBox[1],
-        offsetX: 0,
-        offsetY: 0,
-        handleX: 0,
-        handleY: 0,
-
-        pivot: false,
-        path: false,
-        mimic: false,
-
-        fromPath: (this.fromPath) ? this.fromPath.name : false,
-        toPath: (this.toPath) ? this.toPath.name : false,
-
-        lockX: 'start',
-        lockY: 'start',
-        isBeingDragged: false
-    }
-};
-
-/*
-invalidate various init and clone functionalities
+Invalidate various init and clone functionalities
 */
 P.midInitActions = defaultNonReturnFunction;
 
@@ -536,7 +503,7 @@ P.getSensors = function () {
 };
 
 /*
-Setters and getters for Loom-specific attributes
+TODO - documentation
 */
 S.fromPath = function (item) {
 
@@ -580,6 +547,9 @@ S.toPath = function (item) {
     }
 };
 
+/*
+TODO - documentation
+*/
 S.source = function (item) {
 
     item = (item.substring) ? artefact[item] : item;
@@ -596,12 +566,18 @@ S.source = function (item) {
     }
 };
 
+/*
+TODO - documentation
+*/
 S.isHorizontalCopy = function (item) {
 
     this.isHorizontalCopy = (item) ? true : false;
     this.dirtyPathData = true;
 };
 
+/*
+TODO - documentation
+*/
 S.synchronizePathCursors = function (item) {
 
     this.synchronizePathCursors = (item) ? true : false;
@@ -615,6 +591,9 @@ S.synchronizePathCursors = function (item) {
     this.dirtyPathData = true;
 };
 
+/*
+TODO - documentation
+*/
 S.loopPathCursors = function (item) {
 
     this.loopPathCursors = (item) ? true : false;
@@ -640,6 +619,9 @@ S.loopPathCursors = function (item) {
     this.dirtyOutput = true;
 };
 
+/*
+TODO - documentation
+*/
 S.fromPathStart = function (item) {
 
     if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
@@ -808,6 +790,9 @@ P.prepareStamp = function() {
     if (this.sourceIsVideoOrSprite) this.dirtyInput = true;
 };
 
+/*
+TODO - documentation
+*/
 P.setSourceDimension = function (val) {
 
     // prepareStamp does the dimension calculation itself, then supplies the new value
@@ -945,6 +930,9 @@ P.stamp = function (force = false, host, changes) {
     else return Promise.resolve(false);
 };
 
+/*
+TODO - documentation
+*/
 P.cleanInput = function () {
 
     let self = this;
@@ -1001,6 +989,9 @@ P.cleanInput = function () {
     });
 };
 
+/*
+TODO - documentation
+*/
 P.cleanOutput = function () {
     
     let self = this;
@@ -1193,6 +1184,9 @@ P.cleanOutput = function () {
     });
 };
 
+/*
+TODO - documentation
+*/
 P.regularStamp = function () {
 
     let self = this;
@@ -1516,6 +1510,10 @@ const makeLoom = function (items) {
 
 constructors.Loom = Loom;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeLoom,
 };

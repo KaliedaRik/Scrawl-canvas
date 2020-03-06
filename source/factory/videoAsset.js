@@ -1,5 +1,7 @@
 /*
 # VideoAsset factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { mergeOver, generateUuid, xt } from '../core/utilities.js';
@@ -31,6 +33,21 @@ P = baseMix(P);
 P = assetMix(P);
 
 /*
+## Packet management
+
+Currently nothing to do here
+
+TODO: work out how we're going to handle assets in packages
+	- currently assume asset already exists on the destination device browser
+	- we could include the &lt;img> element's src attribute in the packet??
+	- then when it comes to unpacking, check if it really does exist
+		- if not exist, do the load thing
+
+	- same work required across imageAsset, spriteAsset, videoAsset
+*/
+
+
+/*
 ## Define default attributes
 */
 let defaultAttributes = {};
@@ -41,7 +58,7 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 S.source = function (item = {}) {
 
@@ -64,7 +81,7 @@ S.source = function (item = {}) {
 */
 
 /*
-
+TODO - documentation
 */
 P.checkSource = function (width, height) {
 
@@ -235,6 +252,8 @@ const importDomVideo = function (query) {
 };
 
 /*
+TODO - documentation
+
 TODO - extend functionality so users can manipulate the mediaStream via the Picture entity using it as its asset
 */
 const importMediaStream = function (items = {}) {
@@ -315,16 +334,16 @@ Import video from wherever
 
 Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.mp4' - in which case Scrawl-canvas:
 
-* will attempt to give the new videoAsset object, and video element, a name/id value of eg 'flower' (but not guaranteed)
-* will not add the new video element to the DOM
++ will attempt to give the new videoAsset object, and video element, a name/id value of eg 'flower' (but not guaranteed)
++ will not add the new video element to the DOM
 
 ... or the argument can be an object with the following attributes:
 
-* __name__ string
-* __src__ url string, or an array of ['url_strings']
-* __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new video element to the corresponding DOM element
-* __isVisible__ boolean - if true, and new video element has been added to DOM, make that image visible; default is false
-* __className__ string - list of classes to be added to the new video element
++ __name__ string
++ __src__ url string, or an array of ['url_strings']
++ __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new video element to the corresponding DOM element
++ __isVisible__ boolean - if true, and new video element has been added to DOM, make that image visible; default is false
++ __className__ string - list of classes to be added to the new video element
 
 */
 const importVideo = function (...args) {
@@ -420,7 +439,7 @@ const importVideo = function (...args) {
 };
 
 /*
-
+TODO - documentation
 */
 const gettableVideoAssetAtributes = [
 	'video_audioTracks',
@@ -457,7 +476,7 @@ const gettableVideoAssetAtributes = [
 ];
 
 /*
-
+TODO - documentation
 */
 const settableVideoAssetAtributes = [
 	'video_autoPlay',
@@ -489,6 +508,9 @@ const makeVideoAsset = function (items) {
 constructors.VideoAsset = VideoAsset;
 
 
+/*
+TODO - documentation
+*/
 export {
 	makeVideoAsset,
 

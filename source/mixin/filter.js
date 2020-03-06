@@ -1,5 +1,7 @@
 /*
 # Filter mixin
+
+TODO - documentation
 */
 import { filter } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
@@ -76,6 +78,8 @@ Replaces the existing filters array with a new filters array. If a string name i
 */
 
 /*
+TODO - documentation
+
 Internal housekeeping
 */
 	P.cleanFilters = function () {

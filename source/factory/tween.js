@@ -1,5 +1,7 @@
 /*
 # Tween factory
+
+TODO - documentation
 */
 import { constructors, animationtickers, radian } from '../core/library.js';
 import { mergeOver, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
@@ -73,27 +75,23 @@ P = tweenMix(P);
 let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 	definitions: null,
 
 /*
-
+TODO - documentation
 */
 	duration: 0,
 
 /*
-
+TODO - documentation
 */
 	commenceAction: null,
-
-/*
-
-*/
 	completeAction: null,
 
 /*
-
+TODO - documentation
 */
 	killOnComplete: false,
 
@@ -113,16 +111,13 @@ let G = P.getters,
 	S = P.setters;
 
 /*
-
+TODO - documentation
 */
 G.definitions = function() {
 
 	return [].concat(this.definitions);
 };
 
-/*
-
-*/
 S.definitions = function (item) {
 
 	this.definitions = [].concat(item);
@@ -130,7 +125,7 @@ S.definitions = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.commenceAction = function (item) {
 
@@ -139,9 +134,6 @@ S.commenceAction = function (item) {
 	if (typeof this.commenceAction !== 'function') this.commenceAction = defaultNonReturnFunction;
 };
 
-/*
-
-*/
 S.completeAction = function (item) {
 
 	this.completeAction = item;
@@ -155,6 +147,8 @@ S.completeAction = function (item) {
 */
 
 /*
+TODO - documentation
+
 Overwrites function defined in mixin/base.js
 */
 P.set = function (items) {
@@ -193,7 +187,7 @@ P.set = function (items) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getEndTime = function () {
 
@@ -201,7 +195,7 @@ P.getEndTime = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.calculateEffectiveDuration = function (item) {
 
@@ -234,7 +228,7 @@ P.calculateEffectiveDuration = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.update = function (items = {}) {
 
@@ -295,7 +289,7 @@ P.update = function (items = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.doSimpleUpdate = function (items = {}) {
 
@@ -346,7 +340,7 @@ P.doSimpleUpdate = function (items = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.engineActions = {
 
@@ -448,7 +442,7 @@ P.engineActions = {
 };
 
 /*
-
+TODO - documentation
 */
 P.setDefinitionsValues = function () {
 
@@ -477,7 +471,7 @@ P.setDefinitionsValues = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.parseDefinitionsValue = function (item) {
 
@@ -500,7 +494,7 @@ P.parseDefinitionsValue = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.run = function () {
 
@@ -517,7 +511,7 @@ P.run = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.isRunning = function () {
 
@@ -528,7 +522,7 @@ P.isRunning = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.halt = function() {
 
@@ -544,7 +538,7 @@ P.halt = function() {
 };
 
 /*
-
+TODO - documentation
 */
 P.reverse = function() {
 
@@ -560,7 +554,7 @@ P.reverse = function() {
 };
 
 /*
-
+TODO - documentation
 */
 P.resume = function() {
 
@@ -576,7 +570,7 @@ P.resume = function() {
 };
 
 /*
-
+TODO - documentation
 */
 P.seekTo = function(milliseconds) {
 
@@ -592,7 +586,7 @@ P.seekTo = function(milliseconds) {
 };
 
 /*
-
+TODO - documentation
 */
 P.seekFor = function(milliseconds) {
 
@@ -619,6 +613,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Tween = Tween;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeTween,
 };

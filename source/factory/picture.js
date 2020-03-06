@@ -1,5 +1,7 @@
 /*
 # Picture factory
+
+TODO - documentation
 */
 import { constructors, asset, artefact } from '../core/library.js';
 
@@ -32,6 +34,7 @@ const Picture = function (items = {}) {
 	this.pasteArray = [];
 
 	this.entityInit(items);
+	this.initAssetAttributes();
 
 	if (!items.copyStart) {
 
@@ -80,19 +83,32 @@ P = filterMix(P);
 let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 	copyStart: null,
 	copyDimensions: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+/*
+## Packet management
+*/
+P.packetExclusions = pushUnique(P.packetExclusions, []);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, ['copyStart', 'copyDimensions']);
+P.packetObjects = pushUnique(P.packetObjects, ['asset']);
+P.packetFunctions = pushUnique(P.packetFunctions, []);
+
+
+/*
+## Define getter, setter and deltaSetter functions
+*/
 let G = P.getters,
 	S = P.setters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 G.copyStartX = function () {
 
@@ -154,7 +170,7 @@ D.copyStart = function (x, y) {
 };
 
 /*
-
+TODO - documentation
 */
 G.copyWidth = function () {
 
@@ -308,6 +324,22 @@ P.set = function (items = {}) {
 };
 
 /*
+TODO - documentation
+
+Overwrites mixin/position.js function
+*/
+P.kill = function () {
+
+	this.asset.unsubscribe(this);
+	if (this.group && this.group.name) this.group.removeArtefacts(this.name);
+	this.demolishAnchor();
+	this.deregister();
+	return this;
+};
+
+/*
+TODO - documentation
+
 Overwrites mixin/position.js function
 */
 P.updateImageSubscribers = function () {
@@ -330,13 +362,13 @@ P.imageSubscribe = function (name) {
 	if (name && name.substring) pushUnique(this.imageSubscribers, name);
 };
 
-P.imageUnsubscribe = function () {
+P.imageUnsubscribe = function (name) {
 
 	if (name && name.substring) removeItem(this.imageSubscribers, name);
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanImage = function () {
 
@@ -366,7 +398,7 @@ P.cleanImage = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanCopyStart = function () {
 
@@ -399,7 +431,7 @@ P.cleanCopyStart = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanCopyDimensions = function () {
 
@@ -441,6 +473,8 @@ P.cleanCopyDimensions = function () {
 
 
 /*
+TODO - documentation
+
 Overrides mixin/entity.js
 */
 P.prepareStamp = function() {
@@ -495,7 +529,7 @@ P.prepareStamp = function() {
 };
 
 /*
-
+TODO - documentation
 */
 P.preparePasteObject = function () {
 
@@ -519,7 +553,7 @@ P.preparePasteObject = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanPathObject = function () {
 
@@ -536,7 +570,7 @@ P.cleanPathObject = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.draw = function (engine) {
 
@@ -588,6 +622,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Picture = Picture;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makePicture,
 };

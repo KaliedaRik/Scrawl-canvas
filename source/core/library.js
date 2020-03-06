@@ -79,12 +79,6 @@ const fontattribute = {};
 const fontattributenames = [];
 
 /*
-Objects used as part of the physics engine
-*/
-// const force = {};
-// const forcenames = [];
-	
-/*
 Objects created using the __makeGroup__ factory, and generated as part of the process of creating Stack and Canvas artefacts, and Cell assets.
 */
 const group = {};
@@ -95,18 +89,6 @@ Used internally by Gradient and RadialGradient styles
 */
 const palette = {};
 const palettenames = [];
-	
-/*
-Zero-dimension Artefacts used as part of the physics engine
-*/
-// const particle = {};
-// const particlenames = [];
-	
-/*
-Objects used as part of the physics engine
-*/
-// const spring = {};
-// const springnames = [];
 	
 /*
 Stack element wrappers created during Scrawl-canvas initialization, and created using the __makeStack__ and __addStack__ factories
@@ -153,6 +135,9 @@ Convenience set, used internally
 const xcss = new Set(['alignContent', 'alignItems', 'alignSelf', 'animation', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIterationCount', 'animationName', 'animationPlayState', 'animationTimingFunction', 'backfaceVisibility', 'backgroundImage', 'backgroundSize', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderImage', 'borderImageOutset', 'borderImageRepeat', 'borderImageSlice', 'borderImageSource', 'borderImageWidth', 'borderRadius', 'borderTopLeftRadius', 'borderTopRightRadius', 'boxDecorationBreak', 'boxShadow', 'boxSizing', 'columnCount', 'columnFill', 'columnGap', 'columnRule', 'columnRuleColor', 'columnRuleStyle', 'columnRuleWidth', 'columnSpan', 'columnWidth', 'filter', 'flex', 'flexBasis', 'flexDirection', 'flexFlow', 'flexGrow', 'flexShrink', 'flexWrap', 'fontFeatureSettings', 'fontKerning', 'fontLanguageOverride', 'hyphens', 'imageRendering', 'imageOrientation', 'initial', 'justifyContent', 'linearGradient', 'opacity', 'order', 'orientation', 'outline', 'outlineColor', 'outlineOffset', 'outlineStyle', 'outlineWidth', 'resize', 'tabSize', 'textAlignLast', 'textCombineUpright', 'textDecorationColor', 'textDecorationLine', 'textDecorationStyle', 'touchAction', 'transformStyle', 'transition', 'transitionDelay', 'transitionDuration', 'transitionProperty', 'transitionTimingFunction', 'unicodeBidi', 'whiteSpace', 'writingMode']);
 
 
+/*
+TODO - documentation
+*/
 export {
 	version,
 	anchor,

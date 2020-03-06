@@ -1,5 +1,7 @@
 /*
 # ImageAsset factory
+
+TODO - documentation
 */
 import { constructors, canvas, cell, group, artefact } from '../core/library.js';
 import { mergeOver, isa_obj } from '../core/utilities.js';
@@ -31,11 +33,24 @@ P = baseMix(P);
 P = assetMix(P);
 
 /*
+## Packet management
+
+Currently nothing to do here
+
+TODO: work out how we're going to handle assets in packages
+	- currently assume asset already exists on the destination device browser
+	- we could include the &lt;img> element's src attribute in the packet??
+	- then when it comes to unpacking, check if it really does exist
+		- if not exist, do the load thing
+
+	- same work required across imageAsset, spriteAsset, videoAsset
+*/
+
+
+/*
 ## Define default attributes
 */
-let defaultAttributes = {
-
-};
+let defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 let G = P.getters,
@@ -43,7 +58,7 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 S.source = function (item = {}) {
 
@@ -68,7 +83,7 @@ S.source = function (item = {}) {
 */
 
 /*
-
+TODO - documentation
 */
 P.checkSource = function (width, height) {
 
@@ -90,13 +105,9 @@ P.checkSource = function (width, height) {
 };
 
 /*
-
+TODO - documentation
 */
 const gettableImageAssetAtributes = [];
-
-/*
-
-*/
 const settableImageAssetAtributes = [];
 
 /*
@@ -104,16 +115,16 @@ Import images from wherever
 
 Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.jpg' - in which case Scrawl-canvas:
 
-* will attempt to give the new imageAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
-* will not add the new img element to the DOM
++ will attempt to give the new imageAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
++ will not add the new img element to the DOM
 
 ... or the argument can be an object with the following attributes:
 
-* __name__ string
-* __src__ url string
-* __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
-* __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
-* __className__ string - list of classes to be added to the new img element
++ __name__ string
++ __src__ url string
++ __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
++ __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
++ __className__ string - list of classes to be added to the new img element
 */
 const importImage = function (...args) {
 
@@ -293,6 +304,10 @@ const makeImageAsset = function (items) {
 
 constructors.ImageAsset = ImageAsset;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeImageAsset,
 

@@ -2,6 +2,8 @@
 # Styles mixin
 
 Note: this mixin needs to be applied after the position mixin in order to work properly
+
+TODO - documentation
 */
 import { addStrings, defaultNonReturnFunction, mergeOver, xt, mergeDiscard } from '../core/utilities.js';
 
@@ -51,7 +53,7 @@ The cyclePalette attribute tells the Palette object how to handle situations whe
 		D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 	G.startX = function () {
 
@@ -75,7 +77,7 @@ The cyclePalette attribute tells the Palette object how to handle situations whe
 	};
 
 /*
-
+TODO - documentation
 */
 	S.startX = function (coord) {
 
@@ -122,7 +124,7 @@ The cyclePalette attribute tells the Palette object how to handle situations whe
 	};
 
 /*
-
+TODO - documentation
 */
 	S.endX = function (coord) {
 
@@ -169,7 +171,7 @@ The cyclePalette attribute tells the Palette object how to handle situations whe
 	};
 
 /*
-
+TODO - documentation
 */
 	S.palette = function (item = {}) {
 
@@ -177,7 +179,7 @@ The cyclePalette attribute tells the Palette object how to handle situations whe
 	};
 
 /*
-
+TODO - documentation
 */
 	S.paletteStart = function (item) {
 
@@ -236,7 +238,7 @@ The cyclePalette attribute tells the Palette object how to handle situations whe
 	};
 
 /*
-
+TODO - documentation
 */
 	S.delta = function (items = {}) {
 
@@ -350,7 +352,7 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 	};
 
 /*
-
+TODO - documentation
 */
 	P.setCoordinateHelper = function (label, x, y) {
 
@@ -387,7 +389,7 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 	};
 
 /*
-
+TODO - documentation
 */
 	P.updateByDelta = function () {
 
@@ -397,7 +399,7 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 	};
 
 /*
-
+TODO - documentation
 */
 	P.stylesInit = function (items = {}) {
 
@@ -424,15 +426,6 @@ Overwrites function defined in mixin/base.js - takes into account Palette object
 	};
 
 /*
-
-*/
-	P.updateByDelta = function () {
-
-		this.setDelta(this.delta);
-		return this;
-	};
-
-/*
 This is where we have to calculate all the stuff necessary to get the ctx gradient object attached to the ctx, so we can use it for upcoming fillStyle and strokeStyle settings on the engine. We have to create the ctx gradient and return it. 
 */
 	P.getData = function (entity, cell, isFill) {
@@ -451,7 +444,7 @@ This is where we have to calculate all the stuff necessary to get the ctx gradie
 	};
 
 /*
-
+TODO - documentation
 */
 	P.cleanStyle = function (entity = {}, cell = {}, isFill) {
 
@@ -478,7 +471,7 @@ This is where we have to calculate all the stuff necessary to get the ctx gradie
 	};
 
 /*
-
+TODO - documentation
 */
 	P.cleanPosition = function (current, source, dimensions) {
 
@@ -498,7 +491,7 @@ This is where we have to calculate all the stuff necessary to get the ctx gradie
 	};
 
 /*
-
+TODO - documentation
 */
 	P.finalizeCoordinates = function (entity = {}, isFill) {
 
@@ -540,7 +533,7 @@ Just in case something went wrong with loading other styles files, which must ov
 	};
 
 /*
-
+TODO - documentation
 */
 	P.addStopsToGradient = function (gradient, start, stop, cycle) {
 
@@ -550,7 +543,7 @@ Just in case something went wrong with loading other styles files, which must ov
 	};
 
 /*
-
+TODO - documentation
 */
 	P.updateColor = function (index, color) {
 
@@ -560,7 +553,7 @@ Just in case something went wrong with loading other styles files, which must ov
 	};
 
 /*
-
+TODO - documentation
 */
 	P.removeColor = function (index) {
 

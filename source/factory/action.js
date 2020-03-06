@@ -54,6 +54,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 let G = P.getters,
 	S = P.setters;
 
+/*
+TODO - documentation
+*/
 S.revert = function (item) {
 
 	this.revert = item;
@@ -61,6 +64,9 @@ S.revert = function (item) {
 	if (typeof this.revert !== 'function') this.revert = defaultNonReturnFunction;
 };
 
+/*
+TODO - documentation
+*/
 S.triggered = function (item) {
 
 	if (this.triggered !== item) {
@@ -120,7 +126,7 @@ P.getEndTime = function () {
 /*
 The __update__ function checks to see if the action (or revert) functions need to be invoked, and invokes them as-and-when required.
 
-ISSUE: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. All other %times appear to work as expected. Thus I don't consider this to be a show stopper.
+BUG: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. All other %times appear to work as expected. Thus I don't consider this to be a show stopper.
 */
 P.update = function (items) {
 
@@ -188,6 +194,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Action = Action;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeAction,
 };

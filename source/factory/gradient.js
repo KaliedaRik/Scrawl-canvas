@@ -1,5 +1,7 @@
 /*
 # Gradient factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 
@@ -36,7 +38,7 @@ P = stylesMix(P);
 */
 
 /*
-
+TODO - documentation
 */
 P.buildStyle = function (cell = {}) {
 	
@@ -55,7 +57,7 @@ P.buildStyle = function (cell = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.updateGradientArgs = function (x, y) {
 
@@ -88,6 +90,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Gradient = Gradient;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeGradient,
 };

@@ -1,5 +1,7 @@
 /*
 # SpriteAsset factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { mergeOver, generateUuid, xt, isa_obj, defaultNonReturnFunction } from '../core/utilities.js';
@@ -33,10 +35,28 @@ P = baseMix(P);
 P = assetMix(P);
 
 /*
+## Packet management
+
+Currently nothing to do here
+
+TODO: work out how we're going to handle assets in packages
+	- currently assume asset already exists on the destination device browser
+	- we could include the &lt;img> element's src attribute in the packet??
+	- then when it comes to unpacking, check if it really does exist
+		- if not exist, do the load thing
+
+	- same work required across imageAsset, spriteAsset, videoAsset
+*/
+
+
+/*
 ## Define default attributes
 */
 let defaultAttributes = {
 
+/*
+TODO - documentation
+*/
 	manifest: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -46,7 +66,7 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 S.source = function (items = []) {
 
@@ -86,20 +106,20 @@ Import sprite sheet
 
 Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.jpg' - in which case Scrawl-canvas:
 
-* will attempt to give the new spriteAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
-* will attempt to load the associated manifest JSON file, which it expects to find at 'http://www.example.com/path/to/image/flower.json'
-* will not add the new img element to the DOM
++ will attempt to give the new spriteAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
++ will attempt to load the associated manifest JSON file, which it expects to find at 'http://www.example.com/path/to/image/flower.json'
++ will not add the new img element to the DOM
 
 Note: if using an url string path to import the spritesheet image, a manifest JSON file with the same filename (ending in .json) in the same folder __must__ also be supplied!
 
 ... or the arguments can be one or more (comma-separated) objects with the following attributes:
 
-* __name__ string
-* __imageSrc__ (required) image url string, or an Array of such strings (for sprites using frames from multiple spritesheets)
-* __manifestSrc__ (required) JSON manifest file url string, or an object detailing the manifest
-* __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
-* __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
-* __className__ string - list of classes to be added to the new img element
++ __name__ string
++ __imageSrc__ (required) image url string, or an Array of such strings (for sprites using frames from multiple spritesheets)
++ __manifestSrc__ (required) JSON manifest file url string, or an object detailing the manifest
++ __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
++ __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
++ __className__ string - list of classes to be added to the new img element
 
 Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.
 
@@ -225,7 +245,7 @@ const importSprite = function (...args) {
 };
 
 /*
-
+TODO - documentation
 */
 const gettableSpriteAssetAtributes = [];
 const settableSpriteAssetAtributes = [];
@@ -242,6 +262,9 @@ const makeSpriteAsset = function (items) {
 constructors.SpriteAsset = SpriteAsset;
 
 
+/*
+TODO - documentation
+*/
 export {
 	makeSpriteAsset,
 

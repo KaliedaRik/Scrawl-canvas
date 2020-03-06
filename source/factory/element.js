@@ -1,5 +1,7 @@
 /*
 # Element factory
+
+TODO - documentation
 */
 import { group, element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
 import { generateUuid, pushUnique, removeItem, xt, isa_obj, isa_boolean } from '../core/utilities.js';
@@ -75,6 +77,11 @@ P = domMix(P);
 
 let S = P.setters;
 
+/*
+This is the preferred way to update an element's text content because the text supplied in the argument is not treated as HTML by the browser. 
+
+When we update the DOM attribute __element.textContent__, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its 'kids' after updating the text
+*/
 S.text = function (item) {
 
 	if (this.domElement) {
@@ -90,6 +97,11 @@ S.text = function (item) {
 	}
 };
 
+/*
+__WARNING - this is a dangerous function!__ It does not perform any character escaping before inserting the supplied argument into the element. Raw HTML (including, for instance, &lt;script> tags) will be added to the DOM. It's up to the coder to make sure this content is safe!
+
+When we update the DOM attribute __element.innerHTML__, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its 'kids' after updating the text
+*/
 S.content = function (item) {
 
 	if (this.domElement) {
@@ -115,7 +127,11 @@ P.cleanDimensionsAdditionalActions = function () {
 };
 
 /*
+Removes the element's wrapper from the Scrawl-canvas library.
 
+If the function is invoked with an argument which resolves to true, the DOM element itself will also be removed from the web page.
+
+This function will not remove references to the element in animations objects, including tweens and actions. Nor will it remove references to it in Group objects except for its current host stack's group.
 */
 P.demolish = function (removeFromDom = false) {
 
@@ -144,7 +160,13 @@ P.demolish = function (removeFromDom = false) {
 };
 
 /*
-Adds a canvas element to sit behind the element
+Adds a new &lt;canvas> element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element's dimensions, positioning, scale and 3D rotational values)
+
+The function can accept a Javascript object argument containing key:value pairs which will be used to set up the new canvas's attributes after it has been created.
+
+To make the canvas look as if it is in front of the element, set the element's opacity CSS attribute to 0
+
+This function is used when adding a Scrawl-canvas component to a stacked element.
 */
 P.addCanvas = function (items = {}) {
 
@@ -206,6 +228,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Element = Element;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeElement,
 };

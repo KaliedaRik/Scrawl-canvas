@@ -17,7 +17,7 @@ Details of how to add an anchor to a Scrawl-canvas artefact (including DOM eleme
 */
 import { constructors } from '../core/library.js';
 import { scrawlNavigationHold } from '../core/document.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_fn } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
@@ -66,7 +66,7 @@ The text that Scrawl-canvas will include between the anchor tags, when building 
 /*
 The following attributes are detailed in https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a - they are (most of) the DOM element's attributes
 
-* the HTML Anchor element 'type' attribute is stored in the Scrawl-canvas Anchor object using the key 'anchorType'
++ the HTML Anchor element 'type' attribute is stored in the Scrawl-canvas Anchor object using the key 'anchorType'
 
 Scrawl-canvas will build a link element and add it to the DOM, then invoke a click event on it when required to do so.
 */
@@ -80,15 +80,53 @@ Scrawl-canvas will build a link element and add it to the DOM, then invoke a cli
 	anchorType: '',
 
 /*
-The clickAction is a function which gets attached to the anchor DOM element's __onclick__ attribute. Invoking this function is handled entirely by the browser (as is normal)
+The __clickAction__ attribute is a ___function which returns a string command___ which in turn gets attached to the anchor DOM element's __onclick__ attribute. Invoking the result is handled entirely by the browser (as is normal).
+
+Example usage
+
+This __doesn't work!__ The browser will generate an error, rather than output an update to the console, when the user clicks on the canvas entity associated with the anchor (although navigation will still occur - the wikipedia page will open in a new browser tab):
+
+    anchor: {
+        name: 'wikipedia-box-link',
+        href: 'https://en.wikipedia.org/wiki/Box',
+        description: 'Link to the Wikipedia article on boxes (opens in new tab)',
+
+        clickAction: function () { console.log('box clicked') },
+    }
+
+This __works as expected__ - the function returns a string which can then be attached to the &lt;a> DOM element's _onclick_ attribute:
+
+    anchor: {
+        name: 'wikipedia-box-link',
+        href: 'https://en.wikipedia.org/wiki/Box',
+        description: 'Link to the Wikipedia article on boxes (opens in new tab)',
+
+        clickAction: function () { return `console.log('box clicked')` },
+    },
 */
 	clickAction: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
+/*
+## Packet management
+
+Overwriting base mixin functions.
+*/
+P.packetExclusions = pushUnique(P.packetExclusions, ['domElement']);
+P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
+
+
+/*
+## Define attribute getters and setters
+*/
+
 let S = P.setters;
 
+/*
+While the Scrawl-canvas anchor object keeps copies of all of its &lt;a> DOM element's attributes locally, they also need to be updated on that element. Most of the setter functions manage this using the anchor.update() helper function.
+*/
 S.download = function (item) {
 
 	this.download = item;
@@ -137,6 +175,12 @@ S.anchorType = function (item) {
 	if (this.domElement) this.update('type');
 };
 
+/*
+These last setters do not follow previous behaviour because Scrawl-canvas anchor objects save the values for each under a different attribute key, compared to the DOM element's attribute key:
+
++ anchor.description -> a.textContent - this is the text between the &lt;a> element's opening and closing tags
++ anchor.clickAction -> a.onclick - the function that returns the onclick string
+*/
 S.description = function (item) {
 
 	this.description = item;
@@ -145,8 +189,11 @@ S.description = function (item) {
 
 S.clickAction = function (item) {
 
-	this.clickAction = item;
-	if (this.domElement) this.domElement.setAttribute('onclick', item());
+	if (isa_fn(item)) {
+
+		this.clickAction = item;
+		if (this.domElement) this.domElement.setAttribute('onclick', item());
+	}
 };
 
 
@@ -178,7 +225,7 @@ P.build = function () {
 	if (this.target) link.setAttribute('target', this.target);
 	if (this.anchorType) link.setAttribute('type', this.anchorType);
 
-	if (this.clickAction) link.setAttribute('onclick', this.clickAction());
+	if (this.clickAction && isa_fn(this.clickAction)) link.setAttribute('onclick', this.clickAction());
 
 	if (this.description) link.textContent = this.description;
 
@@ -188,7 +235,7 @@ P.build = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.update = function (item) {
 
@@ -210,7 +257,7 @@ P.click = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.demolish = function () {
 
@@ -233,6 +280,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Anchor = Anchor;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeAnchor,
 };

@@ -1,5 +1,7 @@
 /*
 # Asset consumer mixin
+
+TODO - documentation
 */
 import { mergeOver, xt } from '../core/utilities.js';
 import { assetnames, asset } from '../core/library.js';
@@ -24,31 +26,31 @@ Handle to the appropriate Asset object
 
 /*
 Set internally - handle to the DOM object which acts as the Asset object's source (tagName: IMG, VIDEO, CANVAS)
+ - set internally - do we need it in the defs?
 */
-		source: null,
+		// source: null,
 
 /*
-Source natural dimensions
+Source natural dimensions - set internally - do we need it in the defs?
 */
-		sourceNaturalWidth: 0,
-		sourceNaturalHeight: 0,
+		// sourceNaturalWidth: 0,
+		// sourceNaturalHeight: 0,
 
 /*
-Flag indicating that the Asset file(s) has successfully loaded
+Flag indicating that the Asset file(s) has successfully loaded - set internally - do we need it in the defs?
 */
-		sourceLoaded: false,
+		// sourceLoaded: false,
 
 /*
-Sprite-specific attributes - set internally
+Sprite-specific attributes - set internally - set internally - do we need it in the defs?
 */
-		spriteIsRunning: false,
-		spriteLastFrameChange: 0,
-		spriteCurrentFrame: 0,
-		spriteTrack: 'default',
-		// spriteTrackLength: 0,
-		spriteForward: true,
-		spriteFrameDuration: 100,
-		spriteWillLoop: true, 
+		// spriteIsRunning: false,
+		// spriteLastFrameChange: 0,
+		// spriteCurrentFrame: 0,
+		// spriteTrack: 'default',
+		// spriteForward: true,
+		// spriteFrameDuration: 100,
+		// spriteWillLoop: true, 
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -91,6 +93,36 @@ Cleaning the Asset object
 				myAsset.subscribe(this);
 			}
 		}
+	};
+
+/*
+Initialize asset attributes
+*/
+	P.initAssetAttributes = function () {
+
+		this.source = null;
+
+/*
+Source natural dimensions - set internally
+*/
+		this.sourceNaturalWidth = 0;
+		this.sourceNaturalHeight = 0;
+
+/*
+Flag indicating that the Asset file(s) has successfully loaded
+*/
+		this.sourceLoaded = false;
+
+/*
+Sprite-specific attributes - set internally
+*/
+		this.spriteIsRunning = false;
+		this.spriteLastFrameChange = 0;
+		this.spriteCurrentFrame = 0;
+		this.spriteTrack = 'default';
+		this.spriteForward = true;
+		this.spriteFrameDuration = 100;
+		this.spriteWillLoop = true;
 	};
 
 /*

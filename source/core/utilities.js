@@ -138,11 +138,12 @@ const convertTime = (item) => {
 __defaultXYZReturnFunction__ helps us avoid errors when invoking a function attribute settable by the coder
 */ 
 const defaultNonReturnFunction = () => {};
-const defaultArgReturnFunction = (a) => { return a; };
+const defaultArgReturnFunction = (a) => a;
 const defaultThisReturnFunction = function () { return this; };
-const defaultFalseReturnFunction = () => { return false; };
-const defaultZeroReturnFunction = () => { return 0; };
-const defaultBlankStringReturnFunction = () => { return ''; };
+const defaultFalseReturnFunction = () => false;
+const defaultZeroReturnFunction = () => 0;
+const defaultBlankStringReturnFunction = () => '';
+const defaultPromiseReturnFunction = () => Promise.resolve(true);
 
 /*
 Return the value provided if it is an integer number and, if it isn't, return 0
@@ -191,8 +192,8 @@ const ensurePositiveFloat = (val, precision) => {
 };
 
 /*
-
-*/ 
+TODO - documentation
+*/
 const ensureString = (val) => {
 
 	return (val.substring) ? val : val.toString;
@@ -381,7 +382,14 @@ const pushUnique = (myArray, potentialMember) => {
 
 	if (!Array.isArray(myArray)) throw new Error(`core/utilities pushUnique() error - argument not an array ${myArray}`);
 
-	if (myArray.indexOf(potentialMember) < 0) myArray.push(potentialMember);
+	if (Array.isArray(potentialMember)) {
+
+		potentialMember.forEach(item => pushUnique(myArray, item));
+	}
+	else {
+
+		if (myArray.indexOf(potentialMember) < 0) myArray.push(potentialMember);
+	}
 
 	return myArray;
 };
@@ -462,6 +470,9 @@ const atobUTF16 = function (sBase64) {
 	return String.fromCharCode.apply(null, new Uint16Array(aBinaryView.buffer));
 };
 
+/*
+TODO - documentation
+*/
 export {
 	addStrings,
 	convertLength,
@@ -473,6 +484,7 @@ export {
 	defaultFalseReturnFunction,
 	defaultZeroReturnFunction,
 	defaultBlankStringReturnFunction,
+	defaultPromiseReturnFunction,
 	ensureInteger,
 	ensurePositiveInteger,
 	ensureFloat,

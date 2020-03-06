@@ -1,5 +1,7 @@
 /*
 # Grid factory
+
+TODO - documentation
 */
 import { constructors, entity } from '../core/library.js';
 import { mergeOver, isa_number, isa_obj, defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
@@ -42,6 +44,10 @@ const Grid = function (items = {}) {
 		this.tileFill.length = this.columns * this.rows;
 		this.tileFill.fill(0);
 	}
+	else if (Array.isArray(items.tileFill) && this.tileFill.length === items.tileFill.length) {
+
+		this.tileFill = items.tileFill;
+	}
 
 	this.tilePaths = [];
 	this.tileRealCoordinates = [];
@@ -83,24 +89,24 @@ P = filterMix(P);
 let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 	columns: 2,
 	rows: 2,
 
 /*
-
+TODO - documentation
 */
 	columnGutterWidth: 1,
 	rowGutterWidth: 1,
 
 /*
-
+TODO - documentation
 */
 	gutterColor: '#808080',
 
 /*
-
+TODO - documentation
 */
 	tileFill: null,
 	tileSources: null,
@@ -112,7 +118,7 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 S.columns = function (item) {
 
@@ -144,7 +150,7 @@ S.columns = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.rows = function (item) {
 
@@ -167,13 +173,13 @@ S.rows = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 D.columns = defaultNonReturnFunction;
 D.rows = defaultNonReturnFunction;
 
 /*
-
+TODO - documentation
 */
 P.setAllTilesTo = function (val) {
 
@@ -186,7 +192,7 @@ P.setAllTilesTo = function (val) {
 };
 
 /*
-
+TODO - documentation
 */
 P.setTilesTo = function (tiles, val) {
 
@@ -208,7 +214,7 @@ P.setTilesTo = function (tiles, val) {
 };
 
 /*
-
+TODO - documentation
 */
 P.setTileSourceTo = function (index, obj) {
 
@@ -219,7 +225,7 @@ P.setTileSourceTo = function (index, obj) {
 };
 
 /*
-
+TODO - documentation
 */
 P.removeTileSource = function (index) {
 
@@ -232,7 +238,7 @@ P.removeTileSource = function (index) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getTileSource = function (row, col) {
 
@@ -244,7 +250,7 @@ P.getTileSource = function (row, col) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getTilesUsingSource = function (index) {
 
@@ -719,6 +725,10 @@ const makeGrid = function (items) {
 
 constructors.Grid = Grid;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeGrid,
 };

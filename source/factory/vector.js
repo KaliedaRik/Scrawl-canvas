@@ -1,5 +1,7 @@
 /*
 # Vector factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { xt, xta, isa_obj, isa_number } from '../core/utilities.js';
@@ -31,23 +33,20 @@ P.type = 'Vector';
 
 
 /*
-
+TODO - documentation
 */
 P.getXYCoordinate = function () {
 
 	return [this.x, this.y];
 };
 
-/*
-
-*/
 P.getXYZCoordinate = function () {
 
 	return [this.x, this.y, this.z];
 };
 
 /*
-
+TODO - documentation
 */
 P.zero = function () {
 
@@ -59,7 +58,7 @@ P.zero = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.setX = function (x) {
 
@@ -70,9 +69,6 @@ P.setX = function (x) {
 	return this;
 };
 
-/*
-
-*/
 P.setY = function (y) {
 
 	if (!xt(y)) throw new Error(`${this.name} Vector error - setY() arguments error: ${y}`);
@@ -82,9 +78,6 @@ P.setY = function (y) {
 	return this;
 };
 
-/*
-
-*/
 P.setZ = function (z) {
 
 	if (!xt(z)) throw new Error(`${this.name} Vector error - setZ() arguments error: ${z}`);
@@ -94,9 +87,6 @@ P.setZ = function (z) {
 	return this;
 };
 
-/*
-
-*/
 P.setXY = function (x, y) {
 
 	if (!xta(x, y)) throw new Error(`${this.name} Vector error - setXY() arguments error: ${x}, ${y}`);
@@ -107,9 +97,6 @@ P.setXY = function (x, y) {
 	return this;
 };
 
-/*
-
-*/
 P.set = function (x, y, z) {
 
 	if (isa_obj(x)) return this.setFromVector(x);
@@ -121,9 +108,6 @@ P.set = function (x, y, z) {
 	return this;
 };
 
-/*
-
-*/
 P.setFromArray = function (args) {
 
 	if (!Array.isArray(args)) throw new Error(`${this.name} Vector error - setFromArray() arguments error: ${args}`);
@@ -137,9 +121,6 @@ P.setFromArray = function (args) {
 	return this;
 };
 
-/*
-
-*/
 P.setFromVector = function (item) {
 
 	// if (Array.isArray(item)) item = item[0];
@@ -156,7 +137,7 @@ P.setFromVector = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.vectorAdd = function (item = {}) {
 
@@ -182,9 +163,6 @@ P.vectorAddArray = function (item = []) {
 	return this;
 };
 
-/*
-
-*/
 P.vectorSubtract = function (item = {}) {
 
 	if (Array.isArray(item)) return this.vectorSubtractArray(item);
@@ -210,7 +188,7 @@ P.vectorSubtractArray = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.scalarMultiply = function (item) {
 
@@ -223,9 +201,6 @@ P.scalarMultiply = function (item) {
 	return this;
 };
 
-/*
-
-*/
 P.scalarDivide = function (item) {
 
 	if (!isa_number(item)) throw new Error(`${this.name} Vector error - scalarDivide() argument not a number: ${item}`);
@@ -239,7 +214,7 @@ P.scalarDivide = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getMagnitude = function () {
 
@@ -247,7 +222,7 @@ P.getMagnitude = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.rotate = function (angle) {
 
@@ -265,7 +240,7 @@ P.rotate = function (angle) {
 };
 
 /*
-
+TODO - documentation
 */
 P.reverse = function () {
 
@@ -276,6 +251,9 @@ P.reverse = function () {
 	return this;
 };
 
+/*
+TODO - documentation
+*/
 P.normalize = function() {
 	
 	let val = this.getMagnitude();
@@ -340,6 +318,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Vector = Vector;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeVector,
 	requestVector,

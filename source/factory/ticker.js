@@ -1,5 +1,7 @@
 /*
 # Ticker factory
+
+TODO - documentation
 */
 import { constructors, animationtickers, tween } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt, xtGet, convertTime } from '../core/utilities.js';
@@ -20,44 +22,13 @@ const Ticker = function (items = {}) {
 	this.set(this.defs);
 	this.set(items);
 
-/*
-
-*/
 	this.subscribers = [];
-
-/*
-
-*/
 	this.cycleCount = 0;
-
-/*
-
-*/
 	this.active = false;
-
-/*
-
-*/
 	this.effectiveDuration = 0;
-
-/*
-
-*/
 	this.startTime = 0;
-
-/*
-
-*/
 	this.currentTime = 0;
-
-/*
-
-*/
 	this.tick = 0;
-
-/*
-
-*/
 	this.lastEvent = 0;
 
 	if (items.subscribers) this.subscribe(items.subscribers);
@@ -86,32 +57,32 @@ P = baseMix(P);
 let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 	order: 1,
 
 /*
-
+TODO - documentation
 */
 	duration: 0,
 
 /*
-
+TODO - documentation
 */
 	subscribers: null,
 
 /*
-
+TODO - documentation
 */
 	killOnComplete: false,
 
 /*
-
+TODO - documentation
 */
 	cycles: 1,
 
 /*
-
+TODO - documentation
 */
 	eventChoke: 0,
 
@@ -133,15 +104,20 @@ let G = P.getters,
 	S = P.setters;
 
 /*
-
+TODO - documentation
 */
 G.subscribers = function () {
 
 	return [].concat(this.subscribers);
 };
+S.subscribers = function (item) {
+
+	this.subscribers = [];
+	this.subscribe(item);
+};
 
 /*
-
+TODO - documentation
 */
 S.order = function (item) {
 
@@ -151,7 +127,7 @@ S.order = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.cycles = function (item) {
 
@@ -161,16 +137,7 @@ S.cycles = function (item) {
 };
 
 /*
-
-*/
-S.subscribers = function (item) {
-
-	this.subscribers = [];
-	this.subscribe(item);
-};
-
-/*
-
+TODO - documentation
 */
 S.duration = function (item) {
 
@@ -201,7 +168,7 @@ S.duration = function (item) {
 */
 
 /*
-
+TODO - documentation
 */
 P.makeTickerUpdateEvent = function() {
 
@@ -218,7 +185,7 @@ P.makeTickerUpdateEvent = function() {
 };
 
 /*
-
+TODO - documentation
 */
 P.subscribe = function (items) {
 
@@ -247,9 +214,6 @@ P.subscribe = function (items) {
 	return this;
 };
 
-/*
-
-*/
 P.unsubscribe = function (items) {
 
 	var myItems = [].concat(items),
@@ -274,8 +238,68 @@ P.unsubscribe = function (items) {
 	return this;
 };
 
-/*
+P.sortSubscribers = function () {
 
+	let mysubscribers = this.subscribers;
+
+	if(mysubscribers.length > 1) {
+
+		let subs = [].concat(mysubscribers),
+			floor = Math.floor,
+			buckets = [];
+
+		subs.forEach(obj => {
+
+			let effectiveTime = floor(obj.effectiveTime) || 0;
+
+			if (!buckets[effectiveTime]) buckets[effectiveTime] = [];
+
+			buckets[effectiveTime].push(obj);
+		});
+
+		this.subscribers = buckets.reduce((a, v) => a.concat(v), []);
+	}
+};
+
+P.updateSubscribers = function(items, reversed) {
+	
+	let subs = this.subscribers,
+		i, iz;
+
+	reversed = (xt(reversed)) ? reversed : false;
+
+	if (reversed) {
+
+		for (i = subs.length - 1; i >= 0; i--) {
+
+			tween[subs[i]].set(items);
+		}
+	}
+	else{
+
+		for (i = 0, iz = subs.length; i < iz; i++) {
+
+			tween[subs[i]].set(items);
+		}
+	}
+	return this;
+};
+
+P.changeSubscriberDirection = function () {
+
+	var subs = this.subscribers,
+		sub, i, iz;
+
+	for (i = 0, iz = subs.length; i < iz; i++) {
+
+		sub = tween[subs[i]];
+		sub.reversed = !sub.reversed;
+	}
+	return this;
+};
+
+/*
+TODO - documentation
 */
 P.recalculateEffectiveDuration = function() {
 
@@ -300,9 +324,6 @@ P.recalculateEffectiveDuration = function() {
 	return this;
 };
 
-/*
-
-*/
 P.setEffectiveDuration = function() {
 
 	let temp;
@@ -323,33 +344,7 @@ P.setEffectiveDuration = function() {
 };
 
 /*
-
-*/
-P.sortSubscribers = function () {
-
-	let mysubscribers = this.subscribers;
-
-	if(mysubscribers.length > 1) {
-
-		let subs = [].concat(mysubscribers),
-			floor = Math.floor,
-			buckets = [];
-
-		subs.forEach(obj => {
-
-			let effectiveTime = floor(obj.effectiveTime) || 0;
-
-			if (!buckets[effectiveTime]) buckets[effectiveTime] = [];
-
-			buckets[effectiveTime].push(obj);
-		});
-
-		this.subscribers = buckets.reduce((a, v) => a.concat(v), []);
-	}
-};
-
-/*
-
+TODO - documentation
 */
 P.fn = function (reverseOrder) {
 
@@ -461,50 +456,7 @@ P.fn = function (reverseOrder) {
 };
 
 /*
-
-*/
-P.updateSubscribers = function(items, reversed) {
-	
-	let subs = this.subscribers,
-		i, iz;
-
-	reversed = (xt(reversed)) ? reversed : false;
-
-	if (reversed) {
-
-		for (i = subs.length - 1; i >= 0; i--) {
-
-			tween[subs[i]].set(items);
-		}
-	}
-	else{
-
-		for (i = 0, iz = subs.length; i < iz; i++) {
-
-			tween[subs[i]].set(items);
-		}
-	}
-	return this;
-};
-
-/*
-
-*/
-P.changeSubscriberDirection = function () {
-
-	var subs = this.subscribers,
-		sub, i, iz;
-
-	for (i = 0, iz = subs.length; i < iz; i++) {
-
-		sub = tween[subs[i]];
-		sub.reversed = !sub.reversed;
-	}
-	return this;
-};
-
-/*
-
+TODO - documentation
 */
 P.run = function () {
 
@@ -529,7 +481,7 @@ P.run = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.isRunning = function () {
 
@@ -537,7 +489,7 @@ P.isRunning = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.reset = function () {
 
@@ -561,7 +513,7 @@ P.reset = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.complete = function () {
 
@@ -585,7 +537,7 @@ P.complete = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.reverse = function (resume = false) {
 
@@ -613,7 +565,7 @@ P.reverse = function (resume = false) {
 };
 
 /*
-
+TODO - documentation
 */
 P.halt = function () {
 
@@ -627,7 +579,7 @@ P.halt = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.resume = function () {
 
@@ -651,7 +603,7 @@ P.resume = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.seekTo = function (milliseconds, resume = false) {
 
@@ -680,7 +632,7 @@ P.seekTo = function (milliseconds, resume = false) {
 };
 
 /*
-
+TODO - documentation
 */
 P.seekFor = function (milliseconds, resume = false) {
 
@@ -709,7 +661,7 @@ P.seekFor = function (milliseconds, resume = false) {
 };
 
 /*
-
+TODO - documentation
 */
 P.kill = function () {
 
@@ -723,9 +675,6 @@ P.kill = function () {
 	return true;
 };
 
-/*
-
-*/
 P.killTweens = function(autokill = false) {
 
 	let i, iz, sub;
@@ -814,6 +763,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Ticker = Ticker;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeTicker,
 };

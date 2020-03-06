@@ -1,4 +1,6 @@
 /*
+TODO - documentation
+
 # Adapted from Shape paths worker - used by factory/shape.js/calculateLocalPath()
 */
 
@@ -448,6 +450,11 @@ export default function (d, scale, start, useAsPath, precision) {
 	return returnObject;
 };
 
+/*
+TODO - documentation
+
+consider whether we could swap out this vector stuff for a pool coordinate?
+*/
 const vector = {
 
 	x: 0,
@@ -471,6 +478,9 @@ const rotateVector = function (v, angle) {
 	v.y = mag * Math.sin(arg);
 };
 
+/*
+TODO - documentation
+*/
 const getShapeUnitMetaData = function (species, precision, args) {
 
 	let xPts = [],
@@ -548,6 +558,9 @@ const getShapeUnitMetaData = function (species, precision, args) {
 	};
 };
 
+/*
+TODO - documentation
+*/
 const getXY = {
 
 	getBezierXY: function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {

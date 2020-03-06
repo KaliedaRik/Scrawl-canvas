@@ -1,5 +1,7 @@
 /*
 # FontAttributes factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { mergeOver, xt } from '../core/utilities.js';
@@ -43,7 +45,7 @@ let defaultAttributes = {
 __font-style__
 
 _values:_ 
-* 'normal', 'italic', 'oblique'
++ 'normal', 'italic', 'oblique'
 
 CANVAS CONTEXT ENGINE - does not handle oblique slope values
 */
@@ -53,11 +55,11 @@ CANVAS CONTEXT ENGINE - does not handle oblique slope values
 __font-variant__ - the standard indicates that canvas context engine should only recognise 'normal' and 'small-caps' values
 
 Scrawl-canvas ignores all other possible values. Do not use them in font strings.
-* font-variant-caps
-* font-variant-numeric
-* font-variant-ligatures
-* font-variant-east-asian
-* font-variant-alternates
++ font-variant-caps
++ font-variant-numeric
++ font-variant-ligatures
++ font-variant-east-asian
++ font-variant-alternates
 
 CANVAS CONTEXT ENGINE - only accepts 'small caps'
 */
@@ -67,8 +69,8 @@ CANVAS CONTEXT ENGINE - only accepts 'small caps'
 __font-weight__
 
 _Values:_ 
-* 'normal', 'bold', 'lighter', 'bolder'; or
-* a number (between 1 and 1000)
++ 'normal', 'bold', 'lighter', 'bolder'; or
++ a number (between 1 and 1000)
 
 ('normal' translates to 400; 'bold' translates to 700)
 
@@ -81,9 +83,9 @@ CANVAS CONTEXT ENGINE - doesn't seem to recognise number values (for Garamond), 
 __font-stretch__
 
 _Values:_ 
-* 'normal' (default), 
-* 'semi-condensed', 'condensed', 'extra-condensed', 'ultra-condensed', 
-* 'semi-expanded', 'expanded', 'extra-expanded', 'ultra-expanded', 
++ 'normal' (default), 
++ 'semi-condensed', 'condensed', 'extra-condensed', 'ultra-condensed', 
++ 'semi-expanded', 'expanded', 'extra-expanded', 'ultra-expanded', 
 
 (Ignoring 'number%' values as it clashes with font-size % values, which are far more likely to be used in a font string)
 
@@ -99,21 +101,21 @@ Standard says "with the 'font-size' component converted to CSS pixels" - hoping 
 Values can be: 
 
 _Absolute or relative string values:_
-* 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' 
-* 'smaller', 'larger'
++ 'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large' 
++ 'smaller', 'larger'
 
 _Length values:_ 
-* 1.2em, 1.2ch, 1.2ex, 1.2rem
-* (experimental!) 1.2cap, 1.2ic, 1.2lh, 1.2rlh
-* 1.2vh, 1.2vw, 1.2vmin, 1.2vmax
-* (experimental!) 1.2vi, 1.2vb
-* 1.2px, 1.2cm, 1.2mm, 1.2in, 1.2pc, 1.2pt
-* (experimental!) 1.2Q
++ 1.2em, 1.2ch, 1.2ex, 1.2rem
++ (experimental!) 1.2cap, 1.2ic, 1.2lh, 1.2rlh
++ 1.2vh, 1.2vw, 1.2vmin, 1.2vmax
++ (experimental!) 1.2vi, 1.2vb
++ 1.2px, 1.2cm, 1.2mm, 1.2in, 1.2pc, 1.2pt
++ (experimental!) 1.2Q
 
 Note that only the following have wide support; these are the only metrics this code tests for: em, ch, ex, rem, vh, vw, vmin, vmax, px, cm, mm, in, pc, pt
 
 _Percent values: 
-* 1.2%
++ 1.2%
 
 (Percent values clash with font-stretch % values - assume any number followed by a % is a font-size value)
 
@@ -128,7 +130,7 @@ GOTCHA NOTE 2: the canvas context engine refuses to handle line heights appended
 __font-family__ - always comes at the end of the string. More than one can be included, with each separated by commas - be aware that string may often include quotes around font families with spaces in their names.
 
 Generic font names have been extended - values include: 
-* 'serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui', 'math', 'emoji', 'fangsong'
++ 'serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui', 'math', 'emoji', 'fangsong'
 
 GOTCHA NOTE: current functionality tests the supplied string with the expectation that the font families will be preceded by a font size metric value. To set the fontFamily value direct, put a font size metric at the start of the string - % will do - followed by a space and then the font family string:
 
@@ -152,7 +154,7 @@ G.size = function () {
 };
 
 /*
-Handling updates to font attributes
+TODO - documentation
 */
 S.font = function (item) {
 
@@ -167,6 +169,9 @@ S.font = function (item) {
 	}
 };
 
+/*
+TODO - documentation
+*/
 S.style = function (item) {
 
 	let v = 'normal';
@@ -316,7 +321,7 @@ S.family = function (item) {
 */
 
 /*
-
+TODO - documentation
 */
 P.buildFont = function (scale = 1) {
 
@@ -342,7 +347,7 @@ P.buildFont = function (scale = 1) {
 };
 
 /*
-
+TODO - documentation
 */
 P.update = function (scale = 1, items) {
 
@@ -364,6 +369,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.FontAttributes = FontAttributes;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeFontAttributes,
 };

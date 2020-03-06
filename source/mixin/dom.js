@@ -1,5 +1,7 @@
 /*
 # dom mixin
+
+TODO - documentation
 */
 import { constructors, artefact, group } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, isa_obj, isa_fn, isa_quaternion, xt, addStrings, xta } from '../core/utilities.js';
@@ -18,18 +20,14 @@ All factories using the dom mixin will add these to their prototype objects
 	let defaultAttributes = {
 
 /*
-
+TODO - documentation - don't think this needs to be in the defs object
 */
 		domElement: '',
 
 /*
-
+TODO - documentation
 */
 		pitch: 0,
-
-/*
-
-*/
 		yaw: 0,
 
 /*
@@ -38,41 +36,50 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 		offsetZ: 0,
 
 /*
-
+TODO - documentation
 */
-		collides: false,
-		pathCorners: null,
-		collisionPath: null,
-		collisionPoints: null,
+		// collides: false, 			// set in mixin/position
+		pathCorners: null,			// does this need to be in dims object?
+		collisionPath: null,		// does this need to be in dims object?
+		collisionPoints: null,		// does this need to be in dims object?
 
 /*
-
+TODO - documentation
 */
 		css: null,
 
 /*
-
+TODO - documentation
 */
 		classes: '',
 
 /*
-
+TODO - do we want this in the defs object?
 */
-		currentTransformString: '',
-		currentTransformOriginString: '',
+		currentTransformString: '',			// does this need to be in dims object?
+		currentTransformOriginString: '',	// does this need to be in dims object?
 
 /*
-
+TODO - do we want this in the defs object?
 */
-		rotation: null,
+		rotation: null,						// does this need to be in dims object?
 
 /*
-
+TODO - documentation
 */
 		position: 'absolute',
 
 /*
+... relates to dimensions somehow
+TODO: check if we're actually using this attribute anywhere
+    - has been used in demos DOM-007 and DOM-011
+        - check to see if it actually having any effect
+        - or if other functionality could (already?) handle the issues it is supposed to be addressing 
+*/
+		actionResize: false,
 
+/*
+TODO - documentation
 */
 		trackHere: false,
 	};
@@ -86,7 +93,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 		D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 	S.trackHere = function (item) {
 
@@ -97,7 +104,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	};
 
 /*
-
+TODO - documentation
 */
 	S.actionResize = function (item) {
 
@@ -112,7 +119,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	};
 
 /*
-
+TODO - documentation
 */
 	S.position = function (item) {
 
@@ -121,7 +128,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	};
 
 /*
-
+TODO - documentation
 */
 	S.visibility = function (item) {
 
@@ -130,7 +137,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	};
 
 /*
-
+TODO - documentation
 */
 	S.offsetZ = function (item) {
 
@@ -138,9 +145,6 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 		this.dirtyOffsetZ = true;
 	};
 
-/*
-
-*/
 	D.offsetZ = function (item) {
 
 		this.offsetZ += item;
@@ -148,7 +152,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	};
 
 /*
-
+TODO - documentation
 */
 	S.roll = function (item) {
 
@@ -156,45 +160,30 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 		this.dirtyRotation = true;
 	};
 
-/*
-
-*/
 	S.pitch = function (item) {
 
 		this.pitch = this.checkRotationAngle(item);
 		this.dirtyRotation = true;
 	};
 
-/*
-
-*/
 	S.yaw = function (item) {
 
 		this.yaw = this.checkRotationAngle(item);
 		this.dirtyRotation = true;
 	};
 
-/*
-
-*/
 	D.roll = function (item) {
 
 		this.roll = this.checkRotationAngle(this.roll + item);
 		this.dirtyRotation = true;
 	};
 
-/*
-
-*/
 	D.pitch = function (item) {
 
 		this.pitch = this.checkRotationAngle(this.pitch + item);
 		this.dirtyRotation = true;
 	};
 
-/*
-
-*/
 	D.yaw = function (item) {
 
 		this.yaw = this.checkRotationAngle(this.yaw + item);
@@ -202,7 +191,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	};
 
 /*
-
+TODO - documentation
 */
 	S.css = function (item) {
 
@@ -212,7 +201,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	};
 
 /*
-
+TODO - documentation
 */
 	S.classes = function (item) {
 
@@ -222,7 +211,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	};
 
 /*
-
+TODO - documentation
 */
 	S.collides = function (item) {
 
@@ -232,7 +221,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	};
 
 /*
-
+TODO - documentation
 */
 	S.domAttributes = function (item) {
 
@@ -240,7 +229,7 @@ Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d 
 	}
 
 /*
-
+TODO - documentation
 */
 	P.checkRotationAngle = function (angle) {
 
@@ -322,7 +311,7 @@ Overwrites the clone function in mixin/base.js
 	};
 
 /*
-
+TODO - documentation
 */
 	P.addClasses = function (item) {
 
@@ -343,9 +332,6 @@ Overwrites the clone function in mixin/base.js
 		return this;
 	};
 
-/*
-
-*/
 	P.removeClasses = function (item) {
 
 		if (item.substring) {
@@ -372,7 +358,7 @@ Overwrites the clone function in mixin/base.js
 	};
 
 /*
-
+TODO - documentation
 */
 	P.updateDomAttributes = function (items, value) {
 
@@ -399,7 +385,7 @@ Overwrites the clone function in mixin/base.js
 	};
 
 /*
-
+TODO - documentation
 */
 	P.addPathCorners = function () {
 
@@ -455,7 +441,110 @@ Overwrites the clone function in mixin/base.js
 	};
 
 /*
+TODO - documentation
+*/
+	P.checkCornerPositions = function (corner) {
 
+		let pathCorners = this.pathCorners;
+
+		if (pathCorners.length === 4) {
+
+			let here = this.getHere(),
+				x = currentCorePosition.scrollX - (here.offsetX || 0),
+				y = currentCorePosition.scrollY - (here.offsetY || 0),
+				round = Math.round,
+				results = [],
+				client;
+
+			const cornerPush = function (c) {
+
+				let coord = c[0];
+
+				if (coord) {
+
+					results.push(round(coord.left + x));
+					results.push(round(coord.top + y));
+				}
+				else results.push(0, 0);
+			};
+
+			switch (corner) {
+
+				case 'topLeft' :
+
+					client = pathCorners[0].getClientRects();
+					cornerPush(client);
+					return results;
+
+				case 'topRight' :
+
+					client = pathCorners[1].getClientRects();
+					cornerPush(client);
+					return results;
+
+				case 'bottomRight' :
+
+					client = pathCorners[2].getClientRects();
+					cornerPush(client);
+					return results;
+
+				case 'bottomLeft' :
+
+					client = pathCorners[3].getClientRects();
+					cornerPush(client);
+					return results;
+
+				default :
+
+					pathCorners.forEach(point => {
+
+						client = point.getClientRects();
+						cornerPush(client);
+					});
+					return results;
+			}
+		}
+	}
+
+/*
+TODO - documentation
+*/
+	P.getCornerCoordinate = function (corner, coordinate) {
+
+		let x, y;
+
+		switch (corner) {
+
+			case 'topLeft' :
+				[x, y] = this.checkCornerPositions('topLeft');
+				break;
+
+			case 'topRight' :
+				[x, y] = this.checkCornerPositions('topRight');
+				break;
+
+			case 'bottomRight' :
+				[x, y] = this.checkCornerPositions('bottomRight');
+				break;
+
+			case 'bottomLeft' :
+				[x, y] = this.checkCornerPositions('bottomLeft');
+				break;
+
+			default :
+				[x, y] = this.currentStampPosition;
+		}
+
+		if (coordinate) {
+
+			if (coordinate === 'x') return x;
+			if (coordinate === 'y') return y;
+		}
+		return [x, y];
+	};
+
+/*
+TODO - documentation
 */
 	P.cleanPathObject = function () {
 
@@ -465,38 +554,23 @@ Overwrites the clone function in mixin/base.js
 
 			if (!this.pathCorners.length) this.addPathCorners();
 
-			let here = this.getHere(),
-				x = currentCorePosition.scrollX - (here.offsetX || 0),
-				y = currentCorePosition.scrollY - (here.offsetY || 0),
-				round = Math.round,
-				results = [],
-				client;
-
 			if (!this.currentCornersData) this.currentCornersData = [];
 			let cornerData = this.currentCornersData;
-
-			this.pathCorners.forEach(point => {
-
-				client = point.getClientRects();
-				client = client[0];
-				
-				if (client) results.push(round(client.left + x), round(client.top + y));
-				else results.push(0, 0);
-			});
+			cornerData.length = 0;
+			cornerData.push(...this.checkCornerPositions());
 
 			let p = this.pathObject = new Path2D();
-			p.moveTo(results[0], results[1]);
-			p.lineTo(results[2], results[3]);
-			p.lineTo(results[4], results[5]);
-			p.lineTo(results[6], results[7]);
+			p.moveTo(cornerData[0], cornerData[1]);
+			p.lineTo(cornerData[2], cornerData[3]);
+			p.lineTo(cornerData[4], cornerData[5]);
+			p.lineTo(cornerData[6], cornerData[7]);
 			p.closePath();
-
-			cornerData.length = 0;
-			cornerData.push(...results);
 		}
 	};
 
 /*
+TODO - documentation
+
 Overwrites mixin/position.js function
 */
 	P.calculateSensors = function () {
@@ -599,7 +673,7 @@ Overwrites mixin/position.js function
 	};
 
 /*
-
+TODO - documentation
 */
 	P.cleanRotation = function () {
 
@@ -661,7 +735,7 @@ Overwrites mixin/position.js function
 	};
 
 /*
-
+TODO - documentation
 */
 	P.cleanOffsetZ = function () {
 
@@ -670,7 +744,7 @@ Overwrites mixin/position.js function
 	};
 
 /*
-
+TODO - documentation
 */
 	P.cleanContent = function () {
 
@@ -682,7 +756,7 @@ Overwrites mixin/position.js function
 	};
 
 /*
-
+TODO - documentation
 */
 	P.initializeDomLayout = function (items) {
 
@@ -765,7 +839,7 @@ Overwrites mixin/position.js function
 	};
 
 /*
-
+TODO - documentation
 */
 	P.checkForResize = function () {
 
@@ -818,7 +892,7 @@ Overwrites mixin/position.js function
 	};
 
 /*
-
+TODO - documentation
 */
 	P.prepareStamp = function () {
 
@@ -846,6 +920,8 @@ Overwrites mixin/position.js function
 			this.dirtyStampHandlePositions = true;
 		}
 
+		if (this.pivoted.length) this.dirtyStampPositions = true;
+
 		if (this.dirtyStampPositions) this.cleanStampPositions();
 		if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
@@ -856,8 +932,9 @@ Overwrites mixin/position.js function
 
 		if (this.domElement && this.collides) this.dirtyPathObject = true;
 	};
-/*
 
+/*
+TODO - documentation
 */
 	P.stamp = function () {
 
@@ -935,6 +1012,8 @@ Overwrites mixin/position.js function
 	};
 
 /*
+TODO - documentation
+
 Overwrites mixin/position.js function
 */
 	P.checkHit = function (items = [], mycell) {
@@ -964,6 +1043,7 @@ Overwrites mixin/position.js function
 
 		if (tests.some(test => {
 
+// console.log(test)
 			if (Array.isArray(test)) {
 
 				tx = test[0];
@@ -997,7 +1077,9 @@ Overwrites mixin/position.js function
 	};
 
 /*
+TODO - documentation
 
+I really don't like this functionality - see if we can purge it from the code base?
 */
 	P.apply = function() {
 

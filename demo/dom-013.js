@@ -115,21 +115,16 @@ let report = function () {
 		testTime, testNow,
 		testMessage = document.querySelector('#reportmessage');
 
-	// BUG: the final positioning, dimensions, scaling etc of DOM elements often don't settle down until after the first Display cycle completes, by which time certain internal structures (such as, in this case, the sensor coordinates for our element) have been set to old values. Which for this demo means that the element sensor data doesn't translate over to the canvas until after a user interaction of some sort brings everything back into synchronicity
-
-	// The simplest way to correct this BUG (for now) is to apply a .set() call on the element, changing one attribute a small amount. We only need to do this once, after the first Display cycle has completed.
-	let firstRun = true;
-
 	return function () {
 
-		if (firstRun) {
+		// if (firstRun) {
 
-			element.set({
-				roll: 11,
-			});
+		// 	element.set({
+		// 		roll: 11,
+		// 	});
 
-			firstRun = false;
-		}
+		// 	firstRun = false;
+		// }
 
 		testNow = Date.now();
 		testTime = testNow - testTicker;
@@ -139,11 +134,15 @@ let report = function () {
 	};
 }();
 
+// BUG: the final positioning, dimensions, scaling etc of DOM elements often don't settle down until after the first Display cycle completes, by which time certain internal structures (such as, in this case, the sensor coordinates for our element) have been set to old values. Which for this demo means that the element sensor data doesn't translate over to the canvas until after a user interaction of some sort brings everything back into synchronicity
+
+// The simplest way to correct this BUG (for now) is to apply a .set() call on the element, changing one attribute a small amount. We only need to do this once, after the first Display cycle has completed; this can be achieved by adding the set tweak in the afterCreated attribute of the makeRender (or makeAnimation) function.
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
 	name: 'demo-animation',
+	afterCreated: () => element.set({ roll: 10.001 }),
 	commence: checkHits,
 	afterShow: report,
 });
@@ -203,3 +202,5 @@ document.querySelector('#pitch').value = 20;
 document.querySelector('#yaw').value = 30;
 document.querySelector('#scale').value = 1;
 document.querySelector('#perspective').value = 1200;
+
+console.log(scrawl.library);

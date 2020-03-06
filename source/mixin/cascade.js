@@ -1,5 +1,7 @@
 /*
 # Cascade mixin
+
+TODO - documentation
 */
 import { group } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xtGet } from '../core/utilities.js';
@@ -37,16 +39,13 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 		S = P.setters;
 
 /*
-
+TODO - documentation
 */
 	G.groups = function () {
 
 		return [].concat(this.groups);
 	};
 
-/*
-
-*/
 	S.groups = function (item) {
 
 		this.groups = [];
@@ -58,7 +57,7 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 */
 
 /*
-
+TODO - documentation
 */
 	P.sortGroups = function (force = false) {
 
@@ -85,7 +84,7 @@ The __batchResort__ flag determines whether the groups will be sorted by their o
 	};
 
 /*
-
+TODO - documentation
 */
 	P.initializeCascade = function () {
 
@@ -109,9 +108,6 @@ Groups should be added to, and removed from, the controller object using the __a
 		return this;
 	};
 
-/*
-
-*/
 	P.removeGroups = function (...args) {
 
 		args.forEach( item => {
@@ -160,7 +156,7 @@ Set all artefact objects in all the controller object's groups using the __setAr
 	};
 
 /*
-
+TODO - documentation
 */
 	P.addArtefactClasses = function (items) {
 
@@ -168,9 +164,6 @@ Set all artefact objects in all the controller object's groups using the __setAr
 		return this;
 	};
 
-/*
-
-*/
 	P.removeArtefactClasses = function (items) {
 
 		this.cascadeAction(items, 'removeArtefactClasses');
@@ -178,7 +171,7 @@ Set all artefact objects in all the controller object's groups using the __setAr
 	};
 
 /*
-
+TODO - documentation
 */
 	P.updateByDelta = function () {
 
@@ -186,9 +179,6 @@ Set all artefact objects in all the controller object's groups using the __setAr
 		return this;
 	};
 
-/*
-
-*/
 	P.reverseByDelta = function () {
 
 		this.cascadeAction(false, 'reverseByDelta');

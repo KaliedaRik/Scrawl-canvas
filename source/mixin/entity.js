@@ -1,9 +1,19 @@
 /*
 # Entity mixin
+
+This mixin builds on the _base_ mixin to set up much of the basic functionality of a Scrawl-canvas __entity__ Object:
+
++ __defaults__ -
+
++ __getters__ -
++ __setters__ -
++ __deltaSetters__ - 
+
+
 */
 import * as library from '../core/library.js';
 import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
-	generateUuid, isa_fn, mergeOver, xt, xta, addStrings } from '../core/utilities.js';
+	generateUuid, isa_fn, mergeOver, pushUnique, xt, xta, addStrings } from '../core/utilities.js';
 import { currentGroup, scrawlCanvasHold } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
@@ -22,43 +32,39 @@ All factories using the position mixin will add these to their prototype objects
 	let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 		method: 'fill',
 
 /*
-
+TODO - do we really need this in the defs object?
 */
 		pathObject: null,
 
 /*
-
+TODO - documentation
 */
 		winding: 'nonzero',
 
 /*
-
+TODO - documentation
 */
 		flipReverse: false,
-
-/*
-
-*/
 		flipUpend: false,
 
 /*
-
+TODO - documentation
 */
 		scaleOutline: true,
 
 /*
-
+TODO - documentation
 */
 		lockFillStyleToEntity: false,
 		lockStrokeStyleToEntity: false,
 
 /*
-
+TODO - documentation
 */
 		onEnter: null,
 		onLeave: null,
@@ -68,6 +74,47 @@ All factories using the position mixin will add these to their prototype objects
 	P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
+## Packet management
+*/
+	P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
+	P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+	P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+    P.packetObjects = pushUnique(P.packetObjects, []);
+    P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
+
+	P.processEntityPacketOut = function (key, value, includes) {
+
+		let result = true;
+
+		switch (key) {
+
+			default :
+
+				result = this.processFactoryPacketOut(key, value, includes);
+		}
+		return result;
+	};
+
+	P.processFactoryPacketOut = function (key, value, includes) {
+
+		let result = true;
+
+		if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+
+		return result;
+	};
+
+	P.finalizePacketOut = function (copy, items) {
+
+		let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+		copy = mergeOver(copy, stateCopy);
+
+		copy = this.handlePacketAnchor(copy, items);
+
+		return copy;
+	};
+
+/*
 ## Define getter, setter and deltaSetter functions
 */
 	let G = P.getters,
@@ -75,7 +122,7 @@ All factories using the position mixin will add these to their prototype objects
 		D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 	G.group = function () {
 
@@ -83,7 +130,7 @@ All factories using the position mixin will add these to their prototype objects
 	};
 
 /*
-
+TODO - documentation
 */
 	S.lockStylesToEntity = function (item) {
 
@@ -92,7 +139,7 @@ All factories using the position mixin will add these to their prototype objects
 	};
 
 /*
-
+TODO - documentation
 */
 	S.flipUpend = function (item) {
 
@@ -100,9 +147,6 @@ All factories using the position mixin will add these to their prototype objects
 		this.flipUpend = item;
 	};
 
-/*
-
-*/
 	S.flipReverse = function (item) {
 
 		if (item !== this.flipReverse) this.dirtyCollision = true;
@@ -217,7 +261,7 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 	};
 
 /*
-
+TODO - documentation
 */
 	P.entityInit = function (items = {}) {
 
@@ -241,14 +285,13 @@ Overwrites function defined in mixin/base.js - takes into account State object a
 		this.midInitActions(items);
 	};
 
-/*
-
-*/
 	P.midInitActions = defaultNonReturnFunction;
 	P.preCloneActions = defaultNonReturnFunction;
 	P.postCloneActions = defaultNonReturnFunction;
 
 /*
+TODO - documentation
+
 Overwrites the clone function in mixin/base.js
 */
 	P.clone = function(items = {}) {
@@ -285,11 +328,19 @@ Overwrites the clone function in mixin/base.js
 		let tempAsset = this.asset, 
 			tempSource = this.source, 
 			tempPivot = this.pivot, 
+			tempStartControlPivot = this.startControlPivot, 
+			tempControlPivot = this.controlPivot, 
+			tempEndControlPivot = this.endControlPivot, 
+			tempEndPivot = this.endPivot, 
 			tempMimic = this.mimic, 
 			tempPath = this.path;
 
 		if (tempAsset && tempAsset.name) this.asset = tempAsset.name;
 		if (tempPivot && tempPivot.name) this.pivot = tempPivot.name;
+		if (tempStartControlPivot && tempStartControlPivot.name) this.startControlPivot = tempStartControlPivot.name;
+		if (tempControlPivot && tempControlPivot.name) this.controlPivot = tempControlPivot.name;
+		if (tempEndControlPivot && tempEndControlPivot.name) this.endControlPivot = tempEndControlPivot.name;
+		if (tempEndPivot && tempEndPivot.name) this.endPivot = tempEndPivot.name;
 		if (tempMimic && tempMimic.name) this.mimic = tempMimic.name;
 		if (tempPath && tempPath.name) this.path = tempPath.name;
 
@@ -303,6 +354,10 @@ Overwrites the clone function in mixin/base.js
 		if (tempAsset) this.asset = tempAsset;
 		if (tempSource) this.source = tempSource;
 		if (tempPivot) this.pivot = tempPivot;
+		if (tempStartControlPivot) this.startControlPivot = tempStartControlPivot;
+		if (tempControlPivot) this.controlPivot = tempControlPivot;
+		if (tempEndControlPivot) this.endControlPivot = tempEndControlPivot;
+		if (tempEndPivot) this.endPivot = tempEndPivot;
 		if (tempMimic) this.mimic = tempMimic;
 		if (tempPath) this.path = tempPath;
 
@@ -345,6 +400,8 @@ Overwrites the clone function in mixin/base.js
 	};
 
 /*
+TODO - documentation
+
 CURRENTLY does not support filters on entitys
 */
 	P.simpleStamp = function (host, changes = {}) {
@@ -361,7 +418,7 @@ CURRENTLY does not support filters on entitys
 	};
 
 /*
-
+TODO - documentation
 */
 	P.prepareStamp = function() {
 
@@ -404,12 +461,14 @@ CURRENTLY does not support filters on entitys
 	};
 
 /*
+TODO - documentation
+
 EVERY ENTITY FILE will need to define its own .cleanPathObject function
 */
 	P.cleanPathObject = defaultNonReturnFunction;
 
 /*
-
+TODO - documentation
 */
 	P.draw = function (engine) {
 
@@ -469,7 +528,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 	P.none = function (engine) {}
 
 /*
-
+TODO - documentation
 */
 	P.stamp = function (force = false, host, changes) {
 
@@ -498,7 +557,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 	};
 
 /*
-
+TODO - documentation
 */
 	P.filteredStamp = function(){
 
@@ -645,6 +704,9 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 		});
 	};
 
+/*
+TODO - documentation
+*/
 	P.getCellCoverage = function (img) {
 
 		let width = img.width,
@@ -677,7 +739,7 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 	};
 
 /*
-
+TODO - documentation
 */
 	P.regularStamp = function () {
 
@@ -694,9 +756,6 @@ EVERY ENTITY FILE will need to define its own .cleanPathObject function
 		});
 	};
 
-/*
-
-*/
 	P.regularStampSynchronousActions = function () {
 
 		let dest = this.currentHost;

@@ -1,5 +1,7 @@
 /*
 # Palette factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta } from '../core/utilities.js';
@@ -89,7 +91,7 @@ S.stops = defaultNonReturnFunction;
 */
 
 /*
-
+TODO - documentation
 */
 P.set = function (items = {}) {
 
@@ -104,11 +106,13 @@ P.set = function (items = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.recalculateHold = [];
 
 /*
+TODO - documentation
+
 Question: possible tasks for web worker?
 */
 P.recalculate = function () {
@@ -213,7 +217,7 @@ P.recalculate = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.makeColorString = function (item) {
 
@@ -235,7 +239,7 @@ P.makeColorString = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.updateColor = function (index, color) {
 
@@ -256,7 +260,7 @@ P.updateColor = function (index, color) {
 };
 
 /*
-
+TODO - documentation
 */
 P.removeColor = function (index) {
 	
@@ -274,7 +278,7 @@ P.removeColor = function (index) {
 };
 
 /*
-
+TODO - documentation
 */
 P.addStopsToGradient = function (gradient, start, end, cycle) {
 
@@ -387,6 +391,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Palette = Palette;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makePalette,
 };

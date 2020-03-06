@@ -90,18 +90,16 @@ Boundary checking can get very messy very quickly, particularly when using delta
 let checkForFlowerBoundaryCollisions = function () {
 
 	// Step 0 - determine the current boundary values (in this case they are dynamic, relative to the current dimensions of the Stack) and the current position of the flower element (again, a dynamic coordinate relative to Stack dimensions)
-	// let start, dims, changes, 
-	// 	minX, minY, maxX, maxY;
+	let [x, y] = flower.get('start'),
+		[minX, minY] = stack.get('dimensions');
 
-	let start = flower.getBasicData(),
-		dims = stack.getBasicData(),
-		minX = dims.w / 10,
-		minY = dims.h / 10,
-		maxX = minX * 9,
+	minX /= 10;
+	minY /= 10;
+
+	let maxX = minX * 9,
 		maxY = minY * 9;
 
-	// Step 1 - check to see if the flower start coordinate has moved beyond the boundary
-	if (start.x < minX || start.x > maxX || start.y < minY || start.y > maxY) {
+	if (x < minX || x > maxX || y < minY || y > maxY) {
 
 		// Step 2 - reverse out of danger
 		flower.reverseByDelta();
@@ -109,12 +107,12 @@ let checkForFlowerBoundaryCollisions = function () {
 		// Step 3 - update the appropriate delta values for the flower
 		let changes = {};
 
-		if (start.x < minX || start.x > maxX) {
+		if (x < minX || x > maxX) {
 
 			deltaX = -deltaX;
 			changes.startX = `${deltaX}%`;
 		}
-		if (start.y < minY || start.y > maxY) {
+		if (y < minY || y > maxY) {
 
 			deltaY = -deltaY;
 			changes.startY = `${deltaY}%`;
@@ -132,8 +130,7 @@ let checkForFlowerBoundaryCollisions = function () {
 // Updating the flower's DOM element's class attribute
 let checkForFlowerClassUpdates = function () {
 
-	let start = flower.getBasicData(),
-		current = hitgroup.getArtefactAt(start).artefact;
+	let current = hitgroup.getArtefactAt([flower.get('start')]).artefact;
 
 	if (current && !currentClass) {
 

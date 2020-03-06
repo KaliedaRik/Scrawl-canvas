@@ -1,5 +1,7 @@
 /*
 # Quaternion factory
+
+TODO - documentation
 */
 import { radian, constructors } from '../core/library.js';
 import { isa_quaternion, isa_vector, isa_number, xt, xto } from '../core/utilities.js';
@@ -38,17 +40,19 @@ P.type = 'Quaternion';
 P.defs = {
 
 /*
-
+TODO - documentation
 */
 	name: 'generic',
 
 /*
-
+TODO - documentation
 */
 	n: 1,
 
 /*
+TODO - documentation
 
+Not happy with this! Prefer it to be set to null in the defs, and instantiated in the constructor
 */
 	v: {
 		x: 0,
@@ -63,7 +67,7 @@ P.defs = {
 
 
 /*
-
+TODO - documentation
 */
 P.zero = function () {
 
@@ -78,7 +82,7 @@ P.zero = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.getMagnitude = function () {
 
@@ -88,7 +92,7 @@ P.getMagnitude = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.normalize = function () {
 
@@ -113,7 +117,7 @@ P.normalize = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.set = function (items = {}) {
 
@@ -143,7 +147,7 @@ P.set = function (items = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.setFromQuaternion = function (item) {
 
@@ -161,7 +165,7 @@ P.setFromQuaternion = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.quaternionMultiply = function (item) {
 
@@ -190,7 +194,7 @@ P.quaternionMultiply = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getAngle = function (degree) {
 
@@ -209,7 +213,7 @@ P.getAngle = function (degree) {
 };
 
 /*
-
+TODO - documentation
 */
 P.quaternionRotate = function (item) {
 
@@ -227,7 +231,7 @@ P.quaternionRotate = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.setFromEuler = function (items = {}) {
 
@@ -256,6 +260,10 @@ P.setFromEuler = function (items = {}) {
 
 	return this;
 };
+
+/*
+TODO - need to make a decision - are we going to keep the following functions, or ditch them?
+*/
 
 /*
 P.checkNormal = function (tolerance) {
@@ -526,6 +534,8 @@ P.getEulerRoll = function () {
 
 /*
 ## Quaternion pool - an attempt to reuse quaternions rather than constantly creating and deleting them
+
+TODO - check to see if we're actually using the pool in any of the code (including demos)?
 */
 const quaternionPool = [];
 let quaternionPoolCount = 0;
@@ -584,6 +594,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Quaternion = Quaternion;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeQuaternion,
 	requestQuaternion,

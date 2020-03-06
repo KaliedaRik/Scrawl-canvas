@@ -1,5 +1,7 @@
 /*
 # UnstackedElement factory
+
+TODO - documentation
 */
 import { unstackedelement, unstackedelementnames, constructors } from '../core/library.js';
 import { generateUuid, pushUnique, removeItem, xt, isa_obj, isa_boolean, mergeOver } from '../core/utilities.js';
@@ -51,6 +53,9 @@ P = baseMix(P);
 
 let defaultAttributes = {
 
+/*
+TODO - documentation
+*/
 	canvasOnTop: false,
 
 };
@@ -66,7 +71,7 @@ let G = P.getters,
 */
 
 /*
-
+TODO - documentation
 */
 P.demolish = function (removeFromDom = false) {
 
@@ -300,6 +305,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.UnstackedElement = UnstackedElement;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeUnstackedElement,
 };

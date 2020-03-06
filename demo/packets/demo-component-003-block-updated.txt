@@ -1,0 +1,1 @@
+["my-box","Block","entity",{"name":"my-box","delta":{},"fillStyle":"green","strokeStyle":"blue","onEnter":"~~~this.setDelta({lineWidth: 10,});console.log(`entering updated ${this.name}`)","onLeave":"~~~this.setDelta({lineWidth: -10,});console.log(`leaving updated ${this.name}`)","onUp":"~~~"}]

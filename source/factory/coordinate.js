@@ -1,5 +1,7 @@
 /*
 # Coordinate factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { xt, isa_obj, isa_number } from '../core/utilities.js';
@@ -32,7 +34,7 @@ P.type = 'Coordinate';
 
 
 /*
-
+TODO - documentation
 */
 P.zero = function () {
 
@@ -42,45 +44,8 @@ P.zero = function () {
 	return this;
 };
 
-// /*
-
-// */
-// P.setX = function (x) {
-
-// 	if (!xt(x)) throw new Error(`Coordinate error - setX() arguments error: ${x}`);
-	
-// 	this[0] = x;
-
-// 	return this;
-// };
-
-// /*
-
-// */
-// P.setY = function (y) {
-
-// 	if (!xt(y)) throw new Error(`Coordinate error - setY() arguments error: ${y}`);
-
-// 	this[1] = y;
-
-// 	return this;
-// };
-
-// /*
-
-// */
-// P.setXY = function (x, y) {
-
-// 	if (!xt(x) || !xt(y)) throw new Error(`Coordinate error - setXY() arguments error: ${x}, ${y}`);
-	
-// 	this[0] = x;
-// 	this[1] = y;
-
-// 	return this;
-// };
-
 /*
-
+TODO - documentation
 */
 P.set = function (items, y) {
 
@@ -93,12 +58,7 @@ P.set = function (items, y) {
 	return this;
 };
 
-/*
-
-*/
 P.setFromArray = function (item) {
-
-	// if (!Array.isArray(item)) throw new Error(`Coordinate error - setFromArray() argument is not an array: ${item}`);
 
 	this[0] = item[0];
 	this[1] = item[1];
@@ -106,16 +66,9 @@ P.setFromArray = function (item) {
 	return this;
 };
 
-/*
-
-*/
 P.setFromVector = function (item) {
 
-	// if (!isa_obj(item)) throw new Error(`Coordinate error - setFromVector() argument is not an object: ${item}`);
-
 	let {x, y} = item;
-
-	// if (!xt(x) || !xt(y)) throw new Error(`Coordinate error - setFromVector() arguments error: ${x}, ${y}`);
 
 	this[0] = x;
 	this[1] = y;
@@ -124,16 +77,11 @@ P.setFromVector = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.vectorAdd = function (item) {
 
-	// if (!isa_obj(item)) throw new Error(`Coordinate error - vectorAdd() argument is not an object: ${item}`);
-
 	let {x, y} = item;
-
-	// if (!xt(x) || !xt(y)) throw new Error(`Coordinate error - vectorAdd() arguments error: ${x}, ${y}`);
-	// if (!isa_number(x) || !isa_number(y)) throw new Error(`Coordinate error - vectorAdd() arguments not numbers: ${x}, ${y}`);
 
 	this[0] += x;
 	this[1] += y;
@@ -141,17 +89,9 @@ P.vectorAdd = function (item) {
 	return this;
 };
 
-/*
-
-*/
 P.vectorSubtract = function (item) {
 
-	// if (!isa_obj(item)) throw new Error(`Coordinate error - vectorSubtract() argument is not an object: ${item}`);
-
 	let {x, y} = item;
-
-	// if (!xt(x) || !xt(y)) throw new Error(`Coordinate error - vectorSubtract() arguments error: ${x}, ${y}`);
-	// if (!isa_number(x) || !isa_number(y)) throw new Error(`Coordinate error - vectorSubtract() arguments not numbers: ${x}, ${y}`);
 
 	this[0] -= x;
 	this[1] -= y;
@@ -160,16 +100,11 @@ P.vectorSubtract = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.add = function (item) {
 
-	// if (!Array.isArray(item)) throw new Error(`Coordinate error - add() argument is not an array: ${item}`);
-
 	let [x, y] = item;
-
-	// if (!xt(x) || !xt(y)) throw new Error(`Coordinate error - add() arguments error: ${x}, ${y}`);
-	// if (!isa_number(x) || !isa_number(y)) throw new Error(`Coordinate error - add() arguments not numbers: ${x}, ${y}`);
 
 	this[0] += x;
 	this[1] += y;
@@ -177,17 +112,9 @@ P.add = function (item) {
 	return this;
 };
 
-/*
-
-*/
 P.subtract = function (item) {
 
-	// if (!Array.isArray(item)) throw new Error(`Coordinate error - subtract() argument is not an array: ${item}`);
-
 	let [x, y] = item;
-
-	// if (!xt(x) || !xt(y)) throw new Error(`Coordinate error - subtract() arguments error: ${x}, ${y}`);
-	// if (!isa_number(x) || !isa_number(y)) throw new Error(`Coordinate error - subtract() arguments not numbers: ${x}, ${y}`);
 
 	this[0] -= x;
 	this[1] -= y;
@@ -195,9 +122,6 @@ P.subtract = function (item) {
 	return this;
 };
 
-/*
-
-*/
 P.multiply = function (item) {
 
 	let [x, y] = item;
@@ -208,9 +132,6 @@ P.multiply = function (item) {
 	return this;
 };
 
-/*
-
-*/
 P.divide = function (item) {
 
 	let [x, y] = item;
@@ -226,11 +147,9 @@ P.divide = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.scalarMultiply = function (item) {
-
-	// if (!isa_number(item)) throw new Error(`Coordinate error - scalarMultiply() argument not a number: ${item}`);
 
 	this[0] *= item;
 	this[1] *= item;
@@ -238,9 +157,6 @@ P.scalarMultiply = function (item) {
 	return this;
 };
 
-/*
-
-*/
 P.scalarDivide = function (item) {
 
 	if (!isa_number(item)) throw new Error(`Coordinate error - scalarDivide() argument not a number: ${item}`);
@@ -253,7 +169,7 @@ P.scalarDivide = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getMagnitude = function () {
 
@@ -264,7 +180,7 @@ P.getMagnitude = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.rotate = function (angle) {
 
@@ -286,7 +202,7 @@ P.rotate = function (angle) {
 };
 
 /*
-
+TODO - documentation
 */
 P.reverse = function () {
 
@@ -296,11 +212,17 @@ P.reverse = function () {
 	return this;
 };
 
+/*
+TODO - documentation
+*/
 P.getDotProduct = function (coord) {
 
 	return (this[0] * coord[0]) + (this[1] * coord[1]);
 };
 
+/*
+TODO - documentation
+*/
 P.normalize = function() {
 	
 	let val = this.getMagnitude();
@@ -315,7 +237,9 @@ P.normalize = function() {
 
 
 /*
-## Coordinate pool - an attempt to reuse quaternions rather than constantly creating and deleting them
+## Coordinate pool - an attempt to reuse coordinates rather than constantly creating and deleting them
+
+TODO: check - are we actually using this functionality?
 */
 const coordinatePool = [];
 let coordinatePoolCount = 0;
@@ -366,6 +290,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Coordinate = Coordinate;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeCoordinate,
 	requestCoordinate,

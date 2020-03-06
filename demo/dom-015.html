@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo DOM 015</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #mystack {
+      border-width: 0;
+      margin: 0 auto;
+    }
+
+    #myelement {
+      border: 1px solid blue;
+      cursor: grab;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 015</h1>
+  <h2>Use stacked DOM artefact corners as pivot points</h2>
+
+  <div id="mystack" data-stack>
+    <canvas id="mycanvas"></canvas>
+    <p id="myelement">This DOM element can be dragged around the Scrawl-canvas stack using the mouse.</p>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="green label">Width</div>
+    <div class="green"><input class="controlItem" id="width" type="range" value="0" min="0" max="600" step="10" /></div>
+    <div class="green">&nbsp;</div>
+
+    <div class="green label">Height</div>
+    <div class="green"><input class="controlItem" id="height" type="range" value="0" min="0" max="600" step="10" /></div>
+    <div class="green">&nbsp;</div>
+
+    <div class="green label">Handles</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+
+    <div class="green label">Offset</div>
+    <div class="green">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="10" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Pitch</div>
+    <div class="yellow"><input class="controlItem" id="pitch" type="range" value="20" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Yaw</div>
+    <div class="yellow"><input class="controlItem" id="yaw" type="range" value="30" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2" step="0.02" /></div>
+    <div class="yellow">&nbsp;</div>
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <p>Drag and drop the element to test its sensors correctly collide with underlying canvas entitys</p>
+
+    <ul>
+      <li>Create a set of blocks to act as the grid over which the test element will be dragged</li>
+      <li>Perform artefact collision checks between the element and the grid group, updating colliding grid entitys to show that they are in collision</li>
+      <li>Drag and drop the element across the stack canvas, to check that element's sensors are correctly positioned and the artefact collision detection works as expected</li>
+      <li>Vary the element's attributes (handle, offset, 3d-rotation, scale) to make sure its sensors correctly account for these changes</li>
+    </ul>
+
+    <p><b>Note:</b> there is currently a very annoying, intermittent error which will often occur on first load. While the DOM element positions itself correctly (thanks to a temporary fix for a different bug), it fails get the message across to all the canvas entitys using it as a pivot that its position has corrected. This issue seems to be a consequence of the margin padding set on the Stack element (which has CSS styling <i>"margin: 0 auto;"</i>) - when that is removed from the stack, the element and its pivoting entitys all align correctly on first display. Needs to be fixed.</p>
+
+    <p>For details of the other persistent bug affecting this demo, see demo DOM-013.</p>
+  </div>
+
+  <div style="display: none;">
+    <img id="iris" src="img/iris.png" class="flowers" />
+  </div>
+
+  <script src="dom-015.js" type="module"></script>
+
+</body>
+
+</html>

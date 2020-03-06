@@ -1,5 +1,7 @@
 /*
 # Shape factory
+
+TODO - documentation
 */
 import { constructors, radian, artefact } from '../core/library.js';
 import { mergeOver, xt, xta, addStrings, xtGet, defaultNonReturnFunction, capitalize, removeItem, pushUnique } from '../core/utilities.js';
@@ -85,37 +87,37 @@ let defaultAttributes = {
 /*
 The box represents the rectangle surrounding the shape
 */
-	localBox: null,
+	localBox: null, 		// does this need to be in the defs object?
 
 /*
 Current species supported, note that the parameters required by each species' 'make?' function differ:
 
-* default '' (makeShape)
-* __line__ (makeLine) 
-* __quadratic__ (makeQuadratic)
-* __bezier__ (makeBezier)
-* __rectangle__ (makeRectangle)
-* __oval__ (makeOval)
-* __tetragon__ (makeTetragon)
-* __polygon__ (makePolygon)
-* __star__ (makeStar)
-* __spiral__ (makeSpiral)
++ default '' (makeShape)
++ __line__ (makeLine) 
++ __quadratic__ (makeQuadratic)
++ __bezier__ (makeBezier)
++ __rectangle__ (makeRectangle)
++ __oval__ (makeOval)
++ __tetragon__ (makeTetragon)
++ __polygon__ (makePolygon)
++ __star__ (makeStar)
++ __spiral__ (makeSpiral)
 
 TODO: The following species are under consideration - currently their 'make?' functions return a 'm0,0' Shape entity
 
-* __radialshape__ (makeRadialShape) - use path and repeat arguments; functionality will be to: swivel the path around a central point 'repeat' number of times (angle = 360/repeat) and turn the resulting radial shape into a single path value
++ __radialshape__ (makeRadialShape) - use path and repeat arguments; functionality will be to: swivel the path around a central point 'repeat' number of times (angle = 360/repeat) and turn the resulting radial shape into a single path value
 
-* __boxedshape__ (makeBoxedShape) - I'm a bit fuzzy about this one, but I want to somehow _box up_ (relativize) other Shape paths with box width/height values which can then be manipulated - allowing us to stretch the Shape path to match its box dimensions
++ __boxedshape__ (makeBoxedShape) - I'm a bit fuzzy about this one, but I want to somehow _box up_ (relativize) other Shape paths with box width/height values which can then be manipulated - allowing us to stretch the Shape path to match its box dimensions
 
-* __polyline__ (makePolyline) - a shape for freehand drawing. Should include a 'points' Array which could include [x,y] coordinates, or possibly any object containing x/y values (eg Vectors). The functionality would be to construct a long line (linear, possibly also quadratic for smoother lines) from the [points] data
++ __polyline__ (makePolyline) - a shape for freehand drawing. Should include a 'points' Array which could include [x,y] coordinates, or possibly any object containing x/y values (eg Vectors). The functionality would be to construct a long line (linear, possibly also quadratic for smoother lines) from the [points] data
 
 */
-	species: '',
+	species: '', 		// does this need to be in the defs object? YES!
 
 /*
-
+TODO - documentation
 */
-	pathed: null,
+	pathed: null, 		// does this need to be in the defs object?
 
 /*
 Useful for development
@@ -132,8 +134,8 @@ Sets a minimum dimensions size (in px) for calculating the bounding box
 By default, a Shape entity is just lines on the screen. It needs to be explicitly defined as a 'path' if it is to be used as a path by other artefacts.
 */
 	useAsPath: false,
-	length: 0,
-	pathCalculatedOnce: false,
+	length: 0, 		// does this need to be in the defs object?
+	pathCalculatedOnce: false, 		// does this need to be in the defs object?
 
 /*
 Used when doing length calculations - the smaller this value, the greater the precision of the final length value
@@ -186,6 +188,8 @@ Used by 'star' species
 	twist: 0,
 
 /*
+TODO - documentation
+
 Used by 'line', 'quadratic', 'bezier' species
 */
 	startControl: null,
@@ -193,12 +197,13 @@ Used by 'line', 'quadratic', 'bezier' species
 	endControl: null,
 	end: null,
 
-	currentStartControl: null,
-	currentControl: null,
-	currentEndControl: null,
-	currentEnd: null,
+	currentStartControl: null,// does this need to be in the defs object?
+	currentControl: null,// does this need to be in the defs object?
+	currentEndControl: null,// does this need to be in the defs object?
+	currentEnd: null,// does this need to be in the defs object?
 
 	startControlPivot: '',
+	startControlPivotCorner: '',
 	addStartControlPivotHandle: false,
 	addStartControlPivotOffset: false,
 	startControlPath: '',
@@ -208,6 +213,7 @@ Used by 'line', 'quadratic', 'bezier' species
 	startControlLockTo: '',
 
 	controlPivot: '',
+	controlPivotCorner: '',
 	addControlPivotHandle: false,
 	addControlPivotOffset: false,
 	controlPath: '',
@@ -217,6 +223,7 @@ Used by 'line', 'quadratic', 'bezier' species
 	controlLockTo: '',
 
 	endControlPivot: '',
+	endControlPivotCorner: '',
 	addEndControlPivotHandle: false,
 	addEndControlPivotOffset: false,
 	endControlPath: '',
@@ -226,6 +233,7 @@ Used by 'line', 'quadratic', 'bezier' species
 	endControlLockTo: '',
 
 	endPivot: '',
+	endPivotCorner: '',
 	addEndPivotHandle: false,
 	addEndPivotOffset: false,
 	endPath: '',
@@ -235,16 +243,68 @@ Used by 'line', 'quadratic', 'bezier' species
 	endLockTo: '',
 
 	useStartAsControlPoint: false,
-	controlledLineOffset: null,
+	controlledLineOffset: null,		// does this need to be in the defs object?
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
+/*
+## Packet management
+*/
+P.packetExclusions = pushUnique(P.packetExclusions, ['dimensions', 'pathed', 'controlledLineOffset']);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, ['startControl', 'control', 'endControl', 'end']);
+P.packetObjects = pushUnique(P.packetObjects, ['startControlPivot', 'startControlPath', 'controlPivot', 'controlPath', 'endControlPivot', 'endControlPath', 'endPivot', 'endPath']);
+P.packetFunctions = pushUnique(P.packetFunctions, []);
+
+P.packetSpeciesCheck = ['loops', 'loopIncrement', 'innerRadius', 'rectangleWidth', 'rectangleHeight', 'radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY', 'radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB', 'sides', 'sideLength', 'radius1', 'radius2', 'points', 'twist', 'startControl', 'control', 'endControl', 'end', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo'];
+
+P.packetSpeciesInclusions = {
+	spiral: ['loops', 'loopIncrement', 'innerRadius'],
+	rectangle: ['rectangleWidth', 'rectangleHeight', 'radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY'],
+	oval: ['radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB'],
+	tetragon: ['radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB'],
+	polygon: ['sides', 'sideLength'],
+	star: ['radius1', 'radius2', 'points', 'twist'],
+	line: ['end', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo'],
+	quadratic: ['end', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'control', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo'],
+	bezier: ['end', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'startControl', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'endControl', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo']
+};
+
+// Overwrites mixin/entity.js function
+P.finalizePacketOut = function (copy, items) {
+
+	let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+	copy = mergeOver(copy, stateCopy);
+
+	copy = this.handlePacketAnchor(copy, items);
+
+	if (copy.species) {
+
+		let keyCheck = this.packetSpeciesCheck,
+			inclusions = this.packetSpeciesInclusions[copy.species] || [];
+
+		Object.keys(copy).forEach(key => {
+
+			if (keyCheck.indexOf(key) >= 0) {
+
+				if (inclusions.indexOf(key) < 0) delete copy[key];
+			}
+		});
+	}
+
+	return copy;
+};
+
+
+/*
+## Define getter, setter and deltaSetter functions
+*/
 let S = P.setters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 S.pathDefinition = function (item) {
 
@@ -253,7 +313,7 @@ S.pathDefinition = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.species = function (item) {
 
@@ -266,6 +326,9 @@ S.species = function (item) {
 	}
 };
 
+/*
+TODO - documentation
+*/
 S.useStartAsControlPoint = function (item) {
 
 	this.useStartAsControlPoint = item;
@@ -290,7 +353,7 @@ D.dimensions = defaultNonReturnFunction;
 
 
 /*
-
+TODO - documentation
 */
 S.endPivot = function (item) {
 
@@ -349,7 +412,7 @@ S.startControlPath = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.startControlX = function (coord) {
 
@@ -552,7 +615,9 @@ D.end = function (x, y) {
 };
 
 /*
-
+TODO 
+- we also need the ...LockXTo, ...LockYTo versions
+- make sure this functionality replicates the original!
 */
 S.startControlLockTo = function (item) {
 
@@ -583,7 +648,7 @@ S.endLockTo = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.radius = function (item) {
 
@@ -804,7 +869,7 @@ D.radiusBLY = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.sides = function (item) {
 
@@ -830,6 +895,9 @@ D.sideLength = function (item) {
 	this.updateDirty();
 };
 
+/*
+TODO - documentation
+*/
 S.radius1 = function (item) {
 
 	this.radius1 = item;
@@ -854,6 +922,9 @@ D.radius2 = function (item) {
 	this.updateDirty();
 };
 
+/*
+TODO - documentation
+*/
 S.points = function (item) {
 
 	this.points = item;
@@ -866,6 +937,9 @@ D.points = function (item) {
 	this.updateDirty();
 };
 
+/*
+TODO - documentation
+*/
 S.twist = function (item) {
 
 	this.twist = item;
@@ -878,6 +952,9 @@ D.twist = function (item) {
 	this.updateDirty();
 };
 
+/*
+TODO - documentation
+*/
 S.loops = function (item) {
 
 	this.loops = item;
@@ -890,6 +967,9 @@ D.loops = function (item) {
 	this.updateDirty();
 };
 
+/*
+TODO - documentation
+*/
 S.innerRadius = function (item) {
 
 	this.innerRadius = item;
@@ -909,7 +989,7 @@ D.innerRadius = function (item) {
 
 
 /*
-
+TODO - documentation
 */
 P.updateDirty = function () {
 
@@ -917,6 +997,9 @@ P.updateDirty = function () {
 	this.dirtyPathObject = true;
 };
 
+/*
+TODO - documentation
+*/
 P.setRectHelper = function (item, corners) {
 
 	this.updateDirty();
@@ -927,6 +1010,9 @@ P.setRectHelper = function (item, corners) {
 	}, this);
 };
 
+/*
+TODO - documentation
+*/
 P.deltaRectHelper = function (item, corners) {
 
 	this.updateDirty();
@@ -937,6 +1023,9 @@ P.deltaRectHelper = function (item, corners) {
 	}, this);
 };
 
+/*
+TODO - documentation
+*/
 P.setControlHelper = function (item, attr, label) {
 
 	let oldControl = this[attr],
@@ -953,7 +1042,7 @@ P.setControlHelper = function (item, attr, label) {
 };
 
 /*
-
+TODO - documentation
 */
 P.midInitActions = function (items) {
 
@@ -961,7 +1050,7 @@ P.midInitActions = function (items) {
 };
 
 /*
-
+TODO - documentation
 */
 P.positionPointOnPath = function (vals) {
 
@@ -987,7 +1076,7 @@ P.positionPointOnPath = function (vals) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getBezierXY = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 
@@ -1017,6 +1106,9 @@ P.getLinearXY = function (t, sx, sy, ex, ey) {
 	};
 };
 
+/*
+TODO - documentation
+*/
 P.getBezierAngle = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
 
 	let T = 1 - t,
@@ -1044,7 +1136,7 @@ P.getLinearAngle = function (t, sx, sy, ex, ey) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getPathPositionData = function (pos) {
 
@@ -1128,7 +1220,7 @@ P.getPathPositionData = function (pos) {
 }
 
 /*
-
+TODO - documentation
 */
 P.cleanControlLock = function (label) {
 
@@ -1139,7 +1231,7 @@ P.cleanControlLock = function (label) {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanControl = function (label) {
 
@@ -1179,7 +1271,11 @@ P.cleanControl = function (label) {
 
 		case 'pivot' :
 
-			[x, y] = pivot.currentStampPosition;
+			if (this.pivotCorner && pivot.getCornerCoordinate) {
+
+				[x, y] = pivot.getCornerCoordinate(this[`${label}PivotCorner`]);
+			}
+			else [x, y] = pivot.currentStampPosition;
 
 			if (!this.addPivotOffset) {
 
@@ -1240,6 +1336,8 @@ P.cleanControl = function (label) {
 };
 
 /*
+TODO - documentation
+
 Overwrites mixin/position.js function
 */
 P.calculateSensors = function () {
@@ -1269,7 +1367,7 @@ P.calculateSensors = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.getControlPathData = function (path, label, capLabel) {
 
@@ -1311,6 +1409,8 @@ P.getControlPathData = function (path, label, capLabel) {
 };
 
 /*
+TODO - documentation
+
 Overwrites mixin/position.js function
 */
 P.updatePathSubscribers = function () {
@@ -1330,7 +1430,7 @@ P.updatePathSubscribers = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.prepareStamp = function() {
 
@@ -1404,7 +1504,7 @@ P.prepareStamp = function() {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanPathObject = function () {
 
@@ -1427,7 +1527,7 @@ P.cleanPathObject = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanDimensions = function () {
 
@@ -1442,7 +1542,7 @@ P.cleanDimensions = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.calculateLocalPath = function (d) {
 
@@ -1490,7 +1590,7 @@ P.calculateLocalPath = function (d) {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanStampPositionsAdditionalActions = function () {
 
@@ -1513,7 +1613,7 @@ P.cleanStampPositionsAdditionalActions = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanSpecies = function () {
 
@@ -1577,6 +1677,9 @@ P.cleanSpecies = function () {
 	this.pathDefinition = p;
 };
 
+/*
+TODO - documentation
+*/
 P.draw = function (engine) {
 
 	engine.stroke(this.pathObject);
@@ -1641,7 +1744,7 @@ P.clear = function (engine) {
 },	
 
 /*
-
+TODO - documentation
 */
 P.drawBoundingBox = function (engine) {
 
@@ -1662,7 +1765,7 @@ P.drawBoundingBox = function (engine) {
 
 
 /*
-
+TODO - documentation
 */
 P.getBoundingBox = function () {
 
@@ -1683,9 +1786,9 @@ P.getBoundingBox = function () {
 };
 
 
-/**
-
-**/
+/*
+TODO - documentation
+*/
 P.makeOvalPath = function () {
 
 	let A = this.offshootA,
@@ -1725,9 +1828,9 @@ P.makeOvalPath = function () {
 	return myData;
 };
 
-/**
-
-**/
+/*
+TODO - documentation
+*/
 P.makeTetragonPath = function () {
 
 	let radiusX = this.radiusX,
@@ -1761,9 +1864,9 @@ P.makeTetragonPath = function () {
 	return myData;
 };
 
-/**
-
-**/
+/*
+TODO - documentation
+*/
 P.makeRectanglePath = function () {
 
 	let width = this.rectangleWidth,
@@ -1816,9 +1919,9 @@ P.makeRectanglePath = function () {
 	return myData;
 };
 
-/**
-
-**/
+/*
+TODO - documentation
+*/
 P.makeBezierPath = function () {
 	
 	let [startX, startY] = this.currentStampPosition;
@@ -1829,9 +1932,9 @@ P.makeBezierPath = function () {
 	return `m0,0c${(startControlX - startX)},${(startControlY - startY)} ${(endControlX - startX)},${(endControlY - startY)} ${(endX - startX)},${(endY - startY)}`;
 };
 
-/**
-
-**/
+/*
+TODO - documentation
+*/
 P.makeQuadraticPath = function () {
 	
 	let [startX, startY] = this.currentStampPosition;
@@ -1841,9 +1944,9 @@ P.makeQuadraticPath = function () {
 	return `m0,0q${(controlX - startX)},${(controlY - startY)} ${(endX - startX)},${(endY - startY)}`;
 };
 
-/**
-
-**/
+/*
+TODO - documentation
+*/
 P.makeLinearPath = function () {
 
 	let [startX, startY] = this.currentStampPosition;
@@ -1852,9 +1955,9 @@ P.makeLinearPath = function () {
 	return `m0,0l${(endX - startX)},${(endY - startY)}`;
 };
 
-/**
-
-**/
+/*
+TODO - documentation
+*/
 P.makePolygonPath = function () {
 	
 	let sideLength = this.sideLength,
@@ -1886,9 +1989,9 @@ P.makePolygonPath = function () {
 	return myPath;
 };
 
-/**
-
-**/
+/*
+TODO - documentation
+*/
 P.makeStarPath = function () {
 	
 	let points = this.points,
@@ -2118,6 +2221,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Shape = Shape;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeShape,
 

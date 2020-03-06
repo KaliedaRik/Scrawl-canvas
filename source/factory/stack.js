@@ -1,7 +1,9 @@
 /*
 # Stack factory
+
+TODO - documentation
 */
-import { constructors, group, stack, stacknames, element, artefact, artefactnames } from '../core/library.js';
+import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
@@ -66,8 +68,6 @@ const Stack = function (items = {}) {
 		}
 	}
 
-	// this.apply();
-
 	return this;
 };
 
@@ -95,22 +95,22 @@ P = domMix(P);
 let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 	position: 'relative',
 
 /*
-
+TODO - documentation
 */
 	perspective: null,
 
 /*
-
+TODO - documentation
 */
 	trackHere: true,
 
 /*
-
+This is all about a mad idea I had for making stacks 'responsive' to viewport changes. It needs a lot more thinking through. Search on 'isResponsive' to find the relevant function below
 */
 	isResponsive: false,
 	containElementsInHeight: false,
@@ -122,59 +122,39 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 G.perspectiveX = function () {
 
 	return this.perspective.x;
 };
-
-/*
-
-*/
 G.perspectiveY = function () {
 
 	return this.perspective.y;
 };
-
-/*
-
-*/
 G.perspectiveZ = function () {
 
 	return this.perspective.z;
 };
 
 /*
-
+TODO - documentation
 */
 S.perspectiveX = function (item) {
 
 	this.perspective.x = item;
 	this.dirtyPerspective = true;
 };
-
-/*
-
-*/
 S.perspectiveY = function (item) {
 
 	this.perspective.y = item;
 	this.dirtyPerspective = true;
 };
-
-/*
-
-*/
 S.perspectiveZ = function (item) {
 
 	this.perspective.z = item;
 	this.dirtyPerspective = true;
 };
-
-/*
-
-*/
 S.perspective = function (item = {}) {
 
 	this.perspective.x = (xt(item.x)) ? item.x : this.perspective.x;
@@ -182,19 +162,11 @@ S.perspective = function (item = {}) {
 	this.perspective.z = (xt(item.z)) ? item.z : this.perspective.z;
 	this.dirtyPerspective = true;
 };
-
-/*
-
-*/
 D.perspectiveX = function (item) {
 
 	this.perspective.x = addStrings(this.perspective.x, item);
 	this.dirtyPerspective = true;
 };
-
-/*
-
-*/
 D.perspectiveY = function (item) {
 
 	this.perspective.y = addStrings(this.perspective.y, item);
@@ -206,8 +178,9 @@ D.perspectiveY = function (item) {
 ## Define prototype functions
 */
 
-/*
 
+/*
+TODO - documentation
 */
 P.updateArtefacts = function (items = {}) {
 
@@ -228,20 +201,31 @@ P.updateArtefacts = function (items = {}) {
 	});
 };
 
+/*
+TODO - documentation
+*/
 P.cleanDimensionsAdditionalActions = function () {
 
 	if (this.groupBuckets) {
 
 		this.updateArtefacts({
 			dirtyDimensions: true,
+			dirtyPath: true,
+			dirtyStart: true,
+			dirtyHandle: true,
+			dirtyCollision: true,
 		});
 	}
 
 	this.dirtyDomDimensions = true;
+	this.dirtyPath = true;
+	this.dirtyStart = true;
+	this.dirtyHandle = true;
+	this.dirtyCollision = true;
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanPerspective = function () {
 
@@ -307,7 +291,7 @@ P.checkResponsive = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.clear = function () {
 
@@ -317,7 +301,7 @@ P.clear = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.compile = function () {
 
@@ -344,7 +328,7 @@ P.compile = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.show = function () {
 
@@ -356,7 +340,7 @@ P.show = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.render = function () {
 
@@ -492,6 +476,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Stack = Stack;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeStack,
 };

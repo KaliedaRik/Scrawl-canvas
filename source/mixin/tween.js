@@ -1,5 +1,7 @@
 /*
 # Tween mixin
+
+TODO - documentation
 */
 import { constructors, animationtickers } from '../core/library.js';
 import { generateUuid, mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
@@ -14,37 +16,37 @@ All factories using the filter mixin will add these to their prototype objects
 	let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 		ticker: '',
 
 /*
-
+TODO - documentation
 */
 		targets: null,
 
 /*
-
+TODO - documentation
 */
 		time: 0,
 
 /*
-
+TODO - documentation
 */
 		action: null,
 
 /*
-
+TODO - documentation
 */
 		reverseOnCycleEnd: false,
 
 /*
-
+TODO - do we need to define this in the defs object?
 */
 		reversed: false,
 
 /*
-
+TODO - documentation
 */
 		order: 1
 	};
@@ -57,23 +59,20 @@ All factories using the filter mixin will add these to their prototype objects
 		S = P.setters;
 
 /*
-
+TODO - documentation
 */
 	G.targets = function () {
 
 		return [].concat(this.targets);
 	};
 
-/*
-
-*/
 	S.targets = function (item = []) {
 
 		this.setTargets(item);
 	};
 
 /*
-
+TODO - documentation
 */
 	S.action = function (item) {
 
@@ -87,7 +86,7 @@ All factories using the filter mixin will add these to their prototype objects
 */
 
 /*
-
+TODO - documentation
 */
 	P.calculateEffectiveTime = function (item) {
 
@@ -119,7 +118,7 @@ All factories using the filter mixin will add these to their prototype objects
 	};
 
 /*
-
+TODO - documentation
 */
 	P.addToTicker = function (item) {
 
@@ -141,9 +140,6 @@ All factories using the filter mixin will add these to their prototype objects
 		return this;
 	};
 
-/*
-
-*/
 	P.removeFromTicker = function (item) {
 
 		let tick;
@@ -164,7 +160,7 @@ All factories using the filter mixin will add these to their prototype objects
 	};
 
 /*
-
+TODO - documentation
 */
 	P.setTargets = function (items) {
 
@@ -193,7 +189,7 @@ All factories using the filter mixin will add these to their prototype objects
 	};
 
 /*
-
+TODO - documentation
 */
 	P.addToTargets = function (items) {
 
@@ -216,9 +212,6 @@ All factories using the filter mixin will add these to their prototype objects
 		return this;
 	};
 
-/*
-
-*/
 	P.removeFromTargets = function (items) {
 
 		items = [].concat(items);
@@ -267,6 +260,8 @@ All factories using the filter mixin will add these to their prototype objects
 	};
 
 /*
+TODO - documentation
+
 Overwrites the clone function in mixin/base.js
 */
 	P.clone = function (items = {}) {
@@ -298,7 +293,7 @@ Overwrites the clone function in mixin/base.js
 	};
 
 /*
-
+TODO - documentation
 */
 	P.kill = function () {
 

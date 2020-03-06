@@ -1,13 +1,11 @@
 /*
 # Phrase factory
+
+TODO - documentation
 */
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
-import { mergeOver, 
-	xt, 
-	ensurePositiveFloat, 
-	ensureFloat, 
-	ensureString } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, ensurePositiveFloat, ensureFloat, ensureString } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -86,13 +84,15 @@ P = filterMix(P);
 let defaultAttributes = {
 
 /*
+TODO - documentation
 
+How many of these attributes need to be in the defs section? If they're internal, they should not be here!
 */
 	text: '',
 	textPositions: null,
 
 /*
-
+TODO - documentation
 */
 	textLines: null,
 	textLineWidths: null,
@@ -115,24 +115,24 @@ Subsequent styling objects will alter specified attributes, leaving other attrib
 
 The styling object can take one or more of the following attributes:
 
-* style - eg 'italic'
-* variant - eg 'small-caps'
-* weight - eg 'bold'
-* stretch
-* size - any permitted font size value
-* family 
++ style - eg 'italic'
++ variant - eg 'small-caps'
++ weight - eg 'bold'
++ stretch
++ size - any permitted font size value
++ family 
 
-* space - alter the letterSpacing values to spread or condense glyphs
++ space - alter the letterSpacing values to spread or condense glyphs
 
-* fill - fillStyle to be applied to the glyph
-* stroke - strokeStyle to be applied to the glyph
++ fill - fillStyle to be applied to the glyph
++ stroke - strokeStyle to be applied to the glyph
 
-* highlight - boolean - whether highlight should be applied to the glyph
++ highlight - boolean - whether highlight should be applied to the glyph
 
-* underline - boolean - whether underline should be applied to the glyph
-* overline - boolean - whether overline should be applied to the glyph
++ underline - boolean - whether underline should be applied to the glyph
++ overline - boolean - whether overline should be applied to the glyph
 
-* defaults - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity's current font and fill/stroke style values
++ defaults - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity's current font and fill/stroke style values
 
 	Example: "make the word __glyphs__ bold"
 
@@ -171,7 +171,7 @@ A set number of pixels to place between each glyph. Positive numbers only
 	letterSpacing: 0,
 
 /*
-
+TODO - documentation
 */
 	textPath: '',
 	textPathPosition: 0,
@@ -180,11 +180,35 @@ A set number of pixels to place between each glyph. Positive numbers only
 	addTextPathRoll: true,
 
 /*
-
+TODO - documentation
 */
 	boundingBoxColor: 'rgba(0,0,0,0.5)',
 	showBoundingBox: false,
 };
+
+/*
+## Packet management
+
+*/
+P.packetExclusions = pushUnique(P.packetExclusions, ['textPositions', 'textLines', 'textLineWidths', 'textLineWords', 'textGlyphs', 'textGlyphWidths']);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, []);
+P.packetFunctions = pushUnique(P.packetFunctions, []);
+
+P.finalizePacketOut = function (copy, items) {
+
+	let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+	copy = mergeOver(copy, stateCopy);
+
+	let fontAttributesCopy = JSON.parse(this.fontAttributes.saveAsPacket(items))[3];
+	copy = mergeOver(copy, fontAttributesCopy);
+
+	copy = this.handlePacketAnchor(copy, items);
+
+	return copy;
+};
+
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 let G = P.getters,
@@ -204,7 +228,6 @@ S.handleX = function (coord) {
 		this.dirtyPathObject = true;
 	}
 };
-
 S.handleY = function (coord) {
 
 	if (coord != null) {
@@ -215,7 +238,6 @@ S.handleY = function (coord) {
 		this.dirtyPathObject = true;
 	}
 };
-
 S.handle = function (x, y) {
 
 	this.setCoordinateHelper('handle', x, y);
@@ -223,7 +245,6 @@ S.handle = function (x, y) {
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
 };
-
 D.handleX = function (coord) {
 
 	let c = this.handle;
@@ -232,7 +253,6 @@ D.handleX = function (coord) {
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
 };
-
 D.handleY = function (coord) {
 
 	let c = this.handle;
@@ -241,7 +261,6 @@ D.handleY = function (coord) {
 	this.dirtyText = true;
 	this.dirtyPathObject = true;
 };
-
 D.handle = function (x, y) {
 
 	this.setDeltaCoordinateHelper('handle', x, y);
@@ -251,53 +270,50 @@ D.handle = function (x, y) {
 };
 
 /*
+TODO - documentation
+
 Retrieving aspects of the font string
 */
 G.style = function () {
 
 	return this.fontAttributes.get('style');
 };
-
 G.variant = function () {
 
 	return this.fontAttributes.get('variant');
 };
-
 G.weight = function () {
 
 	return this.fontAttributes.get('weight');
 };
-
 G.stretch = function () {
 
 	return this.fontAttributes.get('stretch');
 };
-
 G.size = function () {
 
 	return this.fontAttributes.get('size');
 };
-
 G.sizeValue = function () {
 
 	return this.fontAttributes.get('sizeValue');
 };
-
 G.sizeMetric = function () {
 
 	return this.fontAttributes.get('sizeMetric');
 };
-
 G.family = function () {
 
 	return this.fontAttributes.get('family');
 };
-
 G.font = function () {
 
 	return this.fontAttributes.get('font');
 };
 
+/*
+TODO - documentation
+*/
 S.font = function (item) {
 
 	this.fontAttributes.set({font: item});
@@ -305,7 +321,6 @@ S.font = function (item) {
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 };
-
 S.style = function (item) {
 
 	this.fontAttributes.set({style: item});
@@ -313,7 +328,6 @@ S.style = function (item) {
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 };
-
 S.variant = function (item) {
 
 	this.fontAttributes.set({variant: item});
@@ -321,7 +335,6 @@ S.variant = function (item) {
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 };
-
 S.weight = function (item) {
 
 	this.fontAttributes.set({weight: item});
@@ -329,7 +342,6 @@ S.weight = function (item) {
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 };
-
 S.stretch = function (item) {
 
 	this.fontAttributes.set({stretch: item});
@@ -337,7 +349,6 @@ S.stretch = function (item) {
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 };
-
 S.size = function (item) {
 
 	this.fontAttributes.set({size: item});
@@ -345,7 +356,6 @@ S.size = function (item) {
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 };
-
 S.sizeValue = function (item) {
 
 	this.fontAttributes.set({sizeValue: item});
@@ -353,7 +363,6 @@ S.sizeValue = function (item) {
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 };
-
 D.sizeValue = function (item) {
 
 	this.fontAttributes.deltaSet({sizeValue: item});
@@ -361,7 +370,6 @@ D.sizeValue = function (item) {
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 };
-
 S.sizeMetric = function (item) {
 
 	this.fontAttributes.set({sizeMetric: item});
@@ -369,7 +377,6 @@ S.sizeMetric = function (item) {
 	this.dirtyFont = true;
 	this.dirtyPathObject = true;
 };
-
 S.family = function (item) {
 	
 	this.fontAttributes.set({family: item});
@@ -379,6 +386,8 @@ S.family = function (item) {
 };
 
 /*
+TODO - documentation
+
 Handling text updates
 */
 S.textPath = function (item) {
@@ -390,6 +399,9 @@ S.textPath = function (item) {
 	this.dirtyPathObject = true;
 };
 
+/*
+TODO - documentation
+*/
 S.text = function (item) {
 
 	this.text = ensureString(item);
@@ -398,6 +410,9 @@ S.text = function (item) {
 	this.dirtyPathObject = true;
 };
 
+/*
+TODO - documentation
+*/
 P.permittedJustifications = ['left', 'right', 'center', 'full'];
 S.justify = function (item) {
 
@@ -408,6 +423,8 @@ S.justify = function (item) {
 };
 
 /*
+TODO - documentation
+
 Handling text width - overwrites functions defined in mixin/entity.js
 */
 S.width = function (item) {
@@ -429,7 +446,6 @@ D.width = function (item) {
 	this.dirtyPathObject = true;
 	this.dirtyText = true;
 };
-
 S.scale = function (item) {
 
 	this.scale = item;
@@ -452,6 +468,8 @@ D.scale = function (item) {
 };
 
 /*
+TODO - documentation
+
 Manipulating lineHeight and letterSpacing attributes
 */
 S.lineHeight = function (item) {
@@ -516,7 +534,11 @@ D.underlinePosition = function (item) {
 	this.dirtyText = true;
 };
 
-// textPathPosition needs to take into account whether the text is looping along the path, or not
+/*
+TODO - documentation
+
+textPathPosition needs to take into account whether the text is looping along the path, or not
+*/
 S.textPathPosition = function (item) {
 
 	if (this.textPathLoop) {
@@ -545,7 +567,7 @@ D.textPathPosition = function (item) {
 */
 
 /*
-
+TODO - documentation
 */
 P.setGlyphStyles = function (args, ...pos) {
 
@@ -571,7 +593,7 @@ P.setGlyphStyles = function (args, ...pos) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getTextPath = function () {
 
@@ -592,7 +614,7 @@ P.getTextPath = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.buildText = function () {
 
@@ -624,6 +646,8 @@ P.buildText = function () {
 };
 
 /*
+TODO - documentation
+
 To get convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs
 
 Also removes excessive white space
@@ -639,7 +663,7 @@ P.convertTextEntityCharacters = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.calculateTextPositions = function (mytext) {
 
@@ -1060,7 +1084,7 @@ P.calculateTextPositions = function (mytext) {
 };
 
 /*
-
+TODO - documentation
 */
 P.calculateGlyphPathPositions = function () {
 
@@ -1099,16 +1123,13 @@ P.calculateGlyphPathPositions = function () {
 
 
 /*
-
+TODO - documentation
 */
 P.preCloneActions = function () {
 
 	this.fontAttributes.buildFont(this.scale);
 };
 
-/*
-
-*/
 P.postCloneActions = function (clone, items) {
 
 	clone.fontAttributes.set(this.fontAttributes);
@@ -1118,6 +1139,8 @@ P.postCloneActions = function (clone, items) {
 };
 
 /*
+TODO - documentation
+
 Fonts don't have accessible paths
 */
 P.cleanPathObject = function () {
@@ -1151,7 +1174,7 @@ P.cleanPathObject = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.regularStampSynchronousActions = function () {
 
@@ -1226,7 +1249,7 @@ P.regularStampSynchronousActions = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.preStamper = function (engine, entity, args) {
 
@@ -1274,7 +1297,7 @@ P.preStamper = function (engine, entity, args) {
 };
 
 /*
-
+TODO - documentation
 */
 P.stamper = {
 
@@ -1321,7 +1344,7 @@ P.stamper = {
 };
 
 /*
-
+TODO - documentation
 */
 P.drawBoundingBox = function (engine) {
 
@@ -1344,7 +1367,7 @@ P.drawBoundingBox = function (engine) {
 };
 
 /*
-
+TODO - documentation
 */
 P.performRotation = function (engine) {
 
@@ -1371,6 +1394,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Phrase = Phrase;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makePhrase,
 };

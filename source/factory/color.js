@@ -1,5 +1,7 @@
 /*
 # Color factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { mergeOver, xt, xtGet } from '../core/utilities.js';
@@ -45,7 +47,7 @@ P = baseMix(P);
 let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 	r: 0,
 	g: 0,
@@ -53,7 +55,7 @@ let defaultAttributes = {
 	a: 1,
 
 /*
-
+TODO - documentation
 */
 	rShift: 0,
 	gShift: 0,
@@ -61,7 +63,7 @@ let defaultAttributes = {
 	aShift: 0,
 
 /*
-
+TODO - documentation
 */
 	rMax: 255,
 	gMax: 255,
@@ -69,7 +71,7 @@ let defaultAttributes = {
 	aMax: 1,
 
 /*
-
+TODO - documentation
 */
 	rMin: 0,
 	gMin: 0,
@@ -77,7 +79,7 @@ let defaultAttributes = {
 	aMin: 0,
 
 /*
-
+TODO - documentation
 */
 	rBounce: false,
 	gBounce: false,
@@ -85,12 +87,12 @@ let defaultAttributes = {
 	aBounce: false,
 
 /*
-
+TODO - documentation
 */
 	opaque: true,
 
 /*
-
+TODO - documentation
 */
 	autoUpdate: false,
 };
@@ -181,7 +183,7 @@ P.clone = function (items = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.getData = function () {
 
@@ -193,7 +195,7 @@ P.getData = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.generateRandomColor = function (items = {}) {
 
@@ -225,7 +227,7 @@ P.generateRandomColor = function (items = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.checkValues = function () {
 
@@ -244,7 +246,7 @@ P.checkValues = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.updateArray = ['r', 'g', 'b', 'a'];
 
@@ -287,7 +289,7 @@ P.update = function () {
 P.updateByDelta = P.update;
 
 /*
-
+TODO - documentation
 */
 P.convert = function (items) {
 
@@ -539,6 +541,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Color = Color;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeColor,
 	colorList,

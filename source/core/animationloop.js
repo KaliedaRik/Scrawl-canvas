@@ -1,7 +1,12 @@
+/*
+# Animation Loop - core
+
+TODO - document the purpose of this core file
+*/
 import { animation } from "./library.js";
 
 /*
-
+TODO - documentation
 */
 let animate = [],
 	doAnimation = false,
@@ -9,14 +14,14 @@ let animate = [],
 	animate_sorted = [];
 
 /*
-
+TODO - documentation
 */
 const resortAnimations = function () {
 	resortBatchAnimations = true;
 };
 
 /*
-
+TODO - documentation
 */
 const sortAnimations = function () {
 
@@ -42,7 +47,7 @@ const sortAnimations = function () {
 };
 
 /*
-
+TODO - documentation
 */
 const animationLoop = function () {
 
@@ -64,7 +69,7 @@ const animationLoop = function () {
 };
 
 /*
-
+TODO - documentation
 */
 const startCoreAnimationLoop = function () {
 
@@ -73,7 +78,7 @@ const startCoreAnimationLoop = function () {
 };
 
 /*
-
+TODO - documentation
 */
 const stopCoreAnimationLoop = function () {
 	
@@ -81,6 +86,9 @@ const stopCoreAnimationLoop = function () {
 };
 
 
+/*
+TODO - documentation
+*/
 export {
 	animate,
 	resortAnimations,

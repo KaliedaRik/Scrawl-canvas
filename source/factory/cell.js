@@ -1,5 +1,7 @@
 /*
 # Cell factory
+
+TODO - documentation
 */
 import { artefact, asset, radian, constructors, styles, stylesnames, cell, cellnames, group } from '../core/library.js';
 import { convertLength, generateUuid, isa_canvas, mergeOver, xt, xtGet } from '../core/utilities.js';
@@ -92,11 +94,11 @@ let defaultAttributes = {
 /*
 The following booleans determine whether a Cell canvas will, clear, compile and/or show itself as part of the Display cycle.
 
-* __cleared__ - Clearing the cell wipes it clean ready for new drawing activity - for cells that contain static imagery (such as a background) that only needs to be drawn once during an animation it makes no sense to construct its display on each iteration of the Display cycle. Can also be set to false if the compile step builds on, rather than replaces, the cell's current imagery.
++ __cleared__ - Clearing the cell wipes it clean ready for new drawing activity - for cells that contain static imagery (such as a background) that only needs to be drawn once during an animation it makes no sense to construct its display on each iteration of the Display cycle. Can also be set to false if the compile step builds on, rather than replaces, the cell's current imagery.
 
-* __compiled__ - Compiling the cell triggers the 'stamp cascade', where (visible) entitys in (visible) groups assigned to the cell are instructed to stamp themselves onto the cell. Again, set thisto false if the cell's imagery does not need to be redrawn on each iteration of the Display cycle.
++ __compiled__ - Compiling the cell triggers the 'stamp cascade', where (visible) entitys in (visible) groups assigned to the cell are instructed to stamp themselves onto the cell. Again, set thisto false if the cell's imagery does not need to be redrawn on each iteration of the Display cycle.
 
-* __shown__ - Showing the cell instructs it to stamp itself onto the 'base' cell or, for base cells, to stamp itself onto the display &lt;canvas> element in line with that canvas's wrapper's 'fit' attribute. This can be switched off if the cell is (for instance) being used as an asset source for a Picture entity or Pattern style.
++ __shown__ - Showing the cell instructs it to stamp itself onto the 'base' cell or, for base cells, to stamp itself onto the display &lt;canvas> element in line with that canvas's wrapper's 'fit' attribute. This can be switched off if the cell is (for instance) being used as an asset source for a Picture entity or Pattern style.
 
 Note that cells will clear and compile in the order given (ascending) of their __compileOrder__ and __showOrder__ values. Cells sharing a compileOrder or showOrder value will be compiled and shown determined by the order in which they were declared in the script where they were created.
 
@@ -185,7 +187,7 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 P.get = function (item) {
 
@@ -217,25 +219,25 @@ P.get = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 G.width = function () {
 
 	return this.currentDimensions[0] || this.element.getAttribute('width');
 };
 
-/*
-
-*/
 G.height = function () {
 
 	return this.currentDimensions[1] || this.element.getAttribute('height');
 };
 
+/*
+TODO - documentation
+*/
 S.source = function () {};
 
 /*
-
+TODO - documentation
 */
 S.width = function (item) {
 
@@ -243,9 +245,6 @@ S.width = function (item) {
 	this.dirtyDimensions = true;
 };
 
-/*
-
-*/
 S.height = function (item) {
 
 	this.dimensions[1] = item;
@@ -253,7 +252,7 @@ S.height = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.element = function (item) {
 
@@ -261,7 +260,7 @@ S.element = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.cleared = function (item) {
 
@@ -269,18 +268,12 @@ S.cleared = function (item) {
 	this.updateControllerCells();
 };
 
-/*
-
-*/
 S.compiled = function (item) {
 
 	this.compiled = item;
 	this.updateControllerCells();
 };
 
-/*
-
-*/
 S.shown = function (item) {
 
 	this.shown = item;
@@ -288,7 +281,7 @@ S.shown = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.compileOrder = function (item) {
 
@@ -296,9 +289,6 @@ S.compileOrder = function (item) {
 	this.updateControllerCells();
 };
 
-/*
-
-*/
 S.showOrder = function (item) {
 
 	this.showOrder = item;
@@ -386,7 +376,7 @@ D.stashHeight = function (val) {
 };
 
 /*
-
+TODO - documentation
 */
 P.repeatValues = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat']
 
@@ -401,7 +391,7 @@ S.repeat = function (item) {
 */
 
 /*
-Overrides mixin/asset.js function
+TODO - documentation
 */
 P.checkSource = function (width, height) {
 
@@ -440,6 +430,9 @@ P.buildStyle = function (mycell = {}) {
 	return 'rgba(0,0,0,0)';
 };
 
+/*
+TODO - documentation
+*/
 P.updateArtefacts = function (items = {}) {
 
 	this.groupBuckets.forEach(grp => {
@@ -459,6 +452,9 @@ P.updateArtefacts = function (items = {}) {
 	});
 };
 
+/*
+TODO - documentation
+*/
 P.cleanDimensionsAdditionalActions = function() {
 
 	let element = this.element;
@@ -519,7 +515,7 @@ P.subscribeAction = function (sub = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.installElement = function (element) {
 
@@ -534,7 +530,7 @@ P.installElement = function (element) {
 };
 
 /*
-
+TODO - documentation
 */
 P.updateControllerCells = function () {
 
@@ -542,7 +538,7 @@ P.updateControllerCells = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.setEngineFromState = function (engine) {
 
@@ -563,7 +559,7 @@ P.setEngineFromState = function (engine) {
 };
 
 /*
-
+TODO - documentation
 */
 P.setToDefaults = function () {
 
@@ -592,7 +588,7 @@ P.setToDefaults = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.stylesArray = ['Gradient', 'RadialGradient', 'Pattern'];
 P.setEngine = function (entity) {
@@ -618,7 +614,7 @@ P.setEngine = function (entity) {
 };
 
 /*
-
+TODO - documentation
 */
 P.setEngineActions = {
 
@@ -725,7 +721,7 @@ P.setEngineActions = {
 };
 
 /*
-
+TODO - documentation
 */
 P.clearShadow = function () {
 
@@ -739,9 +735,6 @@ P.clearShadow = function () {
 	return this;
 };
 
-/*
-
-*/
 P.restoreShadow = function (entity) {
 
 	let state = entity.state;
@@ -757,7 +750,7 @@ P.restoreShadow = function (entity) {
 };
 
 /*
-
+TODO - documentation
 */
 P.setToClearShape = function () {
 
@@ -772,7 +765,7 @@ P.setToClearShape = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.saveEngine = function () {
 
@@ -780,9 +773,6 @@ P.saveEngine = function () {
 	return this;
 };
 
-/*
-
-*/
 P.restoreEngine = function () {
 
 	this.engine.restore();
@@ -790,7 +780,7 @@ P.restoreEngine = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.clear = function () {
 
@@ -829,7 +819,7 @@ P.clear = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.compile = function(){
 
@@ -879,7 +869,7 @@ P.compile = function(){
 };
 
 /*
-
+TODO - documentation
 */
 P.show = function () {
 
@@ -1084,8 +1074,8 @@ We store the generated imageData object into the Cell object's __stashedImageDat
 
 If we are also stashing an image, an &lt;img> element will be generated and stored in the Cell object's __stashedImage__ attribute. We also generate an imageAsset wrapper for the object that will have the name _cellname+'-image'_, which gets added to the assets section of the Scrawl-canvas library.
 
-KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements
-ANNOYING ISSUE - images generated from cells are (currently) buggy - a timing issue, I think
+KNOWN BUG - it takes time for the images to load the new dataURLs generated from canvas elements
+ANNOYING BUG - images generated from cells are (currently) buggy - a timing issue, I think
 */
 P.stashOutputAction = function () {
 
@@ -1383,7 +1373,7 @@ P.getEntityHits = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.rotateDestination = function (engine, x, y, entity) {
 
@@ -1448,6 +1438,9 @@ P.poolDefs = {
 	composite: 'source-over',
 }
 
+/*
+TODO - documentation
+*/
 const requestCell = function () {
 
 	if (!cellPool.length) {
@@ -1487,6 +1480,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Cell = Cell;
 
+
+/*
+TODO - documentation
+*/
 export {
 	cellPoolLength,
 	makeCell,

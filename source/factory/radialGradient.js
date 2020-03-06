@@ -1,5 +1,7 @@
 /*
 # Radial Gradient factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { mergeOver, addStrings, convertLength } from '../core/utilities.js';
@@ -38,13 +40,9 @@ P = stylesMix(P);
 let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 	startRadius: 0,
-
-/*
-
-*/
 	endRadius: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -54,51 +52,35 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 G.startRadius = function (item) {
 
 	return this.currentStartRadius;
 };
-
-/*
-
-*/
 G.endRadius = function (item) {
 
 	return this.currentEndRadius;
 };
 
 /*
-
+TODO - documentation
 */
 S.startRadius = function (item) {
 
 	this.startRadius = item;
 	this.dirtyStyle = true;
 };
-
-/*
-
-*/
 S.endRadius = function (item) {
 
 	this.endRadius = item;
 	this.dirtyStyle = true;
 };
-
-/*
-
-*/
 D.startRadius = function (item) {
 
 	this.startRadius = addStrings(this.startRadius, item);
 	this.dirtyStyle = true;
 };
-
-/*
-
-*/
 D.endRadius = function (item) {
 
 	this.endRadius = addStrings(this.endRadius, item);
@@ -110,7 +92,7 @@ D.endRadius = function (item) {
 */
 
 /*
-
+TODO - documentation
 */
 P.cleanRadius = function (width) {
 
@@ -119,7 +101,7 @@ P.cleanRadius = function (width) {
 };
 
 /*
-
+TODO - documentation
 */
 P.buildStyle = function (cell = {}) {
 	
@@ -138,7 +120,7 @@ P.buildStyle = function (cell = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.updateGradientArgs = function (x, y) {
 
@@ -173,6 +155,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.RadialGradient = RadialGradient;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeRadialGradient,
 };

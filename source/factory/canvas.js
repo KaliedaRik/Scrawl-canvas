@@ -1,5 +1,7 @@
 /*
 # Canvas factory
+
+TODO - documentation
 */
 import { cell, constructors, artefact } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
@@ -152,31 +154,33 @@ P = domMix(P);
 let defaultAttributes = {
 
 /*
+TODO - documentation
+
 TO TEST - position needs to change to 'absolute' when Canvas element is an artefact associated with a stack. But canvas elements can also be created independently of any stack, in which case position:relative should suffice
 */
 	position: 'relative',
 
 /*
-
+TODO - documentation
 */
 	trackHere: true,
 
 /*
-
+TODO - documentation
 */
 	dirtyCells: true,
 
 /*
-
+TODO - documentation
 */
 	fit: 'none',
 
 /*
 Accessibility attributes
 
-* __title__ attribute is applied to the &lt;canvas> element's 'title' attribute, and will appear as a tooltip when the user hovers over the canvas
++ __title__ attribute is applied to the &lt;canvas> element's 'title' attribute, and will appear as a tooltip when the user hovers over the canvas
 
-* __label__ and __description__ attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas> element using 'aria-labelledby' and 'aria-describedby' attributes
++ __label__ and __description__ attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas> element using 'aria-labelledby' and 'aria-describedby' attributes
 
 If no label value is supplied to the canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual .set() functionality.
 */
@@ -199,7 +203,7 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 P.fitDefaults = ['fill', 'contain', 'cover'];
 S.fit = function (item) {
@@ -208,7 +212,7 @@ S.fit = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 G.alpha = function () {
 
@@ -245,7 +249,7 @@ S.alpha = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.backgroundColor = function (item) {
 
@@ -258,7 +262,7 @@ S.backgroundColor = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.title = function (item) {
 
@@ -279,7 +283,7 @@ S.description = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.composite = function (item) {
 
@@ -291,7 +295,7 @@ S.composite = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 D.alpha = function(item) {
 
@@ -304,7 +308,7 @@ D.alpha = function(item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.trackHere = function(bool) {
 
@@ -328,7 +332,7 @@ Decided against canvas cloning - too much of an edge case to be worth the code.
 P.clone = defaultThisReturnFunction;
 
 /*
-
+TODO - documentation
 */
 P.setAsCurrentCanvas = function () {
 
@@ -337,7 +341,7 @@ P.setAsCurrentCanvas = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.setBase = function (items) {
 
@@ -350,7 +354,7 @@ P.setBase = function (items) {
 };
 
 /*
-
+TODO - documentation
 */
 P.deltaSetBase = function (items) {
 
@@ -363,7 +367,7 @@ P.deltaSetBase = function (items) {
 };
 
 /*
-
+TODO - documentation
 */
 P.updateBaseHere = function () {
 
@@ -371,7 +375,7 @@ P.updateBaseHere = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.setBaseHelper = function () {
 
@@ -392,7 +396,7 @@ P.setBaseHelper = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.updateCells = function (items = {}) {
 
@@ -414,7 +418,7 @@ P.updateCells = function (items = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.buildCell = function (items = {}) {
 
@@ -429,6 +433,9 @@ P.buildCell = function (items = {}) {
 	return mycell;
 };
 
+/*
+TODO - documentation
+*/
 P.cleanDimensionsAdditionalActions = function () {
 
 	if (this.cells) {
@@ -442,7 +449,7 @@ P.cleanDimensionsAdditionalActions = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.addCell = function (item) {
 
@@ -458,7 +465,7 @@ P.addCell = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.removeCell = function (item) {
 
@@ -501,7 +508,7 @@ In Scrawl-canvas, we need to:
 	- see if we need to add in checks for the existence of the object in tweens and pivot/mimic positioning functionality
 - remove the canvas object from the library (artefact, canvas) - see if we need to overwrite core/base.js function
 */
-P.demolish = function () {
+P.demolish = function (removeDomElement = true) {
 
 	removeItem(uiSubscribedElements, this.name);
 
@@ -516,7 +523,7 @@ P.demolish = function () {
 	textHold.parentNode.removeChild(textHold);
 	ariaLabel.parentNode.removeChild(ariaLabel);
 	ariaDescription.parentNode.removeChild(ariaDescription);
-	el.parentNode.removeChild(el);
+	if (removeDomElement) el.parentNode.removeChild(el);
 
 	this.killCell(this.base);
 
@@ -526,7 +533,7 @@ P.demolish = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.clear = function () {
 
@@ -547,7 +554,7 @@ P.clear = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.compile = function () {
 
@@ -570,7 +577,7 @@ P.compile = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.show = function(){
 
@@ -603,7 +610,7 @@ P.show = function(){
 };
 
 /*
-
+TODO - documentation
 */
 P.render = function () {
 
@@ -620,7 +627,7 @@ P.render = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanCells = function () {
 
@@ -669,9 +676,9 @@ Trigger event action responses in (visible) entitys at the current mouse/touch
 
 Trigger event action responses in (visible) entitys at the current canvas element _here_ attribute coordinates
 
-* Available cascadeEventAction arguments are: 'enter', 'leave', 'down', or 'up'
++ Available cascadeEventAction arguments are: 'enter', 'leave', 'down', or 'up'
 
-* A 'move' argument can also be used, which will trigger enter and leave actions on the entitys, as appropriate to each
++ A 'move' argument can also be used, which will trigger enter and leave actions on the entitys, as appropriate to each
 
 Function returns an Array of name Strings for the entitys at the current mouse cursor coordinates 
 */
@@ -769,7 +776,7 @@ P.cascadeEventAction = function (action) {
 };
 
 /*
-
+TODO - documentation
 */
 P.cleanAria = function () {
 
@@ -792,6 +799,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Canvas = Canvas;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeCanvas,
 };

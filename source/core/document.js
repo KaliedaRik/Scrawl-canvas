@@ -192,12 +192,26 @@ const getCanvases = function () {
 };
 
 /*
+Parse the DOM, looking for &lt;canvas> elements; then create __Canvas__ artefact and __Cell__ asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.
+*/ 
+const getCanvas = function (search) {
+
+	let el = document.querySelector(search),
+		canvas = false;
+
+	if (el) canvas = addInitialCanvasElement(el);
+
+	setCurrentCanvas(canvas);
+	return canvas;
+};
+
+/*
 Use __addStack__ to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include 
 
-* __element__ - the DOM element to be the stack - if not present, will autogenerate a div element
-* __host__ - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element's current place or, failing all else, add the stack to the end of the document body
-* __name__ - String identifier for the stack; if not included the function will attempt to use the element's existing id or name attribute or, failing that, generate a random name for the stack.
-* any other regular stack attribute
++ __element__ - the DOM element to be the stack - if not present, will autogenerate a div element
++ __host__ - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element's current place or, failing all else, add the stack to the end of the document body
++ __name__ - String identifier for the stack; if not included the function will attempt to use the element's existing id or name attribute or, failing that, generate a random name for the stack.
++ any other regular stack attribute
 */
 const addStack = function (items = {}) {
 
@@ -289,9 +303,9 @@ const addStack = function (items = {}) {
 /*
 Use __addCanvas__ to add a Scrawl-canvas canvas element to a web page. The items argument should include 
 
-* __host__ - the host element, either as the DOM element itself, or some sort of CSS search string, or a Scrawl-canvas Stack entity. If no host is supplied, Scrawl-canvas will add the new canvas element to the DOM document body; in all cases, the new canvas element is appended at the end of the host element (or DOM document)
-* __name__ - String identifier for the element; will generate a random name for the canvas if no name is supplied.
-* any other regular Scrawl-canvas Canvas artefact attribute
++ __host__ - the host element, either as the DOM element itself, or some sort of CSS search string, or a Scrawl-canvas Stack entity. If no host is supplied, Scrawl-canvas will add the new canvas element to the DOM document body; in all cases, the new canvas element is appended at the end of the host element (or DOM document)
++ __name__ - String identifier for the element; will generate a random name for the canvas if no name is supplied.
++ any other regular Scrawl-canvas Canvas artefact attribute
 
 By default, Scrawl-canvas will setup the new Canvas as the 'current canvas', and will add mouse/pointer tracking functionality to it. If no dimensions are supplied then the Canvas will default to 300px wide and 150px high.
 */
@@ -360,8 +374,6 @@ const addCanvas = function (items = {}) {
 
 /*
 Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__
-
-Note: need to write a demo to test this functionality
 */
 let currentCanvas = null,
 	currentGroup = null;
@@ -400,17 +412,17 @@ const setCurrentCanvas = function (item) {
 ## Scrawl-canvas user interaction listeners
 Each scrawl-canvas stack and canvas can have bespoke Scrawl-canvas listeners attached to them, to track user mouse and touch interactions with that element. Scrawl-canvas defines five bespoke listeners:
 
-* __move__ - track mouse cursor and touch movements across the DOM element
-* __down__ - register a new touch interaction, or user pressing the left mouse button
-* __up__ - register the end of a touch interaction, or user releasing the left mouse button
-* __enter__ - trigger an event when the mouse cursor or touch event enters into the DOM element
-* __leave__ - trigger an event when the mouse cursor or touch event exits from the DOM element
++ __move__ - track mouse cursor and touch movements across the DOM element
++ __down__ - register a new touch interaction, or user pressing the left mouse button
++ __up__ - register the end of a touch interaction, or user releasing the left mouse button
++ __enter__ - trigger an event when the mouse cursor or touch event enters into the DOM element
++ __leave__ - trigger an event when the mouse cursor or touch event exits from the DOM element
 
 The functions all takes the following arguments:
 
-* __evt__ - String name of the event ('move', 'down', 'up', 'enter', 'leave'), or an array of such strings
-* __fn__ - the function to be called when the event listener(s) trigger
-* __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String; these elements need to be registered in the Scrawl-canvas library beforehend (done automatically for stack and canvas elements)
++ __evt__ - String name of the event ('move', 'down', 'up', 'enter', 'leave'), or an array of such strings
++ __fn__ - the function to be called when the event listener(s) trigger
++ __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String; these elements need to be registered in the Scrawl-canvas library beforehend (done automatically for stack and canvas elements)
 
 Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
 */
@@ -534,9 +546,9 @@ Any event listener can be added to a Scrawl-canvas stack or canvas DOM element. 
 
 The function requires three arguments:
 
-* __evt__ - String name of the event ('click', 'input', 'change', etc), or an array of such strings
-* __fn__ - the function to be called when the event listener(s) trigger
-* __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String
++ __evt__ - String name of the event ('click', 'input', 'change', etc), or an array of such strings
++ __fn__ - the function to be called when the event listener(s) trigger
++ __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String
 
 Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
 */
@@ -675,13 +687,25 @@ const displayCycleBatchProcess = function (method) {
 
 Generate an animation object which will run a clear/compile/show display ccycle on an renderable artefact such as a Stack or Canvas.
 
-We can also add in user-composed __display cycle hook functions__ which will run at appropriate places in the display cycle. These hooks are:
+We can also add in user-composed __display render hook functions__ which will run at appropriate places in the display cycle. These hooks - which are all optional - are:
 
-* commence
-* afterClear
-* afterCompile
-* afterShow
-* error
++ afterCreated - a run-only-once function which will trigger after the first display/animation cycle completes
++ commence - runs at the start of the display cycle, before the 'clear' action
++ afterClear - runs between the display cycle 'clear' and 'compile' actions
++ afterCompile - runs between the display cycle 'compile' and 'show' actions
++ afterShow - runs at the end of each display cycle, after the 'show' action
+
+The animation object also supports some __animation hook functions__:
+
++ onRun - triggers each time the animation object's .run function is invoked
++ onHalt - triggers each time the animation object's .halt function is invoked
++ onKill - triggers each time the animation object's .kill function is invoked
+
+Ther animation object's main function returns a promise each time it is invoked. The error function will be invoked each time the animation's promise chain breaks down.
+
++ error
+
+Note that all the above functions should be normal, synchronous functions. The Animation object will run them within its main, asynchronous (Promise-based) function.
 
 Returns the Animation object, through which the render functionality can be halted, resumed, and/or killed
 */
@@ -718,7 +742,13 @@ const makeRender = function (items = {}) {
 		afterClear = (isa_fn(items.afterClear)) ? items.afterClear : defaultNonReturnFunction,
 		afterCompile = (isa_fn(items.afterCompile)) ? items.afterCompile : defaultNonReturnFunction,
 		afterShow = (isa_fn(items.afterShow)) ? items.afterShow : defaultNonReturnFunction,
+		afterCreated = (isa_fn(items.afterCreated)) ? items.afterCreated : defaultNonReturnFunction,
+		onRun = (isa_fn(items.onRun)) ? items.onRun : defaultNonReturnFunction,
+		onHalt = (isa_fn(items.onHalt)) ? items.onHalt : defaultNonReturnFunction,
+		onKill = (isa_fn(items.onKill)) ? items.onKill : defaultNonReturnFunction,
 		error = (isa_fn(items.error)) ? items.error : defaultNonReturnFunction;
+
+	let readyToInitialize = true;
 
 	return makeAnimation({
 
@@ -737,7 +767,16 @@ const makeRender = function (items = {}) {
 				.then(() => Promise.resolve(afterCompile()))
 				.then(() => target.show())
 				.then(() => Promise.resolve(afterShow()))
-				.then(() => resolve(true))
+				.then(() => {
+
+					if (readyToInitialize) {
+
+						afterCreated();
+						readyToInitialize = false;
+					}
+
+					resolve(true);
+				})
 				.catch(err => {
 
 					error(err);
@@ -749,7 +788,7 @@ const makeRender = function (items = {}) {
 };
 
 /*
-### makeComponent
+TODO - documentation
 */
 const makeComponent = function (items) {
 
@@ -767,7 +806,7 @@ const makeComponent = function (items) {
 };
 
 /*
-### makeStackComponent
+TODO - documentation
 */
 const makeStackComponent = function (domElement, canvasSpecs, animationHooks, observerSpecs) {
 
@@ -810,7 +849,7 @@ const makeStackComponent = function (domElement, canvasSpecs, animationHooks, ob
 };
 
 /*
-### makeUnstackedComponent
+TODO - documentation
 */
 const makeUnstackedComponent = function (domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas) {
 
@@ -859,7 +898,7 @@ const makeUnstackedComponent = function (domElement, canvasSpecs, animationHooks
 };
 
 /*
-### makeAnimationObserver
+TODO - documentation
 */
 const makeAnimationObserver = function (anim, wrapper) {
 
@@ -1055,8 +1094,12 @@ scrawlNavigationHold.style.top = '-5000px';
 scrawlNavigationHold.style.left = '-5000px';
 document.body.prepend(scrawlNavigationHold);
 
+/*
+TODO - documentation
+*/
 export {
 	getCanvases,
+	getCanvas,
 	getStacks,
 
 	addCanvas,

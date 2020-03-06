@@ -1,0 +1,19 @@
+{
+  "name": "scrawl-canvas",
+  "version": "8.0.0",
+  "description": "Version 8.0.0 (alpha) - 5 July 2019",
+  "main": "source/scrawl.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KaliedaRik/Scrawl-canvas.git"
+  },
+  "author": "Rik Roots <rik.roots@rikworks.co.uk> (https://blog.rikworks.co.uk/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KaliedaRik/Scrawl-canvas/issues"
+  },
+  "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme"
+}

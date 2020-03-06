@@ -1,5 +1,7 @@
 /*
 # Pattern factory
+
+TODO - documentation
 */
 import { constructors, cell } from '../core/library.js';
 import { mergeOver, isa_fn } from '../core/utilities.js';
@@ -42,7 +44,7 @@ P = assetConsumerMix(P);
 let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 	repeat: 'repeat',
 };
@@ -53,7 +55,7 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 P.repeatValues = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat']
 
@@ -68,7 +70,7 @@ S.repeat = function (item) {
 */
 
 /*
-
+TODO - documentation
 */
 P.buildStyle = function (mycell = {}) {
 	
@@ -89,7 +91,9 @@ P.buildStyle = function (mycell = {}) {
 	return 'rgba(0,0,0,0)';
 };
 
-
+/*
+TODO - documentation
+*/
 P.getData = function (entity, cell, isFill) {
 
 	if (this.dirtyAsset) this.cleanAsset();
@@ -148,6 +152,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Pattern = Pattern;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makePattern,
 };

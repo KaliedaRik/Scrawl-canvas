@@ -1,5 +1,7 @@
 /*
 # User Object factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { generateUuid } from '../core/utilities.js';
@@ -27,19 +29,11 @@ let P = UserObject.prototype = Object.create(Object.prototype);
 */
 
 /*
-
+TODO - documentation
 */
 P.set = function (items = {}) {
 
 	Object.entries(items).forEach(([key, value]) => this[key] = items[key]);
-	// let keys = Object.keys(items),
-	// 	i, iz, key;
-
-	// for (i = 0, iz = keys.length; i < iz; i++) {
-
-	// 	key = keys[i];
-	// 	this[key] = items[key];
-	// }
 };
 
 /*
@@ -54,6 +48,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.UserObject = UserObject;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeUserObject,
 };

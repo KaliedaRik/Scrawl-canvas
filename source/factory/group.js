@@ -1,5 +1,7 @@
 /*
 # Group factory
+
+TODO - documentation
 */
 import { constructors, cell, artefact, group, groupnames, entity } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
@@ -51,37 +53,37 @@ P = filterMix(P);
 let defaultAttributes = {
 
 /*
-
+TODO - documentation
 */
 	artefacts: null,
 
 /*
-
+TODO: Does this need to be in the defs?
 */
 	artefactBuckets: null,
 
 /*
-
+TODO: Does this need to be in the defs?
 */
 	host: '',
 
 /*
-
+TODO - documentation
 */
 	order: 0,
 
 /*
-
+TODO - documentation
 */
 	visibility: true,
 
 /*
-
+TODO: Does this need to be in the defs?
 */
 	batchResort: true,
 
 /*
-
+TODO - documentation
 */
 	regionRadius: 0
 };
@@ -93,17 +95,22 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 let G = P.getters,
 	S = P.setters;
 
+/*
+TODO - documentation
+*/
 G.artefacts = function () {
 
 	return [].concat(this.artefacts);
 };
-
 S.artefacts = function (item) {
 
 	this.artefacts = [];
 	this.addArtefacts(item);
 };
 
+/*
+TODO - documentation
+*/
 S.host = function (item) {
 
 	let host = this.getHost(item);
@@ -117,6 +124,9 @@ S.host = function (item) {
 	}
 };
 
+/*
+TODO - documentation
+*/
 S.order = function (item) {
 
 	let host = this.getHost(this.host);
@@ -136,7 +146,7 @@ S.order = function (item) {
 */
 
 /*
-
+TODO - documentation
 */
 P.getHost = function (item) {
 
@@ -147,7 +157,7 @@ P.getHost = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 P.forceStamp = function () {
 
@@ -243,7 +253,7 @@ P.stamp = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.sortArtefacts = function () {
 
@@ -269,7 +279,7 @@ P.sortArtefacts = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.prepareStamp = function (myCell) {
 
@@ -295,7 +305,7 @@ P.prepareStamp = function (myCell) {
 };
 
 /*
-
+TODO - documentation
 */
 P.stampAction = function (myCell) {
 
@@ -355,7 +365,7 @@ P.stampAction = function (myCell) {
 };
 
 /*
-
+TODO - documentation
 */
 P.applyFilters = function (myCell) {
 
@@ -486,6 +496,9 @@ P.stashAction = function (img) {
 	releaseCell(myCell);
 }
 
+/*
+TODO - documentation
+*/
 P.getCellCoverage = function (img) {
 
 	let width = img.width,
@@ -535,8 +548,23 @@ P.addArtefacts = function (...args) {
 	return this;
 };
 
-/*
+P.removeArtefacts = function (...args) {
 
+	args.forEach(item => {
+
+		if (item) {
+
+			if (item.substring) removeItem(this.artefacts, item);
+			else if (item.name) removeItem(this.artefacts, item.name);
+		}
+	}, this);
+
+	this.batchResort = true;
+	return this;
+};
+
+/*
+TODO - documentation
 */
 P.moveArtefactsIntoGroup = function (...args) {
 
@@ -570,24 +598,6 @@ P.moveArtefactsIntoGroup = function (...args) {
 };
 
 /*
-
-*/
-P.removeArtefacts = function (...args) {
-
-	args.forEach(item => {
-
-		if (item) {
-
-			if (item.substring) removeItem(this.artefacts, item);
-			else if (item.name) removeItem(this.artefacts, item.name);
-		}
-	}, this);
-
-	this.batchResort = true;
-	return this;
-};
-
-/*
 Update all artefact objects using the __updateArtefacts__ function. The supplied argument will be passed on to each artefact's _setDelta_ function.
 */
 P.updateArtefacts = function (items) {
@@ -606,7 +616,7 @@ P.setArtefacts = function (items) {
 };
 
 /*
-
+TODO - documentation
 */
 P.updateByDelta = function () {
 
@@ -614,9 +624,6 @@ P.updateByDelta = function () {
 	return this;
 };
 
-/*
-
-*/
 P.reverseByDelta = function () {
 
 	this.cascadeAction(false, 'reverseByDelta');
@@ -624,7 +631,7 @@ P.reverseByDelta = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.addArtefactClasses = function (items) {
 
@@ -632,9 +639,6 @@ P.addArtefactClasses = function (items) {
 	return this;
 };
 
-/*
-
-*/
 P.removeArtefactClasses = function (items) {
 
 	this.cascadeAction(items, 'removeClasses');
@@ -642,7 +646,7 @@ P.removeArtefactClasses = function (items) {
 };
 
 /*
-
+TODO - documentation
 */
 P.cascadeAction = function (items, action) {
 
@@ -656,7 +660,7 @@ P.cascadeAction = function (items, action) {
 };
 
 /*
-
+TODO - documentation
 */
 P.setDeltaValues = function (items = {}) {
 
@@ -666,7 +670,7 @@ P.setDeltaValues = function (items = {}) {
 };
 
 /*
-
+TODO - documentation
 */
 P.addFiltersToEntitys = function (...args) {
 
@@ -679,9 +683,6 @@ P.addFiltersToEntitys = function (...args) {
 	return this;
 };
 
-/*
-
-*/
 P.removeFiltersFromEntitys = function (...args) {
 
 	this.artefacts.forEach(name => {
@@ -693,9 +694,6 @@ P.removeFiltersFromEntitys = function (...args) {
 	return this;
 };
 
-/*
-
-*/
 P.clearFiltersFromEntitys = function () {
 
 	this.artefacts.forEach(name => {
@@ -708,7 +706,7 @@ P.clearFiltersFromEntitys = function () {
 };
 
 /*
-
+TODO - documentation
 */
 P.demolishGroup = function (removeFromDom) {
 
@@ -735,9 +733,9 @@ Where no artefacts are present at that coordinate the function returns false.
 
 A __hit report__ is a Javascript object with the following attributes:
 
-* .x - the x coordinate supplied in this functions argument object
-* .y - the y coordinate supplied in this functions argument object
-* .artefact - the Scrawl-canvas artefact object reporting the hit
++ .x - the x coordinate supplied in this functions argument object
++ .y - the y coordinate supplied in this functions argument object
++ .artefact - the Scrawl-canvas artefact object reporting the hit
 
 This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
 */
@@ -891,6 +889,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Group = Group;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeGroup,
 };

@@ -116,9 +116,6 @@ const updateUiSubscribedElements = function () {
 	uiSubscribedElements.forEach(item => updateUiSubscribedElement(item));
 };
 
-/*
-
-*/
 const updateUiSubscribedElement = function (art) {
 
 	let dom = library.artefact[art];
@@ -176,9 +173,6 @@ const coreListenersTracker = makeAnimation({
 	},
 });
 
-/*
-
-*/
 const startCoreListeners = function () {
 
 	actionCoreListeners('removeEventListener');
@@ -189,9 +183,6 @@ const startCoreListeners = function () {
 	coreListenersTracker.run();
 };
 
-/*
-
-*/
 const stopCoreListeners = function () {
 
 	trackMouse = false;
@@ -201,9 +192,6 @@ const stopCoreListeners = function () {
 	actionCoreListeners('removeEventListener');
 };
 
-/*
-
-*/
 const actionCoreListeners = function (action) {
 
 	if (navigator.pointerEnabled || navigator.msPointerEnabled) {
@@ -232,9 +220,6 @@ const actionCoreListeners = function (action) {
 	window[action]('resize', resizeAction, false);
 };
 
-/*
-
-*/
 const applyCoreResizeListener = function () {
 
 	resizeAction();
@@ -399,15 +384,15 @@ Convenience function for setting up drag-and-drop zones.
 
 Required attribute of the argument object:
 
-* __.zone__ - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself
++ __.zone__ - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself
 
 Optional argument object attributes:
 
-* __.coodinateSource__ - the .here object of whatever artefact/asset (Stack, Canvas, Element or Cell) will be supplying the coordinates. Defaults to the .here object of either the Stack zone, or the .here object of the Canvas zone's base Cell.
-* __.collisionGroup__ - the group containg the draggable artefacts, or that Group object's name String. Defaults to the Stack zone's Group object, or the Canvas's base Cell's Group object.
-* __.startOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'down'
-* __.endOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'up'
-* __.exposeCurrentArtefact__ boolean. Defaults to false
++ __.coodinateSource__ - the .here object of whatever artefact/asset (Stack, Canvas, Element or Cell) will be supplying the coordinates. Defaults to the .here object of either the Stack zone, or the .here object of the Canvas zone's base Cell.
++ __.collisionGroup__ - the group containg the draggable artefacts, or that Group object's name String. Defaults to the Stack zone's Group object, or the Canvas's base Cell's Group object.
++ __.startOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'down'
++ __.endOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'up'
++ __.exposeCurrentArtefact__ boolean. Defaults to false
 
 If the exposeCurrentArtefact attribute is true, the function returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). Invoking the returned function with a single argument that evaluates to true will trigger the kill function.
 
@@ -505,6 +490,9 @@ const makeDragZone = function (items = {}) {
 	else return kill;
 };
 
+/*
+TODO - documentation
+*/
 export {
 	uiSubscribedElements,
 	currentCorePosition,

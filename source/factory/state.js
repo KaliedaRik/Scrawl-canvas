@@ -1,5 +1,7 @@
 /*
 # State factory
+
+TODO - documentation
 */
 import { constructors, entity, styles } from '../core/library.js';
 import { isa_obj, xt, xtGet } from '../core/utilities.js';
@@ -38,22 +40,22 @@ P.defs = {
 /*
 Color, gradient or pattern used to fill a entity. Can be:
 
-* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
-* COLORNAME String
-* GRADIENTNAME String
-* RADIALGRADIENTNAME String
-* PATTERNNAME String
++ Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
++ COLORNAME String
++ GRADIENTNAME String
++ RADIALGRADIENTNAME String
++ PATTERNNAME String
 */
 	fillStyle: 'rgba(0,0,0,1)',
 
 /*
 Color, gradient or pattern used to outline a entity. Can be:
 
-* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
-* COLORNAME String
-* GRADIENTNAME String
-* RADIALGRADIENTNAME String
-* PATTERNNAME String
++ Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
++ COLORNAME String
++ GRADIENTNAME String
++ RADIALGRADIENTNAME String
++ PATTERNNAME String
 */
 	strokeStyle: 'rgba(0,0,0,1)',
 
@@ -65,18 +67,18 @@ Entity transparency - a value between 0 and 1, where 0 is completely transparent
 /*
 Compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include
 
-* 'source-over'
-* 'source-atop'
-* 'source-in'
-* 'source-out'
-* 'destination-over'
-* 'destination-atop'
-* 'destination-in'
-* 'destination-out'
-* 'lighter'
-* 'darker'
-* 'copy'
-* 'xor'
++ 'source-over'
++ 'source-atop'
++ 'source-in'
++ 'source-out'
++ 'destination-over'
++ 'destination-atop'
++ 'destination-in'
++ 'destination-out'
++ 'lighter'
++ 'darker'
++ 'copy'
++ 'xor'
 
 _Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers_
 */
@@ -90,18 +92,18 @@ Line width, in pixels
 /*
 Line cap styling. Permitted values include:
 
-* 'butt'
-* 'round'
-* 'square'
++ 'butt'
++ 'round'
++ 'square'
 */
 	lineCap: 'butt',
 
 /*
 Line join styling. Permitted values include:
 
-* 'miter'
-* 'round'
-* 'bevel'
++ 'miter'
++ 'round'
++ 'bevel'
 */
 	lineJoin: 'miter',
 
@@ -138,8 +140,8 @@ Blur border for a entity's shadow, in pixels
 /*
 Color used for entity shadow effect. Can be:
 
-* Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
-* COLORNAME String
++ Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
++ COLORNAME String
 */
 	shadowColor: 'rgba(0,0,0,0)',
 
@@ -166,7 +168,37 @@ TODO: find a (sane) way to interrogate fonts to find out the values - from font 
 };
 
 /*
+## Packet management
+
+Overwriting base mixin functions. Nothing to add to base mixin arrays
+*/
+P.processPacketOut = function (key, value, includes) {
+
+	let result = true;
+
+	switch (key) {
+
+		case 'lineDash' : 
+
+			if (!value.length) {
+
+				result = (includes.indexOf('lineDash') >= 0) ? true : false;
+			}
+			break;
+
+		default : 
+
+        	if (includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+	}
+	return result;
+};
+
+/*
 ## Define attribute getters and setters
+*/
+
+/*
+TODO - documentation
 */
 P.set = function (items) {
 
@@ -205,7 +237,7 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-
+TODO - documentation
 */
 S.fillStyle = function (item) {
 
@@ -222,7 +254,7 @@ S.fillStyle = function (item) {
 };
 
 /*
-
+TODO - documentation
 */
 S.strokeStyle = function (item) {
 
@@ -248,7 +280,7 @@ P.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];
 P.textKeys = ['font'];
 
 /*
-
+TODO - documentation
 */
 P.getChanges = function (ent, engineState) {
 
@@ -363,6 +395,9 @@ P.getChanges = function (ent, engineState) {
 	return result;
 };
 
+/*
+TODO - documentation
+*/
 P.setStateFromEngine = function (engine) {
 
 	let keys = this.allKeys,
@@ -393,6 +428,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.State = State;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeState,
 };

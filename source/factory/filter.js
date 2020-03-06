@@ -1,5 +1,7 @@
 /*
 # Filter factory
+
+TODO - documentation
 */
 import { constructors } from '../core/library.js';
 import { mergeOver } from '../core/utilities.js';
@@ -162,12 +164,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 /*
 ## Filter webworker pool
+
+TODO - documentation
 */
 const filterPool = [];
 
-/*
-
-*/
 const requestFilterWorker = function () {
 
 	if (!filterPool.length) filterPool.push(buildFilterWorker());
@@ -175,17 +176,11 @@ const requestFilterWorker = function () {
 	return filterPool.shift();
 };
 
-/*
-
-*/
 const releaseFilterWorker = function (f) {
 
 	filterPool.push(f);
 };
 
-/*
-
-*/
 const buildFilterWorker = function () {
 
 	let path = import.meta.url.slice(0, -('factory/filter.js'.length))
@@ -194,13 +189,13 @@ const buildFilterWorker = function () {
 		`${path}worker/filter.js` : 
 		`${path}worker/filter.js`;
 
-	// chrome does not yet support module
+	// Sept 2019 - chrome does not yet support module
 	// return new Worker(filterUrl, {type: 'module'});
 	return new Worker(filterUrl);
 };
 
 /*
-
+TODO - documentation
 */
 const actionFilterWorker = function (worker, items) {
 
@@ -236,6 +231,10 @@ Also store constructor in library - clone functionality expects to find it there
 */
 constructors.Filter = Filter;
 
+
+/*
+TODO - documentation
+*/
 export {
 	makeFilter,
 	requestFilterWorker,
