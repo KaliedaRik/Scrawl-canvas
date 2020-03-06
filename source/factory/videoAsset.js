@@ -1,7 +1,11 @@
 /*
 # VideoAsset factory
 
-TODO - documentation
+The factory generates wrapper Objects around &lt;video> elements which can either be pulled from the current document (DOM-based assets) or fetched from the server using an URL address.
+
+Assets are used (consumed) by Picture entitys and Pattern styles.
+
+Additional functionality is defined in the mixin/asset.js mixin.
 */
 import { constructors } from '../core/library.js';
 import { mergeOver, generateUuid, xt } from '../core/utilities.js';
@@ -36,19 +40,13 @@ P = assetMix(P);
 ## Packet management
 
 Currently nothing to do here
-
-TODO: work out how we're going to handle assets in packages
-	- currently assume asset already exists on the destination device browser
-	- we could include the &lt;img> element's src attribute in the packet??
-	- then when it comes to unpacking, check if it really does exist
-		- if not exist, do the load thing
-
-	- same work required across imageAsset, spriteAsset, videoAsset
 */
 
 
 /*
 ## Define default attributes
+
+Currently nothing to do here - this factory's attributes are common with other asset factories, and have been coded up in mixin/asset.js
 */
 let defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -58,7 +56,7 @@ let G = P.getters,
 	D = P.deltaSetters;
 
 /*
-TODO - documentation
+Argument needs to be the &lt;video> element itself.
 */
 S.source = function (item = {}) {
 
@@ -81,7 +79,11 @@ S.source = function (item = {}) {
 */
 
 /*
-TODO - documentation
+__checkSource__ function gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.
+
+If any of the source &lt;video> element's relevant attributes have changed, the asset wrapper will immediately notify/update ALL of its subscribers by changing attributes on their objects.
+
+TODO: there may be a more efficient way of doing this? If the first subscriber triggers a notify action, which propagates to all subscribers, then subsequent subscribers don't need to invoke this function for the remainder of this display cycle.
 */
 P.checkSource = function (width, height) {
 
@@ -107,7 +109,11 @@ P.checkSource = function (width, height) {
 
 
 /*
-Routes the function invocation from the asset to its source &lt;video> element
+The following functions invoke their namesake functions on the source &lt;video> element. 
+
+Note that some of the functions are defined as being asynchronous; for these functions, we wrap the invokations in Promises. which cascade back to the original invocation (probably in user code).
+
+All of these functions are also mapped onto the factories which consume the videoAsset - Picture entitys and Pattern styles - so they can be invoked on those objects instead on the videoAsset instance.
 */
 P.addTextTrack = function (kind, label, language) {
 
@@ -116,9 +122,6 @@ P.addTextTrack = function (kind, label, language) {
 	if (source && source.addTextTrack) source.addTextTrack(kind, label, language);
 };
 
-/*
-Routes the function invocation from the asset to its source &lt;video> element
-*/
 P.captureStream = function () {
 
 	let source = this.source;
@@ -127,9 +130,6 @@ P.captureStream = function () {
 	else return false;
 };
 
-/*
-Routes the function invocation from the asset to its source &lt;video> element
-*/
 P.canPlayType = function (mytype) {
 
 	let source = this.source;
@@ -138,9 +138,6 @@ P.canPlayType = function (mytype) {
 	else return 'maybe';
 };
 
-/*
-Routes the function invocation from the asset to its source &lt;video> element
-*/
 P.fastSeek = function (time) {
 
 	let source = this.source;
@@ -148,9 +145,6 @@ P.fastSeek = function (time) {
 	if (source && source.fastSeek) source.fastSeek(time);
 };
 
-/*
-Routes the function invocation from the asset to its source &lt;video> element
-*/
 P.load = function () {
 
 	let source = this.source;
@@ -158,9 +152,6 @@ P.load = function () {
 	if (source) source.load();
 };
 
-/*
-Routes the function invocation from the asset to its source &lt;video> element
-*/
 P.pause = function () {
 
 	let source = this.source;
@@ -168,9 +159,6 @@ P.pause = function () {
 	if (source) source.pause();
 };
 
-/*
-Routes the function invocation from the asset to its source &lt;video> element
-*/
 P.play = function () {
 
 	let source = this.source;
@@ -179,9 +167,6 @@ P.play = function () {
 	else return Promise.reject('Source not defined');
 };
 
-/*
-Routes the function invocation from the asset to its source &lt;video> element
-*/
 P.setMediaKeys = function (keys) {
 
 	let source = this.source;
@@ -194,9 +179,6 @@ P.setMediaKeys = function (keys) {
 	else return Promise.reject('Source not defined');
 };
 
-/*
-Routes the function invocation from the asset to its source &lt;video> element
-*/
 P.setSinkId = function () {
 
 	let source = this.source;
@@ -210,9 +192,16 @@ P.setSinkId = function () {
 };
 
 /*
+#### The following functions are defined in this file, and exported via scrawl.js for use in user code. 
+
+They need to be invoked against the __scrawl__ object, not against any instance object created by the videoAsset factory.
+
+*/
+
+/*
 Import videos from the DOM
 
-Required argument is a query string used to search the dom for matching elements
+Required argument is a __query string__ used to search the DOM document for matching &lt;video> elements
 */
 const importDomVideo = function (query) {
 
@@ -252,7 +241,9 @@ const importDomVideo = function (query) {
 };
 
 /*
-TODO - documentation
+__Warning: experimental!__
+
+This function will attempt to link a mediaStream - for instance from a device's camera - to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
 
 TODO - extend functionality so users can manipulate the mediaStream via the Picture entity using it as its asset
 */
@@ -440,6 +431,8 @@ const importVideo = function (...args) {
 
 /*
 TODO - documentation
+
+I was planning to make the &lt;video> element's attributes accessible to Picture entitys and Pattern styles - need to check if work has been completed at their end.
 */
 const gettableVideoAssetAtributes = [
 	'video_audioTracks',
@@ -475,9 +468,6 @@ const gettableVideoAssetAtributes = [
 	'video_volume',
 ];
 
-/*
-TODO - documentation
-*/
 const settableVideoAssetAtributes = [
 	'video_autoPlay',
 	'video_controller',
@@ -509,7 +499,14 @@ constructors.VideoAsset = VideoAsset;
 
 
 /*
-TODO - documentation
+The following functions are exposed to the end developer via scrawl.js export:
+
++ makeVideoAsset
++ importDomVideo
++ importVideo
++ importMediaStream
+
+The other functions are exported for import into other Scrawl-canvas modules.
 */
 export {
 	makeVideoAsset,
