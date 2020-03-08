@@ -2,6 +2,14 @@
 # Canvas factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { cell, constructors, artefact } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';

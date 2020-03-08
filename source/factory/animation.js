@@ -2,6 +2,34 @@
 # Animation factory
 
 TODO - documentation
+
+#### Instantiate objects from the factory
+
+Use the __scrawl.makeAnimation({key:value})__ function - see Demo DOM-001 for an example
+
+Almost all of the Demos use __alternative methods for generating animation objects__:
+
++ scrawl.makeRender - use this function to create an animation object which will __control the display cycle for a canvas__ or stack. The function allows users to add a number of hook functions that will trigger at various points in the display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.
+
++ scrawl.makeTween, scrawl.makeTicker - both of these factory functions use animation objects under the hood
+
++ scrawl.makeComponent - used in component files, the factory function will automatically add an animation object to the component, alongside much of the functionality supplied by makeRender. It will also creat an IntersectionObserver on the window object that will automatically run/stop the animation object dependant on its canvas element's position in the browser/device viewport.
+
+#### Library storage: YES
+
++ scrawl.library.animation
+
+#### Clone functionality: YES, BUT ...
+
+__Warning__: this functionality has not been tested, nor is it high on my list for testing!
+
+It's simpler to set up an animation object from scratch, rather than clone it from an existing animation object.
+
+#### Kill functionality: YES, BUT ...
+
+Every animation object can (in theory) be removed using its __kill__ function; this functionality has not been tested, nor is it high on my list for testing!
+
+TODO: review and update kill functionality through the entire Scrawl-canvas system
 */
 import { animation, constructors } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt, 
@@ -71,6 +99,32 @@ The animation object supports some __animation hook functions__:
 	onKill: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+/*
+## Packet management
+*/
+P.packetExclusions = pushUnique(P.packetExclusions, []);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, []);
+P.packetFunctions = pushUnique(P.packetFunctions, ['onRun', 'onHalt', 'onKill', 'fn']);
+
+/*
+Overwrites postCloneAction function in mixin/base.js
+*/
+P.postCloneAction = function(clone, items) {
+
+	if (this.fn) clone.fn = this.fn;
+	if (this.onRun) clone.onRun = this.onRun;
+	if (this.onHalt) clone.onHalt = this.onHalt;
+	if (this.onKill) clone.onKill = this.onKill;
+
+	if (items.sharedState) clone.state = this.state;
+
+	return clone;
+};
+
 
 /*
 ## Define prototype functions

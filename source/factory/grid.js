@@ -2,6 +2,14 @@
 # Grid factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors, entity } from '../core/library.js';
 import { mergeOver, isa_number, isa_obj, defaultNonReturnFunction, xt, xta } from '../core/utilities.js';

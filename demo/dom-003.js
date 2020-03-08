@@ -1,7 +1,7 @@
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup - create some useful variables for use elsewhere in the script
+// Scene setup - create some variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
 	stack = artefact.mystack,
 	current, here;
@@ -226,3 +226,5 @@ scrawl.makeRender({
 	target: stack,
 	afterShow: report,
 });
+
+console.log(scrawl.library);

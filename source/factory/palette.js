@@ -2,6 +2,14 @@
 # Palette factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors } from '../core/library.js';
 import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta } from '../core/utilities.js';

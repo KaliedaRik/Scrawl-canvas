@@ -2,6 +2,14 @@
 # Color factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors } from '../core/library.js';
 import { mergeOver, xt, xtGet } from '../core/utilities.js';
@@ -165,22 +173,22 @@ P.set = function (items = {}) {
 /*
 Overrides function in mixin/base.js
 */
-P.clone = function (items = {}) {
+// P.clone = function (items = {}) {
 
-	let a = this.parse(),
-		b = mergeOver(a, items),
-		c = makeColor(b);
+// 	let a = this.parse(),
+// 		b = mergeOver(a, items),
+// 		c = makeColor(b);
 
-	if (items.random) {
-		delete c.r;
-		delete c.g;
-		delete c.b;
-		delete c.a;
-		c.generateRandomColor(items);
-	}
+// 	if (items.random) {
+// 		delete c.r;
+// 		delete c.g;
+// 		delete c.b;
+// 		delete c.a;
+// 		c.generateRandomColor(items);
+// 	}
 
-	return c;
-};
+// 	return c;
+// };
 
 /*
 TODO - documentation

@@ -162,25 +162,43 @@ Most Scrawl-canvas factory objects can be copied using the __clone__ function. T
         startY: 60,
     });
 */
-	P.clone = function (items = {}) {
+    P.clone = function (items = {}) {
 
-		let self = this,
-			regex = /^(local|dirty|current)/;
+        let myName = this.name,
+            myPacket, myTicker;
 
-		let copied = JSON.parse(JSON.stringify(this));
-		copied.name = (items.name) ? items.name : generateUuid();
+        this.name = items.name || '';
 
-		Object.entries(this).forEach(([key, value]) => {
+        // Tickers are specific to Tween and Action objects
+        if (items.useNewTicker) {
 
-			if (regex.test(key)) delete copied[key];
-			if (isa_fn(this[key])) copied[key] = self[key];
-		}, this);
+            myTicker = this.ticker;
+            this.ticker = null;
+            myPacket = this.saveAsPacket();
+            this.ticker = myTicker;
+        }
+        else myPacket = this.saveAsPacket();
 
-		let clone = new library.constructors[this.type](copied);
-		clone.set(items);
+        this.name = myName;
 
-		return clone;
-	};
+        let clone = this.actionPacket(myPacket);
+
+        this.packetFunctions.forEach(func => {
+
+            if (this[func]) clone[func] = this[func];
+        });
+
+        clone = this.postCloneAction(clone, items);
+
+        clone.set(items);
+
+        return clone;
+    };
+
+    P.postCloneAction = function (clone, items) {
+
+        return clone;
+    };
 
 /*
 __Packets__ are Scrawl-canvas's way of generating and consuming SC object data, both locally and over a network. A packet is a formatted JSON String which can be captured in a variable or saved to a text file.
@@ -309,14 +327,11 @@ Note: if the argument is supplied as a boolean 'true', code will create an items
 
                 if (packetFunctions.indexOf(key) >= 0) {
 
-                    let matches = val.toString().match(/\((.*?)\).*?\{(.*)\}/s);
-                    let vars = matches[1];
-                    let func = matches[2];
+                    if (xt(val) && val !== null) {
 
-                    if (func.substring) {
+                        let func = this.stringifyFunction(val);
 
-                        if (packetDefaultInclusions.indexOf(key) >= 0 && !func.length) copy[key] = '~~~';
-                        else if (func.length) copy[key] = `${vars}~~~${func}`;
+                        if (func && func.length) copy[key] = func;
                     }
                 }
 
@@ -347,6 +362,15 @@ Note: if the argument is supplied as a boolean 'true', code will create an items
 /*
 Helper functions that get defined in various mixins and factories - localizing the functionality to meet the specific needs of that factory's object instances
 */
+    P.stringifyFunction = function (val) {
+
+        let matches = val.toString().match(/\((.*?)\).*?\{(.*)\}/s);
+        let vars = matches[1];
+        let func = matches[2];
+
+        return (xta(vars, func)) ? `${vars}~~~${func}` : false;
+    };
+
 	P.processPacketOut = function (key, value, includes) {
 
         let result = true;
@@ -468,6 +492,30 @@ The function can be called directly on any Scrawl-canvas object that uses the ba
                         if (obj) obj.set(update);
                         else {
 
+                            // Stack-based artefacts need a DOM element that they can pass into the factory
+                            if (update.outerHTML && update.host) {
+
+                                let myParent = document.querySelector(`#${update.host}`);
+
+                                if (myParent) {
+
+                                    let tempEl = document.createElement('div');
+
+                                    tempEl.innerHTML = update.outerHTML;
+
+                                    let myEl = tempEl.firstElementChild;
+
+                                    if (myEl) {
+
+                                        myEl.id = name;
+
+                                        myParent.appendChild(myEl);
+
+                                        update.domElement = myEl;
+                                    }
+                                }
+                            }
+
                             obj = new library.constructors[type](update);
 
                             if (!obj) throw new Error('Failed to create Scrawl-canvas object from supplied packet');
@@ -515,7 +563,7 @@ The function can be called directly on any Scrawl-canvas object that uses the ba
 
         let fItem = obj[item];
 
-        if (xt(fItem) && fItem.substring) {
+        if (xt(fItem) && fItem !== null && fItem.substring) {
 
             if (fItem === '~~~') obj[item] = defaultNonReturnFunction;
             else {
@@ -527,9 +575,14 @@ The function can be called directly on any Scrawl-canvas object that uses the ba
                 args = args.split(',');
                 args = args.map(a => a.trim());
 
-                f = new Function(...args, func);
+                // Native code raises non-terminal errors (because it is native code!) - so we dodge that bullet.
+                if (func.indexOf('[native code]') < 0) {
 
-                obj[item] = f.bind(obj);
+                    f = new Function(...args, func);
+
+                    obj[item] = f.bind(obj);
+                }
+                else obj[item] = defaultNonReturnFunction;
             }
         }
     };

@@ -2,6 +2,14 @@
 # Cell factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { artefact, asset, radian, constructors, styles, stylesnames, cell, cellnames, group } from '../core/library.js';
 import { convertLength, generateUuid, isa_canvas, mergeOver, xt, xtGet } from '../core/utilities.js';

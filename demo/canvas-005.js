@@ -263,3 +263,5 @@ scrawl.makeRender({
 	commence: animateGradients,
 	afterShow: report,
 });
+
+console.log(scrawl.library);

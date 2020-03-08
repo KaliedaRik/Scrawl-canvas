@@ -2,6 +2,14 @@
 # Group factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors, cell, artefact, group, groupnames, entity } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';

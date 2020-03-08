@@ -2,10 +2,18 @@
 # Loom factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors, artefact } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
-import { mergeOver, mergeDiscard, pushUnique, defaultNonReturnFunction, defaultFalseReturnFunction, xta } from '../core/utilities.js';
+import { mergeOver, mergeDiscard, pushUnique, defaultNonReturnFunction, defaultThisReturnFunction, xta } from '../core/utilities.js';
 
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
@@ -486,9 +494,7 @@ This is because Loom entitys are __compound entitys__ which bring together other
 
 (Note: I'm sure it could be done, but I'm not going to do it for Scrawl-canvas v8)
 */
-P.clone = defaultFalseReturnFunction;
-P.preCloneActions = defaultNonReturnFunction;
-P.postCloneActions = defaultNonReturnFunction;
+P.clone = defaultThisReturnFunction;
 
 /*
 Invalidating sensor functionality

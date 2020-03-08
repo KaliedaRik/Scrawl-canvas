@@ -1,8 +1,89 @@
 /*
 # Action factory
+
+Actions are (reversible) functions added to a Scrawl-canvas 'ticker' timeline. They trigger as the ticker passes through the point (along the ticker's timeline):
+
++ if the timeline is moving forwards the __action__ function will be invoked
++ if the timeline is moving backwards the __revert__ function will be invoked
+
+#### Instantiate objects from the factory: YES
+
+Use the __scrawl.makeAction({key:value})__ function - see Demo DOM-006
+
+    // Factory returns the instantiated object
+    let myaction = scrawl.makeAction({
+
+        // Unique name (can be computer generated)
+        name: 'red',
+
+        // Scrawl-canvas ticker object, or its name String
+        ticker: tickerObject,
+
+        // Any Scrawl-canvas object that can be actioned
+        // - or that object's name String
+        // - or a (mixed) array of targets
+        targets: scrawlCanvasObject,
+
+        // % distance (as a string) from ticker start, or a similar time value
+        time: '6.25%',
+
+        // 'action' and 'revert' functions, to be applied to targets
+        action: function () { 
+            element.set({ 
+                css: { 
+                    backgroundColor: 'red', 
+                },
+            });
+        },
+
+        revert: function () {
+            element.set({ 
+                css: { 
+                    backgroundColor: 'blue', 
+                },
+            });
+        },
+    });
+
+The factory uses all attributes and functions defined by the 'base' and 'tween' mixins, alongside those defined in this file.
+
+#### Library storage: YES
+
++ scrawl.library.tween
+
+#### Clone functionality: YES
+
+See Demos DOM-004, DOM-006
+
+    myaction.clone({
+        name: 'yellow-action',
+        time: '8s',
+
+        action: function () { 
+            element.set({ 
+                css: { 
+                    backgroundColor: 'yellow', 
+                },
+            });
+        },
+
+        revert: function () {
+            element.set({ 
+                css: { 
+                    backgroundColor: 'red', 
+                },
+            });
+        },
+
+        // 'ticker' and 'target' attribute values inherited from the clone's source Action object
+    });
+
+#### Kill functionality: (tbd)
+
+TODO: review and update kill functionality through the entire Scrawl-canvas system
 */
 import { constructors } from '../core/library.js';
-import { mergeOver, xt, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, defaultNonReturnFunction } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
@@ -51,11 +132,35 @@ __revert__ - a function that is triggered when a tween is running in reverse dir
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+
+/*
+## Packet management
+*/
+P.packetExclusions = pushUnique(P.packetExclusions, ['targets']);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, []);
+P.packetFunctions = pushUnique(P.packetFunctions, ['revert', 'action']);
+
+/*
+Overwrites finalizePacketOut function in mixin/base.js
+*/
+P.finalizePacketOut = function (copy, items) {
+
+	if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
+
+	return copy;
+};
+
+
+/*
+## Define getter, setter and deltaSetter functions
+*/
 let G = P.getters,
 	S = P.setters;
 
 /*
-TODO - documentation
+Argument must be a function, or a variable holding a reference to a function
 */
 S.revert = function (item) {
 
@@ -65,7 +170,7 @@ S.revert = function (item) {
 };
 
 /*
-TODO - documentation
+Internal attribute. Set true after the ticker moves past the instance's time value (and set false if the ticker is moving backwards)
 */
 S.triggered = function (item) {
 
@@ -189,15 +294,8 @@ const makeAction = function (items) {
 	return new Action(items);
 };
 
-/*
-Also store constructor in library - clone functionality expects to find it there
-*/
 constructors.Action = Action;
 
-
-/*
-TODO - documentation
-*/
 export {
 	makeAction,
 };

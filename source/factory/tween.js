@@ -2,9 +2,17 @@
 # Tween factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors, animationtickers, radian } from '../core/library.js';
-import { mergeOver, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
@@ -107,6 +115,92 @@ Hook functions that can be invoked at the end of each relevant operation
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+
+/*
+## Packet management
+*/
+P.packetExclusions = pushUnique(P.packetExclusions, ['definitions', 'targets']);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, []);
+P.packetFunctions = pushUnique(P.packetFunctions, ['commenceAction', 'completeAction', 'onRun', 'onHalt', 'onResume', 'onReverse', 'onSeekTo', 'onSeekFor', 'action']);
+
+/*
+Overwrites finalizePacketOut function in mixin/base.js
+*/
+P.finalizePacketOut = function (copy, items) {
+
+	if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
+
+	if (Array.isArray(this.definitions)) {
+
+		copy.definitions = this.definitions.map(d => {
+
+			let res = {};
+			res.attribute = d.attribute;
+			res.start = d.start;
+			res.end = d.end;
+
+			if (d.engine && d.engine.substring) res.engine = d.engine.substring;
+			else {
+
+				if (xt(d.engine) && d.engine !== null) {
+
+					let e = this.stringifyFunction(d.engine);
+
+					if (e) {
+
+						res.engine = e;
+						res.engineIsFunction = true;
+					}
+				}
+			}
+			return res;
+		});
+	}
+	return copy;
+};
+
+/*
+Overwrites postCloneAction function in mixin/base.js
+*/
+P.postCloneAction = function(clone, items) {
+
+	if (items.useNewTicker) {
+
+		let ticker = animationtickers[this.ticker];
+
+		if (xt(items.cycles)) clone.cycles = items.cycles;
+		else if (ticker) clone.cycles = ticker.cycles;
+		else clone.cycles = 1;
+
+		let cloneTicker = animationtickers[clone.ticker];
+		cloneTicker.cycles = clone.cycles;
+
+		if (xt(items.duration)) {
+
+			clone.duration = items.duration;
+			clone.calculateEffectiveDuration();
+
+			if (cloneTicker) cloneTicker.recalculateEffectiveDuration();
+		}
+	}
+
+	if (Array.isArray(clone.definitions)) {
+		
+		clone.definitions.forEach((def, index) => {
+
+			if (def.engineIsFunction) def.engine = this.definitions[index].engine;
+		});
+	}
+
+	return clone;
+};
+
+
+/*
+## Define getter, setter and deltaSetter functions
+*/
 let G = P.getters,
 	S = P.setters;
 

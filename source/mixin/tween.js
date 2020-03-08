@@ -4,7 +4,7 @@
 TODO - documentation
 */
 import { constructors, animationtickers } from '../core/library.js';
-import { generateUuid, mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
 
 export default function (P = {}) {
 
@@ -51,6 +51,15 @@ TODO - documentation
 		order: 1
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+/*
+## Packet management
+
+Packet management functionality found in factory/tween.js and factory/action.js
+- factory/ticker.js does not use this mixin
+*/
+
 
 /*
 ## Define getter, setter and deltaSetter functions
@@ -257,39 +266,6 @@ TODO - documentation
 		}, this);
 
 		return this;
-	};
-
-/*
-TODO - documentation
-
-Overwrites the clone function in mixin/base.js
-*/
-	P.clone = function (items = {}) {
-
-		let self = this,
-			regex = /^(local|dirty|current)/;
-
-		let copied = JSON.parse(JSON.stringify(this));
-		copied.name = (items.name) ? items.name : generateUuid();
-
-		Object.entries(this).forEach(([key, value]) => {
-
-			if (regex.test(key)) delete copied[key];
-			if (isa_fn(this[key])) copied[key] = self[key];
-		}, this);
-
-		if (items.useNewTicker) {
-
-			let ticker = animationtickers[this.ticker];
-			delete copied.ticker;
-			copied.cycles = (xt(items.cycles)) ? items.cycles : (ticker) ? ticker.cycles : 1;
-			if (xt(items.duration)) copied.duration = items.duration;
-		}
-
-		let clone = new constructors[this.type](copied);
-		clone.set(items);
-
-		return clone;
 	};
 
 /*

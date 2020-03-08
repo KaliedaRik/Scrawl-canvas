@@ -2,6 +2,14 @@
 # FontAttributes factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors } from '../core/library.js';
 import { mergeOver, xt } from '../core/utilities.js';
@@ -24,6 +32,10 @@ const FontAttributes = function (items = {}) {
 
 /*
 ## FontAttributes object prototype setup
+
+Note - constructor uses naming functionality, but doesn't actually store the FontAttribute instances in the library - instead they are referenced directly from each Phrase instance. The library.fontattribute Object and library.fontattributenames Array are permanently empty.
+
+FontAttribute instances get cloned as part of the Phrase stamp functionality (because of subsequent 'update' invocations on them). If we stored FA instances in the library we'd risk running out of memory, or slowing up code speed, as the cloned instances are pretty temporary and get thrown away whenever a new Phrase.set invocation (involving font attributes) happens.
 */
 let P = FontAttributes.prototype = Object.create(Object.prototype);
 P.type = 'FontAttributes';

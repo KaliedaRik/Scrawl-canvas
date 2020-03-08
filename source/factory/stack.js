@@ -2,6 +2,14 @@
 # Stack factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings } from '../core/utilities.js';

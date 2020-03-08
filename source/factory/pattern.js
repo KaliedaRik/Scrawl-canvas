@@ -2,9 +2,17 @@
 # Pattern factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors, cell } from '../core/library.js';
-import { mergeOver, isa_fn } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_fn } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
@@ -37,6 +45,17 @@ Apply mixins to prototype object
 */
 P = baseMix(P);
 P = assetConsumerMix(P);
+
+/*
+## Packet management
+*/
+P.packetExclusions = pushUnique(P.packetExclusions, []);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+// P.packetCoordinates = pushUnique(P.packetCoordinates, ['copyStart', 'copyDimensions']);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, ['asset']);
+P.packetFunctions = pushUnique(P.packetFunctions, []);
+
 
 /*
 ## Define default attributes
@@ -105,40 +124,40 @@ P.getData = function (entity, cell, isFill) {
 /*
 Replaces clone functionality from mixin/base.js
 */
-P.clone = function (items = {}) {
+// P.clone = function (items = {}) {
 
-	let self = this,
-		regex = /^(local|dirty|current)/,
-		copied;
+// 	let self = this,
+// 		regex = /^(local|dirty|current)/,
+// 		copied;
 
-	if (this.asset || this.source) {
+// 	if (this.asset || this.source) {
 
-		let tempAsset = this.asset,
-			tempSource = this.source;
+// 		let tempAsset = this.asset,
+// 			tempSource = this.source;
 
-		delete this.asset;
-		delete this.source;
+// 		delete this.asset;
+// 		delete this.source;
 
-		copied = JSON.parse(JSON.stringify(this));
+// 		copied = JSON.parse(JSON.stringify(this));
 
-		this.asset = tempAsset;
-		this.source = tempSource;
-	}
-	else copied = JSON.parse(JSON.stringify(this));
+// 		this.asset = tempAsset;
+// 		this.source = tempSource;
+// 	}
+// 	else copied = JSON.parse(JSON.stringify(this));
 
-	copied.name = (items.name) ? items.name : generateUuid();
+// 	copied.name = (items.name) ? items.name : generateUuid();
 
-	Object.entries(this).forEach(([key, value]) => {
+// 	Object.entries(this).forEach(([key, value]) => {
 
-		if (regex.test(key)) delete copied[key];
-		if (isa_fn(this[key])) copied[key] = self[key];
-	}, this);
+// 		if (regex.test(key)) delete copied[key];
+// 		if (isa_fn(this[key])) copied[key] = self[key];
+// 	}, this);
 
-	let clone = new Pattern(copied);
-	clone.set(items);
+// 	let clone = new Pattern(copied);
+// 	clone.set(items);
 
-	return clone;
-};
+// 	return clone;
+// };
 
 /*
 ## Exported factory function

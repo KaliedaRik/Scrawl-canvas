@@ -2,6 +2,14 @@
 # Phrase factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
@@ -185,12 +193,14 @@ TODO - documentation
 	boundingBoxColor: 'rgba(0,0,0,0.5)',
 	showBoundingBox: false,
 };
+P.defs = mergeOver(P.defs, defaultAttributes);
+
 
 /*
 ## Packet management
 
 */
-P.packetExclusions = pushUnique(P.packetExclusions, ['textPositions', 'textLines', 'textLineWidths', 'textLineWords', 'textGlyphs', 'textGlyphWidths']);
+P.packetExclusions = pushUnique(P.packetExclusions, ['textPositions', 'textLines', 'textLineWidths', 'textLineWords', 'textGlyphs', 'textGlyphWidths', 'fontAttributes']);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
 P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, []);
@@ -202,6 +212,7 @@ P.finalizePacketOut = function (copy, items) {
 	copy = mergeOver(copy, stateCopy);
 
 	let fontAttributesCopy = JSON.parse(this.fontAttributes.saveAsPacket(items))[3];
+	delete fontAttributesCopy.name;
 	copy = mergeOver(copy, fontAttributesCopy);
 
 	copy = this.handlePacketAnchor(copy, items);
@@ -209,8 +220,10 @@ P.finalizePacketOut = function (copy, items) {
 	return copy;
 };
 
-P.defs = mergeOver(P.defs, defaultAttributes);
 
+/*
+## Define getter, setter and deltaSetter functions
+*/
 let G = P.getters,
 	S = P.setters,
 	D = P.deltaSetters;
@@ -1119,23 +1132,6 @@ P.calculateGlyphPathPositions = function () {
 			pathPos = (pathPos > 0.5) ? pathPos - 1 : pathPos + 1;
 		}
 	}
-};
-
-
-/*
-TODO - documentation
-*/
-P.preCloneActions = function () {
-
-	this.fontAttributes.buildFont(this.scale);
-};
-
-P.postCloneActions = function (clone, items) {
-
-	clone.fontAttributes.set(this.fontAttributes);
-	clone.fontAttributes.set(items);
-	clone.fontAttributes.buildFont(clone.scale);
-	clone.glyphStyles = JSON.parse(JSON.stringify(this.glyphStyles));
 };
 
 /*

@@ -84,15 +84,7 @@ TODO - documentation
 
 	P.processEntityPacketOut = function (key, value, includes) {
 
-		let result = true;
-
-		switch (key) {
-
-			default :
-
-				result = this.processFactoryPacketOut(key, value, includes);
-		}
-		return result;
+		return this.processFactoryPacketOut(key, value, includes);
 	};
 
 	P.processFactoryPacketOut = function (key, value, includes) {
@@ -113,6 +105,22 @@ TODO - documentation
 
 		return copy;
 	};
+
+/*
+Overwrites postCloneAction function in mixin/base.js
+*/
+	P.postCloneAction = function(clone, items) {
+
+		if (this.onEnter) clone.onEnter = this.onEnter;
+		if (this.onLeave) clone.onLeave = this.onLeave;
+		if (this.onDown) clone.onDown = this.onDown;
+		if (this.onUp) clone.onUp = this.onUp;
+
+		if (items.sharedState) clone.state = this.state;
+
+		return clone;
+	};
+
 
 /*
 ## Define getter, setter and deltaSetter functions
@@ -286,118 +294,6 @@ TODO - documentation
 	};
 
 	P.midInitActions = defaultNonReturnFunction;
-	P.preCloneActions = defaultNonReturnFunction;
-	P.postCloneActions = defaultNonReturnFunction;
-
-/*
-TODO - documentation
-
-Overwrites the clone function in mixin/base.js
-*/
-	P.clone = function(items = {}) {
-
-		let regex = /^(local|dirty|current)/,
-			stateDefs = this.state.defs,
-			copied, myCurrentState, myCloneState;
-
-		let updateCopiedState = (copy, defs, item) => {
-
-			let temp = copy[item];
-			copy[item] = defs[item];
-
-			if (temp) {
-
-				if (temp.substring) copy[item] = temp;
-				else if (temp.name) copy[item] = temp.name;
-			}
-		};
-
-		this.preCloneActions();
-
-		let grp = this.group;
-		this.group = grp.name;
-		
-		let host = this.currentHost;
-		delete this.currentHost;
-
-		myCurrentState = this.state;
-		if (items.sharedState) myCloneState = this.state;
-		else myCloneState = mergeOver({}, this.state);
-		delete this.state;
-
-		let tempAsset = this.asset, 
-			tempSource = this.source, 
-			tempPivot = this.pivot, 
-			tempStartControlPivot = this.startControlPivot, 
-			tempControlPivot = this.controlPivot, 
-			tempEndControlPivot = this.endControlPivot, 
-			tempEndPivot = this.endPivot, 
-			tempMimic = this.mimic, 
-			tempPath = this.path;
-
-		if (tempAsset && tempAsset.name) this.asset = tempAsset.name;
-		if (tempPivot && tempPivot.name) this.pivot = tempPivot.name;
-		if (tempStartControlPivot && tempStartControlPivot.name) this.startControlPivot = tempStartControlPivot.name;
-		if (tempControlPivot && tempControlPivot.name) this.controlPivot = tempControlPivot.name;
-		if (tempEndControlPivot && tempEndControlPivot.name) this.endControlPivot = tempEndControlPivot.name;
-		if (tempEndPivot && tempEndPivot.name) this.endPivot = tempEndPivot.name;
-		if (tempMimic && tempMimic.name) this.mimic = tempMimic.name;
-		if (tempPath && tempPath.name) this.path = tempPath.name;
-
-		delete this.source;
-
-		let tempPathObject = this.pathObject;
-		delete this.pathObject;
-
-		copied = JSON.parse(JSON.stringify(this));
-
-		if (tempAsset) this.asset = tempAsset;
-		if (tempSource) this.source = tempSource;
-		if (tempPivot) this.pivot = tempPivot;
-		if (tempStartControlPivot) this.startControlPivot = tempStartControlPivot;
-		if (tempControlPivot) this.controlPivot = tempControlPivot;
-		if (tempEndControlPivot) this.endControlPivot = tempEndControlPivot;
-		if (tempEndPivot) this.endPivot = tempEndPivot;
-		if (tempMimic) this.mimic = tempMimic;
-		if (tempPath) this.path = tempPath;
-
-		this.pathObject = tempPathObject;
-
-		copied.name = (items.name) ? items.name : generateUuid();
-
-		if (this.anchor && this.anchor.clickAction) copied.anchor.clickAction = this.anchor.clickAction;
-		if (items.anchor) copied.anchor = mergeOver(copied.anchor, items.anchor);
-
-		this.group = grp;
-		this.currentHost = host;
-
-		this.state = myCurrentState;
-		if (!items.sharedState) {
-			
-			updateCopiedState(myCloneState, stateDefs, 'fillStyle');
-			updateCopiedState(myCloneState, stateDefs, 'strokeStyle');
-			updateCopiedState(myCloneState, stateDefs, 'shadowColor');
-		}
-
-		Object.entries(this).forEach(([key, value]) => {
-
-			if (regex.test(key)) delete copied[key];
-			if (isa_fn(this[key])) copied[key] = this[key];
-		}, this);
-
-		if (this.group) copied.group = this.group.name;
-
-		let clone = new library.constructors[this.type](copied);
-
-		if (items.sharedState) clone.state = myCloneState;
-		else clone.set(myCloneState);
-
-		clone.set(items);
-
-		this.postCloneActions(clone, items);
-
-		return clone;
-	};
 
 /*
 TODO - documentation

@@ -6,6 +6,14 @@ The factory generates wrapper Objects around &lt;video> elements which can eithe
 Assets are used (consumed) by Picture entitys and Pattern styles.
 
 Additional functionality is defined in the mixin/asset.js mixin.
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors } from '../core/library.js';
 import { mergeOver, generateUuid, xt } from '../core/utilities.js';

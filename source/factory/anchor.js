@@ -13,7 +13,65 @@ Note that while anchors are primarily for generating URL links to (external site
 
 + We can suppress the click action (via 'preventDefault') and instead action code supplied by a third party library - though there's usually better ways to achieve this via other Scrawl-canvas functionalities, for instance by using Scrawl-canvas enhanced event listeners or artefact functions (onEnter, onLeave, onDown, onUp).
 
-Details of how to add an anchor to a Scrawl-canvas artefact (including DOM elements in a Scrawl-canvas stack) can be found in the anchor mixin file.
+#### Instantiate objects from the factory: NO
+
+NOTE - generating an anchor will have an impact on the DOM document code, as an (off-viewport) &lt;a> element will be added to it.
+
+The __makeAnchor__ function is not exposed to the 'scrawl' object, thus objects can only be created indirectly.
+
+To create an anchor, include an anchor definition object in any artefact object's factory argument:
+
+    // get a handle on the canvas where the block/link will be defined 
+    // (in this case a canvas with id="mycanvas")
+    let canvas = scrawl.library.artefact.mycanvas;
+    canvas.setAsCurrentCanvas();
+
+    // Define a block entity
+    scrawl.makeBlock({
+
+    	name: 'demo-anchor-block',
+
+    	width: '40%',
+    	height: '40%',
+
+    	startX: '25%',
+    	startY: '25%',
+
+    	// Define the anchor object's attributes
+    	anchor: {
+    		name: 'wikipedia-water-link',
+    		href: 'https://en.wikipedia.org/wiki/Water',
+    		description: 'Link to the Wikipedia article on water (opens in new tab)',
+    	},
+
+        // Add an action to take when user clicks on the block entity
+    	onUp: this.clickAnchor,
+    });
+
+    // Add a listener to propagate DOM-detected click events on our canvas 
+    // back into the Scrawl-canvas event system
+    let mylinks = () => canvas.cascadeEventAction('up');
+    scrawl.addListener('up', mylinks, canvas.domElement);
+
+The factory uses all attributes and functions defined by the 'base' mixin, alongside those defined in this file.
+
+#### Library storage: YES, BUT ...
+
++ scrawl.library.anchor
+
+Anchor objects have a 1-to-1 relationship with the artefacts they are created with. The anchor object is always accessible via the artefact object (at __myartefact.anchor__). 
+
+Anchor functionality (setting its attributes, invoking its functions) can be performed on the artefact object, which maps anchor functionality onto itself.
+
+#### Clone functionality: YES, BUT ...
+
+An anchor object (and its associated DOM element) will be cloned when its parent artefact is cloned.
+
+#### Kill functionality: (tbd)
+
+Currently using a 'demolish' function
+
+TODO: review and update kill functionality through the entire Scrawl-canvas system
 */
 import { constructors } from '../core/library.js';
 import { scrawlNavigationHold } from '../core/document.js';
@@ -126,6 +184,35 @@ let S = P.setters;
 
 /*
 While the Scrawl-canvas anchor object keeps copies of all of its &lt;a> DOM element's attributes locally, they also need to be updated on that element. Most of the setter functions manage this using the anchor.update() helper function.
+
+The artefact with which an anchor object is associated maps these attributes to itself as follows:
+
+	anchor.description     -> artefact.anchorDescription
+	anchor.type            -> artefact.anchorType
+	anchor.target          -> artefact.anchorTarget
+	anchor.rel             -> artefact.anchorRel
+	anchor.referrerPolicy  -> artefact.anchorReferrerPolicy
+	anchor.ping            -> artefact.anchorPing
+	anchor.hreflang        -> artefact.anchorHreflang
+    anchor.href            -> artefact.anchorHref
+    anchor.download        -> artefact.anchorDownload
+
+One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an 'anchor' attribute:
+
+    artefact.set({
+    
+        anchor: {
+            description: 'value',
+            type: 'value',
+            target: 'value',
+            rel: 'value',
+            referrerPolicy: 'value',
+            ping: 'value',
+            hreflang: 'value',
+            href: 'value',
+            download: 'value',
+        },
+    });
 */
 S.download = function (item) {
 
@@ -179,7 +266,7 @@ S.anchorType = function (item) {
 These last setters do not follow previous behaviour because Scrawl-canvas anchor objects save the values for each under a different attribute key, compared to the DOM element's attribute key:
 
 + anchor.description -> a.textContent - this is the text between the &lt;a> element's opening and closing tags
-+ anchor.clickAction -> a.onclick - the function that returns the onclick string
++ anchor.clickAction -> a.onclick - a function that returns an string which is added to the DOM element's 'onclick' attribute
 */
 S.description = function (item) {
 
@@ -202,11 +289,13 @@ S.clickAction = function (item) {
 */
 
 /*
-The __build()__ function builds the &lt;a> element and adds it to the DOM
+The __build__ function builds the &lt;a> element and adds it to the DOM
 
 All Scrawl-canvas generated anchor links are kept in a hidden &lt;nav> element (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the body element when it first runs. 
 
 This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)
+
+TODO: consider whether the top of the document is the best place to store hidden anchor elements. It may be better to store them in a nextChild element following the canvas/stack element where the artefact is being used?
 */
 P.build = function () {
 
@@ -235,7 +324,7 @@ P.build = function () {
 };
 
 /*
-TODO - documentation
+Internal function - update the DOM element attribute
 */
 P.update = function (item) {
 
@@ -275,15 +364,8 @@ const makeAnchor = function (items) {
 	return new Anchor(items);
 };
 
-/*
-Also store constructor in library - clone functionality expects to find it there
-*/
 constructors.Anchor = Anchor;
 
-
-/*
-TODO - documentation
-*/
 export {
 	makeAnchor,
 };

@@ -2,6 +2,14 @@
 # State factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors, entity, styles } from '../core/library.js';
 import { isa_obj, xt, xtGet } from '../core/utilities.js';
@@ -191,6 +199,17 @@ P.processPacketOut = function (key, value, includes) {
         	if (includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
 	}
 	return result;
+};
+
+P.finalizePacketOut = function (copy, items) {
+
+	let fill = copy.fillStyle,
+		stroke = copy.strokeStyle;
+
+	if (fill && !fill.substring) copy.fillStyle = fill.name;
+	if (stroke && !stroke.substring) copy.strokeStyle = stroke.name;
+
+    return copy;
 };
 
 /*

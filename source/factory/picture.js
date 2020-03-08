@@ -2,6 +2,14 @@
 # Picture factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors, asset, artefact } from '../core/library.js';
 
@@ -33,8 +41,9 @@ const Picture = function (items = {}) {
 	this.copyArray = [];
 	this.pasteArray = [];
 
+	// this.initAssetAttributes();
+
 	this.entityInit(items);
-	this.initAssetAttributes();
 
 	if (!items.copyStart) {
 

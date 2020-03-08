@@ -2,6 +2,14 @@
 # Quaternion factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { radian, constructors } from '../core/library.js';
 import { isa_quaternion, isa_vector, isa_number, xt, xto } from '../core/utilities.js';

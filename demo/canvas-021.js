@@ -6,6 +6,9 @@ let canvas = scrawl.library.artefact.mycanvas;
 
 
 // Import the spritesheet asset (image file, and its associated JSON manifest file)
+
+// The manifest file should be a .json text file with the same name as the image file, in the same folder as the image file (in this case 'img/cat-sprite.png' and 'img/cat-sprite.json')
+
 // Cat spritesheet imnage file taken from https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/
 scrawl.importSprite('img/cat-sprite.png');
 
@@ -29,7 +32,6 @@ let piccy = scrawl.makePicture({
 
 	spriteTrack: 'walk',
 	spriteFrameDuration: 100,
-
 });
 
 // Start the sprite animation
@@ -52,7 +54,7 @@ piccy.clone({
 }).playSprite(60);
 
 
-// Import a 'spritesheet' asset which in fact comprises a number of different image files bound together by a manifest
+// Import a 'spritesheet' asset which in fact comprises a number of different image files bound together by a manifest. In this case we don't have a separate manifest.json file, instead we define it as part of the import statement
 scrawl.importSprite({
 
 	name: 'dinosaur',
@@ -139,3 +141,5 @@ scrawl.makeRender({
 	target: canvas,
 	afterShow: report,
 });
+
+console.log(scrawl.library);

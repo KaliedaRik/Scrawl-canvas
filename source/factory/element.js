@@ -2,9 +2,17 @@
 # Element factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { group, element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
-import { generateUuid, pushUnique, removeItem, xt, isa_obj, isa_boolean } from '../core/utilities.js';
+import { generateUuid, pushUnique, removeItem, xt, isa_obj, isa_dom, isa_boolean } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeCanvas } from './canvas.js';
@@ -84,7 +92,7 @@ When we update the DOM attribute __element.textContent__, it deletes any positio
 */
 S.text = function (item) {
 
-	if (this.domElement) {
+	if (isa_dom(this.domElement)) {
 
 		let el = this.domElement,
 			kids = el.querySelectorAll('[data-corner-div="sc"]');

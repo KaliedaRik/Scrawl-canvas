@@ -280,4 +280,4 @@ let changeDirection = (e) => {
 
 scrawl.addNativeListener('click', changeDirection, stack.domElement);
 
-console.log(scrawl.library)
+console.log(scrawl.library);

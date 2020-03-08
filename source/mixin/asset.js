@@ -8,6 +8,14 @@ Assets are used (consumed) by Picture entitys and Pattern styles.
 This mixin adds functionality common to all three factories to them as part of their initialization.
 
 The mixin is also used by the __cell__ factory, as &lt;canvas> elements can be used by Picture entitys and Pattern styles as their image sources.
+
+__TO BE AWARE:__ 
+
++ Assets can be loaded into scrawl using either a dedicated 'scrawl.import' function - __importImage__, __importDomImage__, __importDomVideo__, __importVideo__, __importMediaStream__, __importSprite__ - or 'scrawl.create' function () - __createImageFromCell__, __createImageFromGroup__, __createImageFromEntity__.
+
++ Assets will also be created when Picture entitys or Pattern styles are defined using a 'scrawl.make' function (__makePicture__, __makePattern__), or updated with the __.set()__ function, where the _imageSource_, _videoSource_ or _spriteSource_ key in the argument object has been set to a valid URL path string.
+
++ __Loading assets takes time!__ Performing a single render operation after defining or updating a Picture entity or Pattern style will almost certainly fail to render the expected image/sprite/video in the canvas. The load functionality is asynchronous (using Promises). To display the resulting images in the canvas, it needs to be running an animation object (for instance, __scrawl.makeRender__) so that updates appear as soon as they have loaded, as part of the animation's display cycle functionality.
 */
 import { mergeOver, pushUnique, defaultNonReturnFunction } from '../core/utilities.js';
 

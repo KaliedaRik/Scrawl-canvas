@@ -291,7 +291,7 @@ __Animation speed__ - Scrawl-canvas assumes that an artefact will be "ready for 
 	P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'mimicked', 'pivoted']);
 	P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
 	P.packetCoordinates = pushUnique(P.packetCoordinates, ['start', 'handle', 'offset']);
-    P.packetObjects = pushUnique(P.packetObjects, ['group']);
+    P.packetObjects = pushUnique(P.packetObjects, ['group', 'pivot', 'path', 'mimic']);
     P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 	P.processPacketOut = function (key, value, includes) {

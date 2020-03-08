@@ -2,6 +2,14 @@
 # Filter factory
 
 TODO - documentation
+
+#### To instantiate objects from the factory
+
+#### Library storage
+
+#### Clone functionality
+
+#### Kill functionality
 */
 import { constructors } from '../core/library.js';
 import { mergeOver } from '../core/utilities.js';

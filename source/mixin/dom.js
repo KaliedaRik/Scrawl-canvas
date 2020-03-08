@@ -4,7 +4,7 @@
 TODO - documentation
 */
 import { constructors, artefact, group } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, isa_obj, isa_fn, isa_quaternion, xt, addStrings, xta } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, removeItem, isa_obj, isa_fn, isa_dom, isa_quaternion, xt, addStrings, xta } from '../core/utilities.js';
 import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
 import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 
@@ -85,6 +85,62 @@ TODO - documentation
 	};
 	P.defs = mergeOver(P.defs, defaultAttributes);
 
+
+/*
+## Packet management
+*/
+	P.packetExclusions = pushUnique(P.packetExclusions, ['domElement', 'pathCorners', 'rotation']);
+	P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+	P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+    P.packetObjects = pushUnique(P.packetObjects, []);
+    P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
+
+	P.processDOMPacketOut = function (key, value, includes) {
+
+		return this.processFactoryPacketOut(key, value, includes);
+	};
+
+	P.processFactoryPacketOut = function (key, value, includes) {
+
+		let result = true;
+
+		if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+
+		return result;
+	};
+
+	P.finalizePacketOut = function (copy, items) {
+
+		if (isa_dom(this.domElement)) {
+
+			let el = this.domElement;
+
+			let mynode = el.cloneNode(true);
+
+			let kids = mynode.querySelectorAll('[data-corner-div="sc"]');
+			kids.forEach(kid => mynode.removeChild(kid));
+
+			copy.outerHTML = mynode.outerHTML;
+			copy.host = el.parentElement.id;
+		}
+
+		copy = this.handlePacketAnchor(copy, items);
+
+		return copy;
+	};
+
+/*
+Overwrites postCloneAction function in mixin/base.js
+*/
+	P.postCloneAction = function(clone, items) {
+
+		if (this.onEnter) clone.onEnter = this.onEnter;
+		if (this.onLeave) clone.onLeave = this.onLeave;
+		if (this.onDown) clone.onDown = this.onDown;
+		if (this.onUp) clone.onUp = this.onUp;
+
+		return clone;
+	};
 
 /*
 ## Define getter, setter and deltaSetter functions
@@ -238,76 +294,6 @@ TODO - documentation
 		}
 
 		return angle;
-	};
-
-/*
-Overwrites the clone function in mixin/base.js
-*/
-	P.clone = function (items = {}) {
-
-		let self = this,
-			regex = /^(local|dirty|current)/;
-
-		let host = this.currentHost || artefact[this.host];
-		this.currentHost = null;
-
-		let grp = this.group;
-		this.group = grp.name;
-
-		let corners = this.pathCorners;
-		this.pathCorners = null;
-
-		let points = this.collisionPoints;
-		this.collisionPoints = null;
-
-		let tempPivot = this.pivot, 
-			tempMimic = this.mimic, 
-			tempPath = this.path;
-
-		if (tempPivot && tempPivot.name) this.pivot = tempPivot.name;
-		if (tempMimic && tempMimic.name) this.mimic = tempMimic.name;
-		if (tempPath && tempPath.name) this.path = tempPath.name;
-
-		let copied = JSON.parse(JSON.stringify(this));
-
-		if (tempPivot) this.pivot = tempPivot;
-		if (tempMimic) this.mimic = tempMimic;
-		if (tempPath) this.path = tempPath;
-
-		copied.name = (items.name) ? items.name : generateUuid();
-
-		if (this.anchor && this.anchor.clickAction) copied.anchor.clickAction = this.anchor.clickAction;
-		if (items.anchor) copied.anchor = mergeOver(copied.anchor, items.anchor);
-
-		this.currentHost = host;
-		this.group = grp;
-		this.pathCorners = corners;
-		this.collisionPoints = points;
-
-		Object.entries(this).forEach(([key, value]) => {
-
-			if (regex.test(key)) delete copied[key];
-			if (isa_fn(this[key])) copied[key] = self[key];
-		}, this);
-
-		if (this.domElement) {
-
-			let newbie = copied.domElement = this.domElement.cloneNode(true);
-			newbie.id = copied.name;
-
-			let kids = newbie.querySelectorAll('[data-corner-div="sc"]');
-
-			kids.forEach(kid => newbie.removeChild(kid));
-
-			if (host && host.domElement) host.domElement.appendChild(copied.domElement);
-		}
-
-		let clone = new constructors[this.type](copied);
-		clone.set(items);
-
-		if (grp) grp.addArtefacts(clone);
-
-		return clone;
 	};
 
 /*
@@ -498,8 +484,11 @@ TODO - documentation
 
 					pathCorners.forEach(point => {
 
-						client = point.getClientRects();
-						cornerPush(client);
+						if (isa_dom(point)) {
+
+							client = point.getClientRects();
+							cornerPush(client);
+						}
 					});
 					return results;
 			}
