@@ -1,243 +1,224 @@
-/*
-# Cascade mixin
 
-TODO - documentation
-*/
+// # Cascade mixin
+
+// TODO - documentation
 import { group } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xtGet } from '../core/utilities.js';
 
 export default function (P = {}) {
 
-/*
-## Define attributes
 
-All factories using the cascade mixin will add these to their prototype objects
-*/
-	let defaultAttributes = {
+// ## Define attributes
 
-/*
-The __groups__ attribute holds the String names of all the Group objects associated with the controller object.
-*/
-		groups: null,
+// All factories using the cascade mixin will add these to their prototype objects
+    let defaultAttributes = {
 
-/*
-The __groupBuckets__ attribute holds a reference to each Group object, in a set of arrays grouping Groups according to their order values.
-*/
-		groupBuckets: null,
 
-/*
-The __batchResort__ flag determines whether the groups will be sorted by their order value before instructions get passed to each in sequence. Best to leave this flag alone to do its job.
-*/
-		batchResort: true,
-	};
-	P.defs = mergeOver(P.defs, defaultAttributes);
+// The __groups__ attribute holds the String names of all the Group objects associated with the controller object.
+        groups: null,
 
-/*
-## Define getter, setter and deltaSetter functions
-*/
-	let G = P.getters,
-		S = P.setters;
 
-/*
-TODO - documentation
-*/
-	G.groups = function () {
+// The __groupBuckets__ attribute holds a reference to each Group object, in a set of arrays grouping Groups according to their order values.
+        groupBuckets: null,
 
-		return [].concat(this.groups);
-	};
 
-	S.groups = function (item) {
+// The __batchResort__ flag determines whether the groups will be sorted by their order value before instructions get passed to each in sequence. Best to leave this flag alone to do its job.
+        batchResort: true,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
 
-		this.groups = [];
-		this.addGroups(item);
-	};
 
-/*
-## Define functions to be added to the factory prototype
-*/
+// ## Define getter, setter and deltaSetter functions
+    let G = P.getters,
+        S = P.setters;
 
-/*
-TODO - documentation
-*/
-	P.sortGroups = function (force = false) {
 
-		if (this.batchResort) {
+// TODO - documentation
+    G.groups = function () {
 
-			this.batchResort = false;
+        return [].concat(this.groups);
+    };
 
-			let floor = Math.floor,
-				groupnames = this.groups,
-				buckets = [];
+    S.groups = function (item) {
 
-			groupnames.forEach(name => {
+        this.groups = [];
+        this.addGroups(item);
+    };
 
-				let mygroup = group[name],
-					order = (mygroup) ? floor(mygroup.order) : 0;
 
-				if (!buckets[order]) buckets[order] = [];
+// ## Define functions to be added to the factory prototype
 
-				buckets[order].push(mygroup);
-			});
 
-			this.groupBuckets = buckets.reduce((a, v) => a.concat(v), []);
-		}
-	};
+// TODO - documentation
+    P.sortGroups = function (force = false) {
 
-/*
-TODO - documentation
-*/
-	P.initializeCascade = function () {
+        if (this.batchResort) {
 
-		this.groups = [];
-		this.groupBuckets = [];
-	};
+            this.batchResort = false;
 
-/*
-Groups should be added to, and removed from, the controller object using the __addGroups__ and __removeGroups__ functions. The argument can be one or more group object's name attribute, or the group object(s) itself.
-*/
-	P.addGroups = function (...args) {
+            let floor = Math.floor,
+                groupnames = this.groups,
+                buckets = [];
 
-		args.forEach( item => {
+            groupnames.forEach(name => {
 
-			if (item && item.substring) pushUnique(this.groups, item);
-			else if (group[item]) pushUnique(this.groups, item.name);
+                let mygroup = group[name],
+                    order = (mygroup) ? floor(mygroup.order) : 0;
 
-		}, this);
+                if (!buckets[order]) buckets[order] = [];
 
-		this.batchResort = true;
-		return this;
-	};
+                buckets[order].push(mygroup);
+            });
 
-	P.removeGroups = function (...args) {
+            this.groupBuckets = buckets.reduce((a, v) => a.concat(v), []);
+        }
+    };
 
-		args.forEach( item => {
 
-			if (item && item.substring) removeItem(this.groups, item);
-			else if (group[item]) removeItem(this.groups, item.name);
+// TODO - documentation
+    P.initializeCascade = function () {
 
-		}, this);
+        this.groups = [];
+        this.groupBuckets = [];
+    };
 
-		this.batchResort = true;
-		return this;
-	};
 
-/*
-DRY function to handle a number of actions.
-*/
-	P.cascadeAction = function (items, action) {
+// Groups should be added to, and removed from, the controller object using the __addGroups__ and __removeGroups__ functions. The argument can be one or more group object's name attribute, or the group object(s) itself.
+    P.addGroups = function (...args) {
 
-		this.groups.forEach( groupname => {
+        args.forEach( item => {
 
-			let grp = group[groupname];
+            if (item && item.substring) pushUnique(this.groups, item);
+            else if (group[item]) pushUnique(this.groups, item.name);
 
-			if (grp) grp[action](items);
+        }, this);
 
-		}, this);
+        this.batchResort = true;
+        return this;
+    };
 
-		return this;
-	};
+    P.removeGroups = function (...args) {
 
-/*
-Update all artefact objects in all the controller object's groups using the __updateArtefacts__ function. The supplied argument will be passed on to each artefact's _setDelta_ function.
-*/
-	P.updateArtefacts = function (items) {
+        args.forEach( item => {
 
-		this.cascadeAction(items, 'updateArtefacts');
-		return this;
-	};
+            if (item && item.substring) removeItem(this.groups, item);
+            else if (group[item]) removeItem(this.groups, item.name);
 
-/*
-Set all artefact objects in all the controller object's groups using the __setArtefacts__ function. The supplied argument will be passed on to each artefact's _set_ functions
-*/
-	P.setArtefacts = function (items) {
+        }, this);
 
-		this.cascadeAction(items, 'setArtefacts');
-		return this;
-	};
+        this.batchResort = true;
+        return this;
+    };
 
-/*
-TODO - documentation
-*/
-	P.addArtefactClasses = function (items) {
 
-		this.cascadeAction(items, 'addArtefactClasses');
-		return this;
-	};
+// DRY function to handle a number of actions.
+    P.cascadeAction = function (items, action) {
 
-	P.removeArtefactClasses = function (items) {
+        this.groups.forEach( groupname => {
 
-		this.cascadeAction(items, 'removeArtefactClasses');
-		return this;
-	};
+            let grp = group[groupname];
 
-/*
-TODO - documentation
-*/
-	P.updateByDelta = function () {
+            if (grp) grp[action](items);
 
-		this.cascadeAction(false, 'updateByDelta');
-		return this;
-	};
+        }, this);
 
-	P.reverseByDelta = function () {
+        return this;
+    };
 
-		this.cascadeAction(false, 'reverseByDelta');
-		return this;
-	};
 
-/*
-The __getArtefactAt__ function checks to see if any of the controller object's groups' artefacts are located at the supplied coordinates in the argument object. The first artefact to report back as being at that coordinate will be returned by the function; where no artefacts are present at that coordinate the function returns false. The artefact with the highest order attribute value will be returned first. This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
-*/
-	P.getArtefactAt = function (items) {
+// Update all artefact objects in all the controller object's groups using the __updateArtefacts__ function. The supplied argument will be passed on to each artefact's _setDelta_ function.
+    P.updateArtefacts = function (items) {
 
-		items = xtGet(items, this.here, false);
+        this.cascadeAction(items, 'updateArtefacts');
+        return this;
+    };
 
-		if (items) {
 
-			let grp, result;
+// Set all artefact objects in all the controller object's groups using the __setArtefacts__ function. The supplied argument will be passed on to each artefact's _set_ functions
+    P.setArtefacts = function (items) {
 
-			for (let i = this.groups.length - 1; i >= 0; i--) {
+        this.cascadeAction(items, 'setArtefacts');
+        return this;
+    };
 
-				grp = group[this.groups[i]];
+// TODO - documentation
+    P.addArtefactClasses = function (items) {
 
-				if (grp) {
+        this.cascadeAction(items, 'addArtefactClasses');
+        return this;
+    };
 
-					result = grp.getArtefactAt(items);
+    P.removeArtefactClasses = function (items) {
 
-					if (result) return result;
-				}
-			}
-		}
-		return false;
-	};
+        this.cascadeAction(items, 'removeArtefactClasses');
+        return this;
+    };
 
-/*
- The __getAllArtefactsAt__ function returns all of the controller object's groups' artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first. The function will always return an array of artefact objects.
-*/
-	P.getAllArtefactsAt = function (items) {
+// TODO - documentation
+    P.updateByDelta = function () {
 
-		items = xtGet(items, this.here, false);
+        this.cascadeAction(false, 'updateByDelta');
+        return this;
+    };
 
-		if (items) {
+    P.reverseByDelta = function () {
 
-			let grp, result,
-				results = [];
+        this.cascadeAction(false, 'reverseByDelta');
+        return this;
+    };
 
-			for (let i = this.groups.length - 1; i >= 0; i--) {
 
-				grp = group[this.groups[i]];
+// The __getArtefactAt__ function checks to see if any of the controller object's groups' artefacts are located at the supplied coordinates in the argument object. The first artefact to report back as being at that coordinate will be returned by the function; where no artefacts are present at that coordinate the function returns false. The artefact with the highest order attribute value will be returned first. This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
+    P.getArtefactAt = function (items) {
 
-				if (grp) {
+        items = xtGet(items, this.here, false);
 
-					result = grp.getAllArtefactsAt(items);
+        if (items) {
 
-					if(result) results = results.concat(result);
-				}
-			}
-			return results;
-		}
-		return [];
-	};
+            let grp, result;
 
-	return P;
+            for (let i = this.groups.length - 1; i >= 0; i--) {
+
+                grp = group[this.groups[i]];
+
+                if (grp) {
+
+                    result = grp.getArtefactAt(items);
+
+                    if (result) return result;
+                }
+            }
+        }
+        return false;
+    };
+
+
+ // The __getAllArtefactsAt__ function returns all of the controller object's groups' artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first. The function will always return an array of artefact objects.
+    P.getAllArtefactsAt = function (items) {
+
+        items = xtGet(items, this.here, false);
+
+        if (items) {
+
+            let grp, result,
+                results = [];
+
+            for (let i = this.groups.length - 1; i >= 0; i--) {
+
+                grp = group[this.groups[i]];
+
+                if (grp) {
+
+                    result = grp.getAllArtefactsAt(items);
+
+                    if(result) results = results.concat(result);
+                }
+            }
+            return results;
+        }
+        return [];
+    };
+
+// Return the prototype
+    return P;
 };

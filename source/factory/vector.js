@@ -1,339 +1,311 @@
-/*
-# Vector factory
 
-TODO - documentation
+// # Vector factory
 
-#### To instantiate objects from the factory
+// TODO - documentation
 
-#### Library storage
+// #### To instantiate objects from the factory
 
-#### Clone functionality
+// #### Library storage
 
-#### Kill functionality
-*/
+// #### Clone functionality
+
+// #### Kill functionality
 import { constructors } from '../core/library.js';
 import { xt, xta, isa_obj, isa_number } from '../core/utilities.js';
 
-/*
-## Vector constructor
-*/
+
+// ## Vector constructor
 const Vector = function (x, y) {
 
-	this.x = 0;
-	this.y = 0;
-	this.z = 0;
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
 
-	if (xt(x)) this.set(x, y);
+    if (xt(x)) this.set(x, y);
 
-	return this;
+    return this;
 };
 
-/*
-## Vector object prototype setup
-*/
+
+// ## Vector object prototype setup
 let P = Vector.prototype = Object.create(Object.prototype);
 
 P.type = 'Vector';
 
-/*
-## Define prototype functions
-*/
+
+// ## Define prototype functions
 
 
-/*
-TODO - documentation
-*/
+
+// TODO - documentation
 P.getXYCoordinate = function () {
 
-	return [this.x, this.y];
+    return [this.x, this.y];
 };
 
 P.getXYZCoordinate = function () {
 
-	return [this.x, this.y, this.z];
+    return [this.x, this.y, this.z];
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.zero = function () {
 
-	this.x = 0;
-	this.y = 0;
-	this.z = 0;
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
 
-	return this;
+    return this;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.setX = function (x) {
 
-	if (!xt(x)) throw new Error(`${this.name} Vector error - setX() arguments error: ${x}`);
+    if (!xt(x)) throw new Error(`${this.name} Vector error - setX() arguments error: ${x}`);
 
-	this.x = x;
+    this.x = x;
 
-	return this;
+    return this;
 };
 
 P.setY = function (y) {
 
-	if (!xt(y)) throw new Error(`${this.name} Vector error - setY() arguments error: ${y}`);
+    if (!xt(y)) throw new Error(`${this.name} Vector error - setY() arguments error: ${y}`);
 
-	this.y = y;
+    this.y = y;
 
-	return this;
+    return this;
 };
 
 P.setZ = function (z) {
 
-	if (!xt(z)) throw new Error(`${this.name} Vector error - setZ() arguments error: ${z}`);
-	
-	this.z = z;
+    if (!xt(z)) throw new Error(`${this.name} Vector error - setZ() arguments error: ${z}`);
+    
+    this.z = z;
 
-	return this;
+    return this;
 };
 
 P.setXY = function (x, y) {
 
-	if (!xta(x, y)) throw new Error(`${this.name} Vector error - setXY() arguments error: ${x}, ${y}`);
-	
-	this.x = x;
-	this.y = y;
+    if (!xta(x, y)) throw new Error(`${this.name} Vector error - setXY() arguments error: ${x}, ${y}`);
+    
+    this.x = x;
+    this.y = y;
 
-	return this;
+    return this;
 };
 
 P.set = function (x, y, z) {
 
-	if (isa_obj(x)) return this.setFromVector(x);
+    if (isa_obj(x)) return this.setFromVector(x);
 
-	if (Array.isArray(x)) return this.setFromArray(x);
+    if (Array.isArray(x)) return this.setFromArray(x);
 
-	if (xta(x, y)) return this.setFromArray([x, y, z]);
+    if (xta(x, y)) return this.setFromArray([x, y, z]);
 
-	return this;
+    return this;
 };
 
 P.setFromArray = function (args) {
 
-	if (!Array.isArray(args)) throw new Error(`${this.name} Vector error - setFromArray() arguments error: ${args}`);
+    if (!Array.isArray(args)) throw new Error(`${this.name} Vector error - setFromArray() arguments error: ${args}`);
 
-	let [x, y, z] = args;
-	
-	if (isa_number(x)) this.x = x;
-	if (isa_number(y)) this.y = y;
-	if (isa_number(z)) this.z = z;
+    let [x, y, z] = args;
+    
+    if (isa_number(x)) this.x = x;
+    if (isa_number(y)) this.y = y;
+    if (isa_number(z)) this.z = z;
 
-	return this;
+    return this;
 };
 
 P.setFromVector = function (item) {
 
-	// if (Array.isArray(item)) item = item[0];
-	
-	if (!isa_obj(item)) throw new Error(`${this.name} Vector error - setFromVector() arguments error: ${JSON.stringify(item)}`);
-	
-	let {x, y, z} = item;
+    // if (Array.isArray(item)) item = item[0];
+    
+    if (!isa_obj(item)) throw new Error(`${this.name} Vector error - setFromVector() arguments error: ${JSON.stringify(item)}`);
+    
+    let {x, y, z} = item;
 
-	if (isa_number(x)) this.x = x;
-	if (isa_number(y)) this.y = y;
-	if (isa_number(z)) this.z = z;
+    if (isa_number(x)) this.x = x;
+    if (isa_number(y)) this.y = y;
+    if (isa_number(z)) this.z = z;
 
-	return this;
+    return this;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.vectorAdd = function (item = {}) {
 
-	if (Array.isArray(item)) return this.vectorAddArray(item);
+    if (Array.isArray(item)) return this.vectorAddArray(item);
 
-	let {x, y, z} = item;
+    let {x, y, z} = item;
 
-	if (isa_number(x)) this.x += x;
-	if (isa_number(y)) this.y += y;
-	if (isa_number(z)) this.z += z;
+    if (isa_number(x)) this.x += x;
+    if (isa_number(y)) this.y += y;
+    if (isa_number(z)) this.z += z;
 
-	return this;
+    return this;
 };
 
 P.vectorAddArray = function (item = []) {
 
-	let [x, y, z] = item;
+    let [x, y, z] = item;
 
-	if (isa_number(x)) this.x += x;
-	if (isa_number(y)) this.y += y;
-	if (isa_number(z)) this.z += z;
+    if (isa_number(x)) this.x += x;
+    if (isa_number(y)) this.y += y;
+    if (isa_number(z)) this.z += z;
 
-	return this;
+    return this;
 };
 
 P.vectorSubtract = function (item = {}) {
 
-	if (Array.isArray(item)) return this.vectorSubtractArray(item);
+    if (Array.isArray(item)) return this.vectorSubtractArray(item);
 
-	let {x, y, z} = item;
+    let {x, y, z} = item;
 
-	if (isa_number(x)) this.x -= x;
-	if (isa_number(y)) this.y -= y;
-	if (isa_number(z)) this.z -= z;
+    if (isa_number(x)) this.x -= x;
+    if (isa_number(y)) this.y -= y;
+    if (isa_number(z)) this.z -= z;
 
-	return this;
+    return this;
 };
 
 P.vectorSubtractArray = function (item) {
 
-	let [x, y, z] = item;
+    let [x, y, z] = item;
 
-	if (isa_number(x)) this.x -= x;
-	if (isa_number(y)) this.y -= y;
-	if (isa_number(z)) this.z -= z;
+    if (isa_number(x)) this.x -= x;
+    if (isa_number(y)) this.y -= y;
+    if (isa_number(z)) this.z -= z;
 
-	return this;
+    return this;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.scalarMultiply = function (item) {
 
-	if (!isa_number(item)) throw new Error(`${this.name} Vector error - scalarMultiply() argument not a number: ${item}`);
+    if (!isa_number(item)) throw new Error(`${this.name} Vector error - scalarMultiply() argument not a number: ${item}`);
 
-	this.x *= item;
-	this.y *= item;
-	this.z *= item;
+    this.x *= item;
+    this.y *= item;
+    this.z *= item;
 
-	return this;
+    return this;
 };
 
 P.scalarDivide = function (item) {
 
-	if (!isa_number(item)) throw new Error(`${this.name} Vector error - scalarDivide() argument not a number: ${item}`);
-	if (!item) throw new Error(`${this.name} Vector error - scalarDivide() division by zero: ${item}`);
+    if (!isa_number(item)) throw new Error(`${this.name} Vector error - scalarDivide() argument not a number: ${item}`);
+    if (!item) throw new Error(`${this.name} Vector error - scalarDivide() division by zero: ${item}`);
 
-	this.x /= item;
-	this.y /= item;
-	this.z /= item;
+    this.x /= item;
+    this.y /= item;
+    this.z /= item;
 
-	return this;
+    return this;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.getMagnitude = function () {
 
-	return Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
+    return Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.rotate = function (angle) {
 
-	if (!isa_number(angle)) throw new Error(`${this.name} Vector error - rotate() argument not a number: ${angle}`);
+    if (!isa_number(angle)) throw new Error(`${this.name} Vector error - rotate() argument not a number: ${angle}`);
 
-	let arg = Math.atan2(this.y, this.x);
-	arg += (angle * 0.01745329251);
-	
-	let mag = this.getMagnitude();
+    let arg = Math.atan2(this.y, this.x);
+    arg += (angle * 0.01745329251);
+    
+    let mag = this.getMagnitude();
 
-	this.x = mag * Math.cos(arg);
-	this.y = mag * Math.sin(arg);
+    this.x = mag * Math.cos(arg);
+    this.y = mag * Math.sin(arg);
 
-	return this;
+    return this;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.reverse = function () {
 
-	this.x = -this.x;
-	this.y = -this.y;
-	this.z = -this.z;
+    this.x = -this.x;
+    this.y = -this.y;
+    this.z = -this.z;
 
-	return this;
+    return this;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.normalize = function() {
-	
-	let val = this.getMagnitude();
-	
-	if (val > 0) {
-		this.x /= val;
-		this.y /= val;
-		this.z /= val;
-	}
-	return this;
+    
+    let val = this.getMagnitude();
+    
+    if (val > 0) {
+        this.x /= val;
+        this.y /= val;
+        this.z /= val;
+    }
+    return this;
 };
 
 
-/*
-## Vector pool - an attempt to reuse quaternions rather than constantly creating and deleting them
-*/
+
+// ## Vector pool
+
+// An attempt to reuse vectors rather than constantly creating and deleting them
 const vectorPool = [];
 
 let vectorPoolCount = 0;
 
 const vectorPoolLength = function () {
 
-	return `${vectorPool.length} (from ${vectorPoolCount} generated)`;
+    return `${vectorPool.length} (from ${vectorPoolCount} generated)`;
 }
 
 const requestVector = function (x, y, z) {
 
-	if (!vectorPool.length) {
-		vectorPool.push(new Vector());
+    if (!vectorPool.length) {
+        vectorPool.push(new Vector());
 
-		vectorPoolCount++;
-	}
+        vectorPoolCount++;
+    }
 
-	let v = vectorPool.shift();
+    let v = vectorPool.shift();
 
-	v.set(x, y, z);
+    v.set(x, y, z);
 
-	return v
+    return v
 };
 
 const releaseVector = function (item) {
 
-	if (item && item.type === 'Vector') vectorPool.push(item.zero());
+    if (item && item.type === 'Vector') vectorPool.push(item.zero());
 };
 
 const checkVector = function (item) {
 
-	if (v && v.type === 'Vector') return item;
-	else return new Vector(item);
+    if (v && v.type === 'Vector') return item;
+    else return new Vector(item);
 };
 
-/*
-## Exported factory function
-*/
+
+// ## Exported factory function
 const makeVector = function (items) {
-	
-	return new Vector(items);
+    
+    return new Vector(items);
 };
 
-/*
-Also store constructor in library - clone functionality expects to find it there
-*/
 constructors.Vector = Vector;
 
-
-/*
-TODO - documentation
-*/
 export {
-	makeVector,
-	requestVector,
-	releaseVector,
-	checkVector,
-	vectorPoolLength,
+    makeVector,
+    requestVector,
+    releaseVector,
+    checkVector,
+    vectorPoolLength,
 };

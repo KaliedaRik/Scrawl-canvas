@@ -1,16 +1,15 @@
-/*
-# Loom factory
 
-TODO - documentation
+// # Loom factory
 
-#### To instantiate objects from the factory
+// TODO - documentation
 
-#### Library storage
+// #### To instantiate objects from the factory
 
-#### Clone functionality
+// #### Library storage
 
-#### Kill functionality
-*/
+// #### Clone functionality
+
+// #### Kill functionality
 import { constructors, artefact } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
 import { mergeOver, mergeDiscard, pushUnique, defaultNonReturnFunction, defaultThisReturnFunction, xta } from '../core/utilities.js';
@@ -23,28 +22,27 @@ import anchorMix from '../mixin/anchor.js';
 import filterMix from '../mixin/filter.js';
 
 
-/*
-## Loom constructor
-*/
+
+// ## Loom constructor
 const Loom = function (items = {}) {
 
-	this.makeName(items.name);
-	this.register();
+    this.makeName(items.name);
+    this.register();
 
-	this.set(this.defs);
+    this.set(this.defs);
 
-	this.state = makeState();
+    this.state = makeState();
 
-	if (!items.group) items.group = currentGroup;
+    if (!items.group) items.group = currentGroup;
 
-	this.onEnter = defaultNonReturnFunction;
-	this.onLeave = defaultNonReturnFunction;
-	this.onDown = defaultNonReturnFunction;
-	this.onUp = defaultNonReturnFunction;
+    this.onEnter = defaultNonReturnFunction;
+    this.onLeave = defaultNonReturnFunction;
+    this.onDown = defaultNonReturnFunction;
+    this.onUp = defaultNonReturnFunction;
 
-	this.delta = {};
+    this.delta = {};
 
-	this.set(items);
+    this.set(items);
 
     this.fromPathData = [];
     this.toPathData = [];
@@ -54,13 +52,12 @@ const Loom = function (items = {}) {
     this.engineInstructions = [];
     this.engineDeltaLengths = [];
 
-	return this;
+    return this;
 };
 
 
-/*
-## Loom object prototype setup
-*/
+
+// ## Loom object prototype setup
 let P = Loom.prototype = Object.create(Object.prototype);
 P.type = 'Loom';
 P.lib = 'entity';
@@ -68,193 +65,175 @@ P.isArtefact = true;
 P.isAsset = false;
 
 
-/*
-Apply mixins to prototype object
-*/
+
+// Apply mixins to prototype object
 P = baseMix(P);
 P = anchorMix(P);
 P = filterMix(P);
 
 
-/*
-## Define default attributes
-*/
+
+// ## Define default attributes
 let defaultAttributes = {
 
-/*
-A Loom entity uses 2 Shape paths to construct a frame between which the image will be redrawn.
 
-The positioning, scaling etc of each strut is set in the constituent Shape entitys, not the Loom entity. 
-*/
-	fromPath: null,
-	toPath: null,
+// A Loom entity uses 2 Shape paths to construct a frame between which the image will be redrawn.
 
-/*
-The Loom entity can set the start and end cursors on each of its path struts, between which the image will be drawn. These can be animated to allow the image to 'flow' between one part of the display and another, changing its shape as it moves
-*/
-	fromPathStart: 0,
-	fromPathEnd: 1,
+// The positioning, scaling etc of each strut is set in the constituent Shape entitys, not the Loom entity. 
+    fromPath: null,
+    toPath: null,
 
-	toPathStart: 0,
-	toPathEnd: 1,
 
-/*
-To make sure the 'from' and 'to' strut start points, and end points, have the same value set the Loom's __synchronizePathCursors__ attribute to true (default). Setting it to 'false' allows the cursors to be set independently on each strut ... which in turn may lead to unexpected display consequences
-*/
-	synchronizePathCursors: true,
+// The Loom entity can set the start and end cursors on each of its path struts, between which the image will be drawn. These can be animated to allow the image to 'flow' between one part of the display and another, changing its shape as it moves
+    fromPathStart: 0,
+    fromPathEnd: 1,
 
-/*
-For animation purposes, the image will move between the struts with the bottom of the page appearing again at the top of the Loom as it moves down (and vice versa). To change this functionality - so that the image slowly disappears as it animates up and down past the ends of the struts, set the __loopPathCursors__ attribute to false
-*/
-	loopPathCursors: true,
+    toPathStart: 0,
+    toPathEnd: 1,
 
-/*
-Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image. 
 
-To change this to columns (which sets the struts to the top and bottom edges of the image) set the 'isHorizontalCopy' attribute to false 
-*/
-	isHorizontalCopy: true,
+// To make sure the 'from' and 'to' strut start points, and end points, have the same value set the Loom's __synchronizePathCursors__ attribute to true (default). Setting it to 'false' allows the cursors to be set independently on each strut ... which in turn may lead to unexpected display consequences
+    synchronizePathCursors: true,
 
-/*
-Mainly for library development/testing work - shows the loom entity's bounding box - which is calculated from the constituent Shape entitys' current bounding boxes
-*/
-	showBoundingBox: false,
-	boundingBoxColor: '#000000',
 
-/*
-The Picture entity source for this loom. For initialization and/or set, we can supply either the Picture entity itself, or its string name attribute
+// For animation purposes, the image will move between the struts with the bottom of the page appearing again at the top of the Loom as it moves down (and vice versa). To change this functionality - so that the image slowly disappears as it animates up and down past the ends of the struts, set the __loopPathCursors__ attribute to false
+    loopPathCursors: true,
 
-The content image displayed by the Loom entity are set in the Picture entity, not the Loom, and can be any artefact supported by the Picture (image, video, sprite, or a Cell artefact)
 
-Note that any filters should be applied to the Picture entity; Loom entitys do not support filter functionality but will apply a Picture's filters to the source image as-and-where appropriate
+// Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image. 
 
-If the Picture entity is hosting a video or sprite asset, we need to update the input on every frame. It's easier to tell the Loom entity to do this using a flag, rather than get the Picture entity to update all its Loom subscribers on every display cycle. For Pictures using image assets the __sourceIsVideoOrSprite__ flag must be set to false (the default); setting the flag to true will significantly degrade display and animation performance
-*/
-	source: null,
+// To change this to columns (which sets the struts to the top and bottom edges of the image) set the 'isHorizontalCopy' attribute to false 
+    isHorizontalCopy: true,
+
+
+// Mainly for library development/testing work - shows the loom entity's bounding box - which is calculated from the constituent Shape entitys' current bounding boxes
+    showBoundingBox: false,
+    boundingBoxColor: '#000000',
+
+
+// The Picture entity source for this loom. For initialization and/or set, we can supply either the Picture entity itself, or its string name attribute
+
+// The content image displayed by the Loom entity are set in the Picture entity, not the Loom, and can be any artefact supported by the Picture (image, video, sprite, or a Cell artefact)
+
+// Note that any filters should be applied to the Picture entity; Loom entitys do not support filter functionality but will apply a Picture's filters to the source image as-and-where appropriate
+
+// If the Picture entity is hosting a video or sprite asset, we need to update the input on every frame. It's easier to tell the Loom entity to do this using a flag, rather than get the Picture entity to update all its Loom subscribers on every display cycle. For Pictures using image assets the __sourceIsVideoOrSprite__ flag must be set to false (the default); setting the flag to true will significantly degrade display and animation performance
+    source: null,
     sourceIsVideoOrSprite: false,
 
-/**
-The current Frame drawing process often leads to moire interference patterns appearing in the resulting image. Scrawl uses resizing to blur out these patterns. 
+// The current Frame drawing process often leads to moire interference patterns appearing in the resulting image. Scrawl uses resizing to blur out these patterns. 
 
-The interferenceFactor attribute sets the resizing ratio; while he interferenceLoops attribute sets the number of times the image gets resized. 
+// The interferenceFactor attribute sets the resizing ratio; while he interferenceLoops attribute sets the number of times the image gets resized. 
 
-If patterns still appear in the final image, tweak these values to see if a better output can be achieved
-**/
-	interferenceLoops: 2,
-	interferenceFactor: 1.03,
+// If patterns still appear in the final image, tweak these values to see if a better output can be achieved
+    interferenceLoops: 2,
+    interferenceFactor: 1.03,
 
-/*
-The Loom entity does not use the __position__ and __entity__ mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts. It does, however, require these attributes (alongside their setters and getters)
-*/
-	visibility: true,
-	order: 0,
-	delta: null,
-	host: null,
-	group: null,
-	anchor: null,
-	collides: false,
 
-/*
-Canvas engine updates are required for the Loom's border - strokeStyle and line styling; if a Loom is to be drawn without a border, then setting the __noCanvasEngineUpdates__ attribute to true may help improve rendering efficiency
-*/
-	noCanvasEngineUpdates: false,
+// The Loom entity does not use the __position__ and __entity__ mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts. It does, however, require these attributes (alongside their setters and getters)
+    visibility: true,
+    order: 0,
+    delta: null,
+    host: null,
+    group: null,
+    anchor: null,
+    collides: false,
 
-/*
-Loom entitys support delta animation - achieved by updating the fromPathStart, fromPathEnd, toPathStart and toPathEnd attributes by appropriate (and small!) values. If the Loom is not going to be animated by delta values, setting the __noDeltaUpdates__ attributes to true may help improve rendering efficiency
-*/
-	noDeltaUpdates: false,
 
-/*
-Loom entitys support __collision detection__, reporting a hit when a test coordinate falls within the Loom's output image. As a result, Looms can also accept and act on the four __on__ functions
-*/
-	onEnter: null,
-	onLeave: null,
-	onDown: null,
-	onUp: null,
+// Canvas engine updates are required for the Loom's border - strokeStyle and line styling; if a Loom is to be drawn without a border, then setting the __noCanvasEngineUpdates__ attribute to true may help improve rendering efficiency
+    noCanvasEngineUpdates: false,
 
-/*
-To switch off collision detection for a Loom entity - which might help improve rendering efficiency - set the __noUserInteraction__ attribute to true
-*/
+
+// Loom entitys support delta animation - achieved by updating the fromPathStart, fromPathEnd, toPathStart and toPathEnd attributes by appropriate (and small!) values. If the Loom is not going to be animated by delta values, setting the __noDeltaUpdates__ attributes to true may help improve rendering efficiency
+    noDeltaUpdates: false,
+
+
+// Loom entitys support __collision detection__, reporting a hit when a test coordinate falls within the Loom's output image. As a result, Looms can also accept and act on the four __on__ functions
+    onEnter: null,
+    onLeave: null,
+    onDown: null,
+    onUp: null,
+
+
+// To switch off collision detection for a Loom entity - which might help improve rendering efficiency - set the __noUserInteraction__ attribute to true
     noUserInteraction: false,
 
-/*
-Anchor objects can also be assigned to Loom entitys, meaning the following attributes are supported
 
-+ anchorDescription
-+ anchorType
-+ anchorTarget
-+ anchorRel
-+ anchorReferrerPolicy
-+ anchorPing
-+ anchorHreflang
-+ anchorHref
-+ anchorDownload
+// Anchor objects can also be assigned to Loom entitys, meaning the following attributes are supported
 
-And the anchor attributes can also be supplied as a key:value object assigned to the __anchor__ attribute:
+// + anchorDescription
+// + anchorType
+// + anchorTarget
+// + anchorRel
+// + anchorReferrerPolicy
+// + anchorPing
+// + anchorHreflang
+// + anchorHref
+// + anchorDownload
 
-    anchor: {
-        description
-        download
-        href
-        hreflang
-        ping
-        referrerpolicy
-        rel:
-        target:
-        anchorType
-        clickAction: 
-    }
-*/
+// And the anchor attributes can also be supplied as a key:value object assigned to the __anchor__ attribute:
 
-/*
-Note that Loom entitys DO NOT SUPPORT the sensor component of the Scrawl-canvas collisions system and will return an empty array when asked to supply sensor coordinates for testing against other artefacts.
-*/
+//     anchor: {
+//         description
+//         download
+//         href
+//         hreflang
+//         ping
+//         referrerpolicy
+//         rel:
+//         target:
+//         anchorType
+//         clickAction: 
+//     }
 
-/*
-All normal Scrawl-canvas entity stamping methods are supported
-*/	
-	method: 'fill',
 
-/*
-Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the 'draw', 'drawAndFill', 'fillAndDraw', 'drawThenFill' and 'fillThenDraw' stamping methods)
 
-The following attributes are thus supported:
+// Note that Loom entitys DO NOT SUPPORT the sensor component of the Scrawl-canvas collisions system and will return an empty array when asked to supply sensor coordinates for testing against other artefacts.
 
-+ globalAlpha
-+ globalCompositeOperation
 
-Alpha and Composite operations will be applied to both the Loom entity's border (the Shape entitys, with connecting lines between their paths' start and end points) and fill (the image displayed between the Loom's struts)
 
-+ lineWidth
-+ lineCap
-+ lineJoin
-+ lineDash
-+ lineDashOffset
-+ miterLimit
+// All normal Scrawl-canvas entity stamping methods are supported
+    method: 'fill',
 
-All line attributes are supported
 
-+ strokeStyle
+// Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the 'draw', 'drawAndFill', 'fillAndDraw', 'drawThenFill' and 'fillThenDraw' stamping methods)
 
-The Loom entity's strokeStyle can be any style supported by Scrawl-canvas - color strings, gradient objects, and pattern objects
+// The following attributes are thus supported:
 
-+ shadowOffsetX
-+ shadowOffsetY
-+ shadowBlur
-+ shadowColor
+// + globalAlpha
+// + globalCompositeOperation
 
-The shadow attributes will only be applied to the stroke (border), not to the Loom's fill (image)
-*/
+// Alpha and Composite operations will be applied to both the Loom entity's border (the Shape entitys, with connecting lines between their paths' start and end points) and fill (the image displayed between the Loom's struts)
+
+// + lineWidth
+// + lineCap
+// + lineJoin
+// + lineDash
+// + lineDashOffset
+// + miterLimit
+
+// All line attributes are supported
+
+// + strokeStyle
+
+// The Loom entity's strokeStyle can be any style supported by Scrawl-canvas - color strings, gradient objects, and pattern objects
+
+// + shadowOffsetX
+// + shadowOffsetY
+// + shadowBlur
+// + shadowColor
+
+// The shadow attributes will only be applied to the stroke (border), not to the Loom's fill (image)
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+// ## Define getter, setter and deltaSetter functions
 let G = P.getters,
-	S = P.setters,
-	D = P.deltaSetters;
+    S = P.setters,
+    D = P.deltaSetters;
 
-/*
-Setters and getters copied over from the entity mixin
-*/
+
+// Setters and getters copied over from the entity mixin
 P.get = function (item) {
 
     let getter = this.getters[item];
@@ -348,9 +327,8 @@ P.setDelta = function (items = {}) {
     return this;
 };
 
-/*
-Host, group and here functionality (copied from position mixin)
-*/
+
+// Host, group and here functionality (copied from position mixin)
 S.host = function (item) {
 
     if (item) {
@@ -409,9 +387,8 @@ P.getHere = function () {
     return currentCorePosition;
 };
 
-/*
-Delta functionality - copied over from position mixin
-*/
+
+// Delta functionality - copied over from position mixin
 S.delta = function (items = {}) {
 
     if (items) this.delta = mergeDiscard(this.delta, items);
@@ -482,23 +459,20 @@ P.setDeltaValues = function (items = {}) {
     return this;
 };
 
-/*
-Invalidate various init and clone functionalities
-*/
+
+// Invalidate mid-init functionality
 P.midInitActions = defaultNonReturnFunction;
 
-/*
-Loom entities __CANNOT BE CLONED!__
 
-This is because Loom entitys are __compound entitys__ which bring together other entitys to make a new thing. Attempting to clone a Loom would also require decsions on whether to clone the underlying entitys
+// Loom entities __CANNOT BE CLONED!__
 
-(Note: I'm sure it could be done, but I'm not going to do it for Scrawl-canvas v8)
-*/
+// This is because Loom entitys are __compound entitys__ which bring together other entitys to make a new thing. Attempting to clone a Loom would also require decsions on whether to clone the underlying entitys
+
+// (Note: I'm sure it could be done, but I'm not going to do it for Scrawl-canvas v8)
 P.clone = defaultThisReturnFunction;
 
-/*
-Invalidating sensor functionality
-*/
+
+// Invalidating sensor functionality
 P.cleanCollisionData = function () {
 
     return [0, []];
@@ -508,9 +482,8 @@ P.getSensors = function () {
     return [];
 };
 
-/*
-TODO - documentation
-*/
+
+// TODO - documentation
 S.fromPath = function (item) {
 
     if (item) {
@@ -553,9 +526,7 @@ S.toPath = function (item) {
     }
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 S.source = function (item) {
 
     item = (item.substring) ? artefact[item] : item;
@@ -572,18 +543,14 @@ S.source = function (item) {
     }
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 S.isHorizontalCopy = function (item) {
 
     this.isHorizontalCopy = (item) ? true : false;
     this.dirtyPathData = true;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 S.synchronizePathCursors = function (item) {
 
     this.synchronizePathCursors = (item) ? true : false;
@@ -597,9 +564,7 @@ S.synchronizePathCursors = function (item) {
     this.dirtyPathData = true;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 S.loopPathCursors = function (item) {
 
     this.loopPathCursors = (item) ? true : false;
@@ -625,9 +590,7 @@ S.loopPathCursors = function (item) {
     this.dirtyOutput = true;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 S.fromPathStart = function (item) {
 
     if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
@@ -693,13 +656,12 @@ D.toPathEnd = function (item) {
     this.dirtyPathData = true;
 };
 
-/*
-This function is called before we get into the entity stamp promise cascade (thus it's a synchronous function). This is where we need to check whether we need to recalculate the path data which we'll use later to build the Loom entity's output image.
 
-We only need to recalculate the path data on the initial render, and afterwards when the __dirtyPathData__ flag has been set
+// This function is called before we get into the entity stamp promise cascade (thus it's a synchronous function). This is where we need to check whether we need to recalculate the path data which we'll use later to build the Loom entity's output image.
 
-If we perform the recalculation, then we need to make sure to set the __dirtyOutput__ flag, which will trigger the output image build
-*/
+// We only need to recalculate the path data on the initial render, and afterwards when the __dirtyPathData__ flag has been set
+
+// If we perform the recalculation, then we need to make sure to set the __dirtyOutput__ flag, which will trigger the output image build
 P.prepareStamp = function() {
 
     let fPath = this.fromPath,
@@ -796,9 +758,7 @@ P.prepareStamp = function() {
     if (this.sourceIsVideoOrSprite) this.dirtyInput = true;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.setSourceDimension = function (val) {
 
     // prepareStamp does the dimension calculation itself, then supplies the new value
@@ -835,11 +795,10 @@ P.setSourceDimension = function (val) {
     return this.sourceDimension;
 };
 
-/*
-Simple stamping is entirely synchronous
 
-TODO: we may have to disable this functionality for the Loom entity, if we use a web worker for either the prepareStamp calculations, or to build the output image itself
-*/
+// Simple stamping is entirely synchronous
+
+// TODO: we may have to disable this functionality for the Loom entity, if we use a web worker for either the prepareStamp calculations, or to build the output image itself
 P.simpleStamp = function (host, changes = {}) {
 
     if (host && host.type === 'Cell') {
@@ -856,16 +815,15 @@ P.simpleStamp = function (host, changes = {}) {
     }
 };
 
-/*
-All entity stamping - except for simple stamps - goes through the asynchronous __stamp__ function, which needs to return a promise which will resolve in due course
 
-While other entitys have to worry about applying filters as part of the stamping process, this is not an issue for Loom entitys because filters are defined on, and applied to, the source Picture entity, not the Loom itself
+// All entity stamping - except for simple stamps - goes through the asynchronous __stamp__ function, which needs to return a promise which will resolve in due course
 
-Instead we check which dirty flags need actioning, and call a range of different functions to process the work. These flags are:
+// While other entitys have to worry about applying filters as part of the stamping process, this is not an issue for Loom entitys because filters are defined on, and applied to, the source Picture entity, not the Loom itself
 
-+ dirtyInput (the Picture entity has reported a change in its source, or copy attributes)
-+ dirtyOutput (to render the cleaned input, or take account that the Loom paths' cursors have changed)
-*/
+// Instead we check which dirty flags need actioning, and call a range of different functions to process the work. These flags are:
+
+// + dirtyInput (the Picture entity has reported a change in its source, or copy attributes)
+// + dirtyOutput (to render the cleaned input, or take account that the Loom paths' cursors have changed)
 P.stamp = function (force = false, host, changes) {
 
     if (force) {
@@ -936,9 +894,7 @@ P.stamp = function (force = false, host, changes) {
     else return Promise.resolve(false);
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.cleanInput = function () {
 
     let self = this;
@@ -995,9 +951,7 @@ P.cleanInput = function () {
     });
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.cleanOutput = function () {
     
     let self = this;
@@ -1190,9 +1144,7 @@ P.cleanOutput = function () {
     });
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.regularStamp = function () {
 
     let self = this;
@@ -1222,13 +1174,12 @@ P.regularStampSynchronousActions = function () {
     }
 };
 
-/*
-Loom calculates its bounding box from the Shape path entitys associated with it
 
-This function recalculates when presented with a __dirtyStart__ flag - we rely on the Shape entitys to tell us when their paths have changed/updated
+// Loom calculates its bounding box from the Shape path entitys associated with it
 
-Results get stashed in the __boundingBox__ attribute for easier access, but all the method functions call this function just in case the box needs recalculating.
-*/
+// This function recalculates when presented with a __dirtyStart__ flag - we rely on the Shape entitys to tell us when their paths have changed/updated
+
+// Results get stashed in the __boundingBox__ attribute for easier access, but all the method functions call this function just in case the box needs recalculating.
 P.getBoundingBox = function () {
 
     let fPath = this.fromPath,
@@ -1267,9 +1218,8 @@ P.getBoundingBox = function () {
     return this.boundingBox;
 };
 
-/*
-These 'method' functions stamp the Loom entity onto the canvas context supplied to them in the __engine__ argument
-*/
+
+// These 'method' functions stamp the Loom entity onto the canvas context supplied to them in the __engine__ argument
 P.fill = function (engine) {
 
 
@@ -1356,9 +1306,8 @@ P.clear = function (engine) {
 
 P.none = defaultNonReturnFunction;
 
-/*
-The stroke and fill functions handle most of the stuff that the 'method' functions require to stamp the Loom entity onto a canvas cell
-*/
+
+// The stroke and fill functions handle most of the stuff that the 'method' functions require to stamp the Loom entity onto a canvas cell
 P.doStroke = function (engine) {
 
     let fPath = this.fromPath,
@@ -1393,11 +1342,10 @@ P.doStroke = function (engine) {
     }
 };
 
-/*
-putImageData turns transparent pixels in the output, transparent in the host canvas - which is not what we want
 
-Problem solved by putting output into a pool cell, then drawing it from there to the host cell
-*/
+// putImageData turns transparent pixels in the output, transparent in the host canvas - which is not what we want
+
+// Problem solved by putting output into a pool cell, then drawing it from there to the host cell
 P.doFill = function (engine) {
 
     let output = this.output,
@@ -1422,9 +1370,8 @@ P.doFill = function (engine) {
     }
 };
 
-/*
-Usually only need to draw the bounding box during development work, to make sure the getBoundingBox calculation is operating correctly
-*/
+
+// Usually only need to draw the bounding box during development work, to make sure the getBoundingBox calculation is operating correctly
 P.drawBoundingBox = function (engine) {
 
     if (this.dirtyStart) this.getBoundingBox();
@@ -1448,14 +1395,12 @@ P.drawBoundingBox = function (engine) {
     engine.setTransform(t);
 };
 
-/*
-The __checkHit__ functionality can be used in the same way it is for other entitys (and groups)
 
-One difference is that this function checks hits against an ImageData object, thus doesn't need to be supplied with a pool canvas so that it can do its job
+// The __checkHit__ functionality can be used in the same way it is for other entitys (and groups)
 
-Note: will check for the __dirtyTargetImage__ flag, which normally gets checked as part of the rendering cycle
-*/
+// One difference is that this function checks hits against an ImageData object, thus doesn't need to be supplied with a pool canvas so that it can do its job
 
+// Note: will check for the __dirtyTargetImage__ flag, which normally gets checked as part of the rendering cycle
 P.checkHit = function (items = []) {
 
     if (this.noUserInteraction) return false;
@@ -1507,19 +1452,14 @@ P.checkHit = function (items = []) {
 };
 
 
-/*
-## Exported factory function
-*/
+
+// ## Exported factory function
 const makeLoom = function (items) {
-	return new Loom(items);
+    return new Loom(items);
 };
 
 constructors.Loom = Loom;
 
-
-/*
-TODO - documentation
-*/
 export {
-	makeLoom,
+    makeLoom,
 };

@@ -1,3 +1,6 @@
+// ## Demo Canvas 016 
+
+// [Phrase entity position and font attributes; Block mimic functionality](../../demo/canvas-016.html)
 import scrawl from '../source/scrawl.js'
 
 
@@ -8,98 +11,98 @@ let canvas = scrawl.library.artefact.mycanvas;
 // Create Phrase entity
 let lorem = scrawl.makePhrase({
 
-	name: 'myPhrase',
-	order: 1,
+    name: 'myPhrase',
+    order: 1,
 
-	startX: 300,
-	startY: 200,
-	handleX: '50%',
-	handleY: '50%',
-	width: '50%',
+    startX: 300,
+    startY: 200,
+    handleX: '50%',
+    handleY: '50%',
+    width: '50%',
 
-	text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
-	font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
+    text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
+    font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
-	fillStyle: 'darkgreen',
+    fillStyle: 'darkgreen',
 
-	method: 'fill',
-	showBoundingBox: true,
+    method: 'fill',
+    showBoundingBox: true,
 
-	// Use the exposeText attribute to expose the entity's text to the DOM, to make it accessible to people not able to view the canvas (for whatever reason)
-	exposeText: true,
+    // Use the exposeText attribute to expose the entity's text to the DOM, to make it accessible to people not able to view the canvas (for whatever reason)
+    exposeText: true,
 });
 
 
 // Add a background entity which will mimic the Phrase entity
 scrawl.makeBlock({
 
-	name: 'writing-paper',
-	order: 0,
+    name: 'writing-paper',
+    order: 0,
 
-	width: 20,
-	height: 20,
-	handleX: 10,
-	handleY: 10,
+    width: 20,
+    height: 20,
+    handleX: 10,
+    handleY: 10,
 
-	fillStyle: 'rgb(240, 245, 255)',
-	method: 'fillAndDraw',
+    fillStyle: 'rgb(240, 245, 255)',
+    method: 'fillAndDraw',
 
-	mimic: 'myPhrase',
-	lockTo: 'mimic',
+    mimic: 'myPhrase',
+    lockTo: 'mimic',
 
-	useMimicDimensions: true,
-	useMimicScale: true,
-	useMimicStart: true,
-	useMimicHandle: true,
-	useMimicOffset: true,
-	useMimicRotation: true,
-	useMimicFlip: true,
+    useMimicDimensions: true,
+    useMimicScale: true,
+    useMimicStart: true,
+    useMimicHandle: true,
+    useMimicOffset: true,
+    useMimicRotation: true,
+    useMimicFlip: true,
 
-	addOwnDimensionsToMimic: true,
-	addOwnScaleToMimic: false,
-	addOwnStartToMimic: false,
-	addOwnHandleToMimic: true,
-	addOwnOffsetToMimic: false,
-	addOwnRotationToMimic: false,
+    addOwnDimensionsToMimic: true,
+    addOwnScaleToMimic: false,
+    addOwnStartToMimic: false,
+    addOwnHandleToMimic: true,
+    addOwnOffsetToMimic: false,
+    addOwnRotationToMimic: false,
 });
 
 scrawl.makeWheel({
 
-	fillStyle: 'red',
-	radius: 5,
-	pivot: 'myPhrase',
-	lockTo: 'pivot',
-	handleX: 'center',
-	handleY: 'center',
+    fillStyle: 'red',
+    radius: 5,
+    pivot: 'myPhrase',
+    lockTo: 'pivot',
+    handleX: 'center',
+    handleY: 'center',
 
-	order: 2,
+    order: 2,
 });
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow, dragging,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow, dragging,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-	};
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+    };
 }();
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	target: canvas,
-	afterShow: report,
+    name: 'demo-animation',
+    target: canvas,
+    afterShow: report,
 });
 
 
@@ -108,49 +111,49 @@ scrawl.makeRender({
 // KNOWN ISSUE: in the mix between updating scale, font size and font family, the height calculation occasionally glitches, giving an incorrect height value for the Phrase entity
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: lorem,
+    target: lorem,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		relativeWidth: ['width', '%'],
-		absoluteWidth: ['width', 'round'],
+        relativeWidth: ['width', '%'],
+        absoluteWidth: ['width', 'round'],
 
-		start_xPercent: ['startX', '%'],
-		start_xAbsolute: ['startX', 'round'],
-		start_xString: ['startX', 'raw'],
+        start_xPercent: ['startX', '%'],
+        start_xAbsolute: ['startX', 'round'],
+        start_xString: ['startX', 'raw'],
 
-		start_yPercent: ['startY', '%'],
-		start_yAbsolute: ['startY', 'round'],
-		start_yString: ['startY', 'raw'],
+        start_yPercent: ['startY', '%'],
+        start_yAbsolute: ['startY', 'round'],
+        start_yString: ['startY', 'raw'],
 
-		handle_xPercent: ['handleX', '%'],
-		handle_xAbsolute: ['handleX', 'round'],
-		handle_xString: ['handleX', 'raw'],
+        handle_xPercent: ['handleX', '%'],
+        handle_xAbsolute: ['handleX', 'round'],
+        handle_xString: ['handleX', 'raw'],
 
-		handle_yPercent: ['handleY', '%'],
-		handle_yAbsolute: ['handleY', 'round'],
-		handle_yString: ['handleY', 'raw'],
+        handle_yPercent: ['handleY', '%'],
+        handle_yAbsolute: ['handleY', 'round'],
+        handle_yString: ['handleY', 'raw'],
 
-		roll: ['roll', 'float'],
-		scale: ['scale', 'float'],
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
 
-		upend: ['flipUpend', 'boolean'],
-		reverse: ['flipReverse', 'boolean'],
+        upend: ['flipUpend', 'boolean'],
+        reverse: ['flipReverse', 'boolean'],
 
-		weight: ['weight', 'raw'],
-		style: ['style', 'raw'],
-		variant: ['variant', 'raw'],
-		family: ['family', 'raw'],
+        weight: ['weight', 'raw'],
+        style: ['style', 'raw'],
+        variant: ['variant', 'raw'],
+        family: ['family', 'raw'],
 
-		size_string: ['size', 'raw'],
-		size_px: ['size', 'px'],
-	},
+        size_string: ['size', 'raw'],
+        size_px: ['size', 'px'],
+    },
 });
 
 // Setup form

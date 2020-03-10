@@ -1,230 +1,231 @@
+// ## Demo DOM 003
+
+// [Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack](../../demo/dom-003.html)
 import scrawl from '../source/scrawl.js'
 
 
 // Scene setup - create some variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
-	stack = artefact.mystack,
-	current, here;
+    stack = artefact.mystack,
+    current, here;
 
 
 // Create a new group to which we can assign the artefacts we want to drag around the stack
 let hitGroup = scrawl.makeGroup({
 
-	name: 'my-hit-group',
-	host: stack.name,
+    name: 'my-hit-group',
+    host: stack.name,
 });
 
 
 // Generate new (DOM) element artefacts and add them to the stack via our new group
 stack.addNewElement({
 
-	name: 'basic-square',
-	group: 'my-hit-group',
-	tag: 'div',
+    name: 'basic-square',
+    group: 'my-hit-group',
+    tag: 'div',
 
-	collides: true,
+    collides: true,
 
-	text: 'Default square <div>',
+    text: 'Default square <div>',
 
-	css: {
-		border: '1px solid black',
-		padding: '1em',
-		textAlign: 'center',
-		cursor: 'grab',
-	},
+    css: {
+        border: '1px solid black',
+        padding: '1em',
+        textAlign: 'center',
+        cursor: 'grab',
+    },
 
 }).clone({
 
-	name: 'oval',
+    name: 'oval',
 
-	startX: 150,
-	startY: 50,
-	width: 150,
-	height: 'auto',
+    startX: 150,
+    startY: 50,
+    width: 150,
+    height: 'auto',
 
-	classes: 'circle',
-	text: 'Oval <div> with added class',
+    classes: 'circle',
+    text: 'Oval <div> with added class',
 
-	css: {
-		font: '12px monospace',
-	},
+    css: {
+        font: '12px monospace',
+    },
 });
 
 // Clones will create literal clones of the element they are cloning. Thus cannot clone an element and attempt to change its tag value at the same time.
 stack.addNewElement({
 
-	name: 'list',
-	group: hitGroup.name,
-	tag: 'ul',
+    name: 'list',
+    group: hitGroup.name,
+    tag: 'ul',
 
-	width: '25%',
-	height: 80,
-	startX: 400,
-	startY: 120,
-	handleX: 'center',
-	handleY: 'center',
-	roll: 30,
+    width: '25%',
+    height: 80,
+    startX: 400,
+    startY: 120,
+    handleX: 'center',
+    handleY: 'center',
+    roll: 30,
 
-	collides: true,
+    collides: true,
 
-	classes: 'red-text',
+    classes: 'red-text',
 
-	content: `<li>unordered list</li>
+    content: `<li>unordered list</li>
 <li>with several</li>
 <li>bullet points</li>`,
 
-	css: {
-		font: '12px fantasy',
-		paddingInlineStart: '20px',
-		paddingTop: '0.5em',
-		margin: '0',
-		border: '1px solid red',
-		cursor: 'grab',
-	},
-	
+    css: {
+        font: '12px fantasy',
+        paddingInlineStart: '20px',
+        paddingTop: '0.5em',
+        margin: '0',
+        border: '1px solid red',
+        cursor: 'grab',
+    },
+    
 }).clone({
 
-	name: 'list-no-border',
+    name: 'list-no-border',
 
-	startY: 250,
-	scale: 1.25,
-	pitch: 60,
-	yaw: 80,
+    startY: 250,
+    scale: 1.25,
+    pitch: 60,
+    yaw: 80,
 
-	css: {
-		border: 0,
-	},
+    css: {
+        border: 0,
+    },
 });
 
 
 // Generate more elements - these ones won't be draggable: instead we will pivot them to the element artefacts generated above
 stack.addNewElement({
 
-	name: 'pivot-1',
-	tag: 'div',
+    name: 'pivot-1',
+    tag: 'div',
 
-	width: 12,
-	height: 12,
-	handleX: 'center',
-	handleY: 'center',
+    width: 12,
+    height: 12,
+    handleX: 'center',
+    handleY: 'center',
 
-	pivot: 'basic-square',
-	lockTo: 'pivot',
-	order: 1,
+    pivot: 'basic-square',
+    lockTo: 'pivot',
+    order: 1,
 
-	css: {
-		backgroundColor: 'blue',
-	},
-
-}).clone({
-
-	name: 'pivot-2',
-	pivot: 'oval',
+    css: {
+        backgroundColor: 'blue',
+    },
 
 }).clone({
 
-	name: 'pivot-3',
-	pivot: 'list',
+    name: 'pivot-2',
+    pivot: 'oval',
 
 }).clone({
 
-	name: 'pivot-4',
-	pivot: 'list-no-border',
+    name: 'pivot-3',
+    pivot: 'list',
+
+}).clone({
+
+    name: 'pivot-4',
+    pivot: 'list-no-border',
 });
 
 
-/*
-Handle the pre-existing SVG elements that have been automatically imported into the stack
+// Handle the pre-existing SVG elements that have been automatically imported into the stack
 
-SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt drag-and-drop functionality (because: collision functionality not implemented). We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.
-*/ 
+// SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt drag-and-drop functionality (because: collision functionality not implemented). We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.
 stack.addNewElement({
 
-	name: 'weather-icon-dragger',
-	tag: 'div',
+    name: 'weather-icon-dragger',
+    tag: 'div',
 
-	width: 40,
-	height: 40,
+    width: 40,
+    height: 40,
 
-	startX: 340,
-	startY: 360,
-	handleX: 'center',
-	handleY: 'center',
+    startX: 340,
+    startY: 360,
+    handleX: 'center',
+    handleY: 'center',
 
-	group: hitGroup.name,
-	collides: true,
+    group: hitGroup.name,
+    collides: true,
 
-	classes: 'circle',
-	css: {
-		cursor: 'grab',
-		border: '5px solid gold',
-		backgroundColor: 'darkgray',
-	},
+    classes: 'circle',
+    css: {
+        cursor: 'grab',
+        border: '5px solid gold',
+        backgroundColor: 'darkgray',
+    },
 
 }).clone({
 
-	name: 'simple-svg-dragger',
-	startX: 60,
-	startY: 220,
+    name: 'simple-svg-dragger',
+    startX: 60,
+    startY: 220,
 
 });
 
 artefact.weathericon.set({
 
-	pivot: 'weather-icon-dragger',
-	lockTo: 'pivot',
-	order: 1,
+    pivot: 'weather-icon-dragger',
+    lockTo: 'pivot',
+    order: 1,
 });
 
 artefact['simple-svg'].set({
 
-	pivot: 'simple-svg-dragger',
-	lockTo: 'pivot',
-	order: 1,
+    pivot: 'simple-svg-dragger',
+    lockTo: 'pivot',
+    order: 1,
 
-	pitch: 30,
-	yaw: 50,
+    pitch: 30,
+    yaw: 50,
 });
 
 
 // Create the drag-and-drop zone
 scrawl.makeDragZone({
 
-	zone: stack,
-	collisionGroup: hitGroup,
-	endOn: ['up', 'leave'],
+    zone: stack,
+    collisionGroup: hitGroup,
+    endOn: ['up', 'leave'],
 });
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 Pools - 
     cell: ${scrawl.cellPoolLength()}
     coordinate: ${scrawl.coordinatePoolLength()}
     vector: ${scrawl.vectorPoolLength()}
     quaternion: ${scrawl.quaternionPoolLength()}`;
-	};
+    };
 }();
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	target: stack,
-	afterShow: report,
+    name: 'demo-animation',
+    target: stack,
+    afterShow: report,
 });
 
 console.log(scrawl.library);

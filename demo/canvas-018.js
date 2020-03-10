@@ -1,3 +1,6 @@
+// ## Demo Canvas 018 
+
+// [Phrase entity - text along a path](../../demo/canvas-018.html)
 import scrawl from '../source/scrawl.js'
 
 
@@ -8,256 +11,255 @@ let canvas = scrawl.library.artefact.mycanvas;
 // Create Shape entitys for paths
 scrawl.makeOval({
 
-	name: 'oval-path',
+    name: 'oval-path',
 
-	strokeStyle: 'black',
-	method: 'draw',
+    strokeStyle: 'black',
+    method: 'draw',
 
-	startX: 'center',
-	startY: 'center',
-	handleX: 'center',
-	handleY: 'center',
+    startX: 'center',
+    startY: 'center',
+    handleX: 'center',
+    handleY: 'center',
 
-	radiusX: '40%',
-	radiusY: '42%',
+    radiusX: '40%',
+    radiusY: '42%',
 
-	useAsPath: true,
+    useAsPath: true,
 });
 
 let spiral = scrawl.makeSpiral({
 
-	name: 'spiral-path',
+    name: 'spiral-path',
 
-	strokeStyle: 'darkgreen',
-	method: 'draw',
+    strokeStyle: 'darkgreen',
+    method: 'draw',
 
-	startX: 'center',
-	startY: 'center',
-	handleX: 'center',
-	handleY: 'center',
+    startX: 'center',
+    startY: 'center',
+    handleX: 'center',
+    handleY: 'center',
 
-	loops: 4,
-	loopIncrement: 0.5,
-	innerRadius: 20,
+    loops: 4,
+    loopIncrement: 0.5,
+    innerRadius: 20,
 
-	flipReverse: true,
-	roll: 30,
+    flipReverse: true,
+    roll: 30,
 
-	useAsPath: true,
+    useAsPath: true,
 });
 
 
 // Create Phrase entitys
 scrawl.makePhrase({
-	name: 'label',
+    name: 'label',
 
-	text: 'H&epsilon;lj&ouml;!',
-	font: 'bold 40px Garamond, serif',
+    text: 'H&epsilon;lj&ouml;!',
+    font: 'bold 40px Garamond, serif',
 
-	width: 120,
-	handleX: 'center',
-	handleY: 'center',
+    width: 120,
+    handleX: 'center',
+    handleY: 'center',
 
-	method: 'fillAndDraw',
+    method: 'fillAndDraw',
 
-	justify: 'center',
-	lineHeight: 1,
+    justify: 'center',
+    lineHeight: 1,
 
-	fillStyle: 'green',
-	strokeStyle: 'gold',
+    fillStyle: 'green',
+    strokeStyle: 'gold',
 
-	shadowOffsetX: 2,
-	shadowOffsetY: 2,
-	shadowBlur: 2,
-	shadowColor: 'black',
+    shadowOffsetX: 2,
+    shadowOffsetY: 2,
+    shadowBlur: 2,
+    shadowColor: 'black',
 
-	path: 'oval-path',
-	lockTo: 'path',
-	addPathRotation: true,
+    path: 'oval-path',
+    lockTo: 'path',
+    addPathRotation: true,
 
-	delta: {
-		pathPosition: 0.0008,
-	}
+    delta: {
+        pathPosition: 0.0008,
+    }
 });
 
 let lorem = scrawl.makePhrase({
 
-	name: 'myPhrase',
+    name: 'myPhrase',
 
-	text: 'Lorem ipsum har varit standard ända sedan 1500-talet, ___ när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
-	font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
+    text: 'Lorem ipsum har varit standard ända sedan 1500-talet, ___ när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
+    font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
-	fillStyle: '#003399',
+    fillStyle: '#003399',
 
-	method: 'fill',
+    method: 'fill',
 
-	textPath: 'spiral-path',
-	textPathPosition: 0.9,
-	textPathDirection: 'rtl',
+    textPath: 'spiral-path',
+    textPathPosition: 0.9,
+    textPathDirection: 'rtl',
 
-	justify: 'center',
+    justify: 'center',
 
-	delta: {
-		textPathPosition: 0.0006,
-	}
+    delta: {
+        textPathPosition: 0.0006,
+    }
 });
 
 lorem.setGlyphStyles({
 
-	defaults: true
+    defaults: true
 }, 70, 126, 158).setGlyphStyles({
 
-	fill: 'black'
+    fill: 'black'
 }, 12).setGlyphStyles({
 
-	style: 'italic'
+    style: 'italic'
 }, 22).setGlyphStyles({
 
-	style: 'normal'
+    style: 'normal'
 }, 30).setGlyphStyles({
 
-	variant: 'small-caps'
+    variant: 'small-caps'
 }, 42).setGlyphStyles({
 
-	variant: 'normal'
+    variant: 'normal'
 }, 52).setGlyphStyles({
 
-	weight: 'bold'
+    weight: 'bold'
 }, 67, 92, 155).setGlyphStyles({
 
-	weight: 'normal'
+    weight: 'normal'
 }, 95).setGlyphStyles({
 
-	highlight: true
+    highlight: true
 }, 106).setGlyphStyles({
 
-	highlight: false
+    highlight: false
 }, 118).setGlyphStyles({
 
-	underline: true
+    underline: true
 }, 140).setGlyphStyles({
 
-	underline: false
+    underline: false
 }, 148).setGlyphStyles({
 
-	overline: true
+    overline: true
 }, 102).setGlyphStyles({
 
-	overline: false
+    overline: false
 }, 114).setGlyphStyles({
 
-	size: '24px'
+    size: '24px'
 }, 123).setGlyphStyles({
 
-	space: 10
+    space: 10
 }, 132).setGlyphStyles({
 
-	space: 0
+    space: 0
 }, 135).setGlyphStyles({
 
-	family: 'monospace'
+    family: 'monospace'
 }, 149);
 
 
 // Create other entitys
 scrawl.makePicture({
 
-	name: 'bunny',
-	imageSource: 'img/bunny.png',
+    name: 'bunny',
+    imageSource: 'img/bunny.png',
 
-	width: 26,
-	height: 37,
+    width: 26,
+    height: 37,
 
-	copyWidth: 26,
-	copyHeight: 37,
+    copyWidth: 26,
+    copyHeight: 37,
 
-	handleX: 'center',
-	handleY: 'center',
+    handleX: 'center',
+    handleY: 'center',
 
-	path: 'oval-path',
-	pathPosition: .50,
-	lockTo: 'path',
-	addPathRotation: true,
+    path: 'oval-path',
+    pathPosition: .50,
+    lockTo: 'path',
+    addPathRotation: true,
 
-	delta: {
-		pathPosition: 0.0008,
-	}
+    delta: {
+        pathPosition: 0.0008,
+    }
 })
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow, dragging,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow, dragging,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
-	};
+    };
 }();
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	// target: canvas,
-	afterShow: report,
+    name: 'demo-animation',
+    afterShow: report,
 });
 
 
 // User interaction - setup form observer functionality
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: spiral,
+    target: spiral,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		start_xAbsolute: ['startX', 'round'],
-		start_yAbsolute: ['startY', 'round'],
-		handle_xAbsolute: ['handleX', 'round'],
-		handle_yAbsolute: ['handleY', 'round'],
+        start_xAbsolute: ['startX', 'round'],
+        start_yAbsolute: ['startY', 'round'],
+        handle_xAbsolute: ['handleX', 'round'],
+        handle_yAbsolute: ['handleY', 'round'],
 
-		roll: ['roll', 'float'],
-		scale: ['scale', 'float'],
-		upend: ['flipUpend', 'boolean'],
-		reverse: ['flipReverse', 'boolean'],
-	},
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
+        upend: ['flipUpend', 'boolean'],
+        reverse: ['flipReverse', 'boolean'],
+    },
 });
 
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: lorem,
+    target: lorem,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		overline: ['overlinePosition', 'float'],
-		letterSpacing: ['letterSpacing', 'float'],
-		family: ['family', 'raw'],
-		size_px: ['size', 'px'],
+        overline: ['overlinePosition', 'float'],
+        letterSpacing: ['letterSpacing', 'float'],
+        family: ['family', 'raw'],
+        size_px: ['size', 'px'],
 
-		direction: ['textPathDirection', 'raw'],
-		justify: ['justify', 'raw'],
-	},
+        direction: ['textPathDirection', 'raw'],
+        justify: ['justify', 'raw'],
+    },
 });
 
 // Setup form

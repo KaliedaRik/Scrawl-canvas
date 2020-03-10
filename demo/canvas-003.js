@@ -1,3 +1,6 @@
+// ## Demo Canvas 003 
+
+// [Linear gradients](../../demo/canvas-003.html)
 import scrawl from '../source/scrawl.js'
 
 
@@ -5,108 +8,108 @@ import scrawl from '../source/scrawl.js'
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
-	backgroundColor: 'blanchedalmond',
-	css: {
-		border: '1px solid black'
-	}
+    backgroundColor: 'blanchedalmond',
+    css: {
+        border: '1px solid black'
+    }
 });
 
 
 // Create the linear gradient
 let graddy = scrawl.makeGradient({
-	name: 'mygradient',
-	endX: '100%',
+    name: 'mygradient',
+    endX: '100%',
 });
 
 
 // Create a block entity which will use the gradient
 scrawl.makeBlock({
-	name: 'myblock',
-	width: '90%',
-	height: '90%',
-	startX: '5%',
-	startY: '5%',
+    name: 'myblock',
+    width: '90%',
+    height: '90%',
+    startX: '5%',
+    startY: '5%',
 
-	fillStyle: graddy,
-	strokeStyle: 'coral',
-	lineWidth: 2,
-	method: 'fillAndDraw',
+    fillStyle: graddy,
+    strokeStyle: 'coral',
+    lineWidth: 2,
+    method: 'fillAndDraw',
 });
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 Palette - start: ${graddy.get('paletteStart')}; end: ${graddy.get('paletteEnd')}
 Start - x: ${graddy.get('startX')}; y: ${graddy.get('startY')}
 End - x: ${graddy.get('endX')}; y: ${graddy.get('endY')}`;
-	};
+    };
 }();
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	target: canvas,
-	afterShow: report,
+    name: 'demo-animation',
+    target: canvas,
+    afterShow: report,
 });
 
 
 // User interaction - setup form observer functionality
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: graddy,
+    target: graddy,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		paletteStart: ['paletteStart', 'int'],
-		paletteEnd: ['paletteEnd', 'int'],
+        paletteStart: ['paletteStart', 'int'],
+        paletteEnd: ['paletteEnd', 'int'],
 
-		startX: ['startX', '%'],
-		startY: ['startY', '%'],
+        startX: ['startX', '%'],
+        startY: ['startY', '%'],
 
-		endX: ['endX', '%'],
-		endY: ['endY', '%'],
-	},
+        endX: ['endX', '%'],
+        endY: ['endY', '%'],
+    },
 });
 
 let events = (e) => {
 
-	e.preventDefault();
-	e.returnValue = false;
+    e.preventDefault();
+    e.returnValue = false;
 
-	let val = parseInt(e.target.value, 10);
+    let val = parseInt(e.target.value, 10);
 
-	switch (e.target.id) {
+    switch (e.target.id) {
 
-		case 'red':
-			if (val) graddy.updateColor(350, 'red');
-			else graddy.removeColor(350);
-			break;
+        case 'red':
+            if (val) graddy.updateColor(350, 'red');
+            else graddy.removeColor(350);
+            break;
 
-		case 'blue':
-			if (val) graddy.updateColor(650, 'blue');
-			else graddy.removeColor(650);
-			break;
-	}
+        case 'blue':
+            if (val) graddy.updateColor(650, 'blue');
+            else graddy.removeColor(650);
+            break;
+    }
 };
 scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 

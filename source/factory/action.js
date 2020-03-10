@@ -1,301 +1,280 @@
-/*
-# Action factory
 
-Actions are (reversible) functions added to a Scrawl-canvas 'ticker' timeline. They trigger as the ticker passes through the point (along the ticker's timeline):
+// # Action factory
 
-+ if the timeline is moving forwards the __action__ function will be invoked
-+ if the timeline is moving backwards the __revert__ function will be invoked
+// Actions are (reversible) functions added to a Scrawl-canvas 'ticker' timeline. They trigger as the ticker passes through the point (along the ticker's timeline):
 
-#### Instantiate objects from the factory: YES
+// + if the timeline is moving forwards the __action__ function will be invoked
+// + if the timeline is moving backwards the __revert__ function will be invoked
 
-Use the __scrawl.makeAction({key:value})__ function - see Demo DOM-006
+// #### Instantiate objects from the factory: YES
 
-    // Factory returns the instantiated object
-    let myaction = scrawl.makeAction({
+// Use the __scrawl.makeAction({key:value})__ function - see Demo DOM-006
 
-        // Unique name (can be computer generated)
-        name: 'red',
+//     // Factory returns the instantiated object
+//     let myaction = scrawl.makeAction({
 
-        // Scrawl-canvas ticker object, or its name String
-        ticker: tickerObject,
+//         // Unique name (can be computer generated)
+//         name: 'red',
 
-        // Any Scrawl-canvas object that can be actioned
-        // - or that object's name String
-        // - or a (mixed) array of targets
-        targets: scrawlCanvasObject,
+//         // Scrawl-canvas ticker object, or its name String
+//         ticker: tickerObject,
 
-        // % distance (as a string) from ticker start, or a similar time value
-        time: '6.25%',
+//         // Any Scrawl-canvas object that can be actioned
+//         // - or that object's name String
+//         // - or a (mixed) array of targets
+//         targets: scrawlCanvasObject,
 
-        // 'action' and 'revert' functions, to be applied to targets
-        action: function () { 
-            element.set({ 
-                css: { 
-                    backgroundColor: 'red', 
-                },
-            });
-        },
+//         // % distance (as a string) from ticker start, or a similar time value
+//         time: '6.25%',
 
-        revert: function () {
-            element.set({ 
-                css: { 
-                    backgroundColor: 'blue', 
-                },
-            });
-        },
-    });
+//         // 'action' and 'revert' functions, to be applied to targets
+//         action: function () { 
+//             element.set({ 
+//                 css: { 
+//                     backgroundColor: 'red', 
+//                 },
+//             });
+//         },
 
-The factory uses all attributes and functions defined by the 'base' and 'tween' mixins, alongside those defined in this file.
+//         revert: function () {
+//             element.set({ 
+//                 css: { 
+//                     backgroundColor: 'blue', 
+//                 },
+//             });
+//         },
+//     });
 
-#### Library storage: YES
+// The factory uses all attributes and functions defined by the 'base' and 'tween' mixins, alongside those defined in this file.
 
-+ scrawl.library.tween
+// #### Library storage: YES
 
-#### Clone functionality: YES
+// + scrawl.library.tween
 
-See Demos DOM-004, DOM-006
+// #### Clone functionality: YES
 
-    myaction.clone({
-        name: 'yellow-action',
-        time: '8s',
+// See Demos DOM-004, DOM-006
 
-        action: function () { 
-            element.set({ 
-                css: { 
-                    backgroundColor: 'yellow', 
-                },
-            });
-        },
+//     myaction.clone({
+//         name: 'yellow-action',
+//         time: '8s',
 
-        revert: function () {
-            element.set({ 
-                css: { 
-                    backgroundColor: 'red', 
-                },
-            });
-        },
+//         action: function () { 
+//             element.set({ 
+//                 css: { 
+//                     backgroundColor: 'yellow', 
+//                 },
+//             });
+//         },
 
-        // 'ticker' and 'target' attribute values inherited from the clone's source Action object
-    });
+//         revert: function () {
+//             element.set({ 
+//                 css: { 
+//                     backgroundColor: 'red', 
+//                 },
+//             });
+//         },
 
-#### Kill functionality: (tbd)
+//         // 'ticker' and 'target' attribute values inherited from the clone's source Action object
+//     });
 
-TODO: review and update kill functionality through the entire Scrawl-canvas system
-*/
+// #### Kill functionality: (tbd)
+
+// TODO: review and update kill functionality through the entire Scrawl-canvas system
 import { constructors } from '../core/library.js';
 import { mergeOver, pushUnique, xt, defaultNonReturnFunction } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
-/*
-## Action constructor
-*/
+
+// ## Action constructor
 const Action = function (items = {}) {
 
-	this.makeName(items.name);
-	this.register();
-	this.set(this.defs);
-	this.set(items);
+    this.makeName(items.name);
+    this.register();
+    this.set(this.defs);
+    this.set(items);
 
-	this.calculateEffectiveTime();
+    this.calculateEffectiveTime();
 
-	if (xt(items.ticker)) this.addToTicker(items.ticker);
+    if (xt(items.ticker)) this.addToTicker(items.ticker);
 
-	return this;
+    return this;
 };
 
-/*
-## Action object prototype setup
-*/
+
+// ## Action object prototype setup
 let P = Action.prototype = Object.create(Object.prototype);
 P.type = 'Action';
 P.lib = 'tween';
 P.isArtefact = false;
 P.isAsset = false;
 
-/*
-Apply mixins to prototype object
-*/
+
+// Apply mixins to prototype object
 P = baseMix(P);
 P = tweenMix(P);
 
-/*
-## Define default attributes
-*/
+
+// ## Define default attributes
 let defaultAttributes = {
 
-/*
-__revert__ - a function that is triggered when a tween is running in reverse direction. Should be a counterpart to the __action__ function (defined in mixin/tween.js) to reverse the actions performed by that function.
-*/
-	revert: null
+
+// __revert__ - a function that is triggered when a tween is running in reverse direction. Should be a counterpart to the __action__ function (defined in mixin/tween.js) to reverse the actions performed by that function.
+    revert: null
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-/*
-## Packet management
-*/
+// ## Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['targets']);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
 P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, []);
 P.packetFunctions = pushUnique(P.packetFunctions, ['revert', 'action']);
 
-/*
-Overwrites finalizePacketOut function in mixin/base.js
-*/
+
+// Overwrites finalizePacketOut function in mixin/base.js
 P.finalizePacketOut = function (copy, items) {
 
-	if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
+    if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
 
-	return copy;
+    return copy;
 };
 
 
-/*
-## Define getter, setter and deltaSetter functions
-*/
-let G = P.getters,
-	S = P.setters;
 
-/*
-Argument must be a function, or a variable holding a reference to a function
-*/
+// ## Define getter, setter and deltaSetter functions
+let G = P.getters,
+    S = P.setters;
+
+
+// Argument must be a function, or a variable holding a reference to a function
 S.revert = function (item) {
 
-	this.revert = item;
+    this.revert = item;
 
-	if (typeof this.revert !== 'function') this.revert = defaultNonReturnFunction;
+    if (typeof this.revert !== 'function') this.revert = defaultNonReturnFunction;
 };
 
-/*
-Internal attribute. Set true after the ticker moves past the instance's time value (and set false if the ticker is moving backwards)
-*/
+
+// Internal attribute. Set true after the ticker moves past the instance's time value (and set false if the ticker is moving backwards)
 S.triggered = function (item) {
 
-	if (this.triggered !== item) {
+    if (this.triggered !== item) {
 
-		if (item) this.action();
-		else this.revert();
+        if (item) this.action();
+        else this.revert();
 
-		this.triggered = item;
-	}
+        this.triggered = item;
+    }
 };
 
+// ## Define prototype functions
 
-/*
-## Define prototype functions
-*/
-
-/*
-Overrides the set() functionality defined in mixin/base.js
-*/
+// Overrides the set() functionality defined in mixin/base.js
 P.set = function (items = {}) {
 
-	if (items) {
+    if (items) {
 
-		let setters = this.setters,
-			defs = this.defs,
-			ticker = (xt(items.ticker)) ? this.ticker : false;
+        let setters = this.setters,
+            defs = this.defs,
+            ticker = (xt(items.ticker)) ? this.ticker : false;
 
-		Object.entries(items).forEach(([key, value]) => {
+        Object.entries(items).forEach(([key, value]) => {
 
-			if (key !== 'name') {
+            if (key !== 'name') {
 
-				let predefined = setters[key];
+                let predefined = setters[key];
 
-				if (predefined) predefined.call(this, value);
-				else if (typeof defs[key] !== 'undefined') this[key] = value;
-			}
-		}, this);
+                if (predefined) predefined.call(this, value);
+                else if (typeof defs[key] !== 'undefined') this[key] = value;
+            }
+        }, this);
 
-		if (ticker) {
+        if (ticker) {
 
-			this.ticker = ticker;
-			this.addToTicker(items.ticker);
-		}
-		else if (xt(items.time)) this.calculateEffectiveTime();
-	}
-	return this;
+            this.ticker = ticker;
+            this.addToTicker(items.ticker);
+        }
+        else if (xt(items.time)) this.calculateEffectiveTime();
+    }
+    return this;
 };
 
 
-/*
-Ticker-related help function
-*/
+// Ticker-related help function
 P.getEndTime = function () {
-	return this.effectiveTime;
+    return this.effectiveTime;
 };
 
-/*
-The __update__ function checks to see if the action (or revert) functions need to be invoked, and invokes them as-and-when required.
 
-BUG: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. All other %times appear to work as expected. Thus I don't consider this to be a show stopper.
-*/
+// The __update__ function checks to see if the action (or revert) functions need to be invoked, and invokes them as-and-when required.
+
+// BUG: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. All other %times appear to work as expected. Thus I don't consider this to be a show stopper.
 P.update = function (items) {
 
-	let reversed = this.reversed,
-		effectiveTime = this.effectiveTime,
-		triggered = this.triggered,
-		reverseOnCycleEnd = this.reverseOnCycleEnd,
-		tick = items.tick,
-		reverseTick = items.reverseTick,
-		willLoop = items.willLoop,
-		next = items.next;
+    let reversed = this.reversed,
+        effectiveTime = this.effectiveTime,
+        triggered = this.triggered,
+        reverseOnCycleEnd = this.reverseOnCycleEnd,
+        tick = items.tick,
+        reverseTick = items.reverseTick,
+        willLoop = items.willLoop,
+        next = items.next;
 
-	if (reversed) {
+    if (reversed) {
 
-		if (reverseTick >= effectiveTime) {
+        if (reverseTick >= effectiveTime) {
 
-			if (!triggered) {
+            if (!triggered) {
 
-				this.action();
-				this.triggered = true;
-			}
-		}
-		else {
+                this.action();
+                this.triggered = true;
+            }
+        }
+        else {
 
-			if (triggered) {
+            if (triggered) {
 
-				this.revert();
-				this.triggered = false;
-			}
-		}
-	}
-	else {
-		if (tick >= effectiveTime) {
+                this.revert();
+                this.triggered = false;
+            }
+        }
+    }
+    else {
+        if (tick >= effectiveTime) {
 
-			if (!triggered) {
+            if (!triggered) {
 
-				this.action();
-				this.triggered = true;
-			}
-		}
-		else {
+                this.action();
+                this.triggered = true;
+            }
+        }
+        else {
 
-			if (triggered) {
+            if (triggered) {
 
-				this.revert();
-				this.triggered = false;
-			}
-		}
-	}
+                this.revert();
+                this.triggered = false;
+            }
+        }
+    }
 
-	if (willLoop) this.triggered = !this.triggered;
+    if (willLoop) this.triggered = !this.triggered;
 
-	return true;
+    return true;
 };
 
-/*
-## Exported factory function
-*/
+
+// ## Exported factory function
 const makeAction = function (items) {
-	return new Action(items);
+    return new Action(items);
 };
 
 constructors.Action = Action;
 
 export {
-	makeAction,
+    makeAction,
 };

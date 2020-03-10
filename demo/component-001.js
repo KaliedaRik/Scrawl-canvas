@@ -1,3 +1,7 @@
+// ## Demo Component 001
+
+// [Scrawl-canvas DOM element components](../../demo/component-001.html)
+
 // Initialize scrawl-canvas
 import scrawl from '../source/scrawl.js';
 
@@ -20,7 +24,7 @@ jazzyElements.forEach(el => myJazzy.push(jazzyButton(el)));
 
 // make the third jazzy button (in the middle of the grid element) display it's canvas over the button
 myJazzy[2].element.set({
-	canvasOnTop: true,
+    canvasOnTop: true,
 });
 
 pageReport.forEach(el => pagePerformance(el));

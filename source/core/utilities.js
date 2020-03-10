@@ -1,142 +1,139 @@
-/*
-# Core utility functions
-*/
+// # Core utility functions
 import * as library from "./library.js";
 
-/*
-__addStrings__ adds the two arguments together and returns a percentage string value if either of the values was a string; 
 
-Examples:
+// __addStrings__ adds the two arguments together and returns a percentage string value if either of the values was a string; 
 
-    addStrings(20, 40);
-    -> '60%'
+// Examples:
+
+//     addStrings(20, 40);
+//     -> '60%'
     
-    addStrings('20%', 40);
-    -> '60%'
+//     addStrings('20%', 40);
+//     -> '60%'
     
-    addStrings(20, '40%');
-    -> '60%'
+//     addStrings(20, '40%');
+//     -> '60%'
     
-    addStrings('20%', '40%');
-    -> '60%'
-*/
+//     addStrings('20%', '40%');
+//     -> '60%'
+
 const addStrings = (current, delta) => {
 
-	if (!xt(delta)) throw new Error(`core/utilities addStrings() error - no delta argument supplied ${current}, ${delta}`);
+    if (!xt(delta)) throw new Error(`core/utilities addStrings() error - no delta argument supplied ${current}, ${delta}`);
 
-	if ((delta != null)) {
+    if ((delta != null)) {
 
-		let stringFlag = (current.substring || delta.substring) ? true : false;
+        let stringFlag = (current.substring || delta.substring) ? true : false;
 
-		if (isa_number(current)) current += (isa_number(delta) ? delta : parseFloat(delta));
-		else current = parseFloat(current) + (isa_number(delta) ? delta : parseFloat(delta));
+        if (isa_number(current)) current += (isa_number(delta) ? delta : parseFloat(delta));
+        else current = parseFloat(current) + (isa_number(delta) ? delta : parseFloat(delta));
 
-		return (stringFlag) ? current + '%' : current;
-	}
-	return current;
+        return (stringFlag) ? current + '%' : current;
+    }
+    return current;
 };
 
+// TODO documentation
 const capitalize = (s) => {
 
-	if (typeof s !== 'string') return ''
-	return s.charAt(0).toUpperCase() + s.slice(1)
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
 }
-/*
-__convertLength__ takes a value, checks if it is a percent value and - if true - returns a value relative to the supplied length; otherwise returns the value as a number
 
-Examples:
 
-    convertLength(20, 40);
-    -> 20
+// __convertLength__ takes a value, checks if it is a percent value and - if true - returns a value relative to the supplied length; otherwise returns the value as a number
+
+// Examples:
+
+//     convertLength(20, 40);
+//     -> 20
     
-    convertLength('20%', 40);
-    -> 8
-*/
+//     convertLength('20%', 40);
+//     -> 8
 const convertLength = (val, len) => {
 
-	if (!xt(val)) throw new Error(`core/base error - convertLength() bad value argument: ${val}`);
-	if (!isa_number(len)) throw new Error(`core/base error - convertLength() bad length argument: ${len}`);
+    if (!xt(val)) throw new Error(`core/base error - convertLength() bad value argument: ${val}`);
+    if (!isa_number(len)) throw new Error(`core/base error - convertLength() bad length argument: ${len}`);
 
-	if (isa_number(val)) return val;
+    if (isa_number(val)) return val;
 
-	else {
+    else {
 
-		switch(val){
+        switch(val){
 
-			case 'top' :
-			case 'left' :
-				return 0;
+            case 'top' :
+            case 'left' :
+                return 0;
 
-			case 'bottom' :
-			case 'right' :
-				return len;
+            case 'bottom' :
+            case 'right' :
+                return len;
 
-			case 'center' :
-				return len / 2;
+            case 'center' :
+                return len / 2;
 
-			default :
-				val = parseFloat(val);
+            default :
+                val = parseFloat(val);
 
-				if (!isa_number(val)) throw new Error(`core/base error - convertLength() value converst to NaN: ${val}`);
+                if (!isa_number(val)) throw new Error(`core/base error - convertLength() value converst to NaN: ${val}`);
 
-				return ( val / 100) * len;
-		}
-	}
+                return ( val / 100) * len;
+        }
+    }
 };
 
-/*
-__convertTime__ converts a time value into its component string suffix and (millisecond) number value properties; returns an array
 
-Examples:
+// __convertTime__ converts a time value into its component string suffix and (millisecond) number value properties; returns an array
 
-    convertTime(5000);
-    -> ['ms', 5000]
+// Examples:
+
+//     convertTime(5000);
+//     -> ['ms', 5000]
     
-    convertTime('50%');
-    -> ['%', 50]
+//     convertTime('50%');
+//     -> ['%', 50]
     
-    convertTime('5000ms'); 
-    -> ['ms', 5000]
+//     convertTime('5000ms'); 
+//     -> ['ms', 5000]
     
-    convertTime('5s');
-    -> ['ms', 5000]
-*/    
+//     convertTime('5s');
+//     -> ['ms', 5000]
 const convertTime = (item) => {
 
-	let a, timeUnit, timeValue;
+    let a, timeUnit, timeValue;
 
-	if (!xt(item)) throw new Error(`core/utilities convertTime() error - no argument supplied`);
+    if (!xt(item)) throw new Error(`core/utilities convertTime() error - no argument supplied`);
 
-	if (isa_number(item)) return ['ms', item];
+    if (isa_number(item)) return ['ms', item];
 
-	if (!item.substring) throw new Error(`core/utilities convertTime() error - invalid argument: ${item}`);
+    if (!item.substring) throw new Error(`core/utilities convertTime() error - invalid argument: ${item}`);
 
-	a = item.match(/^\d+\.?\d*(\D*)/);
-	timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
-	
-	timeValue = parseFloat(item);
+    a = item.match(/^\d+\.?\d*(\D*)/);
+    timeUnit = (a[1].toLowerCase) ? a[1].toLowerCase() : 'ms';
+    
+    timeValue = parseFloat(item);
 
-	if (!isa_number(timeValue)) throw new Error(`core/base error - convertTime() argument converts to NaN: ${item}`);
+    if (!isa_number(timeValue)) throw new Error(`core/base error - convertTime() argument converts to NaN: ${item}`);
 
-	switch (timeUnit) {
+    switch (timeUnit) {
 
-		case 's':
-			timeValue *= 1000;
-			break;
+        case 's':
+            timeValue *= 1000;
+            break;
 
-		case '%':
-			break;
+        case '%':
+            break;
 
-		default:
-			timeUnit = 'ms';
-	}
-	
-	return [timeUnit, timeValue];
+        default:
+            timeUnit = 'ms';
+    }
+    
+    return [timeUnit, timeValue];
 };
 
-/*
-__defaultXYZReturnFunction__ helps us avoid errors when invoking a function attribute settable by the coder
-*/ 
+
+// __defaultXYZReturnFunction__ helps us avoid errors when invoking a function attribute settable by the coder
 const defaultNonReturnFunction = () => {};
 const defaultArgReturnFunction = (a) => a;
 const defaultThisReturnFunction = function () { return this; };
@@ -145,375 +142,347 @@ const defaultZeroReturnFunction = () => 0;
 const defaultBlankStringReturnFunction = () => '';
 const defaultPromiseReturnFunction = () => Promise.resolve(true);
 
-/*
-Return the value provided if it is an integer number and, if it isn't, return 0
-*/ 
+
+// Return the value provided if it is an integer number and, if it isn't, return 0
 const ensureInteger = (val) => {
 
-	val = parseInt(val, 10);
-	if (!isa_number(val)) val = 0;
-	return val;
+    val = parseInt(val, 10);
+    if (!isa_number(val)) val = 0;
+    return val;
 };
 
-/*
-Return the value provided if it is a positive integer number and, if it isn't, return 0
-*/ 
+
+// Return the value provided if it is a positive integer number and, if it isn't, return 0
 const ensurePositiveInteger = (val) => {
 
-	val = parseInt(val, 10);
-	if (!isa_number(val)) val = 0;
-	return Math.abs(val);
+    val = parseInt(val, 10);
+    if (!isa_number(val)) val = 0;
+    return Math.abs(val);
 };
 
-/*
-Return the value provided as a floating point number of given precision; return 0 if not a number
-*/ 
+
+// Return the value provided as a floating point number of given precision; return 0 if not a number
 const ensureFloat = (val, precision) => {
 
-	val = parseFloat(val);
+    val = parseFloat(val);
 
-	if (!isa_number(val)) val = 0;
-	if (!isa_number(precision)) precision = 0;
+    if (!isa_number(val)) val = 0;
+    if (!isa_number(precision)) precision = 0;
 
-	return parseFloat(val.toFixed(precision));
+    return parseFloat(val.toFixed(precision));
 };
 
-/*
-Return the value provided as a positive floating point number of given precision; return 0 if not a number
-*/ 
+
+// Return the value provided as a positive floating point number of given precision; return 0 if not a number
 const ensurePositiveFloat = (val, precision) => {
 
-	val = parseFloat(val);
+    val = parseFloat(val);
 
-	if (!isa_number(val)) val = 0;
-	if (!isa_number(precision)) precision = 0;
+    if (!isa_number(val)) val = 0;
+    if (!isa_number(precision)) precision = 0;
 
-	return Math.abs(parseFloat(val.toFixed(precision)));
+    return Math.abs(parseFloat(val.toFixed(precision)));
 };
 
-/*
-TODO - documentation
-*/
+
+// TODO - documentation
 const ensureString = (val) => {
 
-	return (val.substring) ? val : val.toString;
+    return (val.substring) ? val : val.toString;
 };
 
-/*
-__generateUuid__ is a simple (crude) uuid generator 
-http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-(imported 2017-07-08)
-*/
+
+// __generateUuid__ is a simple (crude) uuid generator 
+// http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+// (imported 2017-07-08)
 const generateUuid = () => {
 
-	function s4() {
+    function s4() {
 
-		return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-	}
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
 
-	return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+    return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 };
 
-/*
-__isa_boolean__ checks to make sure the argument is a DOM &lt;canvas> element
-*/ 
+
+// __isa_boolean__ checks to make sure the argument is a boolean
 const isa_boolean = item => (typeof item === 'boolean') ? true : false;
 
-/*
-__isa_canvas__ checks to make sure the argument is a DOM &lt;canvas> element
-*/ 
+
+// __isa_canvas__ checks to make sure the argument is a DOM &lt;canvas> element
 const isa_canvas = item => (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
 
-/*
-__isa_dom__ checks to make sure the argument is a DOM element of some sort
-*/ 
+
+// __isa_dom__ checks to make sure the argument is a DOM element of some sort
 const isa_dom = item => (item && item.querySelector && item.dispatchEvent) ? true : false;
 
-/*
-__isa_engine__ checks to make sure the argument is a &lt;canvas> element's context engine'
-*/ 
+
+// __isa_engine__ checks to make sure the argument is a &lt;canvas> element's context engine'
 const isa_engine = item => (item && item.quadraticCurveTo) ? true : false;
 
-/*
-__isa_fn__ checks to make sure the argument is a JavaScript function object
-*/ 
+
+// __isa_fn__ checks to make sure the argument is a JavaScript function object
 const isa_fn = item => (typeof item === 'function') ? true : false;
 
-/*
-__isa_img__ checks to make sure the argument is a DOM &lt;img> element
-*/ 
+
+// __isa_img__ checks to make sure the argument is a DOM &lt;img> element
 const isa_img = item => (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
 
-/*
-__isa_number__ checks to make sure the argument is true number (excluding NaN)
-*/ 
+
+// __isa_number__ checks to make sure the argument is true number (excluding NaN)
 const isa_number = item => (typeof item != 'undefined' && item.toFixed && !Number.isNaN(item)) ? true : false;
 
-/*
-__isa_obj__ checks to make sure the argument is a JavaScript Object
-*/ 
+
+// __isa_obj__ checks to make sure the argument is a JavaScript Object
 const isa_obj = item => (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
 
-/*
-__isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object
-*/ 
+
+// __isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object
 const isa_quaternion = item => (item && item.type && item.type === 'Quaternion') ? true : false;
 
-/*
-__isa_str__ checks to make sure the argument is a JavaScript String
-*/ 
+
+// __isa_str__ checks to make sure the argument is a JavaScript String
 const isa_str = item => (item && item.substring) ? true : false;
 
-/*
-__isa_vector__ checks to make sure the argument is a Scrawl-canvas Vector object
-*/ 
+
+// __isa_vector__ checks to make sure the argument is a Scrawl-canvas Vector object
 const isa_vector = item => (item && item.type && item.type === 'Vector') ? true : false;
 
-/*
-__isa_video__ checks to make sure the argument is a DOM &lt;video> element
-*/ 
+
+// __isa_video__ checks to make sure the argument is a DOM &lt;video> element
 const isa_video = item => (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
 
-/*
-__locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
 
-... used by gradients
-*/ 
+// __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
+
+// Used by gradients
 const locateTargetSections = ['artefact', 'group', 'animation', 'tween', 'styles'];
 const locateTarget = (item) => {
 
-	if(item && item.substring){
+    if(item && item.substring){
 
-		let result;
+        let result;
 
-		return (locateTargetSections.some(section => {
-			
-			result = library[section][item];
-			return result;
+        return (locateTargetSections.some(section => {
+            
+            result = library[section][item];
+            return result;
 
-		})) ? result : false;
-	}
-	return false;
+        })) ? result : false;
+    }
+    return false;
 };
 
-/*
-__mergeInto__ takes two objects and merges the attributes of one into the other. This function mutates the 'original' object rather than generating a third, new onject
 
-Example:
+// __mergeInto__ takes two objects and merges the attributes of one into the other. This function mutates the 'original' object rather than generating a third, new onject
 
-    var original = { name: 'Peter', age: 42, job: 'lawyer' };
-    var additional = { age: 32, job: 'coder', pet: 'cat' };
-    scrawl.utils.mergeInto(original, additional);
+// Example:
+
+//     var original = { name: 'Peter', age: 42, job: 'lawyer' };
+//     var additional = { age: 32, job: 'coder', pet: 'cat' };
+//     scrawl.utils.mergeInto(original, additional);
     
-    -> { name: 'Peter', age: 42, job: 'lawyer', pet: 'cat' }
-*/
+//     -> { name: 'Peter', age: 42, job: 'lawyer', pet: 'cat' }
 const mergeInto = (original, additional) => {
 
-	if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeInto() error - insufficient arguments supplied ${original}, ${additional}`);
+    if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeInto() error - insufficient arguments supplied ${original}, ${additional}`);
 
-	for (let key in additional) {
+    for (let key in additional) {
 
-		if (additional.hasOwnProperty(key) && typeof original[key] == 'undefined') original[key] = additional[key];
-	}
-	return original;
+        if (additional.hasOwnProperty(key) && typeof original[key] == 'undefined') original[key] = additional[key];
+    }
+    return original;
 };
 
-/*
-__mergeOver__ takes two objects and writes the attributes of one over the other. This function mutates the 'original' object rather than generating a third, new onject
 
-Example:
+// __mergeOver__ takes two objects and writes the attributes of one over the other. This function mutates the 'original' object rather than generating a third, new onject
 
-    var original = { name: 'Peter', age: 42, job: 'lawyer' };
-    var additional = { age: 32, job: 'coder', pet: 'cat' };
-    scrawl.utils.mergeOver(original, additional);
+// Example:
+
+//     var original = { name: 'Peter', age: 42, job: 'lawyer' };
+//     var additional = { age: 32, job: 'coder', pet: 'cat' };
+//     scrawl.utils.mergeOver(original, additional);
     
-    -> { name: 'Peter', age: 32, job: 'coder', pet: 'cat' }
-*/
+//     -> { name: 'Peter', age: 32, job: 'coder', pet: 'cat' }
 const mergeOver = (original, additional) => {
 
-	if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeOver() error - insufficient arguments supplied ${original}, ${additional}`);
+    if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeOver() error - insufficient arguments supplied ${original}, ${additional}`);
 
-	for (let key in additional) {
+    for (let key in additional) {
 
-		if (additional.hasOwnProperty(key)) original[key] = additional[key];
-	}
-	return original;
+        if (additional.hasOwnProperty(key)) original[key] = additional[key];
+    }
+    return original;
 };
 
-/*
-__mergeDiscard__ iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object
 
-Example:
+// __mergeDiscard__ iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object
 
-    var original = { name: 'Peter', age: 42, job: 'lawyer' };
-    var additional = { age: 32, job: null, pet: 'cat' };
-    scrawl.utils.mergeOver(original, additional);
+// Example:
+
+//     var original = { name: 'Peter', age: 42, job: 'lawyer' };
+//     var additional = { age: 32, job: null, pet: 'cat' };
+//     scrawl.utils.mergeOver(original, additional);
     
-    -> { name: 'Peter', age: 32, pet: 'cat' }
-*/
+//     -> { name: 'Peter', age: 32, pet: 'cat' }
 const mergeDiscard = (original, additional) => {
 
-	if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeDiscard() error - insufficient arguments supplied ${original}, ${additional}`);
+    if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeDiscard() error - insufficient arguments supplied ${original}, ${additional}`);
 
-	Object.entries(additional).forEach(([key, val]) => {
+    Object.entries(additional).forEach(([key, val]) => {
 
-		if (val === null) delete original[key];
-		else original[key] = additional[key];
-	});
-	return original;
+        if (val === null) delete original[key];
+        else original[key] = additional[key];
+    });
+    return original;
 };
 
-/*
-__pushUnique__ adds a value to the end of an array, if that value is not already present in the array. This function mutates the array
 
-Example:
+// __pushUnique__ adds a value to the end of an array, if that value is not already present in the array. This function mutates the array
 
-    var myarray = ['apple', 'orange'];
-    scrawl.utils.pushUnique(myarray, 'apple');    
-    -> ['apple', 'orange']
+// Example:
+
+//     var myarray = ['apple', 'orange'];
+//     scrawl.utils.pushUnique(myarray, 'apple');    
+//     -> ['apple', 'orange']
     
-    scrawl.utils.pushUnique(myarray, 'banana');
-    -> ['apple', 'orange', 'banana']
-
-*/
+//     scrawl.utils.pushUnique(myarray, 'banana');
+//     -> ['apple', 'orange', 'banana']
 const pushUnique = (myArray, potentialMember) => {
 
-	if (!xta(myArray, potentialMember)) throw new Error(`core/utilities pushUnique() error - insufficient arguments supplied ${myArray}, ${potentialMember}`);
+    if (!xta(myArray, potentialMember)) throw new Error(`core/utilities pushUnique() error - insufficient arguments supplied ${myArray}, ${potentialMember}`);
 
-	if (!Array.isArray(myArray)) throw new Error(`core/utilities pushUnique() error - argument not an array ${myArray}`);
+    if (!Array.isArray(myArray)) throw new Error(`core/utilities pushUnique() error - argument not an array ${myArray}`);
 
-	if (Array.isArray(potentialMember)) {
+    if (Array.isArray(potentialMember)) {
 
-		potentialMember.forEach(item => pushUnique(myArray, item));
-	}
-	else {
+        potentialMember.forEach(item => pushUnique(myArray, item));
+    }
+    else {
 
-		if (myArray.indexOf(potentialMember) < 0) myArray.push(potentialMember);
-	}
+        if (myArray.indexOf(potentialMember) < 0) myArray.push(potentialMember);
+    }
 
-	return myArray;
+    return myArray;
 };
 
-/*
-__removeItem__ removes a value from an array. This function mutates the array
 
-Example:
+// __removeItem__ removes a value from an array. This function mutates the array
 
-    var myarray = ['apple', 'orange'];
-    scrawl.utils.removeItem(myarray, 'banana');   
-    -> ['apple', 'orange']
+// Example:
+
+//     var myarray = ['apple', 'orange'];
+//     scrawl.utils.removeItem(myarray, 'banana');   
+//     -> ['apple', 'orange']
     
-    scrawl.utils.removeItem(myarray, 'apple');    
-    -> ['orange']
-*/
+//     scrawl.utils.removeItem(myarray, 'apple');    
+//     -> ['orange']
 const removeItem = (myArray, unwantedMember) => {
 
-	if (!xta(myArray, unwantedMember)) throw new Error(`core/utilities removeItem() error - insufficient arguments supplied ${myArray}, ${unwantedMember}`);
+    if (!xta(myArray, unwantedMember)) throw new Error(`core/utilities removeItem() error - insufficient arguments supplied ${myArray}, ${unwantedMember}`);
 
-	if (!Array.isArray(myArray)) throw new Error(`core/utilities removeItem() error - argument not an array ${myArray}`);
+    if (!Array.isArray(myArray)) throw new Error(`core/utilities removeItem() error - argument not an array ${myArray}`);
 
-	let index = myArray.indexOf(unwantedMember);
+    let index = myArray.indexOf(unwantedMember);
 
-	if (index >= 0) myArray.splice(index, 1);
+    if (index >= 0) myArray.splice(index, 1);
 
-	return myArray;
+    return myArray;
 };
 
-/*
-__xt__ checks to see if argument exists (is not 'undefined')
-*/ 
+
+// __xt__ checks to see if argument exists (is not 'undefined')
 const xt = item => (typeof item == 'undefined') ? false : true;
 
-/*
-__xta__ checks to make sure that all the arguments supplied to the function exist (none are 'undefined')
-*/ 
+
+// __xta__ checks to make sure that all the arguments supplied to the function exist (none are 'undefined')
 const xta = (...args) => args.every(item => typeof item != 'undefined');
 
-/*
-__xtGet__ returns the first existing (not 'undefined') argument supplied to the function
-*/ 
+
+// __xtGet__ returns the first existing (not 'undefined') argument supplied to the function
 const xtGet = (...args) => args.find(item => typeof item != 'undefined');
 
-/*
-__xto__ checks to make sure that at least one of the arguments supplied to the function exists (is not 'undefined')
-*/ 
+
+// __xto__ checks to make sure that at least one of the arguments supplied to the function exists (is not 'undefined')
 const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true : false;
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+
+// TODO - consider removing these functions - was for a failed solution a few years back, I think.
 const btoaUTF16 = function (sString) {
 
-	console.log(sString.length, sString)
-	sString = sString.replace(/\0/g, '');
-	console.log(sString.length)
-	let aUTF16CodeUnits = new Uint16Array(sString.length);
+    console.log(sString.length, sString)
+    sString = sString.replace(/\0/g, '');
+    console.log(sString.length)
+    let aUTF16CodeUnits = new Uint16Array(sString.length);
 
-	Array.prototype.forEach.call(aUTF16CodeUnits, function (el, idx, arr) { 
-		arr[idx] = sString.charCodeAt(idx); 
-	});
+    Array.prototype.forEach.call(aUTF16CodeUnits, function (el, idx, arr) { 
+        arr[idx] = sString.charCodeAt(idx); 
+    });
 
-	let result = btoa(String.fromCharCode.apply(null, new Uint8Array(aUTF16CodeUnits.buffer)));
+    let result = btoa(String.fromCharCode.apply(null, new Uint8Array(aUTF16CodeUnits.buffer)));
 
-	console.log(result)
-	console.log(atobUTF16(result))
-	return result;
+    console.log(result)
+    console.log(atobUTF16(result))
+    return result;
 };
 
 const atobUTF16 = function (sBase64) {
 
-	let sBinaryString = atob(sBase64), 
-		aBinaryView = new Uint8Array(sBinaryString.length);
+    let sBinaryString = atob(sBase64), 
+        aBinaryView = new Uint8Array(sBinaryString.length);
 
-	Array.prototype.forEach.call(aBinaryView, function (el, idx, arr) { 
-		arr[idx] = sBinaryString.charCodeAt(idx); 
-	});
+    Array.prototype.forEach.call(aBinaryView, function (el, idx, arr) { 
+        arr[idx] = sBinaryString.charCodeAt(idx); 
+    });
 
-	return String.fromCharCode.apply(null, new Uint16Array(aBinaryView.buffer));
+    return String.fromCharCode.apply(null, new Uint16Array(aBinaryView.buffer));
 };
 
-/*
-TODO - documentation
-*/
-export {
-	addStrings,
-	convertLength,
-	capitalize,
-	convertTime,
-	defaultNonReturnFunction,
-	defaultArgReturnFunction,
-	defaultThisReturnFunction,
-	defaultFalseReturnFunction,
-	defaultZeroReturnFunction,
-	defaultBlankStringReturnFunction,
-	defaultPromiseReturnFunction,
-	ensureInteger,
-	ensurePositiveInteger,
-	ensureFloat,
-	ensurePositiveFloat,
-	ensureString,
-	generateUuid,
-	isa_boolean,
-	isa_canvas,
-	isa_dom,
-	isa_engine,
-	isa_fn,
-	isa_img,
-	isa_number,
-	isa_obj,
-	isa_quaternion,
-	isa_str,
-	isa_vector,
-	isa_video,
-	locateTarget,
-	mergeDiscard,
-	mergeInto,
-	mergeOver,
-	pushUnique,
-	removeItem,
-	xt,
-	xta,
-	xtGet,
-	xto, 
 
-	atobUTF16,
-	btoaUTF16,
+// TODO - documentation
+export {
+    addStrings,
+    convertLength,
+    capitalize,
+    convertTime,
+    defaultNonReturnFunction,
+    defaultArgReturnFunction,
+    defaultThisReturnFunction,
+    defaultFalseReturnFunction,
+    defaultZeroReturnFunction,
+    defaultBlankStringReturnFunction,
+    defaultPromiseReturnFunction,
+    ensureInteger,
+    ensurePositiveInteger,
+    ensureFloat,
+    ensurePositiveFloat,
+    ensureString,
+    generateUuid,
+    isa_boolean,
+    isa_canvas,
+    isa_dom,
+    isa_engine,
+    isa_fn,
+    isa_img,
+    isa_number,
+    isa_obj,
+    isa_quaternion,
+    isa_str,
+    isa_vector,
+    isa_video,
+    locateTarget,
+    mergeDiscard,
+    mergeInto,
+    mergeOver,
+    pushUnique,
+    removeItem,
+    xt,
+    xta,
+    xtGet,
+    xto, 
+
+    atobUTF16,
+    btoaUTF16,
 };

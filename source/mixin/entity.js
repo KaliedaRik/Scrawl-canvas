@@ -1,19 +1,16 @@
-/*
-# Entity mixin
 
-This mixin builds on the _base_ mixin to set up much of the basic functionality of a Scrawl-canvas __entity__ Object:
+// # Entity mixin
 
-+ __defaults__ -
+// This mixin builds on the _base_ mixin to set up much of the basic functionality of a Scrawl-canvas __entity__ Object:
 
-+ __getters__ -
-+ __setters__ -
-+ __deltaSetters__ - 
+// + __defaults__ -
 
-
-*/
+// + __getters__ -
+// + __setters__ -
+// + __deltaSetters__ - 
 import * as library from '../core/library.js';
 import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
-	generateUuid, isa_fn, mergeOver, pushUnique, xt, xta, addStrings } from '../core/utilities.js';
+    generateUuid, isa_fn, mergeOver, pushUnique, xt, xta, addStrings } from '../core/utilities.js';
 import { currentGroup, scrawlCanvasHold } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
@@ -24,652 +21,610 @@ import { importDomImage } from '../factory/imageAsset.js';
 
 export default function (P = {}) {
 
-/*
-## Define attributes
 
-All factories using the position mixin will add these to their prototype objects
-*/
-	let defaultAttributes = {
+// ## Define attributes
 
-/*
-TODO - documentation
-*/
-		method: 'fill',
+// All factories using the position mixin will add these to their prototype objects
+    let defaultAttributes = {
 
-/*
-TODO - do we really need this in the defs object?
-*/
-		pathObject: null,
+// TODO - documentation
+        method: 'fill',
 
-/*
-TODO - documentation
-*/
-		winding: 'nonzero',
+// TODO - documentation
+        pathObject: null,
 
-/*
-TODO - documentation
-*/
-		flipReverse: false,
-		flipUpend: false,
+// TODO - documentation
+        winding: 'nonzero',
 
-/*
-TODO - documentation
-*/
-		scaleOutline: true,
+// TODO - documentation
+        flipReverse: false,
+        flipUpend: false,
 
-/*
-TODO - documentation
-*/
-		lockFillStyleToEntity: false,
-		lockStrokeStyleToEntity: false,
+// TODO - documentation
+        scaleOutline: true,
 
-/*
-TODO - documentation
-*/
-		onEnter: null,
-		onLeave: null,
-		onDown: null,
-		onUp: null,
-	};
-	P.defs = mergeOver(P.defs, defaultAttributes);
+// TODO - documentation
+        lockFillStyleToEntity: false,
+        lockStrokeStyleToEntity: false,
 
-/*
-## Packet management
-*/
-	P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
-	P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-	P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+// TODO - documentation
+        onEnter: null,
+        onLeave: null,
+        onDown: null,
+        onUp: null,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+    P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
+    P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+    P.packetCoordinates = pushUnique(P.packetCoordinates, []);
     P.packetObjects = pushUnique(P.packetObjects, []);
     P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
-	P.processEntityPacketOut = function (key, value, includes) {
+    P.processEntityPacketOut = function (key, value, includes) {
 
-		return this.processFactoryPacketOut(key, value, includes);
-	};
+        return this.processFactoryPacketOut(key, value, includes);
+    };
 
-	P.processFactoryPacketOut = function (key, value, includes) {
+    P.processFactoryPacketOut = function (key, value, includes) {
 
-		let result = true;
+        let result = true;
 
-		if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+        if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
 
-		return result;
-	};
+        return result;
+    };
 
-	P.finalizePacketOut = function (copy, items) {
+    P.finalizePacketOut = function (copy, items) {
 
-		let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
-		copy = mergeOver(copy, stateCopy);
+        let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+        copy = mergeOver(copy, stateCopy);
 
-		copy = this.handlePacketAnchor(copy, items);
+        copy = this.handlePacketAnchor(copy, items);
 
-		return copy;
-	};
+        return copy;
+    };
 
-/*
-Overwrites postCloneAction function in mixin/base.js
-*/
-	P.postCloneAction = function(clone, items) {
 
-		if (this.onEnter) clone.onEnter = this.onEnter;
-		if (this.onLeave) clone.onLeave = this.onLeave;
-		if (this.onDown) clone.onDown = this.onDown;
-		if (this.onUp) clone.onUp = this.onUp;
+// Overwrites postCloneAction function in mixin/base.js
+    P.postCloneAction = function(clone, items) {
 
-		if (items.sharedState) clone.state = this.state;
+        if (this.onEnter) clone.onEnter = this.onEnter;
+        if (this.onLeave) clone.onLeave = this.onLeave;
+        if (this.onDown) clone.onDown = this.onDown;
+        if (this.onUp) clone.onUp = this.onUp;
 
-		return clone;
-	};
+        if (items.sharedState) clone.state = this.state;
 
+        return clone;
+    };
 
-/*
-## Define getter, setter and deltaSetter functions
-*/
-	let G = P.getters,
-		S = P.setters,
-		D = P.deltaSetters;
 
-/*
-TODO - documentation
-*/
-	G.group = function () {
 
-		return (this.group) ? this.group.name : '';
-	};
+// ## Define getter, setter and deltaSetter functions
+    let G = P.getters,
+        S = P.setters,
+        D = P.deltaSetters;
 
-/*
-TODO - documentation
-*/
-	S.lockStylesToEntity = function (item) {
+// TODO - documentation
+    G.group = function () {
 
-		this.lockFillStyleToEntity = item;
-		this.lockStrokeStyleToEntity = item;
-	};
+        return (this.group) ? this.group.name : '';
+    };
 
-/*
-TODO - documentation
-*/
-	S.flipUpend = function (item) {
+// TODO - documentation
+    S.lockStylesToEntity = function (item) {
 
-		if (item !== this.flipUpend) this.dirtyCollision = true;
-		this.flipUpend = item;
-	};
+        this.lockFillStyleToEntity = item;
+        this.lockStrokeStyleToEntity = item;
+    };
 
-	S.flipReverse = function (item) {
+// TODO - documentation
+    S.flipUpend = function (item) {
 
-		if (item !== this.flipReverse) this.dirtyCollision = true;
-		this.flipReverse = item;
-	};
+        if (item !== this.flipUpend) this.dirtyCollision = true;
+        this.flipUpend = item;
+    };
 
+    S.flipReverse = function (item) {
 
-/*
-## Define functions to be added to the factory prototype
-*/
+        if (item !== this.flipReverse) this.dirtyCollision = true;
+        this.flipReverse = item;
+    };
 
-/*
-Overwrites function defined in mixin/base.js - takes into account State object attributes
-*/
-	P.get = function (item) {
 
-		let getter = this.getters[item];
 
-		if (getter) return getter.call(this);
+// ## Define functions to be added to the factory prototype
 
-		else {
 
-			let def = this.defs[item],
-				state = this.state,
-				val;
 
-			if (typeof def != 'undefined') {
+// Overwrites function defined in mixin/base.js - takes into account State object attributes
+    P.get = function (item) {
 
-				val = this[item];
-				return (typeof val != 'undefined') ? val : def;
-			}
+        let getter = this.getters[item];
 
-			def = state.defs[item];
+        if (getter) return getter.call(this);
 
-			if (typeof def != 'undefined') {
+        else {
 
-				val = state[item];
-				return (typeof val != 'undefined') ? val : def;
-			}
-			return undef;
-		}
-	};
+            let def = this.defs[item],
+                state = this.state,
+                val;
 
-/*
-Overwrites function defined in mixin/base.js - takes into account State object attributes
-*/
-	P.set = function (items = {}) {
+            if (typeof def != 'undefined') {
 
-		if (items) {
+                val = this[item];
+                return (typeof val != 'undefined') ? val : def;
+            }
 
-			let setters = this.setters,
-				defs = this.defs,
-				state = this.state,
-				stateSetters = (state) ? state.setters : {},
-				stateDefs = (state) ? state.defs : {};
+            def = state.defs[item];
 
-			Object.entries(items).forEach(([key, value]) => {
+            if (typeof def != 'undefined') {
 
-				if (key && key !== 'name' && value != null) {
+                val = state[item];
+                return (typeof val != 'undefined') ? val : def;
+            }
+            return undef;
+        }
+    };
 
-					let predefined = setters[key],
-						stateFlag = false;
 
-					if (!predefined) {
+// Overwrites function defined in mixin/base.js - takes into account State object attributes
+    P.set = function (items = {}) {
 
-						predefined = stateSetters[key];
-						stateFlag = true;
-					}
+        if (items) {
 
-					if (predefined) predefined.call(stateFlag ? this.state : this, value);
-					else if (typeof defs[key] !== 'undefined') this[key] = value;
-					else if (typeof stateDefs[key] !== 'undefined') state[key] = value;
-				}
-			}, this);
-		}
-		return this;
-	};
+            let setters = this.setters,
+                defs = this.defs,
+                state = this.state,
+                stateSetters = (state) ? state.setters : {},
+                stateDefs = (state) ? state.defs : {};
 
-/*
-Overwrites function defined in mixin/base.js - takes into account State object attributes
-*/
-	P.setDelta = function (items = {}) {
+            Object.entries(items).forEach(([key, value]) => {
 
-		if (items) {
+                if (key && key !== 'name' && value != null) {
 
-			let setters = this.deltaSetters,
-				defs = this.defs,
-				state = this.state,
-				stateSetters = (state) ? state.deltaSetters : {},
-				stateDefs = (state) ? state.defs : {};
+                    let predefined = setters[key],
+                        stateFlag = false;
 
-			Object.entries(items).forEach(([key, value]) => {
+                    if (!predefined) {
 
-				if (key && key !== 'name' && value != null) {
+                        predefined = stateSetters[key];
+                        stateFlag = true;
+                    }
 
-					let predefined = setters[key],
-						stateFlag = false;
+                    if (predefined) predefined.call(stateFlag ? this.state : this, value);
+                    else if (typeof defs[key] !== 'undefined') this[key] = value;
+                    else if (typeof stateDefs[key] !== 'undefined') state[key] = value;
+                }
+            }, this);
+        }
+        return this;
+    };
 
-					if (!predefined) {
 
-						predefined = stateSetters[key];
-						stateFlag = true;
-					}
+// Overwrites function defined in mixin/base.js - takes into account State object attributes
+    P.setDelta = function (items = {}) {
 
-					if (predefined) predefined.call(stateFlag ? this.state : this, value);
-					else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
-					else if (typeof stateDefs[key] !== 'undefined') state[key] = addStrings(state[key], value);
-				}
-			}, this);
-		}
-		return this;
-	};
+        if (items) {
 
-/*
-TODO - documentation
-*/
-	P.entityInit = function (items = {}) {
+            let setters = this.deltaSetters,
+                defs = this.defs,
+                state = this.state,
+                stateSetters = (state) ? state.deltaSetters : {},
+                stateDefs = (state) ? state.defs : {};
 
-		this.makeName(items.name);
-		this.register();
-		this.initializePositions();
+            Object.entries(items).forEach(([key, value]) => {
 
-		this.set(this.defs);
+                if (key && key !== 'name' && value != null) {
 
-		this.state = makeState();
+                    let predefined = setters[key],
+                        stateFlag = false;
 
-		if (!items.group) items.group = currentGroup;
+                    if (!predefined) {
 
-		this.onEnter = defaultNonReturnFunction;
-		this.onLeave = defaultNonReturnFunction;
-		this.onDown = defaultNonReturnFunction;
-		this.onUp = defaultNonReturnFunction;
+                        predefined = stateSetters[key];
+                        stateFlag = true;
+                    }
 
-		this.set(items);
+                    if (predefined) predefined.call(stateFlag ? this.state : this, value);
+                    else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
+                    else if (typeof stateDefs[key] !== 'undefined') state[key] = addStrings(state[key], value);
+                }
+            }, this);
+        }
+        return this;
+    };
 
-		this.midInitActions(items);
-	};
+// TODO - documentation
+    P.entityInit = function (items = {}) {
 
-	P.midInitActions = defaultNonReturnFunction;
+        this.makeName(items.name);
+        this.register();
+        this.initializePositions();
 
-/*
-TODO - documentation
+        this.set(this.defs);
 
-CURRENTLY does not support filters on entitys
-*/
-	P.simpleStamp = function (host, changes = {}) {
+        this.state = makeState();
 
-		if (host && host.type === 'Cell') {
+        if (!items.group) items.group = currentGroup;
 
-			this.currentHost = host;
-			
-			this.set(changes);
-			this.prepareStamp();
+        this.onEnter = defaultNonReturnFunction;
+        this.onLeave = defaultNonReturnFunction;
+        this.onDown = defaultNonReturnFunction;
+        this.onUp = defaultNonReturnFunction;
 
-			this.regularStampSynchronousActions();
-		}
-	};
+        this.set(items);
 
-/*
-TODO - documentation
-*/
-	P.prepareStamp = function() {
+        this.midInitActions(items);
+    };
 
-		if (this.dirtyHost) {
+    P.midInitActions = defaultNonReturnFunction;
 
-			this.dirtyHost = false;
-			this.dirtyDimensions = true;
-		}
 
-		if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
+// TODO - documentation
 
-		if (this.dirtyRotation) this.dirtyCollision = true;
+// CURRENTLY does not support filters on entitys
+    P.simpleStamp = function (host, changes = {}) {
 
+        if (host && host.type === 'Cell') {
 
-		if (this.dirtyScale) this.cleanScale();
-		if (this.dirtyDimensions) this.cleanDimensions();
-		if (this.dirtyLock) this.cleanLock();
-		if (this.dirtyStart) this.cleanStart();
-		if (this.dirtyOffset) this.cleanOffset();
-		if (this.dirtyHandle) this.cleanHandle();
-		if (this.dirtyRotation) this.cleanRotation();
+            this.currentHost = host;
+            
+            this.set(changes);
+            this.prepareStamp();
 
-		if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+            this.regularStampSynchronousActions();
+        }
+    };
 
-			this.dirtyStampPositions = true;
-			this.dirtyStampHandlePositions = true;
-		}
+// TODO - documentation
+    P.prepareStamp = function() {
 
-		if (this.dirtyStampPositions) this.cleanStampPositions();
-		if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
+        if (this.dirtyHost) {
 
-		if (this.dirtyPathObject) {
+            this.dirtyHost = false;
+            this.dirtyDimensions = true;
+        }
 
-			this.cleanPathObject();
-			this.dirtyCollision = true;
-		}
+        if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
-		// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
-		if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
-	};
+        if (this.dirtyRotation) this.dirtyCollision = true;
 
-/*
-TODO - documentation
 
-EVERY ENTITY FILE will need to define its own .cleanPathObject function
-*/
-	P.cleanPathObject = defaultNonReturnFunction;
+        if (this.dirtyScale) this.cleanScale();
+        if (this.dirtyDimensions) this.cleanDimensions();
+        if (this.dirtyLock) this.cleanLock();
+        if (this.dirtyStart) this.cleanStart();
+        if (this.dirtyOffset) this.cleanOffset();
+        if (this.dirtyHandle) this.cleanHandle();
+        if (this.dirtyRotation) this.cleanRotation();
 
-/*
-TODO - documentation
-*/
-	P.draw = function (engine) {
+        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
 
-		engine.stroke(this.pathObject);
-	};
+            this.dirtyStampPositions = true;
+            this.dirtyStampHandlePositions = true;
+        }
 
-	P.fill = function (engine) {
+        if (this.dirtyStampPositions) this.cleanStampPositions();
+        if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
-		engine.fill(this.pathObject, this.winding);
-	};
+        if (this.dirtyPathObject) {
 
-	P.drawAndFill = function (engine) {
+            this.cleanPathObject();
+            this.dirtyCollision = true;
+        }
 
-		let p = this.pathObject;
+        // update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
+        if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+    };
 
-		engine.stroke(p);
-		this.currentHost.clearShadow();
-		engine.fill(p, this.winding);
-	};
 
-	P.fillAndDraw = function (engine) {
+// TODO - documentation
 
-		let p = this.pathObject;
+// EVERY ENTITY FILE will need to define its own .cleanPathObject function
+    P.cleanPathObject = defaultNonReturnFunction;
 
-		engine.stroke(p);
-		this.currentHost.clearShadow();
-		engine.fill(p, this.winding);
-		engine.stroke(p);
-	};
+// TODO - documentation
+    P.draw = function (engine) {
 
-	P.drawThenFill = function (engine) {
+        engine.stroke(this.pathObject);
+    };
 
-		let p = this.pathObject;
+    P.fill = function (engine) {
 
-		engine.stroke(p);
-		engine.fill(p, this.winding);
-	};
+        engine.fill(this.pathObject, this.winding);
+    };
 
-	P.fillThenDraw = function (engine) {
+    P.drawAndFill = function (engine) {
 
-		let p = this.pathObject;
+        let p = this.pathObject;
 
-		engine.fill(p, this.winding);
-		engine.stroke(p);
-	};
+        engine.stroke(p);
+        this.currentHost.clearShadow();
+        engine.fill(p, this.winding);
+    };
 
-	P.clear = function (engine) {
+    P.fillAndDraw = function (engine) {
 
-		let gco = engine.globalCompositeOperation;
+        let p = this.pathObject;
 
-		engine.globalCompositeOperation = 'destination-out';
-		engine.fill(this.pathObject, this.winding);
-		
-		engine.globalCompositeOperation = gco;
-	};
+        engine.stroke(p);
+        this.currentHost.clearShadow();
+        engine.fill(p, this.winding);
+        engine.stroke(p);
+    };
 
-	P.none = function (engine) {}
+    P.drawThenFill = function (engine) {
 
-/*
-TODO - documentation
-*/
-	P.stamp = function (force = false, host, changes) {
+        let p = this.pathObject;
 
-		let filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
+        engine.stroke(p);
+        engine.fill(p, this.winding);
+    };
 
-		if (force) {
+    P.fillThenDraw = function (engine) {
 
-			if (host && host.type === 'Cell') this.currentHost = host;
+        let p = this.pathObject;
 
-			if (changes) {
+        engine.fill(p, this.winding);
+        engine.stroke(p);
+    };
 
-				this.set(changes);
-				this.prepareStamp();
-			}
+    P.clear = function (engine) {
 
-			if (filterTest) return this.filteredStamp();
-			else return this.regularStamp();
-		}
+        let gco = engine.globalCompositeOperation;
 
-		if (this.visibility) {
+        engine.globalCompositeOperation = 'destination-out';
+        engine.fill(this.pathObject, this.winding);
+        
+        engine.globalCompositeOperation = gco;
+    };
 
-			if (this.stashOutput || filterTest) return this.filteredStamp();
-			else return this.regularStamp();
-		}
-		return Promise.resolve(false);
-	};
+    P.none = function (engine) {}
 
-/*
-TODO - documentation
-*/
-	P.filteredStamp = function(){
+// TODO - documentation
+    P.stamp = function (force = false, host, changes) {
 
-		// Clean and sort the Entity-level filters before sending them to the filter worker for application
-		if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+        let filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
 
-		let self = this;
+        if (force) {
 
-		return new Promise((resolve, reject) => {
+            if (host && host.type === 'Cell') this.currentHost = host;
 
-			// An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the entity's composite and alpha values
-			let cleanup = function () {
+            if (changes) {
 
-				if (worker) releaseFilterWorker(worker);
+                this.set(changes);
+                this.prepareStamp();
+            }
 
-				currentEngine.save();
-				
-				currentEngine.globalCompositeOperation = self.filterComposite;
-				currentEngine.globalAlpha = self.filterAlpha;
-				currentEngine.setTransform(1, 0, 0, 1, 0, 0);
+            if (filterTest) return this.filteredStamp();
+            else return this.regularStamp();
+        }
 
-				currentEngine.drawImage(filterElement, 0, 0);
-				
-				// This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img> elements for use elsewhere in the Scrawl-canvas ecosystem.
-				if (self.stashOutput) {
+        if (this.visibility) {
 
-					self.stashOutput = false;
+            if (this.stashOutput || filterTest) return this.filteredStamp();
+            else return this.regularStamp();
+        }
+        return Promise.resolve(false);
+    };
 
-					let [stashX, stashY, stashWidth, stashHeight] = self.getCellCoverage(filterEngine.getImageData(0, 0, filterElement.width, filterElement.height));
+// TODO - documentation
+    P.filteredStamp = function(){
 
-					self.stashedImageData = filterEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+        // Clean and sort the Entity-level filters before sending them to the filter worker for application
+        if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
-					if (self.stashOutputAsAsset) {
+        let self = this;
 
-						// KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo canvas-020 for a setTimeout-based workaround.
-						self.stashOutputAsAsset = false;
+        return new Promise((resolve, reject) => {
 
-						filterElement.width = stashWidth;
-						filterElement.height = stashHeight;
-						filterEngine.putImageData(self.stashedImageData, 0, 0);
+            // An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the entity's composite and alpha values
+            let cleanup = function () {
 
-						if (!self.stashedImage) {
+                if (worker) releaseFilterWorker(worker);
 
-							let newimg = self.stashedImage = document.createElement('img');
+                currentEngine.save();
+                
+                currentEngine.globalCompositeOperation = self.filterComposite;
+                currentEngine.globalAlpha = self.filterAlpha;
+                currentEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-							newimg.id = `${self.name}-image`;
+                currentEngine.drawImage(filterElement, 0, 0);
+                
+                // This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img> elements for use elsewhere in the Scrawl-canvas ecosystem.
+                if (self.stashOutput) {
 
-							newimg.onload = function () {
+                    self.stashOutput = false;
 
-								scrawlCanvasHold.appendChild(newimg);
-								importDomImage(`#${newimg.id}`);
-							};
+                    let [stashX, stashY, stashWidth, stashHeight] = self.getCellCoverage(filterEngine.getImageData(0, 0, filterElement.width, filterElement.height));
 
-							newimg.src = filterElement.toDataURL();
-						}
-						else self.stashedImage.src = filterElement.toDataURL();
-					}
-				}
-		
-				releaseCell(filterHost);
+                    self.stashedImageData = filterEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
 
-				currentEngine.restore();
+                    if (self.stashOutputAsAsset) {
 
-				self.currentHost = currentHost;
-				self.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
-			};
+                        // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo canvas-020 for a setTimeout-based workaround.
+                        self.stashOutputAsAsset = false;
 
-			// save current host data into a set of vars, ready for restoration after web worker completes or fails
-			let currentHost = self.currentHost,
-				currentElement = currentHost.element,
-				currentEngine = currentHost.engine,
-				currentDimensions = currentHost.currentDimensions;
+                        filterElement.width = stashWidth;
+                        filterElement.height = stashHeight;
+                        filterEngine.putImageData(self.stashedImageData, 0, 0);
 
-			// get and prepare a blank canvas for the filter operations
-			let filterHost = requestCell(),
-				filterElement = filterHost.element,
-				filterEngine = filterHost.engine;
+                        if (!self.stashedImage) {
 
-			self.currentHost = filterHost;
-			
-			let w = filterElement.width = currentDimensions[0] || currentElement.width,
-				h = filterElement.height = currentDimensions[1] || currentElement.height;
+                            let newimg = self.stashedImage = document.createElement('img');
 
-			// Switch off fast stamp
-			let oldNoCanvasEngineUpdates = self.noCanvasEngineUpdates;
-			self.noCanvasEngineUpdates = false;
+                            newimg.id = `${self.name}-image`;
 
- 			// stamp the entity onto the blank canvas
-			self.regularStampSynchronousActions();
+                            newimg.onload = function () {
 
-			// At this point we will send the contents of the host canvas over to the web worker, alongside details of the filters we wish to apply to it
-			let worker, myimage;
+                                scrawlCanvasHold.appendChild(newimg);
+                                importDomImage(`#${newimg.id}`);
+                            };
 
-			if (!self.noFilters && self.filters && self.filters.length) {
+                            newimg.src = filterElement.toDataURL();
+                        }
+                        else self.stashedImage.src = filterElement.toDataURL();
+                    }
+                }
+        
+                releaseCell(filterHost);
 
-				// if we're using the entity as a stencil, copy the entity cell's current display over the entity in the blank canvas
-				if (self.isStencil) {
+                currentEngine.restore();
 
-					filterEngine.save();
-					filterEngine.globalCompositeOperation = 'source-in';
-					filterEngine.globalAlpha = 1;
-					filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-					filterEngine.drawImage(currentElement, 0, 0);
-					filterEngine.restore();
-				} 
+                self.currentHost = currentHost;
+                self.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
+            };
 
-				filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+            // save current host data into a set of vars, ready for restoration after web worker completes or fails
+            let currentHost = self.currentHost,
+                currentElement = currentHost.element,
+                currentEngine = currentHost.engine,
+                currentDimensions = currentHost.currentDimensions;
 
-				myimage = filterEngine.getImageData(0, 0, w, h);
-				worker = requestFilterWorker();
+            // get and prepare a blank canvas for the filter operations
+            let filterHost = requestCell(),
+                filterElement = filterHost.element,
+                filterEngine = filterHost.engine;
 
-				actionFilterWorker(worker, {
-					image: myimage,
-					filters: self.currentFilters
-				})
-				.then(img => {
+            self.currentHost = filterHost;
+            
+            let w = filterElement.width = currentDimensions[0] || currentElement.width,
+                h = filterElement.height = currentDimensions[1] || currentElement.height;
 
-					// handle the web worker response
-					if (img) {
+            // Switch off fast stamp
+            let oldNoCanvasEngineUpdates = self.noCanvasEngineUpdates;
+            self.noCanvasEngineUpdates = false;
 
-						filterEngine.globalCompositeOperation = 'source-over';
-						filterEngine.globalAlpha = 1;
-						filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-						filterEngine.putImageData(img, 0, 0);
+             // stamp the entity onto the blank canvas
+            self.regularStampSynchronousActions();
 
-						cleanup();
-						resolve(true);
-					}
-					else throw new Error('image issue');
-				})
-				.catch((err) => {
+            // At this point we will send the contents of the host canvas over to the web worker, alongside details of the filters we wish to apply to it
+            let worker, myimage;
 
-					cleanup();
-					reject(false);
-				});
-			}
+            if (!self.noFilters && self.filters && self.filters.length) {
 
-			// Where no filter is required, but we still want to stash the results
-			else {
+                // if we're using the entity as a stencil, copy the entity cell's current display over the entity in the blank canvas
+                if (self.isStencil) {
 
-				cleanup();
-				resolve(true);
-			}
-		});
-	};
+                    filterEngine.save();
+                    filterEngine.globalCompositeOperation = 'source-in';
+                    filterEngine.globalAlpha = 1;
+                    filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+                    filterEngine.drawImage(currentElement, 0, 0);
+                    filterEngine.restore();
+                } 
 
-/*
-TODO - documentation
-*/
-	P.getCellCoverage = function (img) {
+                filterEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-		let width = img.width,
-			height = img.height,
-			data = img.data,
-			maxX = 0,
-			maxY = 0,
-			minX = width,
-			minY = height,
-			counter = 3,
-			x, y;
+                myimage = filterEngine.getImageData(0, 0, w, h);
+                worker = requestFilterWorker();
 
-		for (y = 0; y < height; y++) {
+                actionFilterWorker(worker, {
+                    image: myimage,
+                    filters: self.currentFilters
+                })
+                .then(img => {
 
-			for (x = 0; x < width; x++) {
+                    // handle the web worker response
+                    if (img) {
 
-				if (data[counter]) {
+                        filterEngine.globalCompositeOperation = 'source-over';
+                        filterEngine.globalAlpha = 1;
+                        filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+                        filterEngine.putImageData(img, 0, 0);
 
-					if (minX > x) minX = x;
-					if (maxX < x) maxX = x;
-					if (minY > y) minY = y;
-					if (maxY < y) maxY = y;
-				}
+                        cleanup();
+                        resolve(true);
+                    }
+                    else throw new Error('image issue');
+                })
+                .catch((err) => {
 
-				counter += 4;
-			}
-		}
-		if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
-		else return [0, 0, width, height];
-	};
+                    cleanup();
+                    reject(false);
+                });
+            }
 
-/*
-TODO - documentation
-*/
-	P.regularStamp = function () {
+            // Where no filter is required, but we still want to stash the results
+            else {
 
-		let self = this;
+                cleanup();
+                resolve(true);
+            }
+        });
+    };
 
-		return new Promise((resolve, reject) => {
+// TODO - documentation
+    P.getCellCoverage = function (img) {
 
-			if (self.currentHost) {
+        let width = img.width,
+            height = img.height,
+            data = img.data,
+            maxX = 0,
+            maxY = 0,
+            minX = width,
+            minY = height,
+            counter = 3,
+            x, y;
 
-				self.regularStampSynchronousActions();
-				resolve(true);
-			}
-			reject(false);
-		});
-	};
+        for (y = 0; y < height; y++) {
 
-	P.regularStampSynchronousActions = function () {
+            for (x = 0; x < width; x++) {
 
-		let dest = this.currentHost;
+                if (data[counter]) {
 
-		if (dest) {
+                    if (minX > x) minX = x;
+                    if (maxX < x) maxX = x;
+                    if (minY > y) minY = y;
+                    if (maxY < y) maxY = y;
+                }
 
-			let engine = dest.engine,
-				stamp = this.currentStampPosition,
-				x = stamp[0],
-				y = stamp[1];
+                counter += 4;
+            }
+        }
+        if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
+        else return [0, 0, width, height];
+    };
 
-			dest.rotateDestination(engine, x, y, this);
+// TODO - documentation
+    P.regularStamp = function () {
 
-			if (!this.noCanvasEngineUpdates) dest.setEngine(this);
+        let self = this;
 
-			this[this.method](engine);
-		}
-	};
+        return new Promise((resolve, reject) => {
 
-	return P;
+            if (self.currentHost) {
+
+                self.regularStampSynchronousActions();
+                resolve(true);
+            }
+            reject(false);
+        });
+    };
+
+    P.regularStampSynchronousActions = function () {
+
+        let dest = this.currentHost;
+
+        if (dest) {
+
+            let engine = dest.engine,
+                stamp = this.currentStampPosition,
+                x = stamp[0],
+                y = stamp[1];
+
+            dest.rotateDestination(engine, x, y, this);
+
+            if (!this.noCanvasEngineUpdates) dest.setEngine(this);
+
+            this[this.method](engine);
+        }
+    };
+
+// Return the prototype
+    return P;
 };

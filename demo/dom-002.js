@@ -1,68 +1,71 @@
+// ## Demo DOM 002
+
+// [Element mouse, pivot and mimic functionality](../../demo/dom-002.html)
 import scrawl from '../source/scrawl.js'
 
 
 // Scene setup - create some useful variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
-	stack = artefact.mystack,
-	element = artefact.myelement,
-	mimic = artefact.mymimic,
-	pivot = artefact.mypivot;
+    stack = artefact.mystack,
+    element = artefact.myelement,
+    mimic = artefact.mymimic,
+    pivot = artefact.mypivot;
 
 
 // Give the stack element some depth
 stack.set({
-	perspectiveZ: 1200
+    perspectiveZ: 1200
 });
 
 
 // Setup the main element
 element.set({
-	startX: 250,
-	startY: 250,
-	handleX: 125,
-	handleY: 125,
-	width: 250,
-	height: 250,
-	roll: 10,
-	pitch: 20,
-	yaw: 30
+    startX: 250,
+    startY: 250,
+    handleX: 125,
+    handleY: 125,
+    width: 250,
+    height: 250,
+    roll: 10,
+    pitch: 20,
+    yaw: 30
 });
 
 
 // Setup the mimic element
 mimic.set({
-	width: 20,
-	height: 20,
-	offsetX: 60,
+    width: 20,
+    height: 20,
+    offsetX: 60,
 
-	roll: 15,
-	pitch: 15,
-	yaw: 15,
+    roll: 15,
+    pitch: 15,
+    yaw: 15,
 
-	mimic: 'myelement',
-	lockTo: 'mimic',
-	
-	useMimicDimensions: true,
-	useMimicScale: true,
-	useMimicStart: true,
-	useMimicHandle: true,
-	useMimicOffset: true,
-	useMimicRotation: true,
-	useMimicFlip: false,
+    mimic: 'myelement',
+    lockTo: 'mimic',
+    
+    useMimicDimensions: true,
+    useMimicScale: true,
+    useMimicStart: true,
+    useMimicHandle: true,
+    useMimicOffset: true,
+    useMimicRotation: true,
+    useMimicFlip: false,
 
-	addOwnDimensionsToMimic: true,
-	addOwnScaleToMimic: false,
-	addOwnStartToMimic: false,
-	addOwnHandleToMimic: false,
-	addOwnOffsetToMimic: true,
-	addOwnRotationToMimic: false,
+    addOwnDimensionsToMimic: true,
+    addOwnScaleToMimic: false,
+    addOwnStartToMimic: false,
+    addOwnHandleToMimic: false,
+    addOwnOffsetToMimic: true,
+    addOwnRotationToMimic: false,
 });
 
 
 // Setup the pivot element
 pivot.set({
-	pivot: 'myelement',
-	lockTo: 'pivot',
+    pivot: 'myelement',
+    lockTo: 'pivot',
 });
 
 
@@ -71,135 +74,135 @@ pivot.set({
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
 let stackCheck = function () {
 
-	let active = false;
+    let active = false;
 
-	return function () {
+    return function () {
 
-		if (stack.here.active !== active) {
+        if (stack.here.active !== active) {
 
-			active = stack.here.active;
+            active = stack.here.active;
 
-			element.set({
-				lockTo: (active) ? 'mouse' : 'start'
-			});
-		}
-	};
+            element.set({
+                lockTo: (active) ? 'mouse' : 'start'
+            });
+        }
+    };
 }();
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 lock to: «${element.lockTo}»; width: ${element.get('width')}; height: ${element.get('height')}
 start: [${element.start}]; handle: [${element.handle}]
 scale: ${element.get('scale')}; roll: ${element.get('roll')}°; pitch: ${element.get('pitch')}°; yaw: ${element.get('yaw')}°`;
-	};
+    };
 }();
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	target: stack,
-	commence: stackCheck,
-	afterShow: report,
+    name: 'demo-animation',
+    target: stack,
+    commence: stackCheck,
+    afterShow: report,
 });
 
 
 // User interaction - setup form observer functionality
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: element,
+    target: element,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		dims_widthPercent: ['width', '%'],
-		dims_widthAbsolute: ['width', 'round'],
+        dims_widthPercent: ['width', '%'],
+        dims_widthAbsolute: ['width', 'round'],
 
-		dims_heightPercent: ['height', '%'],
-		dims_heightAbsolute: ['height', 'round'],
+        dims_heightPercent: ['height', '%'],
+        dims_heightAbsolute: ['height', 'round'],
 
-		start_xPercent: ['startX', '%'],
-		start_xAbsolute: ['startX', 'round'],
-		start_xString: ['startX', 'raw'],
+        start_xPercent: ['startX', '%'],
+        start_xAbsolute: ['startX', 'round'],
+        start_xString: ['startX', 'raw'],
 
-		start_yPercent: ['startY', '%'],
-		start_yAbsolute: ['startY', 'round'],
-		start_yString: ['startY', 'raw'],
+        start_yPercent: ['startY', '%'],
+        start_yAbsolute: ['startY', 'round'],
+        start_yString: ['startY', 'raw'],
 
-		handle_xPercent: ['handleX', '%'],
-		handle_xAbsolute: ['handleX', 'round'],
-		handle_xString: ['handleX', 'raw'],
+        handle_xPercent: ['handleX', '%'],
+        handle_xAbsolute: ['handleX', 'round'],
+        handle_xString: ['handleX', 'raw'],
 
-		handle_yPercent: ['handleY', '%'],
-		handle_yAbsolute: ['handleY', 'round'],
-		handle_yString: ['handleY', 'raw'],
+        handle_yPercent: ['handleY', '%'],
+        handle_yAbsolute: ['handleY', 'round'],
+        handle_yString: ['handleY', 'raw'],
 
-		roll: ['roll', 'float'],
-		pitch: ['pitch', 'float'],
-		yaw: ['yaw', 'float'],
-		scale: ['scale', 'float'],
-	},
+        roll: ['roll', 'float'],
+        pitch: ['pitch', 'float'],
+        yaw: ['yaw', 'float'],
+        scale: ['scale', 'float'],
+    },
 });
 
 // 'target' doesn't have to be a Scrawl-canvas object. We can use the object's name, though we also have to tell the function where the object lives in the Scrawl-canvas library (usually this will be 'artefact')
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: 'mypivot',
-	targetLibrarySection: 'artefact',
+    target: 'mypivot',
+    targetLibrarySection: 'artefact',
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		pivot_handle: ['addPivotHandle', 'boolean'],
-		pivot_rotation: ['addPivotRotation', 'boolean'],
-	},
+        pivot_handle: ['addPivotHandle', 'boolean'],
+        pivot_rotation: ['addPivotRotation', 'boolean'],
+    },
 });
 
 // Using the Scrawl-canvas listener functions directly, in this case because we want to update more than one attribute in a single set action, which the observeAndUpdate function cannot do (because: too much of an edge case to handle)
 let events = (e) => {
 
-	e.preventDefault();
-	e.returnValue = false;
+    e.preventDefault();
+    e.returnValue = false;
 
-	switch (e.target.id) {
+    switch (e.target.id) {
 
-		case 'mimic_dims':
-			mimic.set({
-				width: parseFloat(e.target.value),
-				height: parseFloat(e.target.value),
-			});
-			break;
+        case 'mimic_dims':
+            mimic.set({
+                width: parseFloat(e.target.value),
+                height: parseFloat(e.target.value),
+            });
+            break;
 
-		case 'mimic_rotation':
-			mimic.set({
-				addOwnRotationToMimic: (e.target.value === '1') ? true : false,
-			});
-			break;
-	}
+        case 'mimic_rotation':
+            mimic.set({
+                addOwnRotationToMimic: (e.target.value === '1') ? true : false,
+            });
+            break;
+    }
 };
 scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 

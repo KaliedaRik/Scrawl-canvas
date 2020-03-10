@@ -1,295 +1,276 @@
-/*
-# SpriteAsset factory
 
-TODO - documentation
+// # SpriteAsset factory
 
-#### To instantiate objects from the factory
+// TODO - documentation
 
-#### Library storage
+// #### To instantiate objects from the factory
 
-#### Clone functionality
+// #### Library storage
 
-#### Kill functionality
-*/
+// #### Clone functionality
+
+// #### Kill functionality
 import { constructors } from '../core/library.js';
 import { mergeOver, generateUuid, xt, isa_obj, defaultNonReturnFunction } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-/*
-## SpriteAsset constructor
-*/
+
+// ## SpriteAsset constructor
 const SpriteAsset = function (items = {}) {
 
-	this.assetConstructor(items);
+    this.assetConstructor(items);
 
-	return this;
+    return this;
 };
 
-/*
-## SpriteAsset object prototype setup
-*/
+
+// ## SpriteAsset object prototype setup
 let P = SpriteAsset.prototype = Object.create(Object.prototype);
 P.type = 'Sprite';
 P.lib = 'asset';
 P.isArtefact = false;
 P.isAsset = true;
 
-/*
-Apply mixins to prototype object
-*/
+
+// Apply mixins to prototype object
 P = baseMix(P);
 P = assetMix(P);
 
-/*
-## Packet management
 
-Currently nothing to do here
+// ## Packet management
 
-TODO: work out how we're going to handle assets in packages
-	- currently assume asset already exists on the destination device browser
-	- we could include the &lt;img> element's src attribute in the packet??
-	- then when it comes to unpacking, check if it really does exist
-		- if not exist, do the load thing
+// Currently nothing to do here
 
-	- same work required across imageAsset, spriteAsset, videoAsset
-*/
+// TODO: work out how we're going to handle assets in packages
+//     - currently assume asset already exists on the destination device browser
+//     - we could include the &lt;img> element's src attribute in the packet??
+//     - then when it comes to unpacking, check if it really does exist
+//         - if not exist, do the load thing
+
+//     - same work required across imageAsset, spriteAsset, videoAsset
 
 
-/*
-## Define default attributes
-*/
+
+
+// ## Define default attributes
 let defaultAttributes = {
 
-/*
-TODO - documentation
-*/
-	manifest: null,
+// TODO - documentation
+    manifest: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+// ## Define getter, setter and deltaSetter functions
 let G = P.getters,
-	S = P.setters,
-	D = P.deltaSetters;
+    S = P.setters,
+    D = P.deltaSetters;
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 S.source = function (items = []) {
 
-	if (items && items[0]) {
+    if (items && items[0]) {
 
-		if (!this.sourceHold) this.sourceHold = {};
+        if (!this.sourceHold) this.sourceHold = {};
 
-		let hold = this.sourceHold;
+        let hold = this.sourceHold;
 
-		items.forEach(item => {
+        items.forEach(item => {
 
-			let name = item.id || item.name;
+            let name = item.id || item.name;
 
-			if (name) hold[name] = item;
-		})
+            if (name) hold[name] = item;
+        })
 
-		this.source = items[0];
-		this.sourceNaturalWidth = items[0].naturalWidth;
-		this.sourceNaturalHeight = items[0].naturalHeight;
-		this.sourceLoaded = items[0].complete;
-	}
+        this.source = items[0];
+        this.sourceNaturalWidth = items[0].naturalWidth;
+        this.sourceNaturalHeight = items[0].naturalHeight;
+        this.sourceLoaded = items[0].complete;
+    }
 };
 
 
-/*
-## Define prototype functions
-*/
 
-/*
-Sprite assets do not use the checkSource function. Instead, picture entitys will interrogate the checkSpriteFrame function (defined in mixin/assetConsumer.js)
-*/
+// ## Define prototype functions
+
+
+// Sprite assets do not use the checkSource function. Instead, picture entitys will interrogate the checkSpriteFrame function (defined in mixin/assetConsumer.js)
 P.checkSource = defaultNonReturnFunction;
 
 
-/*
-Import sprite sheet
 
-Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.jpg' - in which case Scrawl-canvas:
+// Import sprite sheet
 
-+ will attempt to give the new spriteAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
-+ will attempt to load the associated manifest JSON file, which it expects to find at 'http://www.example.com/path/to/image/flower.json'
-+ will not add the new img element to the DOM
+// Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.jpg' - in which case Scrawl-canvas:
 
-Note: if using an url string path to import the spritesheet image, a manifest JSON file with the same filename (ending in .json) in the same folder __must__ also be supplied!
+// + will attempt to give the new spriteAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
+// + will attempt to load the associated manifest JSON file, which it expects to find at 'http://www.example.com/path/to/image/flower.json'
+// + will not add the new img element to the DOM
 
-... or the arguments can be one or more (comma-separated) objects with the following attributes:
+// Note: if using an url string path to import the spritesheet image, a manifest JSON file with the same filename (ending in .json) in the same folder __must__ also be supplied!
 
-+ __name__ string
-+ __imageSrc__ (required) image url string, or an Array of such strings (for sprites using frames from multiple spritesheets)
-+ __manifestSrc__ (required) JSON manifest file url string, or an object detailing the manifest
-+ __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
-+ __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
-+ __className__ string - list of classes to be added to the new img element
+// ... or the arguments can be one or more (comma-separated) objects with the following attributes:
 
-Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.
+// + __name__ string
+// + __imageSrc__ (required) image url string, or an Array of such strings (for sprites using frames from multiple spritesheets)
+// + __manifestSrc__ (required) JSON manifest file url string, or an object detailing the manifest
+// + __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
+// + __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
+// + __className__ string - list of classes to be added to the new img element
 
-The __manifest__ must resolve to an object containing a set of attributes which represent 'tracks' - sequences of frames which, when run, will result in a particular animation (eg 'walk', 'turn', 'fire-arrow', 'die', etc). Each track attribute is an Array of arrays, with each sub-array supplying details of the source file, copy start coordinates, and copy dimensions for each frame
+// Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.
 
-```
-	manifestSrc: {
-	
-		"default" : [
-			['picturename', copyStartX, copyStartY, width, height]
-		],
+// The __manifest__ must resolve to an object containing a set of attributes which represent 'tracks' - sequences of frames which, when run, will result in a particular animation (eg 'walk', 'turn', 'fire-arrow', 'die', etc). Each track attribute is an Array of arrays, with each sub-array supplying details of the source file, copy start coordinates, and copy dimensions for each frame
 
-		"walk": [
-			['picturename', copyStartX, copyStartY, width, height]
-			['picturename', copyStartX, copyStartY, width, height]
-			['picturename', copyStartX, copyStartY, width, height]
-		]
-	}
-```
+//     manifestSrc: {
+    
+//         "default" : [
+//             ['picturename', copyStartX, copyStartY, width, height]
+//         ],
 
-Note that the frames for any track can be spread across more than one spritesheet image file
+//         "walk": [
+//             ['picturename', copyStartX, copyStartY, width, height]
+//             ['picturename', copyStartX, copyStartY, width, height]
+//             ['picturename', copyStartX, copyStartY, width, height]
+//         ]
+//     }
 
-Note also that the "default" track is mandatory, and should consist of at least one frame
-*/
+// Note that the frames for any track can be spread across more than one spritesheet image file
+
+// Note also that the "default" track is mandatory, and should consist of at least one frame
 const importSprite = function (...args) {
 
-	let reg = /.*\/(.*?)\./,
-		fileTlas = /\.(jpeg|jpg|png|gif|webp|svg|JPEG|JPG|PNG|GIF|WEBP|SVG)/,
-		results = [];
+    let reg = /.*\/(.*?)\./,
+        fileTlas = /\.(jpeg|jpg|png|gif|webp|svg|JPEG|JPG|PNG|GIF|WEBP|SVG)/,
+        results = [];
 
-	args.forEach(item => {
+    args.forEach(item => {
 
-		// Load the sprite image in the normal way
-		let name, urls, className, visibility, manifest, 
-			parent = false;
+        // Load the sprite image in the normal way
+        let name, urls, className, visibility, manifest, 
+            parent = false;
 
-		let flag = false;
+        let flag = false;
 
-		if (item.substring) {
+        if (item.substring) {
 
-			let match = reg.exec(item);
+            let match = reg.exec(item);
 
-			name = (match && match[1]) ? match[1] : '';
-			urls = [item];
-			className = '';
-			visibility = false;
-			manifest = item.replace(fileTlas, '.json');
+            name = (match && match[1]) ? match[1] : '';
+            urls = [item];
+            className = '';
+            visibility = false;
+            manifest = item.replace(fileTlas, '.json');
 
-			flag = true;
-		}
-		else {
+            flag = true;
+        }
+        else {
 
-			if (!isa_obj(item) || !item.imageSrc || !item.manifestSrc) results.push(false);
-			else {
+            if (!isa_obj(item) || !item.imageSrc || !item.manifestSrc) results.push(false);
+            else {
 
-				name = item.name || '';
+                name = item.name || '';
 
-				urls = Array.isArray(item.imageSrc) ? item.imageSrc : [item.imageSrc];
-				manifest = item.manifestSrc;
-				className = item.className || '';
-				visibility = item.visibility || false;
-				parent = document.querySelector(item.parent);
+                urls = Array.isArray(item.imageSrc) ? item.imageSrc : [item.imageSrc];
+                manifest = item.manifestSrc;
+                className = item.className || '';
+                visibility = item.visibility || false;
+                parent = document.querySelector(item.parent);
 
-				flag = true;
-			}
-		}
+                flag = true;
+            }
+        }
 
-		if (flag) {
+        if (flag) {
 
-			let image = makeSpriteAsset({
-				name: name,
-			});
+            let image = makeSpriteAsset({
+                name: name,
+            });
 
-			// Get manifest
-			if (isa_obj(manifest)) image.manifest = manifest;
-			else {
+            // Get manifest
+            if (isa_obj(manifest)) image.manifest = manifest;
+            else {
 
-				fetch(manifest)
-				.then(response => {
+                fetch(manifest)
+                .then(response => {
 
-					if (response.status !== 200) throw new Error('Failed to load manifest');
-					return response.json();
-				})
-				.then(jsonString => image.manifest = jsonString)
-				.catch(err => console.log(err.message));
-			}
+                    if (response.status !== 200) throw new Error('Failed to load manifest');
+                    return response.json();
+                })
+                .then(jsonString => image.manifest = jsonString)
+                .catch(err => console.log(err.message));
+            }
 
-			let imgArray = [];
+            let imgArray = [];
 
-			urls.forEach(url => {
+            urls.forEach(url => {
 
-				let img = document.createElement('img'),
-					filename, match;
+                let img = document.createElement('img'),
+                    filename, match;
 
-				if (fileTlas.test(url)) {
+                if (fileTlas.test(url)) {
 
-					match = reg.exec(url);
-					filename = (match && match[1]) ? match[1] : '';
-				}
+                    match = reg.exec(url);
+                    filename = (match && match[1]) ? match[1] : '';
+                }
 
-				img.name = filename || name;
-				img.className = className;
-				img.crossorigin = 'anonymous';
+                img.name = filename || name;
+                img.className = className;
+                img.crossorigin = 'anonymous';
 
-				img.style.display = (visibility) ? 'block' : 'none';
+                img.style.display = (visibility) ? 'block' : 'none';
 
-				if (parent) parent.appendChild(img);
-				
-				img.src = url;
+                if (parent) parent.appendChild(img);
+                
+                img.src = url;
 
-				imgArray.push(img);
-			});
+                imgArray.push(img);
+            });
 
-			image.set({
-				source: imgArray,
-			});
+            image.set({
+                source: imgArray,
+            });
 
-			results.push(name);
-		}
-		else results.push(false);
-	});
-	return results;
+            results.push(name);
+        }
+        else results.push(false);
+    });
+    return results;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 const gettableSpriteAssetAtributes = [];
 const settableSpriteAssetAtributes = [];
 
 
-/*
-## Exported factory function
-*/
+
+// ## Exported factory function
 const makeSpriteAsset = function (items) {
 
-	return new SpriteAsset(items);
+    return new SpriteAsset(items);
 };
 
 constructors.SpriteAsset = SpriteAsset;
 
-
-/*
-TODO - documentation
-*/
 export {
-	makeSpriteAsset,
+    makeSpriteAsset,
 
-	gettableSpriteAssetAtributes,
-	settableSpriteAssetAtributes,
+    gettableSpriteAssetAtributes,
+    settableSpriteAssetAtributes,
 
-	importSprite,
+    importSprite,
 };
 
 
-/*
-Dino - https://www.gameart2d.com/free-dino-sprites.html
-Wolf - https://opengameart.org/content/lpc-wolf-animation
-Wall tiles - https://opengameart.org/content/2d-wall-tilesets
-Bunny sprite - https://opengameart.org/content/bunny-sprite
-Cat - https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/
-*/
+// Examples used in Demos
 
+// Dino - https://www.gameart2d.com/free-dino-sprites.html
 
+// Wolf - https://opengameart.org/content/lpc-wolf-animation
 
+// Wall tiles - https://opengameart.org/content/2d-wall-tilesets
+
+// Bunny sprite - https://opengameart.org/content/bunny-sprite
+
+// Cat - https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/

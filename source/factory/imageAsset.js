@@ -1,331 +1,312 @@
-/*
-# ImageAsset factory
 
-TODO - documentation
+// # ImageAsset factory
 
-#### To instantiate objects from the factory
+// TODO - documentation
 
-#### Library storage
+// #### To instantiate objects from the factory
 
-#### Clone functionality
+// #### Library storage
 
-#### Kill functionality
-*/
+// #### Clone functionality
+
+// #### Kill functionality
 import { constructors, canvas, cell, group, artefact } from '../core/library.js';
 import { mergeOver, isa_obj } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
-/*
-## ImageAsset constructor
-*/
+
+// ## ImageAsset constructor
 const ImageAsset = function (items = {}) {
 
-	return this.assetConstructor(items);
+    return this.assetConstructor(items);
 };
 
-/*
-## ImageAsset object prototype setup
-*/
+
+// ## ImageAsset object prototype setup
 let P = ImageAsset.prototype = Object.create(Object.prototype);
 P.type = 'Image';
 P.lib = 'asset';
 P.isArtefact = false;
 P.isAsset = true;
 
-/*
-Apply mixins to prototype object
-*/
+
+// Apply mixins to prototype object
 P = baseMix(P);
 P = assetMix(P);
 
-/*
-## Packet management
 
-Currently nothing to do here
+// ## Packet management
 
-TODO: work out how we're going to handle assets in packages
-	- currently assume asset already exists on the destination device browser
-	- we could include the &lt;img> element's src attribute in the packet??
-	- then when it comes to unpacking, check if it really does exist
-		- if not exist, do the load thing
+// Currently nothing to do here
 
-	- same work required across imageAsset, spriteAsset, videoAsset
-*/
+// TODO: work out how we're going to handle assets in packages
+//     - currently assume asset already exists on the destination device browser
+//     - we could include the &lt;img> element's src attribute in the packet??
+//     - then when it comes to unpacking, check if it really does exist
+//         - if not exist, do the load thing
+
+//     - same work required across imageAsset, spriteAsset, videoAsset
 
 
-/*
-## Define default attributes
-*/
+
+
+// ## Define default attributes
 let defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 let G = P.getters,
-	S = P.setters,
-	D = P.deltaSetters;
+    S = P.setters,
+    D = P.deltaSetters;
 
-/*
-TODO - documentation
-*/
+
+// TODO - documentation
 S.source = function (item = {}) {
 
-	if (item) {
+    if (item) {
 
-		// For &lt;img> and &lt;picture> elements
-		if (['IMG', 'PICTURE'].indexOf(item.tagName.toUpperCase()) >= 0) {
+        // For &lt;img> and &lt;picture> elements
+        if (['IMG', 'PICTURE'].indexOf(item.tagName.toUpperCase()) >= 0) {
 
-			this.source = item;
-			this.sourceNaturalWidth = item.naturalWidth;
-			this.sourceNaturalHeight = item.naturalHeight;
-			this.sourceLoaded = item.complete;
-		}
+            this.source = item;
+            this.sourceNaturalWidth = item.naturalWidth;
+            this.sourceNaturalHeight = item.naturalHeight;
+            this.sourceLoaded = item.complete;
+        }
 
-		if (this.sourceLoaded) this.notifySubscribers();
-	}
+        if (this.sourceLoaded) this.notifySubscribers();
+    }
 };
 
 
-/*
-## Define prototype functions
-*/
 
-/*
-TODO - documentation
-*/
+// ## Define prototype functions
+
+// TODO - documentation
 P.checkSource = function (width, height) {
 
-	let el = this.source;
+    let el = this.source;
 
-	if (this.sourceLoaded) {
+    if (this.sourceLoaded) {
 
-		if (this.sourceNaturalWidth !== el.naturalWidth || 
-				this.sourceNaturalHeight !== el.naturalHeight || 
-				this.sourceNaturalWidth !== width ||
-				this.sourceNaturalHeight !== height) {
+        if (this.sourceNaturalWidth !== el.naturalWidth || 
+                this.sourceNaturalHeight !== el.naturalHeight || 
+                this.sourceNaturalWidth !== width ||
+                this.sourceNaturalHeight !== height) {
 
-			this.sourceNaturalWidth = el.naturalWidth;
-			this.sourceNaturalHeight = el.naturalHeight;
+            this.sourceNaturalWidth = el.naturalWidth;
+            this.sourceNaturalHeight = el.naturalHeight;
 
-			this.notifySubscribers();
-		}
-	}
+            this.notifySubscribers();
+        }
+    }
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 const gettableImageAssetAtributes = [];
 const settableImageAssetAtributes = [];
 
-/*
-Import images from wherever
 
-Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.jpg' - in which case Scrawl-canvas:
+// Import images from wherever
 
-+ will attempt to give the new imageAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
-+ will not add the new img element to the DOM
+// Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.jpg' - in which case Scrawl-canvas:
 
-... or the argument can be an object with the following attributes:
+// + will attempt to give the new imageAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
+// + will not add the new img element to the DOM
 
-+ __name__ string
-+ __src__ url string
-+ __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
-+ __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
-+ __className__ string - list of classes to be added to the new img element
-*/
+// ... or the argument can be an object with the following attributes:
+
+// + __name__ string
+// + __src__ url string
+// + __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
+// + __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
+// + __className__ string - list of classes to be added to the new img element
 const importImage = function (...args) {
 
-	let reg = /.*\/(.*?)\./,
-		results = [];
+    let reg = /.*\/(.*?)\./,
+        results = [];
 
-	args.forEach(item => {
+    args.forEach(item => {
 
-		let name, url, className, visibility, 
-			parent = false;
+        let name, url, className, visibility, 
+            parent = false;
 
-		let flag = false;
+        let flag = false;
 
-		if (item.substring) {
+        if (item.substring) {
 
-			let match = reg.exec(item);
+            let match = reg.exec(item);
 
-			name = (match && match[1]) ? match[1] : '';
-			url = item;
-			className = '';
-			visibility = false;
-			// parent = null;
+            name = (match && match[1]) ? match[1] : '';
+            url = item;
+            className = '';
+            visibility = false;
+            // parent = null;
 
-			flag = true;
-		}
-		else {
+            flag = true;
+        }
+        else {
 
-			item = (isa_obj(item)) ? item : false;
+            item = (isa_obj(item)) ? item : false;
 
-			if (item && item.src) {
+            if (item && item.src) {
 
-				name = item.name || '';
+                name = item.name || '';
 
-				url = item.src;
-				className = item.className || '';
-				visibility = item.visibility || false;
-				if (item.parent) parent = document.querySelector(item.parent);
+                url = item.src;
+                className = item.className || '';
+                visibility = item.visibility || false;
+                if (item.parent) parent = document.querySelector(item.parent);
 
-				flag = true;
-			}
-		}	
+                flag = true;
+            }
+        }    
 
-		if (flag) {
+        if (flag) {
 
-			let image = makeImageAsset({
-				name: name,
-			});
+            let image = makeImageAsset({
+                name: name,
+            });
 
-			let img = document.createElement('img');
+            let img = document.createElement('img');
 
-			img.name = name;
-			img.className = className;
-			img.crossorigin = 'anonymous';
+            img.name = name;
+            img.className = className;
+            img.crossorigin = 'anonymous';
 
-			img.style.display = (visibility) ? 'block' : 'none';
+            img.style.display = (visibility) ? 'block' : 'none';
 
-			if (parent) parent.appendChild(img);
-			
-			img.onload = () => {
+            if (parent) parent.appendChild(img);
+            
+            img.onload = () => {
 
-				image.set({
-					source: img,
-				});
-			};
-			
-			img.src = url;
+                image.set({
+                    source: img,
+                });
+            };
+            
+            img.src = url;
 
-			image.set({
-				source: img,
-			});
+            image.set({
+                source: img,
+            });
 
-			results.push(name);
-		}
-		else results.push(false);
-	});
-	return results;
+            results.push(name);
+        }
+        else results.push(false);
+    });
+    return results;
 };
 
-/*
-Import images from the DOM
 
-Required argument is a query string used to search the dom for matching elements
+// Import images from the DOM
 
-Note: unlike in Scrawl-canvas v7, img elements imported from the DOM will always remain in the DOM. If those img elements should not appear on the web page or scene, then coders will need to hide them in some way - either by: positioning them (or their parent element) absolutely to the top or left of the display; or giving their parent element zero width/height; or by setting the img or parent element's style.display attribute to 'none', or their style.opacity attribute's value to 0 ... or some other clever way to hide them.
-*/
+// Required argument is a query string used to search the dom for matching elements
+
+// Note: unlike in Scrawl-canvas v7, img elements imported from the DOM will always remain in the DOM. If those img elements should not appear on the web page or scene, then coders will need to hide them in some way - either by: positioning them (or their parent element) absolutely to the top or left of the display; or giving their parent element zero width/height; or by setting the img or parent element's style.display attribute to 'none', or their style.opacity attribute's value to 0 ... or some other clever way to hide them.
 const importDomImage = function (query) {
 
-	let reg = /.*\/(.*?)\./;
+    let reg = /.*\/(.*?)\./;
 
-	let items = document.querySelectorAll(query);
+    let items = document.querySelectorAll(query);
 
-	items.forEach(item => {
+    items.forEach(item => {
 
-		let name;
+        let name;
 
-		if (['IMG', 'PICTURE'].indexOf(item.tagName.toUpperCase()) >= 0) {
+        if (['IMG', 'PICTURE'].indexOf(item.tagName.toUpperCase()) >= 0) {
 
-			if (item.id || item.name) name = item.id || item.name;
-			else {
+            if (item.id || item.name) name = item.id || item.name;
+            else {
 
-				let match = reg.exec(item.src);
-				name = (match && match[1]) ? match[1] : '';
-			}
+                let match = reg.exec(item.src);
+                name = (match && match[1]) ? match[1] : '';
+            }
 
-			let image = makeImageAsset({
-				name: name,
-				source: item,
-			});
+            let image = makeImageAsset({
+                name: name,
+                source: item,
+            });
 
-			item.onload = () => {
+            item.onload = () => {
 
-				image.set({
-					source: item,
-				});
-			};
-		}
-	});
+                image.set({
+                    source: item,
+                });
+            };
+        }
+    });
 };
 
-/*
-We can get cells, groups and entitys to save their output as imagedata, which we can then use to build an asset which in turn can be used by Picture entitys and pattern styles
-*/
+
+// We can get cells, groups and entitys to save their output as imagedata, which we can then use to build an asset which in turn can be used by Picture entitys and pattern styles
 const createImageFromCell = function (item, stashAsAsset = false) {
 
-	let mycell = (item.substring) ? cell[item] || canvas[item] : item;
+    let mycell = (item.substring) ? cell[item] || canvas[item] : item;
 
-	if (mycell.type === 'Canvas') mycell = mycell.base;
+    if (mycell.type === 'Canvas') mycell = mycell.base;
 
-	if (mycell.type === 'Cell') {
+    if (mycell.type === 'Cell') {
 
-		mycell.stashOutput = true;
+        mycell.stashOutput = true;
 
-		if (stashAsAsset) mycell.stashOutputAsAsset = true;
-	}
+        if (stashAsAsset) mycell.stashOutputAsAsset = true;
+    }
 };
 
 const createImageFromGroup = function (item, stashAsAsset = false) {
 
-	let mygroup;
+    let mygroup;
 
-	if (item && !item.substring) {
+    if (item && !item.substring) {
 
-		if (item.type === 'Group') mygroup = item;
-		else if (item.type === 'Cell') mygroup = group[item.name];
-		else if (item.type === 'Canvas') mygroup = group[item.base.name];
-	}
-	else if (item && item.substring) mygroup = group[item];
+        if (item.type === 'Group') mygroup = item;
+        else if (item.type === 'Cell') mygroup = group[item.name];
+        else if (item.type === 'Canvas') mygroup = group[item.base.name];
+    }
+    else if (item && item.substring) mygroup = group[item];
 
-	if (mygroup) {
+    if (mygroup) {
 
-		mygroup.stashOutput = true;
+        mygroup.stashOutput = true;
 
-		if (stashAsAsset) mygroup.stashOutputAsAsset = true;
-	}
+        if (stashAsAsset) mygroup.stashOutputAsAsset = true;
+    }
 };
 
 const createImageFromEntity = function (item, stashAsAsset = false) {
 
-	let myentity = (item.substring) ? artefact[item] : item;
+    let myentity = (item.substring) ? artefact[item] : item;
 
-	if (myentity.isArtefact) {
+    if (myentity.isArtefact) {
 
-		myentity.stashOutput = true;
+        myentity.stashOutput = true;
 
-		if (stashAsAsset) myentity.stashOutputAsAsset = true;
-	}
+        if (stashAsAsset) myentity.stashOutputAsAsset = true;
+    }
 };
 
 
-/*
-## Exported factory function
-*/
+
+// ## Exported factory function
 const makeImageAsset = function (items) {
 
-	return new ImageAsset(items);
+    return new ImageAsset(items);
 };
 
 constructors.ImageAsset = ImageAsset;
 
-
-/*
-TODO - documentation
-*/
 export {
-	makeImageAsset,
+    makeImageAsset,
 
-	gettableImageAssetAtributes,
-	settableImageAssetAtributes,
+    gettableImageAssetAtributes,
+    settableImageAssetAtributes,
 
-	importImage,
-	importDomImage,
+    importImage,
+    importDomImage,
 
-	createImageFromCell,
-	createImageFromGroup,
-	createImageFromEntity,
+    createImageFromCell,
+    createImageFromGroup,
+    createImageFromEntity,
 };

@@ -1,168 +1,157 @@
-/*
-# Filter mixin
 
-TODO - documentation
-*/
+// # Filter mixin
+
+// TODO - documentation
 import { filter } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
 
 export default function (P = {}) {
 
-/*
-## Define attributes
 
-All factories using the filter mixin will add these to their prototype objects
-*/
-	let defaultAttributes = {
+// ## Define attributes
 
-/*
-An array of filter object String names. If only one filter is to be applied, then it is enough to use the String name of that filter object - Scrawl-canvas will make sure it gets added to the Array.
+// All factories using the filter mixin will add these to their prototype objects
+    let defaultAttributes = {
 
-To add/remove new filters to the filters array, use the addFilters() and removeFilters() functions. Note that the set() function will replace all the existing filters in the array with the new filters. To remove all existing filters from the array, use the clearFilters() function
 
-Multiple filters can be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters will be applied in the order defined by each filter object's __order__ value; filter objects with the same order value will be applied in the order in which they were added to the filters array.
+// An array of filter object String names. If only one filter is to be applied, then it is enough to use the String name of that filter object - Scrawl-canvas will make sure it gets added to the Array.
 
-NOTE: currently, user-defined filters are applied after the application of all Scrawl-canvas-defined filters has completed. 
-*/
-		filters: null,
+// To add/remove new filters to the filters array, use the addFilters() and removeFilters() functions. Note that the set() function will replace all the existing filters in the array with the new filters. To remove all existing filters from the array, use the clearFilters() function
 
-/*
-Use the entity as a stencil.
-*/
-		isStencil: false,
+// Multiple filters can be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters will be applied in the order defined by each filter object's __order__ value; filter objects with the same order value will be applied in the order in which they were added to the filters array.
 
-/*
-To make the filter transparent, so that some of the original colour shows through
-*/
-		filterAlpha: 1,
+// NOTE: currently, user-defined filters are applied after the application of all Scrawl-canvas-defined filters has completed. 
+        filters: null,
 
-/*
-Change how the filter will be applied to the scene
-*/
-		filterComposite: 'source-over',
-	};
-	P.defs = mergeOver(P.defs, defaultAttributes);
 
-/*
-## Define getter, setter and deltaSetter functions
-*/
-	let S = P.setters;
+// Use the entity as a stencil.
+        isStencil: false,
 
-/*
-Replaces the existing filters array with a new filters array. If a string name is supplied, will add that name to the existing filters array
-*/
-	S.filters = function (item) {
 
-		if (!Array.isArray(this.filters)) this.filters = [];
+// To make the filter transparent, so that some of the original colour shows through
+        filterAlpha: 1,
 
-		if (item) {
 
-			if (Array.isArray(item)) {
+// Change how the filter will be applied to the scene
+        filterComposite: 'source-over',
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
 
-				this.filters = item;
-				this.dirtyFilters = true;
-				this.dirtyImageSubscribers = true;
-		
-			}
-			else if (item.substring) {
-				
-				pushUnique(this.filters, item);	
-				this.dirtyFilters = true;
-				this.dirtyImageSubscribers = true;
-			}
-		}
-	};
 
-/*
-## Define functions to be added to the factory prototype
-*/
+// ## Define getter, setter and deltaSetter functions
+    let S = P.setters;
 
-/*
-TODO - documentation
 
-Internal housekeeping
-*/
-	P.cleanFilters = function () {
+// Replaces the existing filters array with a new filters array. If a string name is supplied, will add that name to the existing filters array
+    S.filters = function (item) {
 
-		this.dirtyFilters = false;
+        if (!Array.isArray(this.filters)) this.filters = [];
 
-		if (!this.filters) this.filters = [];
+        if (item) {
 
-		let myfilters = this.filters,
-			floor = Math.floor,
-			buckets = [];
+            if (Array.isArray(item)) {
 
-		myfilters.forEach(name => {
+                this.filters = item;
+                this.dirtyFilters = true;
+                this.dirtyImageSubscribers = true;
+        
+            }
+            else if (item.substring) {
+                
+                pushUnique(this.filters, item);    
+                this.dirtyFilters = true;
+                this.dirtyImageSubscribers = true;
+            }
+        }
+    };
 
-			let myobj = filter[name],
-				order = floor(myobj.order) || 0;
 
-			if (!buckets[order]) buckets[order] = [];
+// ## Define functions to be added to the factory prototype
 
-			buckets[order].push(myobj);
-		});
 
-		this.currentFilters = buckets.reduce((a, v) => a.concat(v), []);
-	};
 
-/*
-Add one or more filter name strings to the filters array. Filter name strings can be supplied as comma-separated arguments to the function
-*/
-	P.addFilters = function (...args) {
+// TODO - documentation
 
-		if (!Array.isArray(this.filters)) this.filters = [];
+// Internal housekeeping
+    P.cleanFilters = function () {
 
-		args.forEach(item => {
+        this.dirtyFilters = false;
 
-			if (this.name, 'addFilters', item) {
+        if (!this.filters) this.filters = [];
 
-				if (item.substring) pushUnique(this.filters, item);
-				else if (item.type === 'Filter') pushUnique(this.filters, item.name);
-			}
-		}, this);
+        let myfilters = this.filters,
+            floor = Math.floor,
+            buckets = [];
 
-		this.dirtyFilters = true;
-		this.dirtyImageSubscribers = true;
+        myfilters.forEach(name => {
 
-		return this;
-	};
+            let myobj = filter[name],
+                order = floor(myobj.order) || 0;
 
-/*
-Remove one or more filter name strings from the filters array. Filter name strings can be supplied as comma-separated arguments to the function
-*/
-	P.removeFilters = function (...args) {
+            if (!buckets[order]) buckets[order] = [];
 
-		if (!Array.isArray(this.filters)) this.filters = [];
+            buckets[order].push(myobj);
+        });
 
-		args.forEach(item => {
+        this.currentFilters = buckets.reduce((a, v) => a.concat(v), []);
+    };
 
-			if (item) {
 
-				if (item.substring) removeItem(this.filters, item);
-				else if (item.type === 'Filter') removeItem(this.filters, item.name);
-			}
-		}, this);
+// Add one or more filter name strings to the filters array. Filter name strings can be supplied as comma-separated arguments to the function
+    P.addFilters = function (...args) {
 
-		this.dirtyFilters = true;
-		this.dirtyImageSubscribers = true;
-		
-		return this;
-	};
+        if (!Array.isArray(this.filters)) this.filters = [];
 
-/*
-Clears the filters array
-*/
-	P.clearFilters = function () {
+        args.forEach(item => {
 
-		if (!Array.isArray(this.filters)) this.filters = [];
+            if (this.name, 'addFilters', item) {
 
-		this.filters.length = 0;
+                if (item.substring) pushUnique(this.filters, item);
+                else if (item.type === 'Filter') pushUnique(this.filters, item.name);
+            }
+        }, this);
 
-		this.dirtyFilters = true;
-		this.dirtyImageSubscribers = true;
-		
-		return this;
-	};
+        this.dirtyFilters = true;
+        this.dirtyImageSubscribers = true;
 
-	return P;
+        return this;
+    };
+
+
+// Remove one or more filter name strings from the filters array. Filter name strings can be supplied as comma-separated arguments to the function
+    P.removeFilters = function (...args) {
+
+        if (!Array.isArray(this.filters)) this.filters = [];
+
+        args.forEach(item => {
+
+            if (item) {
+
+                if (item.substring) removeItem(this.filters, item);
+                else if (item.type === 'Filter') removeItem(this.filters, item.name);
+            }
+        }, this);
+
+        this.dirtyFilters = true;
+        this.dirtyImageSubscribers = true;
+        
+        return this;
+    };
+
+
+// Clears the filters array
+    P.clearFilters = function () {
+
+        if (!Array.isArray(this.filters)) this.filters = [];
+
+        this.filters.length = 0;
+
+        this.dirtyFilters = true;
+        this.dirtyImageSubscribers = true;
+        
+        return this;
+    };
+
+// Return the prototype
+    return P;
 };

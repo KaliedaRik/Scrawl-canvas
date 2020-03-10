@@ -1,97 +1,81 @@
-/*
-# Animation Loop - core
+// # Animation Loop - core
 
-TODO - document the purpose of this core file
-*/
+// TODO - document the purpose of this core file
 import { animation } from "./library.js";
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 let animate = [],
-	doAnimation = false,
-	resortBatchAnimations = true,
-	animate_sorted = [];
+    doAnimation = false,
+    resortBatchAnimations = true,
+    animate_sorted = [];
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 const resortAnimations = function () {
-	resortBatchAnimations = true;
+    resortBatchAnimations = true;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 const sortAnimations = function () {
 
-	if (resortBatchAnimations) {
+    if (resortBatchAnimations) {
 
-		resortBatchAnimations = false;
+        resortBatchAnimations = false;
 
-		let floor = Math.floor,
-			buckets = [];
+        let floor = Math.floor,
+            buckets = [];
 
-		animate.forEach(name => {
+        animate.forEach(name => {
 
-			let obj = animation[name],
-				order = floor(obj.order) || 0;
+            let obj = animation[name],
+                order = floor(obj.order) || 0;
 
-			if (!buckets[order]) buckets[order] = [];
+            if (!buckets[order]) buckets[order] = [];
 
-			buckets[order].push(obj);
-		});
+            buckets[order].push(obj);
+        });
 
-		animate_sorted = buckets.reduce((a, v) => a.concat(v), []);
-	}
+        animate_sorted = buckets.reduce((a, v) => a.concat(v), []);
+    }
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 const animationLoop = function () {
 
-	let promises = [];
+    let promises = [];
 
-	if (resortBatchAnimations) sortAnimations();
+    if (resortBatchAnimations) sortAnimations();
 
-	animate_sorted.forEach((item) => {
+    animate_sorted.forEach((item) => {
 
-		if (item.fn) promises.push(item.fn());
-	});
+        if (item.fn) promises.push(item.fn());
+    });
 
-	Promise.all(promises)
-	.then(() => {
+    Promise.all(promises)
+    .then(() => {
 
-		if (doAnimation) window.requestAnimationFrame(() => animationLoop());
-	})
-	.catch((err) => console.log('animationLoop error: ', err.message));
+        if (doAnimation) window.requestAnimationFrame(() => animationLoop());
+    })
+    .catch((err) => console.log('animationLoop error: ', err.message));
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 const startCoreAnimationLoop = function () {
 
-	doAnimation = true;
-	animationLoop();
+    doAnimation = true;
+    animationLoop();
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 const stopCoreAnimationLoop = function () {
-	
-	doAnimation = false;
+    
+    doAnimation = false;
 };
 
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 export {
-	animate,
-	resortAnimations,
-	startCoreAnimationLoop,
-	stopCoreAnimationLoop,
+    animate,
+    resortAnimations,
+    startCoreAnimationLoop,
+    stopCoreAnimationLoop,
 };

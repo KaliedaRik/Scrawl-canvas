@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Shape path calculation</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="../../demo/canvas-001.html">
+                  ./demo/canvas-001.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-002.html">
+                  ./demo/canvas-002.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-003.html">
+                  ./demo/canvas-003.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-004.html">
+                  ./demo/canvas-004.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-005.html">
+                  ./demo/canvas-005.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-006.html">
+                  ./demo/canvas-006.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-007.html">
+                  ./demo/canvas-007.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-008.html">
+                  ./demo/canvas-008.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-009.html">
+                  ./demo/canvas-009.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-010.html">
+                  ./demo/canvas-010.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-011.html">
+                  ./demo/canvas-011.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-012.html">
+                  ./demo/canvas-012.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-013.html">
+                  ./demo/canvas-013.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-014.html">
+                  ./demo/canvas-014.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-015.html">
+                  ./demo/canvas-015.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-016.html">
+                  ./demo/canvas-016.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-017.html">
+                  ./demo/canvas-017.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-018.html">
+                  ./demo/canvas-018.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-019.html">
+                  ./demo/canvas-019.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-020.html">
+                  ./demo/canvas-020.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-021.html">
+                  ./demo/canvas-021.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-022.html">
+                  ./demo/canvas-022.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-023.html">
+                  ./demo/canvas-023.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/canvas-024.html">
+                  ./demo/canvas-024.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/component-001.html">
+                  ./demo/component-001.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/component-002.html">
+                  ./demo/component-002.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/component-003.html">
+                  ./demo/component-003.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/component-004.html">
+                  ./demo/component-004.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/components/test-001.html">
+                  ./demo/components/test-001.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/components/test-002.html">
+                  ./demo/components/test-002.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/core-001.html">
+                  ./demo/core-001.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-001.html">
+                  ./demo/dom-001.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-002.html">
+                  ./demo/dom-002.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-003.html">
+                  ./demo/dom-003.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-004.html">
+                  ./demo/dom-004.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-005.html">
+                  ./demo/dom-005.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-006.html">
+                  ./demo/dom-006.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-007.html">
+                  ./demo/dom-007.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-008.html">
+                  ./demo/dom-008.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-009.html">
+                  ./demo/dom-009.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-010.html">
+                  ./demo/dom-010.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-011.html">
+                  ./demo/dom-011.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-012.html">
+                  ./demo/dom-012.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-013.html">
+                  ./demo/dom-013.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-014a.html">
+                  ./demo/dom-014a.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-014b.html">
+                  ./demo/dom-014b.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-014c.html">
+                  ./demo/dom-014c.js
+                </a>
+              
+                
+                <a class="source" href="../../demo/dom-015.html">
+                  ./demo/dom-015.js
+                </a>
+              
+                
+                <a class="source" href="../core/animationloop.html">
+                  ./source/core/animationloop.js
+                </a>
+              
+                
+                <a class="source" href="../core/document.html">
+                  ./source/core/document.js
+                </a>
+              
+                
+                <a class="source" href="../core/init.html">
+                  ./source/core/init.js
+                </a>
+              
+                
+                <a class="source" href="../core/library.html">
+                  ./source/core/library.js
+                </a>
+              
+                
+                <a class="source" href="../core/userInteraction.html">
+                  ./source/core/userInteraction.js
+                </a>
+              
+                
+                <a class="source" href="../core/utilities.html">
+                  ./source/core/utilities.js
+                </a>
+              
+                
+                <a class="source" href="../factory/action.html">
+                  ./source/factory/action.js
+                </a>
+              
+                
+                <a class="source" href="../factory/anchor.html">
+                  ./source/factory/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../factory/animation.html">
+                  ./source/factory/animation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/block.html">
+                  ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/canvas.html">
+                  ./source/factory/canvas.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cell.html">
+                  ./source/factory/cell.js
+                </a>
+              
+                
+                <a class="source" href="../factory/color.html">
+                  ./source/factory/color.js
+                </a>
+              
+                
+                <a class="source" href="../factory/coordinate.html">
+                  ./source/factory/coordinate.js
+                </a>
+              
+                
+                <a class="source" href="../factory/element.html">
+                  ./source/factory/element.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filter.html">
+                  ./source/factory/filter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/fontAttributes.html">
+                  ./source/factory/fontAttributes.js
+                </a>
+              
+                
+                <a class="source" href="../factory/gradient.html">
+                  ./source/factory/gradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/grid.html">
+                  ./source/factory/grid.js
+                </a>
+              
+                
+                <a class="source" href="../factory/group.html">
+                  ./source/factory/group.js
+                </a>
+              
+                
+                <a class="source" href="../factory/imageAsset.html">
+                  ./source/factory/imageAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/loom.html">
+                  ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="../factory/palette.html">
+                  ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/pattern.html">
+                  ./source/factory/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../factory/phrase.html">
+                  ./source/factory/phrase.js
+                </a>
+              
+                
+                <a class="source" href="../factory/picture.html">
+                  ./source/factory/picture.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quaternion.html">
+                  ./source/factory/quaternion.js
+                </a>
+              
+                
+                <a class="source" href="../factory/radialGradient.html">
+                  ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/shape.html">
+                  ./source/factory/shape.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spriteAsset.html">
+                  ./source/factory/spriteAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/stack.html">
+                  ./source/factory/stack.js
+                </a>
+              
+                
+                <a class="source" href="../factory/state.html">
+                  ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="../factory/ticker.html">
+                  ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tween.html">
+                  ./source/factory/tween.js
+                </a>
+              
+                
+                <a class="source" href="../factory/unstackedElement.html">
+                  ./source/factory/unstackedElement.js
+                </a>
+              
+                
+                <a class="source" href="../factory/userObject.html">
+                  ./source/factory/userObject.js
+                </a>
+              
+                
+                <a class="source" href="../factory/vector.html">
+                  ./source/factory/vector.js
+                </a>
+              
+                
+                <a class="source" href="../factory/videoAsset.html">
+                  ./source/factory/videoAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/wheel.html">
+                  ./source/factory/wheel.js
+                </a>
+              
+                
+                <a class="source" href="anchor.html">
+                  ./source/mixin/anchor.js
+                </a>
+              
+                
+                <a class="source" href="asset.html">
+                  ./source/mixin/asset.js
+                </a>
+              
+                
+                <a class="source" href="assetConsumer.html">
+                  ./source/mixin/assetConsumer.js
+                </a>
+              
+                
+                <a class="source" href="base.html">
+                  ./source/mixin/base.js
+                </a>
+              
+                
+                <a class="source" href="cascade.html">
+                  ./source/mixin/cascade.js
+                </a>
+              
+                
+                <a class="source" href="dom.html">
+                  ./source/mixin/dom.js
+                </a>
+              
+                
+                <a class="source" href="entity.html">
+                  ./source/mixin/entity.js
+                </a>
+              
+                
+                <a class="source" href="filter.html">
+                  ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="position.html">
+                  ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="shapePathCalculation.html">
+                  ./source/mixin/shapePathCalculation.js
+                </a>
+              
+                
+                <a class="source" href="styles.html">
+                  ./source/mixin/styles.js
+                </a>
+              
+                
+                <a class="source" href="tween.html">
+                  ./source/mixin/tween.js
+                </a>
+              
+                
+                <a class="source" href="../scrawl.html">
+                  ./source/scrawl.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter.html">
+                  ./source/worker/filter.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h1 id="shape-path-calculation">Shape path calculation</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>The function, and its helper functions, translates SVG path data string - example: ‘M0,0H100V100H-100V-100z’ - into data which can be used to construct the a Path2D object which can be consumed by the canvasRenderingContext2D engine’s ‘fill’, ‘stroke’ and ‘isPointInPath’ functions</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Separated out into its own file because it is a potential candidate for hiving off to a web worker</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d, scale, start, useAsPath, precision</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>setup local variables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> points = [],
+        myData = [],
+        command = <span class="hljs-string">''</span>,
+        localPath = <span class="hljs-string">''</span>,
+        units = [],
+        unitLengths = [],
+        unitPartials = [],
+        mySet = d.match(<span class="hljs-regexp">/([A-Za-z][0-9. ,\-]*)/g</span>), 
+        myLen = <span class="hljs-number">0</span>,
+        i, iz, j, jz;
+
+    <span class="hljs-keyword">let</span> returnObject = {};
+
+    <span class="hljs-keyword">let</span> curX = <span class="hljs-number">0</span>, 
+        curY = <span class="hljs-number">0</span>, 
+        oldX = <span class="hljs-number">0</span>, 
+        oldY = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">let</span> xPoints = [],
+        yPoints = [];
+
+    <span class="hljs-keyword">let</span> reflectX = <span class="hljs-number">0</span>,
+        reflectY = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>local function to populate the temporary myData array with data for every path partial</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> buildArrays = <span class="hljs-function">(<span class="hljs-params">thesePoints</span>) =&gt;</span> {
+
+        myData.push({
+            <span class="hljs-attr">c</span>: command.toLowerCase(),
+            <span class="hljs-attr">p</span>: thesePoints || <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">x</span>: oldX,
+            <span class="hljs-attr">y</span>: oldY,
+            <span class="hljs-attr">cx</span>: curX,
+            <span class="hljs-attr">cy</span>: curY,
+            <span class="hljs-attr">rx</span>: reflectX,
+            <span class="hljs-attr">ry</span>: reflectY
+        });
+
+        <span class="hljs-keyword">if</span> (!useAsPath) {
+
+            xPoints.push(curX);
+            yPoints.push(curY);
+        }
+
+        oldX = curX;
+        oldY = curY;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>the purpose of this loop is to </p>
+<ol>
+<li>convert all point values fromn strings to floats</li>
+<li>scale every value</li>
+<li>relativize every value to the last stated cursor position</li>
+<li>populate the temporary myData array with data which can be used for all subsequent calculations</li>
+</ol>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = mySet.length; i &lt; iz; i++) {
+
+        command = mySet[i][<span class="hljs-number">0</span>];
+        points = mySet[i].match(<span class="hljs-regexp">/(-?[0-9.]+\b)/g</span>) || [];
+
+        <span class="hljs-keyword">if</span> (points.length) {
+
+            <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
+
+                points[j] = <span class="hljs-built_in">parseFloat</span>(points[j]);
+            }
+
+            <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) {
+
+                <span class="hljs-keyword">if</span> (command === <span class="hljs-string">'M'</span>) {
+
+                    oldX = (points[<span class="hljs-number">0</span>] * scale) - start.x;
+                    oldY = (points[<span class="hljs-number">1</span>] * scale) - start.y;
+                    command = <span class="hljs-string">'m'</span>;
+                }
+            } 
+            <span class="hljs-keyword">else</span> {
+                
+                oldX = curX;
+                oldY = curY;
+            }
+
+            <span class="hljs-keyword">switch</span> (command) {
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'H'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
+
+                        points[j] = (points[j] * scale) - oldX;
+                        curX += points[j];
+                        reflectX = reflectY = <span class="hljs-number">0</span>;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">1</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'V'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
+
+                        points[j] = (points[j] * scale) - oldY;
+                        curY += points[j];
+                        reflectX = reflectY = <span class="hljs-number">0</span>;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">1</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'M'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">2</span>) {
+
+                        points[j] = (points[j] * scale) - oldX;
+                        points[j + <span class="hljs-number">1</span>] = (points[j + <span class="hljs-number">1</span>] * scale) - oldY;
+                        curX += points[j];
+                        curY += points[j + <span class="hljs-number">1</span>];
+                        reflectX = reflectY = <span class="hljs-number">0</span>;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">2</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'L'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'T'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">2</span>) {
+
+                        points[j] = (points[j] * scale) - oldX;
+                        points[j + <span class="hljs-number">1</span>] = (points[j + <span class="hljs-number">1</span>] * scale) - oldY;
+                        curX += points[j];
+                        curY += points[j + <span class="hljs-number">1</span>];
+
+                        <span class="hljs-keyword">if</span> (command === <span class="hljs-string">'T'</span>) {
+
+                            reflectX = points[j] + oldX;
+                            reflectY = points[j + <span class="hljs-number">1</span>] + oldY;
+                        }
+                        <span class="hljs-keyword">else</span> {
+
+                            reflectX = reflectY = <span class="hljs-number">0</span>;
+                        }
+                        buildArrays(points.slice(j, j + <span class="hljs-number">2</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'Q'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'S'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">4</span>) {
+
+                        points[j] = (points[j] * scale) - oldX;
+                        points[j + <span class="hljs-number">1</span>] = (points[j + <span class="hljs-number">1</span>] * scale) - oldY;
+                        points[j + <span class="hljs-number">2</span>] = (points[j + <span class="hljs-number">2</span>] * scale) - oldX;
+                        points[j + <span class="hljs-number">3</span>] = (points[j + <span class="hljs-number">3</span>] * scale) - oldY;
+                        curX += points[j + <span class="hljs-number">2</span>];
+                        curY += points[j + <span class="hljs-number">3</span>];
+                        reflectX = points[j] + oldX;
+                        reflectY = points[j + <span class="hljs-number">1</span>] + oldY;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">4</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'C'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">6</span>) {
+
+                        points[j] = (points[j] * scale) - oldX;
+                        points[j + <span class="hljs-number">1</span>] = (points[j + <span class="hljs-number">1</span>] * scale) - oldY;
+                        points[j + <span class="hljs-number">2</span>] = (points[j + <span class="hljs-number">2</span>] * scale) - oldX;
+                        points[j + <span class="hljs-number">3</span>] = (points[j + <span class="hljs-number">3</span>] * scale) - oldY;
+                        points[j + <span class="hljs-number">4</span>] = (points[j + <span class="hljs-number">4</span>] * scale) - oldX;
+                        points[j + <span class="hljs-number">5</span>] = (points[j + <span class="hljs-number">5</span>] * scale) - oldY;
+                        curX += points[j + <span class="hljs-number">4</span>];
+                        curY += points[j + <span class="hljs-number">5</span>];
+                        reflectX = points[j + <span class="hljs-number">2</span>] + oldX;
+                        reflectY = points[j + <span class="hljs-number">3</span>] + oldY;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">6</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'A'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">7</span>) {
+
+                        points[j + <span class="hljs-number">5</span>] = (points[j + <span class="hljs-number">5</span>] * scale) - oldX;
+                        points[j + <span class="hljs-number">6</span>] = (points[j + <span class="hljs-number">6</span>] * scale) - oldY;
+                        curX += points[j + <span class="hljs-number">5</span>];
+                        curY += points[j + <span class="hljs-number">6</span>];
+                        reflectX = reflectY = <span class="hljs-number">0</span>;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">7</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'h'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
+
+                        points[j] *= scale;
+                        curX += points[j];
+                        reflectX = reflectY = <span class="hljs-number">0</span>;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">1</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'v'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
+
+                        points[j] *= scale;
+                        curY += points[j];
+                        reflectX = reflectY = <span class="hljs-number">0</span>;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">1</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'m'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'l'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'t'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">2</span>) {
+
+                        points[j] *= scale;
+                        points[j + <span class="hljs-number">1</span>] *= scale;
+                        curX += points[j];
+                        curY += points[j + <span class="hljs-number">1</span>];
+
+                        <span class="hljs-keyword">if</span> (command === <span class="hljs-string">'t'</span>) {
+
+                            reflectX = points[j] + oldX;
+                            reflectY = points[j + <span class="hljs-number">1</span>] + oldY;
+                        }
+                        <span class="hljs-keyword">else</span> {
+
+                            reflectX = reflectY = <span class="hljs-number">0</span>;
+                        }
+                        buildArrays(points.slice(j, j + <span class="hljs-number">2</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'q'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'s'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">4</span>) {
+
+                        points[j] *= scale;
+                        points[j + <span class="hljs-number">1</span>] *= scale;
+                        points[j + <span class="hljs-number">2</span>] *= scale;
+                        points[j + <span class="hljs-number">3</span>] *= scale;
+                        curX += points[j + <span class="hljs-number">2</span>];
+                        curY += points[j + <span class="hljs-number">3</span>];
+                        reflectX = points[j] + oldX;
+                        reflectY = points[j + <span class="hljs-number">1</span>] + oldY;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">4</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'c'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">6</span>) {
+
+                        points[j] *= scale;
+                        points[j + <span class="hljs-number">1</span>] *= scale;
+                        points[j + <span class="hljs-number">2</span>] *= scale;
+                        points[j + <span class="hljs-number">3</span>] *= scale;
+                        points[j + <span class="hljs-number">4</span>] *= scale;
+                        points[j + <span class="hljs-number">5</span>] *= scale;
+                        curX += points[j + <span class="hljs-number">4</span>];
+                        curY += points[j + <span class="hljs-number">5</span>];
+                        reflectX = points[j + <span class="hljs-number">2</span>] + oldX;
+                        reflectY = points[j + <span class="hljs-number">3</span>] + oldY;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">6</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'a'</span>:
+                    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">7</span>) {
+
+                        points[j] *= scale;
+                        points[j + <span class="hljs-number">1</span>] *= scale;
+                        points[j + <span class="hljs-number">5</span>] *= scale;
+                        points[j + <span class="hljs-number">6</span>] *= scale;
+                        curX += points[j + <span class="hljs-number">5</span>];
+                        curY += points[j + <span class="hljs-number">6</span>];
+                        reflectX = reflectY = <span class="hljs-number">0</span>;
+                        buildArrays(points.slice(j, j + <span class="hljs-number">7</span>));
+                    }
+                    <span class="hljs-keyword">break</span>;
+            }
+
+        }
+        <span class="hljs-keyword">else</span> {
+
+            reflectX = reflectY = <span class="hljs-number">0</span>;
+            buildArrays();
+        }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>this loop builds the local path string</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = myData.length; i &lt; iz; i++) {
+
+        <span class="hljs-keyword">let</span> curData = myData[i],
+            points = curData.p;
+
+        <span class="hljs-keyword">if</span> (points) {
+
+            <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
+
+                points[j] = points[j].toFixed(<span class="hljs-number">1</span>);
+            }
+
+            localPath += <span class="hljs-string">`<span class="hljs-subst">${curData.c}</span><span class="hljs-subst">${curData.p.join()}</span>`</span>;
+
+            <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
+
+                points[j] = <span class="hljs-built_in">parseFloat</span>(points[j]);
+            }
+
+        }
+        <span class="hljs-keyword">else</span> localPath += <span class="hljs-string">`<span class="hljs-subst">${curData.c}</span>`</span>;
+    }
+
+    returnObject.localPath = localPath;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (useAsPath) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>request a vector - used for reflection points</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> v = vector;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>this loop calculates this.units array data</p>
+<ul>
+<li>because the lengths calculations requires absolute coordinates</li>
+<li>and TtSs path units use reflective coordinates</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = myData.length; i &lt; iz; i++) {
+
+            <span class="hljs-keyword">let</span> curData = myData[i],
+                prevData = (i &gt; <span class="hljs-number">0</span>) ? myData[i - <span class="hljs-number">1</span>] : <span class="hljs-literal">false</span>;
+
+            <span class="hljs-keyword">let</span> {c, p, x, y, cx, cy, rx, ry} = curData;
+
+            <span class="hljs-keyword">if</span> (p) {
+
+                <span class="hljs-keyword">switch</span> (c) {
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'h'</span> :
+                        units[i] = [<span class="hljs-string">'linear'</span>, x, y, p[<span class="hljs-number">0</span>] + x, y];
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'v'</span> :
+                        units[i] = [<span class="hljs-string">'linear'</span>, x, y, x, p[<span class="hljs-number">0</span>] + y];
+                        <span class="hljs-keyword">break</span>;
+                        
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'m'</span> :
+                        units[i] = [<span class="hljs-string">'move'</span>, x, y];
+                        <span class="hljs-keyword">break</span>;
+                        
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'l'</span> :
+                        units[i] = [<span class="hljs-string">'linear'</span>, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y];
+                        <span class="hljs-keyword">break</span>;
+                        
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'t'</span> :
+                        <span class="hljs-keyword">if</span> (prevData &amp;&amp; (prevData.rx || prevData.ry)) {
+
+                            setVector(v, prevData.rx - cx, prevData.ry - cy);
+                            rotateVector(v, <span class="hljs-number">180</span>);
+
+                            units[i] = [<span class="hljs-string">'quadratic'</span>, x, y, v.x + cx, v.y + cy, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y];
+                        }
+                        <span class="hljs-keyword">else</span> units[i] = [<span class="hljs-string">'quadratic'</span>, x, y, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y];
+                        <span class="hljs-keyword">break</span>;
+                        
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'q'</span> :
+                        units[i] = [<span class="hljs-string">'quadratic'</span>, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y];
+                        <span class="hljs-keyword">break</span>;
+                        
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'s'</span> :
+                        <span class="hljs-keyword">if</span> (prevData &amp;&amp; (prevData.rx || prevData.ry)) {
+
+                            setVector(v, prevData.rx - cx, prevData.ry - cy);
+                            rotateVector(v, <span class="hljs-number">180</span>);
+
+                            units[i] = [<span class="hljs-string">'bezier'</span>, x, y, v.x + cx, v.y + cy, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y];
+                        }
+                        <span class="hljs-keyword">else</span> units[i] = [<span class="hljs-string">'bezier'</span>, x, y, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y];
+                        <span class="hljs-keyword">break</span>;
+                        
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'c'</span> :
+                        units[i] = [<span class="hljs-string">'bezier'</span>, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y, p[<span class="hljs-number">4</span>] + x, p[<span class="hljs-number">5</span>] + y];
+                        <span class="hljs-keyword">break</span>;
+                        
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'a'</span> :
+                        units[i] = [<span class="hljs-string">'linear'</span>, x, y, p[<span class="hljs-number">5</span>] + x, p[<span class="hljs-number">6</span>] + y];
+                        <span class="hljs-keyword">break</span>;
+                        
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'z'</span> :
+                        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(x)) x = <span class="hljs-number">0</span>;
+                        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(y)) y = <span class="hljs-number">0</span>;
+                        units[i] = [<span class="hljs-string">'close'</span>, x, y];
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">default</span> :
+                        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(x)) x = <span class="hljs-number">0</span>;
+                        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(y)) y = <span class="hljs-number">0</span>;
+                        units[i] = [<span class="hljs-string">'unknown'</span>, x, y];
+                }
+            }
+            <span class="hljs-keyword">else</span> units[i] = [<span class="hljs-string">`no-points-<span class="hljs-subst">${c}</span>`</span>, x, y];
+        }
+
+        returnObject.units = units;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = units.length; i &lt; iz; i++) {
+
+            <span class="hljs-keyword">let</span> [spec, ...data] = units[i],
+                results;
+
+            <span class="hljs-keyword">switch</span> (spec) {
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'linear'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'quadratic'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'bezier'</span> :
+                    results = getShapeUnitMetaData(spec, precision, data);
+                    unitLengths[i] = results.length;
+                    xPoints = xPoints.concat(results.xPoints);
+                    yPoints = yPoints.concat(results.yPoints);
+                    <span class="hljs-keyword">break</span>;
+                    
+                <span class="hljs-keyword">default</span> :
+                    unitLengths[i] = <span class="hljs-number">0</span>;
+            }
+        }
+
+        myLen = unitLengths.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>);
+
+        <span class="hljs-keyword">let</span> mySum = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = unitLengths.length; i &lt; iz; i++) {
+
+            mySum += unitLengths[i] / myLen;
+            unitPartials[i] = mySum;
+        }
+    }
+
+    returnObject.unitLengths = unitLengths;
+    returnObject.unitPartials = unitPartials;
+    returnObject.length = <span class="hljs-built_in">parseFloat</span>(myLen.toFixed(<span class="hljs-number">1</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>calculate bounding box dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> maxX = <span class="hljs-built_in">Math</span>.max(...xPoints),
+        maxY = <span class="hljs-built_in">Math</span>.max(...yPoints),
+        minX = <span class="hljs-built_in">Math</span>.min(...xPoints),
+        minY = <span class="hljs-built_in">Math</span>.min(...yPoints);
+
+    returnObject.maxX = maxX;
+    returnObject.maxY = maxY;
+    returnObject.minX = minX;
+    returnObject.minY = minY;
+
+    <span class="hljs-keyword">return</span> returnObject;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>TODO - documentation</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>consider whether we could swap out this vector stuff for a pool coordinate?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> vector = {
+
+    <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>
+};
+
+<span class="hljs-keyword">const</span> setVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">v, x, y</span>) </span>{
+
+    v.x = x;
+    v.y = y;
+};
+
+<span class="hljs-keyword">const</span> rotateVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">v, angle</span>) </span>{
+
+    <span class="hljs-keyword">let</span> arg = <span class="hljs-built_in">Math</span>.atan2(v.y, v.x);
+    arg += (angle * <span class="hljs-number">0.01745329251</span>);
+    
+    <span class="hljs-keyword">let</span> mag = <span class="hljs-built_in">Math</span>.sqrt((v.x * v.x) + (v.y * v.y));
+
+    v.x = mag * <span class="hljs-built_in">Math</span>.cos(arg);
+    v.y = mag * <span class="hljs-built_in">Math</span>.sin(arg);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>TODO - documentation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getShapeUnitMetaData = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">species, precision, args</span>) </span>{
+
+    <span class="hljs-keyword">let</span> xPts = [],
+        yPts = [],
+        len = <span class="hljs-number">0</span>,
+        w, h;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>we want to separate out linear species before going into the while loop</p>
+<ul>
+<li>because these calculations will be simple</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (species === <span class="hljs-string">'linear'</span>) {
+
+        <span class="hljs-keyword">let</span> [sx, sy, ex, ey] = args;
+
+        w = ex - sx,
+        h = ey - sy;
+
+        len = <span class="hljs-built_in">Math</span>.sqrt((w * w) + (h * h));
+
+        xPts = xPts.concat([sx, ex]);
+        yPts = yPts.concat([sy, ey]);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (species === <span class="hljs-string">'bezier'</span> || (species === <span class="hljs-string">'quadratic'</span>)) {
+
+        <span class="hljs-keyword">let</span> func = (species === <span class="hljs-string">'bezier'</span>) ? <span class="hljs-string">'getBezierXY'</span> : <span class="hljs-string">'getQuadraticXY'</span>,
+            flag = <span class="hljs-literal">false</span>,
+            step = <span class="hljs-number">0.25</span>,
+            currentLength = <span class="hljs-number">0</span>,
+            newLength = <span class="hljs-number">0</span>,
+            oldX, oldY, x, y, t, res;
+
+        <span class="hljs-keyword">while</span> (!flag) {
+
+            xPts.length = <span class="hljs-number">0</span>;
+            yPts.length = <span class="hljs-number">0</span>;
+            newLength = <span class="hljs-number">0</span>;
+
+            res = getXY[func](<span class="hljs-number">0</span>, ...args);
+            oldX = res.x;
+            oldY = res.y;
+            xPts.push(oldX);
+            yPts.push(oldY);
+
+            <span class="hljs-keyword">for</span> (t = step; t &lt;= <span class="hljs-number">1</span>; t += step) {
+
+                res = getXY[func](t, ...args);
+                ({x, y} = res)
+
+                xPts.push(x);
+                yPts.push(y);
+
+                w = x - oldX,
+                h = y - oldY;
+
+                newLength += <span class="hljs-built_in">Math</span>.sqrt((w * w) + (h * h));
+                oldX = x;
+                oldY = y;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>stop the while loop if we’re getting close to the true length of the curve</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (newLength &lt; len + precision) flag = <span class="hljs-literal">true</span>;
+
+            len = newLength;
+
+            step /= <span class="hljs-number">2</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>stop the while loop after checking a maximum of 129 points along the curve</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (step &lt; <span class="hljs-number">0.004</span>) flag = <span class="hljs-literal">true</span>;
+        }
+    }
+
+    <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">length</span>: len,
+        <span class="hljs-attr">xPoints</span>: xPts,
+        <span class="hljs-attr">yPoints</span>: yPts
+    };
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>TODO - documentation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getXY = {
+
+    <span class="hljs-attr">getBezierXY</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey</span>) </span>{
+
+        <span class="hljs-keyword">let</span> T = <span class="hljs-number">1</span> - t;
+
+        <span class="hljs-keyword">return</span> {
+            <span class="hljs-attr">x</span>: (<span class="hljs-built_in">Math</span>.pow(T, <span class="hljs-number">3</span>) * sx) + (<span class="hljs-number">3</span> * t * <span class="hljs-built_in">Math</span>.pow(T, <span class="hljs-number">2</span>) * cp1x) + (<span class="hljs-number">3</span> * t * t * T * cp2x) + (t * t * t * ex),
+            <span class="hljs-attr">y</span>: (<span class="hljs-built_in">Math</span>.pow(T, <span class="hljs-number">3</span>) * sy) + (<span class="hljs-number">3</span> * t * <span class="hljs-built_in">Math</span>.pow(T, <span class="hljs-number">2</span>) * cp1y) + (<span class="hljs-number">3</span> * t * t * T * cp2y) + (t * t * t * ey)
+        };
+    },
+
+    <span class="hljs-attr">getQuadraticXY</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, cp1x, cp1y, ex, ey</span>) </span>{
+
+        <span class="hljs-keyword">let</span> T = <span class="hljs-number">1</span> - t;
+
+        <span class="hljs-keyword">return</span> {
+            <span class="hljs-attr">x</span>: T * T * sx + <span class="hljs-number">2</span> * T * t * cp1x + t * t * ex,
+            <span class="hljs-attr">y</span>: T * T * sy + <span class="hljs-number">2</span> * T * t * cp1y + t * t * ey
+        };
+    },
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,8 +1,7 @@
-/*
-# dom mixin
 
-TODO - documentation
-*/
+// # dom mixin
+
+// TODO - documentation
 import { constructors, artefact, group } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, isa_obj, isa_fn, isa_dom, isa_quaternion, xt, addStrings, xta } from '../core/utilities.js';
 import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
@@ -12,1081 +11,1010 @@ import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory
 
 export default function (P = {}) {
 
-/*
-## Define attributes
 
-All factories using the dom mixin will add these to their prototype objects
-*/
-	let defaultAttributes = {
+// ## Define attributes
 
-/*
-TODO - documentation - don't think this needs to be in the defs object
-*/
-		domElement: '',
-
-/*
-TODO - documentation
-*/
-		pitch: 0,
-		yaw: 0,
-
-/*
-Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d box (as such) to act as a length for relative N% strings (and 'front', 'center', 'back' strings would be equally nonsensical)
-*/
-		offsetZ: 0,
-
-/*
-TODO - documentation
-*/
-		// collides: false, 			// set in mixin/position
-		pathCorners: null,			// does this need to be in dims object?
-		collisionPath: null,		// does this need to be in dims object?
-		collisionPoints: null,		// does this need to be in dims object?
-
-/*
-TODO - documentation
-*/
-		css: null,
-
-/*
-TODO - documentation
-*/
-		classes: '',
-
-/*
-TODO - do we want this in the defs object?
-*/
-		currentTransformString: '',			// does this need to be in dims object?
-		currentTransformOriginString: '',	// does this need to be in dims object?
-
-/*
-TODO - do we want this in the defs object?
-*/
-		rotation: null,						// does this need to be in dims object?
-
-/*
-TODO - documentation
-*/
-		position: 'absolute',
-
-/*
-... relates to dimensions somehow
-TODO: check if we're actually using this attribute anywhere
-    - has been used in demos DOM-007 and DOM-011
-        - check to see if it actually having any effect
-        - or if other functionality could (already?) handle the issues it is supposed to be addressing 
-*/
-		actionResize: false,
-
-/*
-TODO - documentation
-*/
-		trackHere: false,
-	};
-	P.defs = mergeOver(P.defs, defaultAttributes);
+// All factories using the dom mixin will add these to their prototype objects
+    let defaultAttributes = {
 
 
-/*
-## Packet management
-*/
-	P.packetExclusions = pushUnique(P.packetExclusions, ['domElement', 'pathCorners', 'rotation']);
-	P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-	P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+// TODO - documentation - don't think this needs to be in the defs object
+        domElement: '',
+
+
+// TODO - documentation
+        pitch: 0,
+        yaw: 0,
+
+
+// Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d box (as such) to act as a length for relative N% strings (and 'front', 'center', 'back' strings would be equally nonsensical)
+        offsetZ: 0,
+
+
+// TODO - documentation
+        pathCorners: null,            // does this need to be in dims object?
+        collisionPath: null,          // does this need to be in dims object?
+        collisionPoints: null,        // does this need to be in dims object?
+
+// TODO - documentation
+        css: null,
+
+// TODO - documentation
+        classes: '',
+
+
+// TODO - do we want this in the defs object?
+        currentTransformString: '',            // does this need to be in dims object?
+        currentTransformOriginString: '',    // does this need to be in dims object?
+
+
+// TODO - do we want this in the defs object?
+        rotation: null,                        // does this need to be in dims object?
+
+// TODO - documentation
+        position: 'absolute',
+
+
+// ... relates to dimensions somehow
+// TODO: check if we're actually using this attribute anywhere
+//     - has been used in demos DOM-007 and DOM-011
+//         - check to see if it actually having any effect
+//         - or if other functionality could (already?) handle the issues it is supposed to be addressing 
+        actionResize: false,
+
+// TODO - documentation
+        trackHere: false,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+
+// ## Packet management
+    P.packetExclusions = pushUnique(P.packetExclusions, ['domElement', 'pathCorners', 'rotation']);
+    P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+    P.packetCoordinates = pushUnique(P.packetCoordinates, []);
     P.packetObjects = pushUnique(P.packetObjects, []);
     P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
-	P.processDOMPacketOut = function (key, value, includes) {
+    P.processDOMPacketOut = function (key, value, includes) {
 
-		return this.processFactoryPacketOut(key, value, includes);
-	};
+        return this.processFactoryPacketOut(key, value, includes);
+    };
 
-	P.processFactoryPacketOut = function (key, value, includes) {
+    P.processFactoryPacketOut = function (key, value, includes) {
 
-		let result = true;
+        let result = true;
 
-		if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+        if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
 
-		return result;
-	};
+        return result;
+    };
 
-	P.finalizePacketOut = function (copy, items) {
+    P.finalizePacketOut = function (copy, items) {
 
-		if (isa_dom(this.domElement)) {
+        if (isa_dom(this.domElement)) {
 
-			let el = this.domElement;
+            let el = this.domElement;
 
-			let mynode = el.cloneNode(true);
+            let mynode = el.cloneNode(true);
 
-			let kids = mynode.querySelectorAll('[data-corner-div="sc"]');
-			kids.forEach(kid => mynode.removeChild(kid));
+            let kids = mynode.querySelectorAll('[data-corner-div="sc"]');
+            kids.forEach(kid => mynode.removeChild(kid));
 
-			copy.outerHTML = mynode.outerHTML;
-			copy.host = el.parentElement.id;
-		}
+            copy.outerHTML = mynode.outerHTML;
+            copy.host = el.parentElement.id;
+        }
 
-		copy = this.handlePacketAnchor(copy, items);
+        copy = this.handlePacketAnchor(copy, items);
 
-		return copy;
-	};
+        return copy;
+    };
 
-/*
-Overwrites postCloneAction function in mixin/base.js
-*/
-	P.postCloneAction = function(clone, items) {
 
-		if (this.onEnter) clone.onEnter = this.onEnter;
-		if (this.onLeave) clone.onLeave = this.onLeave;
-		if (this.onDown) clone.onDown = this.onDown;
-		if (this.onUp) clone.onUp = this.onUp;
+// Overwrites postCloneAction function in mixin/base.js
+    P.postCloneAction = function(clone, items) {
 
-		return clone;
-	};
+        if (this.onEnter) clone.onEnter = this.onEnter;
+        if (this.onLeave) clone.onLeave = this.onLeave;
+        if (this.onDown) clone.onDown = this.onDown;
+        if (this.onUp) clone.onUp = this.onUp;
 
-/*
-## Define getter, setter and deltaSetter functions
-*/
-	let S = P.setters,
-		D = P.deltaSetters;
+        return clone;
+    };
 
-/*
-TODO - documentation
-*/
-	S.trackHere = function (item) {
 
-		this.trackHere = item;
-		
-		if (item) pushUnique(uiSubscribedElements, this.name);
-		else removeItem(uiSubscribedElements, this.name);
-	};
+// ## Define getter, setter and deltaSetter functions
+    let S = P.setters,
+        D = P.deltaSetters;
 
-/*
-TODO - documentation
-*/
-	S.actionResize = function (item) {
+// TODO - documentation
+    S.trackHere = function (item) {
 
-		this.actionResize = item;
+        this.trackHere = item;
+        
+        if (item) pushUnique(uiSubscribedElements, this.name);
+        else removeItem(uiSubscribedElements, this.name);
+    };
 
-		if (item) {
+// TODO - documentation
+    S.actionResize = function (item) {
 
-			this.prepareStamp();
-			domShow(this.name);
-			this.triggerResizeCascade();
-		}
-	};
+        this.actionResize = item;
 
-/*
-TODO - documentation
-*/
-	S.position = function (item) {
+        if (item) {
 
-		this.position = item;
-		this.dirtyPosition = true;
-	};
+            this.prepareStamp();
+            domShow(this.name);
+            this.triggerResizeCascade();
+        }
+    };
 
-/*
-TODO - documentation
-*/
-	S.visibility = function (item) {
+// TODO - documentation
+    S.position = function (item) {
 
-		this.visibility = item;
-		this.dirtyVisibility = true;
-	};
+        this.position = item;
+        this.dirtyPosition = true;
+    };
 
-/*
-TODO - documentation
-*/
-	S.offsetZ = function (item) {
+// TODO - documentation
+    S.visibility = function (item) {
 
-		this.offsetZ = item;
-		this.dirtyOffsetZ = true;
-	};
+        this.visibility = item;
+        this.dirtyVisibility = true;
+    };
 
-	D.offsetZ = function (item) {
+// TODO - documentation
+    S.offsetZ = function (item) {
 
-		this.offsetZ += item;
-		this.dirtyOffsetZ = true;
-	};
+        this.offsetZ = item;
+        this.dirtyOffsetZ = true;
+    };
 
-/*
-TODO - documentation
-*/
-	S.roll = function (item) {
+    D.offsetZ = function (item) {
 
-		this.roll = this.checkRotationAngle(item);
-		this.dirtyRotation = true;
-	};
+        this.offsetZ += item;
+        this.dirtyOffsetZ = true;
+    };
 
-	S.pitch = function (item) {
+// TODO - documentation
+    S.roll = function (item) {
 
-		this.pitch = this.checkRotationAngle(item);
-		this.dirtyRotation = true;
-	};
+        this.roll = this.checkRotationAngle(item);
+        this.dirtyRotation = true;
+    };
 
-	S.yaw = function (item) {
+    S.pitch = function (item) {
 
-		this.yaw = this.checkRotationAngle(item);
-		this.dirtyRotation = true;
-	};
+        this.pitch = this.checkRotationAngle(item);
+        this.dirtyRotation = true;
+    };
 
-	D.roll = function (item) {
+    S.yaw = function (item) {
 
-		this.roll = this.checkRotationAngle(this.roll + item);
-		this.dirtyRotation = true;
-	};
+        this.yaw = this.checkRotationAngle(item);
+        this.dirtyRotation = true;
+    };
 
-	D.pitch = function (item) {
+    D.roll = function (item) {
 
-		this.pitch = this.checkRotationAngle(this.pitch + item);
-		this.dirtyRotation = true;
-	};
+        this.roll = this.checkRotationAngle(this.roll + item);
+        this.dirtyRotation = true;
+    };
 
-	D.yaw = function (item) {
+    D.pitch = function (item) {
 
-		this.yaw = this.checkRotationAngle(this.yaw + item);
-		this.dirtyRotation = true;
-	};
+        this.pitch = this.checkRotationAngle(this.pitch + item);
+        this.dirtyRotation = true;
+    };
 
-/*
-TODO - documentation
-*/
-	S.css = function (item) {
+    D.yaw = function (item) {
 
-		this.css = (this.css) ? mergeOver(this.css, item) : item;
+        this.yaw = this.checkRotationAngle(this.yaw + item);
+        this.dirtyRotation = true;
+    };
 
-		this.dirtyCss = true;
-	};
+// TODO - documentation
+    S.css = function (item) {
 
-/*
-TODO - documentation
-*/
-	S.classes = function (item) {
+        this.css = (this.css) ? mergeOver(this.css, item) : item;
 
-		this.classes = item;
+        this.dirtyCss = true;
+    };
 
-		this.dirtyClasses = true;
-	};
+// TODO - documentation
+    S.classes = function (item) {
 
-/*
-TODO - documentation
-*/
-	S.collides = function (item) {
+        this.classes = item;
 
-		this.collides = item;
+        this.dirtyClasses = true;
+    };
 
-		if (item) this.dirtyPathObject = true;
-	};
+// TODO - documentation
+    S.collides = function (item) {
 
-/*
-TODO - documentation
-*/
-	S.domAttributes = function (item) {
+        this.collides = item;
 
-		this.updateDomAttributes(item);
-	}
+        if (item) this.dirtyPathObject = true;
+    };
 
-/*
-TODO - documentation
-*/
-	P.checkRotationAngle = function (angle) {
+// TODO - documentation
+    S.domAttributes = function (item) {
 
-		if (angle < -180 || angle > 180) {
-			angle += (angle > 0) ? -360 : 360;
-		}
+        this.updateDomAttributes(item);
+    }
 
-		return angle;
-	};
+// TODO - documentation
+    P.checkRotationAngle = function (angle) {
 
-/*
-TODO - documentation
-*/
-	P.addClasses = function (item) {
+        if (angle < -180 || angle > 180) {
+            angle += (angle > 0) ? -360 : 360;
+        }
 
-		if (item.substring) {
+        return angle;
+    };
 
-			let classes = this.classes;
+// TODO - documentation
+    P.addClasses = function (item) {
 
-			classes += ` ${item}`;
-			classes = classes.trim();
-			classes = classes.replace(/[\s\uFEFF\xA0]+/g, ' ');
+        if (item.substring) {
 
-			if (classes !== this.classes) {
+            let classes = this.classes;
 
-				this.classes = classes;
-				this.dirtyClasses = true;
-			}
-		}
-		return this;
-	};
+            classes += ` ${item}`;
+            classes = classes.trim();
+            classes = classes.replace(/[\s\uFEFF\xA0]+/g, ' ');
 
-	P.removeClasses = function (item) {
+            if (classes !== this.classes) {
 
-		if (item.substring) {
+                this.classes = classes;
+                this.dirtyClasses = true;
+            }
+        }
+        return this;
+    };
 
-			let classes = this.classes,
-				targets = item.split(),
-				search;
+    P.removeClasses = function (item) {
 
-			targets.forEach(cls => {
+        if (item.substring) {
 
-				search = new RegExp(' ?' + cls + ' ?');
-				classes = classes.replace(search, ' ');
-				classes = classes.trim();
-				classes = classes.replace(/[\s\uFEFF\xA0]+/g, ' ');
-			});
+            let classes = this.classes,
+                targets = item.split(),
+                search;
 
-			if (classes !== this.classes) {
+            targets.forEach(cls => {
 
-				this.classes = classes;
-				this.dirtyClasses = true;
-			}
-		}
-		return this;
-	};
+                search = new RegExp(' ?' + cls + ' ?');
+                classes = classes.replace(search, ' ');
+                classes = classes.trim();
+                classes = classes.replace(/[\s\uFEFF\xA0]+/g, ' ');
+            });
 
-/*
-TODO - documentation
-*/
-	P.updateDomAttributes = function (items, value) {
+            if (classes !== this.classes) {
 
-		if (this.domElement) {
+                this.classes = classes;
+                this.dirtyClasses = true;
+            }
+        }
+        return this;
+    };
 
-			let el = this.domElement;
+// TODO - documentation
+    P.updateDomAttributes = function (items, value) {
 
-			if (items.substring && xt(value)) {
+        if (this.domElement) {
 
-				if (value) el.setAttribute(items, value);
-				else el.removeAttribute(items);
-			}
-			else if (isa_obj(items)) {
+            let el = this.domElement;
 
-				Object.entries(items).forEach(([item, val]) => {
+            if (items.substring && xt(value)) {
 
-					if (val) el.setAttribute(item, val);
-					else el.removeAttribute(item);
-				});
-			}
+                if (value) el.setAttribute(items, value);
+                else el.removeAttribute(items);
+            }
+            else if (isa_obj(items)) {
 
-		}
-		return this;
-	};
+                Object.entries(items).forEach(([item, val]) => {
 
-/*
-TODO - documentation
-*/
-	P.addPathCorners = function () {
+                    if (val) el.setAttribute(item, val);
+                    else el.removeAttribute(item);
+                });
+            }
 
-		if (!this.noUserInteraction) {
+        }
+        return this;
+    };
 
-			let pointMaker = function () {
+// TODO - documentation
+    P.addPathCorners = function () {
 
-				let p = document.createElement('div');
+        if (!this.noUserInteraction) {
 
-				p.style.width = 0;
-				p.style.height = 0;
-				p.style.position = 'absolute';
+            let pointMaker = function () {
 
-				return p;
-			};
+                let p = document.createElement('div');
 
-			let tl = pointMaker(),
-				tr = pointMaker(),
-				br = pointMaker(),
-				bl = pointMaker();
+                p.style.width = 0;
+                p.style.height = 0;
+                p.style.position = 'absolute';
 
-			tl.style.top = '0%';
-			tl.style.left = '0%';
-			tl.setAttribute('data-corner-div', 'sc');
+                return p;
+            };
 
-			tr.style.top = '0%';
-			tr.style.left = '100%';
-			tr.setAttribute('data-corner-div', 'sc');
+            let tl = pointMaker(),
+                tr = pointMaker(),
+                br = pointMaker(),
+                bl = pointMaker();
 
-			br.style.top = '100%';
-			br.style.left = '100%';
-			br.setAttribute('data-corner-div', 'sc');
+            tl.style.top = '0%';
+            tl.style.left = '0%';
+            tl.setAttribute('data-corner-div', 'sc');
 
-			bl.style.top = '100%';
-			bl.style.left = '0%';
-			bl.setAttribute('data-corner-div', 'sc');
+            tr.style.top = '0%';
+            tr.style.left = '100%';
+            tr.setAttribute('data-corner-div', 'sc');
 
-			let el = this.domElement;
+            br.style.top = '100%';
+            br.style.left = '100%';
+            br.setAttribute('data-corner-div', 'sc');
 
-			el.appendChild(tl);
-			el.appendChild(tr);
-			el.appendChild(br);
-			el.appendChild(bl);
+            bl.style.top = '100%';
+            bl.style.left = '0%';
+            bl.setAttribute('data-corner-div', 'sc');
 
-			this.pathCorners.push(tl);
-			this.pathCorners.push(tr);
-			this.pathCorners.push(br);
-			this.pathCorners.push(bl);
+            let el = this.domElement;
 
-			if (!this.currentCornersData) this.currentCornersData = [];
-		}
-		return this;
-	};
+            el.appendChild(tl);
+            el.appendChild(tr);
+            el.appendChild(br);
+            el.appendChild(bl);
 
-/*
-TODO - documentation
-*/
-	P.checkCornerPositions = function (corner) {
+            this.pathCorners.push(tl);
+            this.pathCorners.push(tr);
+            this.pathCorners.push(br);
+            this.pathCorners.push(bl);
 
-		let pathCorners = this.pathCorners;
+            if (!this.currentCornersData) this.currentCornersData = [];
+        }
+        return this;
+    };
 
-		if (pathCorners.length === 4) {
+// TODO - documentation
+    P.checkCornerPositions = function (corner) {
 
-			let here = this.getHere(),
-				x = currentCorePosition.scrollX - (here.offsetX || 0),
-				y = currentCorePosition.scrollY - (here.offsetY || 0),
-				round = Math.round,
-				results = [],
-				client;
+        let pathCorners = this.pathCorners;
 
-			const cornerPush = function (c) {
+        if (pathCorners.length === 4) {
 
-				let coord = c[0];
+            let here = this.getHere(),
+                x = currentCorePosition.scrollX - (here.offsetX || 0),
+                y = currentCorePosition.scrollY - (here.offsetY || 0),
+                round = Math.round,
+                results = [],
+                client;
 
-				if (coord) {
+            const cornerPush = function (c) {
 
-					results.push(round(coord.left + x));
-					results.push(round(coord.top + y));
-				}
-				else results.push(0, 0);
-			};
+                let coord = c[0];
 
-			switch (corner) {
+                if (coord) {
 
-				case 'topLeft' :
+                    results.push(round(coord.left + x));
+                    results.push(round(coord.top + y));
+                }
+                else results.push(0, 0);
+            };
 
-					client = pathCorners[0].getClientRects();
-					cornerPush(client);
-					return results;
+            switch (corner) {
 
-				case 'topRight' :
+                case 'topLeft' :
 
-					client = pathCorners[1].getClientRects();
-					cornerPush(client);
-					return results;
+                    client = pathCorners[0].getClientRects();
+                    cornerPush(client);
+                    return results;
 
-				case 'bottomRight' :
+                case 'topRight' :
 
-					client = pathCorners[2].getClientRects();
-					cornerPush(client);
-					return results;
+                    client = pathCorners[1].getClientRects();
+                    cornerPush(client);
+                    return results;
 
-				case 'bottomLeft' :
+                case 'bottomRight' :
 
-					client = pathCorners[3].getClientRects();
-					cornerPush(client);
-					return results;
+                    client = pathCorners[2].getClientRects();
+                    cornerPush(client);
+                    return results;
 
-				default :
+                case 'bottomLeft' :
 
-					pathCorners.forEach(point => {
+                    client = pathCorners[3].getClientRects();
+                    cornerPush(client);
+                    return results;
 
-						if (isa_dom(point)) {
+                default :
 
-							client = point.getClientRects();
-							cornerPush(client);
-						}
-					});
-					return results;
-			}
-		}
-	}
+                    pathCorners.forEach(point => {
 
-/*
-TODO - documentation
-*/
-	P.getCornerCoordinate = function (corner, coordinate) {
+                        if (isa_dom(point)) {
 
-		let x, y;
+                            client = point.getClientRects();
+                            cornerPush(client);
+                        }
+                    });
+                    return results;
+            }
+        }
+    }
 
-		switch (corner) {
+// TODO - documentation
+    P.getCornerCoordinate = function (corner, coordinate) {
 
-			case 'topLeft' :
-				[x, y] = this.checkCornerPositions('topLeft');
-				break;
+        let x, y;
 
-			case 'topRight' :
-				[x, y] = this.checkCornerPositions('topRight');
-				break;
+        switch (corner) {
 
-			case 'bottomRight' :
-				[x, y] = this.checkCornerPositions('bottomRight');
-				break;
+            case 'topLeft' :
+                [x, y] = this.checkCornerPositions('topLeft');
+                break;
 
-			case 'bottomLeft' :
-				[x, y] = this.checkCornerPositions('bottomLeft');
-				break;
+            case 'topRight' :
+                [x, y] = this.checkCornerPositions('topRight');
+                break;
 
-			default :
-				[x, y] = this.currentStampPosition;
-		}
+            case 'bottomRight' :
+                [x, y] = this.checkCornerPositions('bottomRight');
+                break;
 
-		if (coordinate) {
+            case 'bottomLeft' :
+                [x, y] = this.checkCornerPositions('bottomLeft');
+                break;
 
-			if (coordinate === 'x') return x;
-			if (coordinate === 'y') return y;
-		}
-		return [x, y];
-	};
+            default :
+                [x, y] = this.currentStampPosition;
+        }
 
-/*
-TODO - documentation
-*/
-	P.cleanPathObject = function () {
+        if (coordinate) {
 
-		this.dirtyPathObject = false;
+            if (coordinate === 'x') return x;
+            if (coordinate === 'y') return y;
+        }
+        return [x, y];
+    };
 
-		if (!this.noUserInteraction) {
+// TODO - documentation
+    P.cleanPathObject = function () {
 
-			if (!this.pathCorners.length) this.addPathCorners();
+        this.dirtyPathObject = false;
 
-			if (!this.currentCornersData) this.currentCornersData = [];
-			let cornerData = this.currentCornersData;
-			cornerData.length = 0;
-			cornerData.push(...this.checkCornerPositions());
+        if (!this.noUserInteraction) {
 
-			let p = this.pathObject = new Path2D();
-			p.moveTo(cornerData[0], cornerData[1]);
-			p.lineTo(cornerData[2], cornerData[3]);
-			p.lineTo(cornerData[4], cornerData[5]);
-			p.lineTo(cornerData[6], cornerData[7]);
-			p.closePath();
-		}
-	};
+            if (!this.pathCorners.length) this.addPathCorners();
 
-/*
-TODO - documentation
+            if (!this.currentCornersData) this.currentCornersData = [];
+            let cornerData = this.currentCornersData;
+            cornerData.length = 0;
+            cornerData.push(...this.checkCornerPositions());
 
-Overwrites mixin/position.js function
-*/
-	P.calculateSensors = function () {
+            let p = this.pathObject = new Path2D();
+            p.moveTo(cornerData[0], cornerData[1]);
+            p.lineTo(cornerData[2], cornerData[3]);
+            p.lineTo(cornerData[4], cornerData[5]);
+            p.lineTo(cornerData[6], cornerData[7]);
+            p.closePath();
+        }
+    };
 
-		if (!this.noUserInteraction) {
 
-			let [_tlx, _tly, _trx, _try, _brx, _bry, _blx, _bly] = this.currentCornersData;
+// TODO - documentation
 
-			let sensors = this.currentSensors;
-			sensors.length = 0;
+// Overwrites mixin/position.js function
+    P.calculateSensors = function () {
 
-			sensors.push([_tlx, _tly]);
-			sensors.push([_trx, _try]);
-			sensors.push([_brx, _bry]);
-			sensors.push([_blx, _bly]);
+        if (!this.noUserInteraction) {
 
-			let sensorSpacing = this.sensorSpacing || 50,
-				topLengthX = _tlx - _trx,
-				topLengthY = _tly - _try,
-				topLength = Math.sqrt((topLengthX * topLengthX) + (topLengthY * topLengthY)),
-				topSensors = parseInt(topLength / sensorSpacing, 10) - 1,
+            let [_tlx, _tly, _trx, _try, _brx, _bry, _blx, _bly] = this.currentCornersData;
 
-				rightLengthX = _trx - _brx,
-				rightLengthY = _try - _bry,
-				rightLength = Math.sqrt((rightLengthX * rightLengthX) + (rightLengthY * rightLengthY)),
-				rightSensors = parseInt(rightLength / sensorSpacing, 10) - 1,
+            let sensors = this.currentSensors;
+            sensors.length = 0;
 
-				bottomLengthX = _brx - _blx,
-				bottomLengthY = _bry - _bly,
-				bottomLength = Math.sqrt((bottomLengthX * bottomLengthX) + (bottomLengthY * bottomLengthY)),
-				bottomSensors = parseInt(bottomLength / sensorSpacing, 10) - 1,
+            sensors.push([_tlx, _tly]);
+            sensors.push([_trx, _try]);
+            sensors.push([_brx, _bry]);
+            sensors.push([_blx, _bly]);
 
-				leftLengthX = _blx - _tlx,
-				leftLengthY = _bly - _tly,
-				leftLength =  Math.sqrt((leftLengthX * leftLengthX) + (leftLengthY * leftLengthY)),
-				leftSensors = parseInt(leftLength / sensorSpacing, 10) - 1;
+            let sensorSpacing = this.sensorSpacing || 50,
+                topLengthX = _tlx - _trx,
+                topLengthY = _tly - _try,
+                topLength = Math.sqrt((topLengthX * topLengthX) + (topLengthY * topLengthY)),
+                topSensors = parseInt(topLength / sensorSpacing, 10) - 1,
 
-			let partX, partY, dx, dy, i;
+                rightLengthX = _trx - _brx,
+                rightLengthY = _try - _bry,
+                rightLength = Math.sqrt((rightLengthX * rightLengthX) + (rightLengthY * rightLengthY)),
+                rightSensors = parseInt(rightLength / sensorSpacing, 10) - 1,
 
-			if (topSensors > 0) {
+                bottomLengthX = _brx - _blx,
+                bottomLengthY = _bry - _bly,
+                bottomLength = Math.sqrt((bottomLengthX * bottomLengthX) + (bottomLengthY * bottomLengthY)),
+                bottomSensors = parseInt(bottomLength / sensorSpacing, 10) - 1,
 
-				partX = _trx;
-				partY = _try;
-				dx = topLengthX / (topSensors + 1);
-				dy = topLengthY / (topSensors + 1);
+                leftLengthX = _blx - _tlx,
+                leftLengthY = _bly - _tly,
+                leftLength =  Math.sqrt((leftLengthX * leftLengthX) + (leftLengthY * leftLengthY)),
+                leftSensors = parseInt(leftLength / sensorSpacing, 10) - 1;
 
-				for (i = 0; i < topSensors; i++) {
+            let partX, partY, dx, dy, i;
 
-					partX += dx;
-					partY += dy;
-					sensors.push([partX, partY]);
-				}
-			}
+            if (topSensors > 0) {
 
-			if (rightSensors > 0) {
+                partX = _trx;
+                partY = _try;
+                dx = topLengthX / (topSensors + 1);
+                dy = topLengthY / (topSensors + 1);
 
-				partX = _brx;
-				partY = _bry;
-				dx = rightLengthX / (rightSensors + 1);
-				dy = rightLengthY / (rightSensors + 1);
+                for (i = 0; i < topSensors; i++) {
 
-				for (i = 0; i < rightSensors; i++) {
+                    partX += dx;
+                    partY += dy;
+                    sensors.push([partX, partY]);
+                }
+            }
 
-					partX += dx;
-					partY += dy;
-					sensors.push([partX, partY]);
-				}
-			}
+            if (rightSensors > 0) {
 
-			if (bottomSensors > 0) {
+                partX = _brx;
+                partY = _bry;
+                dx = rightLengthX / (rightSensors + 1);
+                dy = rightLengthY / (rightSensors + 1);
 
-				partX = _blx;
-				partY = _bly;
-				dx = bottomLengthX / (bottomSensors + 1);
-				dy = bottomLengthY / (bottomSensors + 1);
+                for (i = 0; i < rightSensors; i++) {
 
-				for (i = 0; i < bottomSensors; i++) {
+                    partX += dx;
+                    partY += dy;
+                    sensors.push([partX, partY]);
+                }
+            }
 
-					partX += dx;
-					partY += dy;
-					sensors.push([partX, partY]);
-				}
-			}
+            if (bottomSensors > 0) {
 
-			if (leftSensors > 0) {
+                partX = _blx;
+                partY = _bly;
+                dx = bottomLengthX / (bottomSensors + 1);
+                dy = bottomLengthY / (bottomSensors + 1);
 
-				partX = _tlx;
-				partY = _tly;
-				dx = leftLengthX / (leftSensors + 1);
-				dy = leftLengthY / (leftSensors + 1);
+                for (i = 0; i < bottomSensors; i++) {
 
-				for (i = 0; i < leftSensors; i++) {
+                    partX += dx;
+                    partY += dy;
+                    sensors.push([partX, partY]);
+                }
+            }
 
-					partX += dx;
-					partY += dy;
-					sensors.push([partX, partY]);
-				}
-			}
-		}
-	};
+            if (leftSensors > 0) {
 
-/*
-TODO - documentation
-*/
-	P.cleanRotation = function () {
+                partX = _tlx;
+                partY = _tly;
+                dx = leftLengthX / (leftSensors + 1);
+                dy = leftLengthY / (leftSensors + 1);
 
-		this.dirtyRotation = false;
+                for (i = 0; i < leftSensors; i++) {
 
-		if (!this.rotation || !isa_quaternion(this.rotation)) this.rotation = makeQuaternion();
+                    partX += dx;
+                    partY += dy;
+                    sensors.push([partX, partY]);
+                }
+            }
+        }
+    };
 
-		if (!this.currentRotation || !isa_quaternion(this.rotation)) this.currentRotation = makeQuaternion();
+// TODO - documentation
+    P.cleanRotation = function () {
 
-		let calculatedRotation = this.rotation;
+        this.dirtyRotation = false;
 
-		calculatedRotation.setFromEuler({
-			pitch: this.pitch || 0,
-			yaw: this.yaw || 0,
-			roll: this.roll || 0,
-		});
+        if (!this.rotation || !isa_quaternion(this.rotation)) this.rotation = makeQuaternion();
 
-		if (calculatedRotation.getMagnitude() !== 1) calculatedRotation.normalize();
+        if (!this.currentRotation || !isa_quaternion(this.rotation)) this.currentRotation = makeQuaternion();
 
-		let processedRotation = requestQuaternion(),
-			path = this.path,
-			mimic = this.mimic,
-			pivot = this.pivot,
-			lock = this.lockTo;
+        let calculatedRotation = this.rotation;
 
-		if (path && lock.indexOf('path') >= 0) {
+        calculatedRotation.setFromEuler({
+            pitch: this.pitch || 0,
+            yaw: this.yaw || 0,
+            roll: this.roll || 0,
+        });
 
-			processedRotation.set(calculatedRotation);
-			// TODO check to see if path roll needs to be added
+        if (calculatedRotation.getMagnitude() !== 1) calculatedRotation.normalize();
 
-		}
-		else if (mimic && this.useMimicRotation && lock.indexOf('mimic') >= 0) {
+        let processedRotation = requestQuaternion(),
+            path = this.path,
+            mimic = this.mimic,
+            pivot = this.pivot,
+            lock = this.lockTo;
 
-			if (xt(mimic.currentRotation)) {
+        if (path && lock.indexOf('path') >= 0) {
 
-				processedRotation.set(mimic.currentRotation);
-				if (this.addOwnRotationToMimic) processedRotation.quaternionRotate(calculatedRotation);
-			}
-			else this.dirtyMimicRotation = true;
-		} 
-		else {
+            processedRotation.set(calculatedRotation);
+            // TODO check to see if path roll needs to be added
 
-			processedRotation.set(calculatedRotation);
+        }
+        else if (mimic && this.useMimicRotation && lock.indexOf('mimic') >= 0) {
 
-			if (pivot && this.addPivotRotation && lock.indexOf('pivot') >= 0) {
+            if (xt(mimic.currentRotation)) {
 
-				if (xt(pivot.currentRotation)) processedRotation.quaternionRotate(pivot.currentRotation);
-				else this.dirtyPivotRotation = true;
-			}
-		}
+                processedRotation.set(mimic.currentRotation);
+                if (this.addOwnRotationToMimic) processedRotation.quaternionRotate(calculatedRotation);
+            }
+            else this.dirtyMimicRotation = true;
+        } 
+        else {
 
-		this.currentRotation.set(processedRotation);
+            processedRotation.set(calculatedRotation);
 
-		releaseQuaternion(processedRotation);
+            if (pivot && this.addPivotRotation && lock.indexOf('pivot') >= 0) {
 
-		this.dirtyPositionSubscribers = true;
-		
-		if (this.mimicked && this.mimicked.length) this.dirtyMimicRotation = true;
-	};
+                if (xt(pivot.currentRotation)) processedRotation.quaternionRotate(pivot.currentRotation);
+                else this.dirtyPivotRotation = true;
+            }
+        }
 
-/*
-TODO - documentation
-*/
-	P.cleanOffsetZ = function () {
+        this.currentRotation.set(processedRotation);
 
-		// nothing to do here - function only exists in case we need to do stuff in future Scrawl-canvas version
-		this.dirtyOffsetZ = false;
-	};
+        releaseQuaternion(processedRotation);
 
-/*
-TODO - documentation
-*/
-	P.cleanContent = function () {
+        this.dirtyPositionSubscribers = true;
+        
+        if (this.mimicked && this.mimicked.length) this.dirtyMimicRotation = true;
+    };
 
-		this.dirtyContent = false;
+// TODO - documentation
+    P.cleanOffsetZ = function () {
 
-		let el = this.domElement;
+        // nothing to do here - function only exists in case we need to do stuff in future Scrawl-canvas version
+        this.dirtyOffsetZ = false;
+    };
 
-		if (el) this.dirtyDimensions = true;
-	};
+// TODO - documentation
+    P.cleanContent = function () {
 
-/*
-TODO - documentation
-*/
-	P.initializeDomLayout = function (items) {
+        this.dirtyContent = false;
 
-		let el = items.domElement,
-			elStyle = el.style;
+        let el = this.domElement;
 
-		if (el && items.setInitialDimensions) {
+        if (el) this.dirtyDimensions = true;
+    };
 
-			let dims = el.getBoundingClientRect(),
-				trans = el.style.transform,
-				transOrigin = el.style.transformOrigin,
-				host = false,
-				hostDims;
+// TODO - documentation
+    P.initializeDomLayout = function (items) {
 
-			if (items && items.host) {
+        let el = items.domElement,
+            elStyle = el.style;
 
-				host = items.host;
+        if (el && items.setInitialDimensions) {
 
-				if (host.substring && artefact[host]) host = artefact[host];
-			}
+            let dims = el.getBoundingClientRect(),
+                trans = el.style.transform,
+                transOrigin = el.style.transformOrigin,
+                host = false,
+                hostDims;
 
-			// TODO - discover scale
+            if (items && items.host) {
 
-			// discover dimensions (width, height)
-			this.currentDimensions[0] = dims.width;
-			this.currentDimensions[1] = dims.height;
-			items.width = dims.width;
-			items.height = dims.height;
+                host = items.host;
 
-			// recover classes already assigned to the element
-			if (el.className) items.classes = el.className;
+                if (host.substring && artefact[host]) host = artefact[host];
+            }
 
-			// go with lock defaults - no work required
+            // TODO - discover scale
 
-			// discover start (boundingClientRect - will be the difference between this object and its host (parent) object 'top' and 'left' values)
-			if (host && host.domElement) {
+            // discover dimensions (width, height)
+            this.currentDimensions[0] = dims.width;
+            this.currentDimensions[1] = dims.height;
+            items.width = dims.width;
+            items.height = dims.height;
 
-				hostDims = host.domElement.getBoundingClientRect();
+            // recover classes already assigned to the element
+            if (el.className) items.classes = el.className;
 
-				if (hostDims) {
+            // go with lock defaults - no work required
 
-					items.startX = dims.left - hostDims.left;
-					items.startY = dims.top - hostDims.top;
-				}
-			}
+            // discover start (boundingClientRect - will be the difference between this object and its host (parent) object 'top' and 'left' values)
+            if (host && host.domElement) {
 
+                hostDims = host.domElement.getBoundingClientRect();
 
-			// TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?
+                if (hostDims) {
 
-			// TODO discover handle (transform, transformOrigin)
+                    items.startX = dims.left - hostDims.left;
+                    items.startY = dims.top - hostDims.top;
+                }
+            }
 
-			// TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
 
-			// for Stack artefacts only, discover perspective and perspective-origin values
-			if (this.type === 'Stack') {
+            // TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?
 
-				// TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
-				if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
+            // TODO discover handle (transform, transformOrigin)
 
-					// TODO - this isn't working! 
-					items.perspectiveZ = (xt(elStyle.perspective) && elStyle.perspective) ? parseFloat(elStyle.perspective) : 0;
-				}
+            // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
 
-				let perspectiveOrigin = elStyle.perspectiveOrigin;
+            // for Stack artefacts only, discover perspective and perspective-origin values
+            if (this.type === 'Stack') {
 
-				if (perspectiveOrigin.length) {
+                // TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
+                if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
 
-					perspectiveOrigin = perspectiveOrigin.split(' ');
+                    // TODO - this isn't working! 
+                    items.perspectiveZ = (xt(elStyle.perspective) && elStyle.perspective) ? parseFloat(elStyle.perspective) : 0;
+                }
 
-					if (perspectiveOrigin.length > 0 && !xt(items.perspective) && !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[0];
+                let perspectiveOrigin = elStyle.perspectiveOrigin;
 
-					if (!xt(items.perspective) && !xt(items.perspectiveY)) {
+                if (perspectiveOrigin.length) {
 
-						if (perspectiveOrigin.length > 1) items.perspectiveY = perspectiveOrigin[1];
-						else items.perspectiveY = perspectiveOrigin[0];
-					}
-				}
-			}
-		}
-	};
+                    perspectiveOrigin = perspectiveOrigin.split(' ');
 
-/*
-TODO - documentation
-*/
-	P.checkForResize = function () {
+                    if (perspectiveOrigin.length > 0 && !xt(items.perspective) && !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[0];
 
-		let el = this.domElement;
+                    if (!xt(items.perspective) && !xt(items.perspectiveY)) {
 
-		if (el) {
+                        if (perspectiveOrigin.length > 1) items.perspectiveY = perspectiveOrigin[1];
+                        else items.perspectiveY = perspectiveOrigin[0];
+                    }
+                }
+            }
+        }
+    };
 
-			let dims = el.getBoundingClientRect(),
-				flag = false;
+// TODO - documentation
+    P.checkForResize = function () {
 
-			if (this.currentDimensions[0] !== dims.width) {
+        let el = this.domElement;
 
-				this.dimensions[0] = this.currentDimensions[0] = dims.width;
-				flag = true;
-			}
+        if (el) {
 
-			if (this.currentDimensions[1] !== dims.height) {
+            let dims = el.getBoundingClientRect(),
+                flag = false;
 
-				this.dimensions[1] = this.currentDimensions[1] = dims.height;
-				flag = true;
-			}
+            if (this.currentDimensions[0] !== dims.width) {
 
-			if (flag && (this.type === 'Stack')) this.triggerResizeCascade();
-		}
-	};
+                this.dimensions[0] = this.currentDimensions[0] = dims.width;
+                flag = true;
+            }
 
-	P.triggerResizeCascade = function () {
+            if (this.currentDimensions[1] !== dims.height) {
 
-		let gBucket = this.groupBuckets,
-			aBucket;
+                this.dimensions[1] = this.currentDimensions[1] = dims.height;
+                flag = true;
+            }
 
-		if (gBucket && gBucket.length) {
+            if (flag && (this.type === 'Stack')) this.triggerResizeCascade();
+        }
+    };
 
-			gBucket.forEach(grp => {
+    P.triggerResizeCascade = function () {
 
-				aBucket = grp.artefactBuckets;
+        let gBucket = this.groupBuckets,
+            aBucket;
 
-				if (aBucket && aBucket.length) {
+        if (gBucket && gBucket.length) {
 
-					aBucket.forEach(art => {
+            gBucket.forEach(grp => {
 
-						if (art) {
+                aBucket = grp.artefactBuckets;
 
-							art.dirtyDimensions = true;
-						}
-					})
-				}
-			})
-		}
-	};
+                if (aBucket && aBucket.length) {
 
-/*
-TODO - documentation
-*/
-	P.prepareStamp = function () {
+                    aBucket.forEach(art => {
 
-		if (this.actionResize) this.checkForResize();
+                        if (art) {
 
-		if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
+                            art.dirtyDimensions = true;
+                        }
+                    })
+                }
+            })
+        }
+    };
 
-			this.dirtyPathObject = true;
-			this.dirtyCollision = true;
-		}
+// TODO - documentation
+    P.prepareStamp = function () {
 
-		if (this.dirtyContent) this.cleanContent();
-		if (this.dirtyScale) this.cleanScale();
-		if (this.dirtyDimensions) this.cleanDimensions();
-		if (this.dirtyLock) this.cleanLock();
-		if (this.dirtyStart) this.cleanStart();
-		if (this.dirtyOffset) this.cleanOffset();
-		if (this.dirtyOffsetZ) this.cleanOffsetZ();
-		if (this.dirtyHandle) this.cleanHandle();
-		if (this.dirtyRotation) this.cleanRotation();
+        if (this.actionResize) this.checkForResize();
 
-		if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+        if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
 
-			this.dirtyStampPositions = true;
-			this.dirtyStampHandlePositions = true;
-		}
+            this.dirtyPathObject = true;
+            this.dirtyCollision = true;
+        }
 
-		if (this.pivoted.length) this.dirtyStampPositions = true;
+        if (this.dirtyContent) this.cleanContent();
+        if (this.dirtyScale) this.cleanScale();
+        if (this.dirtyDimensions) this.cleanDimensions();
+        if (this.dirtyLock) this.cleanLock();
+        if (this.dirtyStart) this.cleanStart();
+        if (this.dirtyOffset) this.cleanOffset();
+        if (this.dirtyOffsetZ) this.cleanOffsetZ();
+        if (this.dirtyHandle) this.cleanHandle();
+        if (this.dirtyRotation) this.cleanRotation();
 
-		if (this.dirtyStampPositions) this.cleanStampPositions();
-		if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
+        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
 
-		if (this.dirtyPathObject) this.cleanPathObject();
-	};
+            this.dirtyStampPositions = true;
+            this.dirtyStampHandlePositions = true;
+        }
 
-	P.cleanStampPositionsAdditionalActions = function () {
+        if (this.pivoted.length) this.dirtyStampPositions = true;
 
-		if (this.domElement && this.collides) this.dirtyPathObject = true;
-	};
+        if (this.dirtyStampPositions) this.cleanStampPositions();
+        if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
-/*
-TODO - documentation
-*/
-	P.stamp = function () {
+        if (this.dirtyPathObject) this.cleanPathObject();
+    };
 
-		let self = this;
+    P.cleanStampPositionsAdditionalActions = function () {
 
-		return new Promise((resolve, reject) => {
+        if (this.domElement && this.collides) this.dirtyPathObject = true;
+    };
 
-			// do not process if the DOM element is missing
-			if (!self.domElement) reject(false);
+// TODO - documentation
+    P.stamp = function () {
 
-			// calculate transform strings on each iteration
-			let [stampX, stampY] = self.currentStampPosition,
-				[handleX, handleY] = self.currentStampHandlePosition,
-				scale = self.currentScale;
+        let self = this;
 
-			let rotation = self.currentRotation,
-				v, vx, vy, vz, angle;
+        return new Promise((resolve, reject) => {
 
-			let nTransformOrigin = `${handleX}px ${handleY}px 0`,
-				nTransform = `translate(${stampX - handleX}px,${stampY - handleY}px)`;
+            // do not process if the DOM element is missing
+            if (!self.domElement) reject(false);
 
-			if (self.yaw || self.pitch || self.roll || (self.pivot && self.addPivotRotation) || (self.mimic && self.useMimicRotation) || (self.path && self.addPathRotation)) {
+            // calculate transform strings on each iteration
+            let [stampX, stampY] = self.currentStampPosition,
+                [handleX, handleY] = self.currentStampHandlePosition,
+                scale = self.currentScale;
 
-				v = rotation.v;
-				vx = v.x;
-				vy = v.y;
-				vz = v.z;
-				angle = rotation.getAngle(false);
+            let rotation = self.currentRotation,
+                v, vx, vy, vz, angle;
 
-				nTransform += ` rotate3d(${vx},${vy},${vz},${angle}rad)`;
-			}
+            let nTransformOrigin = `${handleX}px ${handleY}px 0`,
+                nTransform = `translate(${stampX - handleX}px,${stampY - handleY}px)`;
 
-			if (self.offsetZ) nTransform += ` translateZ(${self.offsetZ}px)`;
+            if (self.yaw || self.pitch || self.roll || (self.pivot && self.addPivotRotation) || (self.mimic && self.useMimicRotation) || (self.path && self.addPathRotation)) {
 
-			if (scale !== 1) nTransform += ` scale(${scale},${scale})`;
+                v = rotation.v;
+                vx = v.x;
+                vy = v.y;
+                vz = v.z;
+                angle = rotation.getAngle(false);
 
-			if (nTransform !== self.currentTransformString) {
+                nTransform += ` rotate3d(${vx},${vy},${vz},${angle}rad)`;
+            }
 
-				self.currentTransformString = nTransform;
-				self.dirtyTransform = true;
-			}
+            if (self.offsetZ) nTransform += ` translateZ(${self.offsetZ}px)`;
 
-			if (nTransformOrigin !== self.currentTransformOriginString) {
+            if (scale !== 1) nTransform += ` scale(${scale},${scale})`;
 
-				self.currentTransformOriginString = nTransformOrigin;
-				self.dirtyTransformOrigin = true;
-			}
+            if (nTransform !== self.currentTransformString) {
 
-			// determine whether there is a need to trigger a redraw of the DOM element
-			if (self.dirtyTransform || self.dirtyPerspective || self.dirtyPosition || self.dirtyDomDimensions || self.dirtyTransformOrigin || self.dirtyVisibility || self.dirtyCss || self.dirtyClasses || self.domShowRequired) {
+                self.currentTransformString = nTransform;
+                self.dirtyTransform = true;
+            }
 
-				addDomShowElement(self.name);
-				setDomShowRequired(true);
-			}
+            if (nTransformOrigin !== self.currentTransformOriginString) {
 
-			// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
-			if (self.dirtyPositionSubscribers) self.updatePositionSubscribers();
+                self.currentTransformOriginString = nTransformOrigin;
+                self.dirtyTransformOrigin = true;
+            }
 
-			// if this artefact's pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration
-			if(self.dirtyMimicRotation || self.dirtyPivotRotation) {
+            // determine whether there is a need to trigger a redraw of the DOM element
+            if (self.dirtyTransform || self.dirtyPerspective || self.dirtyPosition || self.dirtyDomDimensions || self.dirtyTransformOrigin || self.dirtyVisibility || self.dirtyCss || self.dirtyClasses || self.domShowRequired) {
 
-				self.dirtyMimicRotation = false;
-				self.dirtyPivotRotation = false;
-				self.dirtyRotation = true;
-			}
+                addDomShowElement(self.name);
+                setDomShowRequired(true);
+            }
 
-			if(self.dirtyMimicScale) {
+            // update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
+            if (self.dirtyPositionSubscribers) self.updatePositionSubscribers();
 
-				self.dirtyMimicScale = false;
-				self.dirtyScale = true;
-			}
+            // if this artefact's pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration
+            if(self.dirtyMimicRotation || self.dirtyPivotRotation) {
 
-			resolve(true);
-		});
-	};
+                self.dirtyMimicRotation = false;
+                self.dirtyPivotRotation = false;
+                self.dirtyRotation = true;
+            }
 
-/*
-TODO - documentation
+            if(self.dirtyMimicScale) {
 
-Overwrites mixin/position.js function
-*/
-	P.checkHit = function (items = [], mycell) {
+                self.dirtyMimicScale = false;
+                self.dirtyScale = true;
+            }
 
-		if (this.noUserInteraction) return false;
+            resolve(true);
+        });
+    };
 
-		if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
 
-			this.cleanPathObject();
-			this.dirtyCollision = false;
-		}
+// TODO - documentation
 
-		let tests = (!Array.isArray(items)) ?  [items] : items,
-			poolCellFlag = false;
+// Overwrites mixin/position.js function
+    P.checkHit = function (items = [], mycell) {
 
-		if (!mycell) {
+        if (this.noUserInteraction) return false;
 
-			mycell = requestCell();
-			poolCellFlag = true;
-		}
+        if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
 
-		let engine = mycell.engine,
-			stamp = this.currentStampPosition,
-			x = stamp[0],
-			y = stamp[1],
-			tx, ty;
+            this.cleanPathObject();
+            this.dirtyCollision = false;
+        }
 
-		if (tests.some(test => {
+        let tests = (!Array.isArray(items)) ?  [items] : items,
+            poolCellFlag = false;
 
-// console.log(test)
-			if (Array.isArray(test)) {
+        if (!mycell) {
 
-				tx = test[0];
-				ty = test[1];
-			}
-			else if (xta(test, test.x, test.y)) {
+            mycell = requestCell();
+            poolCellFlag = true;
+        }
 
-				tx = test.x;
-				ty = test.y;
-			}
-			else return false;
+        let engine = mycell.engine,
+            stamp = this.currentStampPosition,
+            x = stamp[0],
+            y = stamp[1],
+            tx, ty;
 
-			if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+        if (tests.some(test => {
 
-			return engine.isPointInPath(this.pathObject, tx, ty);
+            if (Array.isArray(test)) {
 
-		}, this)) {
+                tx = test[0];
+                ty = test[1];
+            }
+            else if (xta(test, test.x, test.y)) {
 
-			if (poolCellFlag) releaseCell(mycell);
+                tx = test.x;
+                ty = test.y;
+            }
+            else return false;
 
-			return {
-				x: tx,
-				y: ty,
-				artefact: this,
-			};
-		}
-		
-		if (poolCellFlag) releaseCell(mycell);
-		
-		return false;
-	};
+            if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 
-/*
-TODO - documentation
+            return engine.isPointInPath(this.pathObject, tx, ty);
 
-I really don't like this functionality - see if we can purge it from the code base?
-*/
-	P.apply = function() {
+        }, this)) {
 
-		applyCoreResizeListener();
+            if (poolCellFlag) releaseCell(mycell);
 
-		this.prepareStamp();
+            return {
+                x: tx,
+                y: ty,
+                artefact: this,
+            };
+        }
+        
+        if (poolCellFlag) releaseCell(mycell);
+        
+        return false;
+    };
 
-		let self = this;
 
-		this.stamp()
-		.then(() => {
+// TODO - documentation
 
-			domShow(self.name);
-			self.dirtyPathObject = true;
-			self.cleanPathObject();
-		})
-		.catch(() => {});
-	};
+// I really don't like this functionality - see if we can purge it from the code base?
+    P.apply = function() {
 
-	return P;
+        applyCoreResizeListener();
+
+        this.prepareStamp();
+
+        let self = this;
+
+        this.stamp()
+        .then(() => {
+
+            domShow(self.name);
+            self.dirtyPathObject = true;
+            self.cleanPathObject();
+        })
+        .catch(() => {});
+    };
+
+// Return the prototype
+    return P;
 };

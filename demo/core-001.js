@@ -11,14 +11,14 @@ let report = document.querySelector('#reportmessage');
 // Animation
 scrawl.makeAnimation({
 
-	name: 'demo-animation',
+    name: 'demo-animation',
 
-	fn: function () {
+    fn: function () {
 
-		return new Promise((resolve) => {
+        return new Promise((resolve) => {
 
-			// If all modules load and run correctly, we should see data appear in the web page
-			report.textContent = `cursor x: ${scrawl.currentCorePosition.x}
+            // If all modules load and run correctly, we should see data appear in the web page
+            report.textContent = `cursor x: ${scrawl.currentCorePosition.x}
 cursor y: ${scrawl.currentCorePosition.y}
 browser width: ${scrawl.currentCorePosition.w}
 browser height: ${scrawl.currentCorePosition.h}
@@ -26,7 +26,7 @@ scroll x: ${scrawl.currentCorePosition.scrollX}
 scroll y: ${scrawl.currentCorePosition.scrollY}
 cursor type: ${scrawl.currentCorePosition.type}`;
 
-			resolve(true);
-		});
-	},
+            resolve(true);
+        });
+    },
 });

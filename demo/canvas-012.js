@@ -1,152 +1,155 @@
+// ## Demo Canvas 012 
+
+// [Shape entity position; shape entity as a path for other artefacts to follow](../../demo/canvas-012.html)
 import scrawl from '../source/scrawl.js'
 
 
 // Create Shape entity
 let arrow = scrawl.makeShape({
 
-	name: 'myArrow',
+    name: 'myArrow',
 
-	pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
+    pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
-	startX: 300,
-	startY: 200,
-	handleX: '50%',
-	handleY: '50%',
+    startX: 300,
+    startY: 200,
+    handleX: '50%',
+    handleY: '50%',
 
-	scale: 0.2,
-	scaleOutline: false,
+    scale: 0.2,
+    scaleOutline: false,
 
-	lineWidth: 10,
-	lineJoin: 'round',
+    lineWidth: 10,
+    lineJoin: 'round',
 
-	fillStyle: 'lightgreen',
+    fillStyle: 'lightgreen',
 
-	method: 'fill',
+    method: 'fill',
 
-	showBoundingBox: true,
-	useAsPath: true,
-	precision: 2,
+    showBoundingBox: true,
+    useAsPath: true,
+    precision: 2,
 });
 
 // Create Wheel entity to pivot to the arrow
 scrawl.makeWheel({
-	fillStyle: 'blue',
-	radius: 5,
-	handleX: 'center',
-	handleY: 'center',
-	pivot: 'myArrow',
-	lockTo: 'pivot',
+    fillStyle: 'blue',
+    radius: 5,
+    handleX: 'center',
+    handleY: 'center',
+    pivot: 'myArrow',
+    lockTo: 'pivot',
 });
 
 // Create the wheel entitys that will use the arrow as their path
 let myWheel = scrawl.makeWheel({
-	fillStyle: 'red',
-	radius: 3,
+    fillStyle: 'red',
+    radius: 3,
 
-	roll: -90,
+    roll: -90,
 
-	startAngle: 90,
-	endAngle: -90,
+    startAngle: 90,
+    endAngle: -90,
 
-	path: 'myArrow',
-	pathPosition: 0,
-	addPathRotation: true,
-	lockTo: 'path',
+    path: 'myArrow',
+    pathPosition: 0,
+    addPathRotation: true,
+    lockTo: 'path',
 
-	handleX: 'center',
-	handleY: 'center',
+    handleX: 'center',
+    handleY: 'center',
 
-	delta: {
-		pathPosition: 0.0008,
-	}
+    delta: {
+        pathPosition: 0.0008,
+    }
 });
 
 for (let i = 0.01; i < 1; i += 0.01) {
 
-	let col;
+    let col;
 
-	if (i < 0.2) col = 'red';
-	else if (i < 0.4) col = 'orange';
-	else if (i < 0.6) col = 'darkgreen';
-	else if (i < 0.8) col = 'blue';
-	else col = 'purple';
+    if (i < 0.2) col = 'red';
+    else if (i < 0.4) col = 'orange';
+    else if (i < 0.6) col = 'darkgreen';
+    else if (i < 0.8) col = 'blue';
+    else col = 'purple';
 
-	myWheel.clone({
-		pathPosition: i,
-		fillStyle: col,
-	});
+    myWheel.clone({
+        pathPosition: i,
+        fillStyle: col,
+    });
 }
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 Shape path length: ${arrow.length}`;
-	};
+    };
 }();
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	target: scrawl.library.artefact.mycanvas,
-	afterShow: report,
+    name: 'demo-animation',
+    target: scrawl.library.artefact.mycanvas,
+    afterShow: report,
 });
 
 
 // User interaction - setup form observer functionality
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: arrow,
+    target: arrow,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		start_xPercent: ['startX', '%'],
-		start_xAbsolute: ['startX', 'round'],
-		start_xString: ['startX', 'raw'],
+        start_xPercent: ['startX', '%'],
+        start_xAbsolute: ['startX', 'round'],
+        start_xString: ['startX', 'raw'],
 
-		start_yPercent: ['startY', '%'],
-		start_yAbsolute: ['startY', 'round'],
-		start_yString: ['startY', 'raw'],
+        start_yPercent: ['startY', '%'],
+        start_yAbsolute: ['startY', 'round'],
+        start_yString: ['startY', 'raw'],
 
-		handle_xPercent: ['handleX', '%'],
-		handle_xAbsolute: ['handleX', 'round'],
-		handle_xString: ['handleX', 'raw'],
+        handle_xPercent: ['handleX', '%'],
+        handle_xAbsolute: ['handleX', 'round'],
+        handle_xString: ['handleX', 'raw'],
 
-		handle_yPercent: ['handleY', '%'],
-		handle_yAbsolute: ['handleY', 'round'],
-		handle_yString: ['handleY', 'raw'],
+        handle_yPercent: ['handleY', '%'],
+        handle_yAbsolute: ['handleY', 'round'],
+        handle_yString: ['handleY', 'raw'],
 
-		offset_xPercent: ['offsetX', '%'],
-		offset_xAbsolute: ['offsetX', 'round'],
+        offset_xPercent: ['offsetX', '%'],
+        offset_xAbsolute: ['offsetX', 'round'],
 
-		offset_yPercent: ['offsetY', '%'],
-		offset_yAbsolute: ['offsetY', 'round'],
+        offset_yPercent: ['offsetY', '%'],
+        offset_yAbsolute: ['offsetY', 'round'],
 
-		roll: ['roll', 'float'],
-		scale: ['scale', 'float'],
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
 
-		upend: ['flipUpend', 'boolean'],
-		reverse: ['flipReverse', 'boolean'],
-	},
+        upend: ['flipUpend', 'boolean'],
+        reverse: ['flipReverse', 'boolean'],
+    },
 });
 
 // Setup form

@@ -1,16 +1,15 @@
-/*
-# Grid factory
 
-TODO - documentation
+// # Grid factory
 
-#### To instantiate objects from the factory
+// TODO - documentation
 
-#### Library storage
+// #### To instantiate objects from the factory
 
-#### Clone functionality
+// #### Library storage
 
-#### Kill functionality
-*/
+// #### Clone functionality
+
+// #### Kill functionality
 import { constructors, entity } from '../core/library.js';
 import { mergeOver, isa_number, isa_obj, defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
 
@@ -23,57 +22,55 @@ import entityMix from '../mixin/entity.js';
 import filterMix from '../mixin/filter.js';
 
 
-/*
-## Grid constructor
-*/
+
+// ## Grid constructor
 const Grid = function (items = {}) {
 
-	this.tileFill = [];
-	this.tileSources = [];
+    this.tileFill = [];
+    this.tileSources = [];
 
-	this.entityInit(items);
+    this.entityInit(items);
 
-	if (!items.tileSources) {
+    if (!items.tileSources) {
 
-		this.tileSources = [].concat([{
+        this.tileSources = [].concat([{
 
-			type: 'color',
-			source: '#000000',
-		},
-		{
+            type: 'color',
+            source: '#000000',
+        },
+        {
 
-			type: 'color',
-			source: '#ffffff',
-		}]);
-	}
+            type: 'color',
+            source: '#ffffff',
+        }]);
+    }
 
-	if (!items.tileFill) {
+    if (!items.tileFill) {
 
-		this.tileFill.length = this.columns * this.rows;
-		this.tileFill.fill(0);
-	}
-	else if (Array.isArray(items.tileFill) && this.tileFill.length === items.tileFill.length) {
+        this.tileFill.length = this.columns * this.rows;
+        this.tileFill.fill(0);
+    }
+    else if (Array.isArray(items.tileFill) && this.tileFill.length === items.tileFill.length) {
 
-		this.tileFill = items.tileFill;
-	}
+        this.tileFill = items.tileFill;
+    }
 
-	this.tilePaths = [];
-	this.tileRealCoordinates = [];
-	this.tileVirtualCoordinates = [];
+    this.tilePaths = [];
+    this.tileRealCoordinates = [];
+    this.tileVirtualCoordinates = [];
 
-	if (!items.dimensions) {
+    if (!items.dimensions) {
 
-		if (!items.width) this.currentDimensions[0] = this.dimensions[0] = 20;
-		if (!items.height) this.currentDimensions[1] = this.dimensions[1] = 20;
-	}
+        if (!items.width) this.currentDimensions[0] = this.dimensions[0] = 20;
+        if (!items.height) this.currentDimensions[1] = this.dimensions[1] = 20;
+    }
 
-	return this;
+    return this;
 };
 
 
-/*
-## Grid object prototype setup
-*/
+
+// ## Grid object prototype setup
 let P = Grid.prototype = Object.create(Object.prototype);
 P.type = 'Grid';
 P.lib = 'entity';
@@ -81,9 +78,8 @@ P.isArtefact = true;
 P.isAsset = false;
 
 
-/*
-Apply mixins to prototype object
-*/
+
+// Apply mixins to prototype object
 P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
@@ -91,98 +87,84 @@ P = entityMix(P);
 P = filterMix(P);
 
 
-/*
-## Define default attributes
-*/
+
+// ## Define default attributes
 let defaultAttributes = {
 
-/*
-TODO - documentation
-*/
-	columns: 2,
-	rows: 2,
+// TODO - documentation
+    columns: 2,
+    rows: 2,
 
-/*
-TODO - documentation
-*/
-	columnGutterWidth: 1,
-	rowGutterWidth: 1,
+// TODO - documentation
+    columnGutterWidth: 1,
+    rowGutterWidth: 1,
 
-/*
-TODO - documentation
-*/
-	gutterColor: '#808080',
+// TODO - documentation
+    gutterColor: '#808080',
 
-/*
-TODO - documentation
-*/
-	tileFill: null,
-	tileSources: null,
+// TODO - documentation
+    tileFill: null,
+    tileSources: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+// ## Define getter, setter and deltaSetter functions
 let G = P.getters,
-	S = P.setters,
-	D = P.deltaSetters;
+    S = P.setters,
+    D = P.deltaSetters;
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 S.columns = function (item) {
 
-	if (isa_number(item)) {
+    if (isa_number(item)) {
 
-		if (!Number.isInteger(item)) item = parseInt(item, 10);
+        if (!Number.isInteger(item)) item = parseInt(item, 10);
 
-		if (item !== this.columns) {
+        if (item !== this.columns) {
 
-			let i, iz, j, 
-				currentFill = this.tileFill,
-				currentCols = this.columns,
-				newFill = [];
+            let i, iz, j, 
+                currentFill = this.tileFill,
+                currentCols = this.columns,
+                newFill = [];
 
-			this.columns = item;
+            this.columns = item;
 
-			for (i = 0, iz = this.rows; i < iz; i++) {
+            for (i = 0, iz = this.rows; i < iz; i++) {
 
-				for (j = 0; j < item; j++) {
+                for (j = 0; j < item; j++) {
 
-					if (j < currentCols) newFill.push(currentFill[(i * currentCols) + j]);
-					else newFill.push(0);
-				}
-			} 
-			this.tileFill = newFill;
-		}
-	}
-	this.dirtyPathObject = true;
+                    if (j < currentCols) newFill.push(currentFill[(i * currentCols) + j]);
+                    else newFill.push(0);
+                }
+            } 
+            this.tileFill = newFill;
+        }
+    }
+    this.dirtyPathObject = true;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 S.rows = function (item) {
 
-	if (isa_number(item)) {
+    if (isa_number(item)) {
 
-		if (!Number.isInteger(item)) item = parseInt(item, 10);
+        if (!Number.isInteger(item)) item = parseInt(item, 10);
 
-		if (item !== this.rows) {
+        if (item !== this.rows) {
 
-			let currentRows = this.rows;
+            let currentRows = this.rows;
 
-			this.rows = item;
+            this.rows = item;
 
-			this.tileFill.length = this.columns * item;
+            this.tileFill.length = this.columns * item;
 
-			if (currentRows < item) this.tileFill.fill(0, currentRows * this.columns);
-		}
-	}
-	this.dirtyPathObject = true;
+            if (currentRows < item) this.tileFill.fill(0, currentRows * this.columns);
+        }
+    }
+    this.dirtyPathObject = true;
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 D.columns = defaultNonReturnFunction;
 D.rows = defaultNonReturnFunction;
 
@@ -191,552 +173,533 @@ TODO - documentation
 */
 P.setAllTilesTo = function (val) {
 
-	if (isa_number(val)) {
+    if (isa_number(val)) {
 
-		if (!Number.isInteger(val)) val = parseInt(val, 10);
+        if (!Number.isInteger(val)) val = parseInt(val, 10);
 
-		this.tileFill.fill(val);
-	}
+        this.tileFill.fill(val);
+    }
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.setTilesTo = function (tiles, val) {
 
-	let tileFill = this.tileFill;
+    let tileFill = this.tileFill;
 
-	if (xt(tiles) && isa_number(val)) {
+    if (xt(tiles) && isa_number(val)) {
 
-		if (!Number.isInteger(val)) val = parseInt(val, 10);
+        if (!Number.isInteger(val)) val = parseInt(val, 10);
 
-		if (isa_number(tiles)) tileFill[tiles] = val;
-		else if (Array.isArray(tiles)) {
+        if (isa_number(tiles)) tileFill[tiles] = val;
+        else if (Array.isArray(tiles)) {
 
-			tiles.forEach(tile => {
+            tiles.forEach(tile => {
 
-				if (isa_number(tile)) tileFill[tile] = val;
-			});
-		}
-	}
+                if (isa_number(tile)) tileFill[tile] = val;
+            });
+        }
+    }
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.setTileSourceTo = function (index, obj) {
 
-	if (isa_number(index) && isa_obj(obj)) {
+    if (isa_number(index) && isa_obj(obj)) {
 
-		if (obj.type && obj.source) this.tileSources[index] = obj;
-	}
+        if (obj.type && obj.source) this.tileSources[index] = obj;
+    }
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.removeTileSource = function (index) {
 
-	if (isa_number(index) && index) {
+    if (isa_number(index) && index) {
 
-		this.tileSources[index] = null;
+        this.tileSources[index] = null;
 
-		this.tileFill = this.tileFill.map(item => item === index ? 0 : item);
-	}
+        this.tileFill = this.tileFill.map(item => item === index ? 0 : item);
+    }
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.getTileSource = function (row, col) {
 
-	if (isa_number(row)) {
+    if (isa_number(row)) {
 
-		if (!isa_number(col)) return this.tileFill[row];
-		else return this.tileFill[(row * this.rows) + col];
-	}
+        if (!isa_number(col)) return this.tileFill[row];
+        else return this.tileFill[(row * this.rows) + col];
+    }
 };
 
-/*
-TODO - documentation
-*/
+// TODO - documentation
 P.getTilesUsingSource = function (index) {
 
-	if (isa_number(index)) this.tileFill.map(item => item === index ? 1 : 0);
+    if (isa_number(index)) this.tileFill.map(item => item === index ? 1 : 0);
 };
 
 
-/*
-Internal - used for entity stamping (Display cycle), and collision detection (eg: drag-and-drop)
-*/
+
+// Internal - used for entity stamping (Display cycle), and collision detection (eg: drag-and-drop)
 P.cleanPathObject = function () {
 
-	this.dirtyPathObject = false;
+    this.dirtyPathObject = false;
 
-	if (!this.noPathUpdates || !this.pathObject) {
+    if (!this.noPathUpdates || !this.pathObject) {
 
-		let p = this.pathObject = new Path2D(),
-			rowLines = new Path2D(),
-			colLines = new Path2D();
-		
-		let handle = this.currentStampHandlePosition,
-			scale = this.currentScale,
-			dims = this.currentDimensions;
+        let p = this.pathObject = new Path2D(),
+            rowLines = new Path2D(),
+            colLines = new Path2D();
+        
+        let handle = this.currentStampHandlePosition,
+            scale = this.currentScale,
+            dims = this.currentDimensions;
 
-		let x = -handle[0] * scale,
-			y = -handle[1] * scale,
-			w = dims[0] * scale,
-			h = dims[1] * scale;
+        let x = -handle[0] * scale,
+            y = -handle[1] * scale,
+            w = dims[0] * scale,
+            h = dims[1] * scale;
 
-		p.rect(x, y, w, h);
+        p.rect(x, y, w, h);
 
-		let cols = this.columns,
-			rows = this.rows,
-			colWidth = w / cols,
-			rowHeight = h / rows,
-			paths = this.tilePaths,
-			real = this.tileRealCoordinates,
-			virtual = this.tileVirtualCoordinates,
-			i, j, cx, cy;
+        let cols = this.columns,
+            rows = this.rows,
+            colWidth = w / cols,
+            rowHeight = h / rows,
+            paths = this.tilePaths,
+            real = this.tileRealCoordinates,
+            virtual = this.tileVirtualCoordinates,
+            i, j, cx, cy;
 
-		rowLines.moveTo(x, y);
-		rowLines.lineTo(x + w, y);
+        rowLines.moveTo(x, y);
+        rowLines.lineTo(x + w, y);
 
-		for (i = 1; i <= rows; i++) {
+        for (i = 1; i <= rows; i++) {
 
-			let ry = y + (i * rowHeight);
+            let ry = y + (i * rowHeight);
 
-			rowLines.moveTo(x, ry);
-			rowLines.lineTo(x + w, ry);
-		}
-		this.rowLines = rowLines;
+            rowLines.moveTo(x, ry);
+            rowLines.lineTo(x + w, ry);
+        }
+        this.rowLines = rowLines;
 
-		colLines.moveTo(x, y);
-		colLines.lineTo(x, y + h);
+        colLines.moveTo(x, y);
+        colLines.lineTo(x, y + h);
 
-		for (j = 1; j <= cols; j++) {
+        for (j = 1; j <= cols; j++) {
 
-			let cx = x + (j * colWidth);
+            let cx = x + (j * colWidth);
 
-			colLines.moveTo(cx, y);
-			colLines.lineTo(cx, y + h);
-		}
-		this.columnLines = colLines;
+            colLines.moveTo(cx, y);
+            colLines.lineTo(cx, y + h);
+        }
+        this.columnLines = colLines;
 
-		paths.length = 0;
-		real.length = 0;
-		virtual.length = 0;
+        paths.length = 0;
+        real.length = 0;
+        virtual.length = 0;
 
-		for (i = 0; i < rows; i++) {
+        for (i = 0; i < rows; i++) {
 
-			for (j = 0; j < cols; j++) {
+            for (j = 0; j < cols; j++) {
 
-				let path = new Path2D();
+                let path = new Path2D();
 
-				cx = j * colWidth;
-				cy = i * rowHeight;
+                cx = j * colWidth;
+                cy = i * rowHeight;
 
-				path.rect(x + cx, y + cy, colWidth, rowHeight);
-				paths.push(path);
+                path.rect(x + cx, y + cy, colWidth, rowHeight);
+                paths.push(path);
 
-				virtual.push([cx, cy]);
-				real.push([x + cx, y + cy]);
-			}
-		}
+                virtual.push([cx, cy]);
+                real.push([x + cx, y + cy]);
+            }
+        }
 
-		this.currentTileWidth = colWidth;
-		this.currentTileHeight = rowHeight;
-	}
+        this.currentTileWidth = colWidth;
+        this.currentTileHeight = rowHeight;
+    }
 };
 
-/*
-Override entity draw/fill methods
-*/
+
+// Override entity draw/fill methods
 P.performFill = function (engine) {
 
-	// grab the current engine values for various things
-	engine.save();
+    // grab the current engine values for various things
+    engine.save();
 
-	let composer = requestCell(),
-		compEngine = composer.engine,
-		compCanvas = composer.element;
+    let composer = requestCell(),
+        compEngine = composer.engine,
+        compCanvas = composer.element;
 
-	let tileSources = this.tileSources,
-		tileFill = this.tileFill,
-		tilePaths = this.tilePaths,
-		tileRealCoords = this.tileRealCoordinates,
-		tileVirtualCoords = this.tileVirtualCoordinates,
-		winding = this.winding,
-		tileWidth = this.currentTileWidth,
-		tileHeight = this.currentTileHeight,
-		scale = this.scale;
+    let tileSources = this.tileSources,
+        tileFill = this.tileFill,
+        tilePaths = this.tilePaths,
+        tileRealCoords = this.tileRealCoordinates,
+        tileVirtualCoords = this.tileVirtualCoordinates,
+        winding = this.winding,
+        tileWidth = this.currentTileWidth,
+        tileHeight = this.currentTileHeight,
+        scale = this.scale;
 
-	let dims = this.currentDimensions;
+    let dims = this.currentDimensions;
 
-	let currentPicture;
+    let currentPicture;
 
-	// iterate through the grid's tileSources
-	tileSources.forEach((obj, index) => {
+    // iterate through the grid's tileSources
+    tileSources.forEach((obj, index) => {
 
-		// - set up the engine fillStyle value (where required)
-		if (obj && obj.type) {
+        // - set up the engine fillStyle value (where required)
+        if (obj && obj.type) {
 
-			switch (obj.type) {
+            switch (obj.type) {
 
-				case 'color' :
+                case 'color' :
 
-					engine.fillStyle = obj.source;
-					break;
+                    engine.fillStyle = obj.source;
+                    break;
 
-				case 'cellGradient' :
+                case 'cellGradient' :
 
-					this.lockFillStyleToEntity = false;
-					engine.fillStyle = obj.source.getData(this, this.currentHost, true);
-					break;
+                    this.lockFillStyleToEntity = false;
+                    engine.fillStyle = obj.source.getData(this, this.currentHost, true);
+                    break;
 
-				case 'gridGradient' :
+                case 'gridGradient' :
 
-					this.lockFillStyleToEntity = true;
-					engine.fillStyle = obj.source.getData(this, this.currentHost, true);
-					break;
-			}
-		}
+                    this.lockFillStyleToEntity = true;
+                    engine.fillStyle = obj.source.getData(this, this.currentHost, true);
+                    break;
+            }
+        }
 
-		// get an map of tiles using this source
-		let validTiles = tileFill.map(item => item === index ? true : false);
+        // get an map of tiles using this source
+        let validTiles = tileFill.map(item => item === index ? true : false);
 
-		if (validTiles.length) {
+        if (validTiles.length) {
 
-			switch (obj.type) {
+            switch (obj.type) {
 
-				// Use pool canvas to compose the output
-				case 'gridPicture' :
+                // Use pool canvas to compose the output
+                case 'gridPicture' :
 
-					currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
+                    currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
 
-					if (currentPicture.simpleStamp) {
+                    if (currentPicture.simpleStamp) {
 
-						compCanvas.width = dims[0] * scale;
-						compCanvas.height = dims[1] * scale;
-						compEngine.globalCompositeOperation = 'source-over';
-						compEngine.fillStyle = '#000000';
+                        compCanvas.width = dims[0] * scale;
+                        compCanvas.height = dims[1] * scale;
+                        compEngine.globalCompositeOperation = 'source-over';
+                        compEngine.fillStyle = '#000000';
 
-						validTiles.forEach((tile, pos) => {
+                        validTiles.forEach((tile, pos) => {
 
-							if (tile) compEngine.fillRect(tileVirtualCoords[pos][0], tileVirtualCoords[pos][1], tileWidth, tileHeight);
-						});
+                            if (tile) compEngine.fillRect(tileVirtualCoords[pos][0], tileVirtualCoords[pos][1], tileWidth, tileHeight);
+                        });
 
-						compEngine.globalCompositeOperation = 'source-in';
+                        compEngine.globalCompositeOperation = 'source-in';
 
-						currentPicture.simpleStamp(composer, {
-							startX: 0,
-							startY: 0,
-							width: dims[0] * scale,
-							height: dims[1] * scale,
-							method: 'fill'
-						});
+                        currentPicture.simpleStamp(composer, {
+                            startX: 0,
+                            startY: 0,
+                            width: dims[0] * scale,
+                            height: dims[1] * scale,
+                            method: 'fill'
+                        });
 
-						engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
-					}
-					break;
+                        engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
+                    }
+                    break;
 
-				case 'tilePicture' :
+                case 'tilePicture' :
 
-					currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
+                    currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
 
-					if (currentPicture.simpleStamp) {
+                    if (currentPicture.simpleStamp) {
 
-						compCanvas.width = tileWidth;
-						compCanvas.height = tileHeight;
-						compEngine.globalCompositeOperation = 'source-over';
+                        compCanvas.width = tileWidth;
+                        compCanvas.height = tileHeight;
+                        compEngine.globalCompositeOperation = 'source-over';
 
-						currentPicture.simpleStamp(composer, {
-							startX: 0,
-							startY: 0,
-							width: tileWidth,
-							height: tileHeight,
-							method: 'fill'
-						});
+                        currentPicture.simpleStamp(composer, {
+                            startX: 0,
+                            startY: 0,
+                            width: tileWidth,
+                            height: tileHeight,
+                            method: 'fill'
+                        });
 
-						validTiles.forEach((tile, pos) => tile && engine.drawImage(compCanvas, tileRealCoords[pos][0], tileRealCoords[pos][1]));
-					}
-					break;
+                        validTiles.forEach((tile, pos) => tile && engine.drawImage(compCanvas, tileRealCoords[pos][0], tileRealCoords[pos][1]));
+                    }
+                    break;
 
-				default :
+                default :
 
-					validTiles.forEach((tile, pos) => tile && engine.fill(tilePaths[pos], winding));
-			}
-		}
-	});
+                    validTiles.forEach((tile, pos) => tile && engine.fill(tilePaths[pos], winding));
+            }
+        }
+    });
 
-	let gColor = this.gutterColor,
-		gRow = this.rowGutterWidth,
-		gCol = this.columnGutterWidth,
-		gObject;
+    let gColor = this.gutterColor,
+        gRow = this.rowGutterWidth,
+        gCol = this.columnGutterWidth,
+        gObject;
 
-	if(xt(gColor)) {
+    if(xt(gColor)) {
 
-		// assign (or construct) the appropriate object to gObject
-		if (gColor.substring) {
+        // assign (or construct) the appropriate object to gObject
+        if (gColor.substring) {
 
-			gObject = {
-				type: 'color',
-				source: this.gutterColor
-			};
-		}
-		else if (isa_obj(gColor)) gObject = gColor;
-		else if (isa_number(gColor) && isa_obj(tileSources[gColor])) gObject = tileSources[gColor];
+            gObject = {
+                type: 'color',
+                source: this.gutterColor
+            };
+        }
+        else if (isa_obj(gColor)) gObject = gColor;
+        else if (isa_number(gColor) && isa_obj(tileSources[gColor])) gObject = tileSources[gColor];
 
-		// set the engine's strokeStyle to the appropriate value (if needed)
-		switch (gObject.type) {
+        // set the engine's strokeStyle to the appropriate value (if needed)
+        switch (gObject.type) {
 
-			case 'cellGradient' :
+            case 'cellGradient' :
 
-				this.lockFillStyleToEntity = false;
-				engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
-				break;
+                this.lockFillStyleToEntity = false;
+                engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
+                break;
 
-			case 'gridGradient' :
+            case 'gridGradient' :
 
-				this.lockFillStyleToEntity = true;
-				engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
-				break;
+                this.lockFillStyleToEntity = true;
+                engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
+                break;
 
-			case 'color' :
+            case 'color' :
 
-				engine.strokeStyle = gObject.source;
-				break;
-		}
+                engine.strokeStyle = gObject.source;
+                break;
+        }
 
-		switch (gObject.type) {
+        switch (gObject.type) {
 
-			// Use pool canvas to compose the output
-			// - gridPicture and tilePicture both treated the same
-			case 'gridPicture' :
-			case 'tilePicture' :
+            // Use pool canvas to compose the output
+            // - gridPicture and tilePicture both treated the same
+            case 'gridPicture' :
+            case 'tilePicture' :
 
-				if(gRow || gCol) {
+                if(gRow || gCol) {
 
-					currentPicture = (gObject.source.substring) ? entity[gObject.source] : gObject.source;
+                    currentPicture = (gObject.source.substring) ? entity[gObject.source] : gObject.source;
 
-					if (currentPicture.simpleStamp) {
+                    if (currentPicture.simpleStamp) {
 
-						let handle = this.currentStampHandlePosition,
-							scale = this.currentScale,
-							x = handle[0] * scale,
-							y = handle[1] * scale;
-							
-						compCanvas.width = dims[0] * scale;
-						compCanvas.height = dims[1] * scale;
-						compEngine.globalCompositeOperation = 'source-over';
-						compEngine.strokeStyle = '#000000';
-						compEngine.translate(x, y);
+                        let handle = this.currentStampHandlePosition,
+                            scale = this.currentScale,
+                            x = handle[0] * scale,
+                            y = handle[1] * scale;
+                            
+                        compCanvas.width = dims[0] * scale;
+                        compCanvas.height = dims[1] * scale;
+                        compEngine.globalCompositeOperation = 'source-over';
+                        compEngine.strokeStyle = '#000000';
+                        compEngine.translate(x, y);
 
-						if (gRow) {
+                        if (gRow) {
 
-							compEngine.lineWidth = gRow;
-							compEngine.stroke(this.rowLines);
-						}
+                            compEngine.lineWidth = gRow;
+                            compEngine.stroke(this.rowLines);
+                        }
 
-						if (gCol) {
+                        if (gCol) {
 
-							compEngine.lineWidth = gCol;
-							compEngine.stroke(this.columnLines);
-						}
+                            compEngine.lineWidth = gCol;
+                            compEngine.stroke(this.columnLines);
+                        }
 
-						compEngine.globalCompositeOperation = 'source-in';
+                        compEngine.globalCompositeOperation = 'source-in';
 
-						currentPicture.simpleStamp(composer, {
-							startX: 0,
-							startY: 0,
-							width: dims[0] * scale,
-							height: dims[1] * scale,
-							method: 'fill'
-						});
+                        currentPicture.simpleStamp(composer, {
+                            startX: 0,
+                            startY: 0,
+                            width: dims[0] * scale,
+                            height: dims[1] * scale,
+                            method: 'fill'
+                        });
 
-						engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
-						compEngine.translate(0, 0);
-					}
-				}
-				break;
+                        engine.drawImage(compCanvas, tileRealCoords[0][0], tileRealCoords[0][1]);
+                        compEngine.translate(0, 0);
+                    }
+                }
+                break;
 
-			// we have a color/gradient all set up - stroke the lines directly onto grid
-			default :
+            // we have a color/gradient all set up - stroke the lines directly onto grid
+            default :
 
-				if (gRow) {
+                if (gRow) {
 
-					engine.lineWidth = gRow;
-					engine.stroke(this.rowLines);
-				}
+                    engine.lineWidth = gRow;
+                    engine.stroke(this.rowLines);
+                }
 
-				if (gCol) {
+                if (gCol) {
 
-					engine.lineWidth = gCol;
-					engine.stroke(this.columnLines);
-				}
-		}
-	}
+                    engine.lineWidth = gCol;
+                    engine.stroke(this.columnLines);
+                }
+        }
+    }
 
-	releaseCell(composer);
+    releaseCell(composer);
 
-	engine.restore();
+    engine.restore();
 };
 
-/*
-Override entity draw/fill methods
-*/
+
+// Override entity draw/fill methods
 P.fill = function (engine) {
 
-	this.performFill(engine);
+    this.performFill(engine);
 };
 
 P.drawAndFill = function (engine) {
 
-	let p = this.pathObject;
+    let p = this.pathObject;
 
-	engine.stroke(p);
-	this.currentHost.clearShadow();
-	this.performFill(engine);
+    engine.stroke(p);
+    this.currentHost.clearShadow();
+    this.performFill(engine);
 };
 
 P.fillAndDraw = function (engine) {
 
-	let p = this.pathObject;
+    let p = this.pathObject;
 
-	engine.stroke(p);
-	this.currentHost.clearShadow();
-	this.performFill(engine);
-	engine.stroke(p);
+    engine.stroke(p);
+    this.currentHost.clearShadow();
+    this.performFill(engine);
+    engine.stroke(p);
 };
 
 P.drawThenFill = function (engine) {
 
-	let p = this.pathObject;
+    let p = this.pathObject;
 
-	engine.stroke(p);
-	this.performFill(engine);
+    engine.stroke(p);
+    this.performFill(engine);
 };
 
 P.fillThenDraw = function (engine) {
 
-	let p = this.pathObject;
+    let p = this.pathObject;
 
-	this.performFill(engine);
-	engine.stroke(p);
+    this.performFill(engine);
+    engine.stroke(p);
 };
 
 
-/*
-Overrides position mixin function
 
-- Grid entitys need to return ALL of the successful hit coordinates, not just the first
-- They also need to include the cell index of where the hit took place within them
-*/
+// Overrides position mixin function
+
+// - Grid entitys need to return ALL of the successful hit coordinates, not just the first
+// - They also need to include the cell index of where the hit took place within them
 P.checkHit = function (items = [], mycell) {
 
-	if (this.noUserInteraction) return false;
+    if (this.noUserInteraction) return false;
 
-	if (!this.pathObject || this.dirtyPathObject) {
+    if (!this.pathObject || this.dirtyPathObject) {
 
-		this.cleanPathObject();
-	}
+        this.cleanPathObject();
+    }
 
-	let tests = (!Array.isArray(items)) ?  [items] : items,
-		poolCellFlag = false;
+    let tests = (!Array.isArray(items)) ?  [items] : items,
+        poolCellFlag = false;
 
-	if (!mycell) {
+    if (!mycell) {
 
-		mycell = requestCell();
-		poolCellFlag = true;
-	}
+        mycell = requestCell();
+        poolCellFlag = true;
+    }
 
-	let engine = mycell.engine,
-		stamp = this.currentStampPosition,
-		x = stamp[0],
-		y = stamp[1],
-		isGood, tx, ty,
-		tiles = new Set(),
-		tilePaths = this.tilePaths;
+    let engine = mycell.engine,
+        stamp = this.currentStampPosition,
+        x = stamp[0],
+        y = stamp[1],
+        isGood, tx, ty,
+        tiles = new Set(),
+        tilePaths = this.tilePaths;
 
-	const getCoords = (coords) => {
+    const getCoords = (coords) => {
 
-		let x, y;
+        let x, y;
 
-		if (Array.isArray(coords)) {
+        if (Array.isArray(coords)) {
 
-			x = coords[0];
-			y = coords[1];
-		}
-		else if (xta(coords, coords.x, coords.y)) {
+            x = coords[0];
+            y = coords[1];
+        }
+        else if (xta(coords, coords.x, coords.y)) {
 
-			x = coords.x;
-			y = coords.y;
-		}
-		else return [false];
+            x = coords.x;
+            y = coords.y;
+        }
+        else return [false];
 
-		if (!x.toFixed || !y.toFixed || isNaN(x) || isNaN(y)) return [false];
+        if (!x.toFixed || !y.toFixed || isNaN(x) || isNaN(y)) return [false];
 
-		return [true, x, y];
-	}
+        return [true, x, y];
+    }
 
-	mycell.rotateDestination(engine, x, y, this);
+    mycell.rotateDestination(engine, x, y, this);
 
-	if (tests.some(test => {
+    if (tests.some(test => {
 
-		[isGood, tx, ty] = getCoords(test);
+        [isGood, tx, ty] = getCoords(test);
 
-		if (!isGood) return false;
-		else return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
+        if (!isGood) return false;
+        else return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
 
-	}, this)) {
+    }, this)) {
 
-		tests.forEach(test => {
+        tests.forEach(test => {
 
-			[isGood, tx, ty] = getCoords(test);
+            [isGood, tx, ty] = getCoords(test);
 
-			if (isGood) {
+            if (isGood) {
 
-				tilePaths.some((path, index) => {
+                tilePaths.some((path, index) => {
 
-					if (engine.isPointInPath(path, tx, ty, this.winding)) {
+                    if (engine.isPointInPath(path, tx, ty, this.winding)) {
 
-						tiles.add(index);
-						return true;
-					}
-					return false;
-				})
-			}
-		})
+                        tiles.add(index);
+                        return true;
+                    }
+                    return false;
+                })
+            }
+        })
 
-		if (poolCellFlag) releaseCell(mycell);
+        if (poolCellFlag) releaseCell(mycell);
 
-		return {
-			x: tx,
-			y: ty,
-			tiles: [...tiles],
-			artefact: this
-		};
-	}
-	
-	if (poolCellFlag) releaseCell(mycell);
-	
-	return false;
+        return {
+            x: tx,
+            y: ty,
+            tiles: [...tiles],
+            artefact: this
+        };
+    }
+    
+    if (poolCellFlag) releaseCell(mycell);
+    
+    return false;
 };
 
 
-/*
-## Exported factory function
-*/
+
+// ## Exported factory function
 const makeGrid = function (items) {
-	return new Grid(items);
+    return new Grid(items);
 };
 
 constructors.Grid = Grid;
 
-
-/*
-TODO - documentation
-*/
 export {
-	makeGrid,
+    makeGrid,
 };

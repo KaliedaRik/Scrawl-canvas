@@ -1,3 +1,6 @@
+// ## Demo Canvas 022 
+
+// [Grid entity - basic functionality (color, gradients)](../../demo/canvas-022.html)
 import scrawl from '../source/scrawl.js'
 
 
@@ -5,274 +8,274 @@ import scrawl from '../source/scrawl.js'
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
-	backgroundColor: 'gray',
-	css: {
-		border: '1px solid black'
-	}
+    backgroundColor: 'gray',
+    css: {
+        border: '1px solid black'
+    }
 });
 
 let cellGradient = scrawl.makeGradient({
-	name: 'blue-green',
-	endX: '100%',
+    name: 'blue-green',
+    endX: '100%',
 })
 .updateColor(0, 'blue')
 .updateColor(500, 'gold')
 .updateColor(999, 'green');
 
 let gridGradient = scrawl.makeGradient({
-	name: 'red-blue',
-	endX: '100%',
+    name: 'red-blue',
+    endX: '100%',
 })
 .updateColor(0, 'red')
 .updateColor(500, 'gold')
 .updateColor(999, 'lightblue');
 
 let blueSource = {
-	type: 'color',
-	source: 'aliceblue',
+    type: 'color',
+    source: 'aliceblue',
 };
 
 let redSource = {
-	type: 'color',
-	source: 'red',
+    type: 'color',
+    source: 'red',
 };
 
 let cellGradientSource = {
-	type: 'cellGradient',
-	source: cellGradient,
+    type: 'cellGradient',
+    source: cellGradient,
 };
 
 let gridGradientSource = {
-	type: 'gridGradient',
-	source: gridGradient,
+    type: 'gridGradient',
+    source: gridGradient,
 };
 
 
 let myGrid = scrawl.makeGrid({
 
-	name: 'test-grid',
+    name: 'test-grid',
 
-	startX: 'center',
-	startY: 'center',
+    startX: 'center',
+    startY: 'center',
 
-	handleX: 'center',
-	handleY: 'center',
+    handleX: 'center',
+    handleY: 'center',
 
-	width: 300,
-	height: 200,
+    width: 300,
+    height: 200,
 
-	columns: 6,
-	rows: 6,
+    columns: 6,
+    rows: 6,
 
-	tileSources: [blueSource, redSource]
+    tileSources: [blueSource, redSource]
 });
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Columns - ${myGrid.columns}; Rows - ${myGrid.rows}
+        testMessage.textContent = `Columns - ${myGrid.columns}; Rows - ${myGrid.rows}
 canvas.here - x: ${canvas.here.x}, y: ${canvas.here.y}
 ${hitReport}
 Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-	};
+    };
 }();
 
 let hitReport = '';
 let checkHitTiles = () => {
 
-	let hits = myGrid.checkHit(canvas.here);
+    let hits = myGrid.checkHit(canvas.here);
 
-	myGrid.setAllTilesTo(0);
+    myGrid.setAllTilesTo(0);
 
-	if (hits) {
+    if (hits) {
 
-		myGrid.setTilesTo(hits.tiles, 1);
-		hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;
-	}
-	else hitReport = 'Hits - none reported';
+        myGrid.setTilesTo(hits.tiles, 1);
+        hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;
+    }
+    else hitReport = 'Hits - none reported';
 };
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	target: canvas,
-	commence: checkHitTiles,
-	afterShow: report,
+    name: 'demo-animation',
+    target: canvas,
+    commence: checkHitTiles,
+    afterShow: report,
 });
 
 // User interaction - setup form observer functionality
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: myGrid,
+    target: myGrid,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		columns: ['columns', 'round'],
-		rows: ['rows', 'round'],
+        columns: ['columns', 'round'],
+        rows: ['rows', 'round'],
 
-		relativeWidth: ['width', '%'],
-		absoluteWidth: ['width', 'round'],
+        relativeWidth: ['width', '%'],
+        absoluteWidth: ['width', 'round'],
 
-		relativeHeight: ['height', '%'],
-		absoluteHeight: ['height', 'round'],
+        relativeHeight: ['height', '%'],
+        absoluteHeight: ['height', 'round'],
 
-		columnGutter: ['columnGutterWidth', 'float'],
-		rowGutter: ['rowGutterWidth', 'float'],
+        columnGutter: ['columnGutterWidth', 'float'],
+        rowGutter: ['rowGutterWidth', 'float'],
 
-		start_xPercent: ['startX', '%'],
-		start_xAbsolute: ['startX', 'round'],
-		start_xString: ['startX', 'raw'],
+        start_xPercent: ['startX', '%'],
+        start_xAbsolute: ['startX', 'round'],
+        start_xString: ['startX', 'raw'],
 
-		start_yPercent: ['startY', '%'],
-		start_yAbsolute: ['startY', 'round'],
-		start_yString: ['startY', 'raw'],
+        start_yPercent: ['startY', '%'],
+        start_yAbsolute: ['startY', 'round'],
+        start_yString: ['startY', 'raw'],
 
-		handle_xPercent: ['handleX', '%'],
-		handle_xAbsolute: ['handleX', 'round'],
-		handle_xString: ['handleX', 'raw'],
+        handle_xPercent: ['handleX', '%'],
+        handle_xAbsolute: ['handleX', 'round'],
+        handle_xString: ['handleX', 'raw'],
 
-		handle_yPercent: ['handleY', '%'],
-		handle_yAbsolute: ['handleY', 'round'],
-		handle_yString: ['handleY', 'raw'],
+        handle_yPercent: ['handleY', '%'],
+        handle_yAbsolute: ['handleY', 'round'],
+        handle_yString: ['handleY', 'raw'],
 
-		offset_xPercent: ['offsetX', '%'],
-		offset_xAbsolute: ['offsetX', 'round'],
+        offset_xPercent: ['offsetX', '%'],
+        offset_xAbsolute: ['offsetX', 'round'],
 
-		offset_yPercent: ['offsetY', '%'],
-		offset_yAbsolute: ['offsetY', 'round'],
+        offset_yPercent: ['offsetY', '%'],
+        offset_yAbsolute: ['offsetY', 'round'],
 
-		roll: ['roll', 'float'],
-		scale: ['scale', 'float'],
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
 
-		upend: ['flipUpend', 'boolean'],
-		reverse: ['flipReverse', 'boolean'],
-	},
+        upend: ['flipUpend', 'boolean'],
+        reverse: ['flipReverse', 'boolean'],
+    },
 });
 
 let updateBaseFill = (e) => {
 
-	e.preventDefault();
-	e.returnValue = false;
+    e.preventDefault();
+    e.returnValue = false;
 
-	let val = e.target.value;
+    let val = e.target.value;
 
-	switch (val) {
+    switch (val) {
 
-		case 'blueSource' :
-			myGrid.setTileSourceTo(0, blueSource);
-			break;
+        case 'blueSource' :
+            myGrid.setTileSourceTo(0, blueSource);
+            break;
 
-		case 'redSource' :
-			myGrid.setTileSourceTo(0, redSource);
-			break;
+        case 'redSource' :
+            myGrid.setTileSourceTo(0, redSource);
+            break;
 
-		case 'cellGradientSource' :
-			myGrid.setTileSourceTo(0, cellGradientSource);
-			break;
+        case 'cellGradientSource' :
+            myGrid.setTileSourceTo(0, cellGradientSource);
+            break;
 
-		case 'gridGradientSource' :
-			myGrid.setTileSourceTo(0, gridGradientSource);
-			break;
-	}
+        case 'gridGradientSource' :
+            myGrid.setTileSourceTo(0, gridGradientSource);
+            break;
+    }
 };
 scrawl.addNativeListener(['input', 'change'], updateBaseFill, '#baseFill');
 
 let updateHighlightFill = (e) => {
 
-	e.preventDefault();
-	e.returnValue = false;
+    e.preventDefault();
+    e.returnValue = false;
 
-	let val = e.target.value;
+    let val = e.target.value;
 
-	switch (val) {
+    switch (val) {
 
-		case 'blueSource' :
-			myGrid.setTileSourceTo(1, blueSource);
-			break;
+        case 'blueSource' :
+            myGrid.setTileSourceTo(1, blueSource);
+            break;
 
-		case 'redSource' :
-			myGrid.setTileSourceTo(1, redSource);
-			break;
+        case 'redSource' :
+            myGrid.setTileSourceTo(1, redSource);
+            break;
 
-		case 'cellGradientSource' :
-			myGrid.setTileSourceTo(1, cellGradientSource);
-			break;
+        case 'cellGradientSource' :
+            myGrid.setTileSourceTo(1, cellGradientSource);
+            break;
 
-		case 'gridGradientSource' :
-			myGrid.setTileSourceTo(1, gridGradientSource);
-			break;
-	}
+        case 'gridGradientSource' :
+            myGrid.setTileSourceTo(1, gridGradientSource);
+            break;
+    }
 };
 scrawl.addNativeListener(['input', 'change'], updateHighlightFill, '#highlightFill');
 
 let updateGridStroke = (e) => {
 
-	e.preventDefault();
-	e.returnValue = false;
+    e.preventDefault();
+    e.returnValue = false;
 
-	let val = e.target.value;
+    let val = e.target.value;
 
-	switch (val) {
+    switch (val) {
 
-		case 'base' :
-			myGrid.set({
-				gutterColor: 0
-			});
-			break;
+        case 'base' :
+            myGrid.set({
+                gutterColor: 0
+            });
+            break;
 
-		case 'highlight' :
-			myGrid.set({
-				gutterColor: 1
-			});
-			break;
+        case 'highlight' :
+            myGrid.set({
+                gutterColor: 1
+            });
+            break;
 
-		case 'blueSource' :
-			myGrid.set({
-				gutterColor: blueSource
-			});
-			break;
+        case 'blueSource' :
+            myGrid.set({
+                gutterColor: blueSource
+            });
+            break;
 
-		case 'redSource' :
-			myGrid.set({
-				gutterColor: redSource
-			});
-			break;
+        case 'redSource' :
+            myGrid.set({
+                gutterColor: redSource
+            });
+            break;
 
-		case 'cellGradientSource' :
-			myGrid.set({
-				gutterColor: cellGradientSource
-			});
-			break;
+        case 'cellGradientSource' :
+            myGrid.set({
+                gutterColor: cellGradientSource
+            });
+            break;
 
-		case 'gridGradientSource' :
-			myGrid.set({
-				gutterColor: gridGradientSource
-			});
-			break;
+        case 'gridGradientSource' :
+            myGrid.set({
+                gutterColor: gridGradientSource
+            });
+            break;
 
-		default :
-			myGrid.set({
-				gutterColor: '#808080'
-			});
-	}
+        default :
+            myGrid.set({
+                gutterColor: '#808080'
+            });
+    }
 };
 scrawl.addNativeListener(['input', 'change'], updateGridStroke, '#gridStroke');
 

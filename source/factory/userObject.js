@@ -1,65 +1,52 @@
-/*
-# User Object factory
 
-TODO - documentation
+// # User Object factory
 
-#### To instantiate objects from the factory
+// TODO - documentation
 
-#### Library storage
+// #### To instantiate objects from the factory
 
-#### Clone functionality
+// #### Library storage
 
-#### Kill functionality
-*/
+// #### Clone functionality
+
+// #### Kill functionality
 import { constructors } from '../core/library.js';
 import { generateUuid } from '../core/utilities.js';
 
-/*
-## User Object constructor
-*/
+
+// ## User Object constructor
 const UserObject = function (items = {}) {
 
-	this.set(items);
+    this.set(items);
 
-	if (!this.name) this.name = generateUuid();
+    if (!this.name) this.name = generateUuid();
 
-	return this;
+    return this;
 };
 
-/*
-## UserObject object prototype setup
-*/
+
+// ## UserObject object prototype setup
 let P = UserObject.prototype = Object.create(Object.prototype);
 
 
-/*
-## Define prototype functions
-*/
 
-/*
-TODO - documentation
-*/
+// ## Define prototype functions
+
+
+// TODO - documentation
 P.set = function (items = {}) {
 
-	Object.entries(items).forEach(([key, value]) => this[key] = items[key]);
+    Object.entries(items).forEach(([key, value]) => this[key] = items[key]);
 };
 
-/*
-## Exported factory function
-*/
+
+// ## Exported factory function
 const makeUserObject = function (items) {
-	return new UserObject(items);
+    return new UserObject(items);
 };
 
-/*
-Also store constructor in library - clone functionality expects to find it there
-*/
 constructors.UserObject = UserObject;
 
-
-/*
-TODO - documentation
-*/
 export {
-	makeUserObject,
+    makeUserObject,
 };

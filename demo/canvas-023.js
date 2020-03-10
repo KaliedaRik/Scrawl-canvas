@@ -1,3 +1,6 @@
+// ## Demo Canvas 023 
+
+// [Grid entity - using picture-based assets (image, video, sprite)](../../demo/canvas-023.html)
 import scrawl from '../source/scrawl.js'
 
 scrawl.importDomVideo('.myvideo');
@@ -8,350 +11,350 @@ scrawl.importSprite('img/cat-sprite.png');
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
-	backgroundColor: 'aliceblue',
-	css: {
-		border: '1px solid black'
-	}
+    backgroundColor: 'aliceblue',
+    css: {
+        border: '1px solid black'
+    }
 });
 
 // Create the picture entitys
 scrawl.makePicture({
 
-	name: 'myFlower',
-	asset: 'iris',
+    name: 'myFlower',
+    asset: 'iris',
 
-	visibility: false,
-	method: 'fill',
+    visibility: false,
+    method: 'fill',
 
-	width: '100%',
-	height: '100%',
+    width: '100%',
+    height: '100%',
 
-	copyWidth: 200,
-	copyHeight: 200,
-	copyStartX: 100,
-	copyStartY: 100,
+    copyWidth: 200,
+    copyHeight: 200,
+    copyStartX: 100,
+    copyStartY: 100,
 });
 
 let viddyOne = scrawl.makePicture({
 
-	name: 'first-video',
-	asset: 'waves',
+    name: 'first-video',
+    asset: 'waves',
 
-	width: '100%',
-	height: '100%',
+    width: '100%',
+    height: '100%',
 
-	visibility: false,
-	method: 'fill',
+    visibility: false,
+    method: 'fill',
 
-	copyWidth: 200,
-	copyHeight: 200,
-	copyStartX: 100,
-	copyStartY: 100,
+    copyWidth: 200,
+    copyHeight: 200,
+    copyStartX: 100,
+    copyStartY: 100,
 });
 
 scrawl.makePicture({
 
-	name: 'walking-cat',
-	asset: 'cat-sprite',
-	spriteTrack: 'walk',
-	spriteFrameDuration: 100,
+    name: 'walking-cat',
+    asset: 'cat-sprite',
+    spriteTrack: 'walk',
+    spriteFrameDuration: 100,
 
-	width: '100%',
-	height: '100%',
+    width: '100%',
+    height: '100%',
 
-	visibility: false,
-	method: 'fill',
+    visibility: false,
+    method: 'fill',
 
 }).playSprite();
 
 // Assign pictures to gridSource objects
 let imageGrid = {
-	type: 'gridPicture',
-	source: 'myFlower',
+    type: 'gridPicture',
+    source: 'myFlower',
 };
 
 let imageTile = {
-	type: 'tilePicture',
-	source: 'myFlower',
+    type: 'tilePicture',
+    source: 'myFlower',
 };
 
 let videoGrid = {
-	type: 'gridPicture',
-	source: 'first-video',
+    type: 'gridPicture',
+    source: 'first-video',
 };
 
 let videoTile = {
-	type: 'tilePicture',
-	source: 'first-video',
+    type: 'tilePicture',
+    source: 'first-video',
 };
 
 let spriteGrid = {
-	type: 'gridPicture',
-	source: 'walking-cat',
+    type: 'gridPicture',
+    source: 'walking-cat',
 };
 
 let spriteTile = {
-	type: 'tilePicture',
-	source: 'walking-cat',
+    type: 'tilePicture',
+    source: 'walking-cat',
 };
 
 // Create the grid entity
 let myGrid = scrawl.makeGrid({
 
-	name: 'test-grid',
+    name: 'test-grid',
 
-	startX: 'center',
-	startY: 'center',
+    startX: 'center',
+    startY: 'center',
 
-	handleX: 'center',
-	handleY: 'center',
+    handleX: 'center',
+    handleY: 'center',
 
-	width: 300,
-	height: 200,
+    width: 300,
+    height: 200,
 
-	columns: 6,
-	rows: 6,
+    columns: 6,
+    rows: 6,
 
-	tileSources: [imageGrid, imageTile]
+    tileSources: [imageGrid, imageTile]
 });
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Columns - ${myGrid.columns}; Rows - ${myGrid.rows}
+        testMessage.textContent = `Columns - ${myGrid.columns}; Rows - ${myGrid.rows}
 canvas.here - x: ${canvas.here.x}, y: ${canvas.here.y}
 ${hitReport}
 Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-	};
+    };
 }();
 
 // Function to track mouse movement across the grid
-// - if the pointer is over a grid tile, it will show the grid's highlight fill (tile source 1)
-// - other grid tiles will show the grid's base fill (tile source 0)
+// + if the pointer is over a grid tile, it will show the grid's highlight fill (tile source 1)
+// + other grid tiles will show the grid's base fill (tile source 0)
 let hitReport = '';
 let checkHitTiles = () => {
 
-	let hits = myGrid.checkHit(canvas.here);
+    let hits = myGrid.checkHit(canvas.here);
 
-	myGrid.setAllTilesTo(0);
+    myGrid.setAllTilesTo(0);
 
-	if (hits) {
+    if (hits) {
 
-		myGrid.setTilesTo(hits.tiles, 1);
-		hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;
-	}
-	else hitReport = 'Hits - none reported';
+        myGrid.setTilesTo(hits.tiles, 1);
+        hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;
+    }
+    else hitReport = 'Hits - none reported';
 };
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	target: canvas,
-	commence: checkHitTiles,
-	afterShow: report,
+    name: 'demo-animation',
+    target: canvas,
+    commence: checkHitTiles,
+    afterShow: report,
 });
 
 // User interaction - setup form observer functionality
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: myGrid,
+    target: myGrid,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		columns: ['columns', 'round'],
-		rows: ['rows', 'round'],
+        columns: ['columns', 'round'],
+        rows: ['rows', 'round'],
 
-		relativeWidth: ['width', '%'],
-		absoluteWidth: ['width', 'round'],
+        relativeWidth: ['width', '%'],
+        absoluteWidth: ['width', 'round'],
 
-		relativeHeight: ['height', '%'],
-		absoluteHeight: ['height', 'round'],
+        relativeHeight: ['height', '%'],
+        absoluteHeight: ['height', 'round'],
 
-		columnGutter: ['columnGutterWidth', 'float'],
-		rowGutter: ['rowGutterWidth', 'float'],
+        columnGutter: ['columnGutterWidth', 'float'],
+        rowGutter: ['rowGutterWidth', 'float'],
 
-		start_xPercent: ['startX', '%'],
-		start_xAbsolute: ['startX', 'round'],
-		start_xString: ['startX', 'raw'],
+        start_xPercent: ['startX', '%'],
+        start_xAbsolute: ['startX', 'round'],
+        start_xString: ['startX', 'raw'],
 
-		start_yPercent: ['startY', '%'],
-		start_yAbsolute: ['startY', 'round'],
-		start_yString: ['startY', 'raw'],
+        start_yPercent: ['startY', '%'],
+        start_yAbsolute: ['startY', 'round'],
+        start_yString: ['startY', 'raw'],
 
-		handle_xPercent: ['handleX', '%'],
-		handle_xAbsolute: ['handleX', 'round'],
-		handle_xString: ['handleX', 'raw'],
+        handle_xPercent: ['handleX', '%'],
+        handle_xAbsolute: ['handleX', 'round'],
+        handle_xString: ['handleX', 'raw'],
 
-		handle_yPercent: ['handleY', '%'],
-		handle_yAbsolute: ['handleY', 'round'],
-		handle_yString: ['handleY', 'raw'],
+        handle_yPercent: ['handleY', '%'],
+        handle_yAbsolute: ['handleY', 'round'],
+        handle_yString: ['handleY', 'raw'],
 
-		offset_xPercent: ['offsetX', '%'],
-		offset_xAbsolute: ['offsetX', 'round'],
+        offset_xPercent: ['offsetX', '%'],
+        offset_xAbsolute: ['offsetX', 'round'],
 
-		offset_yPercent: ['offsetY', '%'],
-		offset_yAbsolute: ['offsetY', 'round'],
+        offset_yPercent: ['offsetY', '%'],
+        offset_yAbsolute: ['offsetY', 'round'],
 
-		roll: ['roll', 'float'],
-		scale: ['scale', 'float'],
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
 
-		upend: ['flipUpend', 'boolean'],
-		reverse: ['flipReverse', 'boolean'],
-	},
+        upend: ['flipUpend', 'boolean'],
+        reverse: ['flipReverse', 'boolean'],
+    },
 });
 
 let updateBaseFill = (e) => {
 
-	e.preventDefault();
-	e.returnValue = false;
+    e.preventDefault();
+    e.returnValue = false;
 
-	let val = e.target.value;
+    let val = e.target.value;
 
-	switch (val) {
+    switch (val) {
 
-		case 'imageGrid' :
-			myGrid.setTileSourceTo(0, imageGrid);
-			break;
+        case 'imageGrid' :
+            myGrid.setTileSourceTo(0, imageGrid);
+            break;
 
-		case 'imageTile' :
-			myGrid.setTileSourceTo(0, imageTile);
-			break;
+        case 'imageTile' :
+            myGrid.setTileSourceTo(0, imageTile);
+            break;
 
-		case 'videoGrid' :
-			myGrid.setTileSourceTo(0, videoGrid);
-			break;
+        case 'videoGrid' :
+            myGrid.setTileSourceTo(0, videoGrid);
+            break;
 
-		case 'videoTile' :
-			myGrid.setTileSourceTo(0, videoTile);
-			break;
+        case 'videoTile' :
+            myGrid.setTileSourceTo(0, videoTile);
+            break;
 
-		case 'spriteGrid' :
-			myGrid.setTileSourceTo(0, spriteGrid);
-			break;
+        case 'spriteGrid' :
+            myGrid.setTileSourceTo(0, spriteGrid);
+            break;
 
-		case 'spriteTile' :
-			myGrid.setTileSourceTo(0, spriteTile);
-			break;
-	}
+        case 'spriteTile' :
+            myGrid.setTileSourceTo(0, spriteTile);
+            break;
+    }
 };
 scrawl.addNativeListener(['input', 'change'], updateBaseFill, '#baseFill');
 
 let updateHighlightFill = (e) => {
 
-	e.preventDefault();
-	e.returnValue = false;
+    e.preventDefault();
+    e.returnValue = false;
 
-	let val = e.target.value;
+    let val = e.target.value;
 
-	switch (val) {
+    switch (val) {
 
-		case 'imageGrid' :
-			myGrid.setTileSourceTo(1, imageGrid);
-			break;
+        case 'imageGrid' :
+            myGrid.setTileSourceTo(1, imageGrid);
+            break;
 
-		case 'imageTile' :
-			myGrid.setTileSourceTo(1, imageTile);
-			break;
+        case 'imageTile' :
+            myGrid.setTileSourceTo(1, imageTile);
+            break;
 
-		case 'videoGrid' :
-			myGrid.setTileSourceTo(1, videoGrid);
-			break;
+        case 'videoGrid' :
+            myGrid.setTileSourceTo(1, videoGrid);
+            break;
 
-		case 'videoTile' :
-			myGrid.setTileSourceTo(1, videoTile);
-			break;
+        case 'videoTile' :
+            myGrid.setTileSourceTo(1, videoTile);
+            break;
 
-		case 'spriteGrid' :
-			myGrid.setTileSourceTo(1, spriteGrid);
-			break;
+        case 'spriteGrid' :
+            myGrid.setTileSourceTo(1, spriteGrid);
+            break;
 
-		case 'spriteTile' :
-			myGrid.setTileSourceTo(1, spriteTile);
-			break;
-	}
+        case 'spriteTile' :
+            myGrid.setTileSourceTo(1, spriteTile);
+            break;
+    }
 };
 scrawl.addNativeListener(['input', 'change'], updateHighlightFill, '#highlightFill');
 
 let updateGridStroke = (e) => {
 
-	e.preventDefault();
-	e.returnValue = false;
+    e.preventDefault();
+    e.returnValue = false;
 
-	let val = e.target.value;
+    let val = e.target.value;
 
-	switch (val) {
+    switch (val) {
 
-		case 'base' :
-			myGrid.set({
-				gutterColor: 0
-			});
-			break;
+        case 'base' :
+            myGrid.set({
+                gutterColor: 0
+            });
+            break;
 
-		case 'highlight' :
-			myGrid.set({
-				gutterColor: 1
-			});
-			break;
+        case 'highlight' :
+            myGrid.set({
+                gutterColor: 1
+            });
+            break;
 
-		case 'imageGrid' :
-			myGrid.set({
-				gutterColor: imageGrid
-			});
-			break;
+        case 'imageGrid' :
+            myGrid.set({
+                gutterColor: imageGrid
+            });
+            break;
 
-		case 'imageTile' :
-			myGrid.set({
-				gutterColor: imageTile
-			});
-			break;
+        case 'imageTile' :
+            myGrid.set({
+                gutterColor: imageTile
+            });
+            break;
 
-		case 'videoGrid' :
-			myGrid.set({
-				gutterColor: videoGrid
-			});
-			break;
+        case 'videoGrid' :
+            myGrid.set({
+                gutterColor: videoGrid
+            });
+            break;
 
-		case 'videoTile' :
-			myGrid.set({
-				gutterColor: videoTile
-			});
-			break;
+        case 'videoTile' :
+            myGrid.set({
+                gutterColor: videoTile
+            });
+            break;
 
-		case 'spriteGrid' :
-			myGrid.set({
-				gutterColor: spriteGrid
-			});
-			break;
+        case 'spriteGrid' :
+            myGrid.set({
+                gutterColor: spriteGrid
+            });
+            break;
 
-		case 'spriteTile' :
-			myGrid.set({
-				gutterColor: spriteTile
-			});
-			break;
+        case 'spriteTile' :
+            myGrid.set({
+                gutterColor: spriteTile
+            });
+            break;
 
-		default :
-			myGrid.set({
-				gutterColor: '#808080'
-			});
-	}
+        default :
+            myGrid.set({
+                gutterColor: '#808080'
+            });
+    }
 };
 scrawl.addNativeListener(['input', 'change'], updateGridStroke, '#gridStroke');
 
@@ -359,10 +362,10 @@ scrawl.addNativeListener(['input', 'change'], updateGridStroke, '#gridStroke');
 // - until a user interacts with it in some way
 scrawl.addListener(['move', 'up'], function () {
 
-	viddyOne.set({
-		video_muted: true,
-		video_loop: true,
-	}).videoPlay();
+    viddyOne.set({
+        video_muted: true,
+        video_loop: true,
+    }).videoPlay();
 }, canvas.domElement);
 
 

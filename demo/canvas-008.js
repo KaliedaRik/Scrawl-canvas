@@ -1,3 +1,6 @@
+// ## Demo Canvas 008 
+
+// [Picture entity position; manipulate copy attributes](../../demo/canvas-008.html)
 import scrawl from '../source/scrawl.js'
 
 
@@ -10,134 +13,134 @@ scrawl.importDomImage('.flowers');
 
 let piccy = scrawl.makePicture({
 
-	name: 'myFlower',
-	asset: 'iris',
+    name: 'myFlower',
+    asset: 'iris',
 
-	width: 200,
-	height: 200,
+    width: 200,
+    height: 200,
 
-	startX: 300,
-	startY: 200,
-	handleX: 100,
-	handleY: 100,
+    startX: 300,
+    startY: 200,
+    handleX: 100,
+    handleY: 100,
 
-	copyWidth: 200,
-	copyHeight: 200,
-	copyStartX: 100,
-	copyStartY: 100,
+    copyWidth: 200,
+    copyHeight: 200,
+    copyStartX: 100,
+    copyStartY: 100,
 
-	lineWidth: 10,
-	strokeStyle: 'gold',
+    lineWidth: 10,
+    strokeStyle: 'gold',
 
-	order: 1,
-	method: 'drawAndFill',
+    order: 1,
+    method: 'drawAndFill',
 
 });
 
 // Create a second Picture entity, this time pulling in the image dynamically
 piccy.clone({
 
-	name: 'myFactory',
-	imageSource: 'img/canalFactory-800.png',
+    name: 'myFactory',
+    imageSource: 'img/canalFactory-800.png',
 
-	width: 600,
-	height: 400,
+    width: 600,
+    height: 400,
 
-	startX: 0,
-	startY: 0,
-	handleX: 0,
-	handleY: 0,
+    startX: 0,
+    startY: 0,
+    handleX: 0,
+    handleY: 0,
 
-	copyWidth: 600,
-	copyHeight: 400,
-	copyStartX: 150,
-	copyStartY: 0,
+    copyWidth: 600,
+    copyHeight: 400,
+    copyStartX: 150,
+    copyStartY: 0,
 
-	order: 0,
-	method: 'fill',
+    order: 0,
+    method: 'fill',
 });
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-	};
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+    };
 }();
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	target: canvas,
-	afterShow: report,
+    name: 'demo-animation',
+    target: canvas,
+    afterShow: report,
 });
 
 
 // User interaction - setup form observer functionality
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: piccy,
+    target: piccy,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		copy_start_xPercent: ['copyStartX', '%'],
-		copy_start_xAbsolute: ['copyStartX', 'round'],
+        copy_start_xPercent: ['copyStartX', '%'],
+        copy_start_xAbsolute: ['copyStartX', 'round'],
 
-		copy_start_yPercent: ['copyStartY', '%'],
-		copy_start_yAbsolute: ['copyStartY', 'round'],
+        copy_start_yPercent: ['copyStartY', '%'],
+        copy_start_yAbsolute: ['copyStartY', 'round'],
 
-		copy_dims_widthPercent: ['copyWidth', '%'],
-		copy_dims_widthAbsolute: ['copyWidth', 'round'],
+        copy_dims_widthPercent: ['copyWidth', '%'],
+        copy_dims_widthAbsolute: ['copyWidth', 'round'],
 
-		copy_dims_heightPercent: ['copyHeight', '%'],
-		copy_dims_heightAbsolute: ['copyHeight', 'round'],
+        copy_dims_heightPercent: ['copyHeight', '%'],
+        copy_dims_heightAbsolute: ['copyHeight', 'round'],
 
-		paste_dims_widthPercent: ['width', '%'],
-		paste_dims_widthAbsolute: ['width', 'round'],
+        paste_dims_widthPercent: ['width', '%'],
+        paste_dims_widthAbsolute: ['width', 'round'],
 
-		paste_dims_heightPercent: ['height', '%'],
-		paste_dims_heightAbsolute: ['height', 'round'],
+        paste_dims_heightPercent: ['height', '%'],
+        paste_dims_heightAbsolute: ['height', 'round'],
 
-		paste_start_xPercent: ['startX', '%'],
-		paste_start_xAbsolute: ['startX', 'round'],
-		paste_start_xString: ['startX', 'raw'],
+        paste_start_xPercent: ['startX', '%'],
+        paste_start_xAbsolute: ['startX', 'round'],
+        paste_start_xString: ['startX', 'raw'],
 
-		paste_start_yPercent: ['startY', '%'],
-		paste_start_yAbsolute: ['startY', 'round'],
-		paste_start_yString: ['startY', 'raw'],
+        paste_start_yPercent: ['startY', '%'],
+        paste_start_yAbsolute: ['startY', 'round'],
+        paste_start_yString: ['startY', 'raw'],
 
-		paste_handle_xPercent: ['handleX', '%'],
-		paste_handle_xAbsolute: ['handleX', 'round'],
-		paste_handle_xString: ['handleX', 'raw'],
+        paste_handle_xPercent: ['handleX', '%'],
+        paste_handle_xAbsolute: ['handleX', 'round'],
+        paste_handle_xString: ['handleX', 'raw'],
 
-		paste_handle_yPercent: ['handleY', '%'],
-		paste_handle_yAbsolute: ['handleY', 'round'],
-		paste_handle_yString: ['handleY', 'raw'],
+        paste_handle_yPercent: ['handleY', '%'],
+        paste_handle_yAbsolute: ['handleY', 'round'],
+        paste_handle_yString: ['handleY', 'raw'],
 
-		roll: ['roll', 'float'],
-		scale: ['scale', 'float'],
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
 
-		upend: ['flipUpend', 'boolean'],
-		reverse: ['flipReverse', 'boolean'],
-	},
+        upend: ['flipUpend', 'boolean'],
+        reverse: ['flipReverse', 'boolean'],
+    },
 });
 
 // Setup form

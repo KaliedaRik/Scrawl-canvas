@@ -1,223 +1,214 @@
-/*
-# Anchor mixin
 
-This mixin adds functionality to artefacts, which allows them to act as an anchor - a link - to external URLs (eg web pages). 
+// # Anchor mixin
 
-In Scrawl-canvas, an anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in the factory file (./factory/anchor.js). This mixin makes it easy for the user to gain access to the anchor object via the artefact object.
+// This mixin adds functionality to artefacts, which allows them to act as an anchor - a link - to external URLs (eg web pages). 
 
-### Examples of using anchors:
+// In Scrawl-canvas, an anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in the factory file (./factory/anchor.js). This mixin makes it easy for the user to gain access to the anchor object via the artefact object.
 
-    // get a handle on the canvas where the block/link will be defined 
-    // (in this case a canvas with id="mycanvas")
-    let canvas = scrawl.library.artefact.mycanvas;
-    canvas.setAsCurrentCanvas();
+// ### Examples of using anchors:
 
-    // Define a block entity
-    scrawl.makeBlock({
+//     // get a handle on the canvas where the block/link will be defined 
+//     // (in this case a canvas with id="mycanvas")
+//     let canvas = scrawl.library.artefact.mycanvas;
+//     canvas.setAsCurrentCanvas();
 
-    	name: 'demo-anchor-block',
+//     // Define a block entity
+//     scrawl.makeBlock({
 
-    	width: '40%',
-    	height: '40%',
+//         name: 'demo-anchor-block',
 
-    	startX: '25%',
-    	startY: '25%',
+//         width: '40%',
+//         height: '40%',
 
-    	// Define the anchor object's attributes
-    	anchor: {
-    		name: 'wikipedia-water-link',
-    		href: 'https://en.wikipedia.org/wiki/Water',
-    		description: 'Link to the Wikipedia article on water (opens in new tab)',
-    	},
+//         startX: '25%',
+//         startY: '25%',
 
-        // Add an action to take when user clicks on the block entity
-    	onUp: this.clickAnchor,
-    });
+//         // Define the anchor object's attributes
+//         anchor: {
+//             name: 'wikipedia-water-link',
+//             href: 'https://en.wikipedia.org/wiki/Water',
+//             description: 'Link to the Wikipedia article on water (opens in new tab)',
+//         },
 
-    // Add a listener to propagate DOM-detected click events on our canvas 
-    // back into the Scrawl-canvas event system
-    let mylinks = () => canvas.cascadeEventAction('up');
-    scrawl.addListener('up', mylinks, canvas.domElement);
-*/
+//         // Add an action to take when user clicks on the block entity
+//         onUp: this.clickAnchor,
+//     });
+
+//     // Add a listener to propagate DOM-detected click events on our canvas 
+//     // back into the Scrawl-canvas event system
+//     let mylinks = () => canvas.cascadeEventAction('up');
+//     scrawl.addListener('up', mylinks, canvas.domElement);
 import { mergeOver } from '../core/utilities.js';
 import { makeAnchor } from '../factory/anchor.js';
 
 export default function (P = {}) {
 
-/*
-## Define attributes
 
-All factories using the anchor mixin will add these attributes to their prototype objects
-*/
-	let defaultAttributes = {
+// ## Define attributes
 
-/*
-Add an anchor attribute to the artefact - acts as a handle to the anchor object
-*/
-		anchor: null,
+// All factories using the anchor mixin will add these attributes to their prototype objects
+    let defaultAttributes = {
 
-/*
-The mixin includes functionality to pass anchor-related attribute values through to its anchor object when the object is created or updated. Those attributes are stored in the anchor object, not the artefact object.
-*/
-	};
-	P.defs = mergeOver(P.defs, defaultAttributes);
 
-/*
-## Define getter, setter and deltaSetter functions
-*/
-	let G = P.getters,
-		S = P.setters,
-		D = P.deltaSetters;
+// Add an anchor attribute to the artefact - acts as a handle to the anchor object
+        anchor: null,
 
-/*
-These Get functions pass calls on the artefact object through to the artefact's associated anchor object (if it exists). As all of the attributes are strings, the Get functions will return '' strings if there is no anchor object currently assigned to the artefact.
-*/
-	G.anchorDescription = function () {
 
-		if (this.anchor) return this.anchor.get('description');
-		return '';
-	};
-	G.anchorType = function () {
+// The mixin includes functionality to pass anchor-related attribute values through to its anchor object when the object is created or updated. Those attributes are stored in the anchor object, not the artefact object.
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
 
-		if (this.anchor) return this.anchor.get('type');
-		return '';
-	};
-	G.anchorTarget = function () {
 
-		if (this.anchor) return this.anchor.get('target');
-		return '';
-	};
-	G.anchorRel = function () {
+// ## Define getter, setter and deltaSetter functions
+    let G = P.getters,
+        S = P.setters,
+        D = P.deltaSetters;
 
-		if (this.anchor) return this.anchor.get('rel');
-		return '';
-	};
-	G.anchorReferrerPolicy = function () {
 
-		if (this.anchor) return this.anchor.get('referrerpolicy');
-		return '';
-	};
-	G.anchorPing = function () {
+// These Get functions pass calls on the artefact object through to the artefact's associated anchor object (if it exists). As all of the attributes are strings, the Get functions will return '' strings if there is no anchor object currently assigned to the artefact.
+    G.anchorDescription = function () {
 
-		if (this.anchor) return this.anchor.get('ping');
-		return '';
-	};
-	G.anchorHreflang = function () {
+        if (this.anchor) return this.anchor.get('description');
+        return '';
+    };
+    G.anchorType = function () {
 
-		if (this.anchor) return this.anchor.get('hreflang');
-		return '';
-	};
-	G.anchorHref = function () {
+        if (this.anchor) return this.anchor.get('type');
+        return '';
+    };
+    G.anchorTarget = function () {
 
-		if (this.anchor) return this.anchor.get('href');
-		return '';
-	};
-	G.anchorDownload = function () {
+        if (this.anchor) return this.anchor.get('target');
+        return '';
+    };
+    G.anchorRel = function () {
 
-		if (this.anchor) return this.anchor.get('download');
-		return '';
-	};
+        if (this.anchor) return this.anchor.get('rel');
+        return '';
+    };
+    G.anchorReferrerPolicy = function () {
 
-/*
-All of the Set functions will check to see if an anchor object has been created/associated with the artefact and, if not, create one to accept the set values.
+        if (this.anchor) return this.anchor.get('referrerpolicy');
+        return '';
+    };
+    G.anchorPing = function () {
 
-The following attributes can be included in the object passed to the artefact's set() function:
+        if (this.anchor) return this.anchor.get('ping');
+        return '';
+    };
+    G.anchorHreflang = function () {
 
-+ anchorDescription
-+ anchorType
-+ anchorTarget
-+ anchorRel
-+ anchorReferrerPolicy
-+ anchorPing
-+ anchorHreflang
-+ anchorHref (required if the anchor is to work as a URL link to external web pages)
-+ anchorDownload
+        if (this.anchor) return this.anchor.get('hreflang');
+        return '';
+    };
+    G.anchorHref = function () {
 
-Also, the artefact's set() function can include a single __anchor__ attribute, whose value should be an object containing some of the above attribute key:value pairs
-*/
-	S.anchorDescription = function (item) {
+        if (this.anchor) return this.anchor.get('href');
+        return '';
+    };
+    G.anchorDownload = function () {
 
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.description(item);
-	};
-	S.anchorType = function (item) {
+        if (this.anchor) return this.anchor.get('download');
+        return '';
+    };
 
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.anchorType(item);
-	};
-	S.anchorTarget = function (item) {
 
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.target(item);
-	};
-	S.anchorRel = function (item) {
+// All of the Set functions will check to see if an anchor object has been created/associated with the artefact and, if not, create one to accept the set values.
 
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.rel(item);
-	};
-	S.anchorReferrerPolicy = function (item) {
+// The following attributes can be included in the object passed to the artefact's set() function:
 
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.referrerpolicy(item);
-	};
-	S.anchorPing = function (item) {
+// + anchorDescription
+// + anchorType
+// + anchorTarget
+// + anchorRel
+// + anchorReferrerPolicy
+// + anchorPing
+// + anchorHreflang
+// + anchorHref (required if the anchor is to work as a URL link to external web pages)
+// + anchorDownload
 
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.ping(item);
-	};
-	S.anchorHreflang = function (item) {
+// Also, the artefact's set() function can include a single __anchor__ attribute, whose value should be an object containing some of the above attribute key:value pairs
+    S.anchorDescription = function (item) {
 
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.hreflang(item);
-	};
-	S.anchorHref = function (item) {
+        if (!this.anchor) this.buildAnchor(items);
+        if (this.anchor) this.anchor.setters.description(item);
+    };
+    S.anchorType = function (item) {
 
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.href(item);
-	};
-	S.anchorDownload = function (item) {
+        if (!this.anchor) this.buildAnchor(items);
+        if (this.anchor) this.anchor.setters.anchorType(item);
+    };
+    S.anchorTarget = function (item) {
 
-		if (!this.anchor) this.buildAnchor(items);
-		if (this.anchor) this.anchor.setters.download(item);
-	};
+        if (!this.anchor) this.buildAnchor(items);
+        if (this.anchor) this.anchor.setters.target(item);
+    };
+    S.anchorRel = function (item) {
 
-	S.anchor = function (items = {}) {
+        if (!this.anchor) this.buildAnchor(items);
+        if (this.anchor) this.anchor.setters.rel(item);
+    };
+    S.anchorReferrerPolicy = function (item) {
 
-		if (!this.anchor) this.buildAnchor(items);
-		else this.anchor.set(items);
-	};
+        if (!this.anchor) this.buildAnchor(items);
+        if (this.anchor) this.anchor.setters.referrerpolicy(item);
+    };
+    S.anchorPing = function (item) {
 
-/*
-These functions handle adding an anchor object to an artefact, or rebuilding it, or deleting it from the artefact. Each artifact can have a maximum of one anchor object associated with it.
-*/
-	P.buildAnchor = function (items = {}) {
+        if (!this.anchor) this.buildAnchor(items);
+        if (this.anchor) this.anchor.setters.ping(item);
+    };
+    S.anchorHreflang = function (item) {
 
-		if (this.anchor) this.anchor.demolish();
+        if (!this.anchor) this.buildAnchor(items);
+        if (this.anchor) this.anchor.setters.hreflang(item);
+    };
+    S.anchorHref = function (item) {
 
-		if (!items.name) items.name = `${this.name}-anchor`;
-		if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
+        if (!this.anchor) this.buildAnchor(items);
+        if (this.anchor) this.anchor.setters.href(item);
+    };
+    S.anchorDownload = function (item) {
 
-		this.anchor = makeAnchor(items);
-	};
+        if (!this.anchor) this.buildAnchor(items);
+        if (this.anchor) this.anchor.setters.download(item);
+    };
 
-	P.rebuildAnchor = function () {
+    S.anchor = function (items = {}) {
 
-		if (this.anchor) this.anchor.build();
-	};
+        if (!this.anchor) this.buildAnchor(items);
+        else this.anchor.set(items);
+    };
 
-	P.demolishAnchor = function () {
 
-		if (this.anchor) this.anchor.demolish();
-	};
+// These functions handle adding an anchor object to an artefact, or rebuilding it, or deleting it from the artefact. Each artifact can have a maximum of one anchor object associated with it.
+    P.buildAnchor = function (items = {}) {
 
-/*
-Function to pass a user click (or whatever event has been set up) on the artefact through to the anchor object, for action.
-*/
+        if (this.anchor) this.anchor.demolish();
 
-	P.clickAnchor = function () {
+        if (!items.name) items.name = `${this.name}-anchor`;
+        if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
 
-		if (this.anchor) this.anchor.click();
-	};
+        this.anchor = makeAnchor(items);
+    };
 
-	return P;
+    P.rebuildAnchor = function () {
+
+        if (this.anchor) this.anchor.build();
+    };
+
+    P.demolishAnchor = function () {
+
+        if (this.anchor) this.anchor.demolish();
+    };
+
+
+// Function to pass a user click (or whatever event has been set up) on the artefact through to the anchor object, for action.
+    P.clickAnchor = function () {
+
+        if (this.anchor) this.anchor.click();
+    };
+
+// Return the prototype
+    return P;
 };

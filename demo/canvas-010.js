@@ -1,3 +1,6 @@
+// ## Demo Canvas 010 
+
+// [Use video sources and media streams for Picture entitys](../../demo/canvas-010.html)
 import scrawl from '../source/scrawl.js'
 
 
@@ -18,111 +21,109 @@ scrawl.importDomVideo('.myvideo');
 // Create Picture entity from video entity included in the DOM
 let viddyOne = scrawl.makePicture({
 
-	name: 'first-video',
-	asset: 'waves',
+    name: 'first-video',
+    asset: 'waves',
 
-	width: 200,
-	height: 200,
+    width: 200,
+    height: 200,
 
-	startX: 300,
-	startY: 200,
-	handleX: 100,
-	handleY: 100,
+    startX: 300,
+    startY: 200,
+    handleX: 100,
+    handleY: 100,
 
-	copyWidth: 200,
-	copyHeight: 200,
-	copyStartX: 100,
-	copyStartY: 100,
+    copyWidth: 200,
+    copyHeight: 200,
+    copyStartX: 100,
+    copyStartY: 100,
 
-	lineWidth: 10,
-	strokeStyle: 'lightgreen',
+    lineWidth: 10,
+    strokeStyle: 'lightgreen',
 
-	order: 1,
-	method: 'drawThenFill',
+    order: 1,
+    method: 'drawThenFill',
 
 });
 
 // Create picture entity, explicitly giving it a video source file to load
 let viddyTwo = scrawl.makePicture({
 
-	name: 'second-video',
-	videoSource: 'img/Motion - 18249.mp4',
+    name: 'second-video',
+    videoSource: 'img/Motion - 18249.mp4',
 
-	width: '100%',
-	height: '100%',
+    width: '100%',
+    height: '100%',
 
-	copyWidth: '100%',
-	copyHeight: '100%',
+    copyWidth: '100%',
+    copyHeight: '100%',
 
-	order: 0,
-	method: 'fill',
+    order: 0,
+    method: 'fill',
 });
 
 
 // Display a device-based media stream in a Picture entity
-// - Note 1: Users will need to explicitly agree to let Scrawl-canvas 
-//           use the media stream the first time the page loads
-//           (the browser should handle this agreement procedure itself)
-// - Note 2: importMediaStream is promise-based
+// + Note 1: Users will need to explicitly agree to let Scrawl-canvas use the media stream the first time the page loads (the browser should handle this agreement procedure itself)
+// + Note 2: importMediaStream is promise-based
 let viddyThree;
 
 scrawl.importMediaStream({
-	audio: false,
+    audio: false,
 })
 .then(myface => {
 
-	viddyThree = scrawl.makePicture({
+    viddyThree = scrawl.makePicture({
 
-		name: 'mediastream-video',
-		asset: myface.name,
+        name: 'mediastream-video',
+        asset: myface.name,
 
-		startX: '20%',
-		startY: '20%',
-		handleX: 'center',
-		handleY: 'center',
+        startX: '20%',
+        startY: '20%',
+        handleX: 'center',
+        handleY: 'center',
 
-		width: '40%',
-		height: '40%',
+        width: '40%',
+        height: '40%',
 
-		copyWidth: '100%',
-		copyHeight: '100%',
+        copyWidth: '100%',
+        copyHeight: '100%',
 
-		lineWidth: 6,
-		strokeStyle: 'pink',
+        lineWidth: 6,
+        strokeStyle: 'pink',
 
-		order: 0,
-		method: 'drawThenFill',
-	});
+        order: 0,
+        method: 'drawThenFill',
+    });
 
-	// Adding some controls to manipulate the media stream's display
-	scrawl.observeAndUpdate({
+    // Adding some controls to manipulate the media stream's display
+    scrawl.observeAndUpdate({
 
-		event: ['input', 'change'],
-		origin: '.controlItem',
+        event: ['input', 'change'],
+        origin: '.controlItem',
 
-		target: viddyThree,
+        target: viddyThree,
 
-		useNativeListener: true,
-		preventDefault: true,
+        useNativeListener: true,
+        preventDefault: true,
 
-		updates: {
+        updates: {
 
-			copy_start_xPercent: ['copyStartX', '%'],
-			copy_start_xAbsolute: ['copyStartX', 'round'],
+            copy_start_xPercent: ['copyStartX', '%'],
+            copy_start_xAbsolute: ['copyStartX', 'round'],
 
-			copy_start_yPercent: ['copyStartY', '%'],
-			copy_start_yAbsolute: ['copyStartY', 'round'],
+            copy_start_yPercent: ['copyStartY', '%'],
+            copy_start_yAbsolute: ['copyStartY', 'round'],
 
-			copy_dims_widthPercent: ['copyWidth', '%'],
-			copy_dims_widthAbsolute: ['copyWidth', 'round'],
+            copy_dims_widthPercent: ['copyWidth', '%'],
+            copy_dims_widthAbsolute: ['copyWidth', 'round'],
 
-			copy_dims_heightPercent: ['copyHeight', '%'],
-			copy_dims_heightAbsolute: ['copyHeight', 'round'],
+            copy_dims_heightPercent: ['copyHeight', '%'],
+            copy_dims_heightAbsolute: ['copyHeight', 'round'],
 
-			upend: ['flipUpend', 'boolean'],
-			reverse: ['flipReverse', 'boolean'],
-		},
-	});
+            upend: ['flipUpend', 'boolean'],
+            reverse: ['flipReverse', 'boolean'],
+        },
+    });
 })
 .catch(err => console.log(err.message));
 
@@ -130,100 +131,99 @@ scrawl.importMediaStream({
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
 
-	return function () {
+    return function () {
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
-	};
+    };
 }();
 
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
 
-	name: 'demo-animation',
-	target: canvas,
-	afterShow: report,
+    name: 'demo-animation',
+    target: canvas,
+    afterShow: report,
 });
 
 
 // User interaction - setup form observer functionality
 scrawl.observeAndUpdate({
 
-	event: ['input', 'change'],
-	origin: '.controlItem',
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-	target: viddyOne,
+    target: viddyOne,
 
-	useNativeListener: true,
-	preventDefault: true,
+    useNativeListener: true,
+    preventDefault: true,
 
-	updates: {
+    updates: {
 
-		copy_start_xPercent: ['copyStartX', '%'],
-		copy_start_xAbsolute: ['copyStartX', 'round'],
+        copy_start_xPercent: ['copyStartX', '%'],
+        copy_start_xAbsolute: ['copyStartX', 'round'],
 
-		copy_start_yPercent: ['copyStartY', '%'],
-		copy_start_yAbsolute: ['copyStartY', 'round'],
+        copy_start_yPercent: ['copyStartY', '%'],
+        copy_start_yAbsolute: ['copyStartY', 'round'],
 
-		copy_dims_widthPercent: ['copyWidth', '%'],
-		copy_dims_widthAbsolute: ['copyWidth', 'round'],
+        copy_dims_widthPercent: ['copyWidth', '%'],
+        copy_dims_widthAbsolute: ['copyWidth', 'round'],
 
-		copy_dims_heightPercent: ['copyHeight', '%'],
-		copy_dims_heightAbsolute: ['copyHeight', 'round'],
+        copy_dims_heightPercent: ['copyHeight', '%'],
+        copy_dims_heightAbsolute: ['copyHeight', 'round'],
 
-		paste_dims_widthPercent: ['width', '%'],
-		paste_dims_widthAbsolute: ['width', 'round'],
+        paste_dims_widthPercent: ['width', '%'],
+        paste_dims_widthAbsolute: ['width', 'round'],
 
-		paste_dims_heightPercent: ['height', '%'],
-		paste_dims_heightAbsolute: ['height', 'round'],
+        paste_dims_heightPercent: ['height', '%'],
+        paste_dims_heightAbsolute: ['height', 'round'],
 
-		paste_start_xPercent: ['startX', '%'],
-		paste_start_xAbsolute: ['startX', 'round'],
-		paste_start_xString: ['startX', 'raw'],
+        paste_start_xPercent: ['startX', '%'],
+        paste_start_xAbsolute: ['startX', 'round'],
+        paste_start_xString: ['startX', 'raw'],
 
-		paste_start_yPercent: ['startY', '%'],
-		paste_start_yAbsolute: ['startY', 'round'],
-		paste_start_yString: ['startY', 'raw'],
+        paste_start_yPercent: ['startY', '%'],
+        paste_start_yAbsolute: ['startY', 'round'],
+        paste_start_yString: ['startY', 'raw'],
 
-		paste_handle_xPercent: ['handleX', '%'],
-		paste_handle_xAbsolute: ['handleX', 'round'],
-		paste_handle_xString: ['handleX', 'raw'],
+        paste_handle_xPercent: ['handleX', '%'],
+        paste_handle_xAbsolute: ['handleX', 'round'],
+        paste_handle_xString: ['handleX', 'raw'],
 
-		paste_handle_yPercent: ['handleY', '%'],
-		paste_handle_yAbsolute: ['handleY', 'round'],
-		paste_handle_yString: ['handleY', 'raw'],
+        paste_handle_yPercent: ['handleY', '%'],
+        paste_handle_yAbsolute: ['handleY', 'round'],
+        paste_handle_yString: ['handleY', 'raw'],
 
-		roll: ['roll', 'float'],
-		scale: ['scale', 'float'],
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
 
-		upend: ['flipUpend', 'boolean'],
-		reverse: ['flipReverse', 'boolean'],
-	},
+        upend: ['flipUpend', 'boolean'],
+        reverse: ['flipReverse', 'boolean'],
+    },
 });
 
 
-// Because many browsers/devices will not allow video to be played
-// - until a user interacts with it in some way
+// Because many browsers/devices will not allow video to be played until a user interacts with it in some way
 scrawl.addListener('up', function () {
 
-	viddyOne.set({
-		video_muted: true,
-		video_loop: true,
-	}).videoPlay();
+    viddyOne.set({
+        video_muted: true,
+        video_loop: true,
+    }).videoPlay();
 
-	viddyTwo.set({
-		video_muted: true,
-		video_loop: true,
-	}).videoPlay();
+    viddyTwo.set({
+        video_muted: true,
+        video_loop: true,
+    }).videoPlay();
 
 }, canvas.domElement);
 

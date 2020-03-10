@@ -1,3 +1,6 @@
+// ## Demo DOM 010
+
+// [Add and remove (demolish) Scrawl-canvas stack elements programmatically](../../demo/dom-010.html)
 import scrawl from '../source/scrawl.js'
 
 
@@ -7,130 +10,130 @@ let library = scrawl.library;
 
 let report = function () {
 
-	let testTicker = Date.now(),
-		testTime, testNow, text,
-		testMessage = document.querySelector('#reportmessage');
+    let testTicker = Date.now(),
+        testTime, testNow, text,
+        testMessage = document.querySelector('#reportmessage');
 
-	let artefactnames = library.artefactnames,
-		stacknames = library.stacknames,
-		elementnames = library.elementnames,
-		artefact = library.artefact,
-		stack = library.stack,
-		element = library.element;
+    let artefactnames = library.artefactnames,
+        stacknames = library.stacknames,
+        elementnames = library.elementnames,
+        artefact = library.artefact,
+        stack = library.stack,
+        element = library.element;
 
-	let a, s, el;
+    let a, s, el;
 
-	return function () {
+    return function () {
 
-		a = Object.keys(artefact);
-		s = Object.keys(stack);
-		el = Object.keys(element);
+        a = Object.keys(artefact);
+        s = Object.keys(stack);
+        el = Object.keys(element);
 
-		testNow = Date.now();
-		testTime = testNow - testTicker;
-		testTicker = testNow;
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-		testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 artefact - ${a.length}, ${artefactnames.length}: [${(artefactnames).join(', ')}] 
 stack - ${s.length}, ${stacknames.length}: [${(stacknames).join(', ')}] 
 element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
-	};
+    };
 }();
 
 
 // Animation loop - can't use .makeRender() in this case because there's no initial stack/canvas arterfact to render. Using .makeAnimation() and .render() - both of which use promises - instead
 scrawl.makeAnimation({
 
-	name: 'demo-animation',
+    name: 'demo-animation',
 
-	fn: function () {
+    fn: function () {
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			scrawl.render()
-			.then(() => {
+            scrawl.render()
+            .then(() => {
 
-				report();
-				resolve(true);
-			})
-			.catch(err => reject(err));
-		});
-	}
+                report();
+                resolve(true);
+            })
+            .catch(err => reject(err));
+        });
+    }
 });
 
 
 // User interaction - buttons listener
 let controls = function () {
 
-	// the control buttons are never part of a Scrawl-canvas stack
-	let b1 = document.querySelector('#action_1'),
-		b2 = document.querySelector('#action_2'),
-		b3 = document.querySelector('#action_3'),
-		b4 = document.querySelector('#action_4');
+    // the control buttons are never part of a Scrawl-canvas stack
+    let b1 = document.querySelector('#action_1'),
+        b2 = document.querySelector('#action_2'),
+        b3 = document.querySelector('#action_3'),
+        b4 = document.querySelector('#action_4');
 
-	b1.disabled = '';
-	b2.disabled = 'disabled';
-	b3.disabled = '';
-	b4.disabled = 'disabled';
+    b1.disabled = '';
+    b2.disabled = 'disabled';
+    b3.disabled = '';
+    b4.disabled = 'disabled';
 
-	let newStack, hostStack;
+    let newStack, hostStack;
 
-	return function (e) {
+    return function (e) {
 
-		e.preventDefault();
-		e.returnValue = false;
-		
-		switch (e.target.id) {
+        e.preventDefault();
+        e.returnValue = false;
+        
+        switch (e.target.id) {
 
-			case 'action_1':
-				b1.disabled = 'disabled';
-				b2.disabled = '';
+            case 'action_1':
+                b1.disabled = 'disabled';
+                b2.disabled = '';
 
-				newStack = scrawl.addStack({
-					host: '#target',
-					name: 'my-new-stack',
-					width: 300,
-					height: 50,
-				});
+                newStack = scrawl.addStack({
+                    host: '#target',
+                    name: 'my-new-stack',
+                    width: 300,
+                    height: 50,
+                });
 
-				break;
+                break;
 
-			case 'action_2':
+            case 'action_2':
 
-				b1.disabled = '';
-				b2.disabled = 'disabled';
+                b1.disabled = '';
+                b2.disabled = 'disabled';
 
-				newStack.demolish(true);
+                newStack.demolish(true);
 
-				break;
+                break;
 
-			case 'action_3':
+            case 'action_3':
 
-				b3.disabled = 'disabled';
-				b4.disabled = '';
+                b3.disabled = 'disabled';
+                b4.disabled = '';
 
-				hostStack = scrawl.addStack({
-					element: '#target',
-				});
+                hostStack = scrawl.addStack({
+                    element: '#target',
+                });
 
-				break;
-				
-			case 'action_4':
+                break;
+                
+            case 'action_4':
 
-				if (b1.disabled) {
+                if (b1.disabled) {
 
-					b1.disabled = '';
-					b2.disabled = 'disabled';
-				}
+                    b1.disabled = '';
+                    b2.disabled = 'disabled';
+                }
 
-				b3.disabled = 'disabled';
-				b4.disabled = 'disabled';
-				
-				hostStack.demolish(true);
+                b3.disabled = 'disabled';
+                b4.disabled = 'disabled';
+                
+                hostStack.demolish(true);
 
-				break;
-		}
-	};
+                break;
+        }
+    };
 }();
 
 scrawl.addListener('up', controls, '.controls');

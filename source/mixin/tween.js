@@ -1,292 +1,262 @@
-/*
-# Tween mixin
 
-TODO - documentation
-*/
+// # Tween mixin
+
+// TODO - documentation
 import { constructors, animationtickers } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
 
 export default function (P = {}) {
 
-/*
-## Define attributes
-
-All factories using the filter mixin will add these to their prototype objects
-*/
-	let defaultAttributes = {
 
-/*
-TODO - documentation
-*/
-		ticker: '',
+// ## Define attributes
 
-/*
-TODO - documentation
-*/
-		targets: null,
+// All factories using the filter mixin will add these to their prototype objects
+    let defaultAttributes = {
 
-/*
-TODO - documentation
-*/
-		time: 0,
-
-/*
-TODO - documentation
-*/
-		action: null,
+// TODO - documentation
+        ticker: '',
 
-/*
-TODO - documentation
-*/
-		reverseOnCycleEnd: false,
+// TODO - documentation
+        targets: null,
 
-/*
-TODO - do we need to define this in the defs object?
-*/
-		reversed: false,
+// TODO - documentation
+        time: 0,
 
-/*
-TODO - documentation
-*/
-		order: 1
-	};
-	P.defs = mergeOver(P.defs, defaultAttributes);
+// TODO - documentation
+        action: null,
 
+// TODO - documentation
+        reverseOnCycleEnd: false,
 
-/*
-## Packet management
+// TODO - documentation - does this need to be in the defs object?
+        reversed: false,
 
-Packet management functionality found in factory/tween.js and factory/action.js
-- factory/ticker.js does not use this mixin
-*/
+// TODO - documentation
+        order: 1
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-/*
-## Define getter, setter and deltaSetter functions
-*/
-	let G = P.getters,
-		S = P.setters;
 
-/*
-TODO - documentation
-*/
-	G.targets = function () {
+// ## Packet management
 
-		return [].concat(this.targets);
-	};
+// Packet management functionality found in factory/tween.js and factory/action.js
 
-	S.targets = function (item = []) {
+// ... factory/ticker.js does not use this mixin
 
-		this.setTargets(item);
-	};
 
-/*
-TODO - documentation
-*/
-	S.action = function (item) {
 
-		this.action = item;
-		
-		if (typeof this.action !== 'function') this.action = defaultNonReturnFunction;
-	};
+// ## Define getter, setter and deltaSetter functions
+    let G = P.getters,
+        S = P.setters;
 
-/*
-## Define functions to be added to the factory prototype
-*/
+// TODO - documentation
+    G.targets = function () {
 
-/*
-TODO - documentation
-*/
-	P.calculateEffectiveTime = function (item) {
+        return [].concat(this.targets);
+    };
 
-		let time = xtGet(item, this.time),
-			calculatedTime = convertTime(time),
-			cTime = calculatedTime[1],
-			cType = calculatedTime[0],
-			ticker, 
-			tickerDuration = 0;
+    S.targets = function (item = []) {
 
-		this.effectiveTime = 0;
+        this.setTargets(item);
+    };
 
-		if (cType === '%' && cTime <= 100) {
+// TODO - documentation
+    S.action = function (item) {
 
-			if (this.ticker) {
+        this.action = item;
+        
+        if (typeof this.action !== 'function') this.action = defaultNonReturnFunction;
+    };
 
-				ticker = animationtickers[this.ticker];
 
-				if (ticker) {
+// ## Define functions to be added to the factory prototype
 
-					tickerDuration = ticker.effectiveDuration;
-					this.effectiveTime = tickerDuration * (cTime / 100);
-				}
-			}
-		}
-		else this.effectiveTime = cTime;
 
-		return this;
-	};
+// TODO - documentation
+    P.calculateEffectiveTime = function (item) {
 
-/*
-TODO - documentation
-*/
-	P.addToTicker = function (item) {
+        let time = xtGet(item, this.time),
+            calculatedTime = convertTime(time),
+            cTime = calculatedTime[1],
+            cType = calculatedTime[0],
+            ticker, 
+            tickerDuration = 0;
 
-		let tick;
+        this.effectiveTime = 0;
 
-		if (xt(item)) {
+        if (cType === '%' && cTime <= 100) {
 
-			if (this.ticker && this.ticker !== item) this.removeFromTicker(this.ticker);
+            if (this.ticker) {
 
-			tick = animationtickers[item];
+                ticker = animationtickers[this.ticker];
 
-			if (xt(tick)) {
+                if (ticker) {
 
-				this.ticker = item;
-				tick.subscribe(this.name);
-				this.calculateEffectiveTime();
-			}
-		}
-		return this;
-	};
+                    tickerDuration = ticker.effectiveDuration;
+                    this.effectiveTime = tickerDuration * (cTime / 100);
+                }
+            }
+        }
+        else this.effectiveTime = cTime;
 
-	P.removeFromTicker = function (item) {
+        return this;
+    };
 
-		let tick;
+// TODO - documentation
+    P.addToTicker = function (item) {
 
-		item = (xt(item)) ? item : this.ticker;
+        let tick;
 
-		if (item) {
+        if (xt(item)) {
 
-			tick = animationtickers[item];
+            if (this.ticker && this.ticker !== item) this.removeFromTicker(this.ticker);
 
-			if (xt(tick)) {
+            tick = animationtickers[item];
 
-				this.ticker = '';
-				tick.unsubscribe(this.name);
-			}
-		}
-		return this;
-	};
+            if (xt(tick)) {
 
-/*
-TODO - documentation
-*/
-	P.setTargets = function (items) {
+                this.ticker = item;
+                tick.subscribe(this.name);
+                this.calculateEffectiveTime();
+            }
+        }
+        return this;
+    };
 
-		items = [].concat(items);
+    P.removeFromTicker = function (item) {
 
-		let newTargets = [];
+        let tick;
 
-		items.forEach(item => {
+        item = (xt(item)) ? item : this.ticker;
 
-			if (isa_fn(item)) {
+        if (item) {
 
-				if (isa_fn(item.set)) newTargets.push(item);
-			}
-			else if (isa_obj(item) && xt(item.name)) newTargets.push(item);
-			else {
+            tick = animationtickers[item];
 
-				let result = locateTarget(item);
+            if (xt(tick)) {
 
-				if (result) newTargets.push(result);
-			}
-		});
+                this.ticker = '';
+                tick.unsubscribe(this.name);
+            }
+        }
+        return this;
+    };
 
-		this.targets = newTargets;
+// TODO - documentation
+    P.setTargets = function (items) {
 
-		return this;
-	};
+        items = [].concat(items);
 
-/*
-TODO - documentation
-*/
-	P.addToTargets = function (items) {
+        let newTargets = [];
 
-		items = [].concat(items);
+        items.forEach(item => {
 
-		items.forEach(item => {
+            if (isa_fn(item)) {
 
-			if (typeof item === 'function') {
+                if (isa_fn(item.set)) newTargets.push(item);
+            }
+            else if (isa_obj(item) && xt(item.name)) newTargets.push(item);
+            else {
 
-				if (typeof item.set === 'function') this.targets.push(item);
-			}
-			else {
+                let result = locateTarget(item);
 
-				result = locateTarget(item);
+                if (result) newTargets.push(result);
+            }
+        });
 
-				if (result) this.targets.push(result);
-			}
-		}, this);
+        this.targets = newTargets;
 
-		return this;
-	};
+        return this;
+    };
 
-	P.removeFromTargets = function (items) {
+// TODO - documentation
+    P.addToTargets = function (items) {
 
-		items = [].concat(items);
+        items = [].concat(items);
 
-		let identifiers = [],
-			newTargets = [].concat(this.targets);
+        items.forEach(item => {
 
-		newTargets.forEach(target => {
+            if (typeof item === 'function') {
 
-			let type = target.type || 'unknown',
-				name = target.name || 'unnamed';
+                if (typeof item.set === 'function') this.targets.push(item);
+            }
+            else {
 
-			if (type !== 'unknown' && name !== 'unnamed') identifiers.push(`${type}_${name}`);
-		});
+                result = locateTarget(item);
 
-		items.forEach(item => {
+                if (result) this.targets.push(result);
+            }
+        }, this);
 
-			let myObj;
-			
-			if (typeof item === 'function') myObj = item;
-			else myObj = locateTarget(item);
+        return this;
+    };
 
-			if (myObj) {
+    P.removeFromTargets = function (items) {
 
-				let type = myObj.type || 'unknown',
-					name = myObj.name || 'unnamed';
+        items = [].concat(items);
 
-				if (type !== 'unknown' && name !== 'unnamed') {
+        let identifiers = [],
+            newTargets = [].concat(this.targets);
 
-					let objName = `${type}_${name}`,
-						doRemove = identifiers.indexOf(objName);
+        newTargets.forEach(target => {
 
-					if (doRemove >= 0) newTargets[doRemove] = false;
-				}
-			}
-		});
+            let type = target.type || 'unknown',
+                name = target.name || 'unnamed';
 
-		this.targets = [];
+            if (type !== 'unknown' && name !== 'unnamed') identifiers.push(`${type}_${name}`);
+        });
 
-		newTargets.forEach(target => {
+        items.forEach(item => {
 
-			if (target) this.targets.push(target);
-		}, this);
+            let myObj;
+            
+            if (typeof item === 'function') myObj = item;
+            else myObj = locateTarget(item);
 
-		return this;
-	};
+            if (myObj) {
 
-/*
-TODO - documentation
-*/
-	P.kill = function () {
+                let type = myObj.type || 'unknown',
+                    name = myObj.name || 'unnamed';
 
-		let t;
+                if (type !== 'unknown' && name !== 'unnamed') {
 
-		if (this.ticker === this.name + '_ticker') {
+                    let objName = `${type}_${name}`,
+                        doRemove = identifiers.indexOf(objName);
 
-			t = animationtickers[this.ticker];
-			
-			if (t) t.kill();
-		}
-		else if (this.ticker) this.removeFromTicker(this.ticker);
+                    if (doRemove >= 0) newTargets[doRemove] = false;
+                }
+            }
+        });
 
-		this.deregister();
+        this.targets = [];
 
-		return true;
-	};
+        newTargets.forEach(target => {
 
-	return P;
+            if (target) this.targets.push(target);
+        }, this);
+
+        return this;
+    };
+
+// TODO - documentation
+    P.kill = function () {
+
+        let t;
+
+        if (this.ticker === this.name + '_ticker') {
+
+            t = animationtickers[this.ticker];
+            
+            if (t) t.kill();
+        }
+        else if (this.ticker) this.removeFromTicker(this.ticker);
+
+        this.deregister();
+
+        return true;
+    };
+
+// Return the prototype
+    return P;
 };

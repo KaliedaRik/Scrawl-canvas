@@ -1,10 +1,9 @@
-/*
-# Styles mixin
 
-Note: this mixin needs to be applied after the position mixin in order to work properly
+// # Styles mixin
 
-TODO - documentation
-*/
+// Note: this mixin needs to be applied after the position mixin in order to work properly
+
+// TODO - documentation
 import { addStrings, defaultNonReturnFunction, mergeOver, xt, mergeDiscard } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
@@ -12,555 +11,515 @@ import { makePalette } from '../factory/palette.js';
 
 export default function (P = {}) {
 
-/*
-## Define attributes
 
-All factories using the position mixin will add these to their prototype objects
-*/
-	let defaultAttributes = {
+// ## Define attributes
 
-/*
-(Radial)Gradient styles uses the position mixin to supply attributes and functions for handling the gradient's start and end coordinates.
-*/
-		start: null,
-		end: null,
+// All factories using the position mixin will add these to their prototype objects
+    let defaultAttributes = {
 
-/*
-Every gradient requires a palette of color stop instructions
-*/
-		palette: null,
 
-/*
-We don't need to use the entire palette when building a context gradient; we can restrict the palette using these start and end attributes
-*/
-		paletteStart: 0,
-		paletteEnd: 999,
+// (Radial)Gradient styles uses the position mixin to supply attributes and functions for handling the gradient's start and end coordinates.
+        start: null,
+        end: null,
 
-/*
-The cyclePalette attribute tells the Palette object how to handle situations where paletteStart > paletteEnd
-- when false, we reverse the color stops
-- when true, we keep the normal order of color stops and pass through the 1/0 border
-*/
-		cyclePalette: false,
-	};
-	P.defs = mergeOver(P.defs, defaultAttributes);
 
-/*
-## Define getter, setter and deltaSetter functions
-*/
-	let G = P.getters,
-		S = P.setters,
-		D = P.deltaSetters;
+// Every gradient requires a palette of color stop instructions
+        palette: null,
 
-/*
-TODO - documentation
-*/
-	G.startX = function () {
 
-		return this.currentStart[0];
-	};
+// We don't need to use the entire palette when building a context gradient; we can restrict the palette using these start and end attributes
+        paletteStart: 0,
+        paletteEnd: 999,
 
-	G.startY = function () {
 
-		return this.currentStart[1];
-	};
+// The cyclePalette attribute tells the Palette object how to handle situations where paletteStart > paletteEnd
+// + when false, we reverse the color stops
+// + when true, we keep the normal order of color stops and pass through the 1/0 border
+        cyclePalette: false,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-	G.endX = function () {
+// ## Define getter, setter and deltaSetter functions
+    let G = P.getters,
+        S = P.setters,
+        D = P.deltaSetters;
 
-		return this.currentEnd[0];
-	};
+// TODO - documentation
+    G.startX = function () {
 
-	G.endY = function () {
+        return this.currentStart[0];
+    };
 
-		return this.currentEnd[1];
-	};
+    G.startY = function () {
 
-/*
-TODO - documentation
-*/
-	S.startX = function (coord) {
+        return this.currentStart[1];
+    };
 
-		if (coord != null) {
 
-			this.start[0] = coord;
-			this.dirtyStart = true;
-		}
-	};
+    G.endX = function () {
 
-	S.startY = function (coord) {
+        return this.currentEnd[0];
+    };
 
-		if (coord != null) {
+    G.endY = function () {
 
-			this.start[1] = coord;
-			this.dirtyStart = true;
-		}
-	};
+        return this.currentEnd[1];
+    };
 
-	S.start = function (x, y) {
 
-		this.setCoordinateHelper('start', x, y);
-		this.dirtyStart = true;
-	};
+// TODO - documentation
+    S.startX = function (coord) {
 
-	D.startX = function (coord) {
+        if (coord != null) {
 
-		let c = this.start;
-		c[0] = addStrings(c[0], coord);
-		this.dirtyStart = true;
-	};
+            this.start[0] = coord;
+            this.dirtyStart = true;
+        }
+    };
 
-	D.startY = function (coord) {
+    S.startY = function (coord) {
 
-		let c = this.start;
-		c[1] = addStrings(c[1], coord);
-		this.dirtyStart = true;
-	};
+        if (coord != null) {
 
-	D.start = function (x, y) {
+            this.start[1] = coord;
+            this.dirtyStart = true;
+        }
+    };
 
-		this.setDeltaCoordinateHelper('start', x, y);
-		this.dirtyStart = true;
-	};
+    S.start = function (x, y) {
 
-/*
-TODO - documentation
-*/
-	S.endX = function (coord) {
+        this.setCoordinateHelper('start', x, y);
+        this.dirtyStart = true;
+    };
 
-		if (coord != null) {
+    D.startX = function (coord) {
 
-			this.end[0] = coord;
-			this.dirtyEnd = true;
-		}
-	};
+        let c = this.start;
+        c[0] = addStrings(c[0], coord);
+        this.dirtyStart = true;
+    };
 
-	S.endY = function (coord) {
+    D.startY = function (coord) {
 
-		if (coord != null) {
+        let c = this.start;
+        c[1] = addStrings(c[1], coord);
+        this.dirtyStart = true;
+    };
 
-			this.end[1] = coord;
-			this.dirtyEnd = true;
-		}
-	};
+    D.start = function (x, y) {
 
-	S.end = function (x, y) {
+        this.setDeltaCoordinateHelper('start', x, y);
+        this.dirtyStart = true;
+    };
 
-		this.setCoordinateHelper('end', x, y);
-		this.dirtyEnd = true;
-	};
+// TODO - documentation
+    S.endX = function (coord) {
 
-	D.endX = function (coord) {
+        if (coord != null) {
 
-		let c = this.end;
-		c[0] = addStrings(c[0], coord);
-		this.dirtyEnd = true;
-	};
+            this.end[0] = coord;
+            this.dirtyEnd = true;
+        }
+    };
 
-	D.endY = function (coord) {
+    S.endY = function (coord) {
 
-		let c = this.end;
-		c[1] = addStrings(c[1], coord);
-		this.dirtyEnd = true;
-	};
+        if (coord != null) {
 
-	D.end = function (x, y) {
+            this.end[1] = coord;
+            this.dirtyEnd = true;
+        }
+    };
 
-		this.setDeltaCoordinateHelper('end', x, y);
-		this.dirtyEnd = true;
-	};
+    S.end = function (x, y) {
 
-/*
-TODO - documentation
-*/
-	S.palette = function (item = {}) {
+        this.setCoordinateHelper('end', x, y);
+        this.dirtyEnd = true;
+    };
 
-		if(item.type === 'Palette') this.palette = item;
-	};
+    D.endX = function (coord) {
 
-/*
-TODO - documentation
-*/
-	S.paletteStart = function (item) {
+        let c = this.end;
+        c[0] = addStrings(c[0], coord);
+        this.dirtyEnd = true;
+    };
 
-		if (item.toFixed) {
+    D.endY = function (coord) {
 
-			this.paletteStart = item;
-			
-			if(item < 0 || item > 999) this.paletteStart = (item > 500) ? 999 : 0;
-		}
-	};
+        let c = this.end;
+        c[1] = addStrings(c[1], coord);
+        this.dirtyEnd = true;
+    };
 
-	S.paletteEnd = function (item) {
+    D.end = function (x, y) {
 
-		if (item.toFixed) {
+        this.setDeltaCoordinateHelper('end', x, y);
+        this.dirtyEnd = true;
+    };
 
-			this.paletteEnd = item;
-			
-			if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
-		}
-	};
+// TODO - documentation
+    S.palette = function (item = {}) {
 
-	D.paletteStart = function (item) {
+        if(item.type === 'Palette') this.palette = item;
+    };
 
-		let p;
+// TODO - documentation
+    S.paletteStart = function (item) {
 
-		if (item.toFixed) {
+        if (item.toFixed) {
 
-			p = this.paletteStart + item;
+            this.paletteStart = item;
+            
+            if(item < 0 || item > 999) this.paletteStart = (item > 500) ? 999 : 0;
+        }
+    };
 
-			if (p < 0 || p > 999) {
+    S.paletteEnd = function (item) {
 
-				if (this.cyclePalette) p = (p > 500) ? p - 1000 : p + 1000;
-				else p = (item > 500) ? 999 : 0;
-			}
+        if (item.toFixed) {
 
-			this.paletteStart = p;
-		}
-	};
+            this.paletteEnd = item;
+            
+            if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
+        }
+    };
 
-	D.paletteEnd = function (item) {
+    D.paletteStart = function (item) {
 
-		let p;
+        let p;
 
-		if (item.toFixed) {
+        if (item.toFixed) {
 
-			p = this.paletteEnd + item;
+            p = this.paletteStart + item;
 
-			if (p < 0 || p > 999) {
+            if (p < 0 || p > 999) {
 
-				if (this.cyclePalette) p = (p > 500) ? p - 1000 : p + 1000;
-				else p = (item > 500) ? 999 : 0;
-			}
+                if (this.cyclePalette) p = (p > 500) ? p - 1000 : p + 1000;
+                else p = (item > 500) ? 999 : 0;
+            }
 
-			this.paletteEnd = p;
-		}
-	};
+            this.paletteStart = p;
+        }
+    };
 
-/*
-TODO - documentation
-*/
-	S.delta = function (items = {}) {
+    D.paletteEnd = function (item) {
 
-		if (items) this.delta = mergeDiscard(this.delta, items);
-	};
+        let p;
 
+        if (item.toFixed) {
 
-/*
-## Define functions to be added to the factory prototype
-*/
+            p = this.paletteEnd + item;
 
-/*
-Overwrites function defined in mixin/base.js - takes into account Palette object attributes
-*/
-	P.get = function (item) {
+            if (p < 0 || p > 999) {
 
-		let getter = this.getters[item];
+                if (this.cyclePalette) p = (p > 500) ? p - 1000 : p + 1000;
+                else p = (item > 500) ? 999 : 0;
+            }
 
-		if (getter) return getter.call(this);
-		else {
+            this.paletteEnd = p;
+        }
+    };
 
-			let def = this.defs[item],
-				palette = this.palette,
-				val;
+// TODO - documentation
+    S.delta = function (items = {}) {
 
-			if (typeof def !== 'undefined') {
+        if (items) this.delta = mergeDiscard(this.delta, items);
+    };
 
-				val = this[item];
-				return (typeof val !== 'undefined') ? val : def;
-			}
 
-			def = palette.defs[item];
 
-			if (typeof def !== 'undefined') {
+// ## Define functions to be added to the factory prototype
 
-				val = palette[item];
-				return (typeof val !== 'undefined') ? val : def;
-			}
-			else return undef;
-		}
-	};
 
-/*
-Overwrites function defined in mixin/base.js - takes into account Palette object attributes
-*/
-	P.set = function (items = {}) {
 
-		if (items) {
+// Overwrites function defined in mixin/base.js - takes into account Palette object attributes
+    P.get = function (item) {
 
-			let setters = this.setters,
-				defs = this.defs,
-				palette = this.palette,
-				paletteSetters = (palette) ? palette.setters : {},
-				paletteDefs = (palette) ? palette.defs : {};
+        let getter = this.getters[item];
 
-			Object.entries(items).forEach(([key, value]) => {
+        if (getter) return getter.call(this);
+        else {
 
-				if (key && key !== 'name' && value != null) {
+            let def = this.defs[item],
+                palette = this.palette,
+                val;
 
-					let predefined = setters[key],
-						paletteFlag = false;
+            if (typeof def !== 'undefined') {
 
-					if (!predefined) {
+                val = this[item];
+                return (typeof val !== 'undefined') ? val : def;
+            }
 
-						predefined = paletteSetters[key];
-						paletteFlag = true;
-					}
+            def = palette.defs[item];
 
-					if (predefined) predefined.call(paletteFlag ? this.palette : this, value);
-					else if (typeof defs[key] !== 'undefined') this[key] = value;
-					else if (typeof paletteDefs[key] !== 'undefined') palette[key] = value;
-				}
-			}, this);
-		}
-		return this;
-	};
+            if (typeof def !== 'undefined') {
 
-/*
-Overwrites function defined in mixin/base.js - takes into account Palette object attributes
-*/
-	P.setDelta = function (items = {}) {
+                val = palette[item];
+                return (typeof val !== 'undefined') ? val : def;
+            }
+            else return undef;
+        }
+    };
 
-		if (items) {
 
-			let setters = this.deltaSetters,
-				defs = this.defs,
-				palette = this.palette,
-				paletteSetters = (palette) ? palette.deltaSetters : {},
-				paletteDefs = (palette) ? palette.defs : {};
+// Overwrites function defined in mixin/base.js - takes into account Palette object attributes
+    P.set = function (items = {}) {
 
-			Object.entries(items).forEach(([key, value]) => {
+        if (items) {
 
-				if (key && key !== 'name' && value != null) {
+            let setters = this.setters,
+                defs = this.defs,
+                palette = this.palette,
+                paletteSetters = (palette) ? palette.setters : {},
+                paletteDefs = (palette) ? palette.defs : {};
 
-					let predefined = setters[key],
-						paletteFlag = false;
+            Object.entries(items).forEach(([key, value]) => {
 
-					if (!predefined) {
+                if (key && key !== 'name' && value != null) {
 
-						predefined = paletteSetters[key];
-						paletteFlag = true;
-					}
+                    let predefined = setters[key],
+                        paletteFlag = false;
 
-					if (predefined) predefined.call(paletteFlag ? this.palette : this, value);
-					else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
-					else if (typeof paletteDefs[key] !== 'undefined') palette[key] = addStrings(this[key], value);
-				}
-			}, this);
-		}
-		return this;
-	};
+                    if (!predefined) {
 
-/*
-TODO - documentation
-*/
-	P.setCoordinateHelper = function (label, x, y) {
+                        predefined = paletteSetters[key];
+                        paletteFlag = true;
+                    }
 
-		let c = this[label];
+                    if (predefined) predefined.call(paletteFlag ? this.palette : this, value);
+                    else if (typeof defs[key] !== 'undefined') this[key] = value;
+                    else if (typeof paletteDefs[key] !== 'undefined') palette[key] = value;
+                }
+            }, this);
+        }
+        return this;
+    };
 
-		if (Array.isArray(x)) {
 
-			c[0] = x[0];
-			c[1] = x[1];
-		}
-		else {
+// Overwrites function defined in mixin/base.js - takes into account Palette object attributes
+    P.setDelta = function (items = {}) {
 
-			c[0] = x;
-			c[1] = y;
-		}
-	};
+        if (items) {
 
-	P.setDeltaCoordinateHelper = function (label, x, y) {
+            let setters = this.deltaSetters,
+                defs = this.defs,
+                palette = this.palette,
+                paletteSetters = (palette) ? palette.deltaSetters : {},
+                paletteDefs = (palette) ? palette.defs : {};
 
-		let c = this[label],
-			myX = c[0],
-			myY = c[1];
+            Object.entries(items).forEach(([key, value]) => {
 
-		if (Array.isArray(x)) {
+                if (key && key !== 'name' && value != null) {
 
-			c[0] = addStrings(myX, x[0]);
-			c[1] = addStrings(myY, x[1]);
-		}
-		else {
+                    let predefined = setters[key],
+                        paletteFlag = false;
 
-			c[0] = addStrings(myX, x);
-			c[1] = addStrings(myY, y);
-		}
-	};
+                    if (!predefined) {
 
-/*
-TODO - documentation
-*/
-	P.updateByDelta = function () {
+                        predefined = paletteSetters[key];
+                        paletteFlag = true;
+                    }
 
-		this.setDelta(this.delta);
+                    if (predefined) predefined.call(paletteFlag ? this.palette : this, value);
+                    else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                    else if (typeof paletteDefs[key] !== 'undefined') palette[key] = addStrings(this[key], value);
+                }
+            }, this);
+        }
+        return this;
+    };
 
-		return this;
-	};
+// TODO - documentation
+    P.setCoordinateHelper = function (label, x, y) {
 
-/*
-TODO - documentation
-*/
-	P.stylesInit = function (items = {}) {
+        let c = this[label];
 
-		this.makeName(items.name);
-		this.register();
+        if (Array.isArray(x)) {
 
-		this.gradientArgs = [];
+            c[0] = x[0];
+            c[1] = x[1];
+        }
+        else {
 
-		this.start = makeCoordinate();
-		this.end = makeCoordinate();
+            c[0] = x;
+            c[1] = y;
+        }
+    };
 
-		this.currentStart = makeCoordinate();
-		this.currentEnd = makeCoordinate();
+    P.setDeltaCoordinateHelper = function (label, x, y) {
 
-		this.set(this.defs);
+        let c = this[label],
+            myX = c[0],
+            myY = c[1];
 
-		this.palette = makePalette({
-			name: `${this.name}_palette`,
-		});
+        if (Array.isArray(x)) {
 
-		this.delta = {};
+            c[0] = addStrings(myX, x[0]);
+            c[1] = addStrings(myY, x[1]);
+        }
+        else {
 
-		this.set(items);
-	};
+            c[0] = addStrings(myX, x);
+            c[1] = addStrings(myY, y);
+        }
+    };
 
-/*
-This is where we have to calculate all the stuff necessary to get the ctx gradient object attached to the ctx, so we can use it for upcoming fillStyle and strokeStyle settings on the engine. We have to create the ctx gradient and return it. 
-*/
-	P.getData = function (entity, cell, isFill) {
+// TODO - documentation
+    P.updateByDelta = function () {
 
-		// Step 1: see if the palette is dirty, from having colors added/deleted/changed
-		if(this.palette && this.palette.dirtyPalette) this.palette.recalculate();
+        this.setDelta(this.delta);
 
-		// Step 2: recalculate current start and end points
-		this.cleanStyle(entity, cell, isFill);
+        return this;
+    };
 
-		// Step 3: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
-		this.finalizeCoordinates(entity, isFill);
+// TODO - documentation
+    P.stylesInit = function (items = {}) {
 
-		// Step 4: create, populate and return gradient/pattern object
-		return this.buildStyle(cell);
-	};
+        this.makeName(items.name);
+        this.register();
 
-/*
-TODO - documentation
-*/
-	P.cleanStyle = function (entity = {}, cell = {}, isFill) {
+        this.gradientArgs = [];
 
-		let dims, w, h, scale;
+        this.start = makeCoordinate();
+        this.end = makeCoordinate();
 
-		if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
+        this.currentStart = makeCoordinate();
+        this.currentEnd = makeCoordinate();
 
-			dims = entity.currentDimensions;
-			scale = entity.currentScale;
+        this.set(this.defs);
 
-			w = dims[0] * scale; 
-			h = dims[1] * scale; 
-		}
-		else {
+        this.palette = makePalette({
+            name: `${this.name}_palette`,
+        });
 
-			dims = cell.currentDimensions;
-			w = dims[0]; 
-			h = dims[1]; 
-		}
+        this.delta = {};
 
-		this.cleanPosition(this.currentStart, this.start, [w, h]);
-		this.cleanPosition(this.currentEnd, this.end, [w, h]);
-		this.cleanRadius(w);
-	};
+        this.set(items);
+    };
 
-/*
-TODO - documentation
-*/
-	P.cleanPosition = function (current, source, dimensions) {
 
-		let val, dim;
+// This is where we have to calculate all the stuff necessary to get the ctx gradient object attached to the ctx, so we can use it for upcoming fillStyle and strokeStyle settings on the engine. We have to create the ctx gradient and return it. 
+    P.getData = function (entity, cell, isFill) {
 
-		for (let i = 0; i < 2; i++) {
+        // Step 1: see if the palette is dirty, from having colors added/deleted/changed
+        if(this.palette && this.palette.dirtyPalette) this.palette.recalculate();
 
-			val = source[i];
-			dim = dimensions[i];
+        // Step 2: recalculate current start and end points
+        this.cleanStyle(entity, cell, isFill);
 
-			if (val.toFixed) current[i] = val;
-			else if (val === 'left' || val === 'top') current[i] = 0;
-			else if (val === 'right' || val === 'bottom') current[i] = dim;
-			else if (val === 'center') current[i] = dim / 2;
-			else current[i] = (parseFloat(val) / 100) * dim;
-		}
-	};
+        // Step 3: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
+        this.finalizeCoordinates(entity, isFill);
 
-/*
-TODO - documentation
-*/
-	P.finalizeCoordinates = function (entity = {}, isFill) {
+        // Step 4: create, populate and return gradient/pattern object
+        return this.buildStyle(cell);
+    };
 
-		let currentStart = this.currentStart,
-			currentEnd = this.currentEnd,
-			entityStampPosition = entity.currentStampPosition,
-			entityStampHandlePosition = entity.currentStampHandlePosition,
-			entityScale = entity.currentScale,
-			correctX, correctY;
+// TODO - documentation
+    P.cleanStyle = function (entity = {}, cell = {}, isFill) {
 
-		if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
+        let dims, w, h, scale;
 
-			correctX = -(entityStampHandlePosition[0] * entityScale) || 0; 
-			correctY = -(entityStampHandlePosition[1] * entityScale) || 0; 
-		}
-		else {
+        if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
 
-			correctX = -entityStampPosition[0] || 0; 
-			correctY = -entityStampPosition[1] || 0; 
-		}
+            dims = entity.currentDimensions;
+            scale = entity.currentScale;
 
-		if (entity.flipReverse) correctX = -correctX;
-		if (entity.flipUpend) correctY = -correctY;
+            w = dims[0] * scale; 
+            h = dims[1] * scale; 
+        }
+        else {
 
-		this.updateGradientArgs(correctX, correctY);
-	};
+            dims = cell.currentDimensions;
+            w = dims[0]; 
+            h = dims[1]; 
+        }
 
-/*
-Do stuff here for startRadius, endRadius, producing local variants - overwritten in factory-radialgradient.js file
-*/
-	P.cleanRadius = defaultNonReturnFunction;
+        this.cleanPosition(this.currentStart, this.start, [w, h]);
+        this.cleanPosition(this.currentEnd, this.end, [w, h]);
+        this.cleanRadius(w);
+    };
 
-/*
-Just in case something went wrong with loading other styles files, which must overwrite this function, we can return transparent color here
-*/
-	P.buildStyle = function (cell) {
+// TODO - documentation
+    P.cleanPosition = function (current, source, dimensions) {
 
-		return 'rgba(0,0,0,0)';
-	};
+        let val, dim;
 
-/*
-TODO - documentation
-*/
-	P.addStopsToGradient = function (gradient, start, stop, cycle) {
+        for (let i = 0; i < 2; i++) {
 
-		if (this.palette) return this.palette.addStopsToGradient(gradient, start, stop, cycle);
+            val = source[i];
+            dim = dimensions[i];
 
-		return gradient;
-	};
+            if (val.toFixed) current[i] = val;
+            else if (val === 'left' || val === 'top') current[i] = 0;
+            else if (val === 'right' || val === 'bottom') current[i] = dim;
+            else if (val === 'center') current[i] = dim / 2;
+            else current[i] = (parseFloat(val) / 100) * dim;
+        }
+    };
 
-/*
-TODO - documentation
-*/
-	P.updateColor = function (index, color) {
+// TODO - documentation
+    P.finalizeCoordinates = function (entity = {}, isFill) {
 
-		if (this.palette) this.palette.updateColor(index, color);
+        let currentStart = this.currentStart,
+            currentEnd = this.currentEnd,
+            entityStampPosition = entity.currentStampPosition,
+            entityStampHandlePosition = entity.currentStampHandlePosition,
+            entityScale = entity.currentScale,
+            correctX, correctY;
 
-		return this;
-	};
+        if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
 
-/*
-TODO - documentation
-*/
-	P.removeColor = function (index) {
+            correctX = -(entityStampHandlePosition[0] * entityScale) || 0; 
+            correctY = -(entityStampHandlePosition[1] * entityScale) || 0; 
+        }
+        else {
 
-		if (this.palette) this.palette.removeColor(index);
+            correctX = -entityStampPosition[0] || 0; 
+            correctY = -entityStampPosition[1] || 0; 
+        }
 
-		return this;
-	};
+        if (entity.flipReverse) correctX = -correctX;
+        if (entity.flipUpend) correctY = -correctY;
 
-	return P;
+        this.updateGradientArgs(correctX, correctY);
+    };
+
+
+// Do stuff here for startRadius, endRadius, producing local variants - overwritten in factory-radialgradient.js file
+    P.cleanRadius = defaultNonReturnFunction;
+
+
+// Just in case something went wrong with loading other styles files, which must overwrite this function, we can return transparent color here
+    P.buildStyle = function (cell) {
+
+        return 'rgba(0,0,0,0)';
+    };
+
+// TODO - documentation
+    P.addStopsToGradient = function (gradient, start, stop, cycle) {
+
+        if (this.palette) return this.palette.addStopsToGradient(gradient, start, stop, cycle);
+
+        return gradient;
+    };
+
+// TODO - documentation
+    P.updateColor = function (index, color) {
+
+        if (this.palette) this.palette.updateColor(index, color);
+
+        return this;
+    };
+
+// TODO - documentation
+    P.removeColor = function (index) {
+
+        if (this.palette) this.palette.removeColor(index);
+
+        return this;
+    };
+
+// Return the prototype
+    return P;
 };
