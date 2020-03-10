@@ -15,7 +15,7 @@ import { makeUnstackedElement } from "../factory/unstackedElement.js";
 import { makeAnimation } from "../factory/animation.js";
 
 
-## Core DOM element discovery and management
+// ## Core DOM element discovery and management
 
 // Stack artefacts can be nested within each other, and canvas artefacts can also be nested inside a stack. A Display cycle can be triggered on a given Stack or Canvas artefact at any time (but usually as part of an animation loop); as part of that loop a stack artefact will also trigger a Display cycle on any child stacks.
 
