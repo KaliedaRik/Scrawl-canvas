@@ -1,6 +1,6 @@
 import { animation, constructors } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt,
-defaultNonReturnFunction, defaultPromiseReturnFunction } from '../core/utilities.js';
+defaultNonReturnFunction, defaultPromiseReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 import baseMix from '../mixin/base.js';
 const Animation = function (items = {}) {
@@ -28,19 +28,13 @@ onHalt: null,
 onKill: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
-P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
-P.packetFunctions = pushUnique(P.packetFunctions, ['onRun', 'onHalt', 'onKill', 'fn']);
-P.postCloneAction = function(clone, items) {
-if (this.fn) clone.fn = this.fn;
-if (this.onRun) clone.onRun = this.onRun;
-if (this.onHalt) clone.onHalt = this.onHalt;
-if (this.onKill) clone.onKill = this.onKill;
-if (items.sharedState) clone.state = this.state;
-return clone;
+P.saveAsPacket = function () {
+return [this.name, this.type, this.lib, {}];
 };
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.clone = defaultThisReturnFunction;
 P.run = function () {
 this.onRun();
 pushUnique(animate, this.name);

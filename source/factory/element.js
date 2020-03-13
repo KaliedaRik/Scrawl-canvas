@@ -10,8 +10,11 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { group, element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
-import { generateUuid, pushUnique, removeItem, xt, isa_obj, isa_dom, isa_boolean } from '../core/utilities.js';
+import { generateUuid, pushUnique, mergeOver, removeItem, xt, isa_obj, isa_dom, isa_boolean } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeCanvas } from './canvas.js';
@@ -78,6 +81,18 @@ P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
 P = domMix(P);
+
+// ## Define default attributes
+let defaultAttributes = {};
+P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+
+// ## Packet management
+
+// TODO
+
+
 
 // ## Define getter, setter and deltaSetter functions
 let S = P.setters;

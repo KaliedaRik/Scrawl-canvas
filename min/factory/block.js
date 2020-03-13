@@ -23,6 +23,8 @@ P = positionMix(P);
 P = anchorMix(P);
 P = entityMix(P);
 P = filterMix(P);
+let defaultAttributes = {};
+P.defs = mergeOver(P.defs, defaultAttributes);
 P.cleanPathObject = function () {
 this.dirtyPathObject = false;
 if (!this.noPathUpdates || !this.pathObject) {

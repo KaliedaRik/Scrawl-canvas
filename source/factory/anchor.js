@@ -72,6 +72,9 @@
 // Currently using a 'demolish' function
 
 // TODO: review and update kill functionality through the entire Scrawl-canvas system
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
 import { scrawlNavigationHold } from '../core/document.js';
 import { mergeOver, pushUnique, isa_fn } from '../core/utilities.js';
@@ -162,7 +165,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // ## Packet management
 
-// Overwriting base mixin functions.
+// See Demo Canvas-009 for example of cloning Anchors (as part of cloning an entity)
 P.packetExclusions = pushUnique(P.packetExclusions, ['domElement']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
 

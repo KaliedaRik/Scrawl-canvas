@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { artefact, asset, radian, constructors, styles, stylesnames, cell, cellnames, group } from '../core/library.js';
 import { convertLength, generateUuid, isa_canvas, mergeOver, xt, xtGet } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
@@ -166,6 +169,12 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // Cells don't have a need for these default attributes, which will have been added in by mixin/asset.js
 delete P.defs.source;
 delete P.defs.sourceLoaded;
+
+
+
+// ## Packet management
+
+// TODO!
 
 
 
@@ -1347,13 +1356,6 @@ P.rotateDestination = function (engine, x, y, entity) {
 const cellPool = [];
 let cellPoolCount = 0;
 
-const generatedPoolCanvases = [];
-
-const cellPoolLength = function () {
-
-    return `${cellPool.length} (from ${cellPoolCount} generated)`;
-}
-
 P.poolDefs = {
     element: null,
     engine: null,
@@ -1374,8 +1376,6 @@ const requestCell = function () {
             isPool: true
         }));
         cellPoolCount++;
-
-        generatedPoolCanvases.push(cellPool[0].element)
     }
 
     return cellPool.shift();
@@ -1401,10 +1401,7 @@ const makeCell = function (items) {
 constructors.Cell = Cell;
 
 export {
-    cellPoolLength,
     makeCell,
     requestCell,
     releaseCell,
-
-    generatedPoolCanvases,
 };

@@ -4,6 +4,9 @@
 // Note: this mixin needs to be applied after the position mixin in order to work properly
 
 // TODO - documentation
+
+
+// ## Imports
 import { addStrings, defaultNonReturnFunction, mergeOver, xt, mergeDiscard } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';

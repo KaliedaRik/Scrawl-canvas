@@ -1,11 +1,8 @@
-import { isa_canvas, generateUuid, isa_fn, isa_dom, isa_boolean, isa_obj, pushUnique, removeItem, xt, defaultNonReturnFunction } from "./utilities.js";
-import { artefact, canvas, group, stack, unstackedelement, css, xcss } from "./library.js";
+import { isa_canvas, generateUuid, isa_fn, isa_dom, pushUnique, removeItem, xt } from "./utilities.js";
+import { artefact, canvas, group, stack, css, xcss } from "./library.js";
 import { makeStack } from "../factory/stack.js";
 import { makeElement } from "../factory/element.js";
 import { makeCanvas } from "../factory/canvas.js";
-import { makeUnstackedElement } from "../factory/unstackedElement.js";
-import { makeAnimation } from "../factory/animation.js";
-## Core DOM element discovery and management
 let rootElements = [],
 rootElements_sorted = [];
 let rootElementsSort = true,
@@ -368,136 +365,6 @@ Promise.all(promises)
 .catch((err) => reject(false));
 })
 };
-const makeRender = function (items = {}) {
-if (!items) return false;
-let target;
-if (!items.target) target = {
-clear: clear,
-compile: compile,
-show: show
-};
-else if (Array.isArray(items.target)) {
-let multiReturn = []
-items.target.forEach(tempTarget => {
-let tempItems = Object.assign({}, items);
-tempItems.name = `${tempItems.name}_${tempTarget.name}`;
-tempItems.target = tempTarget;
-multiReturn.push(makeRender(tempItems));
-});
-return multiReturn;
-}
-else target = (items.target.substring) ? artefact[items.target] : items.target;
-if (!target || !target.clear || !target.compile || !target.show) return false;
-let commence = (isa_fn(items.commence)) ? items.commence : defaultNonReturnFunction,
-afterClear = (isa_fn(items.afterClear)) ? items.afterClear : defaultNonReturnFunction,
-afterCompile = (isa_fn(items.afterCompile)) ? items.afterCompile : defaultNonReturnFunction,
-afterShow = (isa_fn(items.afterShow)) ? items.afterShow : defaultNonReturnFunction,
-afterCreated = (isa_fn(items.afterCreated)) ? items.afterCreated : defaultNonReturnFunction,
-onRun = (isa_fn(items.onRun)) ? items.onRun : defaultNonReturnFunction,
-onHalt = (isa_fn(items.onHalt)) ? items.onHalt : defaultNonReturnFunction,
-onKill = (isa_fn(items.onKill)) ? items.onKill : defaultNonReturnFunction,
-error = (isa_fn(items.error)) ? items.error : defaultNonReturnFunction;
-let readyToInitialize = true;
-return makeAnimation({
-name: items.name || '',
-order: items.order || 1,
-delay: items.delay || false,
-fn: function() {
-return new Promise((resolve, reject) => {
-Promise.resolve(commence())
-.then(() => target.clear())
-.then(() => Promise.resolve(afterClear()))
-.then(() => target.compile())
-.then(() => Promise.resolve(afterCompile()))
-.then(() => target.show())
-.then(() => Promise.resolve(afterShow()))
-.then(() => {
-if (readyToInitialize) {
-afterCreated();
-readyToInitialize = false;
-}
-resolve(true);
-})
-.catch(err => {
-error(err);
-reject(err);
-});
-});
-},
-});
-};
-const makeComponent = function (items) {
-let domElement = (isa_dom(items.domElement)) ? items.domElement : false,
-animationHooks = (isa_obj(items.animationHooks)) ? items.animationHooks : {},
-canvasSpecs = (isa_obj(items.canvasSpecs)) ? items.canvasSpecs : {},
-observerSpecs = (isa_obj(items.observerSpecs)) ? items.observerSpecs : {},
-includeCanvas = (isa_boolean(items.includeCanvas)) ? items.includeCanvas : true;
-if (domElement && domElement.id && artefact[domElement.id]) {
-return makeStackComponent(domElement, canvasSpecs, animationHooks, observerSpecs);
-}
-return makeUnstackedComponent(domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas);
-};
-const makeStackComponent = function (domElement, canvasSpecs, animationHooks, observerSpecs) {
-let myElement = artefact[domElement.id];
-if (!myElement) return false;
-canvasSpecs.isComponent = true;
-let myCanvas = myElement.addCanvas(canvasSpecs);
-animationHooks.name = `${myElement.name}-animation`;
-animationHooks.target = myCanvas;
-let myAnimation = makeRender(animationHooks);
-let observer = new IntersectionObserver((entries, observer) => {
-entries.forEach(entry => {
-if (entry.isIntersecting) !myAnimation.isRunning() && myAnimation.run();
-else if (!entry.isIntersecting) myAnimation.isRunning() && myAnimation.halt();
-});
-}, observerSpecs);
-observer.observe(myElement.domElement);
-let destroy = () => {
-observer.disconnect();
-myAnimation.kill();
-myCanvas.demolish();
-myElement.demolish(true);
-};
-return {
-element: myElement,
-canvas: myCanvas,
-animation: myAnimation,
-demolish: destroy,
-};
-};
-const makeUnstackedComponent = function (domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas) {
-let myElement,
-id = domElement.id;
-if (id && unstackedelement[id]) myElement = unstackedelement[id];
-else myElement = makeUnstackedElement(domElement);
-canvasSpecs.isComponent = true;
-let myCanvas = (includeCanvas) ? myElement.addCanvas(canvasSpecs) : false;
-animationHooks.name = `${myElement.name}-animation`;
-if (myCanvas) {
-if (!animationHooks.afterClear) animationHooks.afterClear = () => myElement.updateCanvas();
-animationHooks.target = myCanvas;
-}
-let myAnimation = makeRender(animationHooks);
-let observer = new IntersectionObserver((entries, observer) => {
-entries.forEach(entry => {
-if (entry.isIntersecting) !myAnimation.isRunning() && myAnimation.run();
-else if (!entry.isIntersecting) myAnimation.isRunning() && myAnimation.halt();
-});
-}, observerSpecs);
-observer.observe(myElement.domElement);
-let destroy = () => {
-observer.disconnect();
-myAnimation.kill();
-if (myCanvas) myCanvas.demolish();
-myElement.demolish(true);
-};
-return {
-element: myElement,
-canvas: myCanvas,
-animation: myAnimation,
-demolish: destroy,
-};
-};
 const makeAnimationObserver = function (anim, wrapper) {
 if (anim && anim.run && wrapper && wrapper.domElement) {
 let observer = new IntersectionObserver((entries, observer) => {
@@ -635,9 +502,7 @@ clear,
 compile,
 show,
 render,
-makeRender,
 makeAnimationObserver,
-makeComponent,
 addDomShowElement,
 setDomShowRequired,
 domShow,

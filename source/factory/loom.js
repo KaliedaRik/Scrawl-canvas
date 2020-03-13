@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors, artefact } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
 import { mergeOver, mergeDiscard, pushUnique, defaultNonReturnFunction, defaultThisReturnFunction, xta } from '../core/utilities.js';
@@ -226,6 +229,45 @@ let defaultAttributes = {
 // The shadow attributes will only be applied to the stroke (border), not to the Loom's fill (image)
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'state']);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, ['group', 'fromPath', 'toPath', 'source']);
+P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
+
+P.processPacketOut = function (key, value, includes) {
+
+    let result = true;
+
+    if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+
+    return result;
+};
+
+P.finalizePacketOut = function (copy, items) {
+
+    let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+    copy = mergeOver(copy, stateCopy);
+
+    copy = this.handlePacketAnchor(copy, items);
+
+    return copy;
+};
+
+P.handlePacketAnchor = function (copy, items) {
+
+    if (this.anchor) {
+
+        let a = JSON.parse(this.anchor.saveAsPacket(items))[3];
+        copy.anchor = a;
+    }
+    return copy;
+}
+
+
 
 // ## Define getter, setter and deltaSetter functions
 let G = P.getters,

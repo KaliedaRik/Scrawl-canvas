@@ -30,9 +30,12 @@
 // Every animation object can (in theory) be removed using its __kill__ function; this functionality has not been tested, nor is it high on my list for testing!
 
 // TODO: review and update kill functionality through the entire Scrawl-canvas system
+
+
+// ## Imports
 import { animation, constructors } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt, 
-    defaultNonReturnFunction, defaultPromiseReturnFunction } from '../core/utilities.js';
+    defaultNonReturnFunction, defaultPromiseReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';
@@ -95,25 +98,20 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // ## Packet management
-P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
-P.packetFunctions = pushUnique(P.packetFunctions, ['onRun', 'onHalt', 'onKill', 'fn']);
 
+// Animations do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions
 
-// Overwrites postCloneAction function in mixin/base.js
-P.postCloneAction = function(clone, items) {
+// Overwrites mixin/base.js functionality
+P.saveAsPacket = function () {
 
-    if (this.fn) clone.fn = this.fn;
-    if (this.onRun) clone.onRun = this.onRun;
-    if (this.onHalt) clone.onHalt = this.onHalt;
-    if (this.onKill) clone.onKill = this.onKill;
-
-    if (items.sharedState) clone.state = this.state;
-
-    return clone;
+    return [this.name, this.type, this.lib, {}];
 };
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+
+// Clone functionality disabled
+P.clone = defaultThisReturnFunction;
 
 
 // ## Define prototype functions

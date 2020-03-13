@@ -67,6 +67,29 @@ noUserInteraction: false,
 method: 'fill',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'state']);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, ['group', 'fromPath', 'toPath', 'source']);
+P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
+P.processPacketOut = function (key, value, includes) {
+let result = true;
+if(includes.indexOf(key) < 0 && value === this.defs[key]) result = false;
+return result;
+};
+P.finalizePacketOut = function (copy, items) {
+let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+copy = mergeOver(copy, stateCopy);
+copy = this.handlePacketAnchor(copy, items);
+return copy;
+};
+P.handlePacketAnchor = function (copy, items) {
+if (this.anchor) {
+let a = JSON.parse(this.anchor.saveAsPacket(items))[3];
+copy.anchor = a;
+}
+return copy;
+}
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;

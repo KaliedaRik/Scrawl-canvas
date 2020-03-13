@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
 import { mergeOver } from '../core/utilities.js';
 
@@ -154,6 +157,17 @@ let defaultAttributes = {
     udVariable9: '',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+
+// TODO
+
+
+// ## Define getter, setter and deltaSetter functions
+
+// None defined
+
 
 
 // ## Filter webworker pool

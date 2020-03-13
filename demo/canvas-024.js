@@ -179,6 +179,32 @@ let myLoom = scrawl.makeLoom({
 let interactions = function () { canvas.cascadeEventAction('move') };
 scrawl.addListener('move', interactions, canvas.domElement);
 
+// Test packet functionality
+console.log(myLoom.saveAsPacket());
+//    RESULT:
+//    [
+//        "display-loom",
+//        "Loom",
+//        "entity",
+//        {
+//            "name":"display-loom",
+//            "showBoundingBox":true,
+//            "boundingBoxColor":"red",
+//            "method":"fillThenDraw",
+//            "onEnter":"~~~ this.set({ lineWidth: 6 }) ",
+//            "onLeave":"~~~ this.set({ lineWidth: 2 }) ",
+//            "onDown":"~~~",
+//            "onUp":"~~~",
+//            "delta":{},
+//            "fromPath":"my-quad",
+//            "toPath":"my-bezier",
+//            "source":"myFlower",
+//            "group":"mycanvas_base",
+//            "strokeStyle":"orange",
+//            "lineWidth":2,
+//            "lineCap":"round"
+//        }
+//    ]
 
 // Create the drag-and-drop zone
 scrawl.makeDragZone({
@@ -344,8 +370,3 @@ document.querySelector('#copy_dims_heightPercent').value = 100;
 document.querySelector('#copy_dims_heightAbsolute').value = 400;
 
 console.log(scrawl.library);
-
-// For developers
-// - if we ever need to see what the pool cells are up to, we can output their canvases like this:
-
-//     window.setTimeout(() => scrawl.generatedPoolCanvases.forEach(el => document.body.appendChild(el)), 1000);

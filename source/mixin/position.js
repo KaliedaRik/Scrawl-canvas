@@ -2,13 +2,16 @@
 // # Position mixin
 
 // TODO - document the purpose of the mixin
+
+
+// ## Imports
 import { artefact, group } from '../core/library.js';
 import { defaultNonReturnFunction, mergeOver, mergeInto, mergeDiscard, 
     isa_obj, isa_number, xt, xta, xto, xtGet, 
     addStrings, pushUnique, removeItem } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
-import { makeCoordinate, checkCoordinate } from '../factory/coordinate.js';
+import { makeCoordinate } from '../factory/coordinate.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 
 export default function (P = {}) {

@@ -84,12 +84,32 @@ let controls = function () {
     let stackCanvas, divCanvas;
 
     // Using a color factory object to generate random colors within a restricted palette
-    let colorFactory = scrawl.makeColor({
-        name: 'myColorObject',
+    scrawl.makeColor({
+        name: 'templateColor',
         rMax: 200,
         gMax: 50,
         bMax: 10,
     });
+
+    // Test color packet and clone functionality
+    let colorFactory = scrawl.library.styles.templateColor.clone({
+        name: 'myColorObject',
+    });
+
+    console.log(colorFactory.saveAsPacket());
+    //    RESULTS:
+    //
+    //    [
+    //        "myColorObject",
+    //        "Color",
+    //        "styles",
+    //        {
+    //            "name":"myColorObject",
+    //            "rMax":200,
+    //            "gMax":50,
+    //            "bMax":10
+    //        }
+    //    ]
 
     return function (e) {
 

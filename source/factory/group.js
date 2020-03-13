@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors, cell, artefact, group, groupnames, entity } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
@@ -79,6 +82,10 @@ let defaultAttributes = {
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
+// ## Packet management
+P.packetExclusions = pushUnique(P.packetExclusions, ['artefactBuckets', 'batchResort']);
+
+
 // ## Define attribute getters and setters
 let G = P.getters,
     S = P.setters;
@@ -91,6 +98,7 @@ G.artefacts = function () {
 S.artefacts = function (item) {
 
     this.artefacts = [];
+
     this.addArtefacts(item);
 };
 
@@ -499,6 +507,8 @@ P.getCellCoverage = function (img) {
 // Artefacts should be added to, and removed from, the group object using the __addArtefacts__ and __removeArtefacts__ functions. The argument can be one or more artefact object's name attribute, or the artefact object(s) itself.
 P.addArtefacts = function (...args) {
 
+    if (args && Array.isArray(args[0])) args = args[0];
+
     args.forEach(item => {
 
         if (item) {
@@ -523,6 +533,14 @@ P.removeArtefacts = function (...args) {
         }
     }, this);
 
+    this.batchResort = true;
+    return this;
+};
+
+P.clearArtefacts = function () {
+
+    this.artefacts.length = 0;
+    this.artefactBuckets.length = 0;
     this.batchResort = true;
     return this;
 };

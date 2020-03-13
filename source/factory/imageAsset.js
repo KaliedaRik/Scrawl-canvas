@@ -10,8 +10,12 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors, canvas, cell, group, artefact } from '../core/library.js';
-import { mergeOver, isa_obj } from '../core/utilities.js';
+import { mergeOver, isa_obj, 
+    defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -37,25 +41,32 @@ P = baseMix(P);
 P = assetMix(P);
 
 
-// ## Packet management
-
-// Currently nothing to do here
-
-// TODO: work out how we're going to handle assets in packages
-//     - currently assume asset already exists on the destination device browser
-//     - we could include the &lt;img> element's src attribute in the packet??
-//     - then when it comes to unpacking, check if it really does exist
-//         - if not exist, do the load thing
-
-//     - same work required across imageAsset, spriteAsset, videoAsset
-
-
-
-
 // ## Define default attributes
 let defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+
+
+// ## Packet management
+
+// Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions
+
+// Overwrites mixin/base.js functionality
+P.saveAsPacket = function () {
+
+    return [this.name, this.type, this.lib, {}];
+};
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+
+
+// Clone functionality disabled
+P.clone = defaultThisReturnFunction;
+
+
+
+// ## Define attribute getters and setters
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;

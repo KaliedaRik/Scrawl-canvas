@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { unstackedelement, unstackedelementnames, constructors } from '../core/library.js';
 import { generateUuid, pushUnique, removeItem, xt, isa_obj, isa_boolean, mergeOver } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
@@ -51,10 +54,11 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-
 // Apply mixins to prototype object
 P = baseMix(P);
 
+
+// ## Define default attributes
 let defaultAttributes = {
 
 
@@ -63,6 +67,12 @@ let defaultAttributes = {
 
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+
+// TODO
+
 
 // ## Define getter, setter and deltaSetter functions
 let G = P.getters,

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Use demo folder examples for testing\" && exit 1",
     "minify": "./minifier.sh",
-    "makedocs": "./docco ./**/*.js"
+    "makedocs": "docco ./demo/**/*.js && docco ./source/**/*.js && docco ./source/scrawl.js"
   },
   "repository": {
     "type": "git",

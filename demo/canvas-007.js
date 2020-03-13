@@ -16,34 +16,62 @@ canvas.set({
 });
 
 
-// Create gradients
-scrawl.makeGradient({
+// Create gradients - clone test
+let myGrad = scrawl.makeGradient({
     name: 'linear1',
     endX: '100%',
 })
 .updateColor(0, 'pink')
 .updateColor(999, 'darkgreen');
 
-scrawl.makeGradient({
+myGrad.clone({
     name: 'linear2',
-    endX: '100%',
 })
 .updateColor(0, 'darkblue')
 .updateColor(999, 'white');
 
-scrawl.makeGradient({
+myGrad.clone({
     name: 'linear3',
-    endX: '100%',
 })
 .updateColor(0, 'yellow')
 .updateColor(999, 'purple');
 
-scrawl.makeGradient({
+myGrad.clone({
     name: 'linear4',
-    endX: '100%',
 })
 .updateColor(0, 'black')
 .updateColor(999, 'coral');
+
+
+// Gradient packet test
+console.log(myGrad.saveAsPacket());
+console.log(myGrad.palette.saveAsPacket());
+
+// RESULTS:
+// [
+//     "linear1",
+//     "Gradient",
+//     "styles",
+//     {
+//         "name":"linear1",
+//         "start":[0,0],
+//         "end":["100%",0],
+//         "palette":"linear1_palette"
+//     }
+// ]
+
+// [
+//     "linear1_palette",
+//     "Palette",
+//     "palette",
+//     {
+//         "name":"linear1_palette",
+//         "colors":{
+//             "0 ":[255,192,203,1],
+//             "999 ":[0,100,0,1]
+//         }
+//     }
+// ]
 
 
 // Create entitys
@@ -266,7 +294,7 @@ scrawl.makeFilter({
 });
 
 // First user-defined filter
-scrawl.makeFilter({
+let myUDF = scrawl.makeFilter({
     name: 'totalRed',
     method: 'userDefined',
 
@@ -277,12 +305,9 @@ scrawl.makeFilter({
         }`,
 });
 
-
-// Second user-defined filter
-scrawl.makeFilter({
+// Second user-defined filter (cloned)
+myUDF.clone({
     name: 'venetianBlinds',
-    method: 'userDefined',
-
     level: 9,
 
     userDefined: `
@@ -322,8 +347,7 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();
 
@@ -419,3 +443,6 @@ scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 // Set the DOM input values
 document.querySelector('#target').value = '';
 document.querySelector('#filter').value = '';
+
+console.log(scrawl.library);
+

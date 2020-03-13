@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors, entity, styles } from '../core/library.js';
 import { isa_obj, xt, xtGet } from '../core/utilities.js';
 
@@ -191,7 +194,6 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // ## Define attribute getters and setters
-
 
 // TODO - documentation
 P.set = function (items) {

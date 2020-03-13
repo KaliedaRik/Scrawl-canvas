@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { radian, constructors } from '../core/library.js';
 import { isa_quaternion, isa_vector, isa_number, xt, xto } from '../core/utilities.js';
 
@@ -62,8 +65,6 @@ P.defs = {
 
 
 // ## Define prototype functions
-
-
 
 // TODO - documentation
 P.zero = function () {
@@ -251,11 +252,6 @@ P.setFromEuler = function (items = {}) {
 const quaternionPool = [];
 let quaternionPoolCount = 0;
 
-const quaternionPoolLength = function () {
-
-    return `${quaternionPool.length} (from ${quaternionPoolCount} generated)`;
-};
-
 const requestQuaternion = function (items) {
 
     if (!quaternionPool.length) {
@@ -280,12 +276,6 @@ const releaseQuaternion = function (q) {
     }
 };
 
-const checkQuaternion = function (item) {
-
-    if (item && item.type === 'Quaternion') return item;
-    else return new Quaternion(item);
-};
-
 
 // ## Exported factory function
 const makeQuaternion = function (items = {}) {
@@ -305,6 +295,4 @@ export {
     makeQuaternion,
     requestQuaternion,
     releaseQuaternion,
-    checkQuaternion,
-    quaternionPoolLength,
 };

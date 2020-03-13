@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
 import { xt, isa_obj, isa_number } from '../core/utilities.js';
 
@@ -228,11 +231,6 @@ P.normalize = function() {
 const coordinatePool = [];
 let coordinatePoolCount = 0;
 
-const coordinatePoolLength = function () {
-
-    return `${coordinatePool.length} (from ${coordinatePoolCount} generated)`;
-}
-
 const requestCoordinate = function (items, y) {
 
     if (!coordinatePool.length) {
@@ -255,12 +253,6 @@ const releaseCoordinate = function (coordinate) {
     if (coordinate && coordinate.type === 'Coordinate') coordinatePool.push(coordinate.zero());
 };
 
-const checkCoordinate = function (item) {
-
-    if (item && item.type === 'Coordinate') return item;
-    else return new Coordinate(item);
-};
-
 
 // ## Exported factory function
 const makeCoordinate = function (items) {
@@ -274,6 +266,4 @@ export {
     makeCoordinate,
     requestCoordinate,
     releaseCoordinate,
-    checkCoordinate,
-    coordinatePoolLength,
 };

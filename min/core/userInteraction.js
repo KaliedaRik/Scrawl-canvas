@@ -139,10 +139,6 @@ const applyCoreResizeListener = function () {
 resizeAction();
 mouseChanged = true;
 };
-const applyCoreMoveListener = function () {
-moveAction();
-mouseChanged = true;
-};
 const applyCoreScrollListener = function () {
 scrollAction();
 mouseChanged = true;
@@ -296,7 +292,6 @@ currentCorePosition,
 startCoreListeners,
 stopCoreListeners,
 applyCoreResizeListener,
-applyCoreMoveListener,
 applyCoreScrollListener,
 observeAndUpdate,
 makeDragZone,

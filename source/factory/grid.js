@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors, entity } from '../core/library.js';
 import { mergeOver, isa_number, isa_obj, defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
 
@@ -107,6 +110,13 @@ let defaultAttributes = {
     tileSources: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+
+// TODO
+
+
 
 // ## Define getter, setter and deltaSetter functions
 let G = P.getters,

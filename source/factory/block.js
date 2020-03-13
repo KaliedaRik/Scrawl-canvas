@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
 import { mergeOver } from '../core/utilities.js';
 
@@ -52,6 +55,12 @@ P = positionMix(P);
 P = anchorMix(P);
 P = entityMix(P);
 P = filterMix(P);
+
+
+
+// ## Define default attributes
+let defaultAttributes = {};
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 

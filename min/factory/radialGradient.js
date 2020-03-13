@@ -1,5 +1,5 @@
 import { constructors } from '../core/library.js';
-import { mergeOver, addStrings, convertLength } from '../core/utilities.js';
+import { mergeOver, addStrings, convertLength, pushUnique } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 const RadialGradient = function (items = {}) {
@@ -18,6 +18,7 @@ startRadius: 0,
 endRadius: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;

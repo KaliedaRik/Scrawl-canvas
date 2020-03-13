@@ -4,6 +4,14 @@
 // The function, and its helper functions, translates SVG path data string - example: 'M0,0H100V100H-100V-100z' - into data which can be used to construct the a Path2D object which can be consumed by the canvasRenderingContext2D engine's 'fill', 'stroke' and 'isPointInPath' functions
 
 // Separated out into its own file because it is a potential candidate for hiving off to a web worker
+
+
+// ## Imports
+
+// No imports required
+
+
+// ## Exports
 export default function (d, scale, start, useAsPath, precision) {
 
     // setup local variables

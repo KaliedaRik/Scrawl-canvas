@@ -4,6 +4,8 @@
 
 // TODO - documentation
 
+
+// ## Imports
 import { startCoreAnimationLoop } from './animationloop.js';
 import { getCanvases, getStacks } from './document.js';
 import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } from './userInteraction.js';

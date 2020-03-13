@@ -14,8 +14,12 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, generateUuid, xt } from '../core/utilities.js';
+import { mergeOver, generateUuid, xt, 
+    defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -41,18 +45,30 @@ P = baseMix(P);
 P = assetMix(P);
 
 
-// ## Packet management
-
-// Currently nothing to do here
-
-
-
 
 // ## Define default attributes
 
 // Currently nothing to do here - this factory's attributes are common with other asset factories, and have been coded up in mixin/asset.js
 let defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+
+// Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions
+
+// Overwrites mixin/base.js functionality
+P.saveAsPacket = function () {
+
+    return [this.name, this.type, this.lib, {}];
+};
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+
+// Clone functionality disabled
+P.clone = defaultThisReturnFunction;
+
 
 // ## Define getter, setter and deltaSetter functions
 let G = P.getters,

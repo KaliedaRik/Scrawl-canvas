@@ -3,6 +3,9 @@ startCoreAnimationLoop,
 stopCoreAnimationLoop,
 } from './core/animationloop.js';
 import {
+makeComponent,
+} from './core/component.js';
+import {
 addStack,
 addCanvas,
 getCanvas,
@@ -15,18 +18,13 @@ clear,
 compile,
 show,
 render,
-makeRender,
 makeAnimationObserver,
-makeComponent,
 } from './core/document.js';
 import * as library from './core/library.js';
 import {
 currentCorePosition,
 startCoreListeners,
 stopCoreListeners,
-applyCoreResizeListener,
-applyCoreMoveListener,
-applyCoreScrollListener,
 observeAndUpdate,
 makeDragZone,
 } from './core/userInteraction.js';
@@ -40,17 +38,11 @@ import {
 makeBlock,
 } from './factory/block.js';
 import {
-cellPoolLength,
-generatedPoolCanvases,
-} from './factory/cell.js';
-import {
 makeColor,
 } from './factory/color.js';
 import {
 requestCoordinate,
 releaseCoordinate,
-checkCoordinate,
-coordinatePoolLength,
 } from './factory/coordinate.js';
 import {
 makeFilter,
@@ -65,7 +57,6 @@ import {
 makeGroup,
 } from './factory/group.js';
 import {
-makeImageAsset,
 importImage,
 importDomImage,
 createImageFromCell,
@@ -87,12 +78,13 @@ makePicture,
 import {
 requestQuaternion,
 releaseQuaternion,
-checkQuaternion,
-quaternionPoolLength,
 } from './factory/quaternion.js';
 import {
 makeRadialGradient,
 } from './factory/radialGradient.js';
+import {
+makeRender,
+} from './factory/renderAnimation.js';
 import {
 makeShape,
 makeLine,
@@ -118,16 +110,10 @@ import {
 makeTween,
 } from './factory/tween.js';
 import {
-makeUserObject,
-} from './factory/userObject.js';
-import {
 requestVector,
 releaseVector,
-checkVector,
-vectorPoolLength,
 } from './factory/vector.js';
 import {
-makeVideoAsset,
 importDomVideo,
 importVideo,
 importMediaStream,
@@ -144,11 +130,9 @@ stopCoreAnimationLoop,
 currentCorePosition,
 startCoreListeners,
 stopCoreListeners,
-applyCoreResizeListener,
-applyCoreMoveListener,
-applyCoreScrollListener,
 observeAndUpdate,
 makeDragZone,
+makeComponent,
 addStack,
 addCanvas,
 getCanvas,
@@ -161,24 +145,17 @@ clear,
 compile,
 show,
 render,
-makeRender,
 makeAnimationObserver,
-makeComponent,
 makeAction,
 makeAnimation,
 makeBlock,
-cellPoolLength,
-generatedPoolCanvases,
 makeColor,
 requestCoordinate,
 releaseCoordinate,
-checkCoordinate,
-coordinatePoolLength,
 makeFilter,
 makeGradient,
 makeGrid,
 makeGroup,
-makeImageAsset,
 importImage,
 importDomImage,
 createImageFromCell,
@@ -190,9 +167,8 @@ makePhrase,
 makePicture,
 requestQuaternion,
 releaseQuaternion,
-checkQuaternion,
-quaternionPoolLength,
 makeRadialGradient,
+makeRender,
 makeShape,
 makeLine,
 makeQuadratic,
@@ -209,12 +185,8 @@ makeSpiral,
 importSprite,
 makeTicker,
 makeTween,
-makeUserObject,
 requestVector,
 releaseVector,
-checkVector,
-vectorPoolLength,
-makeVideoAsset,
 importDomVideo,
 importVideo,
 importMediaStream,

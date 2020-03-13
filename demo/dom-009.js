@@ -64,11 +64,37 @@ circleGroup.artefacts.forEach(name => {
 });
 
 
-// Create a group to hold the buttons
-let buttonGroup = scrawl.makeGroup({
+// Create a group to hold the buttons (also: test Group cloning and packet functionality)
+console.log(circleGroup.saveAsPacket());
+//    RESULTS:
+//    [
+//        "circles",
+//        "Group",
+//        "group",
+//        {
+//            "name":"circles",
+//            "artefacts":["f_0","f_1","f_2","f_3",etc],
+//            "host":"mystack"
+//        }
+//    ]
+
+let buttonGroup = circleGroup.clone({
     name: 'buttons',
-    host: 'mystack',
-}).moveArtefactsIntoGroup('start_animation', 'stop_animation', 'start_listeners', 'stop_listeners');
+}).clearArtefacts().moveArtefactsIntoGroup('start_animation', 'stop_animation', 'start_listeners', 'stop_listeners');
+
+console.log(buttonGroup.saveAsPacket());
+//    RESULTS:
+//    [
+//        "buttons",
+//        "Group",
+//        "group",
+//        {
+//            "name":"buttons",
+//            "artefacts":["start_animation","stop_animation","start_listeners","stop_listeners"],
+//            "host":"mystack"
+//        }
+//    ]
+
 
 // User controls setup
 buttonGroup.setArtefacts({
@@ -148,10 +174,7 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Hits: ${targetsLength}
-Pools - 
-    cell: ${scrawl.cellPoolLength()}
-    quaternion: ${scrawl.quaternionPoolLength()}`;
+Hits: ${targetsLength}`;
     };
 }();
 

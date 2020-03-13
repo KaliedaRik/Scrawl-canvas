@@ -17,6 +17,9 @@
 // + __clone__ functionality - most Scrawl-canvas objects can be cloned, to make the development of a canvas (or stack) scene easier.
 
 // Given the fundamental nature of the above functionality the base mixin should always, when coding a Scrawl-canvas factory, be the first to be applied to that factory function's prototype.
+
+
+// ## Imports
 import * as library from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, generateUuid, 
     isa_fn, isa_boolean, isa_vector, isa_obj, addStrings, xt, xta,
@@ -372,8 +375,6 @@ export default function (P = {}) {
         return copy;
     };
 
-
-
 // Import and unpack a string representation of a factory object using the __saveAsPacket__ function.
 
 // Uses __fetch__, thus is an asynchronous process and returns a promise
@@ -451,6 +452,7 @@ export default function (P = {}) {
 // 5. Returns the affected artefact/asset/style/tween/etc on success; false otherwise
 
 // The function can be called directly on any Scrawl-canvas object that uses the base.js mixin - which means that all differing functionality for various types of object have to remain here, in base.js
+    P.actionPacketExclusions = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
     P.actionPacket = function (packet) {
 
         try {
@@ -471,6 +473,11 @@ export default function (P = {}) {
                     }
 
                     if (xta(name, type, lib, update)) {
+
+                        if (this.actionPacketExclusions.indexOf(type) >= 0) {
+
+                            throw new Error(`Failed to process packet - Stacks, Canvases and visual assets are excluded from the packet system`);
+                        }
 
                         let obj = library[lib][name];
 
@@ -541,7 +548,7 @@ export default function (P = {}) {
             }
             else throw new Error('Failed to process packet - not a JSON string');
         }
-        catch (e) { return e }
+        catch (e) { console.log(e); return e }
     };
 
     P.actionPacketFunctions = function(obj, item) {

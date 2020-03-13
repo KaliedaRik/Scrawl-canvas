@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
 import { mergeOver, xt } from '../core/utilities.js';
 
@@ -144,6 +147,12 @@ let defaultAttributes = {
 
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+
+// TODO
+
 
 // ## Define getter, setter and deltaSetter functions
 let G = P.getters,

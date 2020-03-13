@@ -32,6 +32,7 @@ batchResort: true,
 regionRadius: 0
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.packetExclusions = pushUnique(P.packetExclusions, ['artefactBuckets', 'batchResort']);
 let G = P.getters,
 S = P.setters;
 G.artefacts = function () {
@@ -285,6 +286,7 @@ if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
 else return [0, 0, width, height];
 };
 P.addArtefacts = function (...args) {
+if (args && Array.isArray(args[0])) args = args[0];
 args.forEach(item => {
 if (item) {
 if (item.substring) pushUnique(this.artefacts, item);
@@ -301,6 +303,12 @@ if (item.substring) removeItem(this.artefacts, item);
 else if (item.name) removeItem(this.artefacts, item.name);
 }
 }, this);
+this.batchResort = true;
+return this;
+};
+P.clearArtefacts = function () {
+this.artefacts.length = 0;
+this.artefactBuckets.length = 0;
 this.batchResort = true;
 return this;
 };

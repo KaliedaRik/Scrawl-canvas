@@ -4,6 +4,9 @@
 // This mixin needs to be applied to any factory which wishes to use an asset. Asset objects are wrappers for managing &lt;img>, &lt;video> and (offscreen) &lt;canvas> elements.
 
 // Currently only Picture entity and Pattern style factories use assets. This mixin defines attributes and functionality common to both.
+
+
+// ## Imports
 import { mergeOver, xt } from '../core/utilities.js';
 import { assetnames, asset } from '../core/library.js';
 

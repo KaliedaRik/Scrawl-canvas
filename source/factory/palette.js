@@ -10,8 +10,11 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
-import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta } from '../core/utilities.js';
+import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta, pushUnique } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -66,6 +69,11 @@ let defaultAttributes = {
     cyclic: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+P.packetExclusions = pushUnique(P.packetExclusions, ['stops']);
+
 
 // ## Define getter, setter and deltaSetter functions
 let G = P.getters,

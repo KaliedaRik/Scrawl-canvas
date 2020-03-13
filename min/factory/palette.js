@@ -1,5 +1,5 @@
 import { constructors } from '../core/library.js';
-import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta } from '../core/utilities.js';
+import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta, pushUnique } from '../core/utilities.js';
 import { makeColor } from './color.js';
 import baseMix from '../mixin/base.js';
 const Palette = function (items = {}) {
@@ -24,6 +24,7 @@ stops: null,
 cyclic: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.packetExclusions = pushUnique(P.packetExclusions, ['stops']);
 let G = P.getters,
 S = P.setters;
 S.colors = function (item) {

@@ -1,5 +1,5 @@
 import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 import { makeGroup } from './group.js';
@@ -63,6 +63,7 @@ isResponsive: false,
 containElementsInHeight: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.clone = defaultThisReturnFunction;
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;

@@ -1,5 +1,6 @@
 import { constructors } from '../core/library.js';
-import { mergeOver, generateUuid, xt, isa_obj, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, generateUuid, xt, isa_obj,
+defaultNonReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 const SpriteAsset = function (items = {}) {
@@ -17,6 +18,13 @@ let defaultAttributes = {
 manifest: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.saveAsPacket = function () {
+return [this.name, this.type, this.lib, {}];
+};
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.clone = defaultThisReturnFunction;
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;

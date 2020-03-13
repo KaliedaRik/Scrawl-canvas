@@ -38,6 +38,9 @@
 //     // back into the Scrawl-canvas event system
 //     let mylinks = () => canvas.cascadeEventAction('up');
 //     scrawl.addListener('up', mylinks, canvas.domElement);
+
+
+// ## Imports
 import { mergeOver } from '../core/utilities.js';
 import { makeAnchor } from '../factory/anchor.js';
 

@@ -33,6 +33,12 @@ import {
     stopCoreAnimationLoop,
 } from './core/animationloop.js';
 
+
+import { 
+    makeComponent,
+} from './core/component.js';
+
+
 import { 
     addStack,
     addCanvas,
@@ -46,9 +52,7 @@ import {
     compile,
     show,
     render,
-    makeRender,
     makeAnimationObserver,
-    makeComponent,
 } from './core/document.js';
 
 import * as library from './core/library.js';
@@ -57,9 +61,6 @@ import {
     currentCorePosition, 
     startCoreListeners, 
     stopCoreListeners, 
-    applyCoreResizeListener, 
-    applyCoreMoveListener, 
-    applyCoreScrollListener,
     observeAndUpdate,
     makeDragZone,
 } from './core/userInteraction.js';
@@ -81,12 +82,6 @@ import {
 
 
 import { 
-    cellPoolLength,
-    generatedPoolCanvases,
-} from './factory/cell.js';
-
-
-import { 
     makeColor,
 } from './factory/color.js';
 
@@ -94,8 +89,6 @@ import {
 import { 
     requestCoordinate, 
     releaseCoordinate,
-    checkCoordinate,
-    coordinatePoolLength,
 } from './factory/coordinate.js';
 
 
@@ -120,7 +113,6 @@ import {
 
 
 import { 
-    makeImageAsset,
     importImage,
     importDomImage,
     createImageFromCell,
@@ -152,14 +144,17 @@ import {
 import { 
     requestQuaternion, 
     releaseQuaternion,
-    checkQuaternion,
-    quaternionPoolLength,
 } from './factory/quaternion.js';
 
 
 import { 
     makeRadialGradient,
 } from './factory/radialGradient.js';
+
+
+import { 
+    makeRender,
+} from './factory/renderAnimation.js';
 
 
 import { 
@@ -195,20 +190,12 @@ import {
 
 
 import { 
-    makeUserObject,
-} from './factory/userObject.js';
-
-
-import { 
     requestVector, 
     releaseVector,
-    checkVector,
-    vectorPoolLength,
 } from './factory/vector.js';
 
 
 import { 
-    makeVideoAsset,
     importDomVideo,
     importVideo,
     importMediaStream,
@@ -243,11 +230,12 @@ export default {
     currentCorePosition,
     startCoreListeners,
     stopCoreListeners,
-    applyCoreResizeListener,
-    applyCoreMoveListener,
-    applyCoreScrollListener,
     observeAndUpdate,
     makeDragZone,
+
+
+    // core/component.js
+    makeComponent,
 
 
     // core/document.js
@@ -263,9 +251,7 @@ export default {
     compile,
     show,
     render,
-    makeRender,
     makeAnimationObserver,
-    makeComponent,
 
 
     // factory/action.js
@@ -280,21 +266,13 @@ export default {
     makeBlock,
 
 
-    // factory/cell.js
-    cellPoolLength,
-    generatedPoolCanvases,
-
-
     // factory/color.js
-    // colorList,
     makeColor,
 
 
     // factory/coordinate.js
     requestCoordinate, 
     releaseCoordinate,
-    checkCoordinate,
-    coordinatePoolLength,
 
 
     // factory/filter.js
@@ -314,7 +292,6 @@ export default {
 
 
     // factory/imageAsset.js
-    makeImageAsset,
     importImage,
     importDomImage,
     createImageFromCell,
@@ -341,12 +318,14 @@ export default {
     // factory/quaternion.js
     requestQuaternion, 
     releaseQuaternion,
-    checkQuaternion,
-    quaternionPoolLength,
 
 
     // factory/radialGradient.js
     makeRadialGradient,
+
+
+    // factory/renderAnimation.js
+    makeRender,
 
 
     // factory/shape.js
@@ -377,19 +356,12 @@ export default {
     makeTween,
 
 
-    // factory/userObject.js
-    makeUserObject,
-
-
     // factory/vector.js
     requestVector, 
     releaseVector,
-    checkVector,
-    vectorPoolLength,
 
 
     // factory/videoAsset.js
-    makeVideoAsset,
     importDomVideo,
     importVideo,
     importMediaStream,

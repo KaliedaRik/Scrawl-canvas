@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors, cell } from '../core/library.js';
 import { mergeOver, pushUnique, isa_fn } from '../core/utilities.js';
 
@@ -43,15 +46,6 @@ P = baseMix(P);
 P = assetConsumerMix(P);
 
 
-// ## Packet management
-P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, ['asset']);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
-
-
-
 // ## Define default attributes
 let defaultAttributes = {
 
@@ -59,6 +53,15 @@ let defaultAttributes = {
     repeat: 'repeat',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+P.packetExclusions = pushUnique(P.packetExclusions, []);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, ['asset']);
+P.packetFunctions = pushUnique(P.packetFunctions, []);
+
 
 // ## Define getter, setter and deltaSetter functions
 let G = P.getters,

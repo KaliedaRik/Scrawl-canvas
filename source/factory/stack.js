@@ -10,8 +10,11 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 
@@ -112,6 +115,13 @@ let defaultAttributes = {
     containElementsInHeight: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+
+// Clone functionality disabled
+P.clone = defaultThisReturnFunction;
+
 
 // ## Define getter, setter and deltaSetter functions
 let G = P.getters,

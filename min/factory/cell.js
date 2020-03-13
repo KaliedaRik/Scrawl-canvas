@@ -825,10 +825,6 @@ return this;
 };
 const cellPool = [];
 let cellPoolCount = 0;
-const generatedPoolCanvases = [];
-const cellPoolLength = function () {
-return `${cellPool.length} (from ${cellPoolCount} generated)`;
-}
 P.poolDefs = {
 element: null,
 engine: null,
@@ -845,7 +841,6 @@ name: `pool_${generateUuid()}`,
 isPool: true
 }));
 cellPoolCount++;
-generatedPoolCanvases.push(cellPool[0].element)
 }
 return cellPool.shift();
 };
@@ -860,9 +855,7 @@ return new Cell(items);
 };
 constructors.Cell = Cell;
 export {
-cellPoolLength,
 makeCell,
 requestCell,
 releaseCell,
-generatedPoolCanvases,
 };

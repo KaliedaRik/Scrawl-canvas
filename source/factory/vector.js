@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
 import { xt, xta, isa_obj, isa_number } from '../core/utilities.js';
 
@@ -262,11 +265,6 @@ const vectorPool = [];
 
 let vectorPoolCount = 0;
 
-const vectorPoolLength = function () {
-
-    return `${vectorPool.length} (from ${vectorPoolCount} generated)`;
-}
-
 const requestVector = function (x, y, z) {
 
     if (!vectorPool.length) {
@@ -287,12 +285,6 @@ const releaseVector = function (item) {
     if (item && item.type === 'Vector') vectorPool.push(item.zero());
 };
 
-const checkVector = function (item) {
-
-    if (v && v.type === 'Vector') return item;
-    else return new Vector(item);
-};
-
 
 // ## Exported factory function
 const makeVector = function (items) {
@@ -306,6 +298,4 @@ export {
     makeVector,
     requestVector,
     releaseVector,
-    checkVector,
-    vectorPoolLength,
 };

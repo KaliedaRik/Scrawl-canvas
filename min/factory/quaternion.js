@@ -134,9 +134,6 @@ return this;
 };
 const quaternionPool = [];
 let quaternionPoolCount = 0;
-const quaternionPoolLength = function () {
-return `${quaternionPool.length} (from ${quaternionPoolCount} generated)`;
-};
 const requestQuaternion = function (items) {
 if (!quaternionPool.length) {
 quaternionPool.push(makeQuaternion({
@@ -153,10 +150,6 @@ if (q && q.type === 'Quaternion') {
 quaternionPool.push(q.zero());
 }
 };
-const checkQuaternion = function (item) {
-if (item && item.type === 'Quaternion') return item;
-else return new Quaternion(item);
-};
 const makeQuaternion = function (items = {}) {
 let q = new Quaternion(items);
 if (xto(items.pitch, items.yaw, items.roll)) {
@@ -169,6 +162,4 @@ export {
 makeQuaternion,
 requestQuaternion,
 releaseQuaternion,
-checkQuaternion,
-quaternionPoolLength,
 };

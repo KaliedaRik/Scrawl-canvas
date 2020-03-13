@@ -239,8 +239,7 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
     };
 }();
 

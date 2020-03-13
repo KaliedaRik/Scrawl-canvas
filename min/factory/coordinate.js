@@ -118,9 +118,6 @@ return this;
 };
 const coordinatePool = [];
 let coordinatePoolCount = 0;
-const coordinatePoolLength = function () {
-return `${coordinatePool.length} (from ${coordinatePoolCount} generated)`;
-}
 const requestCoordinate = function (items, y) {
 if (!coordinatePool.length) {
 coordinatePool.push(new Coordinate());
@@ -136,10 +133,6 @@ return coordinate
 const releaseCoordinate = function (coordinate) {
 if (coordinate && coordinate.type === 'Coordinate') coordinatePool.push(coordinate.zero());
 };
-const checkCoordinate = function (item) {
-if (item && item.type === 'Coordinate') return item;
-else return new Coordinate(item);
-};
 const makeCoordinate = function (items) {
 return new Coordinate(items);
 };
@@ -148,6 +141,4 @@ export {
 makeCoordinate,
 requestCoordinate,
 releaseCoordinate,
-checkCoordinate,
-coordinatePoolLength,
 };

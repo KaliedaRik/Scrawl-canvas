@@ -138,9 +138,6 @@ return this;
 };
 const vectorPool = [];
 let vectorPoolCount = 0;
-const vectorPoolLength = function () {
-return `${vectorPool.length} (from ${vectorPoolCount} generated)`;
-}
 const requestVector = function (x, y, z) {
 if (!vectorPool.length) {
 vectorPool.push(new Vector());
@@ -153,10 +150,6 @@ return v
 const releaseVector = function (item) {
 if (item && item.type === 'Vector') vectorPool.push(item.zero());
 };
-const checkVector = function (item) {
-if (v && v.type === 'Vector') return item;
-else return new Vector(item);
-};
 const makeVector = function (items) {
 return new Vector(items);
 };
@@ -165,6 +158,4 @@ export {
 makeVector,
 requestVector,
 releaseVector,
-checkVector,
-vectorPoolLength,
 };

@@ -57,13 +57,31 @@ element.set({
 });
 
 
-// Create, and start, tickers and tweens
-let ticker = scrawl.makeTicker({
-    name: 'myTicker',
+// Create tickers - testing Ticker clone and packet functionality
+let modelTicker = scrawl.makeTicker({
+    name: 'modelTicker',
     cycles: 0,
     duration: '12s'
 });
 
+console.log(modelTicker.saveAsPacket());
+//    RESULT:
+//    [
+//        "modelTicker",
+//        "Ticker",
+//        "animationtickers",
+//        {
+//            "name":"modelTicker",
+//            "duration":"12s",
+//            "cycles":0
+//        }
+//    ]
+
+let ticker = modelTicker.clone({
+    name: 'myTicker',
+});
+
+// Create, and start, tweens - testing Tween clone and packet functionality
 scrawl.makeTween({
     name: 'myTween',
     targets: element,
@@ -101,6 +119,26 @@ scrawl.makeTween({
         }
     ]
 });
+
+console.log(scrawl.library.tween.mySecondClonedTween.saveAsPacket())
+//     RESULTS:
+//     [
+//         "mySecondClonedTween",
+//         "Tween",
+//         "tween",
+//         {
+//             "name":"mySecondClonedTween",
+//             "ticker":"mySecondClonedTween_ticker",
+//             "action":"~~~",
+//             "duration":"10s",
+//             "commenceAction":"~~~",
+//             "completeAction":"~~~",
+//             "targets":["mythirdelement"],
+//             "definitions":[
+//                 {"attribute":"roll","start":-40,"end":320}
+//             ]
+//         }
+//     ]
 
 
 // Build timeline actions

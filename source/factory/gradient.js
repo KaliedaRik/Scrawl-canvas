@@ -10,7 +10,11 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
+import { mergeOver, pushUnique } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
@@ -37,9 +41,23 @@ P.isAsset = false;
 P = baseMix(P);
 P = stylesMix(P);
 
+
+// ## Define default attributes
+let defaultAttributes = {};
+P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+
+// ## Packet management
+P.packetObjects = pushUnique(P.packetObjects, ['palette']);
+
+
+
 // ## Define getter, setter and deltaSetter functions
 
 // Nothing additional to define here
+
+
 
 // ## Define prototype functions
 

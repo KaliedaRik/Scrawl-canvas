@@ -109,6 +109,7 @@ description: '',
 isComponent: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.clone = defaultThisReturnFunction;
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -172,7 +173,6 @@ else removeItem(uiSubscribedElements, this.name);
 this.trackHere = bool;
 }
 };
-P.clone = defaultThisReturnFunction;
 P.setAsCurrentCanvas = function () {
 if (this.base) setCurrentCanvas(this);
 return this;

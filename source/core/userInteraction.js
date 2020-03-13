@@ -1,4 +1,10 @@
 // # Core user interaction
+
+// TODO - documentation
+
+
+
+// ## Imports
 import * as library from "./library.js";
 import { xt, xta, isa_dom, isa_fn, defaultNonReturnFunction } from "./utilities.js";
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "./document.js";
@@ -210,12 +216,6 @@ const actionCoreListeners = function (action) {
 const applyCoreResizeListener = function () {
 
     resizeAction();
-    mouseChanged = true;
-};
-
-const applyCoreMoveListener = function () {
-
-    moveAction();
     mouseChanged = true;
 };
 
@@ -487,7 +487,6 @@ export {
     startCoreListeners,
     stopCoreListeners,
     applyCoreResizeListener,
-    applyCoreMoveListener,
     applyCoreScrollListener,
     observeAndUpdate,
     makeDragZone,

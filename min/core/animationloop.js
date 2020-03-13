@@ -12,10 +12,12 @@ resortBatchAnimations = false;
 let floor = Math.floor,
 buckets = [];
 animate.forEach(name => {
-let obj = animation[name],
-order = floor(obj.order) || 0;
+let obj = animation[name];
+if (obj) {
+let order = floor(obj.order) || 0;
 if (!buckets[order]) buckets[order] = [];
 buckets[order].push(obj);
+}
 });
 animate_sorted = buckets.reduce((a, v) => a.concat(v), []);
 }

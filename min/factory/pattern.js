@@ -16,15 +16,15 @@ P.isArtefact = false;
 P.isAsset = false;
 P = baseMix(P);
 P = assetConsumerMix(P);
+let defaultAttributes = {
+repeat: 'repeat',
+};
+P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, []);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
 P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, ['asset']);
 P.packetFunctions = pushUnique(P.packetFunctions, []);
-let defaultAttributes = {
-repeat: 'repeat',
-};
-P.defs = mergeOver(P.defs, defaultAttributes);
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;

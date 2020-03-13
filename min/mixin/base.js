@@ -183,6 +183,7 @@ Promise.all(promises)
 else if (items.substring) return getPacket(items);
 else Promise.reject(new Error('Argument supplied for packet import is not a string or array of strings'));
 };
+P.actionPacketExclusions = ['Image', 'Sprite', 'Video', 'Canvas', 'Stack'];
 P.actionPacket = function (packet) {
 try {
 if (packet && packet.substring) {
@@ -195,6 +196,9 @@ catch (e) {
 throw new Error(`Failed to process packet due to JSON parsing error - ${e.message}`);
 }
 if (xta(name, type, lib, update)) {
+if (this.actionPacketExclusions.indexOf(type) >= 0) {
+throw new Error(`Failed to process packet - Stacks, Canvases and visual assets are excluded from the packet system`);
+}
 let obj = library[lib][name];
 if (obj) obj.set(update);
 else {
@@ -236,7 +240,7 @@ else throw new Error('Failed to process packet - JSON string does not represent 
 }
 else throw new Error('Failed to process packet - not a JSON string');
 }
-catch (e) { return e }
+catch (e) { console.log(e); return e }
 };
 P.actionPacketFunctions = function(obj, item) {
 let fItem = obj[item];

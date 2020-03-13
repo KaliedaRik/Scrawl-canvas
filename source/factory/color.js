@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { constructors } from '../core/library.js';
 import { mergeOver, xt, xtGet } from '../core/utilities.js';
 
@@ -88,6 +91,14 @@ let defaultAttributes = {
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+
+// ## Packet management
+
+// TODO
+
+
+
+// ## Define prototype functions
 
 // Overrides function in mixin/base.js
 P.get = function (item) {

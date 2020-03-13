@@ -1,4 +1,5 @@
 import { constructors } from '../core/library.js';
+import { mergeOver, pushUnique } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 const Gradient = function (items = {}) {
@@ -12,6 +13,9 @@ P.isArtefact = false;
 P.isAsset = false;
 P = baseMix(P);
 P = stylesMix(P);
+let defaultAttributes = {};
+P.defs = mergeOver(P.defs, defaultAttributes);
+P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 P.buildStyle = function (cell = {}) {
 if (cell) {
 let engine = cell.engine;

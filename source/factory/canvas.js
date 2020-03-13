@@ -10,6 +10,9 @@
 // #### Clone functionality
 
 // #### Kill functionality
+
+
+// ## Imports
 import { cell, constructors, artefact } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, xt, defaultThisReturnFunction } from '../core/utilities.js';
@@ -191,6 +194,15 @@ let defaultAttributes = {
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
+// ## Packet management
+
+// 
+
+// Clone functionality disabled
+P.clone = defaultThisReturnFunction;
+
+
+
 // ## Define attribute getters and setters
 let G = P.getters,
     S = P.setters,
@@ -295,10 +307,6 @@ S.trackHere = function(bool) {
 
 
 // ## Define prototype functions
-
-
-// Decided against canvas cloning - too much of an edge case to be worth the code.
-P.clone = defaultThisReturnFunction;
 
 // TODO - documentation
 P.setAsCurrentCanvas = function () {

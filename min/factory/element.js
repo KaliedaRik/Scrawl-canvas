@@ -1,5 +1,5 @@
 import { group, element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
-import { generateUuid, pushUnique, removeItem, xt, isa_obj, isa_dom, isa_boolean } from '../core/utilities.js';
+import { generateUuid, pushUnique, mergeOver, removeItem, xt, isa_obj, isa_dom, isa_boolean } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
@@ -39,6 +39,8 @@ P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
 P = domMix(P);
+let defaultAttributes = {};
+P.defs = mergeOver(P.defs, defaultAttributes);
 let S = P.setters;
 S.text = function (item) {
 if (isa_dom(this.domElement)) {

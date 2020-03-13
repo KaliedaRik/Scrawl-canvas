@@ -1,13 +1,19 @@
-
 // # Filter worker
 
 // A long-running web worker which, when not in use, gets stored in the filter pool defined in factory/filter.js
 
 
+// ## Imports
+
+// None required
+
+
+// ## Polyfills
 
 // TypedArray.slice() polyfill - for blur filter
+
 // - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/slice
- if (!Uint8Array.prototype.slice) {
+if (!Uint8Array.prototype.slice) {
     Object.defineProperty(Uint8Array.prototype, 'slice', {
         value: function (begin, end) {
             return new Uint8Array(Array.prototype.slice.call(this, begin, end));

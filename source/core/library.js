@@ -4,6 +4,13 @@
 
 // Scrawl-canvas exposes the library, and its sections, for import into other script files
 
+
+
+// ## Imports
+
+// No imports required
+
+
 // Current version
 const version = '8.0.0 alpha';
 
