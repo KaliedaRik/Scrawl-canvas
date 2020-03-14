@@ -479,8 +479,10 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 <span class="hljs-keyword">import</span> { makeAnchor } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/anchor.js'</span>;
+<span class="hljs-keyword">import</span> { scrawlNavigationHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
             
@@ -628,7 +630,7 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>All of the Set functions will check to see if an anchor object has been created/associated with the artefact and, if not, create one to accept the set values.</p>
+              <p>The following attributes can be included in the object passed to the artefact’s set() function:</p>
 
             </div>
             
@@ -641,7 +643,19 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>The following attributes can be included in the object passed to the artefact’s set() function:</p>
+              <ul>
+<li>anchorDescription</li>
+<li>anchorType</li>
+<li>anchorTarget</li>
+<li>anchorRel</li>
+<li>anchorReferrerPolicy</li>
+<li>anchorPing</li>
+<li>anchorHreflang</li>
+<li>anchorHref (required if the anchor is to work as a URL link to external web pages)</li>
+<li>anchorDownload</li>
+<li>anchorFocusAction</li>
+<li>anchorBlurAction</li>
+</ul>
 
             </div>
             
@@ -654,77 +668,66 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <ul>
-<li>anchorDescription</li>
-<li>anchorType</li>
-<li>anchorTarget</li>
-<li>anchorRel</li>
-<li>anchorReferrerPolicy</li>
-<li>anchorPing</li>
-<li>anchorHreflang</li>
-<li>anchorHref (required if the anchor is to work as a URL link to external web pages)</li>
-<li>anchorDownload</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
               <p>Also, the artefact’s set() function can include a single <strong>anchor</strong> attribute, whose value should be an object containing some of the above attribute key:value pairs</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    S.anchorDescription = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.description(item);
     };
     S.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.anchorType(item);
     };
     S.anchorTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.target(item);
     };
     S.anchorRel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.rel(item);
     };
     S.anchorReferrerPolicy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.referrerpolicy(item);
     };
     S.anchorPing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.ping(item);
     };
     S.anchorHreflang = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.hreflang(item);
     };
     S.anchorHref = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.href(item);
     };
     S.anchorDownload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.download(item);
+    };
+
+    S.anchorFocusAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.focusAction(item);
+    };
+
+    S.anchorBlurAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.blurAction(item);
     };
 
     S.anchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
@@ -736,11 +739,11 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>These functions handle adding an anchor object to an artefact, or rebuilding it, or deleting it from the artefact. Each artifact can have a maximum of one anchor object associated with it.</p>
 
@@ -753,8 +756,31 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         <span class="hljs-keyword">if</span> (!items.name) items.name = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-anchor`</span>;
         <span class="hljs-keyword">if</span> (!items.description) items.description = <span class="hljs-string">`Anchor link for <span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>`</span>;
 
+        items.host = <span class="hljs-keyword">this</span>;
+        items.hold = <span class="hljs-keyword">this</span>.getAnchorHold();
+
         <span class="hljs-keyword">this</span>.anchor = makeAnchor(items);
     };
+
+    P.getAnchorHold = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">let</span> entityHost = <span class="hljs-keyword">this</span>.currentHost;
+
+        <span class="hljs-keyword">if</span> (entityHost) {
+
+            <span class="hljs-keyword">if</span> (entityHost.type === <span class="hljs-string">'Canvas'</span>) <span class="hljs-keyword">return</span> entityHost.navigation;
+
+            <span class="hljs-keyword">if</span> (entityHost.type === <span class="hljs-string">'Cell'</span>) {
+
+                <span class="hljs-keyword">let</span> cellHost = (entityHost.currentHost) ? entityHost.currentHost : canvas[entityHost.host];
+
+                <span class="hljs-keyword">if</span> (cellHost &amp;&amp; cellHost.type === <span class="hljs-string">'Canvas'</span>) <span class="hljs-keyword">return</span> cellHost.navigation;
+            }
+        }
+        <span class="hljs-keyword">this</span>.dirtyAnchorHold = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">return</span> scrawlNavigationHold;
+    }
 
     P.rebuildAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
@@ -769,11 +795,11 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Function to pass a user click (or whatever event has been set up) on the artefact through to the anchor object, for action.</p>
 
@@ -787,11 +813,11 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

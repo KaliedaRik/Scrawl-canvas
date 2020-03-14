@@ -1,10 +1,10 @@
 import { constructors } from '../core/library.js';
 import { xt, xta, isa_obj, isa_number } from '../core/utilities.js';
-const Vector = function (x, y) {
+const Vector = function (x, y, z) {
 this.x = 0;
 this.y = 0;
 this.z = 0;
-if (xt(x)) this.set(x, y);
+if (xt(x)) this.set(x, y, z);
 return this;
 };
 let P = Vector.prototype = Object.create(Object.prototype);
@@ -140,18 +140,17 @@ const vectorPool = [];
 let vectorPoolCount = 0;
 const requestVector = function (x, y, z) {
 if (!vectorPool.length) {
-vectorPool.push(new Vector());
+vectorPool.push(new Vector(x, y, z));
 vectorPoolCount++;
 }
 let v = vectorPool.shift();
-v.set(x, y, z);
 return v
 };
 const releaseVector = function (item) {
 if (item && item.type === 'Vector') vectorPool.push(item.zero());
 };
-const makeVector = function (items) {
-return new Vector(items);
+const makeVector = function (x, y, z) {
+return new Vector(x, y, z);
 };
 constructors.Vector = Vector;
 export {

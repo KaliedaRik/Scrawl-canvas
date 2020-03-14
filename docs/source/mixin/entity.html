@@ -587,12 +587,7 @@
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.onEnter) clone.onEnter = <span class="hljs-keyword">this</span>.onEnter;
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.onLeave) clone.onLeave = <span class="hljs-keyword">this</span>.onLeave;
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.onDown) clone.onDown = <span class="hljs-keyword">this</span>.onDown;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.onUp) clone.onUp = <span class="hljs-keyword">this</span>.onUp;
-
-        <span class="hljs-keyword">if</span> (items.sharedState) clone.state = <span class="hljs-keyword">this</span>.state;
-
-        <span class="hljs-keyword">return</span> clone;
-    };</pre></div></div>
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.onUp) clone.onUp = <span class="hljs-keyword">this</span>.onUp;</pre></div></div>
             
         </li>
         
@@ -602,6 +597,49 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Shared state</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.sharedState) clone.state = <span class="hljs-keyword">this</span>.state;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Cloned anchors</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.anchor) {
+
+            items.anchor.host = clone;
+
+            <span class="hljs-keyword">if</span> (!xt(items.anchor.focusAction)) items.anchor.focusAction = <span class="hljs-keyword">this</span>.anchor.focusAction;
+            <span class="hljs-keyword">if</span> (!xt(items.anchor.blurAction)) items.anchor.blurAction = <span class="hljs-keyword">this</span>.anchor.blurAction;
+
+            clone.buildAnchor(items.anchor);
+
+            <span class="hljs-keyword">if</span> (!items.anchor.clickAction) clone.anchor.clickAction = <span class="hljs-keyword">this</span>.anchor.clickAction;
+        }
+
+        <span class="hljs-keyword">return</span> clone;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
 
@@ -614,11 +652,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -632,11 +670,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -651,11 +689,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -676,11 +714,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h2 id="define-functions-to-be-added-to-the-factory-prototype">Define functions to be added to the factory prototype</h2>
 
@@ -689,11 +727,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Overwrites function defined in mixin/base.js - takes into account State object attributes</p>
 
@@ -731,11 +769,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Overwrites function defined in mixin/base.js - takes into account State object attributes</p>
 
@@ -776,11 +814,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Overwrites function defined in mixin/base.js - takes into account State object attributes</p>
 
@@ -821,11 +859,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -858,11 +896,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -871,11 +909,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>CURRENTLY does not support filters on entitys</p>
 
@@ -897,11 +935,11 @@
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -946,27 +984,46 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPositionSubscribers) <span class="hljs-keyword">this</span>.updatePositionSubscribers();
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPositionSubscribers) <span class="hljs-keyword">this</span>.updatePositionSubscribers();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Anchor housekeeping</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor &amp;&amp; <span class="hljs-keyword">this</span>.dirtyAnchorHold) {
+
+            <span class="hljs-keyword">this</span>.dirtyAnchorHold = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">this</span>.buildAnchor(<span class="hljs-keyword">this</span>.anchor);
+        }
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-31">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -975,11 +1032,11 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>EVERY ENTITY FILE will need to define its own .cleanPathObject function</p>
 
@@ -990,11 +1047,11 @@
         </li>
         
         
-        <li id="section-33">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1060,11 +1117,11 @@
         </li>
         
         
-        <li id="section-34">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1099,11 +1156,11 @@
         </li>
         
         
-        <li id="section-35">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1114,11 +1171,11 @@
         </li>
         
         
-        <li id="section-36">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Clean and sort the Entity-level filters before sending them to the filter worker for application</p>
 
@@ -1133,11 +1190,11 @@
         </li>
         
         
-        <li id="section-37">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It’s also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the entity’s composite and alpha values</p>
 
@@ -1158,11 +1215,11 @@
         </li>
         
         
-        <li id="section-38">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img&gt; elements for use elsewhere in the Scrawl-canvas ecosystem.</p>
 
@@ -1181,11 +1238,11 @@
         </li>
         
         
-        <li id="section-39">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo canvas-020 for a setTimeout-based workaround.</p>
 
@@ -1226,11 +1283,11 @@
         </li>
         
         
-        <li id="section-40">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>save current host data into a set of vars, ready for restoration after web worker completes or fails</p>
 
@@ -1244,11 +1301,11 @@
         </li>
         
         
-        <li id="section-41">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>get and prepare a blank canvas for the filter operations</p>
 
@@ -1266,11 +1323,11 @@
         </li>
         
         
-        <li id="section-42">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Switch off fast stamp</p>
 
@@ -1282,11 +1339,11 @@
         </li>
         
         
-        <li id="section-43">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>stamp the entity onto the blank canvas</p>
 
@@ -1297,11 +1354,11 @@
         </li>
         
         
-        <li id="section-44">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>At this point we will send the contents of the host canvas over to the web worker, alongside details of the filters we wish to apply to it</p>
 
@@ -1314,11 +1371,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>if we’re using the entity as a stencil, copy the entity cell’s current display over the entity in the blank canvas</p>
 
@@ -1348,11 +1405,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>handle the web worker response</p>
 
@@ -1380,11 +1437,11 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>Where no filter is required, but we still want to stash the results</p>
 
@@ -1401,11 +1458,11 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1445,11 +1502,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1492,11 +1549,11 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

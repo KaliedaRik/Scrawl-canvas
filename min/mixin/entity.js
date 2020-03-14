@@ -48,6 +48,13 @@ if (this.onLeave) clone.onLeave = this.onLeave;
 if (this.onDown) clone.onDown = this.onDown;
 if (this.onUp) clone.onUp = this.onUp;
 if (items.sharedState) clone.state = this.state;
+if (items.anchor) {
+items.anchor.host = clone;
+if (!xt(items.anchor.focusAction)) items.anchor.focusAction = this.anchor.focusAction;
+if (!xt(items.anchor.blurAction)) items.anchor.blurAction = this.anchor.blurAction;
+clone.buildAnchor(items.anchor);
+if (!items.anchor.clickAction) clone.anchor.clickAction = this.anchor.clickAction;
+}
 return clone;
 };
 let G = P.getters,
@@ -181,6 +188,10 @@ this.cleanPathObject();
 this.dirtyCollision = true;
 }
 if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+if (this.anchor && this.dirtyAnchorHold) {
+this.dirtyAnchorHold = false;
+this.buildAnchor(this.anchor);
+}
 };
 P.cleanPathObject = defaultNonReturnFunction;
 P.draw = function (engine) {

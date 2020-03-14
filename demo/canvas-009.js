@@ -141,6 +141,10 @@ scrawl.makeBlock({
 
             return `ga('demoCanvasTracker.send', 'event', 'Outbound link', 'click', '${this.href}')`;
         },
+
+        // Include focus and blur actions, which will trigger the onEnter and onLeave functions (below) for visitors using non-mouse/touch navigation (for example: keyboard tabbing)
+        focusAction: true,
+        blurAction: true,
     },
 
     // Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas> element. Note that 'this' refers to the entity object, meaning the functions can be safely cloned into other entitys.
@@ -246,13 +250,16 @@ scrawl.makeBlock({
 // Additionally, it will update the &lt;canvas> element's title attribute (for tool tips) and its ARIA label value (for accessibility)
 
 // The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates 
-let interactionResults;
+let interactionResults = '';
 let interactions = function () {
 
     if (canvas.here.active) interactionResults = canvas.cascadeEventAction('move');
     else interactionResults = '';
 };
 scrawl.addListener('move', interactions, canvas.domElement);
+
+// To capture other user interaction with the &lt;a> DOM elements which, while being visually hidden, are still accessible - for instance when a user keyboard-tabs through the web page
+
 
 
 // Demonstrate entity-based anchor (href links) functionality
@@ -291,3 +298,5 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+console.log(scrawl.library);

@@ -103,6 +103,19 @@ const Canvas = function (items = {}) {
         // Accessibility
         if (!el.getAttribute('role')) el.setAttribute('role', 'img');
 
+        let navigation = document.createElement('nav');
+        navigation.id = `${this.name}-navigation`;
+        navigation.style.width = '0px';
+        navigation.style.height = '0px';
+        navigation.style.maxWidth = '0px';
+        navigation.style.maxHeight = '0px';
+        navigation.style.border = '0px';
+        navigation.style.padding = '0px';
+        navigation.style.margin = '0px';
+        navigation.style.overflow = 'hidden';
+        this.navigation = navigation;
+        el.parentNode.insertBefore(navigation, el.nextSibling);
+
         let textHold = document.createElement('div');
         textHold.id = `${this.name}-text-hold`;
         textHold.style.width = '0px';
@@ -471,10 +484,12 @@ P.demolish = function (removeDomElement = true) {
     setRootElementsSort();
 
     let el = this.domElement,
+        navigation = this.navigation,
         textHold = this.textHold,
         ariaLabel = this.ariaLabelElement,
         ariaDescription = this.ariaDescriptionElement;
 
+    navigation.parentNode.removeChild(navigation);
     textHold.parentNode.removeChild(textHold);
     ariaLabel.parentNode.removeChild(ariaLabel);
     ariaDescription.parentNode.removeChild(ariaDescription);

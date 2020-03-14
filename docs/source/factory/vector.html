@@ -409,13 +409,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Vector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Vector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) </span>{
 
     <span class="hljs-keyword">this</span>.x = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">this</span>.y = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">this</span>.z = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">if</span> (xt(x)) <span class="hljs-keyword">this</span>.set(x, y);
+    <span class="hljs-keyword">if</span> (xt(x)) <span class="hljs-keyword">this</span>.set(x, y, z);
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };</pre></div></div>
@@ -569,22 +569,8 @@ P.setFromArray = <span class="hljs-function"><span class="hljs-keyword">function
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };
 
-P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>if (Array.isArray(item)) item = item[0];</p>
+P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    
     <span class="hljs-keyword">if</span> (!isa_obj(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - setFromVector() arguments error: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(item)}</span>`</span>);
     
     <span class="hljs-keyword">let</span> {x, y, z} = item;
@@ -599,11 +585,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -660,11 +646,11 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -696,11 +682,11 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -714,11 +700,11 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -742,11 +728,11 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -764,11 +750,11 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -789,11 +775,11 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h2 id="vector-pool">Vector pool</h2>
 
@@ -802,11 +788,11 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>An attempt to reuse vectors rather than constantly creating and deleting them</p>
 
@@ -819,14 +805,12 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
 <span class="hljs-keyword">const</span> requestVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) </span>{
 
     <span class="hljs-keyword">if</span> (!vectorPool.length) {
-        vectorPool.push(<span class="hljs-keyword">new</span> Vector());
+        vectorPool.push(<span class="hljs-keyword">new</span> Vector(x, y, z));
 
         vectorPoolCount++;
     }
 
     <span class="hljs-keyword">let</span> v = vectorPool.shift();
-
-    v.set(x, y, z);
 
     <span class="hljs-keyword">return</span> v
 };
@@ -839,19 +823,19 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) </span>{
     
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Vector(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Vector(x, y, z);
 };
 
 constructors.Vector = Vector;

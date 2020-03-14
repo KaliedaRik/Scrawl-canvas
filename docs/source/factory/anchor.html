@@ -706,9 +706,9 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
 <span class="hljs-keyword">import</span> { scrawlNavigationHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_fn } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_fn, isa_dom } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;</pre></div></div>
             
@@ -726,7 +726,7 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Anchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-    
+
     <span class="hljs-keyword">this</span>.makeName(items.name);
     <span class="hljs-keyword">this</span>.register();
     
@@ -796,11 +796,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>The text that Scrawl-canvas will include between the anchor tags, when building the anchor. <strong>Always include a description</strong> for accessibility</p>
+              <p>Every anchor will belong to exactly one Artefact</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    description: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    host: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -811,9 +811,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>The following attributes are detailed in <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a</a> - they are (most of) the DOM element’s attributes</p>
+              <p>The text that Scrawl-canvas will include between the anchor tags, when building the anchor. <strong>Always include a description</strong> for accessibility</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    description: <span class="hljs-string">''</span>,</pre></div></div>
             
         </li>
         
@@ -824,9 +826,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <ul>
-<li>the HTML Anchor element ‘type’ attribute is stored in the Scrawl-canvas Anchor object using the key ‘anchorType’</li>
-</ul>
+              <p>The following attributes are detailed in <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a</a> - they are (most of) the DOM element’s attributes</p>
 
             </div>
             
@@ -838,6 +838,21 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <ul>
+<li>the HTML Anchor element ‘type’ attribute is stored in the Scrawl-canvas Anchor object using the key ‘anchorType’</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>Scrawl-canvas will build a link element and add it to the DOM, then invoke a click event on it when required to do so.</p>
 
@@ -855,26 +870,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>The <strong>clickAction</strong> attribute is a <strong><em>function which returns a string command</em></strong> which in turn gets attached to the anchor DOM element’s <strong>onclick</strong> attribute. Invoking the result is handled entirely by the browser (as is normal).</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>Example usage</p>
+              <p>The <strong>clickAction</strong> attribute is a <strong><em>function which returns a string command</em></strong> which in turn gets attached to the anchor DOM element’s <strong>onclick</strong> attribute. Invoking the result is handled entirely by the browser (as is normal).</p>
 
             </div>
             
@@ -887,7 +889,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>This <strong>doesn’t work!</strong> The browser will generate an error, rather than output an update to the console, when the user clicks on the canvas entity associated with the anchor (although navigation will still occur - the wikipedia page will open in a new browser tab):</p>
+              <p>Example usage</p>
 
             </div>
             
@@ -900,10 +902,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <pre><code>anchor: {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'wikipedia-box-link'</span>,
-    <span class="hljs-attr">href</span>: <span class="hljs-string">'https://en.wikipedia.org/wiki/Box'</span>,
-    <span class="hljs-attr">description</span>: <span class="hljs-string">'Link to the Wikipedia article on boxes (opens in new tab)'</span>,</code></pre>
+              <p>This <strong>doesn’t work!</strong> The browser will generate an error, rather than output an update to the console, when the user clicks on the canvas entity associated with the anchor (although navigation will still occur - the wikipedia page will open in a new browser tab):</p>
+
             </div>
             
         </li>
@@ -915,8 +915,10 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <pre><code>    clickAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'box clicked'</span>) },
-}</code></pre>
+              <pre><code>anchor: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'wikipedia-box-link'</span>,
+    <span class="hljs-attr">href</span>: <span class="hljs-string">'https://en.wikipedia.org/wiki/Box'</span>,
+    <span class="hljs-attr">description</span>: <span class="hljs-string">'Link to the Wikipedia article on boxes (opens in new tab)'</span>,</code></pre>
             </div>
             
         </li>
@@ -928,8 +930,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
-              <p>This <strong>works as expected</strong> - the function returns a string which can then be attached to the &lt;a&gt; DOM element’s <em>onclick</em> attribute:</p>
-
+              <pre><code>    clickAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'box clicked'</span>) },
+}</code></pre>
             </div>
             
         </li>
@@ -941,10 +943,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <pre><code>anchor: {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'wikipedia-box-link'</span>,
-    <span class="hljs-attr">href</span>: <span class="hljs-string">'https://en.wikipedia.org/wiki/Box'</span>,
-    <span class="hljs-attr">description</span>: <span class="hljs-string">'Link to the Wikipedia article on boxes (opens in new tab)'</span>,</code></pre>
+              <p>This <strong>works as expected</strong> - the function returns a string which can then be attached to the &lt;a&gt; DOM element’s <em>onclick</em> attribute:</p>
+
             </div>
             
         </li>
@@ -956,13 +956,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <pre><code>    clickAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">`console.log('box clicked')`</span> },
-},</code></pre>
+              <pre><code>anchor: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'wikipedia-box-link'</span>,
+    <span class="hljs-attr">href</span>: <span class="hljs-string">'https://en.wikipedia.org/wiki/Box'</span>,
+    <span class="hljs-attr">description</span>: <span class="hljs-string">'Link to the Wikipedia article on boxes (opens in new tab)'</span>,</code></pre>
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    clickAction: <span class="hljs-literal">null</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -973,9 +971,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
-
+              <pre><code>    clickAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">`console.log('box clicked')`</span> },
+},</code></pre>
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    clickAction: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -986,12 +986,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
-              <p>See Demo Canvas-009 for example of cloning Anchors (as part of cloning an entity)</p>
+              <p>We can instruct the anchor to add event listeners for focus and blur events using the <strong>focusAction</strong> and <strong>blurAction</strong> Boolean flags. When set to true, the ‘focus’ event listener will invoke the host entity’s <em>onEnter</em> function; the ‘blur’ event listener invokes the <em>onLeave</em> function. Default is to ignore these events</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'domElement'</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'clickAction'</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    focusAction: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">blurAction</span>: <span class="hljs-literal">false</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -1002,11 +1004,9 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'cl
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
-              <h2 id="define-attribute-getters-and-setters">Define attribute getters and setters</h2>
+              <h2 id="packet-management">Packet management</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters;</pre></div></div>
             
         </li>
         
@@ -1017,9 +1017,13 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'cl
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
-              <p>While the Scrawl-canvas anchor object keeps copies of all of its &lt;a&gt; DOM element’s attributes locally, they also need to be updated on that element. Most of the setter functions manage this using the anchor.update() helper function.</p>
+              <p>See Demo Canvas-009 for example of cloning Anchors (as part of cloning an entity)</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'domElement'</span>]);
+P.packetObjects = pushUnique(P.packetExclusions, [<span class="hljs-string">'host'</span>]);
+P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'clickAction'</span>]);</pre></div></div>
             
         </li>
         
@@ -1030,9 +1034,31 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'cl
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
-              <p>The artefact with which an anchor object is associated maps these attributes to itself as follows:</p>
+              <h2 id="define-attribute-getters-and-setters">Define attribute getters and setters</h2>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters;
+
+
+S.host = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">let</span> h = (item.substring) ? artefact[item] : item;
+
+    <span class="hljs-keyword">if</span> (h &amp;&amp; h.name) <span class="hljs-keyword">this</span>.host = h;
+};
+
+S.hold = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (isa_dom(item)) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; <span class="hljs-keyword">this</span>.hold) <span class="hljs-keyword">this</span>.hold.removeChild(<span class="hljs-keyword">this</span>.domElement);
+
+        <span class="hljs-keyword">this</span>.hold = item;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.hold.appendChild(<span class="hljs-keyword">this</span>.domElement);
+    }
+};</pre></div></div>
             
         </li>
         
@@ -1042,6 +1068,32 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'cl
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>While the Scrawl-canvas anchor object keeps copies of all of its &lt;a&gt; DOM element’s attributes locally, they also need to be updated on that element. Most of the setter functions manage this using the anchor.update() helper function.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>The artefact with which an anchor object is associated maps these attributes to itself as follows:</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <pre><code>anchor.description     -&gt; artefact.anchorDescription
 anchor.type            -&gt; artefact.anchorType
@@ -1057,11 +1109,11 @@ anchor.download        -&gt; artefact.anchorDownload</code></pre>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an ‘anchor’ attribute:</p>
 
@@ -1070,11 +1122,11 @@ anchor.download        -&gt; artefact.anchorDownload</code></pre>
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <pre><code>artefact.set({</code></pre>
             </div>
@@ -1082,11 +1134,11 @@ anchor.download        -&gt; artefact.anchorDownload</code></pre>
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <pre><code>    anchor: {
         <span class="hljs-attr">description</span>: <span class="hljs-string">'value'</span>,
@@ -1153,11 +1205,65 @@ S.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-57">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>S.focusAction = function (item) {</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">this</span>.focusAction = item;
+<span class="hljs-comment">// this.build();</span></code></pre><p>};</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>S.blurAction = function (item) {</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">this</span>.blurAction = item;
+<span class="hljs-comment">// this.build();</span></code></pre><p>};</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>These last setters do not follow previous behaviour because Scrawl-canvas anchor objects save the values for each under a different attribute key, compared to the DOM element’s attribute key:</p>
 
@@ -1166,11 +1272,11 @@ S.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-58">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <ul>
 <li>anchor.description -&gt; a.textContent - this is the text between the &lt;a&gt; element’s opening and closing tags</li>
@@ -1182,11 +1288,11 @@ S.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-59">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>TODO - need to add in additional actions: <strong>focusAction</strong> (for ‘onfocus’ events) and <strong>blurAction</strong> (for ‘onblur’ events) - these will help capture/control keyboard mediated tabbing through a web page. The idea is that when an &lt;a&gt; element becomes focussed via keyboard tabbing (or other assistive technology methods) then we will be able to cascade the activity back into Scrawl-canvas so appropriate (visual) responses can be made to indicate the event has happened. </p>
 
@@ -1210,11 +1316,11 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-60">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <h2 id="define-prototype-functions">Define prototype functions</h2>
 
@@ -1223,11 +1329,11 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-61">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>The <strong>build</strong> function builds the &lt;a&gt; element and adds it to the DOM</p>
 
@@ -1236,11 +1342,11 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-62">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>All Scrawl-canvas generated anchor links are kept in a hidden &lt;nav&gt; element (referenced by <em>scrawlNavigationHold</em>) which Scrawl-canvas automatically generates and adds to the top of the body element when it first runs. </p>
 
@@ -1249,11 +1355,11 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-63">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)</p>
 
@@ -1262,11 +1368,11 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-64">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>TODO: consider whether the top of the document is the best place to store hidden anchor elements. It may be better to store them in a nextChild element following the canvas/stack element where the artefact is being used?</p>
 
@@ -1274,7 +1380,7 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
             
             <div class="content"><div class='highlight'><pre>P.build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) scrawlNavigationHold.removeChild(<span class="hljs-keyword">this</span>.domElement);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; <span class="hljs-keyword">this</span>.hold) <span class="hljs-keyword">this</span>.hold.removeChild(<span class="hljs-keyword">this</span>.domElement);
 
     <span class="hljs-keyword">let</span> link = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'a'</span>);
 
@@ -1293,19 +1399,22 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.description) link.textContent = <span class="hljs-keyword">this</span>.description;
 
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.focusAction) link.addEventListener(<span class="hljs-string">'focus'</span>, (e) =&gt; <span class="hljs-keyword">this</span>.host.onEnter(), <span class="hljs-literal">false</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.blurAction) link.addEventListener(<span class="hljs-string">'blur'</span>, (e) =&gt; <span class="hljs-keyword">this</span>.host.onLeave(), <span class="hljs-literal">false</span>);
+
     <span class="hljs-keyword">this</span>.domElement = link;
 
-    scrawlNavigationHold.appendChild(link);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.hold) <span class="hljs-keyword">this</span>.hold.appendChild(link);
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-65">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>Internal function - update the DOM element attribute</p>
 
@@ -1319,11 +1428,11 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-66">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>To action a user click on an artifact with an associated anchor object, we generate a DOM MouseEvent originating from the anchor element which the browser can act on in the usual manner (browser/device dependent)</p>
 
@@ -1343,11 +1452,11 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-67">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1355,7 +1464,7 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
             
             <div class="content"><div class='highlight'><pre>P.demolish = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) scrawlNavigationHold.removeChild(<span class="hljs-keyword">this</span>.domElement);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; <span class="hljs-keyword">this</span>.hold) <span class="hljs-keyword">this</span>.hold.removeChild(<span class="hljs-keyword">this</span>.domElement);
 
     <span class="hljs-keyword">this</span>.deregister();
 };</pre></div></div>
@@ -1363,11 +1472,11 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-68">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

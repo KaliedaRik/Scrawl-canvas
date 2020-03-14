@@ -99,7 +99,21 @@ export default function (P = {}) {
         if (this.onDown) clone.onDown = this.onDown;
         if (this.onUp) clone.onUp = this.onUp;
 
+        // Shared state
         if (items.sharedState) clone.state = this.state;
+
+        // Cloned anchors
+        if (items.anchor) {
+
+            items.anchor.host = clone;
+
+            if (!xt(items.anchor.focusAction)) items.anchor.focusAction = this.anchor.focusAction;
+            if (!xt(items.anchor.blurAction)) items.anchor.blurAction = this.anchor.blurAction;
+
+            clone.buildAnchor(items.anchor);
+
+            if (!items.anchor.clickAction) clone.anchor.clickAction = this.anchor.clickAction;
+        }
 
         return clone;
     };
@@ -322,6 +336,13 @@ export default function (P = {}) {
 
         // update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+
+        // Anchor housekeeping
+        if (this.anchor && this.dirtyAnchorHold) {
+
+            this.dirtyAnchorHold = false;
+            this.buildAnchor(this.anchor);
+        }
     };
 
 

@@ -1832,6 +1832,8 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.compile = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
 
+<span class="hljs-keyword">let</span> mystash = <span class="hljs-keyword">this</span>.stashOutput;
+
     <span class="hljs-keyword">this</span>.sortGroups();
     <span class="hljs-keyword">this</span>.prepareStamp();
 
@@ -1864,7 +1866,10 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
                 .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
 
                     next(counter + <span class="hljs-number">1</span>)
-                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+
+                        resolve(<span class="hljs-literal">true</span>);
+                    })
                     .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
                 })
                 .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
@@ -1888,13 +1893,16 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
                 <span class="hljs-keyword">if</span> (!self.noFilters &amp;&amp; self.filters &amp;&amp; self.filters.length) {
 
                     self.applyFilters()
-                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-
-                        resolve(<span class="hljs-literal">true</span>);
-                    })
+                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> self.stashOutputAction())
+                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
                     .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
                 }
-                <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">true</span>);
+                <span class="hljs-keyword">else</span> {
+
+                    self.stashOutputAction()
+                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                }
             }
         });
     };
@@ -2136,14 +2144,9 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
             engine.drawImage(element, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, curWidth, curHeight, ...paste);
             engine.restore();
 
-            <span class="hljs-keyword">if</span> (self.stashOutput) self.stashOutputAction();
             resolve(<span class="hljs-literal">true</span>);
         }
-        <span class="hljs-keyword">else</span> {
-
-            <span class="hljs-keyword">if</span> (self.stashOutput) self.stashOutputAction();
-            resolve(<span class="hljs-literal">false</span>);
-        }
+        <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">false</span>);
     });
 };</pre></div></div>
             
@@ -2280,6 +2283,24 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
+            <div class="content"><div class='highlight'><pre>P.stashOutputAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.stashOutput) {
+
+        <span class="hljs-keyword">this</span>.stashOutput = <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span> (<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> [cellWidth, cellHeight] = self.currentDimensions,
+                stashCoordinates = self.stashCoordinates,
+                stashDimensions = self.stashDimensions,
+                stashX = (stashCoordinates) ? stashCoordinates[<span class="hljs-number">0</span>] : <span class="hljs-number">0</span>, 
+                stashY = (stashCoordinates) ? stashCoordinates[<span class="hljs-number">1</span>] : <span class="hljs-number">0</span>, 
+                stashWidth = (stashDimensions) ? stashDimensions[<span class="hljs-number">0</span>] : cellWidth, 
+                stashHeight = (stashDimensions) ? stashDimensions[<span class="hljs-number">1</span>] : cellHeight;</pre></div></div>
+            
         </li>
         
         
@@ -2289,20 +2310,28 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
-              <p>KNOWN BUG - it takes time for the images to load the new dataURLs generated from canvas elements
-ANNOYING BUG - images generated from cells are (currently) buggy - a timing issue, I think</p>
+              <p>Keep the stashed image within bounds of the Cell’s dimensions.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.stashOutputAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
 
-    <span class="hljs-keyword">let</span> [cellWidth, cellHeight] = <span class="hljs-keyword">this</span>.currentDimensions,
-        stashCoordinates = <span class="hljs-keyword">this</span>.stashCoordinates,
-        stashDimensions = <span class="hljs-keyword">this</span>.stashDimensions,
-        stashX = (stashCoordinates) ? stashCoordinates[<span class="hljs-number">0</span>] : <span class="hljs-number">0</span>, 
-        stashY = (stashCoordinates) ? stashCoordinates[<span class="hljs-number">1</span>] : <span class="hljs-number">0</span>, 
-        stashWidth = (stashDimensions) ? stashDimensions[<span class="hljs-number">0</span>] : cellWidth, 
-        stashHeight = (stashDimensions) ? stashDimensions[<span class="hljs-number">1</span>] : cellHeight;</pre></div></div>
+                <span class="hljs-keyword">if</span> (stashWidth.substring) stashWidth = (<span class="hljs-built_in">parseFloat</span>(stashWidth) / <span class="hljs-number">100</span>) * cellWidth;
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(stashWidth) || stashWidth &lt;= <span class="hljs-number">0</span>) stashWidth = <span class="hljs-number">1</span>;
+                <span class="hljs-keyword">if</span> (stashWidth &gt; cellWidth) stashWidth = cellWidth;
+
+                <span class="hljs-keyword">if</span> (stashHeight.substring) stashHeight = (<span class="hljs-built_in">parseFloat</span>(stashHeight) / <span class="hljs-number">100</span>) * cellHeight;
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(stashHeight) || stashHeight &lt;= <span class="hljs-number">0</span>) stashHeight = <span class="hljs-number">1</span>;
+                <span class="hljs-keyword">if</span> (stashHeight &gt; cellHeight) stashHeight = cellHeight;
+
+                <span class="hljs-keyword">if</span> (stashX.substring) stashX = (<span class="hljs-built_in">parseFloat</span>(stashX) / <span class="hljs-number">100</span>) * cellWidth;
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(stashX) || stashX &lt; <span class="hljs-number">0</span>) stashX = <span class="hljs-number">0</span>;
+                <span class="hljs-keyword">if</span> (stashX + stashWidth &gt; cellWidth) stashX = cellWidth - stashWidth;
+
+                <span class="hljs-keyword">if</span> (stashY.substring) stashY = (<span class="hljs-built_in">parseFloat</span>(stashY) / <span class="hljs-number">100</span>) * cellHeight;
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(stashY) || stashY &lt; <span class="hljs-number">0</span>) stashY = <span class="hljs-number">0</span>;
+                <span class="hljs-keyword">if</span> (stashY + stashHeight &gt; cellHeight) stashY = cellHeight - stashHeight;
+            }</pre></div></div>
             
         </li>
         
@@ -2313,28 +2342,14 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
-              <p>Keep the stashed image within bounds of the Cell’s dimensions.</p>
+              <p>Get the imageData object, and stash it</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
-
-        <span class="hljs-keyword">if</span> (stashWidth.substring) stashWidth = (<span class="hljs-built_in">parseFloat</span>(stashWidth) / <span class="hljs-number">100</span>) * cellWidth;
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(stashWidth) || stashWidth &lt;= <span class="hljs-number">0</span>) stashWidth = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (stashWidth &gt; cellWidth) stashWidth = cellWidth;
-
-        <span class="hljs-keyword">if</span> (stashHeight.substring) stashHeight = (<span class="hljs-built_in">parseFloat</span>(stashHeight) / <span class="hljs-number">100</span>) * cellHeight;
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(stashHeight) || stashHeight &lt;= <span class="hljs-number">0</span>) stashHeight = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (stashHeight &gt; cellHeight) stashHeight = cellHeight;
-
-        <span class="hljs-keyword">if</span> (stashX.substring) stashX = (<span class="hljs-built_in">parseFloat</span>(stashX) / <span class="hljs-number">100</span>) * cellWidth;
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(stashX) || stashX &lt; <span class="hljs-number">0</span>) stashX = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (stashX + stashWidth &gt; cellWidth) stashX = cellWidth - stashWidth;
-
-        <span class="hljs-keyword">if</span> (stashY.substring) stashY = (<span class="hljs-built_in">parseFloat</span>(stashY) / <span class="hljs-number">100</span>) * cellHeight;
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(stashY) || stashY &lt; <span class="hljs-number">0</span>) stashY = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (stashY + stashHeight &gt; cellHeight) stashY = cellHeight - stashHeight;
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            self.engine.save();
+            self.engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            self.stashedImageData = self.engine.getImageData(stashX, stashY, stashWidth, stashHeight);
+            self.engine.restore();</pre></div></div>
             
         </li>
         
@@ -2345,11 +2360,47 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
-              <p>Get the imageData object, and stash it</p>
+              <p>Get the dataUrl String, updating the stashed &lt;img&gt; element with it</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.stashedImageData = <span class="hljs-keyword">this</span>.engine.getImageData(stashX, stashY, stashWidth, stashHeight);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (self.stashOutputAsAsset) {
+
+                self.stashOutputAsAsset = <span class="hljs-literal">false</span>;
+
+                <span class="hljs-keyword">let</span> sourcecanvas, mycanvas;
+                    
+                mycanvas = requestCell();
+                sourcecanvas = mycanvas.element;
+
+                sourcecanvas.width = stashWidth;
+                sourcecanvas.height = stashHeight;
+
+                mycanvas.engine.putImageData(self.stashedImageData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+                <span class="hljs-keyword">if</span> (!self.stashedImage) {
+
+                    <span class="hljs-keyword">let</span> newimg = self.stashedImage = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'img'</span>);
+
+                    newimg.id = <span class="hljs-string">`<span class="hljs-subst">${self.name}</span>-image`</span>;
+
+                    newimg.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+                        scrawlCanvasHold.appendChild(newimg);
+                        importDomImage(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
+                    };
+
+                    newimg.src = sourcecanvas.toDataURL();
+                }
+                <span class="hljs-keyword">else</span> self.stashedImage.src = sourcecanvas.toDataURL();
+
+                releaseCell(mycanvas);
+            }
+            resolve(<span class="hljs-literal">true</span>);
+        });
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">false</span>)
+};</pre></div></div>
             
         </li>
         
@@ -2360,56 +2411,9 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
-              <p>Get the dataUrl String, updating the stashed &lt;img&gt; element with it</p>
+              <p>Internal function - get a reference to the Cell’s current host (where it will be stamping itself as part of the Display cycle).</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.stashOutputAsAsset) {
-
-        <span class="hljs-keyword">this</span>.stashOutputAsAsset = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">let</span> cellFlag = <span class="hljs-literal">false</span>,
-            sourcecanvas, mycanvas;
-
-        <span class="hljs-keyword">if</span> (stashWidth !== cellWidth || stashHeight !== cellHeight) {
-
-            cellFlag = <span class="hljs-literal">true</span>;
-            
-            mycanvas = requestCell();
-            sourcecanvas = mycanvas.element;
-
-            sourcecanvas.width = stashWidth;
-            sourcecanvas.height = stashHeight;
-
-            mycanvas.engine.putImageData(<span class="hljs-keyword">this</span>.stashedImageData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        }
-        <span class="hljs-keyword">else</span> sourcecanvas = <span class="hljs-keyword">this</span>.element;
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.stashedImage) {
-
-            <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
-
-            <span class="hljs-keyword">let</span> newimg = <span class="hljs-keyword">this</span>.stashedImage = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'img'</span>);
-
-            newimg.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-image`</span>;
-
-            newimg.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-                scrawlCanvasHold.appendChild(newimg);
-                importDomImage(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
-            };
-
-            newimg.src = sourcecanvas.toDataURL();
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.stashedImage.src = sourcecanvas.toDataURL();
-
-        <span class="hljs-keyword">if</span> (cellFlag) {
-
-            releaseCell(mycanvas);
-        }
-    }
-    <span class="hljs-keyword">this</span>.stashOutput = <span class="hljs-literal">false</span>;
-};</pre></div></div>
             
         </li>
         
@@ -2419,19 +2423,6 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-89">&#182;</a>
-              </div>
-              <p>Internal function - get a reference to the Cell’s current host (where it will be stamping itself as part of the Display cycle).</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-90">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <p>Note that Cells can (in theory: not tested yet) belong to more than one Canvas object Group - they can be used in multiple &lt;canvas&gt; elements, thus the need to check which canvas is the current host at this point in the Display cycle.</p>
 
@@ -2454,11 +2445,11 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
         </li>
         
         
-        <li id="section-91">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
+                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <p>Internal function - keeping the Canvas object’s ‘base’ Cell’s .here attribute up-to-date with accurate mouse/pointer/touch cursor data</p>
 
@@ -2550,11 +2541,11 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
         </li>
         
         
-        <li id="section-92">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
               <p>Remove a Cell object from the Scrawl-canvas ecosystem by invoking its <strong>demolishCell</strong> function.</p>
 
@@ -2576,13 +2567,26 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
         </li>
         
         
+        <li id="section-92">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-92">&#182;</a>
+              </div>
+              <p>Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object’s base cell’s canvas. Will be invoked as part of the Display cycle ‘show’ functionality.</p>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-93">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
-              <p>Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object’s base cell’s canvas. Will be invoked as part of the Display cycle ‘show’ functionality.</p>
+              <p>Cells can emulate (most of) the functionality of entity artefacts, in that they can be positioned (start, handle, offset), rotated, scaled and flipped when they stamp themselves on the base cell. They can also be positioned using pivot, path and mouse functionality, and they can be dragged and dropped across the displayed &lt;canvas&gt; element as part of defined user interaction.</p>
 
             </div>
             
@@ -2594,19 +2598,6 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-94">&#182;</a>
-              </div>
-              <p>Cells can emulate (most of) the functionality of entity artefacts, in that they can be positioned (start, handle, offset), rotated, scaled and flipped when they stamp themselves on the base cell. They can also be positioned using pivot, path and mouse functionality, and they can be dragged and dropped across the displayed &lt;canvas&gt; element as part of defined user interaction.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-95">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
               <p>Note that Cells acting as a Canvas object’s ‘base’ cell will position themselves on the displayed Canvas in line with their Canvas controller’s ‘fit’ attribute, disregarding any positional information it may have been given.</p>
 
@@ -2635,11 +2626,11 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
         </li>
         
         
-        <li id="section-96">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-96">&#182;</a>
+                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
               <p>Internal function - get the Cell to update its .here information</p>
 
@@ -2674,11 +2665,11 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
         </li>
         
         
-        <li id="section-97">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-97">&#182;</a>
+                <a class="pilcrow" href="#section-96">&#182;</a>
               </div>
               <p>Returns an array of entity Objects responding ‘true’ to a checkHit call on them, for the Cell’s current .here attribute coordinates.</p>
 
@@ -2687,11 +2678,11 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
         </li>
         
         
-        <li id="section-98">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-98">&#182;</a>
+                <a class="pilcrow" href="#section-97">&#182;</a>
               </div>
               <p>Used in particular with Canvas.cascadeEventAction() function</p>
 
@@ -2732,11 +2723,11 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
         </li>
         
         
-        <li id="section-99">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-99">&#182;</a>
+                <a class="pilcrow" href="#section-98">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -2777,13 +2768,26 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
         </li>
         
         
+        <li id="section-99">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-99">&#182;</a>
+              </div>
+              <h2 id="cell-pool">Cell pool</h2>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-100">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-100">&#182;</a>
               </div>
-              <h2 id="cell-pool">Cell pool</h2>
+              <p>A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas&gt; element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.</p>
 
             </div>
             
@@ -2796,7 +2800,7 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-101">&#182;</a>
               </div>
-              <p>A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas&gt; element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.</p>
+              <p>To use a pool cell, request it using the exposed <strong>requestCell</strong> function.</p>
 
             </div>
             
@@ -2809,7 +2813,7 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-102">&#182;</a>
               </div>
-              <p>To use a pool cell, request it using the exposed <strong>requestCell</strong> function.</p>
+              <p>IT IS IMPERATIVE that requested cells are released once work with them completes, using the <strong>releaseCell</strong> function. Failure to do this leads to impaired performance as Javascript creates new canvas elements (often in multiples of 60 per second) which need to be garbage collected by the Javascript engine, thus leading to increasingly shoddy performance the longer the animation runs.</p>
 
             </div>
             
@@ -2821,19 +2825,6 @@ ANNOYING BUG - images generated from cells are (currently) buggy - a timing issu
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-103">&#182;</a>
-              </div>
-              <p>IT IS IMPERATIVE that requested cells are released once work with them completes, using the <strong>releaseCell</strong> function. Failure to do this leads to impaired performance as Javascript creates new canvas elements (often in multiples of 60 per second) which need to be garbage collected by the Javascript engine, thus leading to increasingly shoddy performance the longer the animation runs.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-104">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
               <p>The <strong>cellPoolLength</strong> function (supplied for debugging purposes) returns a string reporting on how many Cell objects are currently held in the pool, and how many have been created since the web page / Javascript first loaded.</p>
 
@@ -2855,11 +2846,11 @@ P.poolDefs = {
         </li>
         
         
-        <li id="section-105">
+        <li id="section-104">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-105">&#182;</a>
+                <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -2891,11 +2882,11 @@ P.poolDefs = {
         </li>
         
         
-        <li id="section-106">
+        <li id="section-105">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-106">&#182;</a>
+                <a class="pilcrow" href="#section-105">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

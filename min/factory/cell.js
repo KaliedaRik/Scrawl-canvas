@@ -452,6 +452,7 @@ resolve(true);
 });
 };
 P.compile = function(){
+let mystash = this.stashOutput;
 this.sortGroups();
 this.prepareStamp();
 if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
@@ -463,7 +464,9 @@ if (grp && grp.stamp) {
 grp.stamp()
 .then(res => {
 next(counter + 1)
-.then(res => resolve(true))
+.then(res => {
+resolve(true);
+})
 .catch(err => reject(false));
 })
 .catch(err => reject(false));
@@ -471,12 +474,15 @@ next(counter + 1)
 else {
 if (!self.noFilters && self.filters && self.filters.length) {
 self.applyFilters()
-.then(res => {
-resolve(true);
-})
+.then(res => self.stashOutputAction())
+.then(res => resolve(true))
 .catch(err => reject(false));
 }
-else resolve(true);
+else {
+self.stashOutputAction()
+.then(res => resolve(true))
+.catch(err => reject(false));
+}
 }
 });
 };
@@ -577,13 +583,9 @@ self.rotateDestination(engine, stamp[0], stamp[1]);
 }
 engine.drawImage(element, 0, 0, curWidth, curHeight, ...paste);
 engine.restore();
-if (self.stashOutput) self.stashOutputAction();
 resolve(true);
 }
-else {
-if (self.stashOutput) self.stashOutputAction();
-resolve(false);
-}
+else resolve(false);
 });
 };
 P.applyFilters = function () {
@@ -618,9 +620,13 @@ resolve(false);
 });
 };
 P.stashOutputAction = function () {
-let [cellWidth, cellHeight] = this.currentDimensions,
-stashCoordinates = this.stashCoordinates,
-stashDimensions = this.stashDimensions,
+let self = this;
+if (this.stashOutput) {
+this.stashOutput = false;
+return new Promise ((resolve, reject) => {
+let [cellWidth, cellHeight] = self.currentDimensions,
+stashCoordinates = self.stashCoordinates,
+stashDimensions = self.stashDimensions,
 stashX = (stashCoordinates) ? stashCoordinates[0] : 0,
 stashY = (stashCoordinates) ? stashCoordinates[1] : 0,
 stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth,
@@ -639,36 +645,34 @@ if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
 if (isNaN(stashY) || stashY < 0) stashY = 0;
 if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
 }
-this.stashedImageData = this.engine.getImageData(stashX, stashY, stashWidth, stashHeight);
-if (this.stashOutputAsAsset) {
-this.stashOutputAsAsset = false;
-let cellFlag = false,
-sourcecanvas, mycanvas;
-if (stashWidth !== cellWidth || stashHeight !== cellHeight) {
-cellFlag = true;
+self.engine.save();
+self.engine.setTransform(1, 0, 0, 1, 0, 0);
+self.stashedImageData = self.engine.getImageData(stashX, stashY, stashWidth, stashHeight);
+self.engine.restore();
+if (self.stashOutputAsAsset) {
+self.stashOutputAsAsset = false;
+let sourcecanvas, mycanvas;
 mycanvas = requestCell();
 sourcecanvas = mycanvas.element;
 sourcecanvas.width = stashWidth;
 sourcecanvas.height = stashHeight;
-mycanvas.engine.putImageData(this.stashedImageData, 0, 0);
-}
-else sourcecanvas = this.element;
-if (!this.stashedImage) {
-let self = this;
-let newimg = this.stashedImage = document.createElement('img');
-newimg.id = `${this.name}-image`;
+mycanvas.engine.putImageData(self.stashedImageData, 0, 0);
+if (!self.stashedImage) {
+let newimg = self.stashedImage = document.createElement('img');
+newimg.id = `${self.name}-image`;
 newimg.onload = function () {
 scrawlCanvasHold.appendChild(newimg);
 importDomImage(`#${newimg.id}`);
 };
 newimg.src = sourcecanvas.toDataURL();
 }
-else this.stashedImage.src = sourcecanvas.toDataURL();
-if (cellFlag) {
+else self.stashedImage.src = sourcecanvas.toDataURL();
 releaseCell(mycanvas);
 }
+resolve(true);
+});
 }
-this.stashOutput = false;
+else return Promise.resolve(false)
 };
 P.getHost = function () {
 if (this.currentHost) return this.currentHost;

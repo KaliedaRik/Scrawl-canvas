@@ -148,6 +148,7 @@ art.prepareStamp();
 });
 };
 P.stampAction = function (myCell) {
+let mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
 if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 let self = this;
 let next = (counter) => {
@@ -166,16 +167,30 @@ else {
 if (myCell) {
 if (!self.noFilters && self.filters && self.filters.length) {
 self.applyFilters(myCell)
-.then(img => {
-if (self.stashOutput) self.stashAction(img);
-resolve(true);
-})
+.then(img => self.stashAction(img))
+.then(res => resolve(true))
 .catch(err => reject(false));
 }
-else {
-if (self.stashOutput) self.stashAction(myCell.engine.getImageData(0, 0, myCell.element.width, myCell.element.height));
-resolve(true);
+else if (self.stashOutput) {
+let tempElement = myCell.element,
+tempEngine = myCell.engine,
+realEngine = (self.currentHost && self.currentHost.engine) ?
+self.currentHost.engine : false;
+if (realEngine) {
+realEngine.save();
+realEngine.globalCompositeOperation = 'source-over';
+realEngine.globalAlpha = 1;
+realEngine.setTransform(1, 0, 0, 1, 0, 0);
+realEngine.drawImage(tempElement, 0, 0);
+realEngine.restore();
+let tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
+self.stashAction(tempImg)
+.then(res => resolve(true))
+.catch(err => reject(false));
 }
+else reject ('Could not find real engine');
+}
+else resolve(true);
 }
 else resolve(true);
 }
@@ -235,32 +250,38 @@ reject(false);
 });
 };
 P.stashAction = function (img) {
-if (!img) return false;
+if (!img) return Promise.reject('No image data supplied to stashAction');
+if (this.stashOutput) {
 this.stashOutput = false;
-let [x, y, width, height] = this.getCellCoverage(img);
+let self = this;
+return new Promise ((resolve, reject) => {
+let [x, y, width, height] = self.getCellCoverage(img);
 let myCell = requestCell(),
 myEngine = myCell.engine,
 myElement = myCell.element;
 myElement.width = width;
 myElement.height = height;
 myEngine.putImageData(img, -x, -y);
-this.stashedImageData = myEngine.getImageData(0, 0, width, height);
-if (this.stashOutputAsAsset) {
-this.stashOutputAsAsset = false;
-if (!this.stashedImage) {
-let self = this;
-let newimg = this.stashedImage = document.createElement('img');
-newimg.id = `${this.name}-groupimage`;
+self.stashedImageData = myEngine.getImageData(0, 0, width, height);
+if (self.stashOutputAsAsset) {
+self.stashOutputAsAsset = false;
+if (!self.stashedImage) {
+let newimg = self.stashedImage = document.createElement('img');
+newimg.id = `${self.name}-groupimage`;
 newimg.onload = function () {
 scrawlCanvasHold.appendChild(newimg);
 importDomImage(`#${newimg.id}`);
 };
 newimg.src = myElement.toDataURL();
 }
-else this.stashedImage.src = myElement.toDataURL();
+else self.stashedImage.src = myElement.toDataURL();
 }
 releaseCell(myCell);
+resolve(true);
+});
 }
+else return Promise.resolve(false);
+};
 P.getCellCoverage = function (img) {
 let width = img.width,
 height = img.height,

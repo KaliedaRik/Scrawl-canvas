@@ -1017,6 +1017,8 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>P.stampAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) </span>{
 
+<span class="hljs-keyword">let</span> mystash = (<span class="hljs-keyword">this</span>.currentHost &amp;&amp; <span class="hljs-keyword">this</span>.currentHost.stashOutput) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyFilters || !<span class="hljs-keyword">this</span>.currentFilters) <span class="hljs-keyword">this</span>.cleanFilters();
 
     <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;</pre></div></div>
@@ -1072,19 +1074,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
                     <span class="hljs-keyword">if</span> (!self.noFilters &amp;&amp; self.filters &amp;&amp; self.filters.length) {
 
                         self.applyFilters(myCell)
-                        .then(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> {
-
-                            <span class="hljs-keyword">if</span> (self.stashOutput) self.stashAction(img);
-                            resolve(<span class="hljs-literal">true</span>);
-                        })
+                        .then(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> self.stashAction(img))
+                        .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
                         .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
                     }
-                    <span class="hljs-keyword">else</span> {
-
-                        <span class="hljs-keyword">if</span> (self.stashOutput) self.stashAction(myCell.engine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, myCell.element.width, myCell.element.height));
-                        resolve(<span class="hljs-literal">true</span>);
-                    }
-                }</pre></div></div>
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (self.stashOutput) {</pre></div></div>
             
         </li>
         
@@ -1094,6 +1088,47 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>We set up things to draw the group on a pool cell if stashOutput set true - so now we have to paint it back into the real canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">let</span> tempElement = myCell.element,
+                            tempEngine = myCell.engine,
+                            realEngine = (self.currentHost &amp;&amp; self.currentHost.engine) ? 
+                                self.currentHost.engine : <span class="hljs-literal">false</span>;
+
+                        <span class="hljs-keyword">if</span> (realEngine) {
+
+                            realEngine.save();
+                            
+                            realEngine.globalCompositeOperation = <span class="hljs-string">'source-over'</span>;
+                            realEngine.globalAlpha = <span class="hljs-number">1</span>;
+                            realEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+                            realEngine.drawImage(tempElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                            
+                            realEngine.restore();
+
+                            <span class="hljs-keyword">let</span> tempImg = tempEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, tempElement.width, tempElement.height);
+
+                            self.stashAction(tempImg)
+                            .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+                            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                        }
+                        <span class="hljs-keyword">else</span> reject (<span class="hljs-string">'Could not find real engine'</span>);
+                    }
+                    <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">true</span>);
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Terminate the cascade and start the resolution collapse</p>
 
@@ -1107,11 +1142,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Start the artefact stamp cascade</p>
 
@@ -1123,11 +1158,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1138,11 +1173,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Clean and sort the Group-level filters before sending them to the filter worker for application</p>
 
@@ -1155,11 +1190,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>Determine if we have all the required resources to perform the filter operation and, if not, clean up and resolve</p>
 
@@ -1173,11 +1208,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It’s also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the Group’s composite and alpha values</p>
 
@@ -1201,11 +1236,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>Get handles to current and filter cell elements and engines</p>
 
@@ -1220,11 +1255,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>Action a request to use the filtered artefacts as a stencil</p>
 
@@ -1243,11 +1278,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>At this point we will send the contents of the filterHost canvas over to the web worker, alongside details of the filters we wish to apply to it</p>
 
@@ -1267,11 +1302,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>Copy the filter worker’s output back onto the filterHost canvas</p>
 
@@ -1287,11 +1322,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>On success, cleanup and resolve</p>
 
@@ -1313,71 +1348,15 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
-              </div>
-              <p>Internal function - creates an imageAsset object (and an &lt;img&gt; element which gets attached to the DOM document in the scrawlCanvasHold hidden &lt;div&gt; element) from the group’s entity’s output.</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <p>Note that, unlike the equivalent functionality for Cell and entity objects, the Group stashAction functionality seems to be working fine in “real time”</p>
+              <p>Internal function - creates an imageAsset object (and an &lt;img&gt; element which gets attached to the DOM document in the scrawlCanvasHold hidden &lt;div&gt; element) from the group’s entity’s output.</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.stashAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!img) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">this</span>.stashOutput = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">let</span> [x, y, width, height] = <span class="hljs-keyword">this</span>.getCellCoverage(img);
-
-    <span class="hljs-keyword">let</span> myCell = requestCell(),
-        myEngine = myCell.engine,
-        myElement = myCell.element;
-
-    myElement.width = width;
-    myElement.height = height;
-
-    myEngine.putImageData(img, -x, -y);
-
-    <span class="hljs-keyword">this</span>.stashedImageData = myEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.stashOutputAsAsset) {
-
-        <span class="hljs-keyword">this</span>.stashOutputAsAsset = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.stashedImage) {
-
-            <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
-
-            <span class="hljs-keyword">let</span> newimg = <span class="hljs-keyword">this</span>.stashedImage = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'img'</span>);
-
-            newimg.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-groupimage`</span>;
-
-            newimg.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-                scrawlCanvasHold.appendChild(newimg);
-                importDomImage(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
-            };
-
-            newimg.src = myElement.toDataURL();
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.stashedImage.src = myElement.toDataURL();
-    }
-    releaseCell(myCell);
-}</pre></div></div>
             
         </li>
         
@@ -1387,6 +1366,72 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>Note that, unlike the equivalent functionality for Cell and entity objects, the Group stashAction functionality seems to be working fine in “real time”</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.stashAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!img) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">'No image data supplied to stashAction'</span>);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.stashOutput) {
+
+        <span class="hljs-keyword">this</span>.stashOutput = <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span> (<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> [x, y, width, height] = self.getCellCoverage(img);
+
+            <span class="hljs-keyword">let</span> myCell = requestCell(),
+                myEngine = myCell.engine,
+                myElement = myCell.element;
+
+            myElement.width = width;
+            myElement.height = height;
+
+            myEngine.putImageData(img, -x, -y);
+
+            self.stashedImageData = myEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
+
+            <span class="hljs-keyword">if</span> (self.stashOutputAsAsset) {
+
+                self.stashOutputAsAsset = <span class="hljs-literal">false</span>;
+
+                <span class="hljs-keyword">if</span> (!self.stashedImage) {
+
+                    <span class="hljs-keyword">let</span> newimg = self.stashedImage = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'img'</span>);
+
+                    newimg.id = <span class="hljs-string">`<span class="hljs-subst">${self.name}</span>-groupimage`</span>;
+
+                    newimg.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+                        scrawlCanvasHold.appendChild(newimg);
+                        importDomImage(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
+                    };
+
+                    newimg.src = myElement.toDataURL();
+                }
+                <span class="hljs-keyword">else</span> self.stashedImage.src = myElement.toDataURL();
+            }
+            releaseCell(myCell);
+
+            resolve(<span class="hljs-literal">true</span>);
+        });
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">false</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1426,11 +1471,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>Artefacts should be added to, and removed from, the group object using the <strong>addArtefacts</strong> and <strong>removeArtefacts</strong> functions. The argument can be one or more artefact object’s name attribute, or the artefact object(s) itself.</p>
 
@@ -1479,11 +1524,11 @@ P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1523,11 +1568,11 @@ P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>Update all artefact objects using the <strong>updateArtefacts</strong> function. The supplied argument will be passed on to each artefact’s <em>setDelta</em> function.</p>
 
@@ -1542,11 +1587,11 @@ P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>Set all artefact objects using the <strong>setArtefacts</strong> function. The supplied argument will be passed on to each artefact’s <em>set</em> function.</p>
 
@@ -1561,11 +1606,11 @@ P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1586,11 +1631,11 @@ P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1611,11 +1656,11 @@ P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword"
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1635,11 +1680,11 @@ P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword"
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1655,11 +1700,11 @@ P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword"
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1701,11 +1746,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1730,26 +1775,13 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-65">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
-              </div>
-              <p>The <strong>getArtefactAt</strong> function checks to see if any of the group object’s artefacts are located at the supplied coordinates in the argument object. </p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
-              <p>The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function. </p>
+              <p>The <strong>getArtefactAt</strong> function checks to see if any of the group object’s artefacts are located at the supplied coordinates in the argument object. </p>
 
             </div>
             
@@ -1762,7 +1794,7 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
-              <p>Where no artefacts are present at that coordinate the function returns false.</p>
+              <p>The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function. </p>
 
             </div>
             
@@ -1775,7 +1807,7 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
-              <p>A <strong>hit report</strong> is a Javascript object with the following attributes:</p>
+              <p>Where no artefacts are present at that coordinate the function returns false.</p>
 
             </div>
             
@@ -1788,11 +1820,7 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
-              <ul>
-<li>.x - the x coordinate supplied in this functions argument object</li>
-<li>.y - the y coordinate supplied in this functions argument object</li>
-<li>.artefact - the Scrawl-canvas artefact object reporting the hit</li>
-</ul>
+              <p>A <strong>hit report</strong> is a Javascript object with the following attributes:</p>
 
             </div>
             
@@ -1804,6 +1832,23 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <ul>
+<li>.x - the x coordinate supplied in this functions argument object</li>
+<li>.y - the y coordinate supplied in this functions argument object</li>
+<li>.artefact - the Scrawl-canvas artefact object reporting the hit</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>This function forms part of the Scrawl-canvas library’s <strong>drag-and-drop</strong> functionality.</p>
 
@@ -1839,11 +1884,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>The <strong>getAllArtefactsAt</strong> function returns an array of hit reports from all of the group object’s artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.</p>
 
@@ -1852,11 +1897,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p>The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
 
@@ -1899,11 +1944,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>The <strong>getArtefactCollisions</strong> function returns an array of hit reports from all of the group object’s artefacts which are currently in collision with the <strong>sensor</strong> coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
 
@@ -1912,11 +1957,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>The argument must be either the artefact object itself, or its String name.</p>
 
@@ -1927,11 +1972,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>return empty array if no argument, or the argument is not an artefact, or the group is empty</p>
 
@@ -1944,11 +1989,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>Return empty array if the artefact argument has not been setup to check for collisions</p>
 
@@ -1963,11 +2008,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p>Get entity collision data</p>
 
@@ -1978,11 +2023,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>Winnow step 1: don’t check the entity itself, or any missing or malformed artefacts in the group</p>
 
@@ -1999,11 +2044,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>Winnow step 2: exclude all targets outside the artefact/target collision radius</p>
 
@@ -2035,11 +2080,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>Winnow step 3: perform hit checks on remaining targets - this will not retrieve targets entirely inside the artefact</p>
 
@@ -2057,11 +2102,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p>return filtered results</p>
 
@@ -2075,11 +2120,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

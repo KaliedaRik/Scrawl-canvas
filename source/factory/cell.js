@@ -770,6 +770,8 @@ P.clear = function () {
 // TODO - documentation
 P.compile = function(){
 
+let mystash = this.stashOutput;
+
     this.sortGroups();
     this.prepareStamp();
 
@@ -790,7 +792,10 @@ P.compile = function(){
                 .then(res => {
 
                     next(counter + 1)
-                    .then(res => resolve(true))
+                    .then(res => {
+
+                        resolve(true);
+                    })
                     .catch(err => reject(false));
                 })
                 .catch(err => reject(false));
@@ -802,13 +807,16 @@ P.compile = function(){
                 if (!self.noFilters && self.filters && self.filters.length) {
 
                     self.applyFilters()
-                    .then(res => {
-
-                        resolve(true);
-                    })
+                    .then(res => self.stashOutputAction())
+                    .then(res => resolve(true))
                     .catch(err => reject(false));
                 }
-                else resolve(true);
+                else {
+
+                    self.stashOutputAction()
+                    .then(res => resolve(true))
+                    .catch(err => reject(false));
+                }
             }
         });
     };
@@ -950,14 +958,9 @@ P.show = function () {
             engine.drawImage(element, 0, 0, curWidth, curHeight, ...paste);
             engine.restore();
 
-            if (self.stashOutput) self.stashOutputAction();
             resolve(true);
         }
-        else {
-
-            if (self.stashOutput) self.stashOutputAction();
-            resolve(false);
-        }
+        else resolve(false);
     });
 };
 
@@ -1017,88 +1020,87 @@ P.applyFilters = function () {
 // We store the generated imageData object into the Cell object's __stashedImageData__ attribute.
 
 // If we are also stashing an image, an &lt;img> element will be generated and stored in the Cell object's __stashedImage__ attribute. We also generate an imageAsset wrapper for the object that will have the name _cellname+'-image'_, which gets added to the assets section of the Scrawl-canvas library.
-
-// KNOWN BUG - it takes time for the images to load the new dataURLs generated from canvas elements
-// ANNOYING BUG - images generated from cells are (currently) buggy - a timing issue, I think
 P.stashOutputAction = function () {
 
-    let [cellWidth, cellHeight] = this.currentDimensions,
-        stashCoordinates = this.stashCoordinates,
-        stashDimensions = this.stashDimensions,
-        stashX = (stashCoordinates) ? stashCoordinates[0] : 0, 
-        stashY = (stashCoordinates) ? stashCoordinates[1] : 0, 
-        stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth, 
-        stashHeight = (stashDimensions) ? stashDimensions[1] : cellHeight;
+    let self = this;
 
-    // Keep the stashed image within bounds of the Cell's dimensions.
-    if (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
+    if (this.stashOutput) {
 
-        if (stashWidth.substring) stashWidth = (parseFloat(stashWidth) / 100) * cellWidth;
-        if (isNaN(stashWidth) || stashWidth <= 0) stashWidth = 1;
-        if (stashWidth > cellWidth) stashWidth = cellWidth;
+        this.stashOutput = false;
 
-        if (stashHeight.substring) stashHeight = (parseFloat(stashHeight) / 100) * cellHeight;
-        if (isNaN(stashHeight) || stashHeight <= 0) stashHeight = 1;
-        if (stashHeight > cellHeight) stashHeight = cellHeight;
+        return new Promise ((resolve, reject) => {
 
-        if (stashX.substring) stashX = (parseFloat(stashX) / 100) * cellWidth;
-        if (isNaN(stashX) || stashX < 0) stashX = 0;
-        if (stashX + stashWidth > cellWidth) stashX = cellWidth - stashWidth;
+            let [cellWidth, cellHeight] = self.currentDimensions,
+                stashCoordinates = self.stashCoordinates,
+                stashDimensions = self.stashDimensions,
+                stashX = (stashCoordinates) ? stashCoordinates[0] : 0, 
+                stashY = (stashCoordinates) ? stashCoordinates[1] : 0, 
+                stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth, 
+                stashHeight = (stashDimensions) ? stashDimensions[1] : cellHeight;
 
-        if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
-        if (isNaN(stashY) || stashY < 0) stashY = 0;
-        if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
+            // Keep the stashed image within bounds of the Cell's dimensions.
+            if (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
+
+                if (stashWidth.substring) stashWidth = (parseFloat(stashWidth) / 100) * cellWidth;
+                if (isNaN(stashWidth) || stashWidth <= 0) stashWidth = 1;
+                if (stashWidth > cellWidth) stashWidth = cellWidth;
+
+                if (stashHeight.substring) stashHeight = (parseFloat(stashHeight) / 100) * cellHeight;
+                if (isNaN(stashHeight) || stashHeight <= 0) stashHeight = 1;
+                if (stashHeight > cellHeight) stashHeight = cellHeight;
+
+                if (stashX.substring) stashX = (parseFloat(stashX) / 100) * cellWidth;
+                if (isNaN(stashX) || stashX < 0) stashX = 0;
+                if (stashX + stashWidth > cellWidth) stashX = cellWidth - stashWidth;
+
+                if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
+                if (isNaN(stashY) || stashY < 0) stashY = 0;
+                if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
+            }
+
+            // Get the imageData object, and stash it
+            self.engine.save();
+            self.engine.setTransform(1, 0, 0, 1, 0, 0);
+            self.stashedImageData = self.engine.getImageData(stashX, stashY, stashWidth, stashHeight);
+            self.engine.restore();
+
+            // Get the dataUrl String, updating the stashed &lt;img> element with it
+            if (self.stashOutputAsAsset) {
+
+                self.stashOutputAsAsset = false;
+
+                let sourcecanvas, mycanvas;
+                    
+                mycanvas = requestCell();
+                sourcecanvas = mycanvas.element;
+
+                sourcecanvas.width = stashWidth;
+                sourcecanvas.height = stashHeight;
+
+                mycanvas.engine.putImageData(self.stashedImageData, 0, 0);
+
+                if (!self.stashedImage) {
+
+                    let newimg = self.stashedImage = document.createElement('img');
+
+                    newimg.id = `${self.name}-image`;
+
+                    newimg.onload = function () {
+
+                        scrawlCanvasHold.appendChild(newimg);
+                        importDomImage(`#${newimg.id}`);
+                    };
+
+                    newimg.src = sourcecanvas.toDataURL();
+                }
+                else self.stashedImage.src = sourcecanvas.toDataURL();
+
+                releaseCell(mycanvas);
+            }
+            resolve(true);
+        });
     }
-
-    // Get the imageData object, and stash it
-    this.stashedImageData = this.engine.getImageData(stashX, stashY, stashWidth, stashHeight);
-
-    // Get the dataUrl String, updating the stashed &lt;img> element with it
-    if (this.stashOutputAsAsset) {
-
-        this.stashOutputAsAsset = false;
-
-        let cellFlag = false,
-            sourcecanvas, mycanvas;
-
-        if (stashWidth !== cellWidth || stashHeight !== cellHeight) {
-
-            cellFlag = true;
-            
-            mycanvas = requestCell();
-            sourcecanvas = mycanvas.element;
-
-            sourcecanvas.width = stashWidth;
-            sourcecanvas.height = stashHeight;
-
-            mycanvas.engine.putImageData(this.stashedImageData, 0, 0);
-        }
-        else sourcecanvas = this.element;
-
-        if (!this.stashedImage) {
-
-            let self = this;
-
-            let newimg = this.stashedImage = document.createElement('img');
-
-            newimg.id = `${this.name}-image`;
-
-            newimg.onload = function () {
-
-                scrawlCanvasHold.appendChild(newimg);
-                importDomImage(`#${newimg.id}`);
-            };
-
-            newimg.src = sourcecanvas.toDataURL();
-        }
-        else this.stashedImage.src = sourcecanvas.toDataURL();
-
-        if (cellFlag) {
-
-            releaseCell(mycanvas);
-        }
-    }
-    this.stashOutput = false;
+    else return Promise.resolve(false)
 };
 
 

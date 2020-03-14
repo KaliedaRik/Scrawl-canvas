@@ -1,6 +1,6 @@
-import { constructors } from '../core/library.js';
+import { constructors, artefact } from '../core/library.js';
 import { scrawlNavigationHold } from '../core/document.js';
-import { mergeOver, pushUnique, isa_fn } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_fn, isa_dom } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 const Anchor = function (items = {}) {
 this.makeName(items.name);
@@ -17,6 +17,7 @@ P.isArtefact = false;
 P.isAsset = false;
 P = baseMix(P);
 let defaultAttributes = {
+host: null,
 description: '',
 download: '',
 href: '',
@@ -27,11 +28,25 @@ rel: 'noreferrer',
 target: '_blank',
 anchorType: '',
 clickAction: null,
+focusAction: false,
+blurAction: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['domElement']);
+P.packetObjects = pushUnique(P.packetExclusions, ['host']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
 let S = P.setters;
+S.host = function (item) {
+let h = (item.substring) ? artefact[item] : item;
+if (h && h.name) this.host = h;
+};
+S.hold = function (item) {
+if (isa_dom(item)) {
+if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
+this.hold = item;
+if (this.domElement) this.hold.appendChild(this.domElement);
+}
+};
 S.download = function (item) {
 this.download = item;
 if (this.domElement) this.update('download');
@@ -75,7 +90,7 @@ if (this.domElement) this.domElement.setAttribute('onclick', item());
 }
 };
 P.build = function () {
-if (this.domElement) scrawlNavigationHold.removeChild(this.domElement);
+if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
 let link = document.createElement('a');
 link.id = this.name;
 if (this.download) link.setAttribute('download', this.download);
@@ -88,8 +103,10 @@ if (this.target) link.setAttribute('target', this.target);
 if (this.anchorType) link.setAttribute('type', this.anchorType);
 if (this.clickAction && isa_fn(this.clickAction)) link.setAttribute('onclick', this.clickAction());
 if (this.description) link.textContent = this.description;
+if (this.focusAction) link.addEventListener('focus', (e) => this.host.onEnter(), false);
+if (this.blurAction) link.addEventListener('blur', (e) => this.host.onLeave(), false);
 this.domElement = link;
-scrawlNavigationHold.appendChild(link);
+if (this.hold) this.hold.appendChild(link);
 };
 P.update = function (item) {
 if (this.domElement) this.domElement.setAttribute(item, this[item]);
@@ -103,7 +120,7 @@ cancelable: true
 return this.domElement.dispatchEvent(e);
 };
 P.demolish = function () {
-if (this.domElement) scrawlNavigationHold.removeChild(this.domElement);
+if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
 this.deregister();
 };
 const makeAnchor = function (items) {

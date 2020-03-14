@@ -265,6 +265,7 @@ const requestQuaternion = function (items) {
     let q = quaternionPool.shift();
 
     q.set(items);
+    
     return q
 };
 

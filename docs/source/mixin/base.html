@@ -738,7 +738,7 @@
             <div class="content"><div class='highlight'><pre>    P.clone = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
         <span class="hljs-keyword">let</span> myName = <span class="hljs-keyword">this</span>.name,
-            myPacket, myTicker;
+            myPacket, myTicker, myAnchor;
 
         <span class="hljs-keyword">this</span>.name = items.name || <span class="hljs-string">''</span>;</pre></div></div>
             
@@ -761,8 +761,22 @@
             <span class="hljs-keyword">this</span>.ticker = <span class="hljs-literal">null</span>;
             myPacket = <span class="hljs-keyword">this</span>.saveAsPacket();
             <span class="hljs-keyword">this</span>.ticker = myTicker;
-        }
-        <span class="hljs-keyword">else</span> myPacket = <span class="hljs-keyword">this</span>.saveAsPacket();
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Everything else</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> myPacket = <span class="hljs-keyword">this</span>.saveAsPacket();
 
         <span class="hljs-keyword">this</span>.name = myName;
 
@@ -788,26 +802,13 @@
         </li>
         
         
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p><strong>Packets</strong> are Scrawl-canvas’s way of generating and consuming SC object data, both locally and over a network. A packet is a formatted JSON String which can be captured in a variable or saved to a text file.</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>The packet format is as follows:</p>
+              <p><strong>Packets</strong> are Scrawl-canvas’s way of generating and consuming SC object data, both locally and over a network. A packet is a formatted JSON String which can be captured in a variable or saved to a text file.</p>
 
             </div>
             
@@ -820,7 +821,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <pre><code><span class="hljs-string">"[object-name, object-type, object's-library-section, {object-data-key:value-pairs}]"</span></code></pre>
+              <p>The packet format is as follows:</p>
+
             </div>
             
         </li>
@@ -832,10 +834,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <ul>
-<li>Use <strong>saveAsPacket()</strong> to get a stringified representation of a Scrawl-canvas object, which can then be consumed by other SC objects at a later date.</li>
-</ul>
-
+              <pre><code><span class="hljs-string">"[object-name, object-type, object's-library-section, {object-data-key:value-pairs}]"</span></code></pre>
             </div>
             
         </li>
@@ -848,7 +847,7 @@
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <ul>
-<li>Use <strong>actionPacket(‘packet-string’)</strong> to apply a previously saved packet to an existing SC object, or to create a new SC object from the packet if it doesn’t exist already</li>
+<li>Use <strong>saveAsPacket()</strong> to get a stringified representation of a Scrawl-canvas object, which can then be consumed by other SC objects at a later date.</li>
 </ul>
 
             </div>
@@ -863,7 +862,7 @@
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <ul>
-<li>Use <strong>importPacket(url)</strong> to retrieve a packet from a text file (normally kept remotely on a server); the function’s argument can be either the packet file’s url address, or an Array of such addresses.</li>
+<li>Use <strong>actionPacket(‘packet-string’)</strong> to apply a previously saved packet to an existing SC object, or to create a new SC object from the packet if it doesn’t exist already</li>
 </ul>
 
             </div>
@@ -877,7 +876,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>Using <em>JSON.stringify(object)</em>, or <em>object.toString()</em>, to generate String representations of SC objects is not recommended as they will forego the pre-processing that saveAsPacket performs to generate the packet String.</p>
+              <ul>
+<li>Use <strong>importPacket(url)</strong> to retrieve a packet from a text file (normally kept remotely on a server); the function’s argument can be either the packet file’s url address, or an Array of such addresses.</li>
+</ul>
 
             </div>
             
@@ -890,7 +891,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>Example:</p>
+              <p>Using <em>JSON.stringify(object)</em>, or <em>object.toString()</em>, to generate String representations of SC objects is not recommended as they will forego the pre-processing that saveAsPacket performs to generate the packet String.</p>
 
             </div>
             
@@ -903,8 +904,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <pre><code><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;
-canvas.setAsCurrentCanvas();</code></pre>
+              <p>Example:</p>
+
             </div>
             
         </li>
@@ -916,7 +917,8 @@ canvas.setAsCurrentCanvas();</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <pre><code><span class="hljs-keyword">let</span> box = scrawl.makeBlock({</code></pre>
+              <pre><code><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;
+canvas.setAsCurrentCanvas();</code></pre>
             </div>
             
         </li>
@@ -928,7 +930,7 @@ canvas.setAsCurrentCanvas();</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <pre><code>    name: <span class="hljs-string">'my-box'</span>,</code></pre>
+              <pre><code><span class="hljs-keyword">let</span> box = scrawl.makeBlock({</code></pre>
             </div>
             
         </li>
@@ -940,8 +942,7 @@ canvas.setAsCurrentCanvas();</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <pre><code>    startX: <span class="hljs-number">10</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">10</span>,</code></pre>
+              <pre><code>    name: <span class="hljs-string">'my-box'</span>,</code></pre>
             </div>
             
         </li>
@@ -953,8 +954,8 @@ canvas.setAsCurrentCanvas();</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <pre><code>    width: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,</code></pre>
+              <pre><code>    startX: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">10</span>,</code></pre>
             </div>
             
         </li>
@@ -966,7 +967,8 @@ canvas.setAsCurrentCanvas();</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <pre><code>    fillStyle: <span class="hljs-string">'red'</span>,</code></pre>
+              <pre><code>    width: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,</code></pre>
             </div>
             
         </li>
@@ -978,11 +980,7 @@ canvas.setAsCurrentCanvas();</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <pre><code>    onEnter: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        box.set({
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'pink'</span>,
-        });
-    },</code></pre>
+              <pre><code>    fillStyle: <span class="hljs-string">'red'</span>,</code></pre>
             </div>
             
         </li>
@@ -993,6 +991,22 @@ canvas.setAsCurrentCanvas();</code></pre>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <pre><code>    onEnter: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        box.set({
+            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'pink'</span>,
+        });
+    },</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <pre><code>    onLeave: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
         box.set({
@@ -1005,11 +1019,11 @@ canvas.setAsCurrentCanvas();</code></pre>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <pre><code><span class="hljs-keyword">let</span> boxPacket = box.saveAsPacket();</code></pre>
             </div>
@@ -1017,11 +1031,11 @@ canvas.setAsCurrentCanvas();</code></pre>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <pre><code><span class="hljs-built_in">console</span>.log(boxPacket);
 | [
@@ -1044,27 +1058,14 @@ canvas.setAsCurrentCanvas();</code></pre>
         </li>
         
         
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-comment">// delete the box</span>
-box.deregister()</code></pre>
-            </div>
-            
-        </li>
-        
-        
         <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <pre><code><span class="hljs-comment">// recreate the entity - we can invoke the function on any handy SC object without affecting that object</span>
-<span class="hljs-keyword">let</span> resurrectedBox = canvas.actionPacket(boxPacket);</code></pre>
+              <pre><code><span class="hljs-comment">// delete the box</span>
+box.deregister()</code></pre>
             </div>
             
         </li>
@@ -1075,6 +1076,19 @@ box.deregister()</code></pre>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// recreate the entity - we can invoke the function on any handy SC object without affecting that object</span>
+<span class="hljs-keyword">let</span> resurrectedBox = canvas.actionPacket(boxPacket);</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <pre><code><span class="hljs-comment">// recreate the entity - if we had saved the packet to a file on a server</span>
 <span class="hljs-keyword">let</span> fetchedBox = canvas.importPacket(<span class="hljs-string">'https://example.com/path/to/boxPacket.txt'</span>);</code></pre>
@@ -1089,28 +1103,13 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
-              </div>
-              <p>The <strong>saveAsPacket</strong> function accepts an items {key:value} object argument with the following (optional) attributes:</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
-              <ul>
-<li><strong>includeDefaults</strong> - either a boolean (default: false), or an array of attribute strings listing those attributes whose values should be included in the packet even if those values are the default values; setting this attribute to boolean true will include all of the Scrawl-canvas object’s attribute values in the (much larger) packet.</li>
-</ul>
+              <p>The <strong>saveAsPacket</strong> function accepts an items {key:value} object argument with the following (optional) attributes:</p>
 
             </div>
             
@@ -1122,6 +1121,21 @@ box.deregister()</code></pre>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <ul>
+<li><strong>includeDefaults</strong> - either a boolean (default: false), or an array of attribute strings listing those attributes whose values should be included in the packet even if those values are the default values; setting this attribute to boolean true will include all of the Scrawl-canvas object’s attribute values in the (much larger) packet.</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>Note: if the argument is supplied as a boolean ‘true’, code will create an items object with an attribute ‘includeDefaults’ set to true.</p>
 
@@ -1189,11 +1203,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>Start cascade down to factory to pick up factory-specific exclusions</p>
 
@@ -1208,11 +1222,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>Start cascade down to factory to complete the copy object’s build</p>
 
@@ -1223,11 +1237,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>Return a JSON string</p>
 
@@ -1239,11 +1253,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>Helper functions that get defined in various mixins and factories - localizing the functionality to meet the specific needs of that factory’s object instances</p>
 
@@ -1276,26 +1290,13 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-56">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
-              </div>
-              <p>Import and unpack a string representation of a factory object using the <strong>saveAsPacket</strong> function.</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
-              <p>Uses <strong>fetch</strong>, thus is an asynchronous process and returns a promise</p>
+              <p>Import and unpack a string representation of a factory object using the <strong>saveAsPacket</strong> function.</p>
 
             </div>
             
@@ -1307,6 +1308,19 @@ box.deregister()</code></pre>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>Uses <strong>fetch</strong>, thus is an asynchronous process and returns a promise</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>Once we have the packet, we can further action it using actionPacket() </p>
 
@@ -1329,11 +1343,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>Looks like we already have a packet for processing</p>
 
@@ -1347,11 +1361,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>This is not much of a test …</p>
 
@@ -1362,11 +1376,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>Looks like we have a packet for processing, but it’s malformed</p>
 
@@ -1379,11 +1393,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>Attempt to fetch the packet from a remote server</p>
 
@@ -1426,11 +1440,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>This function:</p>
 
@@ -1439,11 +1453,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <ol>
 <li>Unpacks the packet</li>
@@ -1458,11 +1472,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>The function can be called directly on any Scrawl-canvas object that uses the base.js mixin - which means that all differing functionality for various types of object have to remain here, in base.js</p>
 
@@ -1503,11 +1517,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>Stack-based artefacts need a DOM element that they can pass into the factory</p>
 
@@ -1544,11 +1558,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>For the main object</p>
 
@@ -1559,11 +1573,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>For artefact anchors - I know that anchors only have the one function to worry about, but doing it this way so I don’t forget how to approach it eg for SC sub-objects that have more than one user-settable function (eg timeline actions)</p>
 
@@ -1576,11 +1590,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>Anchor.setters.clickAction(arg) explicitly checks that the supplied arg is a function - if it isn’t (like in packet cases) then the attribute doesn’t get updated when we invoke <em>obj.set(update);</em> earlier in this function.</p>
 
@@ -1592,11 +1606,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>Anchors are a bit of an exception case because they add a user-interactive and yet otherwise untracked DOM element to the page, which has to be updated in its own sweet, special way…</p>
 
@@ -1609,11 +1623,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>Specific to Phrase entitys, which doesn’t include a simple way to set or update glyphStyle objects</p>
 
@@ -1658,11 +1672,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p>Native code raises non-terminal errors (because it is native code!) - so we dodge that bullet.</p>
 
@@ -1682,11 +1696,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>If the user/coder doesn’t supply a name value for a factory function, then Scrawl-canvas will generate a random name for the object to use.</p>
 
@@ -1703,11 +1717,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function’s type value. Some objects are stored in more than one place - for example the artefacts section will include Stack, Element and Canvas objects in addition to various Entity objects</p>
 
@@ -1741,11 +1755,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>Reverse what register() does</p>
 
@@ -1779,11 +1793,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1797,11 +1811,11 @@ box.deregister()</code></pre>
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

@@ -287,6 +287,8 @@ P.prepareStamp = function (myCell) {
 // TODO - documentation
 P.stampAction = function (myCell) {
 
+let mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
+
     if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
     let self = this;
@@ -318,18 +320,39 @@ P.stampAction = function (myCell) {
                     if (!self.noFilters && self.filters && self.filters.length) {
 
                         self.applyFilters(myCell)
-                        .then(img => {
-
-                            if (self.stashOutput) self.stashAction(img);
-                            resolve(true);
-                        })
+                        .then(img => self.stashAction(img))
+                        .then(res => resolve(true))
                         .catch(err => reject(false));
                     }
-                    else {
+                    else if (self.stashOutput) {
 
-                        if (self.stashOutput) self.stashAction(myCell.engine.getImageData(0, 0, myCell.element.width, myCell.element.height));
-                        resolve(true);
+                        // We set up things to draw the group on a pool cell if stashOutput set true - so now we have to paint it back into the real canvas
+                        let tempElement = myCell.element,
+                            tempEngine = myCell.engine,
+                            realEngine = (self.currentHost && self.currentHost.engine) ? 
+                                self.currentHost.engine : false;
+
+                        if (realEngine) {
+
+                            realEngine.save();
+                            
+                            realEngine.globalCompositeOperation = 'source-over';
+                            realEngine.globalAlpha = 1;
+                            realEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+                            realEngine.drawImage(tempElement, 0, 0);
+                            
+                            realEngine.restore();
+
+                            let tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
+
+                            self.stashAction(tempImg)
+                            .then(res => resolve(true))
+                            .catch(err => reject(false));
+                        }
+                        else reject ('Could not find real engine');
                     }
+                    else resolve(true);
                 }
 
                 // Terminate the cascade and start the resolution collapse
@@ -430,46 +453,56 @@ P.applyFilters = function (myCell) {
 // Note that, unlike the equivalent functionality for Cell and entity objects, the Group stashAction functionality seems to be working fine in "real time"
 P.stashAction = function (img) {
 
-    if (!img) return false;
+    if (!img) return Promise.reject('No image data supplied to stashAction');
 
-    this.stashOutput = false;
-    let [x, y, width, height] = this.getCellCoverage(img);
+    if (this.stashOutput) {
 
-    let myCell = requestCell(),
-        myEngine = myCell.engine,
-        myElement = myCell.element;
+        this.stashOutput = false;
 
-    myElement.width = width;
-    myElement.height = height;
+        let self = this;
 
-    myEngine.putImageData(img, -x, -y);
+        return new Promise ((resolve, reject) => {
 
-    this.stashedImageData = myEngine.getImageData(0, 0, width, height);
+            let [x, y, width, height] = self.getCellCoverage(img);
 
-    if (this.stashOutputAsAsset) {
+            let myCell = requestCell(),
+                myEngine = myCell.engine,
+                myElement = myCell.element;
 
-        this.stashOutputAsAsset = false;
+            myElement.width = width;
+            myElement.height = height;
 
-        if (!this.stashedImage) {
+            myEngine.putImageData(img, -x, -y);
 
-            let self = this;
+            self.stashedImageData = myEngine.getImageData(0, 0, width, height);
 
-            let newimg = this.stashedImage = document.createElement('img');
+            if (self.stashOutputAsAsset) {
 
-            newimg.id = `${this.name}-groupimage`;
+                self.stashOutputAsAsset = false;
 
-            newimg.onload = function () {
+                if (!self.stashedImage) {
 
-                scrawlCanvasHold.appendChild(newimg);
-                importDomImage(`#${newimg.id}`);
-            };
+                    let newimg = self.stashedImage = document.createElement('img');
 
-            newimg.src = myElement.toDataURL();
-        }
-        else this.stashedImage.src = myElement.toDataURL();
+                    newimg.id = `${self.name}-groupimage`;
+
+                    newimg.onload = function () {
+
+                        scrawlCanvasHold.appendChild(newimg);
+                        importDomImage(`#${newimg.id}`);
+                    };
+
+                    newimg.src = myElement.toDataURL();
+                }
+                else self.stashedImage.src = myElement.toDataURL();
+            }
+            releaseCell(myCell);
+
+            resolve(true);
+        });
     }
-    releaseCell(myCell);
-}
+    else return Promise.resolve(false);
+};
 
 // TODO - documentation
 P.getCellCoverage = function (img) {

@@ -55,7 +55,7 @@ return this;
 };
 P.clone = function (items = {}) {
 let myName = this.name,
-myPacket, myTicker;
+myPacket, myTicker, myAnchor;
 this.name = items.name || '';
 if (items.useNewTicker) {
 myTicker = this.ticker;

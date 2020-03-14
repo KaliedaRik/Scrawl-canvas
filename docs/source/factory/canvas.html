@@ -542,6 +542,19 @@
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!el.getAttribute(<span class="hljs-string">'role'</span>)) el.setAttribute(<span class="hljs-string">'role'</span>, <span class="hljs-string">'img'</span>);
 
+        <span class="hljs-keyword">let</span> navigation = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'nav'</span>);
+        navigation.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-navigation`</span>;
+        navigation.style.width = <span class="hljs-string">'0px'</span>;
+        navigation.style.height = <span class="hljs-string">'0px'</span>;
+        navigation.style.maxWidth = <span class="hljs-string">'0px'</span>;
+        navigation.style.maxHeight = <span class="hljs-string">'0px'</span>;
+        navigation.style.border = <span class="hljs-string">'0px'</span>;
+        navigation.style.padding = <span class="hljs-string">'0px'</span>;
+        navigation.style.margin = <span class="hljs-string">'0px'</span>;
+        navigation.style.overflow = <span class="hljs-string">'hidden'</span>;
+        <span class="hljs-keyword">this</span>.navigation = navigation;
+        el.parentNode.insertBefore(navigation, el.nextSibling);
+
         <span class="hljs-keyword">let</span> textHold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
         textHold.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-text-hold`</span>;
         textHold.style.width = <span class="hljs-string">'0px'</span>;
@@ -1375,10 +1388,12 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
     setRootElementsSort();
 
     <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement,
+        navigation = <span class="hljs-keyword">this</span>.navigation,
         textHold = <span class="hljs-keyword">this</span>.textHold,
         ariaLabel = <span class="hljs-keyword">this</span>.ariaLabelElement,
         ariaDescription = <span class="hljs-keyword">this</span>.ariaDescriptionElement;
 
+    navigation.parentNode.removeChild(navigation);
     textHold.parentNode.removeChild(textHold);
     ariaLabel.parentNode.removeChild(ariaLabel);
     ariaDescription.parentNode.removeChild(ariaDescription);

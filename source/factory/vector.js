@@ -18,13 +18,13 @@ import { xt, xta, isa_obj, isa_number } from '../core/utilities.js';
 
 
 // ## Vector constructor
-const Vector = function (x, y) {
+const Vector = function (x, y, z) {
 
     this.x = 0;
     this.y = 0;
     this.z = 0;
 
-    if (xt(x)) this.set(x, y);
+    if (xt(x)) this.set(x, y, z);
 
     return this;
 };
@@ -125,8 +125,6 @@ P.setFromArray = function (args) {
 
 P.setFromVector = function (item) {
 
-    // if (Array.isArray(item)) item = item[0];
-    
     if (!isa_obj(item)) throw new Error(`${this.name} Vector error - setFromVector() arguments error: ${JSON.stringify(item)}`);
     
     let {x, y, z} = item;
@@ -268,14 +266,12 @@ let vectorPoolCount = 0;
 const requestVector = function (x, y, z) {
 
     if (!vectorPool.length) {
-        vectorPool.push(new Vector());
+        vectorPool.push(new Vector(x, y, z));
 
         vectorPoolCount++;
     }
 
     let v = vectorPool.shift();
-
-    v.set(x, y, z);
 
     return v
 };
@@ -287,9 +283,9 @@ const releaseVector = function (item) {
 
 
 // ## Exported factory function
-const makeVector = function (items) {
+const makeVector = function (x, y, z) {
     
-    return new Vector(items);
+    return new Vector(x, y, z);
 };
 
 constructors.Vector = Vector;

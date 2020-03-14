@@ -157,7 +157,7 @@ export default function (P = {}) {
     P.clone = function (items = {}) {
 
         let myName = this.name,
-            myPacket, myTicker;
+            myPacket, myTicker, myAnchor;
 
         this.name = items.name || '';
 
@@ -169,6 +169,8 @@ export default function (P = {}) {
             myPacket = this.saveAsPacket();
             this.ticker = myTicker;
         }
+
+        // Everything else
         else myPacket = this.saveAsPacket();
 
         this.name = myName;

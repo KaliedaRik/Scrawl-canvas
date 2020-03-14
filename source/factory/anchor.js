@@ -75,16 +75,16 @@
 
 
 // ## Imports
-import { constructors } from '../core/library.js';
+import { constructors, artefact } from '../core/library.js';
 import { scrawlNavigationHold } from '../core/document.js';
-import { mergeOver, pushUnique, isa_fn } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_fn, isa_dom } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
 
 // ## Anchor constructor
 const Anchor = function (items = {}) {
-    
+
     this.makeName(items.name);
     this.register();
     
@@ -114,6 +114,8 @@ P = baseMix(P);
 // ## Define default attributes
 let defaultAttributes = {
 
+// Every anchor will belong to exactly one Artefact
+    host: null,
 
 // The text that Scrawl-canvas will include between the anchor tags, when building the anchor. __Always include a description__ for accessibility
     description: '',
@@ -158,6 +160,10 @@ let defaultAttributes = {
 //         clickAction: function () { return `console.log('box clicked')` },
 //     },
     clickAction: null,
+
+// We can instruct the anchor to add event listeners for focus and blur events using the __focusAction__ and __blurAction__ Boolean flags. When set to true, the 'focus' event listener will invoke the host entity's _onEnter_ function; the 'blur' event listener invokes the _onLeave_ function. Default is to ignore these events
+    focusAction: false,
+    blurAction: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -167,6 +173,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // See Demo Canvas-009 for example of cloning Anchors (as part of cloning an entity)
 P.packetExclusions = pushUnique(P.packetExclusions, ['domElement']);
+P.packetObjects = pushUnique(P.packetExclusions, ['host']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
 
 
@@ -174,6 +181,25 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
 // ## Define attribute getters and setters
 let S = P.setters;
 
+
+S.host = function (item) {
+
+    let h = (item.substring) ? artefact[item] : item;
+
+    if (h && h.name) this.host = h;
+};
+
+S.hold = function (item) {
+
+    if (isa_dom(item)) {
+
+        if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
+
+        this.hold = item;
+
+        if (this.domElement) this.hold.appendChild(this.domElement);
+    }
+};
 
 // While the Scrawl-canvas anchor object keeps copies of all of its &lt;a> DOM element's attributes locally, they also need to be updated on that element. Most of the setter functions manage this using the anchor.update() helper function.
 
@@ -253,6 +279,18 @@ S.anchorType = function (item) {
     if (this.domElement) this.update('type');
 };
 
+// S.focusAction = function (item) {
+
+//     this.focusAction = item;
+//     // this.build();
+// };
+
+// S.blurAction = function (item) {
+
+//     this.blurAction = item;
+//     // this.build();
+// };
+
 
 // These last setters do not follow previous behaviour because Scrawl-canvas anchor objects save the values for each under a different attribute key, compared to the DOM element's attribute key:
 
@@ -289,7 +327,7 @@ S.clickAction = function (item) {
 // TODO: consider whether the top of the document is the best place to store hidden anchor elements. It may be better to store them in a nextChild element following the canvas/stack element where the artefact is being used?
 P.build = function () {
 
-    if (this.domElement) scrawlNavigationHold.removeChild(this.domElement);
+    if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
 
     let link = document.createElement('a');
 
@@ -308,9 +346,12 @@ P.build = function () {
 
     if (this.description) link.textContent = this.description;
 
+    if (this.focusAction) link.addEventListener('focus', (e) => this.host.onEnter(), false);
+    if (this.blurAction) link.addEventListener('blur', (e) => this.host.onLeave(), false);
+
     this.domElement = link;
 
-    scrawlNavigationHold.appendChild(link);
+    if (this.hold) this.hold.appendChild(link);
 };
 
 
@@ -337,7 +378,7 @@ P.click = function () {
 // TODO - documentation
 P.demolish = function () {
 
-    if (this.domElement) scrawlNavigationHold.removeChild(this.domElement);
+    if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
 
     this.deregister();
 };

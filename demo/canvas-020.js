@@ -119,6 +119,19 @@ scrawl.makeFilter({
     method: 'invert',
 });
 
+scrawl.makeGroup({
+    name: 'temp-group',
+    host: canvas.base.name
+});
+
+scrawl.makeBlock({
+    name: 'temp-block',
+    group: 'temp-group',
+
+    start: [50,50],
+    dimensions: [40, 40],
+    fillStyle: 'red',
+});
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
@@ -136,6 +149,25 @@ let report = function () {
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();
+
+
+// Functionality to capture cell, group and entity images
+let captureImages = false;
+
+let imageCapture = function () {
+
+    if (captureImages) {
+
+        scrawl.createImageFromCell(canvas, true);
+        scrawl.createImageFromGroup(canvas, true);
+        scrawl.createImageFromEntity(block1, true);
+        scrawl.createImageFromEntity(block2, true);
+        scrawl.createImageFromEntity(wheel1, true);
+        scrawl.createImageFromEntity(wheel2, true);
+
+        captureImages = false;
+    }
+};
 
 
 // Add Picture entitys to the hold canvas, using the assets we will create from the main canvas
@@ -193,28 +225,13 @@ scrawl.makePicture({
 scrawl.makeRender({
 
     name: 'demo-animation',
+
+    // The Display cycle needs to run once before the entitys/group/cell are ready to have their images captured
+    afterCreated: () => captureImages = true,
+    
+    commence: imageCapture,
     afterShow: report,
 });
-
-
-// A function to trigger updates to the image assets we create from the entitys, group and cell
-let updateAssets = function () {
-    scrawl.createImageFromCell(canvas, true);
-    scrawl.createImageFromGroup(canvas, true);
-    scrawl.createImageFromEntity(block1, true);
-    scrawl.createImageFromEntity(block2, true);
-    scrawl.createImageFromEntity(wheel1, true);
-    scrawl.createImageFromEntity(wheel2, true);
-};
-
-/*
-Initial generation of image assets - the Picture entitys created above won't display until this happens
-
-KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements
-
-ANNOYING ISSUE - images generated from cells are (currently) buggy - a timing issue, I think
-*/
-setTimeout(updateAssets, 100);
 
 
 // Event listeners
@@ -266,8 +283,7 @@ let events = function () {
                     break;
             }
 
-            // Regenerate the image assets
-            setTimeout(updateAssets, 100);
+            captureImages = true;
         }
     };
 }();
@@ -275,3 +291,6 @@ scrawl.addNativeListener(['input'], events, '.controlItem');
 
 // Set the DOM input values
 document.querySelector('#target').value = '';
+
+console.log(scrawl.library);
+

@@ -822,6 +822,7 @@ scrawlCanvasHold.style.boxSizing = 'border-box';
 scrawlCanvasHold.style.position = 'absolute';
 scrawlCanvasHold.style.top = '-5000px';
 scrawlCanvasHold.style.left = '-5000px';
+scrawlCanvasHold.id = 'Scrawl-ARIA-default-hold';
 document.body.appendChild(scrawlCanvasHold);
 
 // #### Navigation area - canvas anchor links
@@ -831,6 +832,7 @@ let scrawlNavigationHold = document.createElement('nav');
 scrawlNavigationHold.style.position = 'absolute';
 scrawlNavigationHold.style.top = '-5000px';
 scrawlNavigationHold.style.left = '-5000px';
+scrawlNavigationHold.id = 'Scrawl-navigation-default-hold';
 document.body.prepend(scrawlNavigationHold);
 
 // TODO - documentation
