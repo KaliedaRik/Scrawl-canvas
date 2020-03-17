@@ -132,3 +132,5 @@ scrawl.makeRender({
     commence: stackCheck,
     afterShow: report,
 });
+
+console.log(scrawl.library);

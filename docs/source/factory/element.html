@@ -532,6 +532,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h2 id="packet-management">Packet management</h2>
+<p>Nothing additional to do here?</p>
 
             </div>
             
@@ -544,9 +545,16 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>TODO</p>
+              <h2 id="kill-functionality">Kill functionality</h2>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    removeItem(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
+
+    <span class="hljs-keyword">this</span>.domElement.remove();
+};</pre></div></div>
             
         </li>
         
@@ -685,7 +693,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>Removes the element’s wrapper from the Scrawl-canvas library.</p>
+              <p>Adds a new &lt;canvas&gt; element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element’s dimensions, positioning, scale and 3D rotational values)</p>
 
             </div>
             
@@ -698,7 +706,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>If the function is invoked with an argument which resolves to true, the DOM element itself will also be removed from the web page.</p>
+              <p>The function can accept a Javascript object argument containing key:value pairs which will be used to set up the new canvas’s attributes after it has been created.</p>
 
             </div>
             
@@ -711,19 +719,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>This function will not remove references to the element in animations objects, including tweens and actions. Nor will it remove references to it in Group objects except for its current host stack’s group.</p>
+              <p>To make the canvas look as if it is in front of the element, set the element’s opacity CSS attribute to 0</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.demolish = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">removeFromDom = false</span>) </span>{
-
-    <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement,
-        name = <span class="hljs-keyword">this</span>.name,
-        g = <span class="hljs-keyword">this</span>.group;
-
-    <span class="hljs-keyword">if</span> (g) g.removeArtefacts(name);
-
-    <span class="hljs-keyword">if</span> (el &amp;&amp; removeFromDom) el.parentNode.removeChild(el);</pre></div></div>
             
         </li>
         
@@ -733,73 +731,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>also needs to remove itself from subscribe arrays in pivot, mimic, path artefacts</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.pivot) removeItem(<span class="hljs-keyword">this</span>.pivot.pivoted, <span class="hljs-keyword">this</span>.name);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.path) removeItem(<span class="hljs-keyword">this</span>.path.pathed, <span class="hljs-keyword">this</span>.name);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.mimic) removeItem(<span class="hljs-keyword">this</span>.mimic.mimicked, <span class="hljs-keyword">this</span>.name);
-
-    removeItem(uiSubscribedElements, name);
-
-    <span class="hljs-keyword">delete</span> element[name];
-    removeItem(elementnames, name);
-
-    <span class="hljs-keyword">delete</span> artefact[name];
-    removeItem(artefactnames, name);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Adds a new &lt;canvas&gt; element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element’s dimensions, positioning, scale and 3D rotational values)</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>The function can accept a Javascript object argument containing key:value pairs which will be used to set up the new canvas’s attributes after it has been created.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>To make the canvas look as if it is in front of the element, set the element’s opacity CSS attribute to 0</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>This function is used when adding a Scrawl-canvas component to a stacked element.</p>
 
@@ -855,11 +786,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

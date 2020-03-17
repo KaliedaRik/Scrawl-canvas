@@ -29,19 +29,18 @@ let G = P.getters,
 S = P.setters;
 S.colors = function (item) {
 if (isa_obj(item)) {
+let f = this.factory;
+Object.entries(item).forEach(([pos, col]) => {
+if (col.substring) {
+f.convert(col);
+item[pos] = [f.r, f.g, f.b, f.a];
+}
+});
 this.colors = item;
 this.dirtyPalette = true;
 }
 };
 S.stops = defaultNonReturnFunction;
-P.set = function (items = {}) {
-let keys = Object.keys(items),
-i, iz, key;
-for (i = 0, iz = keys.length; i < iz; i++) {
-key = keys[i];
-this[key] = items[key];
-}
-};
 P.recalculateHold = [];
 P.recalculate = function () {
 let keys, i, iz, j, jz, cursor, diff,

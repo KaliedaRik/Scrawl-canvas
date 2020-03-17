@@ -33,6 +33,13 @@ regionRadius: 0
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['artefactBuckets', 'batchResort']);
+P.kill = function () {
+let myname = this.name;
+Object.entries(artefact).forEach(([name, art]) => {
+if (Array.isArray(art.groups) && art.groups.indexOf(myname) >= 0) removeItem(art.groups, myname);
+});
+return this.deregister();
+}
 let G = P.getters,
 S = P.setters;
 G.artefacts = function () {
@@ -407,16 +414,6 @@ let ent = entity[name];
 if (ent && ent.clearFilters) ent.clearFilters();
 });
 return this;
-};
-P.demolishGroup = function (removeFromDom) {
-let cp = [].concat(this.artefacts);
-cp.forEach(name => {
-let art = artefact[name];
-if (art && art.demolish) art.demolish(removeFromDom);
-});
-removeItem(groupnames, this.name);
-delete group[this.name];
-return true;
 };
 P.getArtefactAt = function (items) {
 let myCell = requestCell(),

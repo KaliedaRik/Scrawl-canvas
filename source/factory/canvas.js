@@ -13,9 +13,10 @@
 
 
 // ## Imports
-import { cell, constructors, artefact } from '../core/library.js';
+import { cell, constructors, artefact, group } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, xt, defaultThisReturnFunction } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, removeItem, xt, 
+    defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeState } from './state.js';
@@ -207,13 +208,40 @@ let defaultAttributes = {
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
-
-// 
-
-// Clone functionality disabled
+// ## Packet/Clone management
+// This functionality is disabled for Canvas objects
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
 
+
+// ## Kill functionality
+P.kill = function () {
+
+    // rootElements and uiSubscribedElements arrays
+    removeItem(rootElements, this.name);
+    setRootElementsSort();
+
+    removeItem(uiSubscribedElements, this.name);
+
+    // Groups
+    if (group[this.name]) group[this.name].kill();
+
+    // Base Cell
+    this.base.kill();
+
+    // DOM removals
+    this.navigation.remove();
+    this.textHold.remove();
+    this.ariaLabelElement.remove();
+    this.ariaDescriptionElement.remove();
+    this.domElement.remove();
+
+    // Scrawl-canvas library
+    return this.deregister();
+}
 
 
 // ## Define attribute getters and setters
@@ -457,50 +485,12 @@ P.killCell = function (item) {
 
     let mycell = (item.substring) ? cell[item] : item;
 
-    if (mycell) mycell.demolishCell();
+    if (mycell) mycell.kill();
 
     this.dirtyCells = true;
     return this;
 };
 
-
-// TODO - code up this functionality
-
-// In the DOM, we need to:
-// - remove the canvas element
-// - remove all the ARIA elements associated with it
-// - remove the textHold element associated with it
-
-// In Scrawl-canvas, we need to:
-// - remove the base cell associated with the canvas
-//     - which probably needs functionality coded up in factory/Cell.js
-//     - see if we need to add in checks for the existence of the object in tweens and pivot/mimic positioning functionality
-// - remove the canvas object from the library (artefact, canvas) - see if we need to overwrite core/base.js function
-P.demolish = function (removeDomElement = true) {
-
-    removeItem(uiSubscribedElements, this.name);
-
-    removeItem(rootElements, this.name);
-    setRootElementsSort();
-
-    let el = this.domElement,
-        navigation = this.navigation,
-        textHold = this.textHold,
-        ariaLabel = this.ariaLabelElement,
-        ariaDescription = this.ariaDescriptionElement;
-
-    navigation.parentNode.removeChild(navigation);
-    textHold.parentNode.removeChild(textHold);
-    ariaLabel.parentNode.removeChild(ariaLabel);
-    ariaDescription.parentNode.removeChild(ariaDescription);
-    if (removeDomElement) el.parentNode.removeChild(el);
-
-    this.killCell(this.base);
-
-    this.deregister();
-
-    return true;
-};
 
 // TODO - documentation
 P.clear = function () {

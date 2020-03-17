@@ -86,6 +86,22 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['artefactBuckets', 'batchResort']);
 
 
+// ## Kill functionality
+P.kill = function () {
+
+    let myname = this.name;
+
+    // Stack and canvas groups attribute
+    Object.entries(artefact).forEach(([name, art]) => {
+
+        if (Array.isArray(art.groups) && art.groups.indexOf(myname) >= 0) removeItem(art.groups, myname);
+    });
+
+    // Scrawl-canvas library
+    return this.deregister();
+}
+
+
 // ## Define attribute getters and setters
 let G = P.getters,
     S = P.setters;
@@ -287,7 +303,7 @@ P.prepareStamp = function (myCell) {
 // TODO - documentation
 P.stampAction = function (myCell) {
 
-let mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
+    let mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
 
     if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
@@ -707,24 +723,6 @@ P.clearFiltersFromEntitys = function () {
     });
     return this;
 };
-
-// TODO - documentation
-P.demolishGroup = function (removeFromDom) {
-
-    let cp = [].concat(this.artefacts);
-
-    cp.forEach(name => {
-
-        let art = artefact[name];
-
-        if (art && art.demolish) art.demolish(removeFromDom);
-    });
-
-    removeItem(groupnames, this.name);
-    delete group[this.name];
-    return true;
-};
-
 
 // The __getArtefactAt__ function checks to see if any of the group object's artefacts are located at the supplied coordinates in the argument object. 
 

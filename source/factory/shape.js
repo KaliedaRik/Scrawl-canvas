@@ -14,7 +14,7 @@
 
 // ## Imports
 import { constructors, radian, artefact } from '../core/library.js';
-import { mergeOver, xt, xta, addStrings, xtGet, defaultNonReturnFunction, capitalize, removeItem, pushUnique } from '../core/utilities.js';
+import { mergeOver, isa_boolean, xt, xta, addStrings, xtGet, defaultNonReturnFunction, capitalize, removeItem, pushUnique } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from './vector.js';
 import { makeCoordinate } from './coordinate.js';
@@ -94,7 +94,7 @@ let defaultAttributes = {
 
 
 // Current species supported, note that the parameters required by each species' 'make?' function differ:
-
+//
 // + default '' (makeShape)
 // + __line__ (makeLine) 
 // + __quadratic__ (makeQuadratic)
@@ -105,13 +105,13 @@ let defaultAttributes = {
 // + __polygon__ (makePolygon)
 // + __star__ (makeStar)
 // + __spiral__ (makeSpiral)
-
+//
 // TODO: The following species are under consideration - currently their 'make?' functions return a 'm0,0' Shape entity
-
+//
 // + __radialshape__ (makeRadialShape) - use path and repeat arguments; functionality will be to: swivel the path around a central point 'repeat' number of times (angle = 360/repeat) and turn the resulting radial shape into a single path value
-
+//
 // + __boxedshape__ (makeBoxedShape) - I'm a bit fuzzy about this one, but I want to somehow _box up_ (relativize) other Shape paths with box width/height values which can then be manipulated - allowing us to stretch the Shape path to match its box dimensions
-
+//
 // + __polyline__ (makePolyline) - a shape for freehand drawing. Should include a 'points' Array which could include [x,y] coordinates, or possibly any object containing x/y values (eg Vectors). The functionality would be to construct a long line (linear, possibly also quadratic for smoother lines) from the [points] data
     species: '',
 
@@ -288,6 +288,25 @@ P.finalizePacketOut = function (copy, items) {
     return copy;
 };
 
+// ## Kill functionality
+P.factoryKill = function () {
+
+    Object.entries(artefact).forEach(([name, art]) => {
+
+        if (art.name !== this.name) {
+
+            if (art.startControlPivot && art.startControlPivot.name === this.name) art.set({ startControlPivot: false});
+            if (art.controlPivot && art.controlPivot.name === this.name) art.set({ controlPivot: false});
+            if (art.endControlPivot && art.endControlPivot.name === this.name) art.set({ endControlPivot: false});
+            if (art.endPivot && art.endPivot.name === this.name) art.set({ endPivot: false});
+
+            if (art.startControlPath && art.startControlPath.name === this.name) art.set({ startControlPath: false});
+            if (art.controlPath && art.controlPath.name === this.name) art.set({ controlPath: false});
+            if (art.endControlPath && art.endControlPath.name === this.name) art.set({ endControlPath: false});
+            if (art.endPath && art.endPath.name === this.name) art.set({ endPath: false});
+        }
+    });
+};
 
 
 // ## Define getter, setter and deltaSetter functions
@@ -985,16 +1004,48 @@ P.deltaRectHelper = function (item, corners) {
 // TODO - documentation
 P.setControlHelper = function (item, attr, label) {
 
-    let oldControl = this[attr],
-        newControl = (item.substring) ? artefact[item] : item;
+    if (isa_boolean(item) && !item) {
 
-    if (newControl && newControl.isArtefact) {
+        this[attr] = null;
 
-        if (oldControl && oldControl.isArtefact && oldControl[`${label}Subscriber`]) removeItem(oldControl[`${label}Subscriber`], this.name);
+        if (attr.indexOf('Pivot') > 0) {
 
-        if (newControl[`${label}Subscriber`]) pushUnique(newControl[`${label}Subscriber`], this.name);
+            if (this[`${label}LockTo`] === 'pivot') {
 
-        this[attr] = newControl;
+                this[`${label}LockTo`] = 'start';
+
+                if (label === 'startControl') this.dirtyStartControlLock = true;
+                else if (label === 'control') this.dirtyControlLock = true;
+                else if (label === 'endControl') this.dirtyEndControlLock = true;
+                else this.dirtyEndLock = true;
+            }
+        }
+        else {
+
+            if (this[`${label}LockTo`] === 'path') {
+
+                this[`${label}LockTo`] = 'start';
+
+                if (label === 'startControl') this.dirtyStartControlLock = true;
+                else if (label === 'control') this.dirtyControlLock = true;
+                else if (label === 'endControl') this.dirtyEndControlLock = true;
+                else this.dirtyEndLock = true;
+            }
+        }
+    }
+    else if (item) {
+
+        let oldControl = this[attr],
+            newControl = (item.substring) ? artefact[item] : item;
+
+        if (newControl && newControl.isArtefact) {
+
+            if (oldControl && oldControl.isArtefact && oldControl[`${label}Subscriber`]) removeItem(oldControl[`${label}Subscriber`], this.name);
+
+            if (newControl[`${label}Subscriber`]) pushUnique(newControl[`${label}Subscriber`], this.name);
+
+            this[attr] = newControl;
+        }
     }
 };
 
@@ -1582,18 +1633,6 @@ P.cleanSpecies = function () {
             p = this.makeStarPath();
             break;
 
-        case 'radialshape' :
-            p = this.makeRadialShapePath();
-            break;
-
-        case 'boxedshape' :
-            p = this.makeBoxedShapePath();
-            break;
-
-        case 'polyline' :
-            p = this.makePolylinePath();
-            break;
-
         case 'spiral' :
             p = this.makeSpiralPath();
             break;
@@ -1958,33 +1997,6 @@ P.makeStarPath = function () {
 };
 
 
-// TODO: Use path and repeat arguments; functionality will be to: swivel the path around a central point 'repeat' number of times (angle = 360/repeat) and turn the resulting radial shape into a single path value
-P.makeRadialShapePath = function () {
-    
-    let a = 0;
-
-    return `m0,0`;
-};
-
-
-// TODO: I'm a bit fuzzy about this one, but I want to somehow _box up_ (relativize) other Shape paths with box width/height values which can then be manipulated - allowing us to stretch the Shape path to match its box dimensions
-P.makeBoxedShapePath = function () {
-    
-    let a = 0;
-
-    return `m0,0`;
-};
-
-
-// TODO: A shape for freehand drawing. Should include a 'points' Array which could include [x,y] coordinates, or possibly any object containing x/y values (eg Vectors). The functionality would be to construct a long line (linear, possibly also quadratic for smoother lines) from the [points] data
-P.makePolylinePath = function () {
-    
-    let a = 0;
-
-    return `m0,0`;
-};
-
-
 // Taken from this page - https://rosettacode.org/wiki/Archimedean_spiral#JavaScript
 
 // TODO: find a solution that uses far fewer sub-units
@@ -2091,24 +2103,6 @@ const makeStar = function (items = {}) {
     return new Shape(items);
 };
 
-const makeRadialShape = function (items = {}) {
-
-    items.species = 'radialshape';
-    return new Shape(items);
-};
-
-const makeBoxedShape = function (items = {}) {
-
-    items.species = 'boxedshape';
-    return new Shape(items);
-};
-
-const makePolyline = function (items = {}) {
-
-    items.species = 'polyline';
-    return new Shape(items);
-};
-
 const makeSpiral = function (items = {}) {
 
     items.species = 'spiral';
@@ -2129,8 +2123,5 @@ export {
     makeTetragon,
     makePolygon,
     makeStar,
-    makeRadialShape,
-    makeBoxedShape,
-    makePolyline,
-    makeSpiral
+    makeSpiral,
 };

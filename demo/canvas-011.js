@@ -384,17 +384,6 @@ scrawl.makeShape({
     method: 'clear',
 });
 
-scrawl.makeWheel({
-    fillStyle: 'red',
-    radius: 5,
-
-    handleX: 'center',
-    handleY: 'center',
-    
-    pivot: 'japan_fill',
-    lockTo: 'pivot',
-});
-
 // Change the fill and stroke styles on one of the blocks, and any block sharing that block's state
 scrawl.library.artefact.japan_fillAndDraw.set({
     fillStyle: 'blue',
@@ -439,3 +428,60 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+console.log(scrawl.library);
+
+// To test kill functionality
+let killArtefact = (name, time) => {
+
+    let groupname = 'mycanvas_base',
+        packet;
+
+    let checkGroupBucket = (name, groupname) => {
+
+        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
+        return (res.length) ? 'no' : 'yes';
+    };
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+        packet = scrawl.library.artefact[name].saveAsPacket();
+
+        scrawl.library.artefact[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(() => {
+
+                console.log(`${name} resurrected
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+            }, 100);
+        }, 100);
+    }, time);
+};
+
+killArtefact('japan_fill', 4000);
+killArtefact('japan_fillAndDraw', 6000);

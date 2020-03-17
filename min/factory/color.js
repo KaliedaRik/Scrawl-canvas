@@ -1,5 +1,5 @@
-import { constructors } from '../core/library.js';
-import { mergeOver, xt, xtGet } from '../core/utilities.js';
+import { constructors, entity } from '../core/library.js';
+import { mergeOver, xt, xtGet, isa_obj } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 const Color = function (items = {}) {
 this.makeName(items.name);
@@ -42,10 +42,24 @@ opaque: true,
 autoUpdate: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.kill = function () {
+let myname = this.name;
+Object.entries(entity).forEach(([name, ent]) => {
+let state = ent.state;
+if (state) {
+let fill = state.fillStyle,
+stroke = state.strokeStyle;
+if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
+if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+}
+});
+this.deregister();
+return this;
+};
 P.get = function (item) {
 if (!xt(item)) {
 if (this.opaque) return `rgb(${this.r || 0}, ${this.g || 0}, ${this.b || 0})`;
-else return `rgba(${this.r || 0}, ${this.g || 0}, ${this.b || 0}, {xtGet(this.a, 1)})`;
+else return `rgba(${this.r || 0}, ${this.g || 0}, ${this.b || 0}, ${this.a || 1})`;
 }
 else if (item === 'random') {
 this.generateRandomColor();
@@ -120,16 +134,22 @@ return this;
 };
 P.updateArray = ['r', 'g', 'b', 'a'];
 P.update = function () {
+if (!xt(this.rCurrent)) this.rCurrent = this.r;
+if (!xt(this.gCurrent)) this.gCurrent = this.g;
+if (!xt(this.bCurrent)) this.bCurrent = this.b;
+if (!xt(this.aCurrent)) this.aCurrent = this.a;
 let list = this.updateArray;
 if (this.rShift || this.gShift || this.bShift || this.aShift) {
 list.forEach(item => {
 let shift = this[item + 'Shift'];
 if (shift) {
+this[`${item}Current`] += shift;
 let col = this[item],
 min = this[`${item}Min`],
 max = this[`${item}Max`],
 bounce = this[`${item}Bounce`],
-temp = col + shift;
+current = this[`${item}Current`],
+temp = Math.floor(current + shift);
 if (temp > max || temp < min) {
 if (bounce) shift = -shift;
 else {

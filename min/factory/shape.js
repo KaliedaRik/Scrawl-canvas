@@ -1,5 +1,5 @@
 import { constructors, radian, artefact } from '../core/library.js';
-import { mergeOver, xt, xta, addStrings, xtGet, defaultNonReturnFunction, capitalize, removeItem, pushUnique } from '../core/utilities.js';
+import { mergeOver, isa_boolean, xt, xta, addStrings, xtGet, defaultNonReturnFunction, capitalize, removeItem, pushUnique } from '../core/utilities.js';
 import { requestVector, releaseVector } from './vector.js';
 import { makeCoordinate } from './coordinate.js';
 import baseMix from '../mixin/base.js';
@@ -162,6 +162,20 @@ if (inclusions.indexOf(key) < 0) delete copy[key];
 }
 });
 return copy;
+};
+P.factoryKill = function () {
+Object.entries(artefact).forEach(([name, art]) => {
+if (art.name !== this.name) {
+if (art.startControlPivot && art.startControlPivot.name === this.name) art.set({ startControlPivot: false});
+if (art.controlPivot && art.controlPivot.name === this.name) art.set({ controlPivot: false});
+if (art.endControlPivot && art.endControlPivot.name === this.name) art.set({ endControlPivot: false});
+if (art.endPivot && art.endPivot.name === this.name) art.set({ endPivot: false});
+if (art.startControlPath && art.startControlPath.name === this.name) art.set({ startControlPath: false});
+if (art.controlPath && art.controlPath.name === this.name) art.set({ controlPath: false});
+if (art.endControlPath && art.endControlPath.name === this.name) art.set({ endControlPath: false});
+if (art.endPath && art.endPath.name === this.name) art.set({ endPath: false});
+}
+});
 };
 let S = P.setters,
 D = P.deltaSetters;
@@ -638,12 +652,35 @@ this[corner] = addStrings(this[corner], item);
 }, this);
 };
 P.setControlHelper = function (item, attr, label) {
+if (isa_boolean(item) && !item) {
+this[attr] = null;
+if (attr.indexOf('Pivot') > 0) {
+if (this[`${label}LockTo`] === 'pivot') {
+this[`${label}LockTo`] = 'start';
+if (label === 'startControl') this.dirtyStartControlLock = true;
+else if (label === 'control') this.dirtyControlLock = true;
+else if (label === 'endControl') this.dirtyEndControlLock = true;
+else this.dirtyEndLock = true;
+}
+}
+else {
+if (this[`${label}LockTo`] === 'path') {
+this[`${label}LockTo`] = 'start';
+if (label === 'startControl') this.dirtyStartControlLock = true;
+else if (label === 'control') this.dirtyControlLock = true;
+else if (label === 'endControl') this.dirtyEndControlLock = true;
+else this.dirtyEndLock = true;
+}
+}
+}
+else if (item) {
 let oldControl = this[attr],
 newControl = (item.substring) ? artefact[item] : item;
 if (newControl && newControl.isArtefact) {
 if (oldControl && oldControl.isArtefact && oldControl[`${label}Subscriber`]) removeItem(oldControl[`${label}Subscriber`], this.name);
 if (newControl[`${label}Subscriber`]) pushUnique(newControl[`${label}Subscriber`], this.name);
 this[attr] = newControl;
+}
 }
 };
 P.midInitActions = function (items) {
@@ -1019,15 +1056,6 @@ break;
 case 'star' :
 p = this.makeStarPath();
 break;
-case 'radialshape' :
-p = this.makeRadialShapePath();
-break;
-case 'boxedshape' :
-p = this.makeBoxedShapePath();
-break;
-case 'polyline' :
-p = this.makePolylinePath();
-break;
 case 'spiral' :
 p = this.makeSpiralPath();
 break;
@@ -1268,18 +1296,6 @@ myXoffset = Math.abs(myMin).toFixed(1);
 myPath = `m${myXoffset},0l${myPath}z`;
 return myPath;
 };
-P.makeRadialShapePath = function () {
-let a = 0;
-return `m0,0`;
-};
-P.makeBoxedShapePath = function () {
-let a = 0;
-return `m0,0`;
-};
-P.makePolylinePath = function () {
-let a = 0;
-return `m0,0`;
-};
 P.makeSpiralPath = function () {
 let loops = this.loops,
 loopIncrement = this.loopIncrement,
@@ -1345,18 +1361,6 @@ const makeStar = function (items = {}) {
 items.species = 'star';
 return new Shape(items);
 };
-const makeRadialShape = function (items = {}) {
-items.species = 'radialshape';
-return new Shape(items);
-};
-const makeBoxedShape = function (items = {}) {
-items.species = 'boxedshape';
-return new Shape(items);
-};
-const makePolyline = function (items = {}) {
-items.species = 'polyline';
-return new Shape(items);
-};
 const makeSpiral = function (items = {}) {
 items.species = 'spiral';
 return new Shape(items);
@@ -1372,8 +1376,5 @@ makeOval,
 makeTetragon,
 makePolygon,
 makeStar,
-makeRadialShape,
-makeBoxedShape,
-makePolyline,
-makeSpiral
+makeSpiral,
 };

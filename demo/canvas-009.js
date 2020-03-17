@@ -300,3 +300,138 @@ scrawl.makeRender({
 });
 
 console.log(scrawl.library);
+
+// To test artefact kill functionality
+let killArtefact = (name, anchorname, time, finishResurrection) => {
+
+    let groupname = 'mycanvas_base',
+        packet;
+
+    let checkGroupBucket = (name, groupname) => {
+
+        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
+        return (res.length) ? 'no' : 'yes';
+    };
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
+    anchor removed: ${(scrawl.library.anchor[anchorname]) ? 'no' : 'yes'}`);
+
+        packet = scrawl.library.artefact[name].saveAsPacket();
+
+        scrawl.library.artefact[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
+    anchor removed: ${(scrawl.library.anchor[anchorname]) ? 'no' : 'yes'}`);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(() => {
+
+                console.log(`${name} resurrected
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
+    anchor removed: ${(scrawl.library.anchor[anchorname]) ? 'no' : 'yes'}`);
+
+                finishResurrection();
+
+            }, 100);
+        }, 100);
+    }, time);
+};
+
+// We use the __canvas__ and __myTracker__ variables in our blocks' onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file's code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be 'undefined'. So we need to reset the block's 'on...' functions (in this module file's code) after the block has resurrected
+killArtefact('brick-in-marble', 'wikipedia-brick-link', 2000, () => {
+
+    scrawl.library.artefact['brick-in-marble'].set({
+
+        onEnter: function () {
+            this.set({ lineWidth: 30 });
+            canvas.set({
+                title: `${this.name} tile`,
+                label: this.get('anchorDescription'),
+            });
+            myTracker.send('event', 'Canvas Entity', 'hover start', `${this.name} ${this.type}`);
+        },
+        onLeave: function () {
+            this.set({ lineWidth: 20 });
+            canvas.set({
+                title: '',
+                label: `${canvas.name} canvas element`,
+            });
+            myTracker.send('event', 'Canvas Entity', 'hover end', `${this.name} ${this.type}`);
+        },
+        onUp: function () {
+            myTracker.send('event', 'Canvas Entity Link', 'click', `${this.name} ${this.type} ${this.anchor.href}`);
+            this.clickAnchor();
+        },
+    });
+});
+
+// To test styles (Pattern) kill functionality
+let killStyle = (name, time, finishResurrection) => {
+
+    let packet;
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from styles: ${(scrawl.library.styles[name]) ? 'no' : 'yes'}
+    removed from stylesnames: ${(scrawl.library.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
+
+        packet = scrawl.library.styles[name].saveAsPacket();
+
+        scrawl.library.styles[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from styles: ${(scrawl.library.styles[name]) ? 'no' : 'yes'}
+    removed from stylesnames: ${(scrawl.library.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(() => {
+
+                console.log(`${name} resurrected
+    removed from styles: ${(scrawl.library.styles[name]) ? 'no' : 'yes'}
+    removed from stylesnames: ${(scrawl.library.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
+
+                finishResurrection();
+
+            }, 100);
+        }, 100);
+    }, time);
+};
+
+killStyle('marble-pattern', 3000, () => {
+
+    // Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died
+    scrawl.library.entity['brick-in-marble'].set({
+        strokeStyle: 'marble-pattern',
+    });
+
+    scrawl.library.entity['marble-in-water'].set({
+        fillStyle: 'marble-pattern',
+    });
+});
+

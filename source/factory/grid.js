@@ -14,7 +14,8 @@
 
 // ## Imports
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, isa_number, isa_obj, defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_number, isa_obj, 
+    defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -71,16 +72,12 @@ const Grid = function (items = {}) {
     return this;
 };
 
-
-
 // ## Grid object prototype setup
 let P = Grid.prototype = Object.create(Object.prototype);
 P.type = 'Grid';
 P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
-
-
 
 // Apply mixins to prototype object
 P = baseMix(P);
@@ -113,8 +110,30 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // ## Packet management
+P.packetExclusions = pushUnique(P.packetExclusions, ['tileSources']);
 
-// TODO
+P.finalizePacketOut = function (copy, items) {
+
+    let cSources = copy.tileSources = [],
+        tSources = this.tileSources;
+
+    tSources.forEach(item => {
+
+        cSources.push({
+            type: item.type,
+            source: (isa_obj(item.source)) ? item.source.name : item.source
+        });
+    });
+
+    if (isa_obj(copy.gutterColor)) copy.gutterColor = copy.gutterColor.name;
+
+    let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+    copy = mergeOver(copy, stateCopy);
+
+    copy = this.handlePacketAnchor(copy, items);
+
+    return copy;
+};
 
 
 

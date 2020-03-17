@@ -255,3 +255,5 @@ let buttonControls = function () {
 }();
 
 scrawl.addListener('up', buttonControls, '.controls');
+
+console.log(scrawl.library);

@@ -103,7 +103,7 @@ let controls = function () {
                 b1.disabled = '';
                 b2.disabled = 'disabled';
 
-                newStack.demolish(true);
+                newStack.kill();
 
                 break;
 
@@ -129,7 +129,7 @@ let controls = function () {
                 b3.disabled = 'disabled';
                 b4.disabled = 'disabled';
                 
-                hostStack.demolish(true);
+                hostStack.kill();
 
                 break;
         }
@@ -137,3 +137,5 @@ let controls = function () {
 }();
 
 scrawl.addListener('up', controls, '.controls');
+
+console.log(scrawl.library);

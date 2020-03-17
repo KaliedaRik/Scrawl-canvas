@@ -1,10 +1,10 @@
 
 // # Entity mixin
-
+//
 // This mixin builds on the _base_ mixin to set up much of the basic functionality of a Scrawl-canvas __entity__ Object:
-
+//
 // + __defaults__ -
-
+//
 // + __getters__ -
 // + __setters__ -
 // + __deltaSetters__ - 

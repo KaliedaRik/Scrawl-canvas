@@ -88,6 +88,9 @@ copy = mergeOver(copy, fontAttributesCopy);
 copy = this.handlePacketAnchor(copy, items);
 return copy;
 };
+P.factoryKill = function () {
+if (this.exposedTextHold) this.exposedTextHold.remove();
+};
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;

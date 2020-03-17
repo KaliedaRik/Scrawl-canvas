@@ -1,5 +1,5 @@
-import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { constructors, cell, group, entity } from '../core/library.js';
+import { mergeOver, removeItem } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 const Filter = function (items = {}) {
 this.makeName(items.name);
@@ -58,6 +58,23 @@ udVariable8: '',
 udVariable9: '',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.kill = function () {
+let myname = this.name;
+Object.entries(entity).forEach(([name, ent]) => {
+let f = ent.filters;
+if (f && f.indexOf(myname) >= 0) removeItem(f, myname);
+});
+Object.entries(group).forEach(([name, grp]) => {
+let f = grp.filters;
+if (f && f.indexOf(myname) >= 0) removeItem(f, myname);
+});
+Object.entries(cell).forEach(([name, c]) => {
+let f = c.filters;
+if (f && f.indexOf(myname) >= 0) removeItem(f, myname);
+});
+this.deregister();
+return this;
+};
 const filterPool = [];
 const requestFilterWorker = function () {
 if (!filterPool.length) filterPool.push(buildFilterWorker());

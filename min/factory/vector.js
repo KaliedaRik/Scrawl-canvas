@@ -140,10 +140,11 @@ const vectorPool = [];
 let vectorPoolCount = 0;
 const requestVector = function (x, y, z) {
 if (!vectorPool.length) {
-vectorPool.push(new Vector(x, y, z));
+vectorPool.push(new Vector());
 vectorPoolCount++;
 }
 let v = vectorPool.shift();
+v.set(x, y, z);
 return v
 };
 const releaseVector = function (item) {

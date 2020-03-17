@@ -354,7 +354,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { addStrings, defaultNonReturnFunction, mergeOver, xt, mergeDiscard } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { entity, asset, palette } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { addStrings, defaultNonReturnFunction, mergeOver, xt, isa_obj, mergeDiscard } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/coordinate.js'</span>;
 <span class="hljs-keyword">import</span> { makePalette } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/palette.js'</span>;
@@ -466,6 +467,92 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
+              <h2 id="packet-management">Packet management</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (items.colors) copy.colors = items.colors;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.palette &amp;&amp; <span class="hljs-keyword">this</span>.palette.colors) copy.colors = <span class="hljs-keyword">this</span>.palette.colors;
+        <span class="hljs-keyword">else</span> copy.colors = {<span class="hljs-string">'0 '</span>: [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>], <span class="hljs-string">'999 '</span>: [<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">1</span>]};
+
+        <span class="hljs-keyword">return</span> copy;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h2 id="kill-functionality---overwrites-mixinbasejs">Kill functionality - overwrites ./mixin/base.js</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">let</span> myname = <span class="hljs-keyword">this</span>.name;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.palette &amp;&amp; <span class="hljs-keyword">this</span>.palette.kill) <span class="hljs-keyword">this</span>.palette.kill();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Remove style from all entity state objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">Object</span>.entries(entity).forEach(<span class="hljs-function">(<span class="hljs-params">[name, ent]</span>) =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> state = ent.state;
+
+            <span class="hljs-keyword">if</span> (state) {
+
+                <span class="hljs-keyword">let</span> fill = state.fillStyle,
+                    stroke = state.strokeStyle;
+
+                <span class="hljs-keyword">if</span> (isa_obj(fill) &amp;&amp; fill.name === myname) state.fillStyle = state.defs.fillStyle;
+                <span class="hljs-keyword">if</span> (isa_obj(stroke) &amp;&amp; stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+            }
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Remove style from the Scrawl-canvas library</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.deregister();
+        
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
               <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
 
             </div>
@@ -477,11 +564,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -511,11 +598,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -568,11 +655,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -625,11 +712,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -643,11 +730,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -707,16 +794,23 @@
 
             <span class="hljs-keyword">this</span>.paletteEnd = p;
         }
+    };
+
+    S.colors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.palette;
+
+        <span class="hljs-keyword">if</span> (p &amp;&amp; p.colors) p.set({ <span class="hljs-attr">colors</span>: item });
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-18">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -730,11 +824,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h2 id="define-functions-to-be-added-to-the-factory-prototype">Define functions to be added to the factory prototype</h2>
 
@@ -743,11 +837,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
 
@@ -784,11 +878,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
 
@@ -829,11 +923,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
 
@@ -874,11 +968,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -921,11 +1015,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -941,11 +1035,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -964,13 +1058,13 @@
         <span class="hljs-keyword">this</span>.currentStart = makeCoordinate();
         <span class="hljs-keyword">this</span>.currentEnd = makeCoordinate();
 
-        <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
-
         <span class="hljs-keyword">this</span>.palette = makePalette({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>_palette`</span>,
         });
 
         <span class="hljs-keyword">this</span>.delta = {};
+
+        <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
 
         <span class="hljs-keyword">this</span>.set(items);
     };</pre></div></div>
@@ -978,11 +1072,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>This is where we have to calculate all the stuff necessary to get the ctx gradient object attached to the ctx, so we can use it for upcoming fillStyle and strokeStyle settings on the engine. We have to create the ctx gradient and return it. </p>
 
@@ -993,11 +1087,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Step 1: see if the palette is dirty, from having colors added/deleted/changed</p>
 
@@ -1008,11 +1102,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Step 2: recalculate current start and end points</p>
 
@@ -1023,11 +1117,11 @@
         </li>
         
         
-        <li id="section-29">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Step 3: finalize the coordinates to use for creating the gradient in relation to the current entity’s position and requirements on the canvas</p>
 
@@ -1038,11 +1132,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Step 4: create, populate and return gradient/pattern object</p>
 
@@ -1054,11 +1148,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1091,11 +1185,11 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1121,11 +1215,11 @@
         </li>
         
         
-        <li id="section-33">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1160,11 +1254,11 @@
         </li>
         
         
-        <li id="section-34">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Do stuff here for startRadius, endRadius, producing local variants - overwritten in factory-radialgradient.js file</p>
 
@@ -1175,11 +1269,11 @@
         </li>
         
         
-        <li id="section-35">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Just in case something went wrong with loading other styles files, which must overwrite this function, we can return transparent color here</p>
 
@@ -1193,11 +1287,11 @@
         </li>
         
         
-        <li id="section-36">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1213,11 +1307,11 @@
         </li>
         
         
-        <li id="section-37">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1233,11 +1327,11 @@
         </li>
         
         
-        <li id="section-38">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1253,11 +1347,11 @@
         </li>
         
         
-        <li id="section-39">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

@@ -394,7 +394,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, isa_number, isa_obj, defaultNonReturnFunction, xt, xta } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_number, isa_obj, 
+    defaultNonReturnFunction, xt, xta } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cell.js'</span>;
 
@@ -592,6 +593,31 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
+            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'tileSources'</span>]);
+
+P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+
+    <span class="hljs-keyword">let</span> cSources = copy.tileSources = [],
+        tSources = <span class="hljs-keyword">this</span>.tileSources;
+
+    tSources.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+
+        cSources.push({
+            <span class="hljs-attr">type</span>: item.type,
+            <span class="hljs-attr">source</span>: (isa_obj(item.source)) ? item.source.name : item.source
+        });
+    });
+
+    <span class="hljs-keyword">if</span> (isa_obj(copy.gutterColor)) copy.gutterColor = copy.gutterColor.name;
+
+    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-keyword">this</span>.state.saveAsPacket(items))[<span class="hljs-number">3</span>];
+    copy = mergeOver(copy, stateCopy);
+
+    copy = <span class="hljs-keyword">this</span>.handlePacketAnchor(copy, items);
+
+    <span class="hljs-keyword">return</span> copy;
+};</pre></div></div>
+            
         </li>
         
         
@@ -600,19 +626,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>TODO</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
 
@@ -625,11 +638,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -667,11 +680,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -700,11 +713,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -729,11 +742,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -761,11 +774,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -782,11 +795,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -805,11 +818,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -827,11 +840,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -845,11 +858,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-28">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Internal - used for entity stamping (Display cycle), and collision detection (eg: drag-and-drop)</p>
 
@@ -938,11 +951,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-29">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Override entity draw/fill methods</p>
 
@@ -953,11 +966,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>grab the current engine values for various things</p>
 
@@ -986,11 +999,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>iterate through the grid’s tileSources</p>
 
@@ -1001,11 +1014,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <ul>
 <li>set up the engine fillStyle value (where required)</li>
@@ -1039,11 +1052,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>get an map of tiles using this source</p>
 
@@ -1058,11 +1071,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Use pool canvas to compose the output</p>
 
@@ -1137,11 +1150,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>assign (or construct) the appropriate object to gObject</p>
 
@@ -1160,11 +1173,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>set the engine’s strokeStyle to the appropriate value (if needed)</p>
 
@@ -1195,11 +1208,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Use pool canvas to compose the output</p>
 <ul>
@@ -1259,11 +1272,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>we have a color/gradient all set up - stroke the lines directly onto grid</p>
 
@@ -1293,11 +1306,11 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Override entity draw/fill methods</p>
 
@@ -1346,11 +1359,11 @@ P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Overrides position mixin function</p>
 
@@ -1359,11 +1372,11 @@ P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-41">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <ul>
 <li>Grid entitys need to return ALL of the successful hit coordinates, not just the first</li>
@@ -1466,11 +1479,11 @@ P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-42">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

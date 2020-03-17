@@ -1,8 +1,8 @@
 import { animation } from "./library.js";
-let animate = [],
-doAnimation = false,
+let doAnimation = false,
 resortBatchAnimations = true,
 animate_sorted = [];
+let animate = [];
 const resortAnimations = function () {
 resortBatchAnimations = true;
 };

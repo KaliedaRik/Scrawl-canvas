@@ -912,6 +912,24 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
+              <h2 id="kill-functionality">Kill functionality</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.exposedTextHold) <span class="hljs-keyword">this</span>.exposedTextHold.remove();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
               <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
 
             </div>
@@ -923,11 +941,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Overwrites mixin/position.js function</p>
 
@@ -987,11 +1005,11 @@ D.handle = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1000,11 +1018,11 @@ D.handle = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Retrieving aspects of the font string</p>
 
@@ -1050,11 +1068,11 @@ G.font = <span class="hljs-function"><span class="hljs-keyword">function</span> 
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1134,11 +1152,11 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1147,11 +1165,11 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Handling text updates</p>
 
@@ -1169,27 +1187,6 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.text = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.text = ensureString(item);
-    
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-45">
             <div class="annotation">
               
@@ -1200,10 +1197,9 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.permittedJustifications = [<span class="hljs-string">'left'</span>, <span class="hljs-string">'right'</span>, <span class="hljs-string">'center'</span>, <span class="hljs-string">'full'</span>];
-S.justify = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.text = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.permittedJustifications.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.justify = item;
+    <span class="hljs-keyword">this</span>.text = ensureString(item);
     
     <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
@@ -1222,6 +1218,15 @@ S.justify = <span class="hljs-function"><span class="hljs-keyword">function</spa
 
             </div>
             
+            <div class="content"><div class='highlight'><pre>P.permittedJustifications = [<span class="hljs-string">'left'</span>, <span class="hljs-string">'right'</span>, <span class="hljs-string">'center'</span>, <span class="hljs-string">'full'</span>];
+S.justify = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.permittedJustifications.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.justify = item;
+    
+    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
         </li>
         
         
@@ -1230,6 +1235,19 @@ S.justify = <span class="hljs-function"><span class="hljs-keyword">function</spa
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>TODO - documentation</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>Handling text width - overwrites functions defined in mixin/entity.js</p>
 
@@ -1278,11 +1296,11 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1291,11 +1309,11 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>Manipulating lineHeight and letterSpacing attributes</p>
 
@@ -1366,11 +1384,11 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1379,11 +1397,11 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>textPathPosition needs to take into account whether the text is looping along the path, or not</p>
 
@@ -1414,11 +1432,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <h2 id="define-prototype-functions">Define prototype functions</h2>
 
@@ -1427,11 +1445,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1463,11 +1481,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1494,11 +1512,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1536,26 +1554,13 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-56">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
-              <p>To get convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs</p>
+              <p>TODO - documentation</p>
 
             </div>
             
@@ -1567,6 +1572,19 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>To get convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>Also removes excessive white space</p>
 
@@ -1585,11 +1603,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1598,11 +1616,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>(If you are not a fan of big, complex functions … look away now!)</p>
 
@@ -1613,11 +1631,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <ol start="0">
 <li>strokeStyle/fillStyle helper function
@@ -1644,11 +1662,11 @@ TODO: need to check (with a demo-test) that we can use gradients and patterns as
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <ol>
 <li>setup - get values for text? arrays, current?, highlight?, ?Attributes, etc
@@ -1723,11 +1741,11 @@ TODO - check code uses all of these local variables; remove those that are not u
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <ol start="2">
 <li>create textGlyphs array</li>
@@ -1744,11 +1762,11 @@ TODO - check code uses all of these local variables; remove those that are not u
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <ol start="3">
 <li>textPositions array will include an array of data for each glyph</li>
@@ -1773,11 +1791,11 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <ol start="4">
 <li>process the glyphStyles array to start populating the textPositions arrays</li>
@@ -1878,11 +1896,11 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>setup textGlyphWidths array, populating it with current letterSpacing values</p>
 
@@ -1894,11 +1912,11 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>finish populating textGlyphWidths</p>
 
@@ -1914,11 +1932,11 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <ol start="5">
 <li>calculate the text height value</li>
@@ -1941,11 +1959,11 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <ol start="6">
 <li>calculate glyph width values</li>
@@ -1962,11 +1980,11 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>TODO - none of this takes into consideration the needs of RTL scripts eg Arabic, Hebrew, etc - needs testing, review and necessary refactor to fix (if required)</p>
 
@@ -2007,11 +2025,11 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>calculate text line arrays
 TODO: create a demo-test for treatWordAsGlyph</p>
@@ -2034,11 +2052,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p>need starts to be less than ends</p>
 <ul>
@@ -2064,11 +2082,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>need to pick up the last (or only) line</p>
 
@@ -2079,11 +2097,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>pick up single line</p>
 
@@ -2101,11 +2119,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>final line of multiline text</p>
 
@@ -2126,11 +2144,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>and complete the population of data for highlight, overline, underline</p>
 
@@ -2148,11 +2166,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p>handle path positioning (which we’ll assume will need to be done for every display cycle) separately during stamping</p>
 
@@ -2163,11 +2181,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <ol start="7">
 <li>calculate localHeight</li>
@@ -2188,30 +2206,15 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-79">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
-              </div>
-              <ol start="8">
-<li>we should now be in a position where we can calculate each glyph’s startXY values</li>
-</ol>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
-              <ul>
-<li>we have 2 non-path scenarios: full-justified text; and regular text</li>
-</ul>
+              <ol start="8">
+<li>we should now be in a position where we can calculate each glyph’s startXY values</li>
+</ol>
 
             </div>
             
@@ -2223,6 +2226,21 @@ TODO: create a demo-test for treatWordAsGlyph</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-81">&#182;</a>
+              </div>
+              <ul>
+<li>we have 2 non-path scenarios: full-justified text; and regular text</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p>Scenario 1: justify === ‘full’</p>
 
@@ -2263,11 +2281,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <p>Scenario 2: regular text - justify === ‘left’, or ‘centre’, or ‘right’</p>
 
@@ -2306,11 +2324,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <ol start="9">
 <li>clean up and exit</li>
@@ -2334,11 +2352,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-84">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -2364,11 +2382,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-85">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
               <p>TODO - using non-left justified text buggers up letter kerning along the line</p>
 <ul>
@@ -2396,11 +2414,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-86">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -2409,11 +2427,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-87">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
               <p>Fonts don’t have accessible paths</p>
 
@@ -2452,11 +2470,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-88">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-89">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -2537,11 +2555,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-89">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -2595,11 +2613,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-90">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -2652,11 +2670,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-91">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
+                <a class="pilcrow" href="#section-92">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -2685,11 +2703,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-92">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -2710,11 +2728,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-93">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+                <a class="pilcrow" href="#section-94">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

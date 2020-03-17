@@ -956,9 +956,16 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h2 id="packetclone-management">Packet/Clone management</h2>
+<p>This functionality is disabled for RenderAnimation objects</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.saveAsPacket = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.lib}</span>, {}]`</span>;
+P.clone = defaultThisReturnFunction;</pre></div></div>
             
         </li>
         
@@ -969,7 +976,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>Animations do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions</p>
+              <h2 id="define-prototype-functions">Define prototype functions</h2>
 
             </div>
             
@@ -981,55 +988,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p>Overwrites mixin/base.js functionality</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> [<span class="hljs-keyword">this</span>.name, <span class="hljs-keyword">this</span>.type, <span class="hljs-keyword">this</span>.lib, {}];
-};
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p>Clone functionality disabled</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.clone = defaultThisReturnFunction;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Start the animation, if it is not already running</p>
 
@@ -1046,11 +1004,11 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Returns true if animation is running; false otherwise</p>
 
@@ -1064,11 +1022,11 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Stop the animation, if it is already running</p>
 
@@ -1085,11 +1043,11 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Stop the animation if it is already running, and remove it from the Scrawl-canvas library</p>
 
@@ -1109,11 +1067,11 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

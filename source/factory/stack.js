@@ -14,7 +14,7 @@
 
 // ## Imports
 import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 
@@ -117,10 +117,40 @@ let defaultAttributes = {
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
-
-// Clone functionality disabled
+// ## Packet/Clone management
+// This functionality is disabled for Stack objects
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
+
+
+// ## Kill functionality
+P.kill = function () {
+
+    let myname = this.name;
+
+    // rootElements and uiSubscribedElements arrays
+    removeItem(rootElements, myname);
+    setRootElementsSort();
+
+    removeItem(uiSubscribedElements, myname);
+
+    // Groups
+    if (group[myname]) group[myname].kill();
+
+    Object.entries(artefact).forEach(([name, art]) => {
+
+        if (art.host === myname) art.kill();
+    });
+
+    // DOM removals
+    this.domElement.remove();
+
+    // Scrawl-canvas library
+    return this.deregister();
+}
 
 
 // ## Define getter, setter and deltaSetter functions
@@ -405,43 +435,6 @@ P.addNewElement = function (items = {}) {
     }
     return false;
 };
-
-
-// TODO - review and recode
-P.demolish = function (removeFromDom = false) {
-
-    let el = this.domElement,
-        name = this.name,
-        grp = group[this.group],
-        i, iz, item;
-
-    for (i = 0, iz = this.groups.length; i < iz; i++) {
-
-        item = group[this.groups[i]];
-
-        if (item) item.demolishGroup(removeFromDom);
-    }
-
-    if (grp) grp.removeArtefacts(name);
-
-    if (el && removeFromDom) el.parentNode.removeChild(el);
-
-    // also needs to remove itself from subscribe arrays in pivot, mimic, path artefacts
-
-    removeItem(uiSubscribedElements, name);
-
-    delete stack[name];
-    removeItem(stacknames, name);
-
-    delete artefact[name];
-    removeItem(artefactnames, name);
-
-    removeItem(rootElements, name);
-    setRootElementsSort();
-
-    return true;
-};
-
 
 
 // ## Exported factory function

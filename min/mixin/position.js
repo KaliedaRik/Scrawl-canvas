@@ -1,6 +1,6 @@
-import { artefact, group } from '../core/library.js';
+import { artefact, group, tween } from '../core/library.js';
 import { defaultNonReturnFunction, mergeOver, mergeInto, mergeDiscard,
-isa_obj, isa_number, xt, xta, xto, xtGet,
+isa_obj, isa_number, isa_boolean, xt, xta, xto, xtGet,
 addStrings, pushUnique, removeItem } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 import { makeCoordinate } from '../factory/coordinate.js';
@@ -84,6 +84,27 @@ copy.anchor = a;
 }
 return copy;
 }
+P.kill = function () {
+let myname = this.name
+Object.entries(group).forEach(([name, grp]) => {
+if (grp.artefacts.indexOf(myname) >= 0) grp.removeArtefacts(myname);
+});
+if (this.anchor) this.demolishAnchor();
+Object.entries(artefact).forEach(([name, art]) => {
+if (art.name !== myname) {
+if (art.pivot && art.pivot.name === myname) art.set({ pivot: false});
+if (art.mimic && art.mimic.name === myname) art.set({ mimic: false});
+if (art.path && art.path.name === myname) art.set({ path: false});
+}
+});
+Object.entries(tween).forEach(([name, t]) => {
+if (t.checkForTarget(myname)) t.removeFromTargets(this);
+});
+this.factoryKill();
+this.deregister();
+return this;
+};
+P.factoryKill = defaultNonReturnFunction;
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -264,6 +285,14 @@ this.sensorSpacing += val;
 this.dirtyCollision = true;
 };
 S.pivot = function (item) {
+if (isa_boolean(item) && !item) {
+this.pivot = null;
+if (this.lockTo[0] === 'pivot') this.lockTo[0] = 'start';
+if (this.lockTo[1] === 'pivot') this.lockTo[1] = 'start';
+this.dirtyStampPositions = true;
+this.dirtyStampHandlePositions = true;
+}
+else {
 let oldPivot = this.pivot,
 newPivot = (item.substring) ? artefact[item] : item,
 name = this.name;
@@ -273,6 +302,7 @@ pushUnique(newPivot.pivoted, name);
 this.pivot = newPivot;
 this.dirtyStampPositions = true;
 this.dirtyStampHandlePositions = true;
+}
 }
 };
 P.pivotCorners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
@@ -292,6 +322,14 @@ this.addPivotRotation = item;
 this.dirtyRotation = true;
 };
 S.path = function (item) {
+if (isa_boolean(item) && !item) {
+this.path = null;
+if (this.lockTo[0] === 'path') this.lockTo[0] = 'start';
+if (this.lockTo[1] === 'path') this.lockTo[1] = 'start';
+this.dirtyStampPositions = true;
+this.dirtyStampHandlePositions = true;
+}
+else {
 let oldPath = this.path,
 newPath = (item.substring) ? artefact[item] : item,
 name = this.name;
@@ -301,6 +339,7 @@ pushUnique(newPath.pathed, name);
 this.path = newPath;
 this.dirtyStampPositions = true;
 this.dirtyStampHandlePositions = true;
+}
 }
 };
 S.pathPosition = function (item) {
@@ -331,6 +370,14 @@ this.addPathRotation = item;
 this.dirtyRotation = true;
 };
 S.mimic = function (item) {
+if (isa_boolean(item) && !item) {
+this.mimic = null;
+if (this.lockTo[0] === 'mimic') this.lockTo[0] = 'start';
+if (this.lockTo[1] === 'mimic') this.lockTo[1] = 'start';
+this.dirtyStampPositions = true;
+this.dirtyStampHandlePositions = true;
+}
+else {
 let oldMimic = this.mimic,
 newMimic = (item.substring) ? artefact[item] : item,
 name = this.name;
@@ -340,6 +387,7 @@ pushUnique(newMimic.mimicked, name);
 this.mimic = newMimic;
 this.dirtyStampPositions = true;
 this.dirtyStampHandlePositions = true;
+}
 }
 };
 S.useMimicDimensions = function (item) {
@@ -490,12 +538,6 @@ this.isBeingDragged = false;
 this.initializeDomPositions();
 };
 P.initializeDomPositions = defaultNonReturnFunction;
-P.kill = function () {
-if (this.group && this.group.name) this.group.removeArtefacts(this.name);
-this.demolishAnchor();
-this.deregister();
-return this;
-};
 P.setCoordinateHelper = function (label, x, y) {
 let c = this[label];
 if (Array.isArray(x)) {

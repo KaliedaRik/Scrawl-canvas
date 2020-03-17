@@ -1,5 +1,5 @@
 import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 import { makeGroup } from './group.js';
@@ -63,7 +63,23 @@ isResponsive: false,
 containElementsInHeight: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
+P.kill = function () {
+let myname = this.name;
+removeItem(rootElements, myname);
+setRootElementsSort();
+removeItem(uiSubscribedElements, myname);
+if (group[myname]) group[myname].kill();
+Object.entries(artefact).forEach(([name, art]) => {
+if (art.host === myname) art.kill();
+});
+this.domElement.remove();
+return this.deregister();
+}
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -239,26 +255,6 @@ this.domElement.appendChild(myElement.domElement);
 return myElement;
 }
 return false;
-};
-P.demolish = function (removeFromDom = false) {
-let el = this.domElement,
-name = this.name,
-grp = group[this.group],
-i, iz, item;
-for (i = 0, iz = this.groups.length; i < iz; i++) {
-item = group[this.groups[i]];
-if (item) item.demolishGroup(removeFromDom);
-}
-if (grp) grp.removeArtefacts(name);
-if (el && removeFromDom) el.parentNode.removeChild(el);
-removeItem(uiSubscribedElements, name);
-delete stack[name];
-removeItem(stacknames, name);
-delete artefact[name];
-removeItem(artefactnames, name);
-removeItem(rootElements, name);
-setRootElementsSort();
-return true;
 };
 const makeStack = function (items) {
 return new Stack(items);

@@ -1,5 +1,7 @@
-import { artefact, asset, radian, constructors, styles, stylesnames, cell, cellnames, group } from '../core/library.js';
-import { convertLength, generateUuid, isa_canvas, mergeOver, xt, xtGet } from '../core/utilities.js';
+import { artefact, asset, tween, radian, constructors,
+styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
+import { convertLength, generateUuid, isa_canvas, isa_obj, mergeOver, xt, xtGet,
+defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
@@ -73,6 +75,42 @@ sourceNaturalDimensions: null,
 P.defs = mergeOver(P.defs, defaultAttributes);
 delete P.defs.source;
 delete P.defs.sourceLoaded;
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
+P.clone = defaultThisReturnFunction;
+P.kill = function () {
+let myname = this.name
+Object.entries(canvas).forEach(([name, cvs]) => {
+if (cvs.cells.indexOf(myname) >= 0) cvs.removeCell(myname);
+if (cvs.base && cvs.base.name === myname) {
+cvs.set({
+visibility: false,
+});
+}
+});
+if (this.anchor) this.demolishAnchor();
+Object.entries(artefact).forEach(([name, art]) => {
+if (art.name !== myname) {
+if (art.pivot && art.pivot.name === myname) art.set({ pivot: false});
+if (art.mimic && art.mimic.name === myname) art.set({ mimic: false});
+if (art.path && art.path.name === myname) art.set({ path: false});
+let state = art.state;
+if (state) {
+let fill = state.fillStyle,
+stroke = state.strokeStyle;
+if (fill.name && fill.name === myname) state.fillStyle = state.defs.fillStyle;
+if (stroke.name && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+}
+}
+});
+Object.entries(tween).forEach(([name, t]) => {
+if (t.checkForTarget(myname)) t.removeFromTargets(this);
+});
+this.deregister();
+return this;
+};
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;

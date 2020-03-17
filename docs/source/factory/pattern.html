@@ -393,8 +393,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_fn } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_fn, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
 <span class="hljs-keyword">import</span> assetConsumerMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/assetConsumer.js'</span>;</pre></div></div>
@@ -518,6 +518,70 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
+              <h2 id="kill-functionality---overwrites-mixinbasejs">Kill functionality - overwrites ./mixin/base.js</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> myname = <span class="hljs-keyword">this</span>.name;
+
+    <span class="hljs-keyword">if</span> (isa_obj(<span class="hljs-keyword">this</span>.asset)) <span class="hljs-keyword">this</span>.asset.unsubscribe(<span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Remove style from all entity state objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(entity).forEach(<span class="hljs-function">(<span class="hljs-params">[name, ent]</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> state = ent.state;
+
+        <span class="hljs-keyword">if</span> (state) {
+
+            <span class="hljs-keyword">let</span> fill = state.fillStyle,
+                stroke = state.strokeStyle;
+
+            <span class="hljs-keyword">if</span> (isa_obj(fill) &amp;&amp; fill.name === myname) state.fillStyle = state.defs.fillStyle;
+            <span class="hljs-keyword">if</span> (isa_obj(stroke) &amp;&amp; stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+        }
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Remove style from the Scrawl-canvas library</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.deregister();
+    
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
               <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
 
             </div>
@@ -529,11 +593,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -550,11 +614,11 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-17">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h2 id="define-prototype-functions">Define prototype functions</h2>
 
@@ -563,11 +627,11 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-18">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -595,11 +659,11 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-19">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -616,11 +680,11 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-20">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

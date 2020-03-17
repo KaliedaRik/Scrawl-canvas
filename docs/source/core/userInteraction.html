@@ -300,6 +300,9 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="core-user-interaction">Core user interaction</h1>
+<p>A set of functions that are closely tied to the <a href="./document.html">core/document.js</a> functionality, and a couple of additional coder convenience functions.</p>
+<p>Scrawl-canvas adds some event listeners (mouse movement, screen resize, scrolling) to the window object. These help maintain a centralizerd mouse/touch cursor tracking facility that updates here and then cascades and localizes to artefacts (stacks, canvases and element wrapper objects) which need to keep track of a <strong>local, immediately updated mouse/touch coordinate</strong>.</p>
+<p>Checks to see if events have occurred happen once per requestAnimationFrame tick - this is to choke the more eager event listeners which can, at times, fire thousands of times a second.</p>
 
             </div>
             
@@ -312,9 +315,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Imports</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;
+<span class="hljs-keyword">import</span> { xt, xta, isa_dom, isa_fn, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
+<span class="hljs-keyword">import</span> { addListener, addNativeListener, removeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"./document.js"</span>;
+
+<span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/animation.js"</span>;</pre></div></div>
             
         </li>
         
@@ -325,17 +334,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h2 id="imports">Imports</h2>
+              <p><code>Exported array</code> (to modules). DOM element wrappers subscribe for updates by adding themselves to the <strong>uiSubscribedElements</strong> array. When an event fires, the updated data will be pushed to them automatically</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;
-<span class="hljs-keyword">import</span> { xt, xta, isa_dom, isa_fn, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
-<span class="hljs-keyword">import</span> { addListener, addNativeListener, removeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"./document.js"</span>;
-
-<span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/animation.js"</span>;
-
-<span class="hljs-keyword">const</span> uiSubscribedElements = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> uiSubscribedElements = [];</pre></div></div>
             
         </li>
         
@@ -346,7 +349,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Scrawl-canvas mouse tracking functionality can be switched off by setting the <strong>scrawl.ui.trackMouse</strong> flag to false</p>
+              <p>Local boolean flags. </p>
 
             </div>
             
@@ -362,7 +365,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p><strong>currentCorePosition</strong> object holds the mouse cursor position, alongside browser view dimensions and scroll position</p>
+              <p><code>Exported object</code> (to modules and the scrawl object). The <strong>currentCorePosition</strong> object holds the <strong>global</strong> mouse cursor position, alongside browser view dimensions and scroll position</p>
 
             </div>
             
@@ -502,7 +505,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.</p>
+              <p>Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. </p>
+<p>TODO: Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.</p>
 
             </div>
             
@@ -585,7 +589,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Attach and remove core listeners attached to the <strong>window</strong> object</p>
+              <p>Animation object which checks whether any window event listeners have fired, and actions accordingly</p>
 
             </div>
             
@@ -609,9 +613,22 @@
             resolve(<span class="hljs-literal">true</span>);
         });
     },
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p><code>Exported functions</code> (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas’s impact on those pages by switching off the core listeners (and also the core animation loop).</p>
 
-<span class="hljs-keyword">const</span> startCoreListeners = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> startCoreListeners = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     actionCoreListeners(<span class="hljs-string">'removeEventListener'</span>);
     actionCoreListeners(<span class="hljs-string">'addEventListener'</span>);
@@ -628,9 +645,22 @@
     coreListenersTracker.halt();
 
     actionCoreListeners(<span class="hljs-string">'removeEventListener'</span>);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Helper function</p>
 
-<span class="hljs-keyword">const</span> actionCoreListeners = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">action</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> actionCoreListeners = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">action</span>) </span>{
 
     <span class="hljs-keyword">if</span> (navigator.pointerEnabled || navigator.msPointerEnabled) {
 
@@ -656,9 +686,22 @@
 
     <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'scroll'</span>, scrollAction, <span class="hljs-literal">false</span>);
     <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'resize'</span>, resizeAction, <span class="hljs-literal">false</span>);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p><code>Exported functions</code> (to modules). Invoke the resize and/or scroll event listeners once, outside the regular requestAnimationFrame tick.</p>
 
-<span class="hljs-keyword">const</span> applyCoreResizeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> applyCoreResizeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     resizeAction();
     mouseChanged = <span class="hljs-literal">true</span>;
@@ -673,55 +716,26 @@
         </li>
         
         
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <h4 id="user-interaction-to-test-scrawl-canvas-demos">User interaction to test Scrawl-canvas Demos</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <ul>
-<li>scrawl.addNativeListener()</li>
-<li>scrawl.removeNativeListener()</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Then there was the use case for reacting to various mouse (and touch) events, so I bundled all those up into a set of complementary functions:</p>
+              <h4 id="convenience-functions">Convenience functions</h4>
+<p>Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:</p>
+<ul>
+<li>scrawl.addNativeListener()</li>
+<li>scrawl.removeNativeListener()</li>
+</ul>
+<p>Then there was the use case for reacting to various mouse (and touch) events, so I bundled all those up into a set of complementary functions:</p>
+<ul>
+<li>scrawl.addListener()</li>
+<li>scrawl.removeListener()</li>
+</ul>
+<p>Even so, there was still a lot of boilerplate code to write, in particular to listening for user interaction with form elements (which can be anywhere on the web page). So I further factorised that code into an <strong>observeAndUpdate</strong> function which uses the listener functions internally.</p>
+<p>I have no idea how useful the observeAndUpdate function will be to anyone else. All I know is that it works for me and my demos, and that makes me happy.</p>
+<p>Note: observeAndUpdate() returns a function that will (in theory) remove all the bundled event listeners from their DOM elements when it is invoked. Not yet tested.</p>
 
             </div>
             
@@ -734,49 +748,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <ul>
-<li>scrawl.addListener()</li>
-<li>scrawl.removeListener()</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>Even so, there was still a lot of boilerplate code to write, in particular to listening for user interaction with form elements (which can be anywhere on the web page). So I further factorised that code into an <strong>observeAndUpdate</strong> function which uses the listener functions internally.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>I have no idea how useful the observeAndUpdate function will be to anyone else. All I know is that it works for me and my demos, and that makes me happy.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>Note: observeAndUpdate() returns a function that will (in theory) remove all the bundled event listeners from their DOM elements when it is invoked. Not yet tested.</p>
+              <p><code>Exported function</code> (to modules and the scrawl object). Capture changes in a form and apply them to a target Scrawl-canvas artefact, asset, style, group, etc object</p>
 
             </div>
             
@@ -806,8 +778,6 @@
             e.returnValue = <span class="hljs-literal">false</span>;
         };
     }
-
-    
 
     <span class="hljs-keyword">let</span> func = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
 
@@ -905,125 +875,42 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h4 id="setting-up-drag-and-drop-zones">Setting up drag-and-drop zones.</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p><strong>makeDragZone</strong> is an attempt to make setting up drag-and-drop functionality withing a Scrawl-canvas stack or canvas as simple as possible</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>Required attribute of the argument object:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <ul>
+              <h4 id="drag-and-drop-zones">Drag-and-drop zones.</h4>
+<p><strong>makeDragZone</strong> is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible</p>
+<p>Required attribute of the argument object:</p>
+<ul>
 <li><strong>.zone</strong> - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself</li>
 </ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Optional argument object attributes:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <ul>
+<p>Optional argument object attributes:</p>
+<ul>
 <li><strong>.coodinateSource</strong> - the .here object of whatever artefact/asset (Stack, Canvas, Element or Cell) will be supplying the coordinates. Defaults to the .here object of either the Stack zone, or the .here object of the Canvas zone’s base Cell.</li>
 <li><strong>.collisionGroup</strong> - the group containg the draggable artefacts, or that Group object’s name String. Defaults to the Stack zone’s Group object, or the Canvas’s base Cell’s Group object.</li>
 <li><strong>.startOn</strong> - one of ‘move’, ‘up’, ‘down’, ‘enter’, ‘leave’, or an array of a selection of those strings. Defaults to ‘down’</li>
 <li><strong>.endOn</strong> - one of ‘move’, ‘up’, ‘down’, ‘enter’, ‘leave’, or an array of a selection of those strings. Defaults to ‘up’</li>
 <li><strong>.exposeCurrentArtefact</strong> boolean. Defaults to false</li>
 </ul>
+<p>If the exposeCurrentArtefact attribute is true, the function returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). </p>
+<p>Invoking the returned function with a single argument that evaluates to true will trigger the kill function.</p>
+<p>If the exposeCurrentArtefact attribute is false, or omitted, the function returns a kill function that can be invoked to remove the event listeners from the Stack or Canvas zone’s DOM element.</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-29">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>If the exposeCurrentArtefact attribute is true, the function returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
-              </div>
-              <p>Invoking the returned function with a single argument that evaluates to true will trigger the kill function.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p>If the exposeCurrentArtefact attribute is false, or omitted, the function returns a kill function that can be invoked to remove the event listeners from the Stack or Canvas zone’s DOM element.</p>
+              <p><code>Exported function</code> (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.</p>
 
             </div>
             
@@ -1057,11 +944,11 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Generally the system won’t have had time to establish target.base.here, if the dragzone is defined as part of setup before a Display cycle has completed - so the test gets repeated in the pickup function below, to capture those cases</p>
 
@@ -1129,22 +1016,9 @@
 
     <span class="hljs-keyword">if</span> (items.exposeCurrentArtefact) <span class="hljs-keyword">return</span> getCurrent;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> kill;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+};
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
+<span class="hljs-keyword">export</span> {
     uiSubscribedElements,
     currentCorePosition,
     startCoreListeners,

@@ -4,9 +4,9 @@ import { makeStack } from "../factory/stack.js";
 import { makeElement } from "../factory/element.js";
 import { makeCanvas } from "../factory/canvas.js";
 let rootElements = [],
-rootElements_sorted = [];
-let rootElementsSort = true,
 setRootElementsSort = () => {rootElementsSort = true};
+let rootElements_sorted = [],
+rootElementsSort = true;
 const sortRootElements = function () {
 let floor = Math.floor;
 if (rootElementsSort) {
@@ -20,6 +20,9 @@ buckets[order].push(art.name);
 });
 rootElements_sorted = buckets.reduce((a, v) => a.concat(v), []);
 }
+};
+const getStacks = function () {
+document.querySelectorAll('[data-stack]').forEach(el => addInitialStackElement(el));
 };
 const addInitialStackElement = function (el) {
 let mygroup = el.getAttribute('data-group'),
@@ -71,44 +74,6 @@ makeElement(args);
 }
 else child.setAttribute('data-group', name);
 });
-};
-const addInitialCanvasElement = function (el) {
-let mygroup = el.getAttribute('data-group'),
-myname = el.id || el.getAttribute('name'),
-position = 'absolute';
-if (!mygroup) {
-el.setAttribute('data-group', 'root');
-mygroup = 'root';
-position = el.style.position;
-}
-if (!myname) {
-myname = generateUuid();
-el.id = myname;
-}
-return makeCanvas({
-name: myname,
-domElement: el,
-group: mygroup,
-host: mygroup,
-position: position,
-setInitialDimensions: true
-});
-};
-const getStacks = function () {
-document.querySelectorAll('[data-stack]').forEach(el => addInitialStackElement(el));
-};
-const getCanvases = function () {
-document.querySelectorAll('canvas').forEach((el, index) => {
-let item = addInitialCanvasElement(el);
-if (!index) setCurrentCanvas(item);
-});
-};
-const getCanvas = function (search) {
-let el = document.querySelector(search),
-canvas = false;
-if (el) canvas = addInitialCanvasElement(el);
-setCurrentCanvas(canvas);
-return canvas;
 };
 const addStack = function (items = {}) {
 let el, host, hostinscrawl, mystack, mygroup, name,
@@ -162,6 +127,63 @@ mystack.set(items);
 rootElementsSort = true;
 return mystack;
 };
+const getCanvases = function () {
+document.querySelectorAll('canvas').forEach((el, index) => {
+let item = addInitialCanvasElement(el);
+if (!index) setCurrentCanvas(item);
+});
+};
+const addInitialCanvasElement = function (el) {
+let mygroup = el.getAttribute('data-group'),
+myname = el.id || el.getAttribute('name'),
+position = 'absolute';
+if (!mygroup) {
+el.setAttribute('data-group', 'root');
+mygroup = 'root';
+position = el.style.position;
+}
+if (!myname) {
+myname = generateUuid();
+el.id = myname;
+}
+return makeCanvas({
+name: myname,
+domElement: el,
+group: mygroup,
+host: mygroup,
+position: position,
+setInitialDimensions: true
+});
+};
+const getCanvas = function (search) {
+let el = document.querySelector(search),
+canvas = false;
+if (el) canvas = addInitialCanvasElement(el);
+setCurrentCanvas(canvas);
+return canvas;
+};
+let currentCanvas = null,
+currentGroup = null;
+const setCurrentCanvas = function (item) {
+let changeFlag = false;
+if (item) {
+if (item.substring) {
+let mycanvas = canvas[item];
+if (mycanvas) {
+currentCanvas = mycanvas;
+changeFlag = true;
+}
+}
+else if (item.type === 'Canvas') {
+currentCanvas = item;
+changeFlag = true;
+}
+}
+if (changeFlag && currentCanvas.base) {
+let mygroup = group[currentCanvas.base.name];
+if (mygroup) currentGroup = mygroup;
+}
+};
 const addCanvas = function (items = {}) {
 let el = document.createElement('canvas'),
 myname = (items.name) ? items.name : generateUuid(),
@@ -211,28 +233,19 @@ delete items.trackHere;
 mycanvas.set(items);
 return mycanvas;
 };
-let currentCanvas = null,
-currentGroup = null;
-const setCurrentCanvas = function (item) {
-let changeFlag = false;
-if (item) {
-if (item.substring) {
-let mycanvas = canvas[item];
-if (mycanvas) {
-currentCanvas = mycanvas;
-changeFlag = true;
+const makeAnimationObserver = function (anim, wrapper) {
+if (anim && anim.run && wrapper && wrapper.domElement) {
+let observer = new IntersectionObserver((entries, observer) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) !anim.isRunning() && anim.run();
+else if (!entry.isIntersecting) anim.isRunning() && anim.halt();
+});
+}, {});
+observer.observe(wrapper.domElement);
+return observer.disconnect;
 }
+else return false;
 }
-else if (item.type === 'Canvas') {
-currentCanvas = item;
-changeFlag = true;
-}
-}
-if (changeFlag && currentCanvas.base) {
-let mygroup = group[currentCanvas.base.name];
-if (mygroup) currentGroup = mygroup;
-}
-};
 const addListener = function (evt, fn, targ) {
 if (!isa_fn(fn)) throw new Error(`core/document addListener() error - no function supplied: ${evt}, ${targ}`);
 actionListener(evt, fn, targ, 'removeEventListener');
@@ -365,19 +378,6 @@ Promise.all(promises)
 .catch((err) => reject(false));
 })
 };
-const makeAnimationObserver = function (anim, wrapper) {
-if (anim && anim.run && wrapper && wrapper.domElement) {
-let observer = new IntersectionObserver((entries, observer) => {
-entries.forEach(entry => {
-if (entry.isIntersecting) !anim.isRunning() && anim.run();
-else if (!entry.isIntersecting) anim.isRunning() && anim.halt();
-});
-}, {});
-observer.observe(wrapper.domElement);
-return observer.disconnect;
-}
-else return false;
-}
 const domShowElements = [];
 const addDomShowElement = function (item = '') {
 if (!item) throw new Error(`core/document addDomShowElement() error - false argument supplied: ${item}`);

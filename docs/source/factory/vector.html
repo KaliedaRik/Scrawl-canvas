@@ -805,12 +805,14 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
 <span class="hljs-keyword">const</span> requestVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) </span>{
 
     <span class="hljs-keyword">if</span> (!vectorPool.length) {
-        vectorPool.push(<span class="hljs-keyword">new</span> Vector(x, y, z));
+        vectorPool.push(<span class="hljs-keyword">new</span> Vector());
 
         vectorPoolCount++;
     }
 
     <span class="hljs-keyword">let</span> v = vectorPool.shift();
+
+    v.set(x, y, z);
 
     <span class="hljs-keyword">return</span> v
 };

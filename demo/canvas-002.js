@@ -17,7 +17,7 @@ canvas.setBase({
 // Note: setting this entity's method value to 'none' means that while it will perform all necessary calculations as part of the Display cycle, it will not complete its stamp action, thus will not appear on the display. This differs from setting its visibility attribute to false, which will make the entity skip both calculation and stamp operations
 let myPivot = scrawl.makeWheel({
     name: 'mouse-pivot',
-    method: 'none',
+    // method: 'none',
 
     startX: 'center',
     startY: 'center',
@@ -218,3 +218,79 @@ scrawl.makeRender({
     commence: mouseCheck,
     afterShow: report,
 });
+
+console.log(scrawl.library);
+
+// To test kill functionality
+let killArtefact = (name, time, finishResurrection) => {
+
+    let groupname = 'mycanvas_base',
+        packet;
+
+    let checkGroupBucket = (name, groupname) => {
+
+        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
+        return (res.length) ? 'no' : 'yes';
+    };
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+        packet = scrawl.library.artefact[name].saveAsPacket();
+
+        scrawl.library.artefact[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(() => {
+
+                console.log(`${name} resurrected
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+                finishResurrection();
+
+            }, 100);
+        }, 100);
+    }, time);
+};
+
+killArtefact('mouse-pivot', 4000, () => {
+
+    myPivot = scrawl.library.entity['mouse-pivot'];
+
+    scrawl.library.entity['base-block'].set({
+
+        pivot: myPivot,
+        lockTo: 'pivot',
+    });
+
+    scrawl.library.entity['base-wheel'].set({
+
+        pivot: myPivot,
+        lockTo: 'pivot',
+    });
+});
+
+killArtefact('mimic-block', 6000, () => {});

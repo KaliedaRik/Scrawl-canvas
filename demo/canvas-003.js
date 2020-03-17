@@ -15,7 +15,7 @@ canvas.set({
 });
 
 
-// Create the linear gradient
+// Create the linear gradient - we will kill and resurrect it as the demo runs
 let graddy = scrawl.makeGradient({
     name: 'mygradient',
     endX: '100%',
@@ -67,30 +67,37 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
-scrawl.observeAndUpdate({
+// User interaction - setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed and recreated it later
+let makeObserver = () => {
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
+    return scrawl.observeAndUpdate({
 
-    target: graddy,
+        event: ['input', 'change'],
+        origin: '.controlItem',
 
-    useNativeListener: true,
-    preventDefault: true,
+        target: graddy,
 
-    updates: {
+        useNativeListener: true,
+        preventDefault: true,
 
-        paletteStart: ['paletteStart', 'int'],
-        paletteEnd: ['paletteEnd', 'int'],
+        updates: {
 
-        startX: ['startX', '%'],
-        startY: ['startY', '%'],
+            paletteStart: ['paletteStart', 'int'],
+            paletteEnd: ['paletteEnd', 'int'],
 
-        endX: ['endX', '%'],
-        endY: ['endY', '%'],
-    },
-});
+            startX: ['startX', '%'],
+            startY: ['startY', '%'],
 
+            endX: ['endX', '%'],
+            endY: ['endY', '%'],
+        },
+    });
+}
+
+// ... Create the form observer
+let myobserver = makeObserver();
+
+// Adding and removing color stops to the gradient - we're using __updateColor__ and __removeColor__ functions rather than setting them on the gradient, so need separate event listener(s) to action form changes.
 let events = (e) => {
 
     e.preventDefault();
@@ -122,3 +129,58 @@ document.querySelector('#endX').value = 100;
 document.querySelector('#endY').value = 0;
 document.querySelector('#red').value = 0;
 document.querySelector('#blue').value = 0;
+
+console.log(scrawl.library);
+
+// To test styles (Gradient) kill functionality
+let killStyle = (name, time, finishResurrection) => {
+
+    let packet;
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from styles: ${(scrawl.library.styles[name]) ? 'no' : 'yes'}
+    removed from stylesnames: ${(scrawl.library.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
+
+        packet = scrawl.library.styles[name].saveAsPacket();
+
+        scrawl.library.styles[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from styles: ${(scrawl.library.styles[name]) ? 'no' : 'yes'}
+    removed from stylesnames: ${(scrawl.library.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(() => {
+
+                console.log(`${name} resurrected
+    removed from styles: ${(scrawl.library.styles[name]) ? 'no' : 'yes'}
+    removed from stylesnames: ${(scrawl.library.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
+
+                finishResurrection();
+
+            }, 100);
+        }, 100);
+    }, time);
+};
+
+killStyle('mygradient', 3000, () => {
+
+    // Repopulate the graddy variable
+    graddy = scrawl.library.styles['mygradient'];
+
+    // Reset the block fillStyle to the gradient
+    scrawl.library.entity['myblock'].set({
+        fillStyle: 'mygradient',
+    });
+
+    // Kill the form observer
+    myobserver();
+
+    // ... and recreate it
+    myobserver = makeObserver();
+});

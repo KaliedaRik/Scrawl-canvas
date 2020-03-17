@@ -27,7 +27,7 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 009</h1>
   <h2>Pattern styles; Entity web link anchors; Dynamic accessibility</h2>
-  <h3>Move cursor over canvas to see dynamic hover and accessibility functionality<br />Click on an entity to open a new web page</h3>
+  <h3>Move cursor over canvas, or use keyboard tab,<br />to see dynamic hover and accessibility functionality<br />Click (or press keyboard enter) on a highlighted entity<br />to open a new web page</h3>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
@@ -46,12 +46,26 @@
     <p>Additionally, using this demo to check zoned canvas User Interactions</p>
     <ul>
       <li>Define onEnter and onLeave functions on the first defined block, to change its linewidth attribute when the mouse cursor hovers over it</li>
-      <li>Check that the functionality works by moving the cursor over and away from the top-left-hand block</li>
-      <li>Check that the onEnter and onLeave functions successfully clone to the other block entitys</li>
-    </ul>
-    <ul>
       <li>Define anchor objects for each entity, and functionality to action mouse clicks on them</li>
-      <li>Check that clicking on an entity results in an appropriate Wikipedia page opening in a newe browser tab</li>
+      <li>Check that the 'on...' functions, and the anchor, successfully clone-and-adapt to the other block entitys</li>
+      <li>Check that the functionality works by moving the cursor over and away from the blocks</li>
+      <li>Check that clicking on an entity results in an appropriate Wikipedia page opening in a new browser tab</li>
+      <li>Check that the functionality works using keyboard tabbing and enter (for accessibility)</li>
+      <li>Check that the canvas's title (used in its tool prompt) adapts appropriately as user moves between Blocks</li>
+    </ul>
+
+    <p>Tracking User Interactions</p>
+    <ul>
+      <li>Add Google Analytics (analytics_debug.js) to the page; create a 'ga' object and tracker</li>
+      <li>Adapt the 'on...' functions to trigger tailored analytics messages as user focuses and blurs across the Block entitys</li>
+      <li>Adapt the anchor so that it, too, sends a tailored analytics message when the link is invoked</li>
+      <li>Check that the tracking functionality works as expected, both for mouse/touch interactions and for keyboard interactions</li>
+    </ul>
+
+    <p>Kill and resurrect</p>
+    <ul>
+      <li>Kill and resurrect a Block entity to make sure it removes itself entirely from the Scrawl-canvas system, and cleanly recreate itself from saved packet, and that full functionality - including analytics tracking - can be re-applied to it</li>
+      <li>Kill and resurrect a Pattern style to make sure it removes itself entirely from the Scrawl-canvas system, and cleanly recreate itself from saved packet</li>
     </ul>
     <p><a href="../docs/demo/canvas-009.html">Annotated code</a></p>
   </div>

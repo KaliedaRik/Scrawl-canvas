@@ -242,6 +242,13 @@ export default function (P = {}) {
         return this;
     };
 
+    P.checkForTarget = function (item) {
+
+        if (!item.substring) return false;
+
+        return this.targets.some(t => t.name === item);
+    };
+
 // TODO - documentation
     P.kill = function () {
 

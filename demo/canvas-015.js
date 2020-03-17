@@ -44,6 +44,8 @@ scrawl.makePhrase({
     showBoundingBox: true,
     boundingBoxColor: 'red',
 
+    exposeText: true,
+
 }).clone({
     name: 'myphrase_draw',
     startX: '38%',
@@ -100,17 +102,6 @@ scrawl.library.artefact.myphrase_fillAndDraw.set({
 });
 
 
-// Wheel pivot to check placement of start on first Phrase entity
-scrawl.makeWheel({
-    fillStyle: 'red',
-    radius: 5,
-    handleX: 'center',
-    handleY: 'center',
-    pivot: 'myphrase_fill',
-    lockTo: 'pivot',
-});
-
-
 // Create the drag-and-drop zone
 let current = scrawl.makeDragZone({
 
@@ -148,3 +139,70 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+console.log(scrawl.library);
+
+// To test kill functionality
+let killArtefact = (name, time) => {
+
+    let groupname = 'mycanvas_base',
+        packet;
+
+    let checkGroupBucket = (name, groupname) => {
+
+        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
+        return (res.length) ? 'no' : 'yes';
+    };
+
+    let checkTextHold = (name) => {
+
+        let el = document.querySelector(`#${name}-text-hold`);
+        return (el) ? 'no' : 'yes';
+    };
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
+    text hold removed from DOM: ${checkTextHold(name)}`);
+
+        packet = scrawl.library.artefact[name].saveAsPacket();
+
+        scrawl.library.artefact[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
+    text hold removed from DOM: ${checkTextHold(name)}`);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(() => {
+
+                console.log(`${name} resurrected
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}
+    text hold removed from DOM: ${checkTextHold(name)}`);
+            }, 100);
+        }, 100);
+    }, time);
+};
+
+killArtefact('myphrase_fill', 4000);
+killArtefact('myphrase_fillAndDraw', 5000);
+killArtefact('myphrase_multiline', 6000);

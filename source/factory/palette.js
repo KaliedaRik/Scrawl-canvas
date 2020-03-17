@@ -82,7 +82,19 @@ let G = P.getters,
 
 // No checking is done prior to assigning the colors object to the colors attribute beyond verifying that the argument value is an object.
 S.colors = function (item) {
+
     if (isa_obj(item)) {
+
+        let f = this.factory;
+
+        Object.entries(item).forEach(([pos, col]) => {
+
+            if (col.substring) {
+
+                f.convert(col);
+                item[pos] = [f.r, f.g, f.b, f.a];
+            }
+        });
 
         this.colors = item;
         this.dirtyPalette = true;
@@ -95,19 +107,6 @@ S.stops = defaultNonReturnFunction;
 
 
 // ## Define prototype functions
-
-// TODO - documentation
-P.set = function (items = {}) {
-
-    let keys = Object.keys(items),
-        i, iz, key;
-
-    for (i = 0, iz = keys.length; i < iz; i++) {
-
-        key = keys[i];
-        this[key] = items[key];
-    }
-};
 
 // TODO - documentation
 P.recalculateHold = [];

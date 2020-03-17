@@ -114,7 +114,7 @@ let func = this.stringifyFunction(val);
 if (func && func.length) copy[key] = func;
 }
 }
-else if (packetObjects.indexOf(key) >= 0 && this[key].name) copy[key] = this[key].name;
+else if (packetObjects.indexOf(key) >= 0 && this[key] && this[key].name) copy[key] = this[key].name;
 else if (packetCoordinates.indexOf(key) >= 0) {
 if (packetDefaultInclusions.indexOf(key) >= 0) copy[key] = val;
 else if (val[0] || val[1]) copy[key] = val;

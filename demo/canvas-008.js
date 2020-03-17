@@ -172,3 +172,5 @@ document.querySelector('#roll').value = 0;
 document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
+
+console.log(scrawl.library);

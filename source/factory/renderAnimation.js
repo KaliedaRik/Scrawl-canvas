@@ -219,20 +219,12 @@ let defaultAttributes = {
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
-
-// Animations do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions
-
-// Overwrites mixin/base.js functionality
-P.saveAsPacket = function () {
-
-    return [this.name, this.type, this.lib, {}];
-};
+// ## Packet/Clone management
+// This functionality is disabled for RenderAnimation objects
 P.stringifyFunction = defaultNonReturnFunction;
 P.processPacketOut = defaultNonReturnFunction;
 P.finalizePacketOut = defaultNonReturnFunction;
-
-// Clone functionality disabled
+P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
 
 

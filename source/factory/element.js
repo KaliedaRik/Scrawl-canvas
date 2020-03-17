@@ -89,8 +89,17 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // ## Packet management
+// Nothing additional to do here?
 
-// TODO
+
+// ## Kill functionality
+P.factoryKill = function () {
+
+    removeItem(uiSubscribedElements, this.name);
+
+    this.domElement.remove();
+};
+
 
 
 
@@ -142,38 +151,6 @@ S.content = function (item) {
 P.cleanDimensionsAdditionalActions = function () {
 
     this.dirtyDomDimensions = true;
-};
-
-
-// Removes the element's wrapper from the Scrawl-canvas library.
-
-// If the function is invoked with an argument which resolves to true, the DOM element itself will also be removed from the web page.
-
-// This function will not remove references to the element in animations objects, including tweens and actions. Nor will it remove references to it in Group objects except for its current host stack's group.
-P.demolish = function (removeFromDom = false) {
-
-    let el = this.domElement,
-        name = this.name,
-        g = this.group;
-
-    if (g) g.removeArtefacts(name);
-
-    if (el && removeFromDom) el.parentNode.removeChild(el);
-
-    // also needs to remove itself from subscribe arrays in pivot, mimic, path artefacts
-    if (this.pivot) removeItem(this.pivot.pivoted, this.name);
-    if (this.path) removeItem(this.path.pathed, this.name);
-    if (this.mimic) removeItem(this.mimic.mimicked, this.name);
-
-    removeItem(uiSubscribedElements, name);
-
-    delete element[name];
-    removeItem(elementnames, name);
-
-    delete artefact[name];
-    removeItem(artefactnames, name);
-
-    return true;
 };
 
 

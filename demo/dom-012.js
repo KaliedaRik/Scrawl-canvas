@@ -137,7 +137,7 @@ let controls = function () {
                 b1.disabled = '';
                 b2.disabled = 'disabled';
 
-                if (stackCanvas) stackCanvas.demolish();
+                if (stackCanvas) stackCanvas.kill();
 
                 break;
 
@@ -147,7 +147,7 @@ let controls = function () {
                 b2.disabled = 'disabled';
                 b3.disabled = 'disabled';
 
-                mystack.demolish(true);
+                mystack.kill();
                 mystack = false;
 
                 break;

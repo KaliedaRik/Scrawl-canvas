@@ -393,9 +393,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { cell, constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { cell, constructors, artefact, group } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
 <span class="hljs-keyword">import</span> { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
-<span class="hljs-keyword">import</span> { generateUuid, mergeOver, pushUnique, removeItem, xt, defaultThisReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { generateUuid, mergeOver, pushUnique, removeItem, xt, 
+    defaultThisReturnFunction, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 <span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/userInteraction.js'</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">'./state.js'</span>;
@@ -803,9 +804,16 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h2 id="packetclone-management">Packet/Clone management</h2>
+<p>This functionality is disabled for Canvas objects</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.saveAsPacket = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.lib}</span>, {}]`</span>;
+P.clone = defaultThisReturnFunction;</pre></div></div>
             
         </li>
         
@@ -816,8 +824,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              
+              <h2 id="kill-functionality">Kill functionality</h2>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -828,11 +839,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Clone functionality disabled</p>
+              <p>rootElements and uiSubscribedElements arrays</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.clone = defaultThisReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    removeItem(rootElements, <span class="hljs-keyword">this</span>.name);
+    setRootElementsSort();
+
+    removeItem(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);</pre></div></div>
             
         </li>
         
@@ -842,6 +856,71 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Groups</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (group[<span class="hljs-keyword">this</span>.name]) group[<span class="hljs-keyword">this</span>.name].kill();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Base Cell</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.base.kill();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>DOM removals</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.navigation.remove();
+    <span class="hljs-keyword">this</span>.textHold.remove();
+    <span class="hljs-keyword">this</span>.ariaLabelElement.remove();
+    <span class="hljs-keyword">this</span>.ariaDescriptionElement.remove();
+    <span class="hljs-keyword">this</span>.domElement.remove();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Scrawl-canvas library</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.deregister();
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h2 id="define-attribute-getters-and-setters">Define attribute getters and setters</h2>
 
@@ -854,11 +933,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -873,11 +952,11 @@ S.fit = <span class="hljs-function"><span class="hljs-keyword">function</span> (
         </li>
         
         
-        <li id="section-32">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -911,11 +990,11 @@ S.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -934,11 +1013,11 @@ S.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -965,11 +1044,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-35">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -987,11 +1066,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-36">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1010,11 +1089,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-37">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1034,11 +1113,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-38">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <h2 id="define-prototype-functions">Define prototype functions</h2>
 
@@ -1047,11 +1126,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-39">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1066,11 +1145,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-40">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1089,11 +1168,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-41">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1112,11 +1191,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-42">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1130,11 +1209,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-43">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1161,11 +1240,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-44">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1193,11 +1272,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-45">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1219,11 +1298,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-46">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1244,11 +1323,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-47">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1270,11 +1349,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-48">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1295,116 +1374,15 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
-              </div>
-              <p>TODO - is this all that is needed? </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
-              </div>
-              <p>Assume that killing a cell involves also killing its associated group(s) and any entitys, tweens, filters etc currently associated with it?</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.killCell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">let</span> mycell = (item.substring) ? cell[item] : item;
-
-    <span class="hljs-keyword">if</span> (mycell) mycell.demolishCell();
-
-    <span class="hljs-keyword">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
-              </div>
-              <p>TODO - code up this functionality</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
-              </div>
-              <p>In the DOM, we need to:</p>
-<ul>
-<li>remove the canvas element</li>
-<li>remove all the ARIA elements associated with it</li>
-<li>remove the textHold element associated with it</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <p>In Scrawl-canvas, we need to:</p>
-<ul>
-<li>remove the base cell associated with the canvas<ul>
-<li>which probably needs functionality coded up in factory/Cell.js</li>
-<li>see if we need to add in checks for the existence of the object in tweens and pivot/mimic positioning functionality</li>
-</ul>
-</li>
-<li>remove the canvas object from the library (artefact, canvas) - see if we need to overwrite core/base.js function</li>
-</ul>
+              <p>TODO - is this all that is needed? </p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.demolish = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">removeDomElement = true</span>) </span>{
-
-    removeItem(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
-
-    removeItem(rootElements, <span class="hljs-keyword">this</span>.name);
-    setRootElementsSort();
-
-    <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement,
-        navigation = <span class="hljs-keyword">this</span>.navigation,
-        textHold = <span class="hljs-keyword">this</span>.textHold,
-        ariaLabel = <span class="hljs-keyword">this</span>.ariaLabelElement,
-        ariaDescription = <span class="hljs-keyword">this</span>.ariaDescriptionElement;
-
-    navigation.parentNode.removeChild(navigation);
-    textHold.parentNode.removeChild(textHold);
-    ariaLabel.parentNode.removeChild(ariaLabel);
-    ariaDescription.parentNode.removeChild(ariaDescription);
-    <span class="hljs-keyword">if</span> (removeDomElement) el.parentNode.removeChild(el);
-
-    <span class="hljs-keyword">this</span>.killCell(<span class="hljs-keyword">this</span>.base);
-
-    <span class="hljs-keyword">this</span>.deregister();
-
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-};</pre></div></div>
             
         </li>
         
@@ -1414,6 +1392,29 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>Assume that killing a cell involves also killing its associated group(s) and any entitys, tweens, filters etc currently associated with it?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.killCell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">let</span> mycell = (item.substring) ? cell[item] : item;
+
+    <span class="hljs-keyword">if</span> (mycell) mycell.kill();
+
+    <span class="hljs-keyword">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1440,11 +1441,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1473,11 +1474,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1516,11 +1517,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1543,11 +1544,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1598,26 +1599,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-59">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
-              </div>
-              <p>Trigger event action responses in (visible) entitys at the current mouse/touch </p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
-              <p>Trigger event action responses in (visible) entitys at the current canvas element <em>here</em> attribute coordinates</p>
+              <p>Trigger event action responses in (visible) entitys at the current mouse/touch </p>
 
             </div>
             
@@ -1630,9 +1618,7 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
-              <ul>
-<li>Available cascadeEventAction arguments are: ‘enter’, ‘leave’, ‘down’, or ‘up’</li>
-</ul>
+              <p>Trigger event action responses in (visible) entitys at the current canvas element <em>here</em> attribute coordinates</p>
 
             </div>
             
@@ -1646,7 +1632,7 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
                 <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <ul>
-<li>A ‘move’ argument can also be used, which will trigger enter and leave actions on the entitys, as appropriate to each</li>
+<li>Available cascadeEventAction arguments are: ‘enter’, ‘leave’, ‘down’, or ‘up’</li>
 </ul>
 
             </div>
@@ -1659,6 +1645,21 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <ul>
+<li>A ‘move’ argument can also be used, which will trigger enter and leave actions on the entitys, as appropriate to each</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>Function returns an Array of name Strings for the entitys at the current mouse cursor coordinates </p>
 
@@ -1679,11 +1680,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <ol>
 <li>Find all entitys currently colliding with the mouse/touch coordinate over the canvas</li>
@@ -1703,11 +1704,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <ol start="2">
 <li>Process the returned test results</li>
@@ -1741,11 +1742,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <ol start="3">
 <li>Trigger the required action on each affected entity</li>
@@ -1796,11 +1797,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <ol start="4">
 <li>Cleanup and return</li>
@@ -1816,11 +1817,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1837,11 +1838,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

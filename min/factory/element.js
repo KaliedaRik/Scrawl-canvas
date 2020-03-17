@@ -41,6 +41,10 @@ P = anchorMix(P);
 P = domMix(P);
 let defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.factoryKill = function () {
+removeItem(uiSubscribedElements, this.name);
+this.domElement.remove();
+};
 let S = P.setters;
 S.text = function (item) {
 if (isa_dom(this.domElement)) {
@@ -62,22 +66,6 @@ this.dirtyContent = true;
 };
 P.cleanDimensionsAdditionalActions = function () {
 this.dirtyDomDimensions = true;
-};
-P.demolish = function (removeFromDom = false) {
-let el = this.domElement,
-name = this.name,
-g = this.group;
-if (g) g.removeArtefacts(name);
-if (el && removeFromDom) el.parentNode.removeChild(el);
-if (this.pivot) removeItem(this.pivot.pivoted, this.name);
-if (this.path) removeItem(this.path.pathed, this.name);
-if (this.mimic) removeItem(this.mimic.mimicked, this.name);
-removeItem(uiSubscribedElements, name);
-delete element[name];
-removeItem(elementnames, name);
-delete artefact[name];
-removeItem(artefactnames, name);
-return true;
 };
 P.addCanvas = function (items = {}) {
 if (!this.canvas) {

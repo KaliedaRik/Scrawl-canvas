@@ -306,3 +306,103 @@ scrawl.makeRender({
     commence: mouseCheck,
     afterShow: report,
 });
+
+console.log(scrawl.library);
+
+// To test kill functionality
+let killArtefact = (name, time, finishResurrection) => {
+
+    let groupname = 'mycanvas_base',
+        packet;
+
+    let checkGroupBucket = (name, groupname) => {
+
+        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
+        return (res.length) ? 'no' : 'yes';
+    };
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+        packet = scrawl.library.artefact[name].saveAsPacket();
+
+        scrawl.library.artefact[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(() => {
+
+                console.log(`${name} resurrected
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+                finishResurrection();
+
+            }, 100);
+        }, 100);
+    }, time);
+};
+
+killArtefact('pin-1', 2000, () => {
+
+    pins.addArtefacts('pin-1');
+
+    scrawl.library.artefact['my-quad'].set({
+        pivot: 'pin-1',
+        lockTo: 'pivot',
+    });
+});
+
+killArtefact('pin-5', 3000, () => {
+
+    pins.addArtefacts('pin-5');
+
+    scrawl.library.artefact['my-bezier'].set({
+        startControlPivot: 'pin-5',
+        startControlLockTo: 'pivot',
+    });
+});
+
+killArtefact('pin-7', 4000, () => {
+
+    pins.addArtefacts('pin-7');
+
+    scrawl.library.artefact['my-bezier'].set({
+        endPivot: 'pin-7',
+        endLockTo: 'pivot',
+    });
+});
+
+killArtefact('my-bezier', 5000, () => {
+
+    scrawl.library.artefact['path-line'].set({
+        endPath: 'my-bezier',
+        endLockTo: 'path',
+    });
+
+    scrawl.library.artefact['bunny1'].set({
+        path: 'my-bezier',
+        lockTo: 'path',
+    });
+});

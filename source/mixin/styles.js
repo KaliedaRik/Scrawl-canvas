@@ -7,7 +7,8 @@
 
 
 // ## Imports
-import { addStrings, defaultNonReturnFunction, mergeOver, xt, mergeDiscard } from '../core/utilities.js';
+import { entity, asset, palette } from '../core/library.js';
+import { addStrings, defaultNonReturnFunction, mergeOver, xt, isa_obj, mergeDiscard } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 import { makePalette } from '../factory/palette.js';
@@ -41,6 +42,46 @@ export default function (P = {}) {
         cyclePalette: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
+
+
+// ## Packet management
+    P.finalizePacketOut = function (copy, items) {
+
+        if (items.colors) copy.colors = items.colors;
+        else if (this.palette && this.palette.colors) copy.colors = this.palette.colors;
+        else copy.colors = {'0 ': [0,0,0,1], '999 ': [255,255,255,1]};
+
+        return copy;
+    };
+
+
+// ## Kill functionality - overwrites ./mixin/base.js
+    P.kill = function () {
+
+        let myname = this.name;
+
+        if (this.palette && this.palette.kill) this.palette.kill();
+
+        // Remove style from all entity state objects
+        Object.entries(entity).forEach(([name, ent]) => {
+
+            let state = ent.state;
+
+            if (state) {
+
+                let fill = state.fillStyle,
+                    stroke = state.strokeStyle;
+
+                if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
+                if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+            }
+        });
+        
+        // Remove style from the Scrawl-canvas library
+        this.deregister();
+        
+        return this;
+    };
 
 
 // ## Define getter, setter and deltaSetter functions
@@ -224,6 +265,13 @@ export default function (P = {}) {
         }
     };
 
+    S.colors = function (item) {
+
+        let p = this.palette;
+
+        if (p && p.colors) p.set({ colors: item });
+    };
+
 // TODO - documentation
     S.delta = function (items = {}) {
 
@@ -390,13 +438,13 @@ export default function (P = {}) {
         this.currentStart = makeCoordinate();
         this.currentEnd = makeCoordinate();
 
-        this.set(this.defs);
-
         this.palette = makePalette({
             name: `${this.name}_palette`,
         });
 
         this.delta = {};
+
+        this.set(this.defs);
 
         this.set(items);
     };

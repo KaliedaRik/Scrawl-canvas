@@ -1,25 +1,28 @@
 // # Core user interaction
+//
+// A set of functions that are closely tied to the [core/document.js](./document.html) functionality, and a couple of additional coder convenience functions.
+//
+// Scrawl-canvas adds some event listeners (mouse movement, screen resize, scrolling) to the window object. These help maintain a centralizerd mouse/touch cursor tracking facility that updates here and then cascades and localizes to artefacts (stacks, canvases and element wrapper objects) which need to keep track of a __local, immediately updated mouse/touch coordinate__.
+//
+// Checks to see if events have occurred happen once per requestAnimationFrame tick - this is to choke the more eager event listeners which can, at times, fire thousands of times a second.
 
-// TODO - documentation
-
-
-
-// ## Imports
+// Imports
 import * as library from "./library.js";
 import { xt, xta, isa_dom, isa_fn, defaultNonReturnFunction } from "./utilities.js";
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "./document.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
+// `Exported array` (to modules). DOM element wrappers subscribe for updates by adding themselves to the __uiSubscribedElements__ array. When an event fires, the updated data will be pushed to them automatically
 const uiSubscribedElements = [];
 
 
-// Scrawl-canvas mouse tracking functionality can be switched off by setting the __scrawl.ui.trackMouse__ flag to false
+// Local boolean flags. 
 let trackMouse = false,
     mouseChanged = false;
 
 
-// __currentCorePosition__ object holds the mouse cursor position, alongside browser view dimensions and scroll position
+// `Exported object` (to modules and the scrawl object). The __currentCorePosition__ object holds the __global__ mouse cursor position, alongside browser view dimensions and scroll position
 const currentCorePosition = {
     x: 0,
     y: 0,
@@ -82,7 +85,9 @@ const moveAction = function (e) {
 
 // The events that trigger this function (touchstart, touchmove, touchend, touchcancel) are tied to the window object, not to any particular DOM element.
 
-// Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.
+// Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. 
+//
+// TODO: Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.
 const touchAction = function (e) {
 
     if (e.type === 'touchstart' || e.type === 'touchmove') {
@@ -143,7 +148,7 @@ const updateUiSubscribedElement = function (art) {
 };
 
 
-// Attach and remove core listeners attached to the __window__ object
+// Animation object which checks whether any window event listeners have fired, and actions accordingly
 const coreListenersTracker = makeAnimation({
 
     name: 'coreListenersTracker',
@@ -166,6 +171,7 @@ const coreListenersTracker = makeAnimation({
     },
 });
 
+// `Exported functions` (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas's impact on those pages by switching off the core listeners (and also the core animation loop).
 const startCoreListeners = function () {
 
     actionCoreListeners('removeEventListener');
@@ -185,6 +191,7 @@ const stopCoreListeners = function () {
     actionCoreListeners('removeEventListener');
 };
 
+// Helper function
 const actionCoreListeners = function (action) {
 
     if (navigator.pointerEnabled || navigator.msPointerEnabled) {
@@ -213,6 +220,7 @@ const actionCoreListeners = function (action) {
     window[action]('resize', resizeAction, false);
 };
 
+// `Exported functions` (to modules). Invoke the resize and/or scroll event listeners once, outside the regular requestAnimationFrame tick.
 const applyCoreResizeListener = function () {
 
     resizeAction();
@@ -226,23 +234,23 @@ const applyCoreScrollListener = function () {
 };
 
 
-// #### User interaction to test Scrawl-canvas Demos
-
+// #### Convenience functions
+//
 // Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:
-
 // + scrawl.addNativeListener()
 // + scrawl.removeNativeListener()
-
+//
 // Then there was the use case for reacting to various mouse (and touch) events, so I bundled all those up into a set of complementary functions:
-
 // + scrawl.addListener()
 // + scrawl.removeListener()
-
+//
 // Even so, there was still a lot of boilerplate code to write, in particular to listening for user interaction with form elements (which can be anywhere on the web page). So I further factorised that code into an __observeAndUpdate__ function which uses the listener functions internally.
-
+//
 // I have no idea how useful the observeAndUpdate function will be to anyone else. All I know is that it works for me and my demos, and that makes me happy.
-
+//
 // Note: observeAndUpdate() returns a function that will (in theory) remove all the bundled event listeners from their DOM elements when it is invoked. Not yet tested.
+
+// `Exported function` (to modules and the scrawl object). Capture changes in a form and apply them to a target Scrawl-canvas artefact, asset, style, group, etc object
 const observeAndUpdate = function (items = {}) {
 
     if (!xta(items.event, items.origin, items.updates)) return false;
@@ -269,8 +277,6 @@ const observeAndUpdate = function (items = {}) {
             e.returnValue = false;
         };
     }
-
-    
 
     let func = function (e) {
 
@@ -366,27 +372,27 @@ const observeAndUpdate = function (items = {}) {
 };
 
 
-// #### Setting up drag-and-drop zones.
-
-// __makeDragZone__ is an attempt to make setting up drag-and-drop functionality withing a Scrawl-canvas stack or canvas as simple as possible
-
+// #### Drag-and-drop zones.
+//
+// __makeDragZone__ is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible
+//
 // Required attribute of the argument object:
-
 // + __.zone__ - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself
-
+//
 // Optional argument object attributes:
-
 // + __.coodinateSource__ - the .here object of whatever artefact/asset (Stack, Canvas, Element or Cell) will be supplying the coordinates. Defaults to the .here object of either the Stack zone, or the .here object of the Canvas zone's base Cell.
 // + __.collisionGroup__ - the group containg the draggable artefacts, or that Group object's name String. Defaults to the Stack zone's Group object, or the Canvas's base Cell's Group object.
 // + __.startOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'down'
 // + __.endOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'up'
 // + __.exposeCurrentArtefact__ boolean. Defaults to false
-
+//
 // If the exposeCurrentArtefact attribute is true, the function returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). 
-
+//
 // Invoking the returned function with a single argument that evaluates to true will trigger the kill function.
-
+//
 // If the exposeCurrentArtefact attribute is false, or omitted, the function returns a kill function that can be invoked to remove the event listeners from the Stack or Canvas zone's DOM element.
+
+// `Exported function` (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.
 const makeDragZone = function (items = {}) {
 
     if (!items.zone) return false;
@@ -479,8 +485,6 @@ const makeDragZone = function (items = {}) {
     else return kill;
 };
 
-
-// TODO - documentation
 export {
     uiSubscribedElements,
     currentCorePosition,

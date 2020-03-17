@@ -327,7 +327,7 @@ export default function (P = {}) {
                     }
                 }
 
-                else if (packetObjects.indexOf(key) >= 0 && this[key].name) copy[key] = this[key].name;
+                else if (packetObjects.indexOf(key) >= 0 && this[key] && this[key].name) copy[key] = this[key].name;
 
                 else if (packetCoordinates.indexOf(key) >= 0) {
 

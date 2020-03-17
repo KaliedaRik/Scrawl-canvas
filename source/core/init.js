@@ -1,11 +1,9 @@
 // # Core initialization
-
-// This needs to run once after the scrawl.js file (or equivalent) loads
-
-// TODO - documentation
+//
+// A single, `exported function` (to modules). This needs to run once after the scrawl.js module (or equivalent) loads
 
 
-// ## Imports
+// Imports
 import { startCoreAnimationLoop } from './animationloop.js';
 import { getCanvases, getStacks } from './document.js';
 import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } from './userInteraction.js';
@@ -13,34 +11,32 @@ import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } 
 
 const init = function () {
 
-// ## Perform some environment checks
+	// #### Environment checks
 
-// Lodge the results in the window object so other parts of the Scrawl-canvas code base can quickly check them
+	// Flags to indicate if Scrawl-canvas is running in a touch-enabled environment. We lodge the results in the window object so other parts of the Scrawl-canvas code base can quickly check them
 
-// Flag to indicate if Scrawl-canvas is running in a touch-enabled environment
+	// Flag to indicate whether the device is touch-enabled
     window.scrawlEnvironmentTouchSupported = ('ontouchstart' in window || (window.DocumentTouch && document instanceof DocumentTouch)) ? true : false;
 
-// Flag to indicate if Scrawl-canvas can use OffscreenCanvas interface
+	// Flag to indicate if Scrawl-canvas can use OffscreenCanvas interface
     window.scrawlEnvironmentOffscreenCanvasSupported = ('OffscreenCanvas' in window) ? true : false;
 
 
-// ## Initialize Scrawl-canvas on the page
+	// #### Initialization
 
-// Discovery phase - collect all canvas elements present in the DOM, and any other elements with a 'data-stack' attribute
+	// Discovery phase - collect all canvas elements present in the DOM, and any other elements with a 'data-stack' attribute
     getStacks();
     getCanvases();
 
-// Start the core animation loop
+	// Start the core animation loop
     startCoreAnimationLoop();
 
-// Start the core listeners on the window object
+	// Start the core listeners on the window object
     applyCoreResizeListener();
     applyCoreScrollListener();
     startCoreListeners();
 };
 
-
-// TODO - documentation
 export {
     init,
 };

@@ -1190,7 +1190,7 @@ box.deregister()</code></pre>
                     }
                 }
 
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (packetObjects.indexOf(key) &gt;= <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-keyword">this</span>[key].name) copy[key] = <span class="hljs-keyword">this</span>[key].name;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (packetObjects.indexOf(key) &gt;= <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-keyword">this</span>[key] &amp;&amp; <span class="hljs-keyword">this</span>[key].name) copy[key] = <span class="hljs-keyword">this</span>[key].name;
 
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (packetCoordinates.indexOf(key) &gt;= <span class="hljs-number">0</span>) {
 

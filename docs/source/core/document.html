@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Core DOM element discovery and management, and the Scrawl-canvas display cycle</title>
+  <title>DOM management</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -299,7 +299,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="core-dom-element-discovery-and-management-and-the-scrawl-canvas-display-cycle">Core DOM element discovery and management, and the Scrawl-canvas display cycle</h1>
+              <h1 id="dom-management">DOM management</h1>
+<p>Core DOM element discovery and management functionality, and the Scrawl-canvas <strong>Display cycle</strong>.</p>
+<p>Scrawl-canvas breaks down the display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
+<p>The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element’s controller’s <strong>order</strong> attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value</p>
 
             </div>
             
@@ -312,7 +315,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Scrawl-canvas breaks down the display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
+              <h2 id="dom-functionality">DOM Functionality</h2>
 
             </div>
             
@@ -325,20 +328,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element’s controller’s <strong>order</strong> attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <p>Imports</p>
 
             </div>
             
@@ -352,15 +342,38 @@
         </li>
         
         
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h4 id="root-elements">Root elements</h4>
+<p><code>Exported array and function</code> (to modules). Root elements are the boxes whose dimensions define the dimensions and positioning of all that they contain. All &lt;canvas&gt; elements are root elements. Scrawl-canvas also allows other DOM elements (typically &lt;div&gt; elements) to be defined as root elements called <strong>stacks</strong>, whose child elements can then be positioned and dimensioned just like entity objects in a canvas.</p>
+<p>Stacks can be nested within each other, and canvases can also be nested inside a stack. (Nothing can nest inside a canvas element). Only the top level stack will be included in the rootElements array.</p>
+<p>The Scrawl-canvas <strong>Display cycle</strong> - a cascade of Promise-based functionality for updating canvas and stack displays - can start at the rootElements array, with each member of the array processed in turn.</p>
+<p>The <strong>rootElements</strong> array keeps track of all ‘root’ stack artefacts, and also includes all canvas artefacts, whether they’re part of a stack or not. <strong>setRootElementSort</strong> forces the root</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> rootElements = [],
+    setRootElementsSort = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {rootElementsSort = <span class="hljs-literal">true</span>};</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="core-dom-element-discovery-and-management">Core DOM element discovery and management</h2>
+              <p>Local variables</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> rootElements_sorted = [],
+    rootElementsSort = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -371,43 +384,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Stack artefacts can be nested within each other, and canvas artefacts can also be nested inside a stack. A Display cycle can be triggered on a given Stack or Canvas artefact at any time (but usually as part of an animation loop); as part of that loop a stack artefact will also trigger a Display cycle on any child stacks.</p>
+              <p>Scrawl-canvas rootElements sorter uses a ‘bucket sort’ algorithm</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>Triggering a Display cycle render on a stack <strong>will not trigger</strong> a render on any child canvases!</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>The <strong>rootElements</strong> array keeps track of all ‘root’ stack artefacts, and also includes all canvas artefacts, whether they’re part of a stack or not.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> rootElements = [],
-    rootElements_sorted = [];
-
-<span class="hljs-keyword">let</span> rootElementsSort = <span class="hljs-literal">true</span>,
-    setRootElementsSort = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {rootElementsSort = <span class="hljs-literal">true</span>};
-
-<span class="hljs-keyword">const</span> sortRootElements = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> sortRootElements = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor;
 
@@ -434,11 +415,31 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h4 id="stack-discovery">Stack discovery</h4>
+<p><code>Exported function</code> (to modules). Parse the DOM, looking for all elements that have been given a <strong>data-stack</strong> attribute; then create <strong>Stack</strong> artefact wrappers for each of them. </p>
+<p>This function will also create wrappers for all <strong>direct child elements</strong> (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getStacks = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        
+    <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'[data-stack]'</span>).forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> addInitialStackElement(el));
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Create a <strong>stack</strong> artefact wrapper for a given stack element.</p>
 
@@ -480,11 +481,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Helper function for addInitialStackElement()</p>
 
@@ -498,11 +499,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Only go down one level of hierarchy here; stacks don’t do hierarchies, only interested in knowing about immediate child elements</p>
 
@@ -540,11 +541,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>No need to worry about processing child stacks - they’ll already be in the list of stacks to be processed</p>
 
@@ -557,11 +558,309 @@
         </li>
         
         
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addStack</strong> to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include </p>
+<ul>
+<li><strong>element</strong> - the DOM element to be the stack - if not present, will autogenerate a div element</li>
+<li><strong>host</strong> - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element’s current place or, failing all else, add the stack to the end of the document body</li>
+<li><strong>name</strong> - String identifier for the stack; if not included the function will attempt to use the element’s existing id or name attribute or, failing that, generate a random name for the stack.</li>
+<li>any other regular stack attribute</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addStack = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>define variables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> el, host, hostinscrawl, mystack, mygroup, name,
+        position = <span class="hljs-string">'absolute'</span>,
+        newElement = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>get, or generate a new, stack-to-be element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (items.element &amp;&amp; items.element.substring) el = <span class="hljs-built_in">document</span>.querySelector(items.element);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_dom(items.element)) el = items.element;
+    <span class="hljs-keyword">else</span> {
+
+        newElement = <span class="hljs-literal">true</span>;
+        el = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>get element’s host (parent-to-be) element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (items.host &amp;&amp; items.host.substring) {
+
+        host = <span class="hljs-built_in">document</span>.querySelector(items.host);
+        <span class="hljs-keyword">if</span> (!host) host = <span class="hljs-built_in">document</span>.body;
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_dom(items.host)) host = items.host;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xt(el.parentElement)) host = el.parentElement;
+    <span class="hljs-keyword">else</span> host = <span class="hljs-built_in">document</span>.body;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>if dimensions have been set in the argument, apply them to the stack-to-be element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (xt(items.width)) el.style.width = (items.width.toFixed) ? <span class="hljs-string">`<span class="hljs-subst">${items.width}</span>px`</span> : items.width;
+    <span class="hljs-keyword">if</span> (xt(items.height)) el.style.height = (items.height.toFixed) ? <span class="hljs-string">`<span class="hljs-subst">${items.height}</span>px`</span> : items.height;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>make sure the stack-to-be element has an id attribute</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    name = items.name || el.id || el.getAttribute(<span class="hljs-string">'name'</span>) || <span class="hljs-string">''</span>;
+    <span class="hljs-keyword">if</span> (!name) name = generateUuid();
+    el.id = name;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>set the ‘data-stack’ attribute on the stack-to-be element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    el.setAttribute(<span class="hljs-string">'data-stack'</span>, <span class="hljs-string">'data-stack'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element’s group </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host.getAttribute(<span class="hljs-string">'data-stack'</span>) != <span class="hljs-literal">null</span>) {
+
+        hostinscrawl = artefact[host.id];
+
+        mygroup = (hostinscrawl) ? hostinscrawl.name : <span class="hljs-string">'root'</span>;
+    }
+    <span class="hljs-keyword">else</span> mygroup = <span class="hljs-string">'root'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>set the ‘data-group’ attribute on the stack-to-be element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    el.setAttribute(<span class="hljs-string">'data-group'</span>, mygroup);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>determine what the stack-to-be element’s position style attribute will be</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (mygroup === <span class="hljs-string">'root'</span>) position = <span class="hljs-string">'relative'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>add (or move) the stack-to-be element to/in the DOM</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!el.parentElement || host.id !== el.parentElement.id) host.appendChild(el);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>create the Scrawl-canvas Stack artefact</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    mystack = makeStack({
+        <span class="hljs-attr">name</span>: name,
+        <span class="hljs-attr">domElement</span>: el,
+        <span class="hljs-attr">group</span>: mygroup,
+        <span class="hljs-attr">host</span>: mygroup,
+        <span class="hljs-attr">position</span>: position,
+        <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">true</span>
+    });
+
+    processNewStackChildren(el, name);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>in case any of the child elements were already a Scrawl-canvas stack, un-root them (if required)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Array</span>.from(el.childNodes).forEach(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (child.id &amp;&amp; rootElements.indexOf(child.id) &gt;= <span class="hljs-number">0</span>) removeItem(rootElements, child.id);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>set the new Stack’s remaining attributes, clearing out any attributes already handled</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">delete</span> items.name;
+    <span class="hljs-keyword">delete</span> items.element;
+    <span class="hljs-keyword">delete</span> items.host;
+    <span class="hljs-keyword">delete</span> items.width;
+    <span class="hljs-keyword">delete</span> items.height;
+    mystack.set(items);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>tidy up and complete</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    rootElementsSort = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> mystack;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h4 id="canvas-discovery">Canvas discovery</h4>
+<p><code>Exported function</code> (to modules). Parse the DOM, looking for &lt;canvas&gt; elements; then create <strong>Canvas</strong> artefact and <strong>Cell</strong> asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getCanvases = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'canvas'</span>).forEach(<span class="hljs-function">(<span class="hljs-params">el, index</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> item = addInitialCanvasElement(el);
+
+        <span class="hljs-keyword">if</span> (!index) setCurrentCanvas(item);
+    });
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Create a <strong>canvas</strong> artefact wrapper for a given canvas element.</p>
 
@@ -599,67 +898,13 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Parse the DOM, looking for all elements that have been given a <strong>data-stack</strong> attribute; then create <strong>Stack</strong> artefact wrappers for each of them. </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>Will also create wrappers for all <em>direct child elements_</em> (one level down) within the stack and create appropriate wrappers (Stack, Canvas, Element) for them.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getStacks = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        
-    <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'[data-stack]'</span>).forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> addInitialStackElement(el));
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Parse the DOM, looking for &lt;canvas&gt; elements; then create <strong>Canvas</strong> artefact and <strong>Cell</strong> asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getCanvases = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'canvas'</span>).forEach(<span class="hljs-function">(<span class="hljs-params">el, index</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">let</span> item = addInitialCanvasElement(el);
-
-        <span class="hljs-keyword">if</span> (!index) setCurrentCanvas(item);
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>Parse the DOM, looking for &lt;canvas&gt; elements; then create <strong>Canvas</strong> artefact and <strong>Cell</strong> asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.</p>
+              <p><code>Exported function</code> (to modules and scrawl object). Parse the DOM, looking for a specific &lt;canvas&gt; element; then create a <strong>Canvas</strong> artefact and <strong>Cell</strong> asset wrapper for it.</p>
 
             </div>
             
@@ -677,233 +922,15 @@
         </li>
         
         
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>Use <strong>addStack</strong> to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <ul>
-<li><strong>element</strong> - the DOM element to be the stack - if not present, will autogenerate a div element</li>
-<li><strong>host</strong> - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element’s current place or, failing all else, add the stack to the end of the document body</li>
-<li><strong>name</strong> - String identifier for the stack; if not included the function will attempt to use the element’s existing id or name attribute or, failing that, generate a random name for the stack.</li>
-<li>any other regular stack attribute</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addStack = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>define variables</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> el, host, hostinscrawl, mystack, mygroup, name,
-        position = <span class="hljs-string">'absolute'</span>,
-        newElement = <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>get, or generate a new, stack-to-be element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (items.element &amp;&amp; items.element.substring) el = <span class="hljs-built_in">document</span>.querySelector(items.element);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_dom(items.element)) el = items.element;
-    <span class="hljs-keyword">else</span> {
-
-        newElement = <span class="hljs-literal">true</span>;
-        el = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
-    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>get element’s host (parent-to-be) element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (items.host &amp;&amp; items.host.substring) {
-
-        host = <span class="hljs-built_in">document</span>.querySelector(items.host);
-        <span class="hljs-keyword">if</span> (!host) host = <span class="hljs-built_in">document</span>.body;
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_dom(items.host)) host = items.host;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xt(el.parentElement)) host = el.parentElement;
-    <span class="hljs-keyword">else</span> host = <span class="hljs-built_in">document</span>.body;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>if dimensions have been set in the argument, apply them to the stack-to-be element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (xt(items.width)) el.style.width = (items.width.toFixed) ? <span class="hljs-string">`<span class="hljs-subst">${items.width}</span>px`</span> : items.width;
-    <span class="hljs-keyword">if</span> (xt(items.height)) el.style.height = (items.height.toFixed) ? <span class="hljs-string">`<span class="hljs-subst">${items.height}</span>px`</span> : items.height;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>make sure the stack-to-be element has an id attribute</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    name = items.name || el.id || el.getAttribute(<span class="hljs-string">'name'</span>) || <span class="hljs-string">''</span>;
-    <span class="hljs-keyword">if</span> (!name) name = generateUuid();
-    el.id = name;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>set the ‘data-stack’ attribute on the stack-to-be element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    el.setAttribute(<span class="hljs-string">'data-stack'</span>, <span class="hljs-string">'data-stack'</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element’s group </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host.getAttribute(<span class="hljs-string">'data-stack'</span>) != <span class="hljs-literal">null</span>) {
-
-        hostinscrawl = artefact[host.id];
-
-        mygroup = (hostinscrawl) ? hostinscrawl.name : <span class="hljs-string">'root'</span>;
-    }
-    <span class="hljs-keyword">else</span> mygroup = <span class="hljs-string">'root'</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>set the ‘data-group’ attribute on the stack-to-be element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    el.setAttribute(<span class="hljs-string">'data-group'</span>, mygroup);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>determine what the stack-to-be element’s position style attribute will be</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (mygroup === <span class="hljs-string">'root'</span>) position = <span class="hljs-string">'relative'</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>add (or move) the stack-to-be element to/in the DOM</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!el.parentElement || host.id !== el.parentElement.id) host.appendChild(el);</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>create the Scrawl-canvas Stack artefact</p>
+              <p>Scrawl-canvas expects one canvas element (if any canvases are present) to act as the ‘current’ canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using <strong>scrawl.setCurrentCanvas</strong></p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    mystack = makeStack({
-        <span class="hljs-attr">name</span>: name,
-        <span class="hljs-attr">domElement</span>: el,
-        <span class="hljs-attr">group</span>: mygroup,
-        <span class="hljs-attr">host</span>: mygroup,
-        <span class="hljs-attr">position</span>: position,
-        <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">true</span>
-    });
-
-    processNewStackChildren(el, name);</pre></div></div>
             
         </li>
         
@@ -914,14 +941,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>in case any of the child elements were already a Scrawl-canvas stack, un-root them (if required)</p>
+              <p><code>Exported variables</code> (to modules). </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Array</span>.from(el.childNodes).forEach(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
-
-        <span class="hljs-keyword">if</span> (child.id &amp;&amp; rootElements.indexOf(child.id) &gt;= <span class="hljs-number">0</span>) removeItem(rootElements, child.id);
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentCanvas = <span class="hljs-literal">null</span>,
+    currentGroup = <span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -932,16 +957,39 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>set the new Stack’s remaining attributes, clearing out any attributes already handled</p>
+              <p><code>Exported function</code> (to modules and scrawl object). </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">delete</span> items.name;
-    <span class="hljs-keyword">delete</span> items.element;
-    <span class="hljs-keyword">delete</span> items.host;
-    <span class="hljs-keyword">delete</span> items.width;
-    <span class="hljs-keyword">delete</span> items.height;
-    mystack.set(items);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setCurrentCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">let</span> changeFlag = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">if</span> (item) {
+
+        <span class="hljs-keyword">if</span> (item.substring) {
+
+            <span class="hljs-keyword">let</span> mycanvas = canvas[item];
+
+            <span class="hljs-keyword">if</span> (mycanvas) {
+                currentCanvas = mycanvas;
+                changeFlag = <span class="hljs-literal">true</span>;    
+            }
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.type === <span class="hljs-string">'Canvas'</span>) {
+
+            currentCanvas = item;    
+            changeFlag = <span class="hljs-literal">true</span>;    
+        } 
+    }
+
+    <span class="hljs-keyword">if</span> (changeFlag &amp;&amp; currentCanvas.base) {
+
+        <span class="hljs-keyword">let</span> mygroup = group[currentCanvas.base.name];
+
+        <span class="hljs-keyword">if</span> (mygroup) currentGroup = mygroup;
+    }
+};</pre></div></div>
             
         </li>
         
@@ -952,54 +1000,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>tidy up and complete</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    rootElementsSort = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> mystack;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p>Use <strong>addCanvas</strong> to add a Scrawl-canvas canvas element to a web page. The items argument should include </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <ul>
+              <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addCanvas</strong> to add a Scrawl-canvas canvas element to a web page. The items argument should include </p>
+<ul>
 <li><strong>host</strong> - the host element, either as the DOM element itself, or some sort of CSS search string, or a Scrawl-canvas Stack entity. If no host is supplied, Scrawl-canvas will add the new canvas element to the DOM document body; in all cases, the new canvas element is appended at the end of the host element (or DOM document)</li>
 <li><strong>name</strong> - String identifier for the element; will generate a random name for the canvas if no name is supplied.</li>
 <li>any other regular Scrawl-canvas Canvas artefact attribute</li>
 </ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <p>By default, Scrawl-canvas will setup the new Canvas as the ‘current canvas’, and will add mouse/pointer tracking functionality to it. If no dimensions are supplied then the Canvas will default to 300px wide and 150px high.</p>
+<p>By default, Scrawl-canvas will setup the new Canvas as the ‘current canvas’, and will add mouse/pointer tracking functionality to it. If no dimensions are supplied then the Canvas will default to 300px wide and 150px high.</p>
 
             </div>
             
@@ -1069,117 +1076,56 @@
         </li>
         
         
-        <li id="section-37">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>Scrawl-canvas expects one canvas element (if any canvases are present) to act as the ‘current’ canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using <strong>scrawl.setCurrentCanvas</strong></p>
+              <p>TODO - documentation</p>
+<p><code>Exported function</code> (to modules and scrawl object). </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentCanvas = <span class="hljs-literal">null</span>,
-    currentGroup = <span class="hljs-literal">null</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper</span>) </span>{
 
-<span class="hljs-keyword">const</span> setCurrentCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    <span class="hljs-keyword">if</span> (anim &amp;&amp; anim.run &amp;&amp; wrapper &amp;&amp; wrapper.domElement) {
 
-    <span class="hljs-keyword">let</span> changeFlag = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
 
-    <span class="hljs-keyword">if</span> (item) {
+            entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (item.substring) {
+                <span class="hljs-keyword">if</span> (entry.isIntersecting) !anim.isRunning() &amp;&amp; anim.run();
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) anim.isRunning() &amp;&amp; anim.halt();
+            });
+        }, {});
+        observer.observe(wrapper.domElement);
 
-            <span class="hljs-keyword">let</span> mycanvas = canvas[item];
-
-            <span class="hljs-keyword">if</span> (mycanvas) {
-                currentCanvas = mycanvas;
-                changeFlag = <span class="hljs-literal">true</span>;    
-            }
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.type === <span class="hljs-string">'Canvas'</span>) {
-
-            currentCanvas = item;    
-            changeFlag = <span class="hljs-literal">true</span>;    
-        } 
+        <span class="hljs-keyword">return</span> observer.disconnect;
     }
-
-    <span class="hljs-keyword">if</span> (changeFlag &amp;&amp; currentCanvas.base) {
-
-        <span class="hljs-keyword">let</span> mygroup = group[currentCanvas.base.name];
-
-        <span class="hljs-keyword">if</span> (mygroup) currentGroup = mygroup;
-    }
-};</pre></div></div>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}</pre></div></div>
             
         </li>
         
         
-        <li id="section-38">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <h2 id="scrawl-canvas-user-interaction-listeners">Scrawl-canvas user interaction listeners</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
-              </div>
-              <p>Each scrawl-canvas stack and canvas can have bespoke Scrawl-canvas listeners attached to them, to track user mouse and touch interactions with that element. Scrawl-canvas defines five bespoke listeners:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <ul>
+              <h4 id="event-listeners">Event listeners</h4>
+<p>Each scrawl-canvas stack and canvas can have <strong>bespoke Scrawl-canvas listeners</strong> attached to them, to track user mouse and touch interactions with that element. Scrawl-canvas defines five bespoke listeners:</p>
+<ul>
 <li><strong>move</strong> - track mouse cursor and touch movements across the DOM element</li>
 <li><strong>down</strong> - register a new touch interaction, or user pressing the left mouse button</li>
 <li><strong>up</strong> - register the end of a touch interaction, or user releasing the left mouse button</li>
 <li><strong>enter</strong> - trigger an event when the mouse cursor or touch event enters into the DOM element</li>
 <li><strong>leave</strong> - trigger an event when the mouse cursor or touch event exits from the DOM element</li>
 </ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p>The functions all takes the following arguments:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <ul>
+<p>The functions all takes the following arguments:</p>
+<ul>
 <li><strong>evt</strong> - String name of the event (‘move’, ‘down’, ‘up’, ‘enter’, ‘leave’), or an array of such strings</li>
 <li><strong>fn</strong> - the function to be called when the event listener(s) trigger</li>
 <li><strong>targ</strong> - either the DOM element object, or an array of DOM element objects, or a query selector String; these elements need to be registered in the Scrawl-canvas library beforehend (done automatically for stack and canvas elements)</li>
@@ -1190,13 +1136,13 @@
         </li>
         
         
-        <li id="section-43">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
+              <p><code>Exported function</code> (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
 
             </div>
             
@@ -1216,13 +1162,13 @@
         </li>
         
         
-        <li id="section-44">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>The counterpart to ‘addListener’ is <strong>removeListener</strong> which removes Scrawl-canvas event listeners from DOM elements in a similar way</p>
+              <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addListener’ is <strong>removeListener</strong> which removes Scrawl-canvas event listeners from DOM elements in a similar way</p>
 
             </div>
             
@@ -1236,11 +1182,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Because devices and browsers differ in their approach to user interaction (mouse vs pointer vs touch), the actual functionality for adding and removing the event listeners associated with each approach is handled by dedicated actionXXXListener functions</p>
 
@@ -1249,11 +1195,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>TODO: code up the functionality to manage touch events</p>
 
@@ -1349,39 +1295,16 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>Any event listener can be added to a Scrawl-canvas stack or canvas DOM element. The <strong>addNativeListener</strong> makes adding and removing these ‘native’ listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
-              </div>
-              <p>The function requires three arguments:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
-              </div>
-              <ul>
+              <p><strong>Any event listener</strong> can be added to a Scrawl-canvas stack or canvas DOM element. </p>
+<p>The <strong>addNativeListener</strong> function makes adding and removing these ‘native’ listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.</p>
+<p>The function requires three arguments:</p>
+<ul>
 <li><strong>evt</strong> - String name of the event (‘click’, ‘input’, ‘change’, etc), or an array of such strings</li>
 <li><strong>fn</strong> - the function to be called when the event listener(s) trigger</li>
 <li><strong>targ</strong> - either the DOM element object, or an array of DOM element objects, or a query selector String</li>
@@ -1392,13 +1315,13 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
+              <p><code>Exported function</code> (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
 
             </div>
             
@@ -1418,13 +1341,13 @@
         </li>
         
         
-        <li id="section-51">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>The counterpart to ‘addNativeListener’ is <strong>removeNativeListener</strong> which removes event listeners from DOM elements in a similar way</p>
+              <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addNativeListener’ is <strong>removeNativeListener</strong> which removes event listeners from DOM elements in a similar way</p>
 
             </div>
             
@@ -1458,94 +1381,47 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <h2 id="scrawl-canvas-display-cycle">Scrawl-canvas display cycle</h2>
+              <h2 id="the-display-cycle">The Display cycle</h2>
+<p>Scrawl-canvas breaks down the Display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
+<p>The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element’s controller’s <strong>order</strong> attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value</p>
+<p>Each display cycle function returns a Promise object which will resolve as true if the function completes successfully; false otherwise. These promises will never reject</p>
+<p>Note that Scrawl-canvas supplies a convenience function - <strong>makeRender()</strong> - for automating the process of creating an animation object to handle the Display cycle</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-53">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>Scrawl-canvas breaks down the Display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
-              </div>
-              <p>The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element’s controller’s <strong>order</strong> attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-55">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
-              </div>
-              <p>Each display cycle function returns a Promise object which will resolve as true if the function completes successfully; false otherwise. These promises will never reject</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-56">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
-              </div>
-              <p>Note that Scrawl-canvas supplies a convenience function - <strong>makeRender()</strong> - for automating the process of creating an animation object to handle the Display cycle</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-57">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
-              </div>
-              <h3 id="clear">Clear</h3>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-58">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
-              </div>
-              <ul>
+              <h4 id="clear">Clear</h4>
+<ul>
 <li>For canvas artefacts, clear its Cell assets’ display (reset all pixels to 0, or the designated background color) ready for them to be redrawn</li>
 <li>For stack artefacts - no action required</li>
 </ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p><code>Exported function</code> (to modules and scrawl object). </p>
 
             </div>
             
@@ -1558,29 +1434,30 @@
         </li>
         
         
-        <li id="section-59">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <h3 id="compile">Compile</h3>
+              <h4 id="compile">Compile</h4>
+<ul>
+<li>For both canvas and stack artefacts, perform necessary entity/element positional calculations</li>
+<li>Additionally for canvas artefacts, stamp associated entitys onto the canvas’s constituent cell assets</li>
+</ul>
 
             </div>
             
         </li>
         
         
-        <li id="section-60">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <ul>
-<li>For both canvas and stack artefacts, perform necessary entity/element positional calculations</li>
-<li>Additionally for canvas artefacts, stamp associated entitys onto the canvas’s constituent cell assets</li>
-</ul>
+              <p><code>Exported function</code> (to modules and scrawl object). </p>
 
             </div>
             
@@ -1593,29 +1470,30 @@
         </li>
         
         
-        <li id="section-61">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <h3 id="show">Show</h3>
+              <h4 id="show">Show</h4>
+<ul>
+<li>For canvas artefacts, stamp additional ‘layer’ canvases onto the base canvas, then copy the base canvas onto the display canvas</li>
+<li>For stack artefacts - invoke the <strong>domShow</strong> function, if any of its constituent elements require DOM-related updating</li>
+</ul>
 
             </div>
             
         </li>
         
         
-        <li id="section-62">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
-              <ul>
-<li>For canvas artefacts, stamp additional ‘layer’ canvases onto the base canvas, then copy the base canvas onto the display canvas</li>
-<li>For stack artefacts - invoke the <strong>domShow</strong> function, if any of its constituent elements require DOM-related updating</li>
-</ul>
+              <p><code>Exported function</code> (to modules and scrawl object). </p>
 
             </div>
             
@@ -1628,28 +1506,29 @@
         </li>
         
         
-        <li id="section-63">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
-              <h3 id="render">Render</h3>
+              <h4 id="render">Render</h4>
+<ul>
+<li>Orchestrate the clear, compile and show actions on each stack and canvas DOM element</li>
+</ul>
 
             </div>
             
         </li>
         
         
-        <li id="section-64">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
-              <ul>
-<li>Orchestrate the clear, compile and show actions on each stack and canvas DOM element</li>
-</ul>
+              <p><code>Exported function</code> (to modules and scrawl object). </p>
 
             </div>
             
@@ -1662,11 +1541,11 @@
         </li>
         
         
-        <li id="section-65">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>Helper functions coordinate the actions required to complete a display cycle</p>
 
@@ -1700,102 +1579,49 @@
         </li>
         
         
-        <li id="section-66">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (anim &amp;&amp; anim.run &amp;&amp; wrapper &amp;&amp; wrapper.domElement) {
-
-        <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
-
-            entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
-
-                <span class="hljs-keyword">if</span> (entry.isIntersecting) !anim.isRunning() &amp;&amp; anim.run();
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) anim.isRunning() &amp;&amp; anim.halt();
-            });
-        }, {});
-        observer.observe(wrapper.domElement);
-
-        <span class="hljs-keyword">return</span> observer.disconnect;
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-67">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
-              </div>
-              <h3 id="dom-element-updates">DOM element updates</h3>
+              <h2 id="dom-element-updates">DOM element updates</h2>
+<p>Scrawl-canvas will batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don’t maintain a full/comprehensive ‘shadow’ or ‘virtual’ DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.</p>
+<p>The decision on whether to update a DOM element is mediated through a suite of ‘dirty’ flags assigned on the Scrawl-canvas artefact object which wraps each DOM element. As part of the compile component of the Scrawl-canvas Display cycle, the code will take a decision on whether the DOM element needs to be updated and insert the artefact’s name in the <strong>domShowElements</strong> array, and set the <strong>domShowRequired</strong> flag to true, which will then trigger the <strong>domShow()</strong> function to run at the end of each Display cycle.</p>
+<p>The domShow() function is exported, and can be triggered for any DOM-related artefact at any time by invoking it with the artefact’s name as the function’s argument.</p>
+<p>The order in which DOM elements get updated is determined by the <strong>order</strong> attributes set on the Stack artefact, on Group objects, and (least important) on the element artefact.</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-68">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
-              <p>Scrawl-canvas will batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don’t maintain a full/comprehensive ‘shadow’ or ‘virtual’ DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.</p>
+              <p>Local variable</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> domShowElements = [];</pre></div></div>
             
         </li>
         
         
-        <li id="section-69">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
-              <p>The decision on whether to update a DOM element is mediated through a suite of ‘dirty’ flags assigned on the Scrawl-canvas artefact object which wraps each DOM element. As part of the compile component of the Scrawl-canvas Display cycle, the code will take a decision on whether the DOM element needs to be updated and insert the artefact’s name in the <strong>domShowElements</strong> array, and set the <strong>domShowRequired</strong> flag to true, which will then trigger the <strong>domShow()</strong> function to run at the end of each Display cycle.</p>
+              <p><code>Exported function</code> (to modules). </p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
-              </div>
-              <p>The domShow() function is exported, and can be triggered for any DOM-related artefact at any time by invoking it with the artefact’s name as the function’s argument.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-71">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
-              </div>
-              <p>The order in which DOM elements get updated is determined by the <strong>order</strong> attributes set on the Stack artefact, on Group objects, and (least important) on the element artefact.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> domShowElements = [];
-<span class="hljs-keyword">const</span> addDomShowElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = <span class="hljs-string">''</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addDomShowElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = <span class="hljs-string">''</span></span>) </span>{
 
     <span class="hljs-keyword">if</span> (!item) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addDomShowElement() error - false argument supplied: <span class="hljs-subst">${item}</span>`</span>);
     <span class="hljs-keyword">if</span> (!item.substring) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addDomShowElement() error - argument not a string: <span class="hljs-subst">${item}</span>`</span>);
@@ -1803,13 +1629,40 @@
     pushUnique(domShowElements, item);
 };
 
-<span class="hljs-keyword">let</span> domShowRequired = <span class="hljs-literal">false</span>;
-<span class="hljs-keyword">const</span> setDomShowRequired = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val = true</span>) </span>{
+<span class="hljs-keyword">let</span> domShowRequired = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p><code>Exported function</code> (to modules). </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setDomShowRequired = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val = true</span>) </span>{
 
     domShowRequired = val;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p><code>Exported function</code> (to modules). This is the <strong>main DOM manipulation function</strong> which will be triggered once during each Display cycle.</p>
 
-<span class="hljs-keyword">const</span> domShow = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">singleArtefact = <span class="hljs-string">''</span></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> domShow = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">singleArtefact = <span class="hljs-string">''</span></span>) </span>{
 
     <span class="hljs-keyword">if</span> (domShowRequired || singleArtefact) {
 
@@ -1826,11 +1679,11 @@
         </li>
         
         
-        <li id="section-72">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>given the critical nature of these loops, using ‘for’ instead of ‘forEach’</p>
 
@@ -1855,11 +1708,11 @@
         </li>
         
         
-        <li id="section-73">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>update perspective</p>
 
@@ -1878,11 +1731,11 @@
         </li>
         
         
-        <li id="section-74">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>update position</p>
 
@@ -1897,11 +1750,11 @@
         </li>
         
         
-        <li id="section-75">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>update dimensions</p>
 
@@ -1930,11 +1783,11 @@
         </li>
         
         
-        <li id="section-76">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>update handle/transformOrigin</p>
 
@@ -1949,11 +1802,11 @@
         </li>
         
         
-        <li id="section-77">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>update transform</p>
 
@@ -1968,11 +1821,11 @@
         </li>
         
         
-        <li id="section-78">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>update visibility</p>
 
@@ -1987,11 +1840,11 @@
         </li>
         
         
-        <li id="section-79">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>update other CSS changes</p>
 
@@ -2026,11 +1879,11 @@
         </li>
         
         
-        <li id="section-80">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>update element classes</p>
 
@@ -2048,26 +1901,27 @@
         </li>
         
         
-        <li id="section-81">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
-              <h4 id="holding-area">Holding area</h4>
+              <h4 id="dom-holding-areas">DOM Holding areas</h4>
+<p><code>Exported handles</code> (to modules). During its initialization phase, Scrawl-canvas will add two hidden ‘hold’ elements at the top and bottom of the document body where it can add additional elements as-and-when required. </p>
 
             </div>
             
         </li>
         
         
-        <li id="section-82">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
-              <p>Mainly for ARIA content, but also used by Phrase entity for font height calculations</p>
+              <p>Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas&gt; elements to inform non-visual website visitors about content in the canvas.</p>
 
             </div>
             
@@ -2086,26 +1940,13 @@ scrawlCanvasHold.id = <span class="hljs-string">'Scrawl-ARIA-default-hold'</span
         </li>
         
         
-        <li id="section-83">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
-              <h4 id="navigation-area---canvas-anchor-links">Navigation area - canvas anchor links</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-84">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
-              </div>
-              <p>TODO - consider recoding this so each canvas/stack gets its own &lt;nav&gt; element either inside it, or directly following it - this would make it clearer about which links belong to which Scrawl-canvas scene</p>
+              <p>Navigation area - canvas anchor links. Canvases create their own (hidden) &lt;nav&gt; elements that directly follow them in the DOM. These are used to store &lt;a&gt; links for clickable entitys in the canvas display, making them accessible to non-visual users (for example: screen readers)</p>
 
             </div>
             
@@ -2114,22 +1955,9 @@ scrawlNavigationHold.style.position = <span class="hljs-string">'absolute'</span
 scrawlNavigationHold.style.top = <span class="hljs-string">'-5000px'</span>;
 scrawlNavigationHold.style.left = <span class="hljs-string">'-5000px'</span>;
 scrawlNavigationHold.id = <span class="hljs-string">'Scrawl-navigation-default-hold'</span>;
-<span class="hljs-built_in">document</span>.body.prepend(scrawlNavigationHold);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-85">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+<span class="hljs-built_in">document</span>.body.prepend(scrawlNavigationHold);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
+<span class="hljs-keyword">export</span> {
     getCanvases,
     getCanvas,
     getStacks,

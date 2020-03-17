@@ -1,4 +1,5 @@
-import { addStrings, defaultNonReturnFunction, mergeOver, xt, mergeDiscard } from '../core/utilities.js';
+import { entity, asset, palette } from '../core/library.js';
+import { addStrings, defaultNonReturnFunction, mergeOver, xt, isa_obj, mergeDiscard } from '../core/utilities.js';
 import { makeCoordinate } from '../factory/coordinate.js';
 import { makePalette } from '../factory/palette.js';
 export default function (P = {}) {
@@ -11,6 +12,27 @@ paletteEnd: 999,
 cyclePalette: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.finalizePacketOut = function (copy, items) {
+if (items.colors) copy.colors = items.colors;
+else if (this.palette && this.palette.colors) copy.colors = this.palette.colors;
+else copy.colors = {'0 ': [0,0,0,1], '999 ': [255,255,255,1]};
+return copy;
+};
+P.kill = function () {
+let myname = this.name;
+if (this.palette && this.palette.kill) this.palette.kill();
+Object.entries(entity).forEach(([name, ent]) => {
+let state = ent.state;
+if (state) {
+let fill = state.fillStyle,
+stroke = state.strokeStyle;
+if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
+if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+}
+});
+this.deregister();
+return this;
+};
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -123,6 +145,10 @@ else p = (item > 500) ? 999 : 0;
 this.paletteEnd = p;
 }
 };
+S.colors = function (item) {
+let p = this.palette;
+if (p && p.colors) p.set({ colors: item });
+};
 S.delta = function (items = {}) {
 if (items) this.delta = mergeDiscard(this.delta, items);
 };
@@ -227,11 +253,11 @@ this.start = makeCoordinate();
 this.end = makeCoordinate();
 this.currentStart = makeCoordinate();
 this.currentEnd = makeCoordinate();
-this.set(this.defs);
 this.palette = makePalette({
 name: `${this.name}_palette`,
 });
 this.delta = {};
+this.set(this.defs);
 this.set(items);
 };
 P.getData = function (entity, cell, isFill) {

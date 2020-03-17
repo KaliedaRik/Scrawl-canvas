@@ -1,18 +1,16 @@
 // # Core library
-
-// Scrawl-canvas stores most of the objects it creates in a centralized space, so that they can be referenced from other places in the code base, and from user-written code. While some sections are dedicated to a single type of object, other sections are aggregations - this may lead to name conflicts if coders are not rigorous in their naming conventions when creating objects (through the __make__ factory functions).
-
-// Scrawl-canvas exposes the library, and its sections, for import into other script files
-
-
-
-// ## Imports
+//
+// Scrawl-canvas stores most of the objects it creates in a centralized space, so that they can be referenced from other places in the code base, and from user-written code. 
+//
+// While some sections are dedicated to a single type of object, other sections are aggregations - this may lead to name conflicts if coders are not rigorous in their naming conventions when creating objects (through the __make__ factory functions).
+//
+// `Exported object` (to modules and scrawl object). Scrawl-canvas exposes the library, and its sections, for import into other script files
 
 // No imports required
 
 
 // Current version
-const version = '8.0.0 alpha';
+const version = '8.0.2 alpha';
 
 
 // Objects created using the __makeAnchor__ factory
@@ -20,12 +18,12 @@ const anchor = {};
 const anchornames = [];
 
 
-// Objects created using the __makeAnimation__ factory
+// Objects created using the __makeAnimation__ and __makeRender__ factories
 const animation = {};
 const animationnames = [];
 
 
-// Objects created using the __makeTicker__ and __makeTween__ factories
+// Objects - specifically tickers - created using the __makeTicker__ and __makeTween__ factories
 const animationtickers = {};
 const animationtickersnames = [];
 
@@ -35,16 +33,12 @@ const artefact = {};
 const artefactnames = [];
 
 
-// Objects created using the __makeImageAsset__, __importImage__, __importDomImage__, __createImageFromCell__, __createImageFromGroup__, __createImageFromEntity__, __makeVideoAsset__, __importDomVideo__ and __importVideo__ factories (add in spritesheet and svg factories, once coded up).
-
-// Also includes all content from the cell section of the library.
-
-// tl;dr: anything that a Picture entity or Pattern style can use as their asset source needs to be included in this section of the library
+// Scrawl-canvas wrappers for visual media (images, videos, sprites). Anything that a Picture entity or Pattern style can use as their asset source needs to be included in this section of the library
 const asset = {};
 const assetnames = [];
 
 
-// Canvas element wrappers created during Scrawl-canvas initialization, and created using the __makeCanvas__ and __addCanvas__ factories
+// Canvas element wrappers created during Scrawl-canvas initialization, and the __makeCanvas__, __getCanvas__ and __addCanvas__ factories
 const canvas = {};
 const canvasnames = [];
 
@@ -59,7 +53,7 @@ const element = {};
 const elementnames = [];
 
 
-// All canvas-related artefacts get stored in the __entity__ section of the library. This includes: __makeBezier__, __makeBlock__, __makeGrid__, __makeLine__, __makeLoom__, __makeOval__, __makePhrase__, __makePicture__, __makePolygon__, __makeQuadratic__, __makeRectangle__, __makeShape__, __makeSpiral__, __makeStar__, __makeTetragon__, and __makeWheel__ factories (once coded up, add in: makeRadialShape, makeBoxedShape, makePolyline)
+// All canvas-related artefacts (Blocks, Wheels, etc) get stored in the __entity__ section of the library. 
 const entity = {};
 const entitynames = [];
 
@@ -99,12 +93,12 @@ const styles = {};
 const stylesnames = [];
 
 
-// DOM unstackedElement wrappers created during Scrawl-canvas initialization, and created using the __makeUnstackedElement__
+// DOM unstackedElement wrappers created using the __makeUnstackedElement__ and __makeComponent__ factories
 const unstackedelement = {};
 const unstackedelementnames = [];
 
 
-// All __makeXXX__ factory functions get added as references to the __constructors__ section of the library - no need for coders to access this section as its used mainly as part of Scrawl-canvas cloning functionality.
+// All __makeXXX__ factory functions get added as references to the __constructors__ section of the library - used mainly as part of Scrawl-canvas cloning functionality.
 const constructors = {};
 
 
@@ -121,7 +115,7 @@ const xcss = new Set(['alignContent', 'alignItems', 'alignSelf', 'animation', 'a
 
 
 
-// TODO - documentation
+// Exports
 export {
     version,
     anchor,

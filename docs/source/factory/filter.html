@@ -393,8 +393,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, group, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;</pre></div></div>
             
@@ -818,6 +818,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h2 id="packet-management">Packet management</h2>
+<p>No additional packet management required</p>
 
             </div>
             
@@ -830,9 +831,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>TODO</p>
+              <h2 id="kill-functionality">Kill functionality</h2>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> myname = <span class="hljs-keyword">this</span>.name;</pre></div></div>
             
         </li>
         
@@ -843,9 +848,15 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <p>Remove filter from all entity filters attribute</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(entity).forEach(<span class="hljs-function">(<span class="hljs-params">[name, ent]</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> f = ent.filters;
+        <span class="hljs-keyword">if</span> (f &amp;&amp; f.indexOf(myname) &gt;= <span class="hljs-number">0</span>) removeItem(f, myname);
+    });</pre></div></div>
             
         </li>
         
@@ -856,9 +867,15 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>None defined</p>
+              <p>Remove filter from all group filters attribute</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(group).forEach(<span class="hljs-function">(<span class="hljs-params">[name, grp]</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> f = grp.filters;
+        <span class="hljs-keyword">if</span> (f &amp;&amp; f.indexOf(myname) &gt;= <span class="hljs-number">0</span>) removeItem(f, myname);
+    });</pre></div></div>
             
         </li>
         
@@ -869,9 +886,15 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <h2 id="filter-webworker-pool">Filter webworker pool</h2>
+              <p>Remove filter from all cell filters attribute</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(cell).forEach(<span class="hljs-function">(<span class="hljs-params">[name, c]</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> f = c.filters;
+        <span class="hljs-keyword">if</span> (f &amp;&amp; f.indexOf(myname) &gt;= <span class="hljs-number">0</span>) removeItem(f, myname);
+    });</pre></div></div>
             
         </li>
         
@@ -881,6 +904,51 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Remove filter from the Scrawl-canvas library</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.deregister();
+    
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+<p>None defined</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <h2 id="filter-webworker-pool">Filter webworker pool</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -911,11 +979,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Sept 2019 - chrome does not yet support module
 return new Worker(filterUrl, {type: ‘module’});</p>
@@ -928,11 +996,11 @@ return new Worker(filterUrl, {type: ‘module’});</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -961,11 +1029,11 @@ return new Worker(filterUrl, {type: ‘module’});</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

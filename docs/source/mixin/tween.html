@@ -804,6 +804,13 @@
         }, <span class="hljs-keyword">this</span>);
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    };
+
+    P.checkForTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!item.substring) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.targets.some(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.name === item);
     };</pre></div></div>
             
         </li>

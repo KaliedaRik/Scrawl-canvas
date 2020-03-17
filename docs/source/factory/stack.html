@@ -394,7 +394,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 <span class="hljs-keyword">import</span> { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
 <span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/userInteraction.js'</span>;
 
@@ -596,9 +596,16 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h2 id="packetclone-management">Packet/Clone management</h2>
+<p>This functionality is disabled for Stack objects</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.saveAsPacket = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.lib}</span>, {}]`</span>;
+P.clone = defaultThisReturnFunction;</pre></div></div>
             
         </li>
         
@@ -609,11 +616,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Clone functionality disabled</p>
+              <h2 id="kill-functionality">Kill functionality</h2>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.clone = defaultThisReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> myname = <span class="hljs-keyword">this</span>.name;</pre></div></div>
             
         </li>
         
@@ -623,6 +632,75 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>rootElements and uiSubscribedElements arrays</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    removeItem(rootElements, myname);
+    setRootElementsSort();
+
+    removeItem(uiSubscribedElements, myname);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Groups</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (group[myname]) group[myname].kill();
+
+    <span class="hljs-built_in">Object</span>.entries(artefact).forEach(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (art.host === myname) art.kill();
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>DOM removals</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.domElement.remove();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Scrawl-canvas library</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.deregister();
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
 
@@ -635,11 +713,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -661,11 +739,11 @@ G.perspectiveZ = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-21">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -707,11 +785,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-22">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h2 id="define-prototype-functions">Define prototype functions</h2>
 
@@ -720,11 +798,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-23">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -752,11 +830,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-24">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -785,11 +863,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-25">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -817,11 +895,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-26">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Scrawl-canvas Stack artefacts cannot have ‘String%’ dimensions, which means they have absolute dimensions -because everything that relies on ‘String%’ dimensions needs an absolute (number) value for their calculations at the root, which is the stack. </p>
 
@@ -830,11 +908,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-27">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>But we still need to make Stacks responsive. We do this by checking if the viewport dimensions have changed (a resize action has taken place) and - if yes - update the stack’s absolute dimensions accordingly … if the <strong>isResponsive</strong> flag has been set to true for the Stack (default is ‘false’ - may change this in due course).</p>
 
@@ -843,11 +921,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-28">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>We call this check in the <strong>clear</strong> function below, because it’s doing nothing else useful at the moment and it makes sense to get updates in place here before everything launches into the compile part of the display cycle</p>
 
@@ -860,11 +938,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-29">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Start keeping track of the viewport dimensions</p>
 
@@ -876,11 +954,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-30">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>If last display cycle responded to dimension changes, need to finalise height now</p>
 
@@ -902,11 +980,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-31">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Won’t be updated until the next display cycle, but flag it now for action</p>
 <ul>
@@ -930,11 +1008,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-32">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -950,11 +1028,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-33">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -987,11 +1065,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-34">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1009,11 +1087,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-35">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1035,11 +1113,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-36">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -1078,11 +1156,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-37">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Takes an ‘items’ object as an argument. The only required attribute of the argument is <strong>.tag</strong>, which determines the type of element that will be created (for example - setting tag to ‘div’ will create a new &lt;div&gt; element)</p>
 
@@ -1091,11 +1169,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-38">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Any other Element artefact attribute can also be included in the argument object, including <strong>.text</strong> and <strong>.content</strong> attributes to set the new DOM Element’s textContent and innerHTML attributes.</p>
 
@@ -1104,11 +1182,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-39">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>If position and dimension values are not included in the argument, the element will be given default values of [0,0] for start, offset and handle; and dimensions of 100px width and height.</p>
 
@@ -1117,11 +1195,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-40">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>The new element will also default to a CSS box-sizing style value of ‘border-box’, unless the argument’s <strong>.boxSizing</strong> attribute has been set to ‘content-box’ - this will override any ‘borderBox’ attribute value in the argument’s <strong>.css</strong> object (if one has been included)</p>
 
@@ -1157,70 +1235,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-41">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p>TODO - review and recode</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.demolish = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">removeFromDom = false</span>) </span>{
-
-    <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement,
-        name = <span class="hljs-keyword">this</span>.name,
-        grp = group[<span class="hljs-keyword">this</span>.group],
-        i, iz, item;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = <span class="hljs-keyword">this</span>.groups.length; i &lt; iz; i++) {
-
-        item = group[<span class="hljs-keyword">this</span>.groups[i]];
-
-        <span class="hljs-keyword">if</span> (item) item.demolishGroup(removeFromDom);
-    }
-
-    <span class="hljs-keyword">if</span> (grp) grp.removeArtefacts(name);
-
-    <span class="hljs-keyword">if</span> (el &amp;&amp; removeFromDom) el.parentNode.removeChild(el);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p>also needs to remove itself from subscribe arrays in pivot, mimic, path artefacts</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-    removeItem(uiSubscribedElements, name);
-
-    <span class="hljs-keyword">delete</span> stack[name];
-    removeItem(stacknames, name);
-
-    <span class="hljs-keyword">delete</span> artefact[name];
-    removeItem(artefactnames, name);
-
-    removeItem(rootElements, name);
-    setRootElementsSort();
-
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

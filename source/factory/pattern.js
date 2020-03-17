@@ -13,8 +13,8 @@
 
 
 // ## Imports
-import { constructors, cell } from '../core/library.js';
-import { mergeOver, pushUnique, isa_fn } from '../core/utilities.js';
+import { constructors, cell, entity } from '../core/library.js';
+import { mergeOver, pushUnique, isa_fn, isa_obj } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
@@ -61,6 +61,35 @@ P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
 P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, ['asset']);
 P.packetFunctions = pushUnique(P.packetFunctions, []);
+
+
+// ## Kill functionality - overwrites ./mixin/base.js
+P.kill = function () {
+
+    let myname = this.name;
+
+    if (isa_obj(this.asset)) this.asset.unsubscribe(this);
+
+    // Remove style from all entity state objects
+    Object.entries(entity).forEach(([name, ent]) => {
+
+        let state = ent.state;
+
+        if (state) {
+
+            let fill = state.fillStyle,
+                stroke = state.strokeStyle;
+
+            if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
+            if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+        }
+    });
+    
+    // Remove style from the Scrawl-canvas library
+    this.deregister();
+    
+    return this;
+};
 
 
 // ## Define getter, setter and deltaSetter functions

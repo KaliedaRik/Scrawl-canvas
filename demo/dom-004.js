@@ -101,7 +101,7 @@ let flyRocket = function(e) {
 
         completeAction: function () {
 
-            this.targets[0].demolish(true);
+            this.targets[0].kill();
         }
     }).run();
 };

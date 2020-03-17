@@ -28,12 +28,10 @@ onHalt: null,
 onKill: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
-P.saveAsPacket = function () {
-return [this.name, this.type, this.lib, {}];
-};
 P.stringifyFunction = defaultNonReturnFunction;
 P.processPacketOut = defaultNonReturnFunction;
 P.finalizePacketOut = defaultNonReturnFunction;
+P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
 P.run = function () {
 this.onRun();

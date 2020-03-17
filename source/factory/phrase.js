@@ -202,6 +202,12 @@ P.finalizePacketOut = function (copy, items) {
 };
 
 
+// ## Kill functionality
+P.factoryKill = function () {
+
+    if (this.exposedTextHold) this.exposedTextHold.remove();
+};
+
 
 // ## Define getter, setter and deltaSetter functions
 let G = P.getters,

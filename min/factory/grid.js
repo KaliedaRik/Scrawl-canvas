@@ -1,5 +1,6 @@
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, isa_number, isa_obj, defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_number, isa_obj,
+defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
 import { requestCell, releaseCell } from './cell.js';
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
@@ -56,6 +57,22 @@ tileFill: null,
 tileSources: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.packetExclusions = pushUnique(P.packetExclusions, ['tileSources']);
+P.finalizePacketOut = function (copy, items) {
+let cSources = copy.tileSources = [],
+tSources = this.tileSources;
+tSources.forEach(item => {
+cSources.push({
+type: item.type,
+source: (isa_obj(item.source)) ? item.source.name : item.source
+});
+});
+if (isa_obj(copy.gutterColor)) copy.gutterColor = copy.gutterColor.name;
+let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
+copy = mergeOver(copy, stateCopy);
+copy = this.handlePacketAnchor(copy, items);
+return copy;
+};
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;

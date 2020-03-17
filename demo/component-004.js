@@ -11,7 +11,72 @@ canvas.set({
     backgroundColor: 'aliceblue',
 });
 
+// Setup Gradient style
+let mygradient = scrawl.makeGradient({
+    name: 'blue-green',
+    endX: '100%',
+    colors: {
+        '0 ': 'blue',
+        '500 ': 'gold',
+        '999 ': 'green'
+    },
+});
+// .updateColor(0, 'blue')
+// .updateColor(500, 'gold')
+// .updateColor(999, 'green');
 
+// Setup Color style
+let mycolor = scrawl.makeColor({
+    name: 'myColorObject',
+    r: 100,
+    g: 50,
+    b: 10,
+
+    rShift: 0.1,
+    gShift: 1,
+    bShift: -1.3,
+
+    rBounce: true,
+    gBounce: true,
+    bBounce: true,
+
+    rMax: 160,
+    gMax: 180,
+    bMax: 150,
+
+    autoUpdate: true,
+});
+
+// Setup Filter
+let myfilter = scrawl.makeFilter({
+    name: 'venetianBlinds',
+    method: 'userDefined',
+    level: 9,
+
+    userDefined: `
+        let i, iz, j, jz,
+            level = filter.level || 6,
+            halfLevel = level / 2,
+            yw, transparent, pos;
+
+        for (i = localY, iz = localY + localHeight; i < iz; i++) {
+
+            transparent = (i % level > halfLevel) ? true : false;
+
+            if (transparent) {
+
+                yw = (i * iWidth) + 3;
+                
+                for (j = localX, jz = localX + localWidth; j < jz; j ++) {
+
+                    pos = yw + (j * 4);
+                    data[pos] = 0;
+                }
+            }
+        }`,
+});
+
+// Test Block entity
 let myblock = scrawl.makeBlock({
 
     name: 'block-tester',
@@ -23,44 +88,11 @@ let myblock = scrawl.makeBlock({
     startX: 60,
     startY: 60,
 
-    fillStyle: 'rgba(0,140,50,0.7)',
+    fillStyle: 'myColorObject',
     method: 'fill',
 });
 
-let myblockPacket = myblock.saveAsPacket();
-console.log('Block packet saveAsPacket: ', myblockPacket);
-
-myblock.kill();
-console.log('Block packet kill: ', Object.keys(scrawl.library.entity));
-
-canvas.importPacket(myblockPacket)
-.then(res => {
-    myblock = res;
-    console.log('Block packet importPacket: ', Object.keys(scrawl.library.entity), myblock);
-})
-.catch(err => console.log(err));
-
-// RESULTS
-
-// Block packet saveAsPacket:  
-// [
-//     "block-tester",
-//     "Block",
-//     "entity",
-//     {
-//         "name":"block-tester",
-//         "dimensions":[120,40],
-//         "start":[60,60],
-//         "delta":{},
-//         "group":"mycanvas_base",
-//         "fillStyle":"rgba(0,140,50,0.7)"
-//     }
-// ]
-
-// Block packet kill:  []
-
-// Block packet importPacket:  ["block-tester"]
-
+// Test Picture entity
 let mypicture = scrawl.makePicture({
 
     name: 'picture-tester',
@@ -82,59 +114,7 @@ let mypicture = scrawl.makePicture({
     globalAlpha: 0.8,
 });
 
-let mypicturePacket = mypicture.saveAsPacket();
-console.log('Picture packet saveAsPacket: ', mypicturePacket);
-
-let myPictureAssetPacket = mypicture.asset.saveAsPacket();
-console.log('Picture asset packet saveAsPacket: ', myPictureAssetPacket);
-
-mypicture.kill();
-console.log('Picture packet kill: ', Object.keys(scrawl.library.entity));
-
-canvas.importPacket(mypicturePacket)
-.then(res => {
-    mypicture = res;
-    console.log('Picture packet importPacket: ', Object.keys(scrawl.library.entity), mypicture);
-})
-.catch(err => console.log(err));
-
-// RESULTS
-
-// Picture packet saveAsPacket:  
-// [
-//     "picture-tester",
-//     "Picture",
-//     "entity",
-//     {
-//         "copyStart":[100,150],
-//         "copyDimensions":[150,100],
-//         "name":"picture-tester",
-//         "dimensions":[150,100],
-//         "start":[420,70],
-//         "delta":{},
-//         "asset":"iris",
-//         "group":"mycanvas_base",
-//         "globalAlpha":0.8
-//     }
-// ]
-
-// Picture asset packet saveAsPacket:  
-// [
-//     "iris",
-//     "Image",
-//     "asset",
-//     {
-//         "name":"iris",
-//         "subscribers":["picture-tester"]
-//     }
-// ]
-
-// Picture packet kill:  
-// ["block-tester"]
-
-// Picture packet importPacket:  (2) 
-// ["block-tester", "picture-tester"]
-
+// Test Phrase entity
 let myphrase = scrawl.makePhrase({
 
     name: 'phrase-tester',
@@ -160,54 +140,7 @@ let myphrase = scrawl.makePhrase({
     weight: 'normal'
 }, 3);
 
-let myphrasePacket = myphrase.saveAsPacket();
-console.log('Phrase packet saveAsPacket: ', myphrasePacket);
-
-myphrase.kill();
-console.log('Phrase packet kill: ', Object.keys(scrawl.library.entity));
-
-canvas.importPacket(myphrasePacket)
-.then(res => {
-    myphrase = res;
-    console.log('Phrase packet importPacket: ', Object.keys(scrawl.library.entity), myphrase);
-})
-.catch(err => console.log(err));
-
-// RESULTS
-
-// Phrase packet saveAsPacket:  
-// [
-//     "phrase-tester",
-//     "Phrase",
-//     "entity",
-//     {
-//         "name":"phrase-tester",
-//         "dimensions":[120,0],
-//         "start":[250,150],
-//         "delta":{},
-//         "text":"H&epsilon;lj&ouml;!",
-//         "glyphStyles":[
-//             null,
-//             {"weight":"bold"},
-//             null,
-//             {"weight":"normal"}
-//         ],
-//         "justify":"center",
-//         "lineHeight":1,
-//         "group":"mycanvas_base",
-//         "fillStyle":"rgb(50,0,0)",
-//         "globalAlpha":0.6,
-//         "sizeValue":40,
-//         "family":"Garamond, serif"
-//     }
-// ]
-
-// Phrase packet kill:  (2) 
-// ["block-tester", "picture-tester"]
-
-// Phrase packet importPacket:  (3) 
-// ["block-tester", "picture-tester", "phrase-tester"]
-
+// Test Wheel entity
 let mypie = scrawl.makeWheel({
 
     name: 'wheel-pie-tester',
@@ -221,50 +154,13 @@ let mypie = scrawl.makeWheel({
     startX: 320,
     startY: 280,
 
-    fillStyle: 'rgba(20, 100, 250, 0.7)',
+    fillStyle: 'blue-green',
+    lockFillStyleToEntity: true,
+
     method: 'fill',
 });
 
-let mypiePacket = mypie.saveAsPacket();
-console.log('Wheel packet saveAsPacket: ', mypiePacket);
-
-mypie.kill();
-console.log('Wheel packet kill: ', Object.keys(scrawl.library.entity));
-
-canvas.importPacket(mypiePacket)
-.then(res => {
-    mypie = res;
-    console.log('Wheel packet importPacket: ', Object.keys(scrawl.library.entity), mypie);
-})
-.catch(err => console.log(err));
-
-// RESULTS
-
-// Wheel packet saveAsPacket:  
-// [
-//     "wheel-pie-tester",
-//     "Wheel",
-//     "entity",
-//     {
-//         "name":"wheel-pie-tester",
-//         "dimensions":[100,100],
-//         "start":[320,280],
-//         "delta":{},
-//         "radius":50,
-//         "startAngle":50,
-//         "endAngle":-50,
-//         "includeCenter":true,
-//         "group":"mycanvas_base",
-//         "fillStyle":"rgba(20, 100, 250, 0.7)"
-//     }
-// ]
-
-// Wheel packet kill:  (3) 
-// ["block-tester", "picture-tester", "phrase-tester"]
-
-// Wheel packet importPacket:  (4) 
-// ["block-tester", "picture-tester", "phrase-tester", "wheel-pie-tester"]
-
+// Test oval Shape entity
 let myoval = scrawl.makeOval({
 
     name: 'shape-oval-tester',
@@ -280,42 +176,7 @@ let myoval = scrawl.makeOval({
     method: 'fill',
 });
 
-let myovalPacket = myoval.saveAsPacket();
-console.log('Oval Shape packet saveAsPacket: ', myovalPacket);
-
-myoval.kill();
-console.log('Oval Shape packet kill: ', Object.keys(scrawl.library.entity));
-
-canvas.importPacket(myovalPacket)
-.then(res => {
-    myoval = res;
-    console.log('Oval Shape packet importPacket: ', Object.keys(scrawl.library.entity), myoval);
-})
-.catch(err => console.log(err));
-
-// RESULTS
-
-// Oval Shape packet saveAsPacket:  
-// [
-//     "shape-oval-tester",
-//     "Shape",
-//     "entity",
-//     {
-//         "name":"shape-oval-tester",
-//         "start":[30,160],
-//         "delta":{},
-//         "species":"oval",
-//         "radiusX":40,
-//         "radiusY":55,
-//         "intersectY":0.6,
-//         "group":"mycanvas_base",
-//         "fillStyle":"rgba(20, 50, 180, 0.7)"
-//     }
-// ]
-
-// Oval Shape packet kill:  (4) 
-// ["block-tester", "picture-tester", "phrase-tester", "wheel-pie-tester"]
-
+// Test bezier Shape entity
 let mybezier = scrawl.makeBezier({
 
     name: 'shape-bezier-tester',
@@ -338,47 +199,7 @@ let mybezier = scrawl.makeBezier({
     showBoundingBox: true,
 });
 
-let mybezierPacket = mybezier.saveAsPacket();
-console.log('Bezier Shape packet saveAsPacket: ', mybezierPacket);
-
-mybezier.kill();
-console.log('Bezier Shape packet kill: ', Object.keys(scrawl.library.entity));
-
-canvas.importPacket(mybezierPacket)
-.then(res => {
-    mybezier = res;
-    console.log('Bezier Shape packet importPacket: ', Object.keys(scrawl.library.entity), mybezier);
-})
-.catch(err => console.log(err));
-
-// RESULTS
-
-// Bezier Shape packet saveAsPacket:  
-// [
-//     "shape-bezier-tester",
-//     "Shape",
-//     "entity",
-//     {
-//         "startControl":[260,180],
-//         "endControl":[320,300],
-//         "end":[380,240],
-//         "name":"shape-bezier-tester",
-//         "start":[200,210],
-//         "delta":{},
-//         "method":"draw",
-//         "species":"bezier",
-//         "showBoundingBox":true,
-//         "boundingBoxColor":"lightgray",
-//         "group":"mycanvas_base",
-//         "strokeStyle":"orange",
-//         "lineWidth":3,
-//         "lineCap":"round"
-//     }
-// ]
-
-// Bezier Shape packet kill:  (5) 
-// ["block-tester", "picture-tester", "phrase-tester", "wheel-pie-tester", "shape-oval-tester"]
-
+// Test Grid entity
 let mygrid = scrawl.makeGrid({
 
     name: 'test-grid',
@@ -410,49 +231,7 @@ let mygrid = scrawl.makeGrid({
     startY: 250,
 });
 
-let mygridPacket = mygrid.saveAsPacket();
-console.log('Grid packet saveAsPacket: ', mygridPacket);
-
-mygrid.kill();
-console.log('Grid packet kill: ', Object.keys(scrawl.library.entity));
-
-canvas.importPacket(mygridPacket)
-.then(res => {
-    mygrid = res;
-    console.log('Grid packet importPacket: ', Object.keys(scrawl.library.entity), mygrid);
-})
-.catch(err => console.log(err));
-
-// RESULTS
-
-// Grid packet saveAsPacket:  
-// [
-//     "test-grid",
-//     "Grid",
-//     "entity",
-//     {
-//         "tileFill":[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-//         "tileSources":[
-//             {"type":"color","source":"blue"},
-//             {"type":"color","source":"red"}
-//         ],
-//         "name":"test-grid",
-//         "dimensions":[120,80],
-//         "start":[450,250],
-//         "delta":{},
-//         "roll":10,
-//         "columns":6,
-//         "rows":4,
-//         "columnGutterWidth":2,
-//         "rowGutterWidth":2,
-//         "group":"mycanvas_base"
-//     }
-// ]
-
-// Grid packet kill:  (6) 
-// ["block-tester", "picture-tester", "phrase-tester", "wheel-pie-tester", "shape-oval-tester", "shape-bezier-tester"]
-
-
+// Test svg path.d Shape entity
 let myshape = scrawl.makeShape({
 
     name: 'shape-test',
@@ -477,6 +256,8 @@ let myshape = scrawl.makeShape({
     boundingBoxColor: 'black',
 
     method: 'fillAndDraw',
+
+    filters: ['venetianBlinds'],
 
     // svg outline of Japan from this source:
     // https://silhouettegarden.com/download/japan-silhouette/
@@ -791,19 +572,141 @@ let myshape = scrawl.makeShape({
     s-0.15-1.692-0.764-1.932C90.416,589.182,89.577,589.392,88.453,589.706z`,
 });
 
-let myshapePacket = myshape.saveAsPacket();
-console.log('SVG path-based Shape packet saveAsPacket: ', myshapePacket);
+let performEntityTests = () => {
 
-myshape.kill();
-console.log('SVG path-based Shape packet kill: ', Object.keys(scrawl.library.entity));
+    console.log('Creating packets for all entitys in test');
+    let myblockPacket = myblock.saveAsPacket();
+    let mypicturePacket = mypicture.saveAsPacket();
+    let myphrasePacket = myphrase.saveAsPacket();
+    let mypiePacket = mypie.saveAsPacket();
+    let myovalPacket = myoval.saveAsPacket();
+    let mybezierPacket = mybezier.saveAsPacket();
+    let mygridPacket = mygrid.saveAsPacket();
+    let myshapePacket = myshape.saveAsPacket();
 
-canvas.importPacket(myshapePacket)
-.then(res => {
-    myshape = res;
-    console.log('SVG path-based Shape packet importPacket: ', Object.keys(scrawl.library.entity), myshape);
-})
-.catch(err => console.log(err));
+    console.log('Kill all entitys in test');
+    myblock.kill();
+    mypicture.kill();
+    myphrase.kill();
+    mypie.kill();
+    myoval.kill();
+    mybezier.kill();
+    mygrid.kill();
+    myshape.kill();
 
+    console.log('Import and resurrect all entitys');
+    canvas.importPacket(myblockPacket)
+    .then(res => {
+        myblock = res;
+        console.log('myblock resurrected');
+    })
+    .catch(err => console.log(err));
+
+    canvas.importPacket(mypicturePacket)
+    .then(res => {
+        mypicture = res;
+        console.log('mypicture resurrected');
+    })
+    .catch(err => console.log(err));
+
+    canvas.importPacket(myphrasePacket)
+    .then(res => {
+        myphrase = res;
+        console.log('myphrase resurrected');
+    })
+    .catch(err => console.log(err));
+
+    canvas.importPacket(mypiePacket)
+    .then(res => {
+        mypie = res;
+        console.log('mypie resurrected');
+    })
+    .catch(err => console.log(err));
+
+    canvas.importPacket(myovalPacket)
+    .then(res => {
+        myoval = res;
+        console.log('myoval resurrected');
+    })
+    .catch(err => console.log(err));
+
+    canvas.importPacket(mybezierPacket)
+    .then(res => {
+        mybezier = res;
+        console.log('mybezier resurrected');
+    })
+    .catch(err => console.log(err));
+
+    canvas.importPacket(mygridPacket)
+    .then(res => {
+        mygrid = res;
+        console.log('mygrid resurrected');
+    })
+    .catch(err => console.log(err));
+
+    canvas.importPacket(myshapePacket)
+    .then(res => {
+        myshape = res;
+        console.log('myshape resurrected');
+    })
+    .catch(err => console.log(err));
+};
+
+let performOtherTests = () => {
+
+    console.log('Creating packets for other objects in test');
+    let mygradientPacket = mygradient.saveAsPacket();
+    let mycolorPacket = mycolor.saveAsPacket();
+    let myfilterPacket = myfilter.saveAsPacket();
+
+    console.log('Kill other objects in test');
+    mygradient.kill();
+    mycolor.kill();
+    myfilter.kill();
+
+    console.log('Import and resurrect other objects');
+    canvas.importPacket(mygradientPacket)
+    .then(res => {
+        mygradient = res;
+        console.log('mygradient resurrected');
+    })
+    .catch(err => console.log(err));
+
+    canvas.importPacket(mycolorPacket)
+    .then(res => {
+        mycolor = res;
+        console.log('mycolor resurrected');
+    })
+    .catch(err => console.log(err));
+
+    // Test Filter
+    canvas.importPacket(myfilterPacket)
+    .then(res => {
+        myfilter = res;
+        console.log('myfilter resurrected');
+    })
+    .catch(err => console.log(err));
+};
+
+let fixEntitys = () => {
+
+    console.log('Fix entitys to use other objects');
+    myblock.set({
+        fillStyle: 'myColorObject',
+    });
+
+    mypie.set({
+        fillStyle: 'blue-green',
+    });
+
+    myshape.set({
+        filters: 'venetianBlinds',
+    })
+};
+
+console.log('TESTS BEFORE starting render cycle');
+performEntityTests();
+performOtherTests();
 
 // Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
@@ -813,3 +716,11 @@ scrawl.makeRender({
 });
 
 console.log(scrawl.library);
+
+setTimeout(() => {
+    console.log('TESTS AFTER starting render cycle');
+    performEntityTests();
+    performOtherTests();
+
+    setTimeout(fixEntitys, 1000);
+}, 5000);

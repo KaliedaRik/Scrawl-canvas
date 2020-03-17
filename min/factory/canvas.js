@@ -1,6 +1,7 @@
-import { cell, constructors, artefact } from '../core/library.js';
+import { cell, constructors, artefact, group } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, xt, defaultThisReturnFunction } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, removeItem, xt,
+defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
@@ -121,7 +122,24 @@ description: '',
 isComponent: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.stringifyFunction = defaultNonReturnFunction;
+P.processPacketOut = defaultNonReturnFunction;
+P.finalizePacketOut = defaultNonReturnFunction;
+P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
+P.kill = function () {
+removeItem(rootElements, this.name);
+setRootElementsSort();
+removeItem(uiSubscribedElements, this.name);
+if (group[this.name]) group[this.name].kill();
+this.base.kill();
+this.navigation.remove();
+this.textHold.remove();
+this.ariaLabelElement.remove();
+this.ariaDescriptionElement.remove();
+this.domElement.remove();
+return this.deregister();
+}
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -268,27 +286,9 @@ return this;
 };
 P.killCell = function (item) {
 let mycell = (item.substring) ? cell[item] : item;
-if (mycell) mycell.demolishCell();
+if (mycell) mycell.kill();
 this.dirtyCells = true;
 return this;
-};
-P.demolish = function (removeDomElement = true) {
-removeItem(uiSubscribedElements, this.name);
-removeItem(rootElements, this.name);
-setRootElementsSort();
-let el = this.domElement,
-navigation = this.navigation,
-textHold = this.textHold,
-ariaLabel = this.ariaLabelElement,
-ariaDescription = this.ariaDescriptionElement;
-navigation.parentNode.removeChild(navigation);
-textHold.parentNode.removeChild(textHold);
-ariaLabel.parentNode.removeChild(ariaLabel);
-ariaDescription.parentNode.removeChild(ariaDescription);
-if (removeDomElement) el.parentNode.removeChild(el);
-this.killCell(this.base);
-this.deregister();
-return true;
 };
 P.clear = function () {
 let self = this;

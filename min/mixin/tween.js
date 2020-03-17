@@ -126,6 +126,10 @@ if (target) this.targets.push(target);
 }, this);
 return this;
 };
+P.checkForTarget = function (item) {
+if (!item.substring) return false;
+return this.targets.some(t => t.name === item);
+};
 P.kill = function () {
 let t;
 if (this.ticker === this.name + '_ticker') {

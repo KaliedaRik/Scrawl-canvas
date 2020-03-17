@@ -276,6 +276,7 @@ let updateGridStroke = (e) => {
                 gutterColor: '#808080'
             });
     }
+    console.log(myGrid.saveAsPacket());
 };
 scrawl.addNativeListener(['input', 'change'], updateGridStroke, '#gridStroke');
 
@@ -313,4 +314,4 @@ document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
 
-console.log(myGrid);
+console.log(scrawl.library);

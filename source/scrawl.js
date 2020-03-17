@@ -167,9 +167,6 @@ import {
     makeTetragon,
     makePolygon,
     makeStar,
-    makeRadialShape,
-    makeBoxedShape,
-    makePolyline,
     makeSpiral,
 } from './factory/shape.js';
 
@@ -338,9 +335,6 @@ export default {
     makeTetragon,
     makePolygon,
     makeStar,
-    makeRadialShape,
-    makeBoxedShape,
-    makePolyline,
     makeSpiral,
 
 
