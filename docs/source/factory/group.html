@@ -299,7 +299,18 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="group-factory">Group factory</h1>
+<p>Scrawl-canvas uses Group objects to gather together artefact objects (Block, Canvas, Element, Grid, Loom, Phrase, Picture, Shape, Stack, Wheel) for common functions.</p>
+<p>Groups connect artefacts with controller objects - Stack, Cell - through which the Display cycle can cascade. Each controller object can have more than one Group associated with it. Only Groups whose <strong>visibility</strong> flag has been set to true will propagate the Display cycle cascade to their member artefacts. The order in which each controller object invokes its Group objects is determined by each Group object’s <strong>order</strong> value.</p>
+<p>Groups can also be used for purposes beyond the Display cycle:</p>
+<ul>
+<li>They are closely involved in collision detection functionality.</li>
+<li>They can be used to propagate updates to their constituent artefacts - for instance animating them in a coordinated manner.</li>
+<li>Filters can be applied to entity objects at the Group level</li>
+</ul>
+<p>Additional functionality to help control and interact with Groups is defined in the <strong>cascade</strong> mixin. Groups also use the <strong>base</strong> mixin, thus they come equipped with packet functionality, alongside clone and kill functions.</p>
+<p>NOTE: <strong>Groups are NOT used to position a set of artefacts in the display</strong> - they have no positioning functionality, which is instead handled by the artefact objects themselves. To position and move a collection of artefacts around the display, choose one of them to act as a a reference, and then <strong>pivot</strong> or <strong>mimic</strong> other artefacts to that reference. When you position or animate the reference artefact, all the other artefacts will position/move with it. See Demo <a href="../../demo/canvas-002.html">Canvas-002</a> for an example.</p>
+
             </div>
             
         </li>
@@ -311,7 +322,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="group-factory">Group factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-014.html">Canvas-014</a> - Line, quadratic and bezier Shapes - control lock alternatives</li>
+<li><a href="../../demo/canvas-020.html">Canvas-020</a> - Testing createImageFromXXX functionality</li>
+<li><a href="../../demo/dom-003.html">DOM-003</a> - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack</li>
+<li><a href="../../demo/dom-008.html">DOM-008</a> - 3d animated cube</li>
+<li><a href="../../demo/dom-009.html">DOM-009</a> - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate</li>
+</ul>
 
             </div>
             
@@ -324,72 +342,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -407,13 +360,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="group-constructor">Group constructor</h2>
+              <h4 id="group-constructor">Group constructor</h4>
 
             </div>
             
@@ -434,22 +387,101 @@
         </li>
         
         
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h4 id="group-prototype">Group prototype</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Group.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
+P.type = <span class="hljs-string">'Group'</span>;
+P.lib = <span class="hljs-string">'group'</span>;
+P.isArtefact = <span class="hljs-literal">false</span>;
+P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/filter.html">filter</a></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P = baseMix(P);
+P = filterMix(P);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h4 id="group-attributes">Group attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p><strong>artefacts</strong> - an Array containing the names of all artefact objects included in this group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    artefacts: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p><strong>order</strong> - positive integer Number, which determines the order in which Stack and Cell controllers will process this Group object during the Display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    order: <span class="hljs-number">0</span>,</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <h2 id="group-object-prototype-setup">Group object prototype setup</h2>
+              <p><strong>visibility</strong> - Boolean flag; when unset, the Group will <strong>not</strong> be processed by Stack and Cell controllers as part of the Display cycle</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Group.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-
-P.type = <span class="hljs-string">'Group'</span>;
-P.lib = <span class="hljs-string">'group'</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    visibility: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -460,12 +492,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <p><strong>regionRadius</strong> - positive Number (measured in px), used as an initial test as part of collision detection functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = filterMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    regionRadius: <span class="hljs-number">0</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -476,11 +509,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'artefactBuckets'</span>, <span class="hljs-string">'batchResort'</span>]);</pre></div></div>
             
         </li>
         
@@ -491,11 +524,10 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    artefacts: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -506,101 +538,7 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>TODO: Do these need to be in the defs?</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    artefactBuckets: <span class="hljs-literal">null</span>,
-
-    <span class="hljs-attr">host</span>: <span class="hljs-string">''</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    order: <span class="hljs-number">0</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    visibility: <span class="hljs-literal">true</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>TODO - does this need to be in the defs object?</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    batchResort: <span class="hljs-literal">true</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    regionRadius: <span class="hljs-number">0</span>
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <h2 id="packet-management">Packet management</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'artefactBuckets'</span>, <span class="hljs-string">'batchResort'</span>]);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <h2 id="kill-functionality">Kill functionality</h2>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
             
@@ -611,13 +549,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Stack and canvas groups attribute</p>
+              <p>Remove the Group object from affected Stack and Cell objects’ <code>groups</code> attribute</p>
 
             </div>
             
@@ -629,13 +567,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Scrawl-canvas library</p>
+              <p>Remove Group object from the Scrawl-canvas library</p>
 
             </div>
             
@@ -645,13 +583,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h2 id="define-attribute-getters-and-setters">Define attribute getters and setters</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -661,21 +599,48 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Artefect membership of the Group object is better handled by the dedicated artefact management functions - <strong>addArtefacts</strong>, <strong>removeArtefacts</strong>, <strong>clearArtefacts</strong>, <strong>moveArtefactsIntoGroup</strong>.  </p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Returns a new Array containing the name String values of current artefact members </p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>G.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">return</span> [].concat(<span class="hljs-keyword">this</span>.artefacts);
-};
-S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Replaces the existing artefact membership with new members, supplied as an Array of name-String values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.artefacts = [];
 
@@ -685,13 +650,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-25">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Adds the Group to a new controller Stack or Cell object. NOTE that this does not remove the Group from its existing host!</p>
 
             </div>
             
@@ -711,13 +676,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-26">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Update the Group’s <code>order</code> attribute, and tell its current host that it will need to resort its associated Groups</p>
 
             </div>
             
@@ -738,26 +703,26 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-27">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-28">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getHost</code> - internal helper function</p>
 
             </div>
             
@@ -772,13 +737,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-29">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>forceStamp</code> - invoke the Group to instruct its artefact members to perform a <code>stamp</code> action, ignoring whether the Group <code>visibility</code> flag setting</p>
 
             </div>
             
@@ -806,13 +771,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-30">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>The Display Cycle is mediated through Groups - these Group functions control display functionality via a series of Promise cascades which in turn allow individual artefacts to make use of web workers, where appropriate, to achieve their stamping functionality - for example when they need to apply image filters to their output.</p>
+              <p><code>stamp</code> - the Display Cycle is mediated through Groups - these Group functions control display functionality via a series of Promise cascades which in turn allow individual artefacts to make use of web workers, where appropriate, to achieve their stamping functionality - for example when they need to apply image filters to their output.</p>
 
             </div>
             
@@ -821,11 +786,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-31">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Check we have a host of some sort (either a Stack artefact or a Cell asset)</p>
 
@@ -854,11 +819,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-32">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Check if artefacts need to be sorterd and, if yes, sort them by their order attribute</p>
 
@@ -869,13 +834,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-33">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Check to see if there is a Group filter in place and, if yes, pull a Cell aset from the pool</p>
+              <p>Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool</p>
 
             </div>
             
@@ -886,11 +851,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-34">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Setup the pool Cell, if required</p>
 
@@ -910,11 +875,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-35">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Prepare the Group’s artefacts for the forthcoming stamp activity</p>
 
@@ -925,13 +890,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-36">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>Get the Group’s artefacts to stamp themselves on the current host</p>
+              <p>Get the Group’s artefacts to stamp themselves on the current host or pool Cell</p>
 
             </div>
             
@@ -951,11 +916,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-37">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Bale out of the stamp functionality if the Group has no host on which to perform its actions</p>
 
@@ -967,11 +932,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-38">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Bale out of the stamp functionality if the Group is not visible</p>
 
@@ -984,13 +949,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-39">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>sortArtefacts</code> - internal function. Uses a bucket sort algorithm</p>
 
             </div>
             
@@ -1020,13 +985,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-40">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>prepareStamp</code> - initial action in the Display cycle, before Stacks/Cells start their clear/compile/show Promise cascade</p>
 
             </div>
             
@@ -1056,13 +1021,14 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-41">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>stampAction</code> - the key Group-mediated action in the Display cycle, invoked as part of the <code>compile</code> functionality. Returns a Promise defined in the <code>next</code> local function, which will be recursively called as the Group processes each of its member artifacts in turn. After the final artefact is processed the Promise chain will collapse to resolution.</p>
+<p>We process artefacts in this way because some artefacts may need to make asynchronous calls as part of their functionality - for example, when an entity needs to apply a filter to its output.</p>
 
             </div>
             
@@ -1077,13 +1043,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-42">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>Doing it this way to ensure that each artefact completes its stamp action before the next one starts - performed as a promise so that if the artefact needs to filter its output it can use the (asynchronous) filter worker. This function is essentially a cascade of promises which collapse into resolution once all the artefacts have been actioned</p>
+              <p>The <code>next</code> function, called recursively as each artefact member gets processed by the Group.</p>
 
             </div>
             
@@ -1108,11 +1074,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-43">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>The else branch should only trigger once all the artefacts have been processed. At this point we should be okay to action any Group-level filters on the (entity) artefact output</p>
 
@@ -1134,13 +1100,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-44">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>We set up things to draw the group on a pool cell if stashOutput set true - so now we have to paint it back into the real canvas</p>
+              <p>We set up things to draw the group on a pool cell if the Group’s <code>stashOutput</code> flag is set to true - so now we have to paint it back into the host Cell</p>
 
             </div>
             
@@ -1175,11 +1141,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-45">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Terminate the cascade and start the resolution collapse</p>
 
@@ -1193,13 +1159,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-46">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>Start the artefact stamp cascade</p>
+              <p>Start the artefact <code>stamp</code> cascade</p>
 
             </div>
             
@@ -1209,13 +1175,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-47">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>applyFilters</code> - filters can be applied to entity artefacts at the group level, in addition to any filters applied at the entity level. Returns a promise, as filters use web-workers, which are asynchronous.</p>
 
             </div>
             
@@ -1224,11 +1190,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-48">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Clean and sort the Group-level filters before sending them to the filter worker for application</p>
 
@@ -1241,11 +1207,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-49">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Determine if we have all the required resources to perform the filter operation and, if not, clean up and resolve</p>
 
@@ -1259,13 +1225,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-50">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <p>An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It’s also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the Group’s composite and alpha values</p>
+              <p>An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It’s also in the cleanup phase that we (finally) copy over the results of the filter over to the current Cell display, taking into account the Group’s <code>composite</code> and <code>alpha</code> values</p>
 
             </div>
             
@@ -1287,13 +1253,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-51">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <p>Get handles to current and filter cell elements and engines</p>
+              <p>Get handles to current and filter Cell elements and engines</p>
 
             </div>
             
@@ -1306,13 +1272,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-52">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <p>Action a request to use the filtered artefacts as a stencil</p>
+              <p>Action a request to use the filtered artefacts as a stencil - as determined by the Group’s <code>isStencil</code> flag</p>
 
             </div>
             
@@ -1329,11 +1295,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-53">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>At this point we will send the contents of the filterHost canvas over to the web worker, alongside details of the filters we wish to apply to it</p>
 
@@ -1353,11 +1319,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-54">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>Copy the filter worker’s output back onto the filterHost canvas</p>
 
@@ -1373,11 +1339,11 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-55">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>On success, cleanup and resolve</p>
 
@@ -1399,26 +1365,14 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-56">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
-              <p>Internal function - creates an imageAsset object (and an &lt;img&gt; element which gets attached to the DOM document in the scrawlCanvasHold hidden &lt;div&gt; element) from the group’s entity’s output.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-57">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
-              </div>
-              <p>Note that, unlike the equivalent functionality for Cell and entity objects, the Group stashAction functionality seems to be working fine in “real time”</p>
+              <p><code>stashAction</code> - internal function which creates an ImageAsset object (and, as determined by the setting of the Group’s <code>stashOutputAsAsset</code> flag, an &lt;img&gt; element which gets attached to the DOM document in the <code>scrawlCanvasHold</code> hidden &lt;div&gt; element) from the Group’s entity’s output.</p>
+<p>NOTE: the <code>stashOutput</code> and <code>stashOutputAsAsset</code> flags are not Group object attributes. They are set on the group as a result of invoking the <code>scrawl.createImageFromGroup</code> function, and will be set to false as soon as the <code>Group.stashAction</code> function runs (in other words, stashing a Group’s output is a one-off operation).</p>
 
             </div>
             
@@ -1478,13 +1432,13 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-58">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getCellCoverage</code> - internal function which calculates the cumulative coverage of the Group’s artefacts. Used as part of the <code>stashAction</code> functionality</p>
 
             </div>
             
@@ -1522,13 +1476,28 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-59">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
-              <p>Artefacts should be added to, and removed from, the group object using the <strong>addArtefacts</strong> and <strong>removeArtefacts</strong> functions. The argument can be one or more artefact object’s name attribute, or the artefact object(s) itself.</p>
+              <h4 id="artefact-management">Artefact management</h4>
+<p>Artefacts should be added to, and removed from, the Group object using the functions detailed below.</p>
+<p>The argument for each function can be one or more artefact object’s name attribute, or the artefact objects themselves, separated by commas.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p><code>addArtefacts</code> - an artefact can belong to more than one Group</p>
 
             </div>
             
@@ -1547,9 +1516,22 @@ S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">this</span>.batchResort = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p><code>removeArtefacts</code> - remove an artefact from this Group</p>
 
-P.removeArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.removeArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
 
     args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
@@ -1562,53 +1544,44 @@ P.removeArtefacts = <span class="hljs-function"><span class="hljs-keyword">funct
 
     <span class="hljs-keyword">this</span>.batchResort = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
-
-P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>.artefacts.length = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.artefactBuckets.length = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.batchResort = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-60">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>moveArtefactsIntoGroup</code> - remove the artefact from their current Group (which is generally their Display cycle group, as set in their <code>group</code> and/or <code>host</code> attribute) and add them to this Group</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.moveArtefactsIntoGroup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
 
+    <span class="hljs-keyword">let</span> temp, art, grp;
+
     args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (item) {
 
-            <span class="hljs-keyword">let</span> temp;
+            art = (item.substring) ? artefact[item] : item;
 
-            <span class="hljs-keyword">if</span> (item.substring) {
+            <span class="hljs-keyword">if</span> (art &amp;&amp; art.isArtefact) {
 
-                temp = group[artefact[item].group];
-
-                <span class="hljs-keyword">if</span> (temp) temp.removeArtefacts(item);
-
-                pushUnique(<span class="hljs-keyword">this</span>.artefacts, item);
+                <span class="hljs-keyword">if</span> (art.group) temp = art.group;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (art.host) temp = group[art.host];
+                <span class="hljs-keyword">else</span> temp = <span class="hljs-literal">false</span>;
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.name) {
 
-                temp = group[item.group];
+            <span class="hljs-keyword">if</span> (temp) {
 
-                <span class="hljs-keyword">if</span> (temp) temp.removeArtefacts(item.name);
-
-                pushUnique(<span class="hljs-keyword">this</span>.artefacts, item.name);
+                temp.removeArtefacts(item);
+                temp.batchResort = <span class="hljs-literal">true</span>;
             }
+            pushUnique(<span class="hljs-keyword">this</span>.artefacts, item);
         }
     }, <span class="hljs-keyword">this</span>);
 
@@ -1619,13 +1592,34 @@ P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-61">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
-              <p>Update all artefact objects using the <strong>updateArtefacts</strong> function. The supplied argument will be passed on to each artefact’s <em>setDelta</em> function.</p>
+              <p><code>clearArtefacts</code> - remove all artefacts from this Group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">this</span>.artefacts.length = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.artefactBuckets.length = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>.batchResort = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p><code>updateArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDelta</code> function</p>
 
             </div>
             
@@ -1638,13 +1632,13 @@ P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-62">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
-              <p>Set all artefact objects using the <strong>setArtefacts</strong> function. The supplied argument will be passed on to each artefact’s <em>set</em> function.</p>
+              <p><code>setArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>set</code> function</p>
 
             </div>
             
@@ -1657,13 +1651,13 @@ P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-63">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>updateByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>updateByDelta</code> function</p>
 
             </div>
             
@@ -1671,11 +1665,43 @@ P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">functi
 
     <span class="hljs-keyword">this</span>.cascadeAction(<span class="hljs-literal">false</span>, <span class="hljs-string">'updateByDelta'</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p><code>reverseByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>reverseByDelta</code> function</p>
 
-P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">this</span>.cascadeAction(<span class="hljs-literal">false</span>, <span class="hljs-string">'reverseByDelta'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p><code>addArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>addClasses</code> function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.addArtefactClasses = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.cascadeAction(items, <span class="hljs-string">'addClasses'</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };</pre></div></div>
             
@@ -1688,17 +1714,11 @@ P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">functi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>removeArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>removeClasses</code> function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addArtefactClasses = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.cascadeAction(items, <span class="hljs-string">'addClasses'</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
-
-P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
     <span class="hljs-keyword">this</span>.cascadeAction(items, <span class="hljs-string">'removeClasses'</span>);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
@@ -1713,7 +1733,7 @@ P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cascadeAction</code> - internal helper function for the above artefact manipulation functionality</p>
 
             </div>
             
@@ -1737,7 +1757,7 @@ P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>setDeltaValues</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDeltaValues</code> function</p>
 
             </div>
             
@@ -1757,7 +1777,20 @@ P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword"
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>We can add and remove filters to each of the Group’s entity artefacts using the following functions. The argument for each function can be one or more Filter name-Strings, or the Filter objects themselves, separated by commas.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p><code>addFiltersToEntitys</code></p>
 
             </div>
             
@@ -1770,9 +1803,22 @@ P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword"
         <span class="hljs-keyword">if</span> (ent &amp;&amp; ent.addFilters) ent.addFilters(args);
     });
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p><code>removeFiltersFromEntitys</code></p>
 
-P.removeFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.removeFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
 
     <span class="hljs-keyword">this</span>.artefacts.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
@@ -1781,9 +1827,22 @@ P.removeFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywo
         <span class="hljs-keyword">if</span> (ent &amp;&amp; ent.removeFilters) ent.removeFilters(args);
     });
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p><code>clearFiltersFromEntitys</code> - clears all filters from all the Group’s entity artefacts.</p>
 
-P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">this</span>.artefacts.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
@@ -1797,82 +1856,23 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-68">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
-              </div>
-              <p>The <strong>getArtefactAt</strong> function checks to see if any of the group object’s artefacts are located at the supplied coordinates in the argument object. </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-69">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
-              </div>
-              <p>The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function. </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
-              </div>
-              <p>Where no artefacts are present at that coordinate the function returns false.</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
-              <p>A <strong>hit report</strong> is a Javascript object with the following attributes:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-72">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
-              </div>
-              <ul>
-<li>.x - the x coordinate supplied in this functions argument object</li>
-<li>.y - the y coordinate supplied in this functions argument object</li>
-<li>.artefact - the Scrawl-canvas artefact object reporting the hit</li>
+              <h4 id="collision-functionality">Collision functionality</h4>
+<p>The <code>getArtefactAt</code> function checks to see if any of the Group object’s artefacts are located at the supplied coordinates in the argument object. </p>
+<p>The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function. </p>
+<p>Where no artefacts are present at that coordinate the function returns false.</p>
+<p>A <strong>hit report</strong> is a Javascript object with the following attributes:</p>
+<ul>
+<li><code>x</code> - the x coordinate supplied in this functions argument object</li>
+<li><code>y</code> - the y coordinate supplied in this functions argument object</li>
+<li><code>artefact</code> - the Scrawl-canvas artefact object reporting the hit</li>
 </ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-73">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
-              </div>
-              <p>This function forms part of the Scrawl-canvas library’s <strong>drag-and-drop</strong> functionality.</p>
+<p>This function forms part of the Scrawl-canvas library’s <strong>drag-and-drop</strong> functionality.</p>
 
             </div>
             
@@ -1906,26 +1906,14 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-74">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
-              <p>The <strong>getAllArtefactsAt</strong> function returns an array of hit reports from all of the group object’s artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-75">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
-              </div>
-              <p>The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
+              <p>The <code>getAllArtefactsAt</code> function returns an array of hit reports from all of the Group object’s artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.</p>
+<p>The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
 
             </div>
             
@@ -1966,26 +1954,14 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-76">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
-              <p>The <strong>getArtefactCollisions</strong> function returns an array of hit reports from all of the group object’s artefacts which are currently in collision with the <strong>sensor</strong> coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-77">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
-              </div>
-              <p>The argument must be either the artefact object itself, or its String name.</p>
+              <p>The <code>getArtefactCollisions</code> function returns an array of hit reports from all of the Group object’s artefacts which are currently in collision with the <strong>sensor</strong> coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
+<p>The argument must be either the artefact object itself, or its String name.</p>
 
             </div>
             
@@ -1994,13 +1970,13 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-78">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
-              <p>return empty array if no argument, or the argument is not an artefact, or the group is empty</p>
+              <p>return empty array if no argument, or the argument is not an artefact, or the Group is empty</p>
 
             </div>
             
@@ -2011,11 +1987,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-79">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>Return empty array if the artefact argument has not been setup to check for collisions</p>
 
@@ -2030,11 +2006,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-80">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>Get entity collision data</p>
 
@@ -2045,13 +2021,13 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-81">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
-              <p>Winnow step 1: don’t check the entity itself, or any missing or malformed artefacts in the group</p>
+              <p>Winnow step 1: don’t check the entity itself, or any missing or malformed artefacts in the Group</p>
 
             </div>
             
@@ -2066,11 +2042,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-82">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p>Winnow step 2: exclude all targets outside the artefact/target collision radius</p>
 
@@ -2102,11 +2078,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-83">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>Winnow step 3: perform hit checks on remaining targets - this will not retrieve targets entirely inside the artefact</p>
 
@@ -2124,11 +2100,11 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-84">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>return filtered results</p>
 
@@ -2142,14 +2118,21 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
         </li>
         
         
-        <li id="section-85">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code><span class="hljs-keyword">let</span> faces = scrawl.makeGroup({
 
+    <span class="hljs-comment">// Unique name to keep track of the Group</span>
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'faces'</span>,
+
+    <span class="hljs-comment">// Groups generally associate with a primary controller (a Stack or Cell object)</span>
+    <span class="hljs-attr">host</span>: <span class="hljs-string">'mystack'</span>,
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeGroup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
@@ -2157,9 +2140,22 @@ P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keywor
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Group(items);
 };
 
-constructors.Group = Group;
+constructors.Group = Group;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-82">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeGroup,
 };</pre></div></div>
             

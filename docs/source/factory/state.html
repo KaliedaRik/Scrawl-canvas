@@ -299,7 +299,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="state-factory">State factory</h1>
+<p>Scrawl-canvas uses State objects to keep track of Cell object <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a> rendering engine state. </p>
+<p>Every entity object also has a State object. Before an entity is ‘stamped’ onto a Cell &lt;canvas&gt; their State objects are compared, to draw up a list of changes required by the entity to bring the engine’s state into alignment.</p>
+<ul>
+<li>State objects are not stored in the Scrawl-canvas library; they can only be accessed through their Cell or entity object.</li>
+<li>State objects <strong>can be shared</strong> between entity Objects, either by setting one entity object’s state attribute to another entity’s State object, or by setting a <code>sharedState</code> flag in the argument object when cloning a new entity from an existing one.</li>
+<li>Entitys can skip the engine comparison step during their Display cycle stamp functionality by setting their <code>noCanvasEngineUpdates</code> flag to true.</li>
+<li>State attributes can be updated directly on the Entity or Cell using those object’s normal <code>set</code> and <code>deltaSet</code> functions.</li>
+<li>State objects will be saved, cloned and killed as part of the Cell or entity save/clone/kill functionality.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +321,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="state-factory">State factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li>All Canvas demos make use of the State object.</li>
+</ul>
 
             </div>
             
@@ -324,72 +337,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -401,13 +349,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="state-constructor">State constructor</h2>
+              <h4 id="state-constructor">State constructor</h4>
 
             </div>
             
@@ -423,13 +371,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="state-object-prototype-setup">State object prototype setup</h2>
+              <h4 id="state-prototype">State prototype</h4>
 
             </div>
             
@@ -439,13 +387,16 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+</ul>
 
             </div>
             
@@ -454,13 +405,13 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="state-attributes">State attributes</h4>
 
             </div>
             
@@ -469,27 +420,16 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Color, gradient or pattern used to fill a entity. Can be:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <ul>
-<li>Cascading Style Sheet format color String - ‘#fff’, ‘#ffffff’, ‘rgb(255,255,255)’, ‘rgba(255,255,255,1)’, ‘white’</li>
+              <h5 id="fills-and-strokes">Fills and Strokes</h5>
+<p><strong>fillStyle</strong> and <strong>strokeStyle</strong> - color, gradient or pattern used to outline or fill a entity. Can be:</p>
+<ul>
+<li>CSS format color String - <code>#fff</code>, <code>#ffffff</code>, <code>rgb(255,255,255)</code>, <code>rgba(255,255,255,1)</code>, <code>white</code>, etc</li>
 <li>COLORNAME String</li>
 <li>GRADIENTNAME String</li>
 <li>RADIALGRADIENTNAME String</li>
@@ -498,52 +438,20 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    fillStyle: <span class="hljs-string">'rgba(0,0,0,1)'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    fillStyle: <span class="hljs-string">'rgba(0,0,0,1)'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'rgba(0,0,0,1)'</span>,</pre></div></div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Color, gradient or pattern used to outline a entity. Can be:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <ul>
-<li>Cascading Style Sheet format color String - ‘#fff’, ‘#ffffff’, ‘rgb(255,255,255)’, ‘rgba(255,255,255,1)’, ‘white’</li>
-<li>COLORNAME String</li>
-<li>GRADIENTNAME String</li>
-<li>RADIALGRADIENTNAME String</li>
-<li>PATTERNNAME String</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    strokeStyle: <span class="hljs-string">'rgba(0,0,0,1)'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>Entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque</p>
+              <h5 id="miscellaneous-engine-settings">Miscellaneous engine settings</h5>
+<p><strong>globalAlpha</strong> - entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque</p>
 
             </div>
             
@@ -552,26 +460,14 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <ul>
+              <p><strong>globalCompositeOperation</strong> - compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include</p>
+<ul>
 <li>‘source-over’</li>
 <li>‘source-atop’</li>
 <li>‘source-in’</li>
@@ -584,20 +480,8 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 <li>‘darker’</li>
 <li>‘copy’</li>
 <li>‘xor’</li>
+<li>any other permitted value - be aware that different browsers may render these operations in different ways, and some options are not supported by all browsers.</li>
 </ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p><em>Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers</em></p>
 
             </div>
             
@@ -606,13 +490,14 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Line width, in pixels</p>
+              <h5 id="stroke-line-styling">Stroke line styling</h5>
+<p><strong>lineWidth</strong> - in pixels</p>
 
             </div>
             
@@ -621,26 +506,14 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Line cap styling. Permitted values include:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <ul>
+              <p><strong>lineCap</strong> - how the ends of lines will display. Permitted values include:</p>
+<ul>
 <li>‘butt’</li>
 <li>‘round’</li>
 <li>‘square’</li>
@@ -653,26 +526,14 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Line join styling. Permitted values include:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <ul>
+              <p><strong>lineJoin</strong> - how line joints will display. Permitted values include:</p>
+<ul>
 <li>‘miter’</li>
 <li>‘round’</li>
 <li>‘bevel’</li>
@@ -685,13 +546,13 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Line dash format - an array of Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern</p>
+              <p><strong>lineDash</strong> - an array of integer Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern</p>
 
             </div>
             
@@ -700,13 +561,13 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Line dash offset - distance along the entity’s outline at which to start the line dash. Changing this value can be used to create a ‘marching ants effect</p>
+              <p><strong>lineDashOffset</strong> - distance along the entity’s outline at which to start the line dash. Changing this value can be used to create a ‘marching ants effect</p>
 
             </div>
             
@@ -715,13 +576,13 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>miterLimit - affecting the ‘pointiness’ of the line join where two lines join at an acute angle</p>
+              <p><strong>miterLimit</strong> - affecting the ‘pointiness’ of the line join where two lines join at an acute angle</p>
 
             </div>
             
@@ -730,43 +591,45 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Horizontal offset of a entity’s shadow, in pixels</p>
+              <h5 id="shadow-styling">Shadow styling</h5>
+<p>If these attributes are set to values different from their defaults, then the shadowing effect will have consequences on how the entity displays. Scrawl-canvas uses a 2-step procedure to displaying both an entity’s fill and stroke, applying one before the other - <code>method</code> <strong>fillThenDraw</strong>, <strong>drawThenFill</strong>. The shadow will be applied for both operations, which leads to the second operation applying a shadow over the first operation.</p>
+<p>If this is not the desired effect - we want the stroke and fill to display as a unified whole, with the shadow underneath them both - we can use <code>method</code> <strong>fillAndDraw</strong>, <strong>drawAndFill</strong>.</p>
+<p>The <strong>clear</strong> <code>method</code> will also include any shadow effect.</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    shadowOffsetX: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
         
-        <li id="section-30">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Vertical offset of a entity’s shadow, in pixels</p>
+              <p><strong>shadowOffsetX</strong>, <strong>shadowOffsetY</strong> - horizontal and vertical offsets for a entity’s shadow, in Number pixels</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    shadowOffsetY: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    shadowOffsetX: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
         
-        <li id="section-31">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Blur border for a entity’s shadow, in pixels</p>
+              <p><strong>shadowBlur</strong> - the blur width for a entity’s shadow, in Number pixels</p>
 
             </div>
             
@@ -775,27 +638,15 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>Color used for entity shadow effect. Can be:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <ul>
-<li>Cascading Style Sheet format color String - ‘#fff’, ‘#ffffff’, ‘rgb(255,255,255)’, ‘rgba(255,255,255,1)’, ‘white’</li>
+              <p><strong>shadowColor</strong> - the color used for an entity’s shadow effect. Can be:</p>
+<ul>
+<li>CSS format color String - <code>#fff</code>, <code>#ffffff</code>, <code>rgb(255,255,255)</code>, <code>rgba(255,255,255,1)</code>, <code>white</code>, etc</li>
 <li>COLORNAME String</li>
 </ul>
 
@@ -806,104 +657,44 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>Cascading Style Sheet font String, for Phrase entitys</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    font: <span class="hljs-string">'12px sans-serif'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <p>Following values are permitted according to Canvas API specs: ‘left’, ‘center’, ‘right’, ‘start’, ‘end’</p>
+              <h5 id="font-styling">Font styling</h5>
 
             </div>
             
         </li>
         
         
-        <li id="section-36">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>TODO: check how setting this value to different values affects Scrawl-canvas functionality</p>
-<ul>
-<li>because at the moment I ignore it, beyond setting it on the canvas2d rendering engine</li>
-</ul>
+              <p><strong>font</strong>, <strong>textAlign</strong>, <strong>textBaseline</strong> - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    textAlign: <span class="hljs-string">'start'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <p>Following values are permitted according to Canvas API specs: ‘top’, ‘hanging’, ‘middle’, ‘alphabetic’, ‘ideographic’, ‘bottom’</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
-              </div>
-              <p>TODO: find a (sane) way to interrogate fonts to find out the values - from font tables? - given for these settings</p>
-<ul>
-<li>because if I can do that, then I can work out the bounding box</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    textBaseline: <span class="hljs-string">'alphabetic'</span>,
+            <div class="content"><div class='highlight'><pre>    font: <span class="hljs-string">'12px sans-serif'</span>,
+    <span class="hljs-attr">textAlign</span>: <span class="hljs-string">'start'</span>,
+    <span class="hljs-attr">textBaseline</span>: <span class="hljs-string">'alphabetic'</span>,
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-39">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>Overwriting base mixin functions. Nothing to add to base mixin arrays</p>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
@@ -942,26 +733,41 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-41">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <h2 id="define-attribute-getters-and-setters">Define attribute getters and setters</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>Handled by Cell and entity objects, not by the State object</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-42">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="kill-management">Kill management</h4>
+<p>Handled by Cell and entity objects, not by the State object</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -999,22 +805,9 @@ P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (
 
 <span class="hljs-keyword">let</span> G = P.getters,
     S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+    D = P.deltaSetters;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.fillStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.fillStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> temp;
 
@@ -1026,22 +819,9 @@ P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (
         <span class="hljs-keyword">if</span> (temp) <span class="hljs-keyword">this</span>.fillStyle = temp;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.fillStyle = item;
     }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+};
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.strokeStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.strokeStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> temp;
 
@@ -1058,13 +838,26 @@ P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (
         </li>
         
         
-        <li id="section-45">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Internal arrays used by a number of Style functions</p>
 
             </div>
             
@@ -1077,13 +870,13 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getChanges</code> is the key function performed by State objects. This is where the entity’s state is compared to a Cell engine’s current state, to identify which engine attributes need to change to bring it into alignment with the entity object’s requirements</p>
 
             </div>
             
@@ -1107,11 +900,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>‘globalAlpha’, ‘globalCompositeOperation’, ‘shadowOffsetX’, ‘shadowOffsetY’, ‘shadowBlur’</p>
 
@@ -1129,11 +922,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>‘lineWidth’, ‘lineCap’, ‘lineJoin’, ‘lineDash’, ‘lineDashOffset’, ‘miterLimit’</p>
 
@@ -1190,11 +983,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>‘fillStyle’, ‘strokeStyle’, ‘shadowColor’</p>
 
@@ -1209,11 +1002,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>string colors - only update if necessary</p>
 
@@ -1224,11 +1017,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Color object colors need to be extracted before they can be compared and, if necessary, updated</p>
 
@@ -1244,11 +1037,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>gradient and pattern objects - get freshly deployed with each entity stamp</p>
 
@@ -1260,11 +1053,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>‘font’</p>
 
@@ -1287,13 +1080,13 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>The <code>setStateFromEngine</code> function takes a CanvasRenderingContext2D engine object and updates its own attributes to match the engine’s current state.</p>
 
             </div>
             
@@ -1317,13 +1110,14 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-55">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<p>Only used internally by Cell and entity factory functions</p>
 
             </div>
             
@@ -1332,9 +1126,22 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> State(items);
 };
 
-constructors.State = State;
+constructors.State = State;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeState,
 };</pre></div></div>
             

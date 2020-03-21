@@ -1,10 +1,11 @@
-// ## Demo Component 004
+// # Demo Component 004
+// Scrawl-canvas packets - save and load a range of different entitys
 
-// [Scrawl-canvas packets - save and load a range of different entitys](../../demo/component-004.html)
+// [Run code](../../demo/component-004.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
@@ -21,9 +22,6 @@ let mygradient = scrawl.makeGradient({
         '999 ': 'green'
     },
 });
-// .updateColor(0, 'blue')
-// .updateColor(500, 'gold')
-// .updateColor(999, 'green');
 
 // Setup Color style
 let mycolor = scrawl.makeColor({
@@ -572,6 +570,7 @@ let myshape = scrawl.makeShape({
     s-0.15-1.692-0.764-1.932C90.416,589.182,89.577,589.392,88.453,589.706z`,
 });
 
+// #### Development and testing
 let performEntityTests = () => {
 
     console.log('Creating packets for all entitys in test');
@@ -688,6 +687,20 @@ let performOtherTests = () => {
     .catch(err => console.log(err));
 };
 
+console.log('TESTS BEFORE starting render cycle');
+performEntityTests();
+performOtherTests();
+
+// #### Scene animation
+// Create the Display cycle animation
+scrawl.makeRender({
+
+    name: 'demo-animation',
+    target: canvas,
+});
+
+console.log(scrawl.library);
+
 let fixEntitys = () => {
 
     console.log('Fix entitys to use other objects');
@@ -703,19 +716,6 @@ let fixEntitys = () => {
         filters: 'venetianBlinds',
     })
 };
-
-console.log('TESTS BEFORE starting render cycle');
-performEntityTests();
-performOtherTests();
-
-// Create the Animation loop which will run the Display cycle
-scrawl.makeRender({
-
-    name: 'demo-animation',
-    target: canvas,
-});
-
-console.log(scrawl.library);
 
 setTimeout(() => {
     console.log('TESTS AFTER starting render cycle');

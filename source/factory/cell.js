@@ -1,16 +1,12 @@
-
 // # Cell factory
-
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
-
+// Scrawl-canvas uses 'hidden' canvases - &lt;canvas> elements that are not part of the DOM - for much of its functionality:
+// + When we wrap a DOM-based &lt;canvas> element in a Scrawl-canvas Canvas wrapper, we create a second 'hidden' &lt;canvas> element and assign it as that Canvas wrapper's __base cell__. 
+// + This Cell is used for building the display during the Display cycle ('clear' and 'compile' steps). 
+// + It gets copied over to the Dom-based &lt;canvas> element at the end of the cycle (the 'show' step).
+//
+// A Scrawl-canvas Canvas wrapper can have more than one Cell wrapper associated with it. These additional Cells can be used as:
+// + __layers__ to be applied to the base cell, allowing us to break a canvas display into more manageable portions
+// + The source for image-based objects such as __Picture entitys__ and __Pattern styles__.
 
 // ## Imports
 import { artefact, asset, tween, radian, constructors, 

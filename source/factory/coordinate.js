@@ -1,54 +1,46 @@
-
 // # Coordinate factory
-
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// Scrawl-canvas uses Coordinate Arrays extensively throughout the code base - in particular to hold artefact coordinate [x, y] and dimensional [w, h] data. The Coordinate factory does not care whether these values are presented as Numbers or Strings (or a mixture of both) - it leaves such functionality to other mixins (in particular the __position__, __dom__ and __entity__ mixins) and factories.
 
 
-// ## Imports
+// #### Imports
 import { constructors } from '../core/library.js';
 import { xt, isa_obj, isa_number } from '../core/utilities.js';
 
 
-// ## Coordinate constructor
-const Coordinate = function (items) {
+// #### Coordinate constructor
+const Coordinate = function (items, y) {
 
     let coords = [0, 0];
 
     Object.setPrototypeOf(coords, Coordinate.prototype);
 
-    if (items) coords.set(items);
+    if (items) coords.set(items, y);
 
     return coords;
 };
 
 
-// ## Coordinate object prototype setup
+// #### Coordinate prototype
 let P = Coordinate.prototype = Object.create(Array.prototype);
-
 P.constructor = Coordinate;
 P.type = 'Coordinate';
 
 
-// ## Define prototype functions
+// #### Mixins
+// Coordinate Arrays do not use mixins - they are regular Javascript Arrays. As such, they do not possess packet, clone or kill functionality.
 
-// TODO - documentation
-P.zero = function () {
 
-    this[0] = 0;
-    this[1] = 0;
+// #### Coordinate attributes
+// There are no attributes. The constructor returns an Array containing two members, whose prototype object includes functions for manipulating those members in various ways.
 
-    return this;
-};
 
-// TODO - documentation
+// #### Get, Set, deltaSet
+// The Array members can be set using a `set` function, which is overloaded as follows:
+// + `mycoordinate.set(Coordinate)` - use another Coordinate Array to set this Coordinate members' values
+// + `mycoordinate.set(Array)` -  - use a Javascript Array to set this Coordinate members' values
+// + `mycoordinate.set(Quaternion)` - use a Quaternion object (specifically, its __v__ Vector object attribute) to set this Coordinate members' values
+// + `mycoordinate.set(Vector)` - use a Vector object to set this Coordinate members' values
+// + `mycoordinate.set(a:Number|String, b:Number|String)` - supply two arguments to the function
 P.set = function (items, y) {
 
     if (items.type === 'Coordinate') this.setFromArray(items);
@@ -78,7 +70,18 @@ P.setFromVector = function (item) {
     return this;
 };
 
-// TODO - documentation
+
+// #### Prototype functions
+// Set the Coordinate array to `[0, 0]`
+P.zero = function () {
+
+    this[0] = 0;
+    this[1] = 0;
+
+    return this;
+};
+
+// Add a Vector object's __x__ and __y__ attributes to the Coordinate members' values
 P.vectorAdd = function (item) {
 
     let {x, y} = item;
@@ -89,6 +92,7 @@ P.vectorAdd = function (item) {
     return this;
 };
 
+// Subtract a Vector object's __x__ and __y__ attributes from the Coordinate members' values
 P.vectorSubtract = function (item) {
 
     let {x, y} = item;
@@ -99,7 +103,7 @@ P.vectorSubtract = function (item) {
     return this;
 };
 
-// TODO - documentation
+// Array addition - argument is a `[Number, Number]` Array
 P.add = function (item) {
 
     let [x, y] = item;
@@ -110,6 +114,7 @@ P.add = function (item) {
     return this;
 };
 
+// Array subtraction - argument is a `[Number, Number]` Array
 P.subtract = function (item) {
 
     let [x, y] = item;
@@ -120,6 +125,7 @@ P.subtract = function (item) {
     return this;
 };
 
+// Array multiplication - argument is a `[Number, Number]` Array
 P.multiply = function (item) {
 
     let [x, y] = item;
@@ -130,6 +136,7 @@ P.multiply = function (item) {
     return this;
 };
 
+// Array division - argument is a `[Number, Number]` Array
 P.divide = function (item) {
 
     let [x, y] = item;
@@ -144,7 +151,7 @@ P.divide = function (item) {
     return this;
 };
 
-// TODO - documentation
+// Multiply both Coordinate Array members by the argument Number
 P.scalarMultiply = function (item) {
 
     this[0] *= item;
@@ -153,6 +160,7 @@ P.scalarMultiply = function (item) {
     return this;
 };
 
+// Divide both Coordinate Array members by the argument Number
 P.scalarDivide = function (item) {
 
     if (!isa_number(item)) throw new Error(`Coordinate error - scalarDivide() argument not a number: ${item}`);
@@ -164,7 +172,7 @@ P.scalarDivide = function (item) {
     return this;
 };
 
-// TODO - documentation
+// Get the Array's __magnitude__ value (treating the Coordinate as if it was a 2D vector)
 P.getMagnitude = function () {
 
     let x = this[0],
@@ -173,7 +181,7 @@ P.getMagnitude = function () {
     return Math.sqrt((x * x) + (y * y));
 };
 
-// TODO - documentation
+// Rotate the Coordinate by the argument number (treating the Coordinate as if it was a 2D vector) - the argument represents degrees, not radians
 P.rotate = function (angle) {
 
     if (!isa_number(item)) throw new Error(`Coordinate error - rotate() argument not a number: ${angle}`);
@@ -193,7 +201,7 @@ P.rotate = function (angle) {
     return this;
 };
 
-// TODO - documentation
+// Reverse the numerical sign on each of the Array's members
 P.reverse = function () {
 
     this[0] = -this[0];
@@ -202,13 +210,13 @@ P.reverse = function () {
     return this;
 };
 
-// TODO - documentation
+// Get the Array's __dot product__ value (treating the Coordinate as if it was a 2D vector)
 P.getDotProduct = function (coord) {
 
     return (this[0] * coord[0]) + (this[1] * coord[1]);
 };
 
-// TODO - documentation
+// __Normalize__ the Array's members (treating the Coordinate as if it was a 2D vector)
 P.normalize = function() {
     
     let val = this.getMagnitude();
@@ -221,40 +229,28 @@ P.normalize = function() {
 };
 
 
-
-
-// ## Coordinate pool
-
-// An attempt to re-use coordinates rather than constantly creating and deleting them
-
-// TODO: check - are we actually using this functionality?
+// #### Coordinate pool
+// An attempt to reuse coordinates rather than constantly creating and deleting them
 const coordinatePool = [];
-let coordinatePoolCount = 0;
 
+// `exported function` - retrieve a Coordinate from the coordinate pool
 const requestCoordinate = function (items, y) {
 
-    if (!coordinatePool.length) {
-        coordinatePool.push(new Coordinate());
-        coordinatePoolCount++;
-    }
+    if (!coordinatePool.length) coordinatePool.push(new Coordinate());
 
-    let coordinate = coordinatePool.shift();
-
-    if (y) coordinate.set(items, y);
-    else if (Array.isArray(items)) coordinate.setFromArray(items);
-    else if(items) coordinate.set(items);
-    else coordinate.zero();
-
-    return coordinate
+    let c = coordinatePool.shift();
+    c.set(items, y);
+    return c
 };
 
+// `exported function` - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.
 const releaseCoordinate = function (coordinate) {
 
     if (coordinate && coordinate.type === 'Coordinate') coordinatePool.push(coordinate.zero());
 };
 
 
-// ## Exported factory function
+// #### Factory
 const makeCoordinate = function (items) {
 
     return new Coordinate(items);
@@ -262,6 +258,8 @@ const makeCoordinate = function (items) {
 
 constructors.Coordinate = Coordinate;
 
+
+// #### Exports
 export {
     makeCoordinate,
     requestCoordinate,

@@ -1,5 +1,4 @@
 // # DOM management
-//
 // Core DOM element discovery and management functionality, and the Scrawl-canvas __Display cycle__.
 //
 // Scrawl-canvas breaks down the display cycle into three parts: __clear__; __compile__; and __show__. These can be triggered either as a single, combined __render__ operation, or separately as-and-when needed.
@@ -7,9 +6,7 @@
 // The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element's controller's __order__ attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value
 
 
-// ## DOM Functionality
-
-// Imports
+// #### Imports
 import { isa_canvas, generateUuid, isa_fn, isa_dom, pushUnique, removeItem, xt } from "./utilities.js";
 import { artefact, canvas, group, stack, css, xcss } from "./library.js";
 
@@ -864,6 +861,7 @@ scrawlNavigationHold.style.left = '-5000px';
 scrawlNavigationHold.id = 'Scrawl-navigation-default-hold';
 document.body.prepend(scrawlNavigationHold);
 
+// #### Exports
 export {
     getCanvases,
     getCanvas,

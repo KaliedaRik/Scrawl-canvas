@@ -39,8 +39,6 @@ P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
 P = domMix(P);
-let defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);
 P.factoryKill = function () {
 removeItem(uiSubscribedElements, this.name);
 this.domElement.remove();

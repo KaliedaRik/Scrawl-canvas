@@ -1,10 +1,12 @@
-// ## Demo DOM 013
+// # Demo DOM 013
+// Artefact collision detection - DOM artefacts
 
-// [Artefact collision detection - DOM artefacts](../../demo/dom-013.html)
+// [Run code](../../demo/dom-013.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup - create some useful variables for use elsewhere in the script
+// #### Scene setup
+// Create some useful variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement,
@@ -91,6 +93,7 @@ let myGrid = scrawl.makeGrid({
 });
 
 
+// #### User interaction
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
 scrawl.makeDragZone({
 
@@ -100,6 +103,7 @@ scrawl.makeDragZone({
 });
 
 
+// #### Scene animation
 // Function to display grid blocks which are currently in collision with the element artefact
 let checkHits = function () {
 
@@ -129,10 +133,10 @@ let report = function () {
 }();
 
 // BUG: the final positioning, dimensions, scaling etc of DOM elements often don't settle down until after the first Display cycle completes, by which time certain internal structures (such as, in this case, the sensor coordinates for our element) have been set to old values. Which for this demo means that the element sensor data doesn't translate over to the canvas until after a user interaction of some sort brings everything back into synchronicity
-
+//
 // The simplest way to correct this BUG (for now) is to apply a .set() call on the element, changing one attribute a small amount. We only need to do this once, after the first Display cycle has completed; this can be achieved by adding the set tweak in the afterCreated attribute of the makeRender function.
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -142,7 +146,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### More user interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -197,4 +202,6 @@ document.querySelector('#yaw').value = 30;
 document.querySelector('#scale').value = 1;
 document.querySelector('#perspective').value = 1200;
 
+
+// #### Development and testing
 console.log(scrawl.library);

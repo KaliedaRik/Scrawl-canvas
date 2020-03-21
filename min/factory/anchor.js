@@ -35,6 +35,10 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['domElement']);
 P.packetObjects = pushUnique(P.packetExclusions, ['host']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['clickAction']);
+P.demolish = function () {
+if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
+this.deregister();
+};
 let S = P.setters;
 S.host = function (item) {
 let h = (item.substring) ? artefact[item] : item;
@@ -118,10 +122,6 @@ bubbles: true,
 cancelable: true
 });
 return this.domElement.dispatchEvent(e);
-};
-P.demolish = function () {
-if (this.domElement && this.hold) this.hold.removeChild(this.domElement);
-this.deregister();
 };
 const makeAnchor = function (items) {
 return new Anchor(items);

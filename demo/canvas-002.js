@@ -1,10 +1,11 @@
-// ## Demo Canvas 002 
+// # Demo Canvas 002 
+// Block and wheel entity positioning (start, pivot, mimic, mouse)
 
-// [Block and wheel entity positioning (start, pivot, mimic, mouse)](../../demo/canvas-002.html)
+// [Run code](../../demo/canvas-002.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.setBase({
@@ -12,12 +13,12 @@ canvas.setBase({
 });
 
 
-// Create and clone block and wheel entitys. For the sake of safety and sanity, create the entitys on which other artefacts will pivot and mimic first. Then create those other artefacts.
-
-// Note: setting this entity's method value to 'none' means that while it will perform all necessary calculations as part of the Display cycle, it will not complete its stamp action, thus will not appear on the display. This differs from setting its visibility attribute to false, which will make the entity skip both calculation and stamp operations
+// Create and clone block and wheel entitys. For the sake of safety and sanity, create the (reference) entitys on which other artefacts will pivot and mimic first. Then create those other artefacts.
+//
+// Note: setting this entity's `method` value to __none__ means that while it will perform all necessary calculations as part of the Display cycle, it will not complete its stamp action, thus will not appear on the display. This differs from setting its `visibility` attribute to false, which will make the entity skip both calculation and stamp operations
 let myPivot = scrawl.makeWheel({
     name: 'mouse-pivot',
-    // method: 'none',
+    method: 'none',
 
     startX: 'center',
     startY: 'center',
@@ -35,6 +36,7 @@ let myblock = scrawl.makeBlock({
     offsetX: -140,
     offsetY: -50,
 
+    // To pivot this entity to the reference entity, we need to set both its `pivot` attribute (to the reference entity's name, or the entity itself) __and also__ set the `lockTo` attribute to the value __'pivot'__
     pivot: 'mouse-pivot',
     lockTo: 'pivot',
 
@@ -115,6 +117,7 @@ myblock.clone({
 }).clone({
     name: 'mimic-wheel',
 
+    // `mimic` is an extended form of `pivot`
     mimic: 'base-wheel',
     lockTo: 'mimic',
 
@@ -160,20 +163,14 @@ mywheel.clone({
     useMimicDimensions: true,
     useMimicScale: true,
     useMimicStart: true,
-    useMimicHandle: false,
     useMimicOffset: true,
     useMimicRotation: true,
-
     addOwnDimensionsToMimic: true,
-    addOwnScaleToMimic: false,
-    addOwnStartToMimic: false,
-    addOwnHandleToMimic: false,
-    addOwnOffsetToMimic: false,
-    addOwnRotationToMimic: false,
 });
 
 
-// Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
+// #### User interaction
+// Function to check whether mouse cursor is over canvas, and lock the reference entity accordingly
 let mouseCheck = function () {
 
     let active = false;
@@ -192,6 +189,7 @@ let mouseCheck = function () {
 }();
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -210,7 +208,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -219,6 +217,7 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+// #### Development and testing
 console.log(scrawl.library);
 
 // To test kill functionality

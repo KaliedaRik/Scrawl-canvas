@@ -299,7 +299,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="coordinate-factory">Coordinate factory</h1>
+<p>Scrawl-canvas uses Coordinate Arrays extensively throughout the code base - in particular to hold artefact coordinate [x, y] and dimensional [w, h] data. The Coordinate factory does not care whether these values are presented as Numbers or Strings (or a mixture of both) - it leaves such functionality to other mixins (in particular the <strong>position</strong>, <strong>dom</strong> and <strong>entity</strong> mixins) and factories.</p>
+
             </div>
             
         </li>
@@ -311,9 +313,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="coordinate-factory">Coordinate factory</h1>
+              <h4 id="imports">Imports</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { xt, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
             
         </li>
         
@@ -324,9 +329,20 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="coordinate-constructor">Coordinate constructor</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Coordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) </span>{
+
+    <span class="hljs-keyword">let</span> coords = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+
+    <span class="hljs-built_in">Object</span>.setPrototypeOf(coords, Coordinate.prototype);
+
+    <span class="hljs-keyword">if</span> (items) coords.set(items, y);
+
+    <span class="hljs-keyword">return</span> coords;
+};</pre></div></div>
             
         </li>
         
@@ -337,9 +353,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
+              <h4 id="coordinate-prototype">Coordinate prototype</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Coordinate.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Array</span>.prototype);
+P.constructor = Coordinate;
+P.type = <span class="hljs-string">'Coordinate'</span>;</pre></div></div>
             
         </li>
         
@@ -350,7 +370,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h4 id="library-storage">Library storage</h4>
+              <h4 id="mixins">Mixins</h4>
+<p>Coordinate Arrays do not use mixins - they are regular Javascript Arrays. As such, they do not possess packet, clone or kill functionality.</p>
 
             </div>
             
@@ -363,7 +384,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
+              <h4 id="coordinate-attributes">Coordinate attributes</h4>
+<p>There are no attributes. The constructor returns an Array containing two members, whose prototype object includes functions for manipulating those members in various ways.</p>
 
             </div>
             
@@ -376,112 +398,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { xt, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <h2 id="coordinate-constructor">Coordinate constructor</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Coordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
-
-    <span class="hljs-keyword">let</span> coords = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
-
-    <span class="hljs-built_in">Object</span>.setPrototypeOf(coords, Coordinate.prototype);
-
-    <span class="hljs-keyword">if</span> (items) coords.set(items);
-
-    <span class="hljs-keyword">return</span> coords;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <h2 id="coordinate-object-prototype-setup">Coordinate object prototype setup</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Coordinate.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Array</span>.prototype);
-
-P.constructor = Coordinate;
-P.type = <span class="hljs-string">'Coordinate'</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.zero = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>The Array members can be set using a <code>set</code> function, which is overloaded as follows:</p>
+<ul>
+<li><code>mycoordinate.set(Coordinate)</code> - use another Coordinate Array to set this Coordinate members’ values</li>
+<li><code>mycoordinate.set(Array)</code> -  - use a Javascript Array to set this Coordinate members’ values</li>
+<li><code>mycoordinate.set(Quaternion)</code> - use a Quaternion object (specifically, its <strong>v</strong> Vector object attribute) to set this Coordinate members’ values</li>
+<li><code>mycoordinate.set(Vector)</code> - use a Vector object to set this Coordinate members’ values</li>
+<li><code>mycoordinate.set(a:Number|String, b:Number|String)</code> - supply two arguments to the function</li>
+</ul>
 
             </div>
             
@@ -517,13 +442,35 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-14">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="prototype-functions">Prototype functions</h4>
+<p>Set the Coordinate array to <code>[0, 0]</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.zero = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Add a Vector object’s <strong>x</strong> and <strong>y</strong> attributes to the Coordinate members’ values</p>
 
             </div>
             
@@ -535,9 +482,22 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
     <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] += y;
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Subtract a Vector object’s <strong>x</strong> and <strong>y</strong> attributes from the Coordinate members’ values</p>
 
-P.vectorSubtract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.vectorSubtract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> {x, y} = item;
 
@@ -550,13 +510,13 @@ P.vectorSubtract = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-15">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Array addition - argument is a <code>[Number, Number]</code> Array</p>
 
             </div>
             
@@ -568,9 +528,22 @@ P.vectorSubtract = <span class="hljs-function"><span class="hljs-keyword">functi
     <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] += y;
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Array subtraction - argument is a <code>[Number, Number]</code> Array</p>
 
-P.subtract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.subtract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> [x, y] = item;
 
@@ -578,9 +551,22 @@ P.subtract = <span class="hljs-function"><span class="hljs-keyword">function</sp
     <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] -= y;
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Array multiplication - argument is a <code>[Number, Number]</code> Array</p>
 
-P.multiply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.multiply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> [x, y] = item;
 
@@ -588,9 +574,22 @@ P.multiply = <span class="hljs-function"><span class="hljs-keyword">function</sp
     <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] *= y;
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Array division - argument is a <code>[Number, Number]</code> Array</p>
 
-P.divide = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.divide = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> [x, y] = item;
 
@@ -607,13 +606,13 @@ P.divide = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Multiply both Coordinate Array members by the argument Number</p>
 
             </div>
             
@@ -623,9 +622,22 @@ P.divide = <span class="hljs-function"><span class="hljs-keyword">function</span
     <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] *= item;
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Divide both Coordinate Array members by the argument Number</p>
 
-P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">if</span> (!isa_number(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Coordinate error - scalarDivide() argument not a number: <span class="hljs-subst">${item}</span>`</span>);
     <span class="hljs-keyword">if</span> (!item) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Coordinate error - scalarDivide() divide by zero`</span>);
@@ -645,7 +657,7 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Get the Array’s <strong>magnitude</strong> value (treating the Coordinate as if it was a 2D vector)</p>
 
             </div>
             
@@ -666,7 +678,7 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Rotate the Coordinate by the argument number (treating the Coordinate as if it was a 2D vector) - the argument represents degrees, not radians</p>
 
             </div>
             
@@ -698,7 +710,7 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Reverse the numerical sign on each of the Array’s members</p>
 
             </div>
             
@@ -719,7 +731,7 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Get the Array’s <strong>dot product</strong> value (treating the Coordinate as if it was a 2D vector)</p>
 
             </div>
             
@@ -737,7 +749,7 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>Normalize</strong> the Array’s members (treating the Coordinate as if it was a 2D vector)</p>
 
             </div>
             
@@ -761,9 +773,12 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <h2 id="coordinate-pool">Coordinate pool</h2>
+              <h4 id="coordinate-pool">Coordinate pool</h4>
+<p>An attempt to reuse coordinates rather than constantly creating and deleting them</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> coordinatePool = [];</pre></div></div>
             
         </li>
         
@@ -774,9 +789,18 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>An attempt to re-use coordinates rather than constantly creating and deleting them</p>
+              <p><code>exported function</code> - retrieve a Coordinate from the coordinate pool</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> requestCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!coordinatePool.length) coordinatePool.push(<span class="hljs-keyword">new</span> Coordinate());
+
+    <span class="hljs-keyword">let</span> c = coordinatePool.shift();
+    c.set(items, y);
+    <span class="hljs-keyword">return</span> c
+};</pre></div></div>
             
         </li>
         
@@ -787,31 +811,11 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>TODO: check - are we actually using this functionality?</p>
+              <p><code>exported function</code> - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> coordinatePool = [];
-<span class="hljs-keyword">let</span> coordinatePoolCount = <span class="hljs-number">0</span>;
-
-<span class="hljs-keyword">const</span> requestCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!coordinatePool.length) {
-        coordinatePool.push(<span class="hljs-keyword">new</span> Coordinate());
-        coordinatePoolCount++;
-    }
-
-    <span class="hljs-keyword">let</span> coordinate = coordinatePool.shift();
-
-    <span class="hljs-keyword">if</span> (y) coordinate.set(items, y);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(items)) coordinate.setFromArray(items);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(items) coordinate.set(items);
-    <span class="hljs-keyword">else</span> coordinate.zero();
-
-    <span class="hljs-keyword">return</span> coordinate
-};
-
-<span class="hljs-keyword">const</span> releaseCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coordinate</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coordinate</span>) </span>{
 
     <span class="hljs-keyword">if</span> (coordinate &amp;&amp; coordinate.type === <span class="hljs-string">'Coordinate'</span>) coordinatePool.push(coordinate.zero());
 };</pre></div></div>
@@ -825,7 +829,7 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
 
             </div>
             
@@ -834,9 +838,22 @@ P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Coordinate(items);
 };
 
-constructors.Coordinate = Coordinate;
+constructors.Coordinate = Coordinate;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeCoordinate,
     requestCoordinate,
     releaseCoordinate,

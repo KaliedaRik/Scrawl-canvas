@@ -159,27 +159,6 @@ const xt = item => (typeof item == 'undefined') ? false : true;
 const xta = (...args) => args.every(item => typeof item != 'undefined');
 const xtGet = (...args) => args.find(item => typeof item != 'undefined');
 const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true : false;
-const btoaUTF16 = function (sString) {
-console.log(sString.length, sString)
-sString = sString.replace(/\0/g, '');
-console.log(sString.length)
-let aUTF16CodeUnits = new Uint16Array(sString.length);
-Array.prototype.forEach.call(aUTF16CodeUnits, function (el, idx, arr) {
-arr[idx] = sString.charCodeAt(idx);
-});
-let result = btoa(String.fromCharCode.apply(null, new Uint8Array(aUTF16CodeUnits.buffer)));
-console.log(result)
-console.log(atobUTF16(result))
-return result;
-};
-const atobUTF16 = function (sBase64) {
-let sBinaryString = atob(sBase64),
-aBinaryView = new Uint8Array(sBinaryString.length);
-Array.prototype.forEach.call(aBinaryView, function (el, idx, arr) {
-arr[idx] = sBinaryString.charCodeAt(idx);
-});
-return String.fromCharCode.apply(null, new Uint16Array(aBinaryView.buffer));
-};
 export {
 addStrings,
 convertLength,
@@ -220,6 +199,4 @@ xt,
 xta,
 xtGet,
 xto,
-atobUTF16,
-btoaUTF16,
 };

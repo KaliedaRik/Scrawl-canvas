@@ -1,25 +1,31 @@
-
 // # Color factory
+// Color objects generate CSS rgb() or rgba() color strings, which can then be used to set an entity's State object's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
+// + Factory can accept any legal CSS color keyword as an attribute, alongside '#nnn' and '#nnnnnn' hexadecimal Strings. It will accept 'rgb()' and 'rgba()' strings under certain conditions.
+// + It can also accept __r__, __g__, __b__ and __a__ channel Number attributes (0-255 integers for r, g, b; 0-1 float Number for a), from which a color can be constructed.
+// + It can be used to generate random colors, using channel __max__ and __min__ integer Number attributes to limit the range of the random colors.
+// + It can be deltaAnimated by setting channel __shift__ float Number attributes and setting the __autoUpdate__ Boolean flag to true. Delta animations can run until values hit their set max/min values, or can bounce between min and max values, depending on the setting of the channel __bounce__ Boolean flags.
+// + It can also be animated directly, or using delta animation, or act as the target for __Tween__ animations.
+// + Colors can be cloned, and killed.
 
-// TODO - documentation
+// TODO: The color object does not yet handle the following color inputs:
+// + `hsl[a](H, S, L[, A])` - color will be treated as transparent black
+// + `hsl[a](H S L[ / A])` - color will be treated as transparent black
+// + for `rgb()` and `rgba()`, if any of the values (including alpha) is given as a %Number, all values will be treated as percentages (in the spec, rgb values all need to be either integer Number 0-255, or %Number 0%-100%, but channels cannot mix the two notations, whereas the alpha value format _can_ differ from rgb value format)
 
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// #### Demos:
+// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets; save and load a range of different entitys
+// + [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
+// + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
 
 
-// ## Imports
+// #### Imports
 import { constructors, entity } from '../core/library.js';
 import { mergeOver, xt, xtGet, isa_obj } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
 
-// ## Color constructor
+// #### Color constructor
 const Color = function (items = {}) {
 
     this.makeName(items.name);
@@ -37,7 +43,7 @@ const Color = function (items = {}) {
 };
 
 
-// ## Color object prototype setup
+// #### Color prototype
 let P = Color.prototype = Object.create(Object.prototype);
 P.type = 'Color';
 P.lib = 'styles';
@@ -45,62 +51,71 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
-// ## Define default attributes
+// #### Color attributes
 let defaultAttributes = {
 
 
-// TODO - documentation
+// The color channel attributes __r__, __g__, __b__ and __a__ are all integer Numbers in the range 0 (no contribution to color from this channel) to 255 (100% contribution)
     r: 0,
     g: 0,
     b: 0,
+
+// The alpha channel attribute __a__ is a float Number between 0 (transparent) and 1 (opaque)
     a: 1,
 
-// TODO - documentation
-    rShift: 0,
-    gShift: 0,
-    bShift: 0,
-    aShift: 0,
-
-// TODO - documentation
+// We can limit a channel's range - useful, for instance, when asking the Color object to supply us with a restricted-random color, or when animating the color. Channel maximum values __must__ be higher than their minimum values.
     rMax: 255,
     gMax: 255,
     bMax: 255,
     aMax: 1,
 
-// TODO - documentation
     rMin: 0,
     gMin: 0,
     bMin: 0,
     aMin: 0,
 
-// TODO - documentation
+// We can ask the Color object to update its channel values when it completes each get() invocation response. Channel __shift__ values can be set separately, and can be float Numbers.
+    rShift: 0,
+    gShift: 0,
+    bShift: 0,
+    aShift: 0,
+
+// The __bounce__ boolean flags determine whether the color animation will be sticky (false, default), remaining at the channel's minimum or maximum value when it is reached, or whether that channel will bounce between its minimum and maximum values as the animation progresses.
     rBounce: false,
     gBounce: false,
     bBounce: false,
     aBounce: false,
 
-// TODO - documentation
+// The __opaque__ Boolean flag will supply colors in 'rgb()' format; when set to false 'rgba()' format colors are supplied.
     opaque: true,
 
-// TODO - documentation
+// The __autoUpdate__ Boolean flag switches on color animation
     autoUpdate: false,
+
+// ##### Non-retained argument attributes (for factory, clone, set functions)
+
+// __random__ - the factory function, and the clone function, can ask the Color object to set its initial channel values randomly by including this attribute in the argument object; if the attribute resolves to true, random color functionality is invoked to set the r, g and b channel attributes to appropriately random values.
+
+// __color__ - a CSS color definition String which the Color object will attempt to convert into appropriate r, g, b and a channel attribute values.
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
-
-// Nothing additional required?
-
+// #### Packet management
+// No additional packet functionality required
 
 
-// ## Kill functionality - overwrites ./mixin/base.js
+// #### Clone management
+// No additional clone functionality required
 
-// TODO: test on an entity that uses a color object for its fill/strokeStyle
+
+// #### Kill management
+// Overwrites ./mixin/base.js
 P.kill = function () {
 
     let myname = this.name;
@@ -127,10 +142,9 @@ P.kill = function () {
 };
 
 
+// #### Get, Set, deltaSet
 
-// ## Define prototype functions
-
-// Overrides function in mixin/base.js
+// `get` - overrides function in mixin/base.js
 P.get = function (item) {
 
     if (!xt(item)) {
@@ -164,7 +178,7 @@ P.get = function (item) {
 };
 
 
-// Overrides function in mixin/base.js
+// `set` - overrides function in mixin/base.js - see above for the additional attributes the set object argument can use.
 P.set = function (items = {}) {
 
     if (items) {
@@ -191,7 +205,9 @@ P.set = function (items = {}) {
     return this;
 };
 
-// TODO - documentation
+// #### Prototype functions
+
+// `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
 P.getData = function () {
 
     if (this.autoUpdate) this.update();
@@ -201,7 +217,7 @@ P.getData = function () {
     return this.get();
 };
 
-// TODO - documentation
+// `generateRandomColor` function asks the Color object to supply a random color, as restricted by its channel minimum and maximum attributes
 P.generateRandomColor = function (items = {}) {
 
     let round = Math.round,
@@ -231,7 +247,7 @@ P.generateRandomColor = function (items = {}) {
     return this;
 };
 
-// TODO - documentation
+// Internal function to make sure channel attribute values are in their correct format and ranges
 P.checkValues = function () {
 
     let f = Math.floor,
@@ -248,9 +264,8 @@ P.checkValues = function () {
     return this;
 };
 
-// TODO - documentation
+// `update` function - adds the channel __shift__ attributes to the r, g, b and a attributes. This functionality can be automated by setting the __autoUpdate__ Boolean flag to true
 P.updateArray = ['r', 'g', 'b', 'a'];
-
 P.update = function () {
 
     if (!xt(this.rCurrent)) this.rCurrent = this.r;
@@ -296,9 +311,10 @@ P.update = function () {
     return this;
 };
 
+// `updateByDelta` - alias for the __update__ function
 P.updateByDelta = P.update;
 
-// TODO - documentation
+// We can also set a Color object to a new color value by invoking its `convert` function. Any CSS color string can be used as an argument (with exceptions - see above)
 P.convert = function (items) {
 
     let r, g, b, a, temp,
@@ -351,10 +367,30 @@ P.convert = function (items) {
 
             temp = items.match(/([0-9.]+\b)/g);
 
-            r = temp[0];
-            g = temp[1];
-            b = temp[2];
-            a = temp[3];
+            if (/%/.test(items)) {
+            
+                r = round((temp[0] / 100) * 255);
+                g = round((temp[1] / 100) * 255);
+                b = round((temp[2] / 100) * 255);
+                a = round(temp[3] / 100);
+            }
+            else {
+            
+                r = round(temp[0]);
+                g = round(temp[1]);
+                b = round(temp[2]);
+                a = round(temp[3]);
+            }
+        }
+        else if (/hsl\(/.test(items) || /hsla\(/.test(items)) {
+
+            // the spec explanation can be found here https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
+            //
+            // see http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/ for one way we can approach converting hsl values to rgb
+            //
+            // currently, knock down to transparent black
+            r = g = b = a = 0;
+
         }
         else if (items === 'transparent') r = g = b = a = 0;
         else {
@@ -532,10 +568,46 @@ P.colorLibrary = {
     yellowgreen: '9acd32'
 };
 
-const colorList = Object.keys(P.colorLibrary);
 
-
-// ## Exported factory function
+// #### Factory
+// ```
+// scrawl.makeColor({
+//
+//     name: 'myColorObject',
+//
+//     r: 100,
+//     g: 50,
+//     b: 10,
+//
+//     rShift: 0.1,
+//     gShift: 1,
+//     bShift: -1.3,
+//
+//     rBounce: true,
+//     gBounce: true,
+//     bBounce: true,
+//
+//     rMax: 160,
+//     gMax: 180,
+//     bMax: 150,
+//
+//     autoUpdate: true,
+// });
+//
+// scrawl.makeBlock({
+//
+//     name: 'block-tester',
+//
+//     width: 120,
+//     height: 40,
+//
+//     startX: 60,
+//     startY: 60,
+//
+//     fillStyle: 'myColorObject',
+//     method: 'fill',
+// });
+// ```
 const makeColor = function (items) {
 
     return new Color(items);
@@ -543,7 +615,7 @@ const makeColor = function (items) {
 
 constructors.Color = Color;
 
+// #### Exports
 export {
     makeColor,
-    colorList,
 };

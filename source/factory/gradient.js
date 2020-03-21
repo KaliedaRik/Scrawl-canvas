@@ -1,18 +1,21 @@
-
 // # Gradient factory
-
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// Scrawl-canvas Gradient objects implement the Canvas API's [createLinearGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient) method. The resulting [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) object can be used by any Scrawl-canvas entity as its `fillStyle` or `strokeStyle`.
+// + Most gradient-related functionality has been coded up in the __styles mixin__, and is documented there.
+// + Gradients fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.
+// + Gradients can be animated in a variety of ways; the can act as target objects for Scrawl-canvas Tweens.
+//
+// Gradients can be applied to an entity in two different ways, depending on the entity's `lockFillStyleToEntity` and `lockStrokeStyleToEntity` attribute flags:
+// + __Cell-locked__ Gradients will cover the entire Cell; an entity moved from one part of the display to another will show different parts of the gradient
+// + __Entity-locked__ Gradients display their entire color range on the entity, move with the entity and even rotate with the entity.
 
 
-// ## Imports
+// #### Demos:
+// + [Canvas-003](../../demo/canvas-003.html) - Linear gradients
+// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
+// + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
+
+
+// #### Imports
 import { constructors } from '../core/library.js';
 import { mergeOver, pushUnique } from '../core/utilities.js';
 
@@ -20,7 +23,7 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 
-// ## Gradient constructor
+// #### Gradient constructor
 const Gradient = function (items = {}) {
 
     this.stylesInit(items);
@@ -28,7 +31,7 @@ const Gradient = function (items = {}) {
 };
 
 
-// ## Gradient object prototype setup
+// #### Gradient prototype
 let P = Gradient.prototype = Object.create(Object.prototype);
 
 P.type = 'Gradient';
@@ -37,31 +40,56 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [styles](../mixin/styles.html)
 P = baseMix(P);
 P = stylesMix(P);
 
 
-// ## Define default attributes
-let defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);
+// #### Gradient attributes
+// In addition to the attributes defined in the __base__ and __styles__ mixins, Gradients also pass through Palette attributes to their Palette object. 
+// 
+// Attributes from __base__ mixin:
+// + `name`
+//
+// Attributes from __styles__ mixin:
+// + `start`
+// + `startX`
+// + `startY`
+// + `end`
+// + `endX`
+// + `endY`
+// + `palette`
+// + `paletteStart`
+// + `paletteEnd`
+// + `cyclePalette`
+//
+// Attributes from the __palette__ factory:
+// + `colors` 
+// + `cyclic`
+// 
+// No additional attributes are defined in this file.
 
-
-
-// ## Packet management
+// #### Packet management
 P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 
 
-
-// ## Define getter, setter and deltaSetter functions
-
-// Nothing additional to define here
+// #### Clone management
+// No additional clone functionality required
 
 
+// #### Kill management
+// No additional kill functionality required
 
-// ## Define prototype functions
 
-// TODO - documentation
+// #### Get, Set, deltaSet
+// No additional functionality required
+
+
+// #### Prototype functions
+
+// `buildStyle` - internal function: creates the linear gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
 P.buildStyle = function (cell = {}) {
     
     if (cell) {
@@ -78,7 +106,7 @@ P.buildStyle = function (cell = {}) {
     return 'rgba(0,0,0,0)';
 };
 
-// TODO - documentation
+// `updateGradientArgs` - internal function
 P.updateGradientArgs = function (x, y) {
 
     let gradientArgs = this.gradientArgs,
@@ -99,13 +127,63 @@ P.updateGradientArgs = function (x, y) {
 
 
 
-// ## Exported factory function
+// #### Factory
+// ```
+// scrawl.makeGradient({
+//     name: 'colored-pipes',
+//     endX: '100%',
+//     cyclePalette: true
+// })
+// .updateColor(0, 'black')
+// .updateColor(49, 'yellow')
+// .updateColor(99, 'black')
+// .updateColor(149, 'lightyellow')
+// .updateColor(199, 'black')
+// .updateColor(249, 'goldenrod')
+// .updateColor(299, 'black')
+// .updateColor(349, 'lemonchiffon')
+// .updateColor(399, 'black')
+// .updateColor(449, 'gold')
+// .updateColor(499, 'black')
+// .updateColor(549, 'tan')
+// .updateColor(599, 'black')
+// .updateColor(649, 'wheat')
+// .updateColor(699, 'black')
+// .updateColor(749, 'yellowgreen')
+// .updateColor(799, 'black')
+// .updateColor(849, 'peachpuff')
+// .updateColor(899, 'black')
+// .updateColor(949, 'papayawhip')
+// .updateColor(999, 'black');
+//
+// scrawl.makeBlock({
+//
+//     name: 'animated-block',
+//
+//     width: 150,
+//     height: 150,
+//
+//     startX: 180,
+//     startY: 120,
+//
+//     handleX: 'center',
+//     handleY: 'center',
+//
+//     strokeStyle: 'coral',
+//     fillStyle: 'colored-pipes',
+//     lineWidth: 2,
+//
+//     method: 'fillAndDraw',
+// });
+// ```
 const makeGradient = function (items) {
     return new Gradient(items);
 };
 
 constructors.Gradient = Gradient;
 
+
+// #### Exports
 export {
     makeGradient,
 };

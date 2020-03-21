@@ -1,10 +1,12 @@
-// ## Demo DOM 015
+// # Demo DOM 015
+// Use stacked DOM artefact corners as pivot points
 
-// [Use stacked DOM artefact corners as pivot points](../../demo/dom-015.html)
+// [Run code](../../demo/dom-015.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup - create some useful variables for use elsewhere in the script
+// #### Scene setup
+// Create some useful variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement,
@@ -152,6 +154,7 @@ scrawl.makeLoom({
 });
 
 
+// #### User interaction
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
 scrawl.makeDragZone({
 
@@ -160,6 +163,7 @@ scrawl.makeDragZone({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -182,7 +186,7 @@ let report = function () {
 let bugTweak = () => element.set({ roll: 10.001 });
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation-stack',
@@ -198,7 +202,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### More user interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -226,7 +231,6 @@ scrawl.observeAndUpdate({
     },
 });
 
-
 // Setup form
 document.querySelector('#width').value = 200;
 document.querySelector('#height').value = 200;
@@ -239,4 +243,6 @@ document.querySelector('#pitch').value = 20;
 document.querySelector('#yaw').value = 30;
 document.querySelector('#scale').value = 1;
 
+
+// #### Development and testing
 console.log(artefact);

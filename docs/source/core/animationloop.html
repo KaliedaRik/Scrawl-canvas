@@ -304,8 +304,10 @@
 <p>Animation objects are Scrawl-canvas objects with a <strong>fn</strong> attribute - a function which returns a Promise; all Animation objects contained in the <strong>animate</strong> array will be invoked as part of a Promise.all action. Once the Promise.all resolves, <em>animationLoop</em> is invoked again.</p>
 <p>The RAF function is first invoked as part of Scrawl-canvas initialization when it loads into a web page, and continues to run while the <strong>doAnimation</strong> flag remains true.</p>
 <p>To stop the RAF:</p>
-<pre><code>scrawl.stopCoreAnimationLoop()</code></pre><p>To restart the RAF after it has been stopped:</p>
-<pre><code>scrawl.startCoreAnimationLoop()</code></pre><p>… Functionality tested in <a href="../../demo/dom-009.html">Demo DOM-009</a></p>
+<p><code>scrawl.stopCoreAnimationLoop()</code></p>
+<p>To restart the RAF after it has been stopped:</p>
+<p><code>scrawl.startCoreAnimationLoop()</code></p>
+<p>… Functionality tested in <a href="../../demo/dom-009.html">Demo DOM-009</a></p>
 <p>As part of initialization, two animation objects are created and added to the <strong>animate</strong> array:</p>
 <ul>
 <li><strong>coreTickersAnimation</strong> (order: 0) - which will invoke all ticker animations currently subscribed to it - <a href="../factory/ticker.html">factory/ticker.js</a></li>
@@ -333,9 +335,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h4 id="functionality">Functionality</h4>
+              <h4 id="imports">Imports</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation } <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;</pre></div></div>
             
         </li>
         
@@ -345,21 +349,6 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>Imports</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation } <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Local variables </p>
 
@@ -372,11 +361,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p><code>Exported array</code> (to modules). The <strong>animate</strong> array, which holds handles to all animation objects due to be run at the next RAF invocation, is exported to other modules so code can add/remove animation objects as required.</p>
 
@@ -387,11 +376,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules). Force the animation objects to be sorted at the start of the next RAF invocation</p>
 
@@ -404,11 +393,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Scrawl-canvas animation sorter uses a ‘bucket sort’ algorithm</p>
 
@@ -444,11 +433,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>The <strong>requestAnimationFrame</strong> function</p>
 
@@ -476,11 +465,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p><code>Exported function</code> (modules and scrawl object). Start the RAF function running</p>
 
@@ -495,11 +484,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p><code>Exported function</code> (modules and scrawl object). Halt the RAF function</p>
 
@@ -508,9 +497,22 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stopCoreAnimationLoop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     
     doAnimation = <span class="hljs-literal">false</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     animate,
     resortAnimations,
     startCoreAnimationLoop,

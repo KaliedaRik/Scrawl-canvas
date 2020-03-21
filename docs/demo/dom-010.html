@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>dom-010.js</title>
+  <title>Demo DOM 010</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>dom-010.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-dom-010">Demo DOM 010</h2>
+              <h1 id="demo-dom-010">Demo DOM 010</h1>
+<p>Add and remove (kill) Scrawl-canvas stack elements programmatically</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/dom-010.html">Add and remove (demolish) Scrawl-canvas stack elements programmatically</a></p>
+              <p><a href="../../demo/dom-010.html">Run code</a></p>
 
             </div>
             
@@ -308,14 +293,27 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>let library = scrawl.library;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> library = scrawl.library;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function that updates the live report on user activity</p>
 
-
-let report = function () {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>let report = function () {
 
     let testTicker = Date.now(),
         testTime, testNow, text,
@@ -350,13 +348,13 @@ element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Animation loop - can’t use .makeRender() in this case because there’s no initial stack/canvas arterfact to render. Using .makeAnimation() and .render() - both of which use promises - instead</p>
+              <p>Animation loop - can’t use <code>scrawl.makeRender</code> in this case because there’s no initial stack/canvas arterfact to render. Using <code>scrawl.makeAnimation</code> which in turn runs <code>scrawl.render</code> instead</p>
 
             </div>
             
@@ -382,32 +380,20 @@ element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
         </li>
         
         
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>User interaction - buttons listener</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> controls = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>the control buttons are never part of a Scrawl-canvas stack</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Buttons listener - the control buttons are never part of a Scrawl-canvas stack</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> b1 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#action_1'</span>),
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> controls = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> b1 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#action_1'</span>),
         b2 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#action_2'</span>),
         b3 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#action_3'</span>),
         b4 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#action_4'</span>);
@@ -444,7 +430,7 @@ element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
                 b1.disabled = <span class="hljs-string">''</span>;
                 b2.disabled = <span class="hljs-string">'disabled'</span>;
 
-                newStack.demolish(<span class="hljs-literal">true</span>);
+                newStack.kill();
 
                 <span class="hljs-keyword">break</span>;
 
@@ -470,7 +456,7 @@ element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
                 b3.disabled = <span class="hljs-string">'disabled'</span>;
                 b4.disabled = <span class="hljs-string">'disabled'</span>;
                 
-                hostStack.demolish(<span class="hljs-literal">true</span>);
+                hostStack.kill();
 
                 <span class="hljs-keyword">break</span>;
         }
@@ -478,6 +464,21 @@ element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
 }();
 
 scrawl.addListener(<span class="hljs-string">'up'</span>, controls, <span class="hljs-string">'.controls'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

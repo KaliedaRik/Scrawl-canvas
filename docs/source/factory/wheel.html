@@ -299,7 +299,19 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="wheel-factory">Wheel factory</h1>
+<p>Wheel entitys are circles and part-circles rendered onto a DOM &lt;canvas&gt; element using the Canvas 2D API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a> - specifically the arc() and lineTo() methods.</p>
+<ul>
+<li>Positioning functionality for the Wheel is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Wheel dimensions are tied closely to its <strong>radius</strong> attribute; relative dimensions are calculated using the Wheel’s Cell container’s width.</li>
+<li>Wheels can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>They will also accept <strong>Filter</strong> objects.</li>
+<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can be animated directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
+<li>Wheels can be cloned, and killed.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +323,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="wheel-factory">Wheel factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-001.html">Canvas-001</a> - Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys</li>
+<li><a href="../../demo/canvas-005.html">Canvas-005</a> - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween</li>
+<li><a href="../../demo/canvas-007.html">Canvas-007</a> - Apply filters at the entity, group and cell level</li>
+<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets; save and load a range of different entitys</li>
+</ul>
 
             </div>
             
@@ -324,72 +342,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -405,13 +358,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="wheel-constructor">Wheel constructor</h2>
+              <h4 id="wheel-constructor">Wheel constructor</h4>
 
             </div>
             
@@ -427,13 +380,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="wheel-object-prototype-setup">Wheel object prototype setup</h2>
+              <h4 id="wheel-prototype">Wheel prototype</h4>
 
             </div>
             
@@ -446,13 +399,20 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/position.html">position</a></li>
+<li><a href="../mixin/anchor.html">anchor</a></li>
+<li><a href="../mixin/entity.html">entity</a></li>
+<li><a href="../mixin/filter.html">filter</a></li>
+</ul>
 
             </div>
             
@@ -465,13 +425,13 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="wheel-attributes">Wheel attributes</h4>
 
             </div>
             
@@ -480,13 +440,13 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>radius</strong> - the circle’s radius measured in Number pixels, or as a String% - `’10%’ - of the Cell’s width</p>
 
             </div>
             
@@ -495,13 +455,13 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>startAngle</strong>, <strong>endAngle</strong> - the Number angles at which the rendered arc starts and ends, in <strong>degrees</strong> (not radians), with 0&deg; and 360&deg; set horizontally to the right (+ve x axis) of the circle’s center.</p>
 
             </div>
             
@@ -511,29 +471,43 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>clockwise</strong> - a Boolean flag which, when true, draws the arc in a clockwise rotation between the start and end angles; a false value causes the arc to be drawn in an anti-clockwise direction.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    includeCenter: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">clockwise</span>: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    clockwise: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
         
-        <li id="section-16">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>includeCenter</strong> - a Boolean flag which, when true, draws a line from the end angle to the center of the circle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    includeCenter: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><strong>closed</strong> - a Boolean flag which, when true, draws a line from the end angle to the start angle. If includeCenter has been set to true, the line will be drawn from the center of the circle to the start angle position on the circle circumference.</p>
 
             </div>
             
@@ -544,13 +518,72 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
+    S = P.setters,
+    D = P.deltaSetters;</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <p><strong>width</strong> and <strong>height</strong> (and dimensions) values are largely irrelevant to Wheel entitys; they get used internally purely as part of the Display cycle stamp functionality. </p>
 
             </div>
             
@@ -562,49 +595,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>TODO</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p><strong>width</strong> and <strong>height</strong> (and dimensions) values are largely irrelevant to Wheel entitys; they get used internally purely as part of the Display cycle stamp functionality. </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>If they are used to (delta)set the entity’s values then the radius will be set to half the supplied value with String% values calculated from the entity’s host’s width, while height and width will equalize to maintain dimensional integrity.</p>
 
@@ -620,6 +610,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <span class="hljs-keyword">this</span>.dimensionsHelper();
     }
 };
+D.width = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+
+    <span class="hljs-keyword">let</span> dims = <span class="hljs-keyword">this</span>.dimensions;
+
+    dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = addStrings(dims[<span class="hljs-number">0</span>], val);
+    <span class="hljs-keyword">this</span>.dimensionsHelper();
+};
 
 S.height = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
 
@@ -631,21 +628,6 @@ S.height = <span class="hljs-function"><span class="hljs-keyword">function</span
         <span class="hljs-keyword">this</span>.dimensionsHelper();
     }
 };
-
-S.dimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'dimensions'</span>, w, h);
-    <span class="hljs-keyword">this</span>.dimensionsHelper();
-};
-
-D.width = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
-
-    <span class="hljs-keyword">let</span> dims = <span class="hljs-keyword">this</span>.dimensions;
-
-    dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = addStrings(dims[<span class="hljs-number">0</span>], val);
-    <span class="hljs-keyword">this</span>.dimensionsHelper();
-};
-
 D.height = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
 
     <span class="hljs-keyword">let</span> dims = <span class="hljs-keyword">this</span>.dimensions;
@@ -654,6 +636,11 @@ D.height = <span class="hljs-function"><span class="hljs-keyword">function</span
     <span class="hljs-keyword">this</span>.dimensionsHelper();
 };
 
+S.dimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'dimensions'</span>, w, h);
+    <span class="hljs-keyword">this</span>.dimensionsHelper();
+};
 D.dimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'dimensions'</span>, w, h);
@@ -663,11 +650,11 @@ D.dimensions = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-22">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Setters for attributes specific to the Wheel entity</p>
 
@@ -678,7 +665,6 @@ D.dimensions = <span class="hljs-function"><span class="hljs-keyword">function</
     <span class="hljs-keyword">this</span>.radius = val;
     <span class="hljs-keyword">this</span>.radiusHelper();
 };
-
 D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
 
     <span class="hljs-keyword">this</span>.radius = addStrings(<span class="hljs-keyword">this</span>.radius, val);
@@ -690,19 +676,17 @@ S.startAngle = <span class="hljs-function"><span class="hljs-keyword">function</
     <span class="hljs-keyword">this</span>.startAngle = ensureFloat(val, <span class="hljs-number">4</span>);
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };
-
-S.endAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.endAngle = ensureFloat(val, <span class="hljs-number">4</span>);
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-
 D.startAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
 
     <span class="hljs-keyword">this</span>.startAngle += ensureFloat(val, <span class="hljs-number">4</span>);
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };
 
+S.endAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.endAngle = ensureFloat(val, <span class="hljs-number">4</span>);
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};
 D.endAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
 
     <span class="hljs-keyword">this</span>.endAngle += ensureFloat(val, <span class="hljs-number">4</span>);
@@ -739,26 +723,26 @@ S.clockwise = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-23">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Internal functions for reconciling dimensions and radius attribute values</p>
 
             </div>
             
@@ -771,7 +755,6 @@ S.clockwise = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     this.dirtyDimensions = true;
 };
-
 P.radiusHelper = function () {
 
     let radius = this.radius,
@@ -786,13 +769,13 @@ P.radiusHelper = function () {
         </li>
         
         
-        <li id="section-25">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Dimensions calculations - overwrites mixin/position.js function</p>
 
             </div>
             
@@ -813,26 +796,13 @@ P.radiusHelper = function () {
         </li>
         
         
-        <li id="section-26">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Overwrites mixin/position.js collision radius and sensor functions</p>
+              <p>A Wheel entitys will place <strong>collision sensors</strong> around its circumference. The following functions completely overwrite the sensor functionality defined in mixin/position.js</p>
 
             </div>
             
@@ -885,11 +855,11 @@ P.radiusHelper = function () {
         </li>
         
         
-        <li id="section-28">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>There’s two components of the wheel we need to add sensors to - the circumference, and any straight bits</p>
 
@@ -901,11 +871,11 @@ P.radiusHelper = function () {
         </li>
         
         
-        <li id="section-29">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>For the circumference</p>
 
@@ -969,11 +939,11 @@ P.radiusHelper = function () {
         </li>
         
         
-        <li id="section-30">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>For the non-circumference perimeter bits - we’ve already calculated the true positions of the start and end angle sensors on the circumference</p>
 
@@ -1056,24 +1026,11 @@ P.radiusHelper = function () {
         </li>
         
         
-        <li id="section-31">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>We take account of scaling in these calculations</p>
 
@@ -1101,11 +1058,11 @@ P.radiusHelper = function () {
         </li>
         
         
-        <li id="section-33">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Not calculating the non-zero parts of the perimeter here - it’s easier to do those calculations when we have real coordinates to work with</p>
 
@@ -1119,26 +1076,13 @@ P.radiusHelper = function () {
         </li>
         
         
-        <li id="section-34">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <p>Internal - used for entity stamping (Display cycle), and collision detection (eg: drag-and-drop)</p>
+              <p>Calculate the Wheel entity’s <strong>Path2D object</strong></p>
 
             </div>
             
@@ -1172,23 +1116,64 @@ P.radiusHelper = function () {
         </li>
         
         
-        <li id="section-36">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code>scrawl.makeWheel({
 
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'mywheel-fill'</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">startAngle</span>: <span class="hljs-number">15</span>,
+    <span class="hljs-attr">endAngle</span>: <span class="hljs-number">-15</span>,
+    <span class="hljs-attr">includeCenter</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">475</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">475</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'purple'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'gold'</span>,
+
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">'round'</span>,
+    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">'black'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'mywheel-draw'</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">325</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+    <span class="hljs-attr">sharedState</span>: <span class="hljs-literal">true</span>,
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeWheel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Wheel(items);
 };
 
-constructors.Wheel = Wheel;
+constructors.Wheel = Wheel;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeWheel,
 };</pre></div></div>
             

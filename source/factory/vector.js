@@ -1,23 +1,13 @@
-
 // # Vector factory
-
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// Scrawl-canvas uses vector objects for some of its calculations - in particular for calculating rotations. These objects are not stored in the library; rather, they are kept in a __vector pool__ and pulled from it when required.
 
 
-// ## Imports
+// #### Imports
 import { constructors } from '../core/library.js';
 import { xt, xta, isa_obj, isa_number } from '../core/utilities.js';
 
 
-// ## Vector constructor
+// #### Vector constructor
 const Vector = function (x, y, z) {
 
     this.x = 0;
@@ -30,17 +20,22 @@ const Vector = function (x, y, z) {
 };
 
 
-// ## Vector object prototype setup
+// #### Vector prototype
 let P = Vector.prototype = Object.create(Object.prototype);
-
 P.type = 'Vector';
 
 
-// ## Define prototype functions
+// #### Mixins
+// Vector objects do not use mixins - they are regular Javascript objects. As such, they do not possess packet, clone or kill functionality.
 
 
+// #### Vector attributes
+// The __x__, __y__ and __z__ attributes are set in the Vector constructor - the Vector object does not have a `defs` object.
 
-// TODO - documentation
+
+// #### Get, Set, deltaSet
+
+// Vector attributes can be retrieved directly - `myvector.x`, etc. The following convenience getters are defined on the Vector prototype, and return an Array
 P.getXYCoordinate = function () {
 
     return [this.x, this.y];
@@ -51,17 +46,7 @@ P.getXYZCoordinate = function () {
     return [this.x, this.y, this.z];
 };
 
-// TODO - documentation
-P.zero = function () {
-
-    this.x = 0;
-    this.y = 0;
-    this.z = 0;
-
-    return this;
-};
-
-// TODO - documentation
+// Vector attributes can be set directly - `myvector.x = 0`, etc. The following convenience setters are defined on the Vector prototype
 P.setX = function (x) {
 
     if (!xt(x)) throw new Error(`${this.name} Vector error - setX() arguments error: ${x}`);
@@ -99,6 +84,11 @@ P.setXY = function (x, y) {
     return this;
 };
 
+// The Vector `set` function is overloaded. It can accept the following arguments:
+// + `set(x-Number, y-Number [, z-Number])` - Number arguments
+// + `set([x-Number, y-Number [, z-Number]])` - an Array of Numbers
+// + `set({x:Number, y:Number, z:Number})` - a Javascript object containing x, y (and z) attributes
+// + `set(Vector)` - a Vector object
 P.set = function (x, y, z) {
 
     if (isa_obj(x)) return this.setFromVector(x);
@@ -136,7 +126,19 @@ P.setFromVector = function (item) {
     return this;
 };
 
-// TODO - documentation
+// #### Prototype functions
+
+// Set the Vector attributes to their default values
+P.zero = function () {
+
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
+
+    return this;
+};
+
+// Add a Vector, or an Array of Number values, to this Vector
 P.vectorAdd = function (item = {}) {
 
     if (Array.isArray(item)) return this.vectorAddArray(item);
@@ -161,6 +163,7 @@ P.vectorAddArray = function (item = []) {
     return this;
 };
 
+// Subtract a Vector, or an Array of Number values, from this Vector
 P.vectorSubtract = function (item = {}) {
 
     if (Array.isArray(item)) return this.vectorSubtractArray(item);
@@ -185,7 +188,7 @@ P.vectorSubtractArray = function (item) {
     return this;
 };
 
-// TODO - documentation
+// Multiply all Vector attributes by the argument Number
 P.scalarMultiply = function (item) {
 
     if (!isa_number(item)) throw new Error(`${this.name} Vector error - scalarMultiply() argument not a number: ${item}`);
@@ -197,6 +200,7 @@ P.scalarMultiply = function (item) {
     return this;
 };
 
+// Divide all Vector attributes by the argument Number
 P.scalarDivide = function (item) {
 
     if (!isa_number(item)) throw new Error(`${this.name} Vector error - scalarDivide() argument not a number: ${item}`);
@@ -209,13 +213,13 @@ P.scalarDivide = function (item) {
     return this;
 };
 
-// TODO - documentation
+// Get the Vector's __magnitude__ value
 P.getMagnitude = function () {
 
     return Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z));
 };
 
-// TODO - documentation
+// Rotate a Vector by a given angle. Argument is a Number representing degrees, not radians.
 P.rotate = function (angle) {
 
     if (!isa_number(angle)) throw new Error(`${this.name} Vector error - rotate() argument not a number: ${angle}`);
@@ -231,7 +235,7 @@ P.rotate = function (angle) {
     return this;
 };
 
-// TODO - documentation
+// Change the numerical sign of all Vector attributes
 P.reverse = function () {
 
     this.x = -this.x;
@@ -241,7 +245,7 @@ P.reverse = function () {
     return this;
 };
 
-// TODO - documentation
+// Normalize the Vector
 P.normalize = function() {
     
     let val = this.getMagnitude();
@@ -255,21 +259,14 @@ P.normalize = function() {
 };
 
 
-
-// ## Vector pool
-
+// #### Vector pool
 // An attempt to reuse vectors rather than constantly creating and deleting them
 const vectorPool = [];
 
-let vectorPoolCount = 0;
-
+// `exported function` - retrieve a Vector from the vector pool
 const requestVector = function (x, y, z) {
 
-    if (!vectorPool.length) {
-        vectorPool.push(new Vector());
-
-        vectorPoolCount++;
-    }
+    if (!vectorPool.length) vectorPool.push(new Vector());
 
     let v = vectorPool.shift();
 
@@ -278,13 +275,14 @@ const requestVector = function (x, y, z) {
     return v
 };
 
+// `exported function` - return a Vector to the vector pool. Failing to return Vectors to the pool may lead to more inefficient code and possible memory leaks.
 const releaseVector = function (item) {
 
     if (item && item.type === 'Vector') vectorPool.push(item.zero());
 };
 
 
-// ## Exported factory function
+// #### Factory
 const makeVector = function (x, y, z) {
     
     return new Vector(x, y, z);
@@ -292,6 +290,8 @@ const makeVector = function (x, y, z) {
 
 constructors.Vector = Vector;
 
+
+// #### Exports
 export {
     makeVector,
     requestVector,

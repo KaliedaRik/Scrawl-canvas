@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>canvas-001.js</title>
+  <title>Demo Canvas 001</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>canvas-001.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-canvas-001">Demo Canvas 001</h2>
+              <h1 id="demo-canvas-001">Demo Canvas 001</h1>
+<p>Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-001.html">Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys</a></p>
+              <p><a href="../../demo/canvas-001.html">Run code</a></p>
 
             </div>
             
@@ -308,7 +293,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
@@ -494,7 +479,8 @@ canvas.setBase({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Create the drag-and-drop zone</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Create the drag-and-drop zone</p>
 
             </div>
             
@@ -514,7 +500,8 @@ canvas.setBase({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
@@ -533,8 +520,7 @@ canvas.setBase({
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
     };
 }();</pre></div></div>
             
@@ -547,7 +533,7 @@ Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLen
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Create the Animation loop which will run the Display cycle</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
@@ -556,9 +542,89 @@ Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLen
     <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
 
-<span class="hljs-built_in">console</span>.log(scrawl.library)</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>To test kill functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> killArtefact = <span class="hljs-function">(<span class="hljs-params">name, time</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">let</span> groupname = <span class="hljs-string">'mycanvas_base'</span>,
+        packet;
+
+    <span class="hljs-keyword">let</span> checkGroupBucket = <span class="hljs-function">(<span class="hljs-params">name, groupname</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> res = scrawl.library.group[groupname].artefactBuckets.filter(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.name === name );
+        <span class="hljs-keyword">return</span> (res.length) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>;
+    };
+
+    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
+
+        packet = scrawl.library.artefact[name].saveAsPacket();
+
+        scrawl.library.artefact[name].kill();
+
+        setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
+            }, <span class="hljs-number">100</span>);
+        }, <span class="hljs-number">100</span>);
+    }, time);
+};
+
+killArtefact(<span class="hljs-string">'myblock-fill'</span>, <span class="hljs-number">4000</span>);
+killArtefact(<span class="hljs-string">'mywheel-fillAndDraw'</span>, <span class="hljs-number">6000</span>);</pre></div></div>
             
         </li>
         

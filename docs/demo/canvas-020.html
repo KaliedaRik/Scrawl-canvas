@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>canvas-020.js</title>
+  <title>Demo Canvas 020</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>canvas-020.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-canvas-020">Demo Canvas 020</h2>
+              <h1 id="demo-canvas-020">Demo Canvas 020</h1>
+<p>Testing createImageFromXXX functionality</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-020.html">Testing createImageFromXXX functionality</a></p>
+              <p><a href="../../demo/canvas-020.html">Run code</a></p>
 
             </div>
             
@@ -308,7 +293,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
@@ -450,7 +435,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Invert filter</p>
+              <p>Create the filter</p>
 
             </div>
             
@@ -468,25 +453,23 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Create a new group with an entity that will only be caught in the Cell’s filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>let report = function () {
+            <div class="content"><div class='highlight'><pre>scrawl.makeGroup({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'temp-group'</span>,
+    <span class="hljs-attr">host</span>: canvas.base.name
+});
 
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
+scrawl.makeBlock({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'temp-block'</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">'temp-group'</span>,
 
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();</pre></div></div>
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">50</span>,<span class="hljs-number">50</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">40</span>, <span class="hljs-number">40</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
+});</pre></div></div>
             
         </li>
         
@@ -497,16 +480,47 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
+              <p>Functionality to capture cell, group and entity images</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> captureImages = <span class="hljs-literal">false</span>;
+
+<span class="hljs-keyword">let</span> imageCapture = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (captureImages) {
+
+        scrawl.createImageFromCell(canvas, <span class="hljs-literal">true</span>);
+        scrawl.createImageFromGroup(canvas, <span class="hljs-literal">true</span>);
+        scrawl.createImageFromEntity(block1, <span class="hljs-literal">true</span>);
+        scrawl.createImageFromEntity(block2, <span class="hljs-literal">true</span>);
+        scrawl.createImageFromEntity(wheel1, <span class="hljs-literal">true</span>);
+        scrawl.createImageFromEntity(wheel2, <span class="hljs-literal">true</span>);
+
+        captureImages = <span class="hljs-literal">false</span>;
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
               <p>Add Picture entitys to the hold canvas, using the assets we will create from the main canvas</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>scrawl.makePicture({
+
     <span class="hljs-attr">name</span>: <span class="hljs-string">'cell-image'</span>,
     <span class="hljs-attr">group</span>: hold.base.name,
 
     <span class="hljs-attr">width</span>: <span class="hljs-string">'13%'</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">'96%'</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">'76%'</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">'3%'</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">'2%'</span>,
@@ -515,10 +529,12 @@ scrawl.makeGradient({
     <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">'100%'</span>,
     <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">'100%'</span>,
 
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'orange'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">lineDash</span>: [<span class="hljs-number">6</span>, <span class="hljs-number">4</span>],
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">'drawThenFill'</span>,
+
 }).clone({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'group-image'</span>,
@@ -553,52 +569,58 @@ scrawl.makeGradient({
         </li>
         
         
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>Create the Animation loop which will run the Display cycle - note that this demo runs two canvases</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>A function to trigger updates to the image assets we create from the entitys, group and cell</p>
+              <p>Give the hold Picture entitys some labels</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> updateAssets = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    scrawl.createImageFromCell(canvas, <span class="hljs-literal">true</span>);
-    scrawl.createImageFromGroup(canvas, <span class="hljs-literal">true</span>);
-    scrawl.createImageFromEntity(block1, <span class="hljs-literal">true</span>);
-    scrawl.createImageFromEntity(block2, <span class="hljs-literal">true</span>);
-    scrawl.createImageFromEntity(wheel1, <span class="hljs-literal">true</span>);
-    scrawl.createImageFromEntity(wheel2, <span class="hljs-literal">true</span>);
-};
+            <div class="content"><div class='highlight'><pre>scrawl.makePhrase({
 
-<span class="hljs-comment">/*
-Initial generation of image assets - the Picture entitys created above won't display until this happens
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'cell-phrase'</span>,
+    <span class="hljs-attr">group</span>: hold.base.name,
 
-KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'Cell'</span>,
+    <span class="hljs-attr">font</span>: <span class="hljs-string">'15px Arial, sans-serif'</span>,
 
-ANNOYING ISSUE - images generated from cells are (currently) buggy - a timing issue, I think
-*/</span>
-setTimeout(updateAssets, <span class="hljs-number">100</span>);</pre></div></div>
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'85%'</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'cell-image'</span>,
+    <span class="hljs-attr">lockXTo</span>: <span class="hljs-string">'pivot'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'group-phrase'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'Group'</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'group-image'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'b1-phrase'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'Block1'</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'b1-image'</span>,
+    
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'b2-phrase'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'Block2'</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'b2-image'</span>,
+    
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'w1-phrase'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'Wheel1'</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'w1-image'</span>,
+    
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'w2-phrase'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'Wheel2'</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'w2-image'</span>,
+});</pre></div></div>
             
         </li>
         
@@ -609,7 +631,74 @@ setTimeout(updateAssets, <span class="hljs-number">100</span>);</pre></div></div
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Event listeners</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>let report = function () {
+
+    let testTicker = Date.now(),
+        testTime, testNow, dragging,
+        testMessage = document.querySelector('#reportmessage');
+
+    return function () {
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+    };
+}();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Create the Display cycle animation - note that the render is not targeted, thus will run document-wide to act on both &lt;canvas&gt; elements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>The Display cycle needs to run once before the entitys, Group and Cell are ready to have their images captured</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    afterCreated: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> captureImages = <span class="hljs-literal">true</span>,
+    
+    <span class="hljs-attr">commence</span>: imageCapture,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Event listeners</p>
 
             </div>
             
@@ -659,22 +748,9 @@ setTimeout(updateAssets, <span class="hljs-number">100</span>);</pre></div></div
                 <span class="hljs-keyword">case</span> <span class="hljs-string">'cell'</span> :
                     base.addFilters(<span class="hljs-string">'invert'</span>);
                     <span class="hljs-keyword">break</span>;
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <p>Regenerate the image assets</p>
+            }
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            setTimeout(updateAssets, <span class="hljs-number">100</span>);
+            captureImages = <span class="hljs-literal">true</span>;
         }
     };
 }();
@@ -683,17 +759,32 @@ scrawl.addNativeListener([<span class="hljs-string">'input'</span>], events, <sp
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Set the DOM input values</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#target'</span>).value = <span class="hljs-string">''</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

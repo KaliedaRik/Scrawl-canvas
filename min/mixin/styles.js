@@ -42,12 +42,6 @@ return this.currentStart[0];
 G.startY = function () {
 return this.currentStart[1];
 };
-G.endX = function () {
-return this.currentEnd[0];
-};
-G.endY = function () {
-return this.currentEnd[1];
-};
 S.startX = function (coord) {
 if (coord != null) {
 this.start[0] = coord;
@@ -77,6 +71,12 @@ this.dirtyStart = true;
 D.start = function (x, y) {
 this.setDeltaCoordinateHelper('start', x, y);
 this.dirtyStart = true;
+};
+G.endX = function () {
+return this.currentEnd[0];
+};
+G.endY = function () {
+return this.currentEnd[1];
 };
 S.endX = function (coord) {
 if (coord != null) {
@@ -117,12 +117,6 @@ this.paletteStart = item;
 if(item < 0 || item > 999) this.paletteStart = (item > 500) ? 999 : 0;
 }
 };
-S.paletteEnd = function (item) {
-if (item.toFixed) {
-this.paletteEnd = item;
-if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
-}
-};
 D.paletteStart = function (item) {
 let p;
 if (item.toFixed) {
@@ -132,6 +126,12 @@ if (this.cyclePalette) p = (p > 500) ? p - 1000 : p + 1000;
 else p = (item > 500) ? 999 : 0;
 }
 this.paletteStart = p;
+}
+};
+S.paletteEnd = function (item) {
+if (item.toFixed) {
+this.paletteEnd = item;
+if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
 }
 };
 D.paletteEnd = function (item) {

@@ -1,10 +1,11 @@
-// ## Demo Canvas 022 
+// # Demo Canvas 022 
+// Grid entity - basic functionality (color, gradients)
 
-// [Grid entity - basic functionality (color, gradients)](../../demo/canvas-022.html)
+// [Run code](../../demo/canvas-022.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
@@ -14,6 +15,7 @@ canvas.set({
     }
 });
 
+// Create gradients
 let cellGradient = scrawl.makeGradient({
     name: 'blue-green',
     endX: '100%',
@@ -30,6 +32,8 @@ let gridGradient = scrawl.makeGradient({
 .updateColor(500, 'gold')
 .updateColor(999, 'lightblue');
 
+
+// Define Grid `tileSource` Array objects
 let blueSource = {
     type: 'color',
     source: 'aliceblue',
@@ -51,6 +55,7 @@ let gridGradientSource = {
 };
 
 
+// Create the Grid entity
 let myGrid = scrawl.makeGrid({
 
     name: 'test-grid',
@@ -70,6 +75,26 @@ let myGrid = scrawl.makeGrid({
     tileSources: [blueSource, redSource]
 });
 
+
+// #### User interaction
+// Function to check for mouse position hits over the Grid entity, and adapt it accordingly
+let hitReport = '';
+let checkHitTiles = () => {
+
+    let hits = myGrid.checkHit(canvas.here);
+
+    myGrid.setAllTilesTo(0);
+
+    if (hits) {
+
+        myGrid.setTilesTo(hits.tiles, 1);
+        hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;
+    }
+    else hitReport = 'Hits - none reported';
+};
+
+
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -90,23 +115,7 @@ Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();
 
-let hitReport = '';
-let checkHitTiles = () => {
-
-    let hits = myGrid.checkHit(canvas.here);
-
-    myGrid.setAllTilesTo(0);
-
-    if (hits) {
-
-        myGrid.setTilesTo(hits.tiles, 1);
-        hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;
-    }
-    else hitReport = 'Hits - none reported';
-};
-
-
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -115,7 +124,9 @@ scrawl.makeRender({
     afterShow: report,
 });
 
-// User interaction - setup form observer functionality
+
+// #### More user interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -314,4 +325,6 @@ document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
 
+
+// #### Development and testing
 console.log(scrawl.library);

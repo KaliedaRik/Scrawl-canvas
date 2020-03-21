@@ -1,10 +1,12 @@
-// ## Demo DOM 002
+// # Demo DOM 002
+// Element mouse, pivot and mimic functionality
 
-// [Element mouse, pivot and mimic functionality](../../demo/dom-002.html)
+// [Run code](../../demo/dom-002.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup - create some useful variables for use elsewhere in the script
+// #### Scene setup
+// Create some useful variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement,
@@ -69,8 +71,7 @@ pivot.set({
 });
 
 
-// Display Cycle and Animation loop functionality
-
+// #### Scene animation
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
 let stackCheck = function () {
 
@@ -111,7 +112,7 @@ scale: ${element.get('scale')}; roll: ${element.get('roll')}°; pitch: ${element
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -121,7 +122,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### User interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -163,7 +165,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-// 'target' doesn't have to be a Scrawl-canvas object. We can use the object's name, though we also have to tell the function where the object lives in the Scrawl-canvas library (usually this will be 'artefact')
+// `target` doesn't have to be a Scrawl-canvas object. We can use the object's name, though we also have to tell the function where the object lives in the Scrawl-canvas library (usually this will be 'artefact')
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -233,4 +235,6 @@ document.querySelector('#pivot_rotation').value = 0;
 document.querySelector('#mimic_dims').value = 10;
 document.querySelector('#mimic_rotation').value = 0;
 
-console.log(scrawl.library)
+
+// #### Development and testing
+console.log(scrawl.library);

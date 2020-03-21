@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>dom-003.js</title>
+  <title>Demo DOM 003</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>dom-003.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-dom-003">Demo DOM 003</h2>
+              <h1 id="demo-dom-003">Demo DOM 003</h1>
+<p>Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/dom-003.html">Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack</a></p>
+              <p><a href="../../demo/dom-003.html">Run code</a></p>
 
             </div>
             
@@ -308,7 +293,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup - create some variables for use elsewhere in the script</p>
+              <h4 id="scene-setup">Scene setup</h4>
+<p>Create some variables for use elsewhere in the script</p>
 
             </div>
             
@@ -509,7 +495,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas’s inbuilt drag-and-drop functionality (because: collision functionality not implemented). We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.</p>
+              <p>SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas’s inbuilt <strong>drag-and-drop</strong> functionality (because: collision functionality not implemented). We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.</p>
 
             </div>
             
@@ -570,7 +556,8 @@ artefact[<span class="hljs-string">'simple-svg'</span>].set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Create the drag-and-drop zone</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Create the drag-and-drop zone</p>
 
             </div>
             
@@ -590,7 +577,8 @@ artefact[<span class="hljs-string">'simple-svg'</span>].set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
@@ -606,12 +594,7 @@ artefact[<span class="hljs-string">'simple-svg'</span>].set({
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Pools - 
-    cell: ${scrawl.cellPoolLength()}
-    coordinate: ${scrawl.coordinatePoolLength()}
-    vector: ${scrawl.vectorPoolLength()}
-    quaternion: ${scrawl.quaternionPoolLength()}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();</pre></div></div>
             
@@ -624,7 +607,7 @@ Pools -
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Create the Animation loop which will run the Display cycle</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
@@ -633,9 +616,22 @@ Pools -
     <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
     <span class="hljs-attr">target</span>: stack,
     <span class="hljs-attr">afterShow</span>: report,
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

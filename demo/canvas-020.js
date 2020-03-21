@@ -1,10 +1,11 @@
-// ## Demo Canvas 020 
+// # Demo Canvas 020 
+// Testing createImageFromXXX functionality
 
-// [Testing createImageFromXXX functionality](../../demo/canvas-020.html)
+// [Run code](../../demo/canvas-020.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas,
     hold = scrawl.library.artefact.holdcanvas;
 
@@ -113,12 +114,14 @@ let wheel2 = wheel1.clone({
 });
 
 
-// Invert filter
+// Create the filter
 scrawl.makeFilter({
     name: 'invert',
     method: 'invert',
 });
 
+
+// Create a new group with an entity that will only be caught in the Cell's filter
 scrawl.makeGroup({
     name: 'temp-group',
     host: canvas.base.name
@@ -132,23 +135,6 @@ scrawl.makeBlock({
     dimensions: [40, 40],
     fillStyle: 'red',
 });
-
-// Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
 
 
 // Functionality to capture cell, group and entity images
@@ -172,11 +158,12 @@ let imageCapture = function () {
 
 // Add Picture entitys to the hold canvas, using the assets we will create from the main canvas
 scrawl.makePicture({
+
     name: 'cell-image',
     group: hold.base.name,
 
     width: '13%',
-    height: '96%',
+    height: '76%',
 
     startX: '3%',
     startY: '2%',
@@ -185,10 +172,12 @@ scrawl.makePicture({
     copyWidth: '100%',
     copyHeight: '100%',
 
-    lineWidth: 4,
-    strokeStyle: 'orange',
+    lineWidth: 2,
+    lineDash: [6, 4],
+    strokeStyle: 'red',
 
     method: 'drawThenFill',
+
 }).clone({
 
     name: 'group-image',
@@ -221,12 +210,76 @@ scrawl.makePicture({
 });
 
 
-// Create the Animation loop which will run the Display cycle - note that this demo runs two canvases
+// Give the hold Picture entitys some labels
+scrawl.makePhrase({
+
+    name: 'cell-phrase',
+    group: hold.base.name,
+
+    text: 'Cell',
+    font: '15px Arial, sans-serif',
+
+    startY: '85%',
+    pivot: 'cell-image',
+    lockXTo: 'pivot',
+
+}).clone({
+
+    name: 'group-phrase',
+    text: 'Group',
+    pivot: 'group-image',
+
+}).clone({
+
+    name: 'b1-phrase',
+    text: 'Block1',
+    pivot: 'b1-image',
+    
+}).clone({
+
+    name: 'b2-phrase',
+    text: 'Block2',
+    pivot: 'b2-image',
+    
+}).clone({
+
+    name: 'w1-phrase',
+    text: 'Wheel1',
+    pivot: 'w1-image',
+    
+}).clone({
+
+    name: 'w2-phrase',
+    text: 'Wheel2',
+    pivot: 'w2-image',
+});
+
+
+// #### Scene animation
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
+
+    let testTicker = Date.now(),
+        testTime, testNow, dragging,
+        testMessage = document.querySelector('#reportmessage');
+
+    return function () {
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+    };
+}();
+
+
+// Create the Display cycle animation - note that the render is not targeted, thus will run document-wide to act on both &lt;canvas> elements
 scrawl.makeRender({
 
     name: 'demo-animation',
 
-    // The Display cycle needs to run once before the entitys/group/cell are ready to have their images captured
+    // The Display cycle needs to run once before the entitys, Group and Cell are ready to have their images captured
     afterCreated: () => captureImages = true,
     
     commence: imageCapture,
@@ -234,6 +287,7 @@ scrawl.makeRender({
 });
 
 
+// #### User interaction
 // Event listeners
 let events = function () {
 
@@ -292,5 +346,6 @@ scrawl.addNativeListener(['input'], events, '.controlItem');
 // Set the DOM input values
 document.querySelector('#target').value = '';
 
-console.log(scrawl.library);
 
+// #### Development and testing
+console.log(scrawl.library);

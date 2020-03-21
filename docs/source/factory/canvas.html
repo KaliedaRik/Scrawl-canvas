@@ -299,7 +299,21 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="canvas-factory">Canvas factory</h1>
+<p>Scrawl-canvas mediates between its system and &lt;canvas&gt; elements in the DOM using Canvas wrapper objects. The wrapper includes a handle to the visible element, but most work is done on a second &lt;canvas&gt; element - the <strong>base Cell</strong> - which is not part of the DOM, thus excluded from a browser’s Document interface (including events).</p>
+<p>The Canvas factory is not used directly; the factory is not exported as part of the <strong>scrawl object</strong> during Scrawl-canvas initialization. Instead, wrappers can be created for DOM-based &lt;canvas&gt; elements using the following scrawl functions:</p>
+<ul>
+<li><code>scrawl.getCanvas</code> - locates a &lt;canvas&gt; element in the DOM and creates a wrapper for it.</li>
+<li><code>scrawl.addCanvas</code> - generates a new &lt;canvas&gt; element, creates a wrapper for it, then adds it to the DOM.</li>
+</ul>
+<p>During initialization Scrawl-canvas will search the DOM tree and automatically create Canvas wrappers for all the &lt;canvas&gt; elements it discovers. The first &lt;canvas&gt; element discovered becomes the <strong>current canvas</strong>; all entitys created without a specified <code>group</code> attribute will be assigned to that element’s wrapper’s base Cell’s Group object. We can change the current canvas by invoking the <code>scrawl.setCurrentCanvas</code> function.</p>
+<p>A canvas wrapper can include more than one Cell object. It will always include a base Cell object; additional Cells can be treated as <strong><em>cell layers</em></strong> and/or normal artefacts contributing to the final display.</p>
+<p>During their creation, Canvas wrappers will directly modify the DOM, adding &lt;div&gt; and &lt;nav&gt; elements to it. These new elements are used as <em>holds</em> where the Canvas will store data and text, mainly to expose &lt;a&gt; links and &lt;p&gt; blocks which expose scene details to assistive technologies (accessibility). These additional elements have zero dimensions and should not affect the layout or painting of the rest of the web page.</p>
+<p>Canvas wrapper objects use the <strong>base</strong>, <strong>position</strong>, <strong>dom</strong> and <strong>anchor</strong> mixins. Thus Canvas wrappers are also <strong>artefact</strong> objects: if a &lt;canvas&gt; element is a direct child of a Stack wrapper’s element then it can be positioned, dimensioned and rotated like any other artefact.</p>
+<p>By default, all Canvas wrappers will track mouse/touch movements across their &lt;canvas&gt; elements, supplying this data to constituent Cell objects and artefacts as-and-when-required.</p>
+<p>Canvas wrappers are used by Scrawl-canvas to invoke the <strong>Display cycle cascade</strong>. As such, they include <code>clear</code>, <code>compile</code>, <code>show</code> and <code>render</code> functions to manage the Display cycle. These functions are asynchronous, returning Promises.</p>
+<p>Canvas wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Canvas wrapper will remove its &lt;canvas&gt; element from the DOM, alongside the additional elements added to the DOM during Canvas creation.</p>
+
             </div>
             
         </li>
@@ -311,7 +325,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="canvas-factory">Canvas factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li>All canvas and component demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. </li>
+<li><a href="../../demo/canvas-009.html">Canvas-009</a> - Pattern styles; Entity web link anchors; Dynamic accessibility</li>
+<li><a href="../../demo/dom-011.html">DOM-011</a> - Canvas controller <code>fit</code> attribute; Cell positioning (mouse)</li>
+<li><a href="../../demo/dom-012.html">DOM-012</a> - Add and remove (kill) Scrawl-canvas canvas elements programmatically</li>
+<li><a href="../../demo/component-001.html">Component-001</a> - Scrawl-canvas DOM element components</li>
+</ul>
 
             </div>
             
@@ -324,72 +345,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -411,13 +367,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="canvas-constructor">Canvas constructor</h2>
+              <h4 id="canvas-constructor">Canvas constructor</h4>
 
             </div>
             
@@ -468,11 +424,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>set up additional cells array</p>
 
@@ -486,11 +442,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>setup base cell</p>
 
@@ -515,11 +471,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>even if it is a child of a stack element, it needs to be recorded as a ‘rootElement’</p>
 
@@ -531,13 +487,13 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Accessibility</p>
+              <h5 id="accessibility">Accessibility</h5>
 
             </div>
             
@@ -586,6 +542,7 @@
         <span class="hljs-keyword">this</span>.cleanAria();
     }
 
+    <span class="hljs-keyword">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.apply();
 
     <span class="hljs-keyword">if</span> (items.setAsCurrentCanvas) <span class="hljs-keyword">this</span>.setAsCurrentCanvas();
@@ -596,13 +553,13 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h2 id="canvas-object-prototype-setup">Canvas object prototype setup</h2>
+              <h4 id="canvas-prototype">Canvas prototype</h4>
 
             </div>
             
@@ -615,13 +572,19 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/position.html">position</a></li>
+<li><a href="../mixin/anchor.html">anchor</a></li>
+<li><a href="../mixin/dom.html">dom</a></li>
+</ul>
 
             </div>
             
@@ -633,17 +596,106 @@ P = domMix(P);</pre></div></div>
         </li>
         
         
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="canvas-attributes">Canvas attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><strong>position</strong> - the CSS position value for the &lt;canvas&gt; element. This value will be set to <code>absolute</code> when the element is an artefact associated with a Stack; <code>relative</code> in other cases.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    position: <span class="hljs-string">'relative'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p><strong>trackHere</strong> - Boolean flag to indicate whether the Canvas object should participate in the Scrawl-canvas mouse/touch tracking functionality; the functionality can be switched off by setting the flag to false (via <code>set</code>).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    trackHere: <span class="hljs-literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><strong>fit</strong> - String indicating how the base Cell should copy its contents over to the &lt;canvas&gt; element as the final step in the Display cycle. Accepted values are: <code>fill</code>, <code>contain</code>, <code>cover</code>, <code>none</code> (but not <code>scale-down</code>).</p>
+<p>The aim of this functionality is to replicate the CSS <code>object-fit</code> property - <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">detailed here</a> - for &lt;canvas&gt; elements. Unlike the CSS property, we apply the fit attribute to the Canvas wrapper, not the element itself or its parent element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fit: <span class="hljs-string">'none'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p><strong>isComponent</strong> - set to true if canvas is being used as part of a Scrawl-canvas component.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    isComponent: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h5 id="accessibility-attributes">Accessibility attributes</h5>
+<p>&lt;canvas&gt; elements are <strong>raster images</strong> - they contain no information within their content (beyond pixel data) which can be analyzed or passed on to the browser or other device. The element <em>can</em> include <code>title</code> and various <code>item</code> attributes (alongside custom <code>data-</code> attributes) but inclusion of these depends entirely on the developer remembering to include them when coding up a web page.</p>
+<p>Scrawl-canvas attempts to automate <em>some</em> (but not <em>all</em>) accessibility work through inclusion of the following Canvas attributes (specifically, Scrawl-canvas implements <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA">ARIA attributes</a>):</p>
+<ul>
+<li><strong>title</strong> - this attribute is applied to the &lt;canvas&gt; element’s ‘title’ attribute, and will appear as a tooltip when the user hovers over the canvas</li>
+<li><strong>label</strong> and <strong>description</strong> - these attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas&gt; element using <code>aria-labelledby</code> and <code>aria-describedby</code> attributes</li>
+</ul>
+<p>If no label value is supplied to the Canvas factory (as part of the function’s argument object), then Scrawl-canvas will auto-generate a label based on the canvas’s name. All three attributes can be updated dynamically using the usual <code>set()</code> functionality.</p>
+<p>Beyond the Canvas object, Scrawl-canvas also encourages Phrase entitys (which handle graphical text in the canvas display) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor’s &lt;a&gt; element in the DOM, which allows the canvas display to become part of the document’s navigation (for example, by keyboard tabbing).</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    title: <span class="hljs-string">''</span>,
+    <span class="hljs-attr">label</span>: <span class="hljs-string">''</span>,
+    <span class="hljs-attr">description</span>: <span class="hljs-string">''</span>,
+
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -654,157 +706,7 @@ P = domMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>TO TEST - position needs to change to ‘absolute’ when Canvas element is an artefact associated with a stack. But canvas elements can also be created independently of any stack, in which case position:relative should suffice</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    position: <span class="hljs-string">'relative'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    trackHere: <span class="hljs-literal">true</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    dirtyCells: <span class="hljs-literal">true</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    fit: <span class="hljs-string">'none'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <h4 id="accessibility-attributes">Accessibility attributes</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <ul>
-<li><strong>title</strong> attribute is applied to the &lt;canvas&gt; element’s ‘title’ attribute, and will appear as a tooltip when the user hovers over the canvas</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <ul>
-<li><strong>label</strong> and <strong>description</strong> attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas&gt; element using ‘aria-labelledby’ and ‘aria-describedby’ attributes</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>If no label value is supplied to the canvas factory (as part of the function’s argument object), then Scrawl-canvas will auto-generate a label based on the canvas’s name. All three attributes can be updated dynamically using the usual .set() functionality.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    title: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">label</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">description</span>: <span class="hljs-string">''</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>Set to true if canvas is being used as part of a Scrawl-canvas component</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    isComponent: <span class="hljs-literal">false</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <h2 id="packetclone-management">Packet/Clone management</h2>
+              <h4 id="packetclone-management">Packet/Clone management</h4>
 <p>This functionality is disabled for Canvas objects</p>
 
             </div>
@@ -818,13 +720,13 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h2 id="kill-functionality">Kill functionality</h2>
+              <h4 id="kill-functionality">Kill functionality</h4>
 
             </div>
             
@@ -833,11 +735,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>rootElements and uiSubscribedElements arrays</p>
 
@@ -851,11 +753,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Groups</p>
 
@@ -866,11 +768,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Base Cell</p>
 
@@ -881,11 +783,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>DOM removals</p>
 
@@ -900,11 +802,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Scrawl-canvas library</p>
 
@@ -916,13 +818,13 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <h2 id="define-attribute-getters-and-setters">Define attribute getters and setters</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -933,13 +835,13 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>fit</code></p>
 
             </div>
             
@@ -952,74 +854,13 @@ S.fit = <span class="hljs-function"><span class="hljs-keyword">function</span> (
         </li>
         
         
-        <li id="section-36">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>G.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.base.alpha;
-};
-
-G.backgroundColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.base.backgroundColor;
-};
-
-G.composite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.base.composite;
-};
-
-S.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-
-        <span class="hljs-keyword">this</span>.base.set({
-            <span class="hljs-attr">alpha</span>: item
-        });
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.backgroundColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-
-        <span class="hljs-keyword">this</span>.base.set({
-            <span class="hljs-attr">backgroundColor</span>: item
-        });
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p><code>title</code> - String</p>
 
             </div>
             
@@ -1027,15 +868,41 @@ S.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
     <span class="hljs-keyword">this</span>.title = item;
     <span class="hljs-keyword">this</span>.dirtyAria = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p><code>label</code> - String</p>
 
-S.label = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.label = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.label = item;
     <span class="hljs-keyword">this</span>.dirtyAria = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p><code>description</code> - String</p>
 
-S.description = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.description = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.description = item;
     <span class="hljs-keyword">this</span>.dirtyAria = <span class="hljs-literal">true</span>;
@@ -1044,58 +911,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-39">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.composite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-        <span class="hljs-keyword">this</span>.base.set({
-            <span class="hljs-attr">composite</span>: item
-        });
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>D.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-
-        <span class="hljs-keyword">this</span>.base.deltaSet({
-            <span class="hljs-attr">alpha</span>: item
-        });
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p><code>trackHere</code> - Boolean</p>
 
             </div>
             
@@ -1113,26 +935,129 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-42">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h5 id="get-and-set-base-cell-attributes">Get and set base cell attributes</h5>
+<p>For convenience, Scrawl-canvas allows us to get/set a limited number of base Cell attributes via their Canvas wrapper’s <code>get</code>, <code>set</code> and <code>deltaSet</code> functions. We can set and deltaSet other base Cell attributes by invoking the <code>mycanvas.setBase</code> and <code>mycanvas.deltaSetBase</code> functions.</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-43">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>backgroundColor</code> - String. We can set the base Cell’s background color to any CSS color String value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.backgroundColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.base.backgroundColor;
+};
+S.backgroundColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
+
+        <span class="hljs-keyword">this</span>.base.set({
+            <span class="hljs-attr">backgroundColor</span>: item
+        });
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p><code>alpha</code> - float Number between 0.0 and 1.0. When the base Cell stamps itself onto the Canvas wrapper’s &lt;canvas&gt; element, it can set the element’s engine to a <code>globalAlpha</code> value stored in the Cell’s alpha attribute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.base.alpha;
+};
+S.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
+
+        <span class="hljs-keyword">this</span>.base.set({
+            <span class="hljs-attr">alpha</span>: item
+        });
+    }
+};
+D.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
+
+        <span class="hljs-keyword">this</span>.base.deltaSet({
+            <span class="hljs-attr">alpha</span>: item
+        });
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p><code>composite</code> - String. When the base Cell stamps itself onto the Canvas wrapper’s &lt;canvas&gt; element, it can set the element’s engine to a <code>globalCompositeOperation</code> value stored in the Cell’s composite attribute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.composite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.base.composite;
+};
+S.composite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
+        <span class="hljs-keyword">this</span>.base.set({
+            <span class="hljs-attr">composite</span>: item
+        });
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p><code>setAsCurrentCanvas</code> - invoke function (without arguments) to make this Canvas wrapper the <strong>current canvas</strong> for future entity generation operations. This is additional to the <code>scrawl.setCurrentCanvas</code> function.</p>
 
             </div>
             
@@ -1145,13 +1070,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-44">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>setBase</code> - pass the argument object through to the base Cell’s <code>set</code> function.</p>
 
             </div>
             
@@ -1168,13 +1093,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-45">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>deltaSetBase</code> - pass the argument object through to the base Cell’s <code>deltaSet</code> function.</p>
 
             </div>
             
@@ -1191,13 +1116,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-46">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Internal function - passes the Canvas wrapper’s current <strong>here</strong> object and <strong>fit</strong> attribute to the base Cell for further processing</p>
 
             </div>
             
@@ -1209,13 +1134,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-47">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Internal helper function</p>
 
             </div>
             
@@ -1240,13 +1165,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-48">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>updateCells</code> - internal function. Iterate through all Cells registered in the wrapper’s <strong>cells</strong> Array and set a range of dirty flags on them, for future processing by each Cell.</p>
 
             </div>
             
@@ -1272,13 +1197,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-49">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>buildCell</code> - internal helper function, called by the Canvas constructor</p>
 
             </div>
             
@@ -1298,13 +1223,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-50">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function. Promulgates canvas dimension changes through to all Cells in the wrapper’s cells Array.</p>
 
             </div>
             
@@ -1323,13 +1248,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-51">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>addCell</code> - add a Cell object to the wrapper’s cells Array; argument can be the Cell’s name-String, or the Cell object itself</p>
 
             </div>
             
@@ -1349,13 +1274,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-52">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>removeCell</code> - remove a Cell object from the wrapper’s cells Array; argument can be the Cell’s name-String, or the Cell object itself</p>
 
             </div>
             
@@ -1374,26 +1299,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-53">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
-              <p>TODO - is this all that is needed? </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
-              </div>
-              <p>Assume that killing a cell involves also killing its associated group(s) and any entitys, tweens, filters etc currently associated with it?</p>
+              <p><code>killCell</code> - invoke a Cell object’s <strong>kill</strong> function; argument can be the Cell’s name-String, or the Cell object itself</p>
 
             </div>
             
@@ -1410,13 +1322,29 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-55">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h5 id="display-cycle-functions">Display cycle functions</h5>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p><code>clear</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays (returns a Promise):</p>
+<ul>
+<li>if the Cell object’s <code>cleared</code> flag is true, invoke the Cell’s <code>clear</code> function </li>
+</ul>
 
             </div>
             
@@ -1441,13 +1369,17 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-56">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>compile</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays (returns a Promise):</p>
+<ul>
+<li>sort Cell objects depending on their <code>compileOrder</code> attribute - Cells with lower order values will be processed first</li>
+<li>if the Cell object’s <code>compiled</code> flag is true, invoke the Cell’s <code>compile</code> function </li>
+</ul>
 
             </div>
             
@@ -1474,13 +1406,22 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-57">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>show</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays (returns a Promise):</p>
+<ul>
+<li>sort Cell objects depending on their <code>showOrder</code> attribute - Cells with lower order values will be processed first</li>
+<li>if the Cell object’s <code>shown</code> flag is true, invoke the Cell’s <code>show</code> function </li>
+</ul>
+<p>And then:</p>
+<ul>
+<li>copy the base Cells display over to the Canvas wrapper’s &lt;canvas&gt; element</li>
+<li>update ARIA and other associated metadata</li>
+</ul>
 
             </div>
             
@@ -1517,13 +1458,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-58">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>render</code> - orchestrate a single Display cycle - clear, then compile, then show (returns a Promise).</p>
 
             </div>
             
@@ -1544,13 +1485,20 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-59">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanCells</code> - internal function triggered each time there is an update to the <strong>cells</strong> Array attribute, or a constituent Cell sets the Canvas wrapper’s <code>dirtyCell</code> flag.</p>
+<ul>
+<li>Cell objects include attribute flags - <code>cleared</code>, <code>compiled</code>, <code>shown</code> - which tell their Canvas wrapper whether they should be included in each part of the Display cycle</li>
+<li>For the compile and show steps, Cell objects also include attributes - <code>compileOrder</code>, <code>showOrder</code> - indicating the order in which they should be processed (compared to other Cell objects). </li>
+<li>The sorting algorithm for all three operations is a bucket sort. </li>
+<li>The results of these operations are deposited in three internal Arrays which are used as part of the Canvas wrapper’s clear/compile/show functionality.</li>
+</ul>
+<p>We do things this way because there may be situations where a Cell needs to calculate and compile before another cell, but should be shown (applied to) the base Cell after the other Cells (so it appears on top of them).</p>
 
             </div>
             
@@ -1599,69 +1547,19 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-60">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
-              <p>Trigger event action responses in (visible) entitys at the current mouse/touch </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-61">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
-              </div>
-              <p>Trigger event action responses in (visible) entitys at the current canvas element <em>here</em> attribute coordinates</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-62">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
-              </div>
-              <ul>
-<li>Available cascadeEventAction arguments are: ‘enter’, ‘leave’, ‘down’, or ‘up’</li>
+              <h5 id="handling-dom-events">Handling DOM events</h5>
+<p><code>cascadeEventAction</code> - The Canvas wrapper’s &lt;canvas&gt; element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups’ artefacts. </p>
+<p>This allows us to ‘regionalize’ various parts of the &lt;canvas&gt; element so that they respond in a similar way to an HTML <strong>image map</strong> (defined using &lt;map&gt; and &lt;area&gt; elements) </p>
+<ul>
+<li>Cascaded events are limited to mouse and touch events, which Scrawl-canvas bundles together into 5 types of event: <code>down</code>, <code>up</code> (which also captures click events), <code>enter</code>, <code>leave</code>, <code>move</code>.</li>
+<li>Returns an Array of name Strings for the entitys at the current mouse cursor coordinates; the Array is also accessible from the Canvas wrapper’s <code>currentActiveEntityNames</code> attribute.</li>
 </ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-63">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
-              </div>
-              <ul>
-<li>A ‘move’ argument can also be used, which will trigger enter and leave actions on the entitys, as appropriate to each</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-64">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
-              </div>
-              <p>Function returns an Array of name Strings for the entitys at the current mouse cursor coordinates </p>
 
             </div>
             
@@ -1680,11 +1578,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-65">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <ol>
 <li>Find all entitys currently colliding with the mouse/touch coordinate over the canvas</li>
@@ -1704,11 +1602,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-66">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <ol start="2">
 <li>Process the returned test results</li>
@@ -1742,11 +1640,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-67">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <ol start="3">
 <li>Trigger the required action on each affected entity</li>
@@ -1797,11 +1695,11 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-68">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <ol start="4">
 <li>Cleanup and return</li>
@@ -1817,13 +1715,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-69">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanAria</code> - internal function; transfers updated <strong>title</strong>, <strong>label</strong> and <strong>description</strong> attribute values into the relevant DOM elements</p>
 
             </div>
             
@@ -1838,13 +1736,13 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-70">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
 
             </div>
             
@@ -1852,9 +1750,22 @@ S.description = <span class="hljs-function"><span class="hljs-keyword">function<
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Canvas(items);
 };
 
-constructors.Canvas = Canvas;
+constructors.Canvas = Canvas;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeCanvas,
 };</pre></div></div>
             

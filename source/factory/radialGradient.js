@@ -1,18 +1,20 @@
-
-// # Radial Gradient factory
-
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// # RadialGradient factory
+// Scrawl-canvas RadialGradient objects implement the Canvas API's [createRadialGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient) method. The resulting [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) object can be used by any Scrawl-canvas entity as its `fillStyle` or `strokeStyle`.
+// + Most gradient-related functionality has been coded up in the __styles mixin__, and is documented there.
+// + RadialGradients fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.
+// + RadialGradients can be animated in a variety of ways; the can act as target objects for Scrawl-canvas Tweens.
+//
+// RadialGradients can be applied to an entity in two different ways, depending on the entity's `lockFillStyleToEntity` and `lockStrokeStyleToEntity` attribute flags:
+// + __Cell-locked__ RadialGradients will cover the entire Cell; an entity moved from one part of the display to another will show different parts of the gradient
+// + __Entity-locked__ RadialGradients display their entire color range on the entity, move with the entity and even rotate with the entity.
 
 
-// ## Imports
+// #### Demos:
+// + [Canvas-004](../../demo/canvas-004.html) - Radial gradients
+// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
+
+
+// #### Imports
 import { constructors } from '../core/library.js';
 import { mergeOver, addStrings, convertLength, pushUnique } from '../core/utilities.js';
 
@@ -20,7 +22,7 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 
-// ## Radial Gradient constructor
+// #### RadialGradient constructor
 const RadialGradient = function (items = {}) {
 
     this.stylesInit(items);
@@ -28,7 +30,7 @@ const RadialGradient = function (items = {}) {
 };
 
 
-// ## Radial Gradient object prototype setup
+// #### RadialGradient prototype
 let P = RadialGradient.prototype = Object.create(Object.prototype);
 
 P.type = 'RadialGradient';
@@ -37,31 +39,63 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [styles](../mixin/styles.html)
 P = baseMix(P);
 P = stylesMix(P);
 
 
-// ## Define default attributes
+// #### RadialGradient attributes
 let defaultAttributes = {
 
-// TODO - documentation
+// RadialGradients calculate their gradients spanning between two circles, whose sizes are determined by the `startRadius` and `endRadius` attributes. Values can be:
+// + __Absolute__ - Numbers, measured in pixels.
+// + __Relative__ - String% - as a percentage of the containing Cell's `width`
     startRadius: 0,
     endRadius: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+// In addition to the attributes defined in the __base__ and __styles__ mixins, Gradients also pass through Palette attributes to their Palette object. 
+// 
+// Attributes from __base__ mixin:
+// + `name`
+//
+// Attributes from __styles__ mixin:
+// + `start`
+// + `startX`
+// + `startY`
+// + `end`
+// + `endX`
+// + `endY`
+// + `palette`
+// + `paletteStart`
+// + `paletteEnd`
+// + `cyclePalette`
+//
+// Attributes from the __palette__ factory:
+// + `colors` 
+// + `cyclic`
 
-// ## Packet management
+// #### Packet management
 P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Clone management
+// No additional clone functionality required
+
+
+// #### Kill management
+// No additional kill functionality required
+
+
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// TODO - documentation
+// The getter functions `myradialgradient.get('startRadius')` and `myradialgradient.get('endRadius')` return the current radius values as Numbers, measuring pixels
 G.startRadius = function (item) {
 
     return this.currentStartRadius;
@@ -71,6 +105,7 @@ G.endRadius = function (item) {
     return this.currentEndRadius;
 };
 
+// Both `startRadius` and `endRadius` attributes can be set and deltaSet
 S.startRadius = function (item) {
 
     this.startRadius = item;
@@ -93,16 +128,16 @@ D.endRadius = function (item) {
 };
 
 
-// ## Define prototype functions
+// #### Prototype functions
 
-// TODO - documentation
+// `cleanRadius` - internal function to calculate the current radius values (in px) of the start and end radii
 P.cleanRadius = function (width) {
 
     this.currentStartRadius = (width) ? convertLength(this.startRadius, width) : this.defs.startRadius;
     this.currentEndRadius = (width) ? convertLength(this.endRadius, width) : this.defs.endRadius;
 };
 
-// TODO - documentation
+// `buildStyle` - internal function: creates the radial gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
 P.buildStyle = function (cell = {}) {
     
     if (cell) {
@@ -119,7 +154,7 @@ P.buildStyle = function (cell = {}) {
     return 'rgba(0,0,0,0)';
 };
 
-// TODO - documentation
+// `updateGradientArgs` - internal function
 P.updateGradientArgs = function (x, y) {
 
     let gradientArgs = this.gradientArgs,
@@ -141,14 +176,44 @@ P.updateGradientArgs = function (x, y) {
 };
 
 
-
-// ## Exported factory function
+// #### Factory
+// ```
+// let graddy = scrawl.makeRadialGradient({
+//
+//     name: 'mygradient',
+//
+//     startX: '50%',
+//     startY: '50%',
+//     endX: '50%',
+//     endY: '50%',
+//  
+//     endRadius: 300,
+// });
+//
+// scrawl.makeBlock({
+//    
+//     name: 'myblock',
+//    
+//     width: '90%',
+//     height: '90%',
+//     startX: '5%',
+//     startY: '5%',
+//
+//     fillStyle: graddy,
+//     strokeStyle: 'coral',
+//     lineWidth: 2,
+//    
+//     method: 'fillAndDraw',
+// });
+// ```
 const makeRadialGradient = function (items) {
     return new RadialGradient(items);
 };
 
 constructors.RadialGradient = RadialGradient;
 
+
+// #### Exports
 export {
     makeRadialGradient,
 };

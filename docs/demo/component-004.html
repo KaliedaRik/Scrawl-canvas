@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>component-004.js</title>
+  <title>Demo Component 004</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>component-004.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-component-004">Demo Component 004</h2>
+              <h1 id="demo-component-004">Demo Component 004</h1>
+<p>Scrawl-canvas packets - save and load a range of different entitys</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/component-004.html">Scrawl-canvas packets - save and load a range of different entitys</a></p>
+              <p><a href="../../demo/component-004.html">Run code</a></p>
 
             </div>
             
@@ -308,7 +293,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
@@ -316,36 +301,7 @@
 
 canvas.set({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'aliceblue'</span>,
-});
-
-
-<span class="hljs-keyword">let</span> myblock = scrawl.makeBlock({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'block-tester'</span>,
-    <span class="hljs-attr">collides</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">40</span>,
-
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">60</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">60</span>,
-
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'rgba(0,140,50,0.7)'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
-});
-
-<span class="hljs-keyword">let</span> myblockPacket = myblock.saveAsPacket();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Block packet saveAsPacket: '</span>, myblockPacket);
-
-myblock.kill();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Block packet kill: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity));
-
-canvas.importPacket(myblockPacket)
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-    myblock = res;
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Block packet importPacket: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity), myblock);
-})
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
+});</pre></div></div>
             
         </li>
         
@@ -356,9 +312,19 @@ canvas.importPacket(myblockPacket)
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>RESULTS</p>
+              <p>Setup Gradient style</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygradient = scrawl.makeGradient({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'blue-green'</span>,
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">'100%'</span>,
+    <span class="hljs-attr">colors</span>: {
+        <span class="hljs-string">'0 '</span>: <span class="hljs-string">'blue'</span>,
+        <span class="hljs-string">'500 '</span>: <span class="hljs-string">'gold'</span>,
+        <span class="hljs-string">'999 '</span>: <span class="hljs-string">'green'</span>
+    },
+});</pre></div></div>
             
         </li>
         
@@ -369,21 +335,30 @@ canvas.importPacket(myblockPacket)
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Block packet saveAsPacket:<br>[
-    “block-tester”,
-    “Block”,
-    “entity”,
-    {
-        “name”:”block-tester”,
-        “dimensions”:[120,40],
-        “start”:[60,60],
-        “delta”:{},
-        “group”:”mycanvas_base”,
-        “fillStyle”:”rgba(0,140,50,0.7)”
-    }
-]</p>
+              <p>Setup Color style</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mycolor = scrawl.makeColor({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myColorObject'</span>,
+    <span class="hljs-attr">r</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">g</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">b</span>: <span class="hljs-number">10</span>,
+
+    <span class="hljs-attr">rShift</span>: <span class="hljs-number">0.1</span>,
+    <span class="hljs-attr">gShift</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">bShift</span>: <span class="hljs-number">-1.3</span>,
+
+    <span class="hljs-attr">rBounce</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">gBounce</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">bBounce</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">rMax</span>: <span class="hljs-number">160</span>,
+    <span class="hljs-attr">gMax</span>: <span class="hljs-number">180</span>,
+    <span class="hljs-attr">bMax</span>: <span class="hljs-number">150</span>,
+
+    <span class="hljs-attr">autoUpdate</span>: <span class="hljs-literal">true</span>,
+});</pre></div></div>
             
         </li>
         
@@ -394,9 +369,37 @@ canvas.importPacket(myblockPacket)
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Block packet kill:  []</p>
+              <p>Setup Filter</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myfilter = scrawl.makeFilter({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'venetianBlinds'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'userDefined'</span>,
+    <span class="hljs-attr">level</span>: <span class="hljs-number">9</span>,
+
+    <span class="hljs-attr">userDefined</span>: <span class="hljs-string">`
+        let i, iz, j, jz,
+            level = filter.level || 6,
+            halfLevel = level / 2,
+            yw, transparent, pos;
+
+        for (i = localY, iz = localY + localHeight; i &lt; iz; i++) {
+
+            transparent = (i % level &gt; halfLevel) ? true : false;
+
+            if (transparent) {
+
+                yw = (i * iWidth) + 3;
+                
+                for (j = localX, jz = localX + localWidth; j &lt; jz; j ++) {
+
+                    pos = yw + (j * 4);
+                    data[pos] = 0;
+                }
+            }
+        }`</span>,
+});</pre></div></div>
             
         </li>
         
@@ -407,12 +410,39 @@ canvas.importPacket(myblockPacket)
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Block packet importPacket:  [“block-tester”]</p>
+              <p>Test Block entity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">let</span> mypicture = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myblock = scrawl.makeBlock({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'block-tester'</span>,
+    <span class="hljs-attr">collides</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">40</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">60</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'myColorObject'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Test Picture entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mypicture = scrawl.makePicture({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'picture-tester'</span>,
 
@@ -431,36 +461,7 @@ canvas.importPacket(myblockPacket)
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
     <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.8</span>,
-});
-
-<span class="hljs-keyword">let</span> mypicturePacket = mypicture.saveAsPacket();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Picture packet saveAsPacket: '</span>, mypicturePacket);
-
-<span class="hljs-keyword">let</span> myPictureAssetPacket = mypicture.asset.saveAsPacket();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Picture asset packet saveAsPacket: '</span>, myPictureAssetPacket);
-
-mypicture.kill();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Picture packet kill: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity));
-
-canvas.importPacket(mypicturePacket)
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-    mypicture = res;
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Picture packet importPacket: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity), mypicture);
-})
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>RESULTS</p>
-
-            </div>
+});</pre></div></div>
             
         </li>
         
@@ -471,75 +472,11 @@ canvas.importPacket(mypicturePacket)
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Picture packet saveAsPacket:<br>[
-    “picture-tester”,
-    “Picture”,
-    “entity”,
-    {
-        “copyStart”:[100,150],
-        “copyDimensions”:[150,100],
-        “name”:”picture-tester”,
-        “dimensions”:[150,100],
-        “start”:[420,70],
-        “delta”:{},
-        “asset”:”iris”,
-        “group”:”mycanvas_base”,
-        “globalAlpha”:0.8
-    }
-]</p>
+              <p>Test Phrase entity</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>Picture asset packet saveAsPacket:<br>[
-    “iris”,
-    “Image”,
-    “asset”,
-    {
-        “name”:”iris”,
-        “subscribers”:[“picture-tester”]
-    }
-]</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <p>Picture packet kill:<br>[“block-tester”]</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <p>Picture packet importPacket:  (2) 
-[“block-tester”, “picture-tester”]</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">let</span> myphrase = scrawl.makePhrase({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myphrase = scrawl.makePhrase({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'phrase-tester'</span>,
 
@@ -562,101 +499,22 @@ canvas.importPacket(mypicturePacket)
 }, <span class="hljs-number">1</span>).setGlyphStyles({
 
     <span class="hljs-attr">weight</span>: <span class="hljs-string">'normal'</span>
-}, <span class="hljs-number">3</span>);
-
-<span class="hljs-keyword">let</span> myphrasePacket = myphrase.saveAsPacket();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Phrase packet saveAsPacket: '</span>, myphrasePacket);
-
-myphrase.kill();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Phrase packet kill: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity));
-
-canvas.importPacket(myphrasePacket)
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-    myphrase = res;
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Phrase packet importPacket: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity), myphrase);
-})
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
+}, <span class="hljs-number">3</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-13">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>RESULTS</p>
+              <p>Test Wheel entity</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p>Phrase packet saveAsPacket:<br>[
-    “phrase-tester”,
-    “Phrase”,
-    “entity”,
-    {
-        “name”:”phrase-tester”,
-        “dimensions”:[120,0],
-        “start”:[250,150],
-        “delta”:{},
-        “text”:”H&epsilon;lj&ouml;!”,
-        “glyphStyles”:[
-            null,
-            {“weight”:”bold”},
-            null,
-            {“weight”:”normal”}
-        ],
-        “justify”:”center”,
-        “lineHeight”:1,
-        “group”:”mycanvas_base”,
-        “fillStyle”:”rgb(50,0,0)”,
-        “globalAlpha”:0.6,
-        “sizeValue”:40,
-        “family”:”Garamond, serif”
-    }
-]</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>Phrase packet kill:  (2) 
-[“block-tester”, “picture-tester”]</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Phrase packet importPacket:  (3) 
-[“block-tester”, “picture-tester”, “phrase-tester”]</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">let</span> mypie = scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mypie = scrawl.makeWheel({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-pie-tester'</span>,
 
@@ -669,95 +527,26 @@ canvas.importPacket(myphrasePacket)
     <span class="hljs-attr">startX</span>: <span class="hljs-number">320</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">280</span>,
 
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'rgba(20, 100, 250, 0.7)'</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'blue-green'</span>,
+    <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
+
     <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
-});
-
-<span class="hljs-keyword">let</span> mypiePacket = mypie.saveAsPacket();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Wheel packet saveAsPacket: '</span>, mypiePacket);
-
-mypie.kill();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Wheel packet kill: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity));
-
-canvas.importPacket(mypiePacket)
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-    mypie = res;
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Wheel packet importPacket: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity), mypie);
-})
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
+});</pre></div></div>
             
         </li>
         
         
-        <li id="section-17">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>RESULTS</p>
+              <p>Test oval Shape entity</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>Wheel packet saveAsPacket:<br>[
-    “wheel-pie-tester”,
-    “Wheel”,
-    “entity”,
-    {
-        “name”:”wheel-pie-tester”,
-        “dimensions”:[100,100],
-        “start”:[320,280],
-        “delta”:{},
-        “radius”:50,
-        “startAngle”:50,
-        “endAngle”:-50,
-        “includeCenter”:true,
-        “group”:”mycanvas_base”,
-        “fillStyle”:”rgba(20, 100, 250, 0.7)”
-    }
-]</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <p>Wheel packet kill:  (3) 
-[“block-tester”, “picture-tester”, “phrase-tester”]</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>Wheel packet importPacket:  (4) 
-[“block-tester”, “picture-tester”, “phrase-tester”, “wheel-pie-tester”]</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">let</span> myoval = scrawl.makeOval({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myoval = scrawl.makeOval({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'shape-oval-tester'</span>,
 
@@ -770,78 +559,22 @@ canvas.importPacket(mypiePacket)
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'rgba(20, 50, 180, 0.7)'</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
-});
-
-<span class="hljs-keyword">let</span> myovalPacket = myoval.saveAsPacket();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Oval Shape packet saveAsPacket: '</span>, myovalPacket);
-
-myoval.kill();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Oval Shape packet kill: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity));
-
-canvas.importPacket(myovalPacket)
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-    myoval = res;
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Oval Shape packet importPacket: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity), myoval);
-})
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
+});</pre></div></div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>RESULTS</p>
+              <p>Test bezier Shape entity</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>Oval Shape packet saveAsPacket:<br>[
-    “shape-oval-tester”,
-    “Shape”,
-    “entity”,
-    {
-        “name”:”shape-oval-tester”,
-        “start”:[30,160],
-        “delta”:{},
-        “species”:”oval”,
-        “radiusX”:40,
-        “radiusY”:55,
-        “intersectY”:0.6,
-        “group”:”mycanvas_base”,
-        “fillStyle”:”rgba(20, 50, 180, 0.7)”
-    }
-]</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>Oval Shape packet kill:  (4) 
-[“block-tester”, “picture-tester”, “phrase-tester”, “wheel-pie-tester”]</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">let</span> mybezier = scrawl.makeBezier({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mybezier = scrawl.makeBezier({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'shape-bezier-tester'</span>,
 
@@ -861,83 +594,22 @@ canvas.importPacket(myovalPacket)
 
     <span class="hljs-attr">boundingBoxColor</span>: <span class="hljs-string">'lightgray'</span>,
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
-});
-
-<span class="hljs-keyword">let</span> mybezierPacket = mybezier.saveAsPacket();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Bezier Shape packet saveAsPacket: '</span>, mybezierPacket);
-
-mybezier.kill();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Bezier Shape packet kill: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity));
-
-canvas.importPacket(mybezierPacket)
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-    mybezier = res;
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Bezier Shape packet importPacket: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity), mybezier);
-})
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
+});</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>RESULTS</p>
+              <p>Test Grid entity</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>Bezier Shape packet saveAsPacket:<br>[
-    “shape-bezier-tester”,
-    “Shape”,
-    “entity”,
-    {
-        “startControl”:[260,180],
-        “endControl”:[320,300],
-        “end”:[380,240],
-        “name”:”shape-bezier-tester”,
-        “start”:[200,210],
-        “delta”:{},
-        “method”:”draw”,
-        “species”:”bezier”,
-        “showBoundingBox”:true,
-        “boundingBoxColor”:”lightgray”,
-        “group”:”mycanvas_base”,
-        “strokeStyle”:”orange”,
-        “lineWidth”:3,
-        “lineCap”:”round”
-    }
-]</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>Bezier Shape packet kill:  (5) 
-[“block-tester”, “picture-tester”, “phrase-tester”, “wheel-pie-tester”, “shape-oval-tester”]</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">let</span> mygrid = scrawl.makeGrid({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygrid = scrawl.makeGrid({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'test-grid'</span>,
 
@@ -966,85 +638,22 @@ canvas.importPacket(mybezierPacket)
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">450</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">250</span>,
-});
-
-<span class="hljs-keyword">let</span> mygridPacket = mygrid.saveAsPacket();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Grid packet saveAsPacket: '</span>, mygridPacket);
-
-mygrid.kill();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Grid packet kill: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity));
-
-canvas.importPacket(mygridPacket)
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-    mygrid = res;
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Grid packet importPacket: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity), mygrid);
-})
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
+});</pre></div></div>
             
         </li>
         
         
-        <li id="section-27">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>RESULTS</p>
+              <p>Test svg path.d Shape entity</p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>Grid packet saveAsPacket:<br>[
-    “test-grid”,
-    “Grid”,
-    “entity”,
-    {
-        “tileFill”:[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        “tileSources”:[
-            {“type”:”color”,”source”:”blue”},
-            {“type”:”color”,”source”:”red”}
-        ],
-        “name”:”test-grid”,
-        “dimensions”:[120,80],
-        “start”:[450,250],
-        “delta”:{},
-        “roll”:10,
-        “columns”:6,
-        “rows”:4,
-        “columnGutterWidth”:2,
-        “rowGutterWidth”:2,
-        “group”:”mycanvas_base”
-    }
-]</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>Grid packet kill:  (6) 
-[“block-tester”, “picture-tester”, “phrase-tester”, “wheel-pie-tester”, “shape-oval-tester”, “shape-bezier-tester”]</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-
-<span class="hljs-keyword">let</span> myshape = scrawl.makeShape({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myshape = scrawl.makeShape({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'shape-test'</span>,
 
@@ -1067,16 +676,18 @@ canvas.importPacket(mygridPacket)
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">boundingBoxColor</span>: <span class="hljs-string">'black'</span>,
 
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,</pre></div></div>
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
+
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">'venetianBlinds'</span>],</pre></div></div>
             
         </li>
         
         
-        <li id="section-30">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>svg outline of Japan from this source:
 <a href="https://silhouettegarden.com/download/japan-silhouette/">https://silhouettegarden.com/download/japan-silhouette/</a></p>
@@ -1392,31 +1003,164 @@ canvas.importPacket(mygridPacket)
     S77.263,589.392,76.484,590.26L76.484,590.26z M88.453,589.706c-1.124,0.314-2.532,0.734-3.056,1.678
     c-0.524,0.943-0.165,2.412,0.719,3.101c0.884,0.689,2.292,0.6,3.431-0.104c1.138-0.704,2.007-2.022,2.247-3.026
     s-0.15-1.692-0.764-1.932C90.416,589.182,89.577,589.392,88.453,589.706z`</span>,
-});
-
-<span class="hljs-keyword">let</span> myshapePacket = myshape.saveAsPacket();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'SVG path-based Shape packet saveAsPacket: '</span>, myshapePacket);
-
-myshape.kill();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'SVG path-based Shape packet kill: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity));
-
-canvas.importPacket(myshapePacket)
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-    myshape = res;
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'SVG path-based Shape packet importPacket: '</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity), myshape);
-})
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
+});</pre></div></div>
             
         </li>
         
         
-        <li id="section-31">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Create the Animation loop which will run the Display cycle</p>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> performEntityTests = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Creating packets for all entitys in test'</span>);
+    <span class="hljs-keyword">let</span> myblockPacket = myblock.saveAsPacket();
+    <span class="hljs-keyword">let</span> mypicturePacket = mypicture.saveAsPacket();
+    <span class="hljs-keyword">let</span> myphrasePacket = myphrase.saveAsPacket();
+    <span class="hljs-keyword">let</span> mypiePacket = mypie.saveAsPacket();
+    <span class="hljs-keyword">let</span> myovalPacket = myoval.saveAsPacket();
+    <span class="hljs-keyword">let</span> mybezierPacket = mybezier.saveAsPacket();
+    <span class="hljs-keyword">let</span> mygridPacket = mygrid.saveAsPacket();
+    <span class="hljs-keyword">let</span> myshapePacket = myshape.saveAsPacket();
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Kill all entitys in test'</span>);
+    myblock.kill();
+    mypicture.kill();
+    myphrase.kill();
+    mypie.kill();
+    myoval.kill();
+    mybezier.kill();
+    mygrid.kill();
+    myshape.kill();
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Import and resurrect all entitys'</span>);
+    canvas.importPacket(myblockPacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        myblock = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'myblock resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+
+    canvas.importPacket(mypicturePacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        mypicture = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'mypicture resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+
+    canvas.importPacket(myphrasePacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        myphrase = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'myphrase resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+
+    canvas.importPacket(mypiePacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        mypie = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'mypie resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+
+    canvas.importPacket(myovalPacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        myoval = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'myoval resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+
+    canvas.importPacket(mybezierPacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        mybezier = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'mybezier resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+
+    canvas.importPacket(mygridPacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        mygrid = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'mygrid resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+
+    canvas.importPacket(myshapePacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        myshape = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'myshape resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+};
+
+<span class="hljs-keyword">let</span> performOtherTests = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Creating packets for other objects in test'</span>);
+    <span class="hljs-keyword">let</span> mygradientPacket = mygradient.saveAsPacket();
+    <span class="hljs-keyword">let</span> mycolorPacket = mycolor.saveAsPacket();
+    <span class="hljs-keyword">let</span> myfilterPacket = myfilter.saveAsPacket();
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Kill other objects in test'</span>);
+    mygradient.kill();
+    mycolor.kill();
+    myfilter.kill();
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Import and resurrect other objects'</span>);
+    canvas.importPacket(mygradientPacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        mygradient = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'mygradient resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+
+    canvas.importPacket(mycolorPacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        mycolor = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'mycolor resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Test Filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    canvas.importPacket(myfilterPacket)
+    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+        myfilter = res;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'myfilter resurrected'</span>);
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+};
+
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'TESTS BEFORE starting render cycle'</span>);
+performEntityTests();
+performOtherTests();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Create the Display cycle animation</p>
 
             </div>
             
@@ -1426,7 +1170,31 @@ canvas.importPacket(myshapePacket)
     <span class="hljs-attr">target</span>: canvas,
 });
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+<span class="hljs-built_in">console</span>.log(scrawl.library);
+
+<span class="hljs-keyword">let</span> fixEntitys = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Fix entitys to use other objects'</span>);
+    myblock.set({
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'myColorObject'</span>,
+    });
+
+    mypie.set({
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'blue-green'</span>,
+    });
+
+    myshape.set({
+        <span class="hljs-attr">filters</span>: <span class="hljs-string">'venetianBlinds'</span>,
+    })
+};
+
+setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'TESTS AFTER starting render cycle'</span>);
+    performEntityTests();
+    performOtherTests();
+
+    setTimeout(fixEntitys, <span class="hljs-number">1000</span>);
+}, <span class="hljs-number">5000</span>);</pre></div></div>
             
         </li>
         

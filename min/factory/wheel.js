@@ -24,8 +24,8 @@ let defaultAttributes = {
 radius: 5,
 startAngle: 0,
 endAngle: 360,
-includeCenter: false,
 clockwise: true,
+includeCenter: false,
 closed: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -39,6 +39,11 @@ dims[0] = dims[1] = val;
 this.dimensionsHelper();
 }
 };
+D.width = function (val) {
+let dims = this.dimensions;
+dims[0] = dims[1] = addStrings(dims[0], val);
+this.dimensionsHelper();
+};
 S.height = function (val) {
 if (val != null) {
 let dims = this.dimensions;
@@ -46,18 +51,13 @@ dims[0] = dims[1] = val;
 this.dimensionsHelper();
 }
 };
-S.dimensions = function (w, h) {
-this.setCoordinateHelper('dimensions', w, h);
-this.dimensionsHelper();
-};
-D.width = function (val) {
-let dims = this.dimensions;
-dims[0] = dims[1] = addStrings(dims[0], val);
-this.dimensionsHelper();
-};
 D.height = function (val) {
 let dims = this.dimensions;
 dims[0] = dims[1] = addStrings(dims[0], val);
+this.dimensionsHelper();
+};
+S.dimensions = function (w, h) {
+this.setCoordinateHelper('dimensions', w, h);
 this.dimensionsHelper();
 };
 D.dimensions = function (w, h) {
@@ -76,12 +76,12 @@ S.startAngle = function (val) {
 this.startAngle = ensureFloat(val, 4);
 this.dirtyPathObject = true;
 };
-S.endAngle = function (val) {
-this.endAngle = ensureFloat(val, 4);
-this.dirtyPathObject = true;
-};
 D.startAngle = function (val) {
 this.startAngle += ensureFloat(val, 4);
+this.dirtyPathObject = true;
+};
+S.endAngle = function (val) {
+this.endAngle = ensureFloat(val, 4);
 this.dirtyPathObject = true;
 };
 D.endAngle = function (val) {

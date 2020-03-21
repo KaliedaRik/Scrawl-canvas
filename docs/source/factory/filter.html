@@ -299,7 +299,39 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="filter-factory">Filter factory</h1>
+<p>Filters take in an image representation of an entity, Group of entitys or a Cell display and, by manipulating the image’s data, return an updated image which replaces those entitys or cell in the final output display.</p>
+<p>Scrawl-canvas defines its filters in <strong>Filter objects</strong>, detailed in this module. The functionality to make use of these objects is coded up in the <a href="../mixin/filter.html">filter mixin</a>, which is used by the Cell, Group and all entity factories.</p>
+<p>Scrawl-canvas uses a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">web worker</a> to generate filter outputs - defined in the <a href="../worker/filter.html">filter web worker</a>. It supports a number of common filter algorithms:</p>
+<ul>
+<li><code>grayscale</code> - desaturates the image</li>
+<li><code>sepia</code> - desaturates the image, then ‘antiques’ it by adding back some yellow tone</li>
+<li><code>invert</code> - turns white into black, and similar across the spectrum</li>
+<li><code>red</code> - suppresses the image’s green and blue channels</li>
+<li><code>green</code> - suppresses the image’s red and blue channels</li>
+<li><code>blue</code> - suppresses the image’s red and green channels</li>
+<li><code>notred</code> - suppresses the image’s red channel</li>
+<li><code>notgreen</code> - suppresses the image’s green channel</li>
+<li><code>notblue</code> - suppresses the image’s blue channel</li>
+<li><code>cyan</code> - averages the image’s blue and green channels, and suppresses the red channel</li>
+<li><code>magenta</code> - averages the image’s red and blue channels, and suppresses the green channel</li>
+<li><code>yellow</code> - averages the image’s red and green channels, and suppresses the blue channel</li>
+<li><code>brightness</code> - multiplies the red, green and blue channel values by a value supplied in the <code>filter.level</code> attribute</li>
+<li><code>saturation</code> - multiplies the red, green and blue channel values by a value supplied in the <code>filter.level</code> attribute, then normalizes the result</li>
+<li><code>threshold</code> - desaturates each pixel then tests it against <code>filter.level</code> value; those pixels below the level are set to the <code>filter.lowRGB</code> values while the rest are set to the <code>filter.highRGB</code> values</li>
+<li><code>channels</code> - multiply each pixel’s channel values by the values set in the <code>filter.RGB</code> attributes</li>
+<li><code>channelstep</code> - divide, floor, and then multiply each pixel’s channel values by the values set in the <code>filter.RGB</code> attributes</li>
+<li><code>tint</code> - a more fine-grained form of the channels filter</li>
+<li><code>chroma</code> - (the green-screen effect) - will evaluate each pixel against a range array; pixels that fall within the range are set to transparent</li>
+<li><code>pixelate</code> - create tiles - whose dimensions and positions are determined by values set in the filter <code>tileWidth</code>, <code>tileHeight</code>, <code>offsetX</code> and <code>offsetY</code> attributes - across the image and then average the pixels in each tile to a single color</li>
+<li><code>blur</code> - creates a blurred image. Note: can be slow across larger images! The degree of the blur - which does not follow conventional algorithms such as gaussian - is determined by the filter attribute values for <code>radius</code> (number), <code>passes</code> (number) and <code>shrink</code> (boolean)</li>
+<li><code>matrix</code> - apply a 3x3 matrix transform to each of the image’s pixels</li>
+<li><code>matrix5</code> - apply a 5x5 matrix transform to each of the image’s pixels</li>
+</ul>
+<p>Scrawl-canvas can also use <strong>user-defined filters</strong>.</p>
+<p>Filters use the <strong>base</strong> mixin, thus they come equipped with packet functionality, alongside clone and kill functions.</p>
+<p>Note that <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter">CSS-mediated filters</a> - <code>url()</code>, <code>blur()</code>, <code>brightness()</code>, <code>contrast()</code>, <code>drop-shadow()</code>, <code>grayscale()</code>, <code>hue-rotate()</code>, <code>invert()</code>, <code>opacity()</code>, <code>saturate()</code>, <code>sepia()</code> - can also be applied to DOM elements wrapped into Scrawl-canvas objects (Stack, Element, Canvas) in the normal way. Browsers will apply CSS filters as the final operation in their paint routines.</p>
+
             </div>
             
         </li>
@@ -311,7 +343,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="filter-factory">Filter factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-007.html">Canvas-007</a> - Apply filters at the entity, group and cell level</li>
+<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets; save and load a range of different entitys</li>
+</ul>
 
             </div>
             
@@ -324,72 +360,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -401,13 +372,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="filter-constructor">Filter constructor</h2>
+              <h4 id="filter-constructor">Filter constructor</h4>
 
             </div>
             
@@ -423,13 +394,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="filter-object-prototype-setup">Filter object prototype setup</h2>
+              <h4 id="filter-prototype">Filter prototype</h4>
 
             </div>
             
@@ -442,13 +413,16 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+</ul>
 
             </div>
             
@@ -457,13 +431,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="filter-attributes">Filter attributes</h4>
 
             </div>
             
@@ -472,11 +446,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>All filters need to set out their <strong>method</strong>. For preset methods, a method string (eg ‘grayscale’, ‘sepia’) is sufficient. Bespoke methods require a function</p>
 
@@ -487,54 +461,30 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>The following methods require no further attributes: </p>
-
+<pre><code><span class="hljs-string">`grayscale`</span>, <span class="hljs-string">`sepia`</span>, <span class="hljs-string">`invert`</span>
+<span class="hljs-string">`red`</span>, <span class="hljs-string">`green`</span>, <span class="hljs-string">`blue`</span>
+<span class="hljs-string">`notred`</span>, <span class="hljs-string">`notgreen`</span>, <span class="hljs-string">`notblue`</span>
+<span class="hljs-string">`cyan`</span>, <span class="hljs-string">`magenta`</span>, <span class="hljs-string">`yellow`</span></code></pre>
             </div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <pre><code>grayscale, sepia, invert
-red, green, blue
-notred, notgreen, notblue
-cyan, magenta, yellow</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>The following methods require the <strong>level</strong> attribute:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <pre><code>brightness, saturation, threshold</code></pre>
+<pre><code><span class="hljs-string">`brightness`</span>, <span class="hljs-string">`saturation`</span>, <span class="hljs-string">`threshold`</span></code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>    level: <span class="hljs-number">0</span>,</pre></div></div>
@@ -542,13 +492,13 @@ cyan, magenta, yellow</code></pre>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>The threshhold filter will default to setting (desaturated) pixels below a given level (0 - 255) to black, and those above the level to white. These colours can be changed by using the <strong>low</strong> and <strong>high</strong> channel attributes</p>
+              <p>The <code>threshhold</code> filter will default to setting (desaturated) pixels below a given level (0 - 255) to black, and those above the level to white. These colours can be changed by using the <strong>low</strong> and <strong>high</strong> channel attributes</p>
 
             </div>
             
@@ -562,13 +512,13 @@ cyan, magenta, yellow</code></pre>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>The channels and channelstep methods make use of the <strong>red</strong>, <strong>green</strong> and <strong>blue</strong> attributes</p>
+              <p>The <code>channels</code> and <code>channelstep</code> methods make use of the <strong>red</strong>, <strong>green</strong> and <strong>blue</strong> attributes</p>
 
             </div>
             
@@ -579,13 +529,13 @@ cyan, magenta, yellow</code></pre>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>The <strong>tint</strong> method uses nine attributes</p>
+              <p>The <code>tint</code> method uses nine attributes</p>
 
             </div>
             
@@ -602,13 +552,13 @@ cyan, magenta, yellow</code></pre>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>The <strong>pixelate</strong> method requires tile dimensions and, optionally, offset coordinates which should not exceed the tile dimensions</p>
+              <p>The <code>pixelate</code> method requires tile dimensions and, optionally, offset coordinates which should not exceed the tile dimensions</p>
 
             </div>
             
@@ -620,26 +570,14 @@ cyan, magenta, yellow</code></pre>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>The <strong>blur</strong> method uses the following attributes:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <ul>
+              <p>The <code>blur</code> method uses the following attributes:</p>
+<ul>
 <li>the <strong>radius</strong> of the blur effect, in pixels</li>
 <li>the <strong>passes</strong> attribute (1+) determines how many times the blur filter will iterate</li>
 <li>the <strong>shrinkingRadius</strong> flag reduces the radius by approx 70% on each successive pass</li>
@@ -656,26 +594,14 @@ cyan, magenta, yellow</code></pre>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>The <strong>matrix</strong> method requires a weights attribute - an array of 9 numbers in the following format:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <pre><code>weights: [
+              <p>The <code>matrix</code> method requires a weights attribute - an array of 9 numbers in the following format:</p>
+<pre><code>weights: [
     topLeftWeight,
     topCenterWeight,
     topRightWeight,
@@ -685,45 +611,21 @@ cyan, magenta, yellow</code></pre>
     bottomLeftWeight,
     bottomCenterWeight,
     bottomRightWeight,
-]</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>… where the top row is the row above the home pixel, etc</p>
+]</code></pre><p>… where the top row is the row above the home pixel, etc</p>
+<p>The method also makes use of the <strong>includeAlpha</strong> attribute.</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-27">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>The method also makes use of the <strong>includeAlpha</strong> attribute.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>The <strong>matrix5</strong> method is the same as the matrix method except that its weights array should contain 25 elements, to cover all the positions (from top-left corner) in a 5x5 grid</p>
+              <p>The <code>matrix5</code> method is the same as the matrix method except that its weights array should contain 25 elements, to cover all the positions (from top-left corner) in a 5x5 grid</p>
 
             </div>
             
@@ -732,51 +634,15 @@ cyan, magenta, yellow</code></pre>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>The <strong>ranges</strong> attribute - used by the <strong>chroma</strong> method - needs to be an array of arrays with the following format:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
-              </div>
-              <pre><code>[[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p>… multiple ranges can be defined - for instance to key out the lightest and darkest hues:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <pre><code>ranges: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>], [<span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>]]</code></pre>
+              <p>The <strong>ranges</strong> attribute - used by the <code>chroma</code> method - needs to be an array of arrays with the following format:</p>
+<pre><code>[[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]</code></pre><p>… multiple ranges can be defined - for instance to key out the lightest and darkest hues:</p>
+<pre><code>ranges: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>], [<span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>]]</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>    ranges: <span class="hljs-literal">null</span>,</pre></div></div>
@@ -784,13 +650,13 @@ cyan, magenta, yellow</code></pre>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>The user-defined filter should be set as a a string of the function’s contents (the bits between the { curly braces }). The function can take no arguments, and can only use variables defined above (or the udn attributes below). The function can use ‘self’ variables supplied by the web worker - see the worker/filter.js for more information</p>
+              <p>The <code>user-defined</code> filter should be set as a String value of the function’s contents (the bits between the { curly braces }) on the <strong>userDefined</strong> attribute. The function can take no arguments, and can only use variables defined above (or the <strong>udVariableN</strong> attributes below). The function can also use <strong>self</strong> variables supplied by the web worker - see the worker/filter.js for more information</p>
 
             </div>
             
@@ -811,27 +677,42 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
-<p>No additional packet management required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-35">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h2 id="kill-functionality">Kill functionality</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>Overwrites ./mixin/base.js</p>
 
             </div>
             
@@ -842,11 +723,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Remove filter from all entity filters attribute</p>
 
@@ -861,11 +742,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Remove filter from all group filters attribute</p>
 
@@ -880,11 +761,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Remove filter from all cell filters attribute</p>
 
@@ -899,11 +780,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Remove filter from the Scrawl-canvas library</p>
 
@@ -917,58 +798,99 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
-<p>None defined</p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>No additional functionality required</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-41">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <h2 id="filter-webworker-pool">Filter webworker pool</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
+<p>No additional prototype functions defined</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-42">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="filter-webworker-pool">Filter webworker pool</h4>
+<p>Because starting a web worker is an expensive operation, and a number of different filters may be required to render displays across a number of different &lt;canvas&gt; elements in a web page, Scrawl-canvas operates a pool of web workers to perform work as-and-when required.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> filterPool = [];
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> filterPool = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p><code>Exported function</code> <strong>requestFilterWorker</strong></p>
 
-<span class="hljs-keyword">const</span> requestFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> requestFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">if</span> (!filterPool.length) filterPool.push(buildFilterWorker());
 
     <span class="hljs-keyword">return</span> filterPool.shift();
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p><code>Exported function</code> <strong>releaseFilterWorker</strong> - to avoid memory leaks, <strong><em>all requested filter workers MUST be released back to the filter pool as soon as their work has completed</em></strong>.</p>
 
-<span class="hljs-keyword">const</span> releaseFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
 
     filterPool.push(f);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p><strong>buildFilterWorker</strong> - create a new filter web worker</p>
 
-<span class="hljs-keyword">const</span> buildFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">let</span> path = <span class="hljs-keyword">import</span>.meta.url.slice(<span class="hljs-number">0</span>, -(<span class="hljs-string">'factory/filter.js'</span>.length))
 
@@ -979,15 +901,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>Sept 2019 - chrome does not yet support module
-return new Worker(filterUrl, {type: ‘module’});</p>
-
+              <p>Sept 2019 - chrome does not yet support module workers</p>
+<pre><code><span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Worker(filterUrl, {<span class="hljs-attr">type</span>: <span class="hljs-string">'module'</span>});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Worker(filterUrl);
@@ -996,13 +917,13 @@ return new Worker(filterUrl, {type: ‘module’});</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>Exported function</code> <strong>actionFilterWorker</strong> - send a task to the filter web worker, and retrieve the resulting image. This function returns a Promise.</p>
 
             </div>
             
@@ -1029,14 +950,60 @@ return new Worker(filterUrl, {type: ‘module’});</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code>scrawl.makeFilter({
 
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-grayscale-filter'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'grayscale'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-sepia-filter'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'sepia'</span>,
+});
+
+scrawl.makeFilter({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-chroma-filter'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'chroma'</span>,
+    <span class="hljs-attr">ranges</span>: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>], [<span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>]],
+});
+
+scrawl.makeFilter({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'venetian-blinds-filter'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'userDefined'</span>,
+
+    <span class="hljs-attr">level</span>: <span class="hljs-number">9</span>,
+
+    <span class="hljs-attr">userDefined</span>: <span class="hljs-string">`
+        let i, iz, j, jz,
+            level = filter.level || 6,
+            halfLevel = level / 2,
+            yw, transparent, pos;
+
+        for (i = localY, iz = localY + localHeight; i &lt; iz; i++) {
+
+            transparent = (i % level &gt; halfLevel) ? true : false;
+
+            if (transparent) {
+
+                yw = (i * iWidth) + 3;
+
+                for (j = localX, jz = localX + localWidth; j &lt; jz; j ++) {
+
+                    pos = yw + (j * 4);
+                    data[pos] = 0;
+                }
+            }
+        }`</span>,
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeFilter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
@@ -1044,9 +1011,22 @@ return new Worker(filterUrl, {type: ‘module’});</p>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Filter(items);
 };
 
-constructors.Filter = Filter;
+constructors.Filter = Filter;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeFilter,
     requestFilterWorker,
     releaseFilterWorker,

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>canvas-007.js</title>
+  <title>Demo Canvas 007</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>canvas-007.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-canvas-007">Demo Canvas 007</h2>
+              <h1 id="demo-canvas-007">Demo Canvas 007</h1>
+<p>Apply filters at the entity, group and cell level</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-007.html">Apply filters at the entity, group and cell level</a></p>
+              <p><a href="../../demo/canvas-007.html">Run code</a></p>
 
             </div>
             
@@ -308,7 +293,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
@@ -331,34 +316,31 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Create gradients</p>
+              <p>Create gradients - clone test</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeGradient({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myGrad = scrawl.makeGradient({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'linear1'</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">'100%'</span>,
 })
 .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">'pink'</span>)
 .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">'darkgreen'</span>);
 
-scrawl.makeGradient({
+myGrad.clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'linear2'</span>,
-    <span class="hljs-attr">endX</span>: <span class="hljs-string">'100%'</span>,
 })
 .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">'darkblue'</span>)
 .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">'white'</span>);
 
-scrawl.makeGradient({
+myGrad.clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'linear3'</span>,
-    <span class="hljs-attr">endX</span>: <span class="hljs-string">'100%'</span>,
 })
 .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">'yellow'</span>)
 .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">'purple'</span>);
 
-scrawl.makeGradient({
+myGrad.clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'linear4'</span>,
-    <span class="hljs-attr">endX</span>: <span class="hljs-string">'100%'</span>,
 })
 .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">'black'</span>)
 .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">'coral'</span>);</pre></div></div>
@@ -455,7 +437,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Grayscale filter</p>
+              <p><strong>Grayscale</strong> filter</p>
 
             </div>
             
@@ -472,7 +454,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Sepia filter</p>
+              <p><strong>Sepia</strong> filter</p>
 
             </div>
             
@@ -489,7 +471,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Invert filter</p>
+              <p><strong>Invert</strong> filter</p>
 
             </div>
             
@@ -506,7 +488,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Red filter</p>
+              <p><strong>Red</strong> filter</p>
 
             </div>
             
@@ -523,7 +505,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Green filter</p>
+              <p><strong>Green</strong> filter</p>
 
             </div>
             
@@ -540,7 +522,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Blue filter</p>
+              <p><strong>Blue</strong> filter</p>
 
             </div>
             
@@ -557,7 +539,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Notred filter</p>
+              <p><strong>Notred</strong> filter</p>
 
             </div>
             
@@ -574,7 +556,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Notgreen filter</p>
+              <p><strong>Notgreen</strong> filter</p>
 
             </div>
             
@@ -591,7 +573,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Notblue filter</p>
+              <p><strong>Notblue</strong> filter</p>
 
             </div>
             
@@ -608,7 +590,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Cyan filter</p>
+              <p><strong>Cyan</strong> filter</p>
 
             </div>
             
@@ -625,7 +607,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Magenta filter</p>
+              <p><strong>Magenta</strong> filter</p>
 
             </div>
             
@@ -642,7 +624,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Yellow filter</p>
+              <p><strong>Yellow</strong> filter</p>
 
             </div>
             
@@ -660,7 +642,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Chroma (green screen) filter</p>
+              <p><strong>Chroma</strong> (green screen) filter</p>
 
             </div>
             
@@ -679,7 +661,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>Brightness filter</p>
+              <p><strong>Brightness</strong> filter</p>
 
             </div>
             
@@ -697,7 +679,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>Saturation filter</p>
+              <p><strong>Saturation</strong> filter</p>
 
             </div>
             
@@ -715,7 +697,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>Threshhold filter</p>
+              <p><strong>Threshhold</strong> filter</p>
 
             </div>
             
@@ -740,7 +722,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>Channels filter</p>
+              <p><strong>Channels</strong> filter</p>
 
             </div>
             
@@ -760,7 +742,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>Channelstep filter</p>
+              <p><strong>Channelstep</strong> filter</p>
 
             </div>
             
@@ -781,7 +763,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>Tint filter</p>
+              <p><strong>Tint</strong> filter</p>
 
             </div>
             
@@ -808,7 +790,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>Pixellate filter</p>
+              <p><strong>Pixellate</strong> filter</p>
 
             </div>
             
@@ -830,7 +812,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Blur filter</p>
+              <p><strong>Blur</strong> filter</p>
 
             </div>
             
@@ -852,7 +834,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>Matrix filter</p>
+              <p><strong>Matrix</strong> filter</p>
 
             </div>
             
@@ -870,7 +852,7 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Matrix5 filter</p>
+              <p><strong>Matrix5</strong> filter</p>
 
             </div>
             
@@ -893,7 +875,7 @@ scrawl.makeGradient({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myUDF = scrawl.makeFilter({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'totalRed'</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">'userDefined'</span>,
 
@@ -913,14 +895,12 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>Second user-defined filter</p>
+              <p>Second user-defined filter (cloned)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>myUDF.clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'venetianBlinds'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'userDefined'</span>,
-
     <span class="hljs-attr">level</span>: <span class="hljs-number">9</span>,
 
     <span class="hljs-attr">userDefined</span>: <span class="hljs-string">`
@@ -955,7 +935,8 @@ scrawl.makeGradient({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
@@ -971,8 +952,7 @@ scrawl.makeGradient({
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();</pre></div></div>
             
@@ -985,7 +965,7 @@ Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLen
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>Create the Animation loop which will run the Display cycle</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
@@ -1005,7 +985,8 @@ Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLen
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>Event listeners</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Event listeners function</p>
 
             </div>
             
@@ -1083,9 +1064,7 @@ Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLen
             }
         }
     };
-}();
-
-scrawl.addNativeListener([<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>], events, <span class="hljs-string">'.controlItem'</span>);</pre></div></div>
+}();</pre></div></div>
             
         </li>
         
@@ -1096,12 +1075,94 @@ scrawl.addNativeListener([<span class="hljs-string">'input'</span>, <span class=
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>Set the DOM input values</p>
+              <p>Event listeners</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener([<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>], events, <span class="hljs-string">'.controlItem'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Set DOM form initial input values</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#target'</span>).value = <span class="hljs-string">''</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#filter'</span>).value = <span class="hljs-string">''</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Gradient packet test</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(myGrad.saveAsPacket());
+<span class="hljs-built_in">console</span>.log(myGrad.palette.saveAsPacket());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>RESULT:</p>
+<pre><code>[
+    <span class="hljs-string">"linear1"</span>,
+    <span class="hljs-string">"Gradient"</span>,
+    <span class="hljs-string">"styles"</span>,
+    {
+        <span class="hljs-string">"name"</span>:<span class="hljs-string">"linear1"</span>,
+        <span class="hljs-string">"start"</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
+        <span class="hljs-string">"end"</span>:[<span class="hljs-string">"100%"</span>,<span class="hljs-number">0</span>],
+        <span class="hljs-string">"palette"</span>:<span class="hljs-string">"linear1_palette"</span>
+    }
+]
+
+[
+    <span class="hljs-string">"linear1_palette"</span>,
+    <span class="hljs-string">"Palette"</span>,
+    <span class="hljs-string">"palette"</span>,
+    {
+        <span class="hljs-string">"name"</span>:<span class="hljs-string">"linear1_palette"</span>,
+        <span class="hljs-string">"colors"</span>:{
+            <span class="hljs-string">"0 "</span>:[<span class="hljs-number">255</span>,<span class="hljs-number">192</span>,<span class="hljs-number">203</span>,<span class="hljs-number">1</span>],
+            <span class="hljs-string">"999 "</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">100</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]
+        }
+    }
+]</code></pre>
+            </div>
             
         </li>
         

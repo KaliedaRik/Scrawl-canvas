@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Radial Gradient factory</title>
+  <title>RadialGradient factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -299,7 +299,19 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="radialgradient-factory">RadialGradient factory</h1>
+<p>Scrawl-canvas RadialGradient objects implement the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient">createRadialGradient</a> method. The resulting <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> object can be used by any Scrawl-canvas entity as its <code>fillStyle</code> or <code>strokeStyle</code>.</p>
+<ul>
+<li>Most gradient-related functionality has been coded up in the <strong>styles mixin</strong>, and is documented there.</li>
+<li>RadialGradients fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.</li>
+<li>RadialGradients can be animated in a variety of ways; the can act as target objects for Scrawl-canvas Tweens.</li>
+</ul>
+<p>RadialGradients can be applied to an entity in two different ways, depending on the entity’s <code>lockFillStyleToEntity</code> and <code>lockStrokeStyleToEntity</code> attribute flags:</p>
+<ul>
+<li><strong>Cell-locked</strong> RadialGradients will cover the entire Cell; an entity moved from one part of the display to another will show different parts of the gradient</li>
+<li><strong>Entity-locked</strong> RadialGradients display their entire color range on the entity, move with the entity and even rotate with the entity.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +323,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="radial-gradient-factory">Radial Gradient factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-004.html">Canvas-004</a> - Radial gradients</li>
+<li><a href="../../demo/canvas-005.html">Canvas-005</a> - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween</li>
+</ul>
 
             </div>
             
@@ -324,72 +340,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -402,13 +353,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="radial-gradient-constructor">Radial Gradient constructor</h2>
+              <h4 id="radialgradient-constructor">RadialGradient constructor</h4>
 
             </div>
             
@@ -421,13 +372,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="radial-gradient-object-prototype-setup">Radial Gradient object prototype setup</h2>
+              <h4 id="radialgradient-prototype">RadialGradient prototype</h4>
 
             </div>
             
@@ -441,13 +392,17 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/styles.html">styles</a></li>
+</ul>
 
             </div>
             
@@ -457,13 +412,13 @@ P = stylesMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="radialgradient-attributes">RadialGradient attributes</h4>
 
             </div>
             
@@ -472,13 +427,17 @@ P = stylesMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>RadialGradients calculate their gradients spanning between two circles, whose sizes are determined by the <code>startRadius</code> and <code>endRadius</code> attributes. Values can be:</p>
+<ul>
+<li><strong>Absolute</strong> - Numbers, measured in pixels.</li>
+<li><strong>Relative</strong> - String% - as a percentage of the containing Cell’s <code>width</code></li>
+</ul>
 
             </div>
             
@@ -490,13 +449,48 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <p>In addition to the attributes defined in the <strong>base</strong> and <strong>styles</strong> mixins, Gradients also pass through Palette attributes to their Palette object. </p>
+<p>Attributes from <strong>base</strong> mixin:</p>
+<ul>
+<li><code>name</code></li>
+</ul>
+<p>Attributes from <strong>styles</strong> mixin:</p>
+<ul>
+<li><code>start</code></li>
+<li><code>startX</code></li>
+<li><code>startY</code></li>
+<li><code>end</code></li>
+<li><code>endX</code></li>
+<li><code>endY</code></li>
+<li><code>palette</code></li>
+<li><code>paletteStart</code></li>
+<li><code>paletteEnd</code></li>
+<li><code>cyclePalette</code></li>
+</ul>
+<p>Attributes from the <strong>palette</strong> factory:</p>
+<ul>
+<li><code>colors</code> </li>
+<li><code>cyclic</code></li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
@@ -505,13 +499,41 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -522,13 +544,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>The getter functions <code>myradialgradient.get(&#39;startRadius&#39;)</code> and <code>myradialgradient.get(&#39;endRadius&#39;)</code> return the current radius values as Numbers, measuring pixels</p>
 
             </div>
             
@@ -539,9 +561,22 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 G.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentEndRadius;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Both <code>startRadius</code> and <code>endRadius</code> attributes can be set and deltaSet</p>
 
-S.startRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.startRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.startRadius = item;
     <span class="hljs-keyword">this</span>.dirtyStyle = <span class="hljs-literal">true</span>;
@@ -565,26 +600,26 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanRadius</code> - internal function to calculate the current radius values (in px) of the start and end radii</p>
 
             </div>
             
@@ -597,13 +632,13 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>buildStyle</code> - internal function: creates the radial gradient on the Cell’s CanvasRenderingContext2D engine, and then adds the color stops to it.</p>
 
             </div>
             
@@ -626,13 +661,13 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>updateGradientArgs</code> - internal function</p>
 
             </div>
             
@@ -652,11 +687,11 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>check to correct situation where coordinates represent a ‘0 x 0’ box - which will cause errors in some browsers</p>
 
@@ -671,23 +706,62 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code><span class="hljs-keyword">let</span> graddy = scrawl.makeRadialGradient({
 
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'mygradient'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'50%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'50%'</span>,
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">'50%'</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">'50%'</span>,
+
+    <span class="hljs-attr">endRadius</span>: <span class="hljs-number">300</span>,
+});
+
+scrawl.makeBlock({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myblock'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-string">'90%'</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">'90%'</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'5%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'5%'</span>,
+
+    <span class="hljs-attr">fillStyle</span>: graddy,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'coral'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeRadialGradient = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> RadialGradient(items);
 };
 
-constructors.RadialGradient = RadialGradient;
+constructors.RadialGradient = RadialGradient;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeRadialGradient,
 };</pre></div></div>
             

@@ -1,12 +1,12 @@
+// REDO TO MATCH NEW LAYOUT
 
 // # Anchor mixin
-
 // This mixin adds functionality to artefacts, which allows them to act as an anchor - a link - to external URLs (eg web pages). 
-
+//
 // In Scrawl-canvas, an anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in the factory file (./factory/anchor.js). This mixin makes it easy for the user to gain access to the anchor object via the artefact object.
-
+//
 // ### Examples of using anchors:
-
+//
 //     // get a handle on the canvas where the block/link will be defined 
 //     // (in this case a canvas with id="mycanvas")
 //     let canvas = scrawl.library.artefact.mycanvas;

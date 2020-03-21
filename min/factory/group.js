@@ -24,12 +24,9 @@ P = baseMix(P);
 P = filterMix(P);
 let defaultAttributes = {
 artefacts: null,
-artefactBuckets: null,
-host: '',
 order: 0,
 visibility: true,
-batchResort: true,
-regionRadius: 0
+regionRadius: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['artefactBuckets', 'batchResort']);
@@ -334,28 +331,29 @@ else if (item.name) removeItem(this.artefacts, item.name);
 this.batchResort = true;
 return this;
 };
-P.clearArtefacts = function () {
-this.artefacts.length = 0;
-this.artefactBuckets.length = 0;
+P.moveArtefactsIntoGroup = function (...args) {
+let temp, art, grp;
+args.forEach(item => {
+if (item) {
+art = (item.substring) ? artefact[item] : item;
+if (art && art.isArtefact) {
+if (art.group) temp = art.group;
+else if (art.host) temp = group[art.host];
+else temp = false;
+}
+if (temp) {
+temp.removeArtefacts(item);
+temp.batchResort = true;
+}
+pushUnique(this.artefacts, item);
+}
+}, this);
 this.batchResort = true;
 return this;
 };
-P.moveArtefactsIntoGroup = function (...args) {
-args.forEach(item => {
-if (item) {
-let temp;
-if (item.substring) {
-temp = group[artefact[item].group];
-if (temp) temp.removeArtefacts(item);
-pushUnique(this.artefacts, item);
-}
-else if (item.name) {
-temp = group[item.group];
-if (temp) temp.removeArtefacts(item.name);
-pushUnique(this.artefacts, item.name);
-}
-}
-}, this);
+P.clearArtefacts = function () {
+this.artefacts.length = 0;
+this.artefactBuckets.length = 0;
 this.batchResort = true;
 return this;
 };

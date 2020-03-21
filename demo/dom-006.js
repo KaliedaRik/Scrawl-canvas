@@ -1,30 +1,30 @@
-// ## Demo DOM 006
+// # Demo DOM 006
+// Tween actions on a DOM element; tracking tween and ticker activity (analytics)
 
-// [Tween actions on a DOM element; tracking tween and ticker activity (analytics)](../../demo/dom-006.html)
+// [Run code](../../demo/dom-006.html)
 import scrawl from '../source/scrawl.js'
 
-// Google Analytics code - loaded in the normal way through markup in the dom-006.html file (lines 11-21)
-
-// Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
-
-// We can then incorporate the tracker's functionality in our various hook functions defined further down in this script
+// #### Google Analytics
+// We load GA code in the normal way through markup in the dom-006.html file (lines 11-21), and get a handle on the __ga__ object here
 let ga = window[window['GoogleAnalyticsObject'] || 'ga'],
     myTracker;
 
+// Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
 ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 
+// We can then incorporate the tracker's functionality in our various hook functions defined further down in this script
 ga(function() {
     myTracker = ga.getByName('demoCanvasTracker');
     myTracker.set('transport', 'beacon');
     myTracker.set('campaignKeyword', 'Scrawl-canvas demo');
 });
 
-
-// Scene setup
+// #### Scene setup
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement;
 
+// Grab a handle to the 'boat' element, then clone it
 element.set({
     startX: 'center',
     startY: 'center',
@@ -64,19 +64,7 @@ let modelTicker = scrawl.makeTicker({
     duration: '12s'
 });
 
-console.log(modelTicker.saveAsPacket());
-//    RESULT:
-//    [
-//        "modelTicker",
-//        "Ticker",
-//        "animationtickers",
-//        {
-//            "name":"modelTicker",
-//            "duration":"12s",
-//            "cycles":0
-//        }
-//    ]
-
+// Test Ticker cloning
 let ticker = modelTicker.clone({
     name: 'myTicker',
 });
@@ -119,27 +107,6 @@ scrawl.makeTween({
         }
     ]
 });
-
-console.log(scrawl.library.tween.mySecondClonedTween.saveAsPacket())
-//     RESULTS:
-//     [
-//         "mySecondClonedTween",
-//         "Tween",
-//         "tween",
-//         {
-//             "name":"mySecondClonedTween",
-//             "ticker":"mySecondClonedTween_ticker",
-//             "action":"~~~",
-//             "duration":"10s",
-//             "commenceAction":"~~~",
-//             "completeAction":"~~~",
-//             "targets":["mythirdelement"],
-//             "definitions":[
-//                 {"attribute":"roll","start":-40,"end":320}
-//             ]
-//         }
-//     ]
-
 
 // Build timeline actions
 let red = { css: { backgroundColor: 'red' }},
@@ -209,8 +176,8 @@ scrawl.makeAction({
 });
 
 // Add some Google Analytics progress actions to one of the tickers
-
-// ISSUE: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. I don't consider this to be a show stopper.
+//
+// TODO: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. I don't consider this to be a show stopper.
 scrawl.makeAction({
 
     ticker: 'myTicker',
@@ -268,10 +235,10 @@ smallboat.set({
     },
 });
 
-// Start the animation
+// #### Scene animation
+// Start the tween animation
 ticker.run();
 smallboat.run();
-
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
@@ -290,8 +257,7 @@ let report = function () {
     };
 }();
 
-
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -299,8 +265,8 @@ scrawl.makeRender({
     afterShow: report,
 });
 
-
-// The event listener will reverse direction on the larger boats, while halting/restarting the smallest boat
+// #### User interaction
+// Event listener will reverse direction on the larger boats, while halting/restarting the smallest boat
 let changeDirection = (e) => {
 
     e.preventDefault();
@@ -311,7 +277,43 @@ let changeDirection = (e) => {
     if (smallboat.isRunning()) smallboat.halt();
     else smallboat.resume();
 };
-
 scrawl.addNativeListener('click', changeDirection, stack.domElement);
 
+// #### Development and testing
 console.log(scrawl.library);
+
+// Test Tween object packet
+console.log(scrawl.library.tween.mySecondClonedTween.saveAsPacket())
+//     RESULT:
+//     [
+//         "mySecondClonedTween",
+//         "Tween",
+//         "tween",
+//         {
+//             "name":"mySecondClonedTween",
+//             "ticker":"mySecondClonedTween_ticker",
+//             "action":"~~~",
+//             "duration":"10s",
+//             "commenceAction":"~~~",
+//             "completeAction":"~~~",
+//             "targets":["mythirdelement"],
+//             "definitions":[
+//                 {"attribute":"roll","start":-40,"end":320}
+//             ]
+//         }
+//     ]
+
+// Test Ticker object packet
+console.log(modelTicker.saveAsPacket());
+//     RESULT:
+//     [
+//         "modelTicker",
+//         "Ticker",
+//         "animationtickers",
+//         {
+//             "name":"modelTicker",
+//             "duration":"12s",
+//             "cycles":0
+//         }
+//     ]
+

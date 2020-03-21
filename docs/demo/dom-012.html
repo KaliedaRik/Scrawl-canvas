@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>dom-012.js</title>
+  <title>Demo DOM 012</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>dom-012.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-dom-012">Demo DOM 012</h2>
+              <h1 id="demo-dom-012">Demo DOM 012</h1>
+<p>Add and remove (kill) Scrawl-canvas canvas elements programmatically</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/dom-012.html">Add and remove (demolish) Scrawl-canvas canvas elements programmatically</a></p>
+              <p><a href="../../demo/dom-012.html">Run code</a></p>
 
             </div>
             
@@ -308,17 +293,29 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>let library = scrawl.library,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> library = scrawl.library,
     artefact = library.artefact,
     canvasnames = library.canvasnames,
-    mystack = artefact.mystack;
+    mystack = artefact.mystack;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
 
-
-let report = function () {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>let report = function () {
 
     let testTicker = Date.now(),
         testTime, testNow, text,
@@ -355,13 +352,14 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Animation loop - can’t use .makeRender() in this case because there’s no initial stack/canvas arterfact to render. Using .makeAnimation() and .render() - which use promises - instead</p>
+              <p>Animation loop </p>
+<p>We can’t use <code>.makeRender()</code> in this case because there’s no initial stack/canvas arterfact to render. Using <code>.makeAnimation()</code> and <code>.render()</code> - which use promises - instead</p>
 
             </div>
             
@@ -387,13 +385,13 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>User interaction - buttons listener</p>
+              <h4 id="user-interaction">User interaction</h4>
 
             </div>
             
@@ -402,11 +400,11 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>the control buttons are never part of a Scrawl-canvas stack</p>
 
@@ -427,23 +425,66 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Using a color factory object to generate random colors within a restricted palette</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> colorFactory = scrawl.makeColor({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">'myColorObject'</span>,
+            <div class="content"><div class='highlight'><pre>    scrawl.makeColor({
+        <span class="hljs-attr">name</span>: <span class="hljs-string">'templateColor'</span>,
         <span class="hljs-attr">rMax</span>: <span class="hljs-number">200</span>,
         <span class="hljs-attr">gMax</span>: <span class="hljs-number">50</span>,
         <span class="hljs-attr">bMax</span>: <span class="hljs-number">10</span>,
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Test color packet and clone functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> colorFactory = scrawl.library.styles.templateColor.clone({
+        <span class="hljs-attr">name</span>: <span class="hljs-string">'myColorObject'</span>,
     });
 
+    <span class="hljs-built_in">console</span>.log(colorFactory.saveAsPacket());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <pre><code>RESULTS:
+[
+    <span class="hljs-string">"myColorObject"</span>,
+    <span class="hljs-string">"Color"</span>,
+    <span class="hljs-string">"styles"</span>,
+    {
+        <span class="hljs-string">"name"</span>:<span class="hljs-string">"myColorObject"</span>,
+        <span class="hljs-string">"rMax"</span>:<span class="hljs-number">200</span>,
+        <span class="hljs-string">"gMax"</span>:<span class="hljs-number">50</span>,
+        <span class="hljs-string">"bMax"</span>:<span class="hljs-number">10</span>
+    }
+]</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
     <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
 
         e.preventDefault();
@@ -470,7 +511,7 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
                 b1.disabled = <span class="hljs-string">''</span>;
                 b2.disabled = <span class="hljs-string">'disabled'</span>;
 
-                <span class="hljs-keyword">if</span> (stackCanvas) stackCanvas.demolish();
+                <span class="hljs-keyword">if</span> (stackCanvas) stackCanvas.kill();
 
                 <span class="hljs-keyword">break</span>;
 
@@ -480,7 +521,7 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
                 b2.disabled = <span class="hljs-string">'disabled'</span>;
                 b3.disabled = <span class="hljs-string">'disabled'</span>;
 
-                mystack.demolish(<span class="hljs-literal">true</span>);
+                mystack.kill();
                 mystack = <span class="hljs-literal">false</span>;
 
                 <span class="hljs-keyword">break</span>;

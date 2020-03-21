@@ -1,18 +1,27 @@
-
 // # Group factory
+// Scrawl-canvas uses Group objects to gather together artefact objects (Block, Canvas, Element, Grid, Loom, Phrase, Picture, Shape, Stack, Wheel) for common functions.
+//
+// Groups connect artefacts with controller objects - Stack, Cell - through which the Display cycle can cascade. Each controller object can have more than one Group associated with it. Only Groups whose __visibility__ flag has been set to true will propagate the Display cycle cascade to their member artefacts. The order in which each controller object invokes its Group objects is determined by each Group object's __order__ value.
+//
+// Groups can also be used for purposes beyond the Display cycle:
+// + They are closely involved in collision detection functionality.
+// + They can be used to propagate updates to their constituent artefacts - for instance animating them in a coordinated manner.
+// + Filters can be applied to entity objects at the Group level
+//
+// Additional functionality to help control and interact with Groups is defined in the __cascade__ mixin. Groups also use the __base__ mixin, thus they come equipped with packet functionality, alongside clone and kill functions.
+//
+// NOTE: __Groups are NOT used to position a set of artefacts in the display__ - they have no positioning functionality, which is instead handled by the artefact objects themselves. To position and move a collection of artefacts around the display, choose one of them to act as a a reference, and then __pivot__ or __mimic__ other artefacts to that reference. When you position or animate the reference artefact, all the other artefacts will position/move with it. See Demo [Canvas-002](../../demo/canvas-002.html) for an example.
 
-// TODO - documentation
 
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// #### Demos:
+// + [Canvas-014](../../demo/canvas-014.html) - Line, quadratic and bezier Shapes - control lock alternatives
+// + [Canvas-020](../../demo/canvas-020.html) - Testing createImageFromXXX functionality
+// + [DOM-003](../../demo/dom-003.html) - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
+// + [DOM-008](../../demo/dom-008.html) - 3d animated cube
+// + [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
 
 
-// ## Imports
+// #### Imports
 import { constructors, cell, artefact, group, groupnames, entity } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
@@ -25,7 +34,7 @@ import baseMix from '../mixin/base.js';
 import filterMix from '../mixin/filter.js';
 
 
-// ## Group constructor
+// #### Group constructor
 const Group = function (items = {}) {
 
     this.makeName(items.name);
@@ -41,76 +50,76 @@ const Group = function (items = {}) {
 };
 
 
-// ## Group object prototype setup
+// #### Group prototype
 let P = Group.prototype = Object.create(Object.prototype);
-
 P.type = 'Group';
 P.lib = 'group';
 P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [filter](../mixin/filter.html)
 P = baseMix(P);
 P = filterMix(P);
 
 
-// ## Define default attributes
+// #### Group attributes
 let defaultAttributes = {
 
-// TODO - documentation
+// __artefacts__ - an Array containing the names of all artefact objects included in this group.
     artefacts: null,
 
-
-// TODO: Do these need to be in the defs?
-    artefactBuckets: null,
-
-    host: '',
-
-// TODO - documentation
+// __order__ - positive integer Number, which determines the order in which Stack and Cell controllers will process this Group object during the Display cycle
     order: 0,
 
-// TODO - documentation
+// __visibility__ - Boolean flag; when unset, the Group will __not__ be processed by Stack and Cell controllers as part of the Display cycle
     visibility: true,
 
-// TODO - does this need to be in the defs object?
-    batchResort: true,
-
-// TODO - documentation
-    regionRadius: 0
+// __regionRadius__ - positive Number (measured in px), used as an initial test as part of collision detection functionality
+    regionRadius: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
+// #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['artefactBuckets', 'batchResort']);
 
 
-// ## Kill functionality
+// #### Clone management
+// No additional clone functionality required
+
+
+// #### Kill management
 P.kill = function () {
 
     let myname = this.name;
 
-    // Stack and canvas groups attribute
+    // Remove the Group object from affected Stack and Cell objects' `groups` attribute
     Object.entries(artefact).forEach(([name, art]) => {
 
         if (Array.isArray(art.groups) && art.groups.indexOf(myname) >= 0) removeItem(art.groups, myname);
     });
 
-    // Scrawl-canvas library
+    // Remove Group object from the Scrawl-canvas library
     return this.deregister();
 }
 
 
-// ## Define attribute getters and setters
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters;
 
-// TODO - documentation
+// Artefect membership of the Group object is better handled by the dedicated artefact management functions - __addArtefacts__, __removeArtefacts__, __clearArtefacts__, __moveArtefactsIntoGroup__.  
+
+// Returns a new Array containing the name String values of current artefact members 
 G.artefacts = function () {
 
     return [].concat(this.artefacts);
 };
+
+// Replaces the existing artefact membership with new members, supplied as an Array of name-String values
 S.artefacts = function (item) {
 
     this.artefacts = [];
@@ -118,7 +127,7 @@ S.artefacts = function (item) {
     this.addArtefacts(item);
 };
 
-// TODO - documentation
+// Adds the Group to a new controller Stack or Cell object. NOTE that this does not remove the Group from its existing host!
 S.host = function (item) {
 
     let host = this.getHost(item);
@@ -132,7 +141,7 @@ S.host = function (item) {
     }
 };
 
-// TODO - documentation
+// Update the Group's `order` attribute, and tell its current host that it will need to resort its associated Groups
 S.order = function (item) {
 
     let host = this.getHost(this.host);
@@ -148,9 +157,9 @@ S.order = function (item) {
 };
 
 
-// ## Define prototype functions
+// #### Prototype functions
 
-// TODO - documentation
+// `getHost` - internal helper function
 P.getHost = function (item) {
 
     let host = this.currentHost;
@@ -159,7 +168,7 @@ P.getHost = function (item) {
     else return artefact[item] || cell[item] || null;
 };
 
-// TODO - documentation
+// `forceStamp` - invoke the Group to instruct its artefact members to perform a `stamp` action, ignoring whether the Group `visibility` flag setting
 P.forceStamp = function () {
 
     var self = this;
@@ -182,7 +191,7 @@ P.forceStamp = function () {
 };
 
 
-// The Display Cycle is mediated through Groups - these Group functions control display functionality via a series of Promise cascades which in turn allow individual artefacts to make use of web workers, where appropriate, to achieve their stamping functionality - for example when they need to apply image filters to their output.
+// `stamp` - the Display Cycle is mediated through Groups - these Group functions control display functionality via a series of Promise cascades which in turn allow individual artefacts to make use of web workers, where appropriate, to achieve their stamping functionality - for example when they need to apply image filters to their output.
 P.stamp = function () {
 
     // Check we have a host of some sort (either a Stack artefact or a Cell asset)
@@ -209,7 +218,7 @@ P.stamp = function () {
                 // Check if artefacts need to be sorterd and, if yes, sort them by their order attribute
                 self.sortArtefacts();
 
-                // Check to see if there is a Group filter in place and, if yes, pull a Cell aset from the pool
+                // Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool
                 let filterCell = (self.stashOutput || (!self.noFilters && self.filters && self.filters.length)) ?
                     requestCell() :
                     false;
@@ -229,7 +238,7 @@ P.stamp = function () {
                 // Prepare the Group's artefacts for the forthcoming stamp activity
                 self.prepareStamp(filterCell);
 
-                // Get the Group's artefacts to stamp themselves on the current host
+                // Get the Group's artefacts to stamp themselves on the current host or pool Cell
                 self.stampAction(filterCell)
                 .then(res => {
 
@@ -252,7 +261,7 @@ P.stamp = function () {
     });
 };
 
-// TODO - documentation
+// `sortArtefacts` - internal function. Uses a bucket sort algorithm
 P.sortArtefacts = function () {
 
     if (this.batchResort) {
@@ -276,7 +285,7 @@ P.sortArtefacts = function () {
     }
 };
 
-// TODO - documentation
+// `prepareStamp` - initial action in the Display cycle, before Stacks/Cells start their clear/compile/show Promise cascade
 P.prepareStamp = function (myCell) {
 
     let host = this.currentHost;
@@ -300,7 +309,9 @@ P.prepareStamp = function (myCell) {
     });
 };
 
-// TODO - documentation
+// `stampAction` - the key Group-mediated action in the Display cycle, invoked as part of the `compile` functionality. Returns a Promise defined in the `next` local function, which will be recursively called as the Group processes each of its member artifacts in turn. After the final artefact is processed the Promise chain will collapse to resolution.
+//
+// We process artefacts in this way because some artefacts may need to make asynchronous calls as part of their functionality - for example, when an entity needs to apply a filter to its output.
 P.stampAction = function (myCell) {
 
     let mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
@@ -309,7 +320,7 @@ P.stampAction = function (myCell) {
 
     let self = this;
 
-    // Doing it this way to ensure that each artefact completes its stamp action before the next one starts - performed as a promise so that if the artefact needs to filter its output it can use the (asynchronous) filter worker. This function is essentially a cascade of promises which collapse into resolution once all the artefacts have been actioned
+    // The `next` function, called recursively as each artefact member gets processed by the Group.
     let next = (counter) => {
 
         return new Promise((resolve, reject) => {
@@ -342,7 +353,7 @@ P.stampAction = function (myCell) {
                     }
                     else if (self.stashOutput) {
 
-                        // We set up things to draw the group on a pool cell if stashOutput set true - so now we have to paint it back into the real canvas
+                        // We set up things to draw the group on a pool cell if the Group's `stashOutput` flag is set to true - so now we have to paint it back into the host Cell
                         let tempElement = myCell.element,
                             tempEngine = myCell.engine,
                             realEngine = (self.currentHost && self.currentHost.engine) ? 
@@ -377,11 +388,11 @@ P.stampAction = function (myCell) {
         });
     };
 
-    // Start the artefact stamp cascade
+    // Start the artefact `stamp` cascade
     return next(0);
 };
 
-// TODO - documentation
+// `applyFilters` - filters can be applied to entity artefacts at the group level, in addition to any filters applied at the entity level. Returns a promise, as filters use web-workers, which are asynchronous.
 P.applyFilters = function (myCell) {
 
     // Clean and sort the Group-level filters before sending them to the filter worker for application
@@ -395,7 +406,7 @@ P.applyFilters = function (myCell) {
 
         if (!currentHost || !filterHost) reject(false);
 
-        // An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the Group's composite and alpha values
+        // An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current Cell display, taking into account the Group's `composite` and `alpha` values
         let cleanup = function () {
 
             releaseFilterWorker(worker);
@@ -411,14 +422,14 @@ P.applyFilters = function (myCell) {
             currentEngine.restore();
         };
 
-        // Get handles to current and filter cell elements and engines
+        // Get handles to current and filter Cell elements and engines
         let currentElement = currentHost.element,
             currentEngine = currentHost.engine;
 
         let filterElement = filterHost.element,
             filterEngine = filterHost.engine;
 
-        // Action a request to use the filtered artefacts as a stencil
+        // Action a request to use the filtered artefacts as a stencil - as determined by the Group's `isStencil` flag
         if (self.isStencil) {
             
             filterEngine.save();
@@ -464,9 +475,9 @@ P.applyFilters = function (myCell) {
 };
 
 
-// Internal function - creates an imageAsset object (and an &lt;img> element which gets attached to the DOM document in the scrawlCanvasHold hidden &lt;div> element) from the group's entity's output.
-
-// Note that, unlike the equivalent functionality for Cell and entity objects, the Group stashAction functionality seems to be working fine in "real time"
+// `stashAction` - internal function which creates an ImageAsset object (and, as determined by the setting of the Group's `stashOutputAsAsset` flag, an &lt;img> element which gets attached to the DOM document in the `scrawlCanvasHold` hidden &lt;div> element) from the Group's entity's output.
+//
+// NOTE: the `stashOutput` and `stashOutputAsAsset` flags are not Group object attributes. They are set on the group as a result of invoking the `scrawl.createImageFromGroup` function, and will be set to false as soon as the `Group.stashAction` function runs (in other words, stashing a Group's output is a one-off operation).
 P.stashAction = function (img) {
 
     if (!img) return Promise.reject('No image data supplied to stashAction');
@@ -520,7 +531,7 @@ P.stashAction = function (img) {
     else return Promise.resolve(false);
 };
 
-// TODO - documentation
+// `getCellCoverage` - internal function which calculates the cumulative coverage of the Group's artefacts. Used as part of the `stashAction` functionality
 P.getCellCoverage = function (img) {
 
     let width = img.width,
@@ -553,7 +564,12 @@ P.getCellCoverage = function (img) {
 };
 
 
-// Artefacts should be added to, and removed from, the group object using the __addArtefacts__ and __removeArtefacts__ functions. The argument can be one or more artefact object's name attribute, or the artefact object(s) itself.
+// #### Artefact management
+// Artefacts should be added to, and removed from, the Group object using the functions detailed below.
+//
+// The argument for each function can be one or more artefact object's name attribute, or the artefact objects themselves, separated by commas.
+
+// `addArtefacts` - an artefact can belong to more than one Group
 P.addArtefacts = function (...args) {
 
     if (args && Array.isArray(args[0])) args = args[0];
@@ -571,6 +587,7 @@ P.addArtefacts = function (...args) {
     return this;
 };
 
+// `removeArtefacts` - remove an artefact from this Group
 P.removeArtefacts = function (...args) {
 
     args.forEach(item => {
@@ -586,6 +603,38 @@ P.removeArtefacts = function (...args) {
     return this;
 };
 
+// `moveArtefactsIntoGroup` - remove the artefact from their current Group (which is generally their Display cycle group, as set in their `group` and/or `host` attribute) and add them to this Group
+P.moveArtefactsIntoGroup = function (...args) {
+
+    let temp, art, grp;
+
+    args.forEach(item => {
+
+        if (item) {
+
+            art = (item.substring) ? artefact[item] : item;
+
+            if (art && art.isArtefact) {
+
+                if (art.group) temp = art.group;
+                else if (art.host) temp = group[art.host];
+                else temp = false;
+            }
+
+            if (temp) {
+
+                temp.removeArtefacts(item);
+                temp.batchResort = true;
+            }
+            pushUnique(this.artefacts, item);
+        }
+    }, this);
+
+    this.batchResort = true;
+    return this;
+};
+
+// `clearArtefacts` - remove all artefacts from this Group
 P.clearArtefacts = function () {
 
     this.artefacts.length = 0;
@@ -594,40 +643,8 @@ P.clearArtefacts = function () {
     return this;
 };
 
-// TODO - documentation
-P.moveArtefactsIntoGroup = function (...args) {
 
-    args.forEach(item => {
-
-        if (item) {
-
-            let temp;
-
-            if (item.substring) {
-
-                temp = group[artefact[item].group];
-
-                if (temp) temp.removeArtefacts(item);
-
-                pushUnique(this.artefacts, item);
-            }
-            else if (item.name) {
-
-                temp = group[item.group];
-
-                if (temp) temp.removeArtefacts(item.name);
-
-                pushUnique(this.artefacts, item.name);
-            }
-        }
-    }, this);
-
-    this.batchResort = true;
-    return this;
-};
-
-
-// Update all artefact objects using the __updateArtefacts__ function. The supplied argument will be passed on to each artefact's _setDelta_ function.
+// `updateArtefacts` - passes the __items__ argument object through to each of the Group's artefact's `setDelta` function
 P.updateArtefacts = function (items) {
 
     this.cascadeAction(items, 'setDelta');
@@ -635,33 +652,35 @@ P.updateArtefacts = function (items) {
 };
 
 
-// Set all artefact objects using the __setArtefacts__ function. The supplied argument will be passed on to each artefact's _set_ function.
+// `setArtefacts` - passes the __items__ argument object through to each of the Group's artefact's `set` function
 P.setArtefacts = function (items) {
 
     this.cascadeAction(items, 'set');
     return this;
 };
 
-// TODO - documentation
+// `updateByDelta` - passes the __items__ argument object through to each of the Group's artefact's `updateByDelta` function
 P.updateByDelta = function () {
 
     this.cascadeAction(false, 'updateByDelta');
     return this;
 };
 
+// `reverseByDelta` - passes the __items__ argument object through to each of the Group's artefact's `reverseByDelta` function
 P.reverseByDelta = function () {
 
     this.cascadeAction(false, 'reverseByDelta');
     return this;
 };
 
-// TODO - documentation
+// `addArtefactClasses` - specifically for non-entity artefacts. Passes the __items__ argument String through to each of the Group's artefact's `addClasses` function
 P.addArtefactClasses = function (items) {
 
     this.cascadeAction(items, 'addClasses');
     return this;
 };
 
+// `removeArtefactClasses` - specifically for non-entity artefacts. Passes the __items__ argument String through to each of the Group's artefact's `removeClasses` function
 P.removeArtefactClasses = function (items) {
 
     this.cascadeAction(items, 'removeClasses');
@@ -669,7 +688,7 @@ P.removeArtefactClasses = function (items) {
 };
 
 
-// TODO - documentation
+// `cascadeAction` - internal helper function for the above artefact manipulation functionality
 P.cascadeAction = function (items, action) {
 
     this.artefacts.forEach(name => {
@@ -682,7 +701,7 @@ P.cascadeAction = function (items, action) {
 };
 
 
-// TODO - documentation
+// `setDeltaValues` - passes the __items__ argument object through to each of the Group's artefact's `setDeltaValues` function
 P.setDeltaValues = function (items = {}) {
 
     this.artefactBuckets.forEach(art => art.setDeltaValues(items));
@@ -690,7 +709,9 @@ P.setDeltaValues = function (items = {}) {
     return this;
 };
 
-// TODO - documentation
+// We can add and remove filters to each of the Group's entity artefacts using the following functions. The argument for each function can be one or more Filter name-Strings, or the Filter objects themselves, separated by commas.
+
+// `addFiltersToEntitys`
 P.addFiltersToEntitys = function (...args) {
 
     this.artefacts.forEach(name => {
@@ -702,6 +723,7 @@ P.addFiltersToEntitys = function (...args) {
     return this;
 };
 
+// `removeFiltersFromEntitys`
 P.removeFiltersFromEntitys = function (...args) {
 
     this.artefacts.forEach(name => {
@@ -713,6 +735,7 @@ P.removeFiltersFromEntitys = function (...args) {
     return this;
 };
 
+// `clearFiltersFromEntitys` - clears all filters from all the Group's entity artefacts.
 P.clearFiltersFromEntitys = function () {
 
     this.artefacts.forEach(name => {
@@ -724,18 +747,18 @@ P.clearFiltersFromEntitys = function () {
     return this;
 };
 
-// The __getArtefactAt__ function checks to see if any of the group object's artefacts are located at the supplied coordinates in the argument object. 
-
+// #### Collision functionality
+// The `getArtefactAt` function checks to see if any of the Group object's artefacts are located at the supplied coordinates in the argument object. 
+//
 // The hit report from the first artefact to respond back positively (artefacts with the highest order value are checked first) will be returned by the function. 
-
+//
 // Where no artefacts are present at that coordinate the function returns false.
-
+//
 // A __hit report__ is a Javascript object with the following attributes:
-
-// + .x - the x coordinate supplied in this functions argument object
-// + .y - the y coordinate supplied in this functions argument object
-// + .artefact - the Scrawl-canvas artefact object reporting the hit
-
+// + `x` - the x coordinate supplied in this functions argument object
+// + `y` - the y coordinate supplied in this functions argument object
+// + `artefact` - the Scrawl-canvas artefact object reporting the hit
+//
 // This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
 P.getArtefactAt = function (items) {
 
@@ -765,8 +788,8 @@ P.getArtefactAt = function (items) {
 };
 
 
-// The __getAllArtefactsAt__ function returns an array of hit reports from all of the group object's artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.
-
+// The `getAllArtefactsAt` function returns an array of hit reports from all of the Group object's artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.
+//
 // The function will always return an array of hit reports, or an empty array if no hits are reported.
 P.getAllArtefactsAt = function (items) {
 
@@ -803,12 +826,12 @@ P.getAllArtefactsAt = function (items) {
 };
 
 
-// The __getArtefactCollisions__ function returns an array of hit reports from all of the group object's artefacts which are currently in collision with the __sensor__ coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.
-
+// The `getArtefactCollisions` function returns an array of hit reports from all of the Group object's artefacts which are currently in collision with the __sensor__ coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.
+//
 // The argument must be either the artefact object itself, or its String name.
 P.getArtefactCollisions = function (art) {
 
-    // return empty array if no argument, or the argument is not an artefact, or the group is empty
+    // return empty array if no argument, or the argument is not an artefact, or the Group is empty
     if (!art || !art.isArtefact || !this.artefactBuckets.length) return [];
 
     if (art.substring) art = artefact[art];
@@ -823,7 +846,7 @@ P.getArtefactCollisions = function (art) {
     // Get entity collision data
     let [entityRadius, entitySensors] = art.cleanCollisionData();
 
-    // Winnow step 1: don't check the entity itself, or any missing or malformed artefacts in the group
+    // Winnow step 1: don't check the entity itself, or any missing or malformed artefacts in the Group
     for (i = 0, iz = artBuckets.length; i < iz; i++) {
 
         target = artBuckets[i];
@@ -873,7 +896,17 @@ P.getArtefactCollisions = function (art) {
 };
 
 
-// ## Exported factory function
+// #### Factory
+// ```
+// let faces = scrawl.makeGroup({
+//
+//     // Unique name to keep track of the Group
+//     name: 'faces',
+//
+//     // Groups generally associate with a primary controller (a Stack or Cell object)
+//     host: 'mystack',
+// });
+// ```
 const makeGroup = function (items) {
 
     return new Group(items);
@@ -881,6 +914,7 @@ const makeGroup = function (items) {
 
 constructors.Group = Group;
 
+// #### Exports
 export {
     makeGroup,
 };

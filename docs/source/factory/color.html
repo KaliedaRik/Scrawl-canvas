@@ -299,7 +299,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="color-factory">Color factory</h1>
+<p>Color objects generate CSS rgb() or rgba() color strings, which can then be used to set an entity’s State object’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
+<ul>
+<li>Factory can accept any legal CSS color keyword as an attribute, alongside ‘#nnn’ and ‘#nnnnnn’ hexadecimal Strings. It will accept ‘rgb()’ and ‘rgba()’ strings under certain conditions.</li>
+<li>It can also accept <strong>r</strong>, <strong>g</strong>, <strong>b</strong> and <strong>a</strong> channel Number attributes (0-255 integers for r, g, b; 0-1 float Number for a), from which a color can be constructed.</li>
+<li>It can be used to generate random colors, using channel <strong>max</strong> and <strong>min</strong> integer Number attributes to limit the range of the random colors.</li>
+<li>It can be deltaAnimated by setting channel <strong>shift</strong> float Number attributes and setting the <strong>autoUpdate</strong> Boolean flag to true. Delta animations can run until values hit their set max/min values, or can bounce between min and max values, depending on the setting of the channel <strong>bounce</strong> Boolean flags.</li>
+<li>It can also be animated directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
+<li>Colors can be cloned, and killed.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +321,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="color-factory">Color factory</h1>
+              <p>TODO: The color object does not yet handle the following color inputs:</p>
+<ul>
+<li><code>hsl[a](H, S, L[, A])</code> - color will be treated as transparent black</li>
+<li><code>hsl[a](H S L[ / A])</code> - color will be treated as transparent black</li>
+<li>for <code>rgb()</code> and <code>rgba()</code>, if any of the values (including alpha) is given as a %Number, all values will be treated as percentages (in the spec, rgb values all need to be either integer Number 0-255, or %Number 0%-100%, but channels cannot mix the two notations, whereas the alpha value format <em>can</em> differ from rgb value format)</li>
+</ul>
 
             </div>
             
@@ -324,7 +339,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets; save and load a range of different entitys</li>
+<li><a href="../../demo/dom-009.html">DOM-009</a> - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate</li>
+<li><a href="../../demo/dom-012.html">DOM-012</a> - Add and remove (kill) Scrawl-canvas canvas elements programmatically</li>
+</ul>
 
             </div>
             
@@ -337,59 +357,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -401,13 +369,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="color-constructor">Color constructor</h2>
+              <h4 id="color-constructor">Color constructor</h4>
 
             </div>
             
@@ -430,13 +398,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="color-object-prototype-setup">Color object prototype setup</h2>
+              <h4 id="color-prototype">Color prototype</h4>
 
             </div>
             
@@ -449,17 +417,90 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P = baseMix(P);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h4 id="color-attributes">Color attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>The color channel attributes <strong>r</strong>, <strong>g</strong>, <strong>b</strong> and <strong>a</strong> are all integer Numbers in the range 0 (no contribution to color from this channel) to 255 (100% contribution)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    r: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">g</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">b</span>: <span class="hljs-number">0</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>The alpha channel attribute <strong>a</strong> is a float Number between 0 (transparent) and 1 (opaque)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    a: <span class="hljs-number">1</span>,</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <p>We can limit a channel’s range - useful, for instance, when asking the Color object to supply us with a restricted-random color, or when animating the color. Channel maximum values <strong>must</strong> be higher than their minimum values.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    rMax: <span class="hljs-number">255</span>,
+    <span class="hljs-attr">gMax</span>: <span class="hljs-number">255</span>,
+    <span class="hljs-attr">bMax</span>: <span class="hljs-number">255</span>,
+    <span class="hljs-attr">aMax</span>: <span class="hljs-number">1</span>,
+
+    <span class="hljs-attr">rMin</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">gMin</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">bMin</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">aMin</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -470,40 +511,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    r: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">g</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">b</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p>We can ask the Color object to update its channel values when it completes each get() invocation response. Channel <strong>shift</strong> values can be set separately, and can be float Numbers.</p>
 
             </div>
             
@@ -515,49 +523,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    rMax: <span class="hljs-number">255</span>,
-    <span class="hljs-attr">gMax</span>: <span class="hljs-number">255</span>,
-    <span class="hljs-attr">bMax</span>: <span class="hljs-number">255</span>,
-    <span class="hljs-attr">aMax</span>: <span class="hljs-number">1</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    rMin: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">gMin</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">bMin</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">aMin</span>: <span class="hljs-number">0</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p>The <strong>bounce</strong> boolean flags determine whether the color animation will be sticky (false, default), remaining at the channel’s minimum or maximum value when it is reached, or whether that channel will bounce between its minimum and maximum values as the animation progresses.</p>
 
             </div>
             
@@ -569,17 +541,74 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>The <strong>opaque</strong> Boolean flag will supply colors in ‘rgb()’ format; when set to false ‘rgba()’ format colors are supplied.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    opaque: <span class="hljs-literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>The <strong>autoUpdate</strong> Boolean flag switches on color animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    autoUpdate: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h5 id="non-retained-argument-attributes-for-factory-clone-set-functions">Non-retained argument attributes (for factory, clone, set functions)</h5>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p><strong>random</strong> - the factory function, and the clone function, can ask the Color object to set its initial channel values randomly by including this attribute in the argument object; if the attribute resolves to true, random color functionality is invoked to set the r, g and b channel attributes to appropriately random values.</p>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>color</strong> - a CSS color definition String which the Color object will attempt to convert into appropriate r, g, b and a channel attribute values.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    opaque: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -590,13 +619,10 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    autoUpdate: <span class="hljs-literal">false</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -607,7 +633,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -620,33 +647,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>Nothing additional required?</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <h2 id="kill-functionality---overwrites-mixinbasejs">Kill functionality - overwrites ./mixin/base.js</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>TODO: test on an entity that uses a color object for its fill/strokeStyle</p>
+              <h4 id="kill-management">Kill management</h4>
+<p>Overwrites ./mixin/base.js</p>
 
             </div>
             
@@ -657,11 +659,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Remove style from all entity state objects</p>
 
@@ -684,11 +686,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Remove style from the Scrawl-canvas library</p>
 
@@ -702,26 +704,26 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-27">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>Overrides function in mixin/base.js</p>
+              <p><code>get</code> - overrides function in mixin/base.js</p>
 
             </div>
             
@@ -760,13 +762,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>Overrides function in mixin/base.js</p>
+              <p><code>set</code> - overrides function in mixin/base.js - see above for the additional attributes the set object argument can use.</p>
 
             </div>
             
@@ -799,13 +801,26 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
 
             </div>
             
@@ -821,13 +836,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>generateRandomColor</code> function asks the Color object to supply a random color, as restricted by its channel minimum and maximum attributes</p>
 
             </div>
             
@@ -863,13 +878,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Internal function to make sure channel attribute values are in their correct format and ranges</p>
 
             </div>
             
@@ -892,18 +907,17 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>update</code> function - adds the channel <strong>shift</strong> attributes to the r, g, b and a attributes. This functionality can be automated by setting the <strong>autoUpdate</strong> Boolean flag to true</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.updateArray = [<span class="hljs-string">'r'</span>, <span class="hljs-string">'g'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'a'</span>];
-
 P.update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">if</span> (!xt(<span class="hljs-keyword">this</span>.rCurrent)) <span class="hljs-keyword">this</span>.rCurrent = <span class="hljs-keyword">this</span>.r;
@@ -947,9 +961,22 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         }, <span class="hljs-keyword">this</span>);
     }
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p><code>updateByDelta</code> - alias for the <strong>update</strong> function</p>
 
-P.updateByDelta = P.update;</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.updateByDelta = P.update;</pre></div></div>
             
         </li>
         
@@ -960,7 +987,7 @@ P.updateByDelta = P.update;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>We can also set a Color object to a new color value by invoking its <code>convert</code> function. Any CSS color string can be used as an argument (with exceptions - see above)</p>
 
             </div>
             
@@ -1016,10 +1043,40 @@ P.updateByDelta = P.update;</pre></div></div>
 
             temp = items.match(<span class="hljs-regexp">/([0-9.]+\b)/g</span>);
 
-            r = temp[<span class="hljs-number">0</span>];
-            g = temp[<span class="hljs-number">1</span>];
-            b = temp[<span class="hljs-number">2</span>];
-            a = temp[<span class="hljs-number">3</span>];
+            <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/%/</span>.test(items)) {
+            
+                r = round((temp[<span class="hljs-number">0</span>] / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
+                g = round((temp[<span class="hljs-number">1</span>] / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
+                b = round((temp[<span class="hljs-number">2</span>] / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
+                a = round(temp[<span class="hljs-number">3</span>] / <span class="hljs-number">100</span>);
+            }
+            <span class="hljs-keyword">else</span> {
+            
+                r = round(temp[<span class="hljs-number">0</span>]);
+                g = round(temp[<span class="hljs-number">1</span>]);
+                b = round(temp[<span class="hljs-number">2</span>]);
+                a = round(temp[<span class="hljs-number">3</span>]);
+            }
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/hsl\(/</span>.test(items) || <span class="hljs-regexp">/hsla\(/</span>.test(items)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>the spec explanation can be found here <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">https://developer.mozilla.org/en-US/docs/Web/CSS/color_value</a></p>
+<p>see <a href="http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/">http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/</a> for one way we can approach converting hsl values to rgb</p>
+<p>currently, knock down to transparent black</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            r = g = b = a = <span class="hljs-number">0</span>;
+
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items === <span class="hljs-string">'transparent'</span>) r = g = b = a = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">else</span> {
@@ -1049,11 +1106,11 @@ P.updateByDelta = P.update;</pre></div></div>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Color keywords harvested from <a href="https://developer.mozilla.org/en/docs/Web/CSS/color_value">https://developer.mozilla.org/en/docs/Web/CSS/color_value</a></p>
 
@@ -1206,21 +1263,54 @@ P.updateByDelta = P.update;</pre></div></div>
     <span class="hljs-attr">whitesmoke</span>: <span class="hljs-string">'f5f5f5'</span>,
     <span class="hljs-attr">yellow</span>: <span class="hljs-string">'ffff00'</span>,
     <span class="hljs-attr">yellowgreen</span>: <span class="hljs-string">'9acd32'</span>
-};
-
-<span class="hljs-keyword">const</span> colorList = <span class="hljs-built_in">Object</span>.keys(P.colorLibrary);</pre></div></div>
+};</pre></div></div>
             
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code>scrawl.makeColor({
 
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myColorObject'</span>,
+
+    <span class="hljs-attr">r</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">g</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">b</span>: <span class="hljs-number">10</span>,
+
+    <span class="hljs-attr">rShift</span>: <span class="hljs-number">0.1</span>,
+    <span class="hljs-attr">gShift</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">bShift</span>: <span class="hljs-number">-1.3</span>,
+
+    <span class="hljs-attr">rBounce</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">gBounce</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">bBounce</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">rMax</span>: <span class="hljs-number">160</span>,
+    <span class="hljs-attr">gMax</span>: <span class="hljs-number">180</span>,
+    <span class="hljs-attr">bMax</span>: <span class="hljs-number">150</span>,
+
+    <span class="hljs-attr">autoUpdate</span>: <span class="hljs-literal">true</span>,
+});
+
+scrawl.makeBlock({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'block-tester'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">40</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">60</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'myColorObject'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
@@ -1228,11 +1318,23 @@ P.updateByDelta = P.update;</pre></div></div>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Color(items);
 };
 
-constructors.Color = Color;
+constructors.Color = Color;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeColor,
-    colorList,
 };</pre></div></div>
             
         </li>

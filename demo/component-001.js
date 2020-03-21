@@ -1,15 +1,20 @@
-// ## Demo Component 001
+// # Demo Component 001
+// Scrawl-canvas DOM element components
 
-// [Scrawl-canvas DOM element components](../../demo/component-001.html)
+// [Run code](../../demo/component-001.html)
+//
+// [See component code](./components/test-001.html)
 
+
+// #### Imports
 // Initialize scrawl-canvas
 import scrawl from '../source/scrawl.js';
-
 
 // Import the component code we want to use
 import { spotlightText, jazzyButton, pagePerformance } from './components/test-001.js';
 
 
+// #### Scene setup
 // Get the relevant Scrawl-canvas stack elements that need component skinning
 let spotlightElements = document.querySelectorAll('.spotlight-text');
 let jazzyElements = document.querySelectorAll('.jazzy-button');
@@ -29,4 +34,6 @@ myJazzy[2].element.set({
 
 pageReport.forEach(el => pagePerformance(el));
 
+
+// #### Development and testing
 console.log(scrawl.library)

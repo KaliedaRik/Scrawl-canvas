@@ -299,7 +299,21 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="animation-factory">Animation factory</h1>
+<p>Animations lie at the heart of Scrawl-canvas functionality. While static Canvas and Stack displays can be rendered once and then forgotten, any Canvas or Stack that implements any form of user interaction, or movement in the display, needs to implement an Animation object to make that functionality happen.</p>
+<p>There are a number of ways to create an Animation object:</p>
+<ul>
+<li><code>scrawl.makeAnimation</code> - as coded by this factory - will supply a very basic Animation object. The factory requires that we supply it with a Promise-based <code>fn</code> function which will be added to the core Scrawl-canvas animation loop.</li>
+</ul>
+<p>Because creating an Animation object from this factory can be quite fiddly, Scrawl-canvas supplies some additional convenience factories to make the process easier: </p>
+<ul>
+<li><code>scrawl.makeRender</code> - use this function to create an animation object which will <strong>control the Display cycle for a canvas or stack</strong>. The function allows users to add a number of hook functions that will trigger at various points in the Display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.</li>
+<li><code>scrawl.makeTween</code> and <code>scrawl.makeTicker</code> - both of these factory functions use animation objects under the hood</li>
+<li><code>scrawl.makeComponent</code> - used in component files, the factory function will automatically add an animation object to the component, alongside much of the functionality supplied by <code>makeRender</code>. It will also create an <code>IntersectionObserver</code> on the window object that will automatically run/stop the animation object dependant on its canvas element’s position in the browser/device viewport.</li>
+</ul>
+<p>Animation objects can be controlled through some simple functions: <code>run</code> to start the animation running; <code>halt</code> to stop it; and <code>kill</code> to remove it from the system.</p>
+<p>NOTE that Animation objects do not take part in Scrawl-canvas’s <code>packet</code> save-and-load functionality, as a result of which they cannot be cloned.</p>
+
             </div>
             
         </li>
@@ -311,7 +325,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="animation-factory">Animation factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li>All the demos run some form of animation - mostly created via <code>scrawl.makeRender</code> - see the <a href="./renderAnimation.html">RenderAnimation factory</a> for details</li>
+<li><a href="../../demo/dom-001.html">DOM-001</a> - Loading the scrawl-canvas library using a script tag in the HTML code</li>
+<li><a href="../../demo/dom-010.html">DOM-010</a> - Add and remove (kill) Scrawl-canvas stack elements programmatically</li>
+</ul>
 
             </div>
             
@@ -324,210 +343,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="instantiate-objects-from-the-factory">Instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Use the <strong>scrawl.makeAnimation({key:value})</strong> function - see Demo DOM-001 for an example</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Almost all of the Demos use <strong>alternative methods for generating animation objects</strong>:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <ul>
-<li>scrawl.makeRender - use this function to create an animation object which will <strong>control the display cycle for a canvas</strong> or stack. The function allows users to add a number of hook functions that will trigger at various points in the display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <ul>
-<li>scrawl.makeTween, scrawl.makeTicker - both of these factory functions use animation objects under the hood</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <ul>
-<li>scrawl.makeComponent - used in component files, the factory function will automatically add an animation object to the component, alongside much of the functionality supplied by makeRender. It will also creat an IntersectionObserver on the window object that will automatically run/stop the animation object dependant on its canvas element’s position in the browser/device viewport.</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <h4 id="library-storage-yes">Library storage: YES</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <ul>
-<li>scrawl.library.animation</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <h4 id="clone-functionality-yes-but-">Clone functionality: YES, BUT …</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <p><strong>Warning</strong>: this functionality has not been tested, nor is it high on my list for testing!</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p>It’s simpler to set up an animation object from scratch, rather than clone it from an existing animation object.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <h4 id="kill-functionality-yes-but-">Kill functionality: YES, BUT …</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Every animation object can (in theory) be removed using its <strong>kill</strong> function; this functionality has not been tested, nor is it high on my list for testing!</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>TODO: review and update kill functionality through the entire Scrawl-canvas system</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -541,13 +357,13 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="animation-constructor">Animation constructor</h2>
+              <h4 id="animation-constructor">Animation constructor</h4>
 
             </div>
             
@@ -570,13 +386,13 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="animation-object-prototype-setup">Animation object prototype setup</h2>
+              <h4 id="animation-prototype">Animation prototype</h4>
 
             </div>
             
@@ -590,13 +406,16 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+</ul>
 
             </div>
             
@@ -605,13 +424,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="animation-attributes">Animation attributes</h4>
 
             </div>
             
@@ -620,13 +439,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations</p>
+              <p><strong>order</strong> - determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations</p>
 
             </div>
             
@@ -635,13 +454,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>The main function that the animation object will run on each RequestAnimationFrame tick. This function <strong>must return a Promise</strong>.</p>
+              <p><strong>fn</strong> - the main function that the animation object will run on each RequestAnimationFrame tick. This function <strong>must return a Promise</strong>.</p>
 
             </div>
             
@@ -650,49 +469,51 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>The animation object supports some <strong>animation hook functions</strong>:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <ul>
-<li>onRun - triggers each time the animation object’s .run function is invoked</li>
-<li>onHalt - triggers each time the animation object’s .halt function is invoked</li>
-<li>onKill - triggers each time the animation object’s .kill function is invoked</li>
+<ul>
+<li><strong>onRun</strong> - triggers each time the animation object’s <code>run</code> function is invoked</li>
+<li><strong>onHalt</strong> - triggers each time the animation object’s <code>halt</code> function is invoked</li>
+<li><strong>onKill</strong> - triggers each time the animation object’s <code>kill</code> function is invoked</li>
 </ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    onRun: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">onHalt</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">onKill</span>: <span class="hljs-literal">null</span>,
-};
+    <span class="hljs-attr">onKill</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p><strong>delay</strong> - by default, Animation objects will start running as soon as they are created. To prevent this happening the constructor argument can take a non-retained <code>delay</code> Boolean flag which, when set to true, will prevent the Animation object from adding itself to the Scrawl-canvas animation loop. The animation can be started at any subsequent time by invoking its <code>run</code> function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>};
 P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
         
-        <li id="section-27">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="packetclone-management">Packet/Clone management</h2>
+              <h4 id="packet-management">Packet management</h4>
 <p>This functionality is disabled for Animation objects</p>
 
             </div>
@@ -700,32 +521,75 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             <div class="content"><div class='highlight'><pre>P.stringifyFunction = defaultNonReturnFunction;
 P.processPacketOut = defaultNonReturnFunction;
 P.finalizePacketOut = defaultNonReturnFunction;
-P.saveAsPacket = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.lib}</span>, {}]`</span>;
-P.clone = defaultThisReturnFunction;</pre></div></div>
+P.saveAsPacket = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.lib}</span>, {}]`</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-28">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>This functionality is disabled for Animation objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.clone = defaultThisReturnFunction;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>Kill functionality is managed as one of the Animation object’s hook functions - see below</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-29">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Start the animation, if it is not already running</p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>No additional getter or setter functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p><code>run</code> - start the animation, if it is not already running</p>
 
             </div>
             
@@ -740,13 +604,13 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Returns true if animation is running; false otherwise</p>
+              <p><code>isRunning</code> - returns true if animation is running; false otherwise</p>
 
             </div>
             
@@ -758,13 +622,13 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Stop the animation, if it is already running</p>
+              <p><code>halt</code> - stop the animation, if it is already running</p>
 
             </div>
             
@@ -779,13 +643,13 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>Stop the animation if it is already running, and remove it from the Scrawl-canvas library</p>
+              <p><code>kill</code> - stop the animation if it is already running, and remove it from the Scrawl-canvas library</p>
 
             </div>
             
@@ -803,58 +667,29 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code>scrawl.makeAnimation({
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p>The factory takes a single object argument which includes the following attributes:</p>
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <ul>
-<li><strong>name</strong> (optional) - String - default: random UUID String generated at time of object construction</li>
-<li><strong>order</strong> (optional) - Number - default: 10</li>
-<li><strong>delay</strong> (optional) - Boolean - default: false</li>
-<li><strong>fn</strong> (required) - Promise-based Function - default: blank non-return function (will break the Animation loop!)</li>
-</ul>
+    <span class="hljs-comment">// Function MUST return a Promise object, and that promise must ALWAYS resolve (not reject)</span>
+    <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <p>Note: by default, animations start running as soon as they are created. To prevent this include a <strong>delay</strong> attribute, set to true, in the argument object.</p>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
 
+            <span class="hljs-comment">// Renders all stack and canvas elements in the document</span>
+            scrawl.render()
+            .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> resolve(<span class="hljs-literal">false</span>));
+        });
+    }
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
@@ -862,9 +697,22 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Animation(items);
 };
 
-constructors.Animation = Animation;
+constructors.Animation = Animation;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeAnimation,
 };</pre></div></div>
             

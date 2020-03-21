@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>dom-001.js</title>
+  <title>Demo DOM 001</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>dom-001.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-dom-001">Demo DOM 001</h2>
+              <h1 id="demo-dom-001">Demo DOM 001</h1>
+<p>Loading the scrawl-canvas library using a script tag in the HTML code</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/dom-001.html">Loading the scrawl-canvas library using a script tag in the HTML code</a></p>
+              <p><a href="../../demo/dom-001.html">Run code</a></p>
 
             </div>
             
@@ -306,7 +291,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Import Scrawl-canvas. It will auto-initialize the page as soon as it loads.</p>
+              <h4 id="imports">Imports</h4>
+<p>Import Scrawl-canvas. It will auto-initialize the page as soon as it loads.</p>
 
             </div>
             
@@ -321,7 +307,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the <strong>scrawl.library.artefact</strong> section of the Scrawl-canvas library. The elements themselves are held in the <strong>domElement</strong> attribute of the wrapper. </p>
+              <h4 id="scene-setup">Scene setup</h4>
+<p>Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the <strong>scrawl.library.artefact</strong> section of the Scrawl-canvas library. The elements themselves are held in the <strong>domElement</strong> attribute of the wrapper. </p>
 
             </div>
             
@@ -339,19 +326,8 @@
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Scrawl-canvas stack elements calculate the positions and dimensions of their member artefacts on the assumption that the stack element itself has no padding. If the element does include padding then all member artefacts will be offset (rightwards and downwards) by the left and top padfding values.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Stack element padding can be set to zero either using regular CSS, or programatically as shown below.</p>
+<p>Stack element padding can be set to zero either using regular CSS, or programatically as shown below.</p>
+<p>TODO: fix this - it’s very annoying!</p>
 
             </div>
             
@@ -364,26 +340,14 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Position and size the report &lt;div&gt; element, which is where we will be displaying details about the stack.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Note that moving this div element will leave a gap at the top of the stack. The positions and dimensions of Stack member artefacts (in other words, all immediate child elements of the stack element) are calculated when Scrawl-canvas initializes, before Scrawl-canvas updates their CSS position value to “absolute”. Thus moving the report div downwards will not trigger a DOM redraw/reflow action</p>
+<p>Note that moving this div element will leave a gap at the top of the stack. The positions and dimensions of Stack member artefacts (in other words, all immediate child elements of the stack element) are calculated when Scrawl-canvas initializes, before Scrawl-canvas updates their CSS position value to “absolute”. Thus moving the report div downwards will not trigger a DOM redraw/reflow action</p>
 
             </div>
             
@@ -396,26 +360,15 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>The animation loop updates the output with details of the stack’s dimensions and positioning, and details of the mouse cursor’s position in relation to the stack’s top-left hand corner.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>Much of the data required for the information panel is contained in the stack wrapper’s <strong>here</strong> object. This data is updated every time Scrawl-canvas detects some sort of user interaction such as a mouse/pointer cursor movement, page scrolling, or when the browser window resizes.</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>The animation loop updates the output with details of the stack’s dimensions and positioning, and details of the mouse cursor’s position in relation to the stack’s top-left hand corner.</p>
+<p>Much of the data required for the information panel is contained in the stack wrapper’s <strong>here</strong> object. This data is updated every time Scrawl-canvas detects some sort of user interaction such as a mouse/pointer cursor movement, page scrolling, or when the browser window resizes.</p>
 
             </div>
             
@@ -424,11 +377,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Giving the animation object a name will make it easy to find in the Scrawl-canvas library object</p>
 
@@ -439,13 +392,14 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Every animation object must include a <strong>fn</strong> function attribute which MUST return a Promise object - even if the functionality within the function is entirely synchronous. This is because some animation functions (for instance: canvas filters) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise</p>
+              <p>Every animation object must include a <strong>fn</strong> function attribute which <strong><em>MUST</em></strong> return a Promise object - even if the functionality within the function is entirely synchronous. </p>
+<p>This is because some animation functions (for instance: canvas filters) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise</p>
 
             </div>
             
@@ -470,11 +424,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Always (ALWAYS!) include a .catch function in the render promise chain (usually at the end)</p>
 
@@ -492,13 +446,14 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Because the code has been loaded as a module, scrawl-canvas attributes and functions do not get added to the global namespace. For development work, we can overcome this issue (to a small extent) by console logging the scrawl library, so we can check internal attribute values and calculation results.</p>
+              <h4 id="development-and-testing">Development and testing</h4>
+<p>Because the code has been loaded as a <strong>module</strong>, Scrawl-canvas attributes and functions do not get added to the global namespace. For development work, we can overcome this issue (to a small extent) by console logging the scrawl library, so we can check internal attribute values and calculation results.</p>
 
             </div>
             

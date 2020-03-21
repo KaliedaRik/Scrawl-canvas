@@ -1,10 +1,11 @@
-// ## Demo Canvas 005 
+// # Demo Canvas 005 
+// Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
 
-// [Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween](../../demo/canvas-005.html)
+// [Run code](../../demo/canvas-005.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
@@ -177,6 +178,7 @@ scrawl.makeWheel({
 });
 
 
+// #### Scene animation
 // Tween, and the engine used by the tween to calculate values
 let tweenEngine = (start, change, position) => {
 
@@ -210,15 +212,6 @@ let tweeny = scrawl.makeTween({
         end: 3998,
         engine: tweenEngine
     }]
-});
-
-
-// Create the drag-and-drop zone
-let current = scrawl.makeDragZone({
-
-    zone: canvas,
-    endOn: ['up', 'leave'],
-    exposeCurrentArtefact: true,
 });
 
 
@@ -258,7 +251,7 @@ let animateGradients = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -267,4 +260,16 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+
+// #### User interaction
+// Create the drag-and-drop zone
+let current = scrawl.makeDragZone({
+
+    zone: canvas,
+    endOn: ['up', 'leave'],
+    exposeCurrentArtefact: true,
+});
+
+
+// #### Development and testing
 console.log(scrawl.library);

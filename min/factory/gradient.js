@@ -13,8 +13,6 @@ P.isArtefact = false;
 P.isAsset = false;
 P = baseMix(P);
 P = stylesMix(P);
-let defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 P.buildStyle = function (cell = {}) {
 if (cell) {

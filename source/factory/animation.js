@@ -1,38 +1,26 @@
-
 // # Animation factory
-
-// TODO - documentation
-
-// #### Instantiate objects from the factory
-
-// Use the __scrawl.makeAnimation({key:value})__ function - see Demo DOM-001 for an example
-
-// Almost all of the Demos use __alternative methods for generating animation objects__:
-
-// + scrawl.makeRender - use this function to create an animation object which will __control the display cycle for a canvas__ or stack. The function allows users to add a number of hook functions that will trigger at various points in the display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.
-
-// + scrawl.makeTween, scrawl.makeTicker - both of these factory functions use animation objects under the hood
-
-// + scrawl.makeComponent - used in component files, the factory function will automatically add an animation object to the component, alongside much of the functionality supplied by makeRender. It will also creat an IntersectionObserver on the window object that will automatically run/stop the animation object dependant on its canvas element's position in the browser/device viewport.
-
-// #### Library storage: YES
-
-// + scrawl.library.animation
-
-// #### Clone functionality: YES, BUT ...
-
-// __Warning__: this functionality has not been tested, nor is it high on my list for testing!
-
-// It's simpler to set up an animation object from scratch, rather than clone it from an existing animation object.
-
-// #### Kill functionality: YES, BUT ...
-
-// Every animation object can (in theory) be removed using its __kill__ function; this functionality has not been tested, nor is it high on my list for testing!
-
-// TODO: review and update kill functionality through the entire Scrawl-canvas system
+// Animations lie at the heart of Scrawl-canvas functionality. While static Canvas and Stack displays can be rendered once and then forgotten, any Canvas or Stack that implements any form of user interaction, or movement in the display, needs to implement an Animation object to make that functionality happen.
+//
+// There are a number of ways to create an Animation object:
+// + `scrawl.makeAnimation` - as coded by this factory - will supply a very basic Animation object. The factory requires that we supply it with a Promise-based `fn` function which will be added to the core Scrawl-canvas animation loop.
+//
+// Because creating an Animation object from this factory can be quite fiddly, Scrawl-canvas supplies some additional convenience factories to make the process easier: 
+// + `scrawl.makeRender` - use this function to create an animation object which will __control the Display cycle for a canvas or stack__. The function allows users to add a number of hook functions that will trigger at various points in the Display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.
+// + `scrawl.makeTween` and `scrawl.makeTicker` - both of these factory functions use animation objects under the hood
+// + `scrawl.makeComponent` - used in component files, the factory function will automatically add an animation object to the component, alongside much of the functionality supplied by `makeRender`. It will also create an `IntersectionObserver` on the window object that will automatically run/stop the animation object dependant on its canvas element's position in the browser/device viewport.
+//
+// Animation objects can be controlled through some simple functions: `run` to start the animation running; `halt` to stop it; and `kill` to remove it from the system.
+// 
+// NOTE that Animation objects do not take part in Scrawl-canvas's `packet` save-and-load functionality, as a result of which they cannot be cloned.
 
 
-// ## Imports
+// #### Demos:
+// + All the demos run some form of animation - mostly created via `scrawl.makeRender` - see the [RenderAnimation factory](./renderAnimation.html) for details
+// + [DOM-001](../../demo/dom-001.html) - Loading the scrawl-canvas library using a script tag in the HTML code
+// + [DOM-010](../../demo/dom-010.html) - Add and remove (kill) Scrawl-canvas stack elements programmatically
+
+
+// #### Imports
 import { animation, constructors } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xt, 
     defaultNonReturnFunction, defaultPromiseReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
@@ -41,7 +29,7 @@ import { animate, resortAnimations } from '../core/animationloop.js';
 import baseMix from '../mixin/base.js';
 
 
-// ## Animation constructor
+// #### Animation constructor
 const Animation = function (items = {}) {
 
     this.makeName(items.name);
@@ -59,7 +47,7 @@ const Animation = function (items = {}) {
 };
 
 
-// ## Animation object prototype setup
+// #### Animation prototype
 let P = Animation.prototype = Object.create(Object.prototype);
 
 P.type = 'Animation';
@@ -68,47 +56,57 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
-// ## Define default attributes
+// #### Animation attributes
 let defaultAttributes = {
 
-
-// Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations
+// __order__ - determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations
     order: 1,
 
-
-// The main function that the animation object will run on each RequestAnimationFrame tick. This function __must return a Promise__.
+// __fn__ - the main function that the animation object will run on each RequestAnimationFrame tick. This function __must return a Promise__.
     fn: null,
 
-
 // The animation object supports some __animation hook functions__:
-
-// + onRun - triggers each time the animation object's .run function is invoked
-// + onHalt - triggers each time the animation object's .halt function is invoked
-// + onKill - triggers each time the animation object's .kill function is invoked
+// + __onRun__ - triggers each time the animation object's `run` function is invoked
+// + __onHalt__ - triggers each time the animation object's `halt` function is invoked
+// + __onKill__ - triggers each time the animation object's `kill` function is invoked
     onRun: null,
     onHalt: null,
     onKill: null,
+
+// __delay__ - by default, Animation objects will start running as soon as they are created. To prevent this happening the constructor argument can take a non-retained `delay` Boolean flag which, when set to true, will prevent the Animation object from adding itself to the Scrawl-canvas animation loop. The animation can be started at any subsequent time by invoking its `run` function.
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-
-// ## Packet/Clone management
+// #### Packet management
 // This functionality is disabled for Animation objects
 P.stringifyFunction = defaultNonReturnFunction;
 P.processPacketOut = defaultNonReturnFunction;
 P.finalizePacketOut = defaultNonReturnFunction;
 P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
+
+
+// #### Clone management
+// This functionality is disabled for Animation objects
 P.clone = defaultThisReturnFunction;
 
 
-// ## Define prototype functions
+// #### Kill management
+// Kill functionality is managed as one of the Animation object's hook functions - see below
 
-// Start the animation, if it is not already running
+
+// #### Get, Set, deltaSet
+// No additional getter or setter functionality required
+
+
+// #### Prototype functions
+
+// `run` - start the animation, if it is not already running
 P.run = function () {
 
     this.onRun();
@@ -118,14 +116,14 @@ P.run = function () {
 };
 
 
-// Returns true if animation is running; false otherwise
+// `isRunning` - returns true if animation is running; false otherwise
 P.isRunning = function () {
 
     return (animate.indexOf(this.name) >= 0) ? true : false;
 };
 
 
-// Stop the animation, if it is already running
+// `halt` - stop the animation, if it is already running
 P.halt = function () {
 
     this.onHalt();
@@ -135,7 +133,7 @@ P.halt = function () {
 };
 
 
-// Stop the animation if it is already running, and remove it from the Scrawl-canvas library
+// `kill` - stop the animation if it is already running, and remove it from the Scrawl-canvas library
 P.kill = function () {
 
     this.onKill();
@@ -148,16 +146,25 @@ P.kill = function () {
 };
 
 
-// ## Exported factory function
-
-// The factory takes a single object argument which includes the following attributes:
-
-// + __name__ (optional) - String - default: random UUID String generated at time of object construction
-// + __order__ (optional) - Number - default: 10
-// + __delay__ (optional) - Boolean - default: false
-// + __fn__ (required) - Promise-based Function - default: blank non-return function (will break the Animation loop!)
-
-// Note: by default, animations start running as soon as they are created. To prevent this include a __delay__ attribute, set to true, in the argument object.
+// #### Factory
+// ```
+// scrawl.makeAnimation({
+//
+//     name: 'demo-animation',
+//
+//     // Function MUST return a Promise object, and that promise must ALWAYS resolve (not reject)
+//     fn: function () {
+//
+//         return new Promise((resolve) => {
+//
+//             // Renders all stack and canvas elements in the document
+//             scrawl.render()
+//             .then(() => resolve(true))
+//             .catch(err => resolve(false));
+//         });
+//     }
+// });
+// ```
 const makeAnimation = function (items) {
     
     return new Animation(items);
@@ -165,6 +172,8 @@ const makeAnimation = function (items) {
 
 constructors.Animation = Animation;
 
+
+// #### Exports
 export {
     makeAnimation,
 };

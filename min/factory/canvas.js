@@ -98,6 +98,7 @@ scrawlCanvasHold.appendChild(ariaDescription);
 el.setAttribute('aria-describedby', ariaDescription.id);
 this.cleanAria();
 }
+this.dirtyCells = true;
 this.apply();
 if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
 return this;
@@ -114,12 +115,11 @@ P = domMix(P);
 let defaultAttributes = {
 position: 'relative',
 trackHere: true,
-dirtyCells: true,
 fit: 'none',
+isComponent: false,
 title: '',
 label: '',
 description: '',
-isComponent: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.stringifyFunction = defaultNonReturnFunction;
@@ -147,29 +147,6 @@ P.fitDefaults = ['fill', 'contain', 'cover'];
 S.fit = function (item) {
 this.fit = (this.fitDefaults.indexOf(item) >= 0) ? item : 'none';
 };
-G.alpha = function () {
-return this.base.alpha;
-};
-G.backgroundColor = function () {
-return this.base.backgroundColor;
-};
-G.composite = function () {
-return this.base.composite;
-};
-S.alpha = function (item) {
-if (this.base) {
-this.base.set({
-alpha: item
-});
-}
-};
-S.backgroundColor = function (item) {
-if (this.base) {
-this.base.set({
-backgroundColor: item
-});
-}
-};
 S.title = function (item) {
 this.title = item;
 this.dirtyAria = true;
@@ -182,10 +159,30 @@ S.description = function (item) {
 this.description = item;
 this.dirtyAria = true;
 };
-S.composite = function (item) {
+S.trackHere = function(bool) {
+if (xt(bool)) {
+if (bool) pushUnique(uiSubscribedElements, this.name);
+else removeItem(uiSubscribedElements, this.name);
+this.trackHere = bool;
+}
+};
+G.backgroundColor = function () {
+return this.base.backgroundColor;
+};
+S.backgroundColor = function (item) {
 if (this.base) {
 this.base.set({
-composite: item
+backgroundColor: item
+});
+}
+};
+G.alpha = function () {
+return this.base.alpha;
+};
+S.alpha = function (item) {
+if (this.base) {
+this.base.set({
+alpha: item
 });
 }
 };
@@ -196,11 +193,14 @@ alpha: item
 });
 }
 };
-S.trackHere = function(bool) {
-if (xt(bool)) {
-if (bool) pushUnique(uiSubscribedElements, this.name);
-else removeItem(uiSubscribedElements, this.name);
-this.trackHere = bool;
+G.composite = function () {
+return this.base.composite;
+};
+S.composite = function (item) {
+if (this.base) {
+this.base.set({
+composite: item
+});
 }
 };
 P.setAsCurrentCanvas = function () {

@@ -1,19 +1,14 @@
 import { constructors } from '../core/library.js';
 import { xt, isa_obj, isa_number } from '../core/utilities.js';
-const Coordinate = function (items) {
+const Coordinate = function (items, y) {
 let coords = [0, 0];
 Object.setPrototypeOf(coords, Coordinate.prototype);
-if (items) coords.set(items);
+if (items) coords.set(items, y);
 return coords;
 };
 let P = Coordinate.prototype = Object.create(Array.prototype);
 P.constructor = Coordinate;
 P.type = 'Coordinate';
-P.zero = function () {
-this[0] = 0;
-this[1] = 0;
-return this;
-};
 P.set = function (items, y) {
 if (items.type === 'Coordinate') this.setFromArray(items);
 else if (items.type === 'Vector') this.setFromVector(items);
@@ -31,6 +26,11 @@ P.setFromVector = function (item) {
 let {x, y} = item;
 this[0] = x;
 this[1] = y;
+return this;
+};
+P.zero = function () {
+this[0] = 0;
+this[1] = 0;
 return this;
 };
 P.vectorAdd = function (item) {
@@ -117,18 +117,11 @@ this[1] /= val;
 return this;
 };
 const coordinatePool = [];
-let coordinatePoolCount = 0;
 const requestCoordinate = function (items, y) {
-if (!coordinatePool.length) {
-coordinatePool.push(new Coordinate());
-coordinatePoolCount++;
-}
-let coordinate = coordinatePool.shift();
-if (y) coordinate.set(items, y);
-else if (Array.isArray(items)) coordinate.setFromArray(items);
-else if(items) coordinate.set(items);
-else coordinate.zero();
-return coordinate
+if (!coordinatePool.length) coordinatePool.push(new Coordinate());
+let c = coordinatePool.shift();
+c.set(items, y);
+return c
 };
 const releaseCoordinate = function (coordinate) {
 if (coordinate && coordinate.type === 'Coordinate') coordinatePool.push(coordinate.zero());

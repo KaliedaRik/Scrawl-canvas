@@ -1,42 +1,54 @@
-
 // # Styles mixin
+// The styles mixin contains most of the code required for the [Gradient](../factory/gradient.html) and [RadialGradient](../factory/radialGradient.html) styles factories. It is not used by the other styles objects (Color, Pattern).
+// + the __start__ and __end__ positioning attributes are defined here rather than in the factories
+// + gradient-type styles manage their color stops in [Palette factory](../factory/palette.html) objects; that functionality is entirely defined here
+//
+// The Canvas API CanvasRenderingContext2D interface defines two types of gradient: [linear](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient) and [radial](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient).
+// + the `createLinearGradient` method creates a gradient along the line connecting two given coordinates (__start__ and __end__) which are absolute values (measured in pixels) from the &lt;canvas> elements top-left corner
+// + the `createRadialGradient` method creates a radial gradient using the size and coordinates of two circles.
+//
+// Common to both types of gradient is the idea of a start coordinate and an end coordinate, supplied in pixels. 
+// + Scrawl-canvas extends this idea so that the coordinates can be supplied as a percentage value (String%) of the host Cell's dimensions. 
+// + Furthermore Scrawl-canvas allows each entity that uses a Gradient-type style to indicate whether the reference box should be that of the host Cell, or of the entity itself, through their `lockFillStyleToEntity` and `lockStrokeStyleToEntity` attribute flags.
 
-// Note: this mixin needs to be applied after the position mixin in order to work properly
 
-// TODO - documentation
-
-
-// ## Imports
+// #### Imports
 import { entity, asset, palette } from '../core/library.js';
 import { addStrings, defaultNonReturnFunction, mergeOver, xt, isa_obj, mergeDiscard } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 import { makePalette } from '../factory/palette.js';
 
+
+// #### Export function
 export default function (P = {}) {
 
 
-// ## Define attributes
-
-// All factories using the position mixin will add these to their prototype objects
+// #### Shared attributes
     let defaultAttributes = {
 
 
-// (Radial)Gradient styles uses the position mixin to supply attributes and functions for handling the gradient's start and end coordinates.
+// __start__, __end__ - Gradient-type styles use Coordinate factory Arrays to hold details of their start and end coordinates. The following _pseudo-attributes_ can also be used to reference these values:
+// + for the start coordinate, __startX__ and __startY__
+// + for the end coordinate, __endX__ and __endY__
+// 
+// In all cases, the attribute values can be Numbers, which indicate absolute pixel coordinates, or String% values for coordinates calculated relative to either Cell or entity current dimensions 
+// + for the `x` coordinate, the Strings __left__, __center__ and __right__ are also supported
+// + for the `y` coordinate, the Strings __top__, __center__ and __bottom__ are also supported
         start: null,
         end: null,
 
 
-// Every gradient requires a palette of color stop instructions
+// __palette__ - Every gradient requires a Palette object containing color stop instructions
         palette: null,
 
 
-// We don't need to use the entire palette when building a context gradient; we can restrict the palette using these start and end attributes
+// __paletteStart__, __paletteEnd__ - We don't need to use the entire palette when building a gradient; we can restrict the palette using these start and end attributes.
         paletteStart: 0,
         paletteEnd: 999,
 
 
-// The cyclePalette attribute tells the Palette object how to handle situations where paletteStart > paletteEnd
+// The __cyclePalette__ attribute tells the Palette object how to handle situations where the paletteStart value is greater than the paletteEnd value:
 // + when false, we reverse the color stops
 // + when true, we keep the normal order of color stops and pass through the 1/0 border
         cyclePalette: false,
@@ -44,7 +56,7 @@ export default function (P = {}) {
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
+// #### Packet management
     P.finalizePacketOut = function (copy, items) {
 
         if (items.colors) copy.colors = items.colors;
@@ -55,7 +67,11 @@ export default function (P = {}) {
     };
 
 
-// ## Kill functionality - overwrites ./mixin/base.js
+// #### Clone management
+// No additional clone functionality defined here
+
+
+// #### Kill management
     P.kill = function () {
 
         let myname = this.name;
@@ -84,35 +100,20 @@ export default function (P = {}) {
     };
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Get, Set, deltaSet
     let G = P.getters,
         S = P.setters,
         D = P.deltaSetters;
 
-// TODO - documentation
+// `start`, `startX`, `startY`
     G.startX = function () {
 
         return this.currentStart[0];
     };
-
     G.startY = function () {
 
         return this.currentStart[1];
     };
-
-
-    G.endX = function () {
-
-        return this.currentEnd[0];
-    };
-
-    G.endY = function () {
-
-        return this.currentEnd[1];
-    };
-
-
-// TODO - documentation
     S.startX = function (coord) {
 
         if (coord != null) {
@@ -121,7 +122,6 @@ export default function (P = {}) {
             this.dirtyStart = true;
         }
     };
-
     S.startY = function (coord) {
 
         if (coord != null) {
@@ -130,34 +130,39 @@ export default function (P = {}) {
             this.dirtyStart = true;
         }
     };
-
     S.start = function (x, y) {
 
         this.setCoordinateHelper('start', x, y);
         this.dirtyStart = true;
     };
-
     D.startX = function (coord) {
 
         let c = this.start;
         c[0] = addStrings(c[0], coord);
         this.dirtyStart = true;
     };
-
     D.startY = function (coord) {
 
         let c = this.start;
         c[1] = addStrings(c[1], coord);
         this.dirtyStart = true;
     };
-
     D.start = function (x, y) {
 
         this.setDeltaCoordinateHelper('start', x, y);
         this.dirtyStart = true;
     };
 
-// TODO - documentation
+
+// `end`, `endX`, `endY`
+    G.endX = function () {
+
+        return this.currentEnd[0];
+    };
+    G.endY = function () {
+
+        return this.currentEnd[1];
+    };
     S.endX = function (coord) {
 
         if (coord != null) {
@@ -166,7 +171,6 @@ export default function (P = {}) {
             this.dirtyEnd = true;
         }
     };
-
     S.endY = function (coord) {
 
         if (coord != null) {
@@ -175,40 +179,36 @@ export default function (P = {}) {
             this.dirtyEnd = true;
         }
     };
-
     S.end = function (x, y) {
 
         this.setCoordinateHelper('end', x, y);
         this.dirtyEnd = true;
     };
-
     D.endX = function (coord) {
 
         let c = this.end;
         c[0] = addStrings(c[0], coord);
         this.dirtyEnd = true;
     };
-
     D.endY = function (coord) {
 
         let c = this.end;
         c[1] = addStrings(c[1], coord);
         this.dirtyEnd = true;
     };
-
     D.end = function (x, y) {
 
         this.setDeltaCoordinateHelper('end', x, y);
         this.dirtyEnd = true;
     };
 
-// TODO - documentation
+// `palette` - argument has to be a Palette object
     S.palette = function (item = {}) {
 
         if(item.type === 'Palette') this.palette = item;
     };
 
-// TODO - documentation
+// `paletteStart` - argument must be a positive integer Number in the range 0 - 999
     S.paletteStart = function (item) {
 
         if (item.toFixed) {
@@ -218,17 +218,6 @@ export default function (P = {}) {
             if(item < 0 || item > 999) this.paletteStart = (item > 500) ? 999 : 0;
         }
     };
-
-    S.paletteEnd = function (item) {
-
-        if (item.toFixed) {
-
-            this.paletteEnd = item;
-            
-            if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
-        }
-    };
-
     D.paletteStart = function (item) {
 
         let p;
@@ -244,6 +233,18 @@ export default function (P = {}) {
             }
 
             this.paletteStart = p;
+        }
+    };
+
+
+// `paletteEnd` - argument must be a positive integer Number in the range 0 - 999
+    S.paletteEnd = function (item) {
+
+        if (item.toFixed) {
+
+            this.paletteEnd = item;
+            
+            if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
         }
     };
 
@@ -265,6 +266,7 @@ export default function (P = {}) {
         }
     };
 
+// `colors` - We can pass through an array of palette color objects to the Palette object by setting it on the gradient-type styles object
     S.colors = function (item) {
 
         let p = this.palette;
@@ -272,19 +274,16 @@ export default function (P = {}) {
         if (p && p.colors) p.set({ colors: item });
     };
 
-// TODO - documentation
+// `delta` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes
     S.delta = function (items = {}) {
 
         if (items) this.delta = mergeDiscard(this.delta, items);
     };
 
 
+// #### Prototype functions
 
-// ## Define functions to be added to the factory prototype
-
-
-
-// Overwrites function defined in mixin/base.js - takes into account Palette object attributes
+// `get` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
     P.get = function (item) {
 
         let getter = this.getters[item];
@@ -314,7 +313,7 @@ export default function (P = {}) {
     };
 
 
-// Overwrites function defined in mixin/base.js - takes into account Palette object attributes
+// `set` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
     P.set = function (items = {}) {
 
         if (items) {
@@ -348,7 +347,7 @@ export default function (P = {}) {
     };
 
 
-// Overwrites function defined in mixin/base.js - takes into account Palette object attributes
+// `setDelta` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
     P.setDelta = function (items = {}) {
 
         if (items) {
@@ -381,7 +380,7 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
+// `setCoordinateHelper` - internal helper function
     P.setCoordinateHelper = function (label, x, y) {
 
         let c = this[label];
@@ -398,6 +397,7 @@ export default function (P = {}) {
         }
     };
 
+// `setDeltaCoordinateHelper` - internal helper function
     P.setDeltaCoordinateHelper = function (label, x, y) {
 
         let c = this[label],
@@ -416,7 +416,7 @@ export default function (P = {}) {
         }
     };
 
-// TODO - documentation
+// `updateByDelta` - manually force the gradient-type styles object to update its attributes by the values supplied in its delta attribute
     P.updateByDelta = function () {
 
         this.setDelta(this.delta);
@@ -424,7 +424,7 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
+// `stylesInit` - common functionality invoked by gradient-type factory constructors
     P.stylesInit = function (items = {}) {
 
         this.makeName(items.name);
@@ -450,7 +450,7 @@ export default function (P = {}) {
     };
 
 
-// This is where we have to calculate all the stuff necessary to get the ctx gradient object attached to the ctx, so we can use it for upcoming fillStyle and strokeStyle settings on the engine. We have to create the ctx gradient and return it. 
+// `getData` - Every styles object (Gradient, RadialGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
     P.getData = function (entity, cell, isFill) {
 
         // Step 1: see if the palette is dirty, from having colors added/deleted/changed
@@ -466,7 +466,7 @@ export default function (P = {}) {
         return this.buildStyle(cell);
     };
 
-// TODO - documentation
+// `cleanStyle` - internal function invoked as part of the gradient-type object's `getData` function. The style has to be cleaned every time it is applied to a Cell's engine because it can never know which Cell is invoking it, or for which entity it is to be used.
     P.cleanStyle = function (entity = {}, cell = {}, isFill) {
 
         let dims, w, h, scale;
@@ -491,7 +491,7 @@ export default function (P = {}) {
         this.cleanRadius(w);
     };
 
-// TODO - documentation
+// `cleanPosition` - internal function invoked as part of the gradient-type object's `cleanStyle` function.
     P.cleanPosition = function (current, source, dimensions) {
 
         let val, dim;
@@ -509,7 +509,7 @@ export default function (P = {}) {
         }
     };
 
-// TODO - documentation
+// `finalizeCoordinates` - internal function invoked as part of the gradient-type object's `getData` function.
     P.finalizeCoordinates = function (entity = {}, isFill) {
 
         let currentStart = this.currentStart,
@@ -537,11 +537,11 @@ export default function (P = {}) {
     };
 
 
-// Do stuff here for startRadius, endRadius, producing local variants - overwritten in factory-radialgradient.js file
+// `cleanRadius` - overwritten by the RadialGradient factory
     P.cleanRadius = defaultNonReturnFunction;
 
 
-// Just in case something went wrong with loading other styles files, which must overwrite this function, we can return transparent color here
+// `buildStyle` - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here
     P.buildStyle = function (cell) {
 
         return 'rgba(0,0,0,0)';

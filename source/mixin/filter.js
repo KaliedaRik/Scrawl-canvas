@@ -1,51 +1,51 @@
-
 // # Filter mixin
+// The filter mixin adds functionality to Cell, Group and all entity factories which allows those objects to use Scrawl-canvas [Filter objects](../factory/filter.html) in their output.
 
-// TODO - documentation
+
+// #### Demos:
+// + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
+// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets; save and load a range of different entitys
 
 
-// ## Imports
+// #### Imports
 import { filter } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
 
+
+// #### Export function
 export default function (P = {}) {
 
 
-// ## Define attributes
-
-// All factories using the filter mixin will add these to their prototype objects
+// #### Filter-related attributes
+// All factories using the filter mixin will add these attributes to their objects
     let defaultAttributes = {
 
 
-// An array of filter object String names. If only one filter is to be applied, then it is enough to use the String name of that filter object - Scrawl-canvas will make sure it gets added to the Array.
-
-// To add/remove new filters to the filters array, use the addFilters() and removeFilters() functions. Note that the set() function will replace all the existing filters in the array with the new filters. To remove all existing filters from the array, use the clearFilters() function
-
-// Multiple filters can be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters will be applied in the order defined by each filter object's __order__ value; filter objects with the same order value will be applied in the order in which they were added to the filters array.
-
-// NOTE: currently, user-defined filters are applied after the application of all Scrawl-canvas-defined filters has completed. 
+// __filters__ - An array of filter object String names. If only one filter is to be applied, then it is enough to use the String name of that filter object - Scrawl-canvas will make sure it gets added to the Array.
+// + To add/remove new filters to the filters array, use the `addFilters` and `removeFilters` functions. Note that the `set` function will replace all the existing filters in the array with the new filters. To remove all existing filters from the array, use the `clearFilters` function
+// + Multiple filters can be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters are applied in the order that they appear in in the filters array.
         filters: null,
 
 
-// Use the entity as a stencil.
+// __isStencil__ - Use the entity as a stencil.
         isStencil: false,
 
 
-// To make the filter transparent, so that some of the original colour shows through
+// __filterAlpha__ - To make the filter transparent, so that some of the original colour shows through
         filterAlpha: 1,
 
 
-// Change how the filter will be applied to the scene
+// __filterComposite__ - Change how the filter will be applied to the scene
         filterComposite: 'source-over',
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Get, Set, deltaSet
     let S = P.setters;
 
 
-// Replaces the existing filters array with a new filters array. If a string name is supplied, will add that name to the existing filters array
+// `filters` - Replaces the existing filters array with a new filters array. If a string name is supplied, will add that name to the existing filters array
     S.filters = function (item) {
 
         if (!Array.isArray(this.filters)) this.filters = [];
@@ -69,13 +69,25 @@ export default function (P = {}) {
     };
 
 
-// ## Define functions to be added to the factory prototype
+// #### Packet management
+// No additional packet functionality defined here
 
 
+// #### Clone management
+// No additional clone functionality defined here
 
-// TODO - documentation
 
-// Internal housekeeping
+// #### Kill management
+// No additional kill functionality defined here
+
+
+// #### Get, Set, deltaSet
+// No additional functionality defined here
+
+
+// #### Prototype functions
+
+// `cleanFilters` - Internal housekeeping
     P.cleanFilters = function () {
 
         this.dirtyFilters = false;
@@ -100,7 +112,7 @@ export default function (P = {}) {
     };
 
 
-// Add one or more filter name strings to the filters array. Filter name strings can be supplied as comma-separated arguments to the function
+// `addFilters` - Add one or more filter name strings to the filters array. Filter name strings can be supplied as comma-separated arguments to the function
     P.addFilters = function (...args) {
 
         if (!Array.isArray(this.filters)) this.filters = [];
@@ -121,7 +133,7 @@ export default function (P = {}) {
     };
 
 
-// Remove one or more filter name strings from the filters array. Filter name strings can be supplied as comma-separated arguments to the function
+// `removeFilters` - Remove one or more filter name strings from the filters array. Filter name strings can be supplied as comma-separated arguments to the function
     P.removeFilters = function (...args) {
 
         if (!Array.isArray(this.filters)) this.filters = [];
@@ -142,7 +154,7 @@ export default function (P = {}) {
     };
 
 
-// Clears the filters array
+// `clearFilters` - Clears the filters array
     P.clearFilters = function () {
 
         if (!Array.isArray(this.filters)) this.filters = [];

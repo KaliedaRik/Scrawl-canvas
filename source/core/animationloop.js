@@ -1,5 +1,4 @@
 // # The Animation Loop
-//
 // Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - __animationLoop__ - for all animation objects. 
 //
 // Animation objects are Scrawl-canvas objects with a __fn__ attribute - a function which returns a Promise; all Animation objects contained in the __animate__ array will be invoked as part of a Promise.all action. Once the Promise.all resolves, _animationLoop_ is invoked again.
@@ -8,11 +7,11 @@
 //
 // To stop the RAF:
 //
-//     scrawl.stopCoreAnimationLoop()
+// `scrawl.stopCoreAnimationLoop()`
 //
 // To restart the RAF after it has been stopped:
 //
-//     scrawl.startCoreAnimationLoop()
+// `scrawl.startCoreAnimationLoop()`
 //
 // ... Functionality tested in [Demo DOM-009](../../demo/dom-009.html)
 //
@@ -33,9 +32,7 @@
 // Note that ticker/tween animations will all run before other animations (order differences between tickers/tween objects will be respected).
 
 
-// #### Functionality
-
-// Imports
+// #### Imports
 import { animation } from "./library.js";
 
 // Local variables 
@@ -112,6 +109,7 @@ const stopCoreAnimationLoop = function () {
     doAnimation = false;
 };
 
+// #### Exports
 export {
     animate,
     resortAnimations,

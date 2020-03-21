@@ -1,10 +1,11 @@
-// ## Demo Canvas 007 
+// # Demo Canvas 007 
+// Apply filters at the entity, group and cell level
 
-// [Apply filters at the entity, group and cell level](../../demo/canvas-007.html)
+// [Run code](../../demo/canvas-007.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
@@ -41,37 +42,6 @@ myGrad.clone({
 })
 .updateColor(0, 'black')
 .updateColor(999, 'coral');
-
-
-// Gradient packet test
-console.log(myGrad.saveAsPacket());
-console.log(myGrad.palette.saveAsPacket());
-
-// RESULTS:
-// [
-//     "linear1",
-//     "Gradient",
-//     "styles",
-//     {
-//         "name":"linear1",
-//         "start":[0,0],
-//         "end":["100%",0],
-//         "palette":"linear1_palette"
-//     }
-// ]
-
-// [
-//     "linear1_palette",
-//     "Palette",
-//     "palette",
-//     {
-//         "name":"linear1_palette",
-//         "colors":{
-//             "0 ":[255,192,203,1],
-//             "999 ":[0,100,0,1]
-//         }
-//     }
-// ]
 
 
 // Create entitys
@@ -135,87 +105,87 @@ let wheel2 = wheel1.clone({
 
 // Define filters - need to test them all, plus some user-defined filters
 
-// Grayscale filter
+// __Grayscale__ filter
 scrawl.makeFilter({
     name: 'grayscale',
     method: 'grayscale',
 
-// Sepia filter
+// __Sepia__ filter
 }).clone({
     name: 'sepia',
     method: 'sepia',
 
-// Invert filter
+// __Invert__ filter
 }).clone({
     name: 'invert',
     method: 'invert',
 
-// Red filter
+// __Red__ filter
 }).clone({
     name: 'red',
     method: 'red',
 
-// Green filter
+// __Green__ filter
 }).clone({
     name: 'green',
     method: 'green',
 
-// Blue filter
+// __Blue__ filter
 }).clone({
     name: 'blue',
     method: 'blue',
 
-// Notred filter
+// __Notred__ filter
 }).clone({
     name: 'notred',
     method: 'notred',
 
-// Notgreen filter
+// __Notgreen__ filter
 }).clone({
     name: 'notgreen',
     method: 'notgreen',
 
-// Notblue filter
+// __Notblue__ filter
 }).clone({
     name: 'notblue',
     method: 'notblue',
 
-// Cyan filter
+// __Cyan__ filter
 }).clone({
     name: 'cyan',
     method: 'cyan',
 
-// Magenta filter
+// __Magenta__ filter
 }).clone({
     name: 'magenta',
     method: 'magenta',
 
-// Yellow filter
+// __Yellow__ filter
 }).clone({
     name: 'yellow',
     method: 'yellow',
 });
 
-// Chroma (green screen) filter
+// __Chroma__ (green screen) filter
 scrawl.makeFilter({
     name: 'chroma',
     method: 'chroma',
     ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]],
 });
 
-// Brightness filter
+// __Brightness__ filter
 scrawl.makeFilter({
     name: 'brightness',
     method: 'brightness',
     level: 0.5,
 
-// Saturation filter
+// __Saturation__ filter
 }).clone({
     name: 'saturation',
     method: 'saturation',
     level: 1.4,
 
-// Threshhold filter
+// __Threshhold__ filter
 }).clone({
     name: 'threshold',
     method: 'threshold',
@@ -228,7 +198,7 @@ scrawl.makeFilter({
     highBlue: 60,
 });
 
-// Channels filter
+// __Channels__ filter
 scrawl.makeFilter({
     name: 'channels',
     method: 'channels',
@@ -236,7 +206,7 @@ scrawl.makeFilter({
     green: 0.8,
     blue: 0.6,
 
-// Channelstep filter
+// __Channelstep__ filter
 }).clone({
     name: 'channelstep',
     method: 'channelstep',
@@ -245,7 +215,7 @@ scrawl.makeFilter({
     blue: 64,
 });
 
-// Tint filter
+// __Tint__ filter
 scrawl.makeFilter({
     name: 'tint',
     method: 'tint',
@@ -260,7 +230,7 @@ scrawl.makeFilter({
     blueInBlue: 0.4,
 });
 
-// Pixellate filter
+// __Pixellate__ filter
 scrawl.makeFilter({
     name: 'pixelate',
     method: 'pixelate',
@@ -270,7 +240,7 @@ scrawl.makeFilter({
     offsetY: 8,
 });
 
-// Blur filter
+// __Blur__ filter
 scrawl.makeFilter({
     name: 'blur',
     method: 'blur',
@@ -280,13 +250,13 @@ scrawl.makeFilter({
     passes: 3,
 });
 
-// Matrix filter
+// __Matrix__ filter
 scrawl.makeFilter({
     name: 'matrix',
     method: 'matrix',
     weights: [-1, -1, 0, -1, 1, 1, 0, 1, 1],
 
-// Matrix5 filter
+// __Matrix5__ filter
 }).clone({
     name: 'matrix5',
     method: 'matrix5',
@@ -334,6 +304,7 @@ myUDF.clone({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -352,7 +323,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -361,7 +332,8 @@ scrawl.makeRender({
 });
 
 
-// Event listeners
+// #### User interaction
+// Event listeners function
 let events = function () {
 
     let base = canvas.base,
@@ -438,11 +410,45 @@ let events = function () {
     };
 }();
 
+// Event listeners
 scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
-// Set the DOM input values
+// Set DOM form initial input values
 document.querySelector('#target').value = '';
 document.querySelector('#filter').value = '';
 
+
+// #### Development and testing
 console.log(scrawl.library);
 
+// Gradient packet test
+console.log(myGrad.saveAsPacket());
+console.log(myGrad.palette.saveAsPacket());
+
+// RESULT:
+// ```
+// [
+//     "linear1",
+//     "Gradient",
+//     "styles",
+//     {
+//         "name":"linear1",
+//         "start":[0,0],
+//         "end":["100%",0],
+//         "palette":"linear1_palette"
+//     }
+// ]
+//    
+// [
+//     "linear1_palette",
+//     "Palette",
+//     "palette",
+//     {
+//         "name":"linear1_palette",
+//         "colors":{
+//             "0 ":[255,192,203,1],
+//             "999 ":[0,100,0,1]
+//         }
+//     }
+// ]
+// ```

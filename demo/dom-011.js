@@ -1,10 +1,11 @@
-// ## Demo DOM 011
+// # Demo DOM 011
+// Canvas controller 'fit' attribute; Cell positioning (mouse)
 
-// [Canvas controller 'fit' attribute; Cell positioning (mouse)](../../demo/dom-011.html)
+// [Run code](../../demo/dom-011.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     canvas = artefact.mycanvas;
@@ -29,12 +30,14 @@ canvas.set({
     width: '100%',
     height: '100%',
 
-    // The 'fit' attribute comes into play when the displayed canvas element and its hidden canvas companion (the base canvas) have different dimensions. The hidden canvas is copied over to the displayed canvas at the end of every display cycle.
-
-    // We can influence how this copy happens by setting the 'fit' attribute to an appropriate String value ('fill', 'contain', 'cover', or 'none'). These replicate the effect of the CSS object-fit property (see https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
+    // The `fit` attribute comes into play when the displayed canvas element and its hidden canvas companion (the base canvas) have different dimensions. The hidden canvas is copied over to the displayed canvas at the end of every display cycle.
+    //
+    // We can influence how this copy happens by setting the `fit` attribute to an appropriate String value ('fill', 'contain', 'cover', or 'none'). These replicate the effect of the CSS object-fit property (see https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
     fit: 'fill',
 
     // We've given the Stack element a 1px border. We need to compensate for this (and any top/left padding) when aligning the canvas element within the stack. if we don't do this, we get a 1px white line between the stack border and the canvas (on the top and left edges)
+    // 
+    // TODO - fix this. Annoying.
     startX: -1,
     startY: -1,
 });
@@ -63,6 +66,7 @@ let cell = canvas.buildCell({
 });
 
 
+// #### Scene animation
 // Function to check whether mouse cursor is over the canvas element within the stack, and lock the element artefact accordingly
 let check = function () {
 
@@ -110,6 +114,7 @@ scrawl.makeRender({
 });
 
 
+// #### User interaction
 // Event listeners
 scrawl.observeAndUpdate({
 
@@ -149,17 +154,18 @@ document.querySelector('#width').value = '400';
 document.querySelector('#height').value = '400';
 
 
-// Dev tip 1: Scrawl-canvas doesn't add a namespace object to the Javascript global object. To see what's going on in the Scrawl-canvas library - where all relevant SC objects are held - console log it (in the code file, not directly in the browser console):
-
-//     console.log(scrawl.library);
-
+// #### Development and testing
+// __Dev tip 1:__ Scrawl-canvas doesn't add a namespace object to the Javascript global object. To see what's going on in the Scrawl-canvas library - where all relevant SC objects are held - console log it (in the code file, not directly in the browser console):
+//
+// `console.log(scrawl.library);`
+//
 // + doesn't update in real time, but closing and opening the object in the console should reveal values at the point in time when it is reopened
 // + In Chrome console (at least), the various objects in the library will be listed with their object type eg Stack, Canvas, Cell, etc
-
+//
 // If you only want to view a specific part of the library - for example, just artefacts - console log it out in the same way:
-
-//     console.log(scrawl.library.artefact);
-
-// Dev tip 2: to see what's going on in any hidden canvas, temporarily add it to the bottom of the page, or insert it wherever using appropriate DOM API functionality:
-
-//     document.body.appendChild(scrawl.library.cell[NAME].element);
+//
+// `console.log(scrawl.library.artefact);`
+//
+// __Dev tip 2:__ to see what's going on in any hidden canvas, temporarily add it to the bottom of the page, or insert it wherever using appropriate DOM API functionality:
+//
+// `document.body.appendChild(scrawl.library.cell[NAME].element);`

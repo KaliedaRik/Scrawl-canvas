@@ -1,10 +1,11 @@
-// ## Demo Canvas 003 
+// # Demo Canvas 003 
+// Linear gradients
 
-// [Linear gradients](../../demo/canvas-003.html)
+// [Run code](../../demo/canvas-003.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
@@ -37,6 +38,7 @@ scrawl.makeBlock({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -58,7 +60,7 @@ End - x: ${graddy.get('endX')}; y: ${graddy.get('endY')}`;
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -67,7 +69,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed and recreated it later
+// #### User interaction
+// Setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later
 let makeObserver = () => {
 
     return scrawl.observeAndUpdate({
@@ -130,6 +133,8 @@ document.querySelector('#endY').value = 0;
 document.querySelector('#red').value = 0;
 document.querySelector('#blue').value = 0;
 
+
+// #### Development and testing
 console.log(scrawl.library);
 
 // To test styles (Gradient) kill functionality
@@ -179,8 +184,10 @@ killStyle('mygradient', 3000, () => {
     });
 
     // Kill the form observer
+    console.log('Kill form observer');
     myobserver();
 
     // ... and recreate it
     myobserver = makeObserver();
+    console.log('Form observer recreated');
 });

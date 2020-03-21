@@ -1,9 +1,8 @@
 // # Core initialization
-//
 // A single, `exported function` (to modules). This needs to run once after the scrawl.js module (or equivalent) loads
 
 
-// Imports
+// #### Imports
 import { startCoreAnimationLoop } from './animationloop.js';
 import { getCanvases, getStacks } from './document.js';
 import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } from './userInteraction.js';
@@ -37,6 +36,7 @@ const init = function () {
     startCoreListeners();
 };
 
+// #### Exports
 export {
     init,
 };

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>canvas-005.js</title>
+  <title>Demo Canvas 005</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>canvas-005.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-canvas-005">Demo Canvas 005</h2>
+              <h1 id="demo-canvas-005">Demo Canvas 005</h1>
+<p>Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-005.html">Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween</a></p>
+              <p><a href="../../demo/canvas-005.html">Run code</a></p>
 
             </div>
             
@@ -308,7 +293,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
@@ -514,7 +499,8 @@ scrawl.makeWheel({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Tween, and the engine used by the tween to calculate values</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Tween, and the engine used by the tween to calculate values</p>
 
             </div>
             
@@ -585,26 +571,6 @@ scrawl.makeWheel({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Create the drag-and-drop zone</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> current = scrawl.makeDragZone({
-
-    <span class="hljs-attr">zone</span>: canvas,
-    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">'up'</span>, <span class="hljs-string">'leave'</span>],
-    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
@@ -631,11 +597,11 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Function to animate the gradients</p>
 
@@ -657,13 +623,13 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Create the Animation loop which will run the Display cycle</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
@@ -673,9 +639,43 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">commence</span>: animateGradients,
     <span class="hljs-attr">afterShow</span>: report,
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Create the drag-and-drop zone</p>
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> current = scrawl.makeDragZone({
+
+    <span class="hljs-attr">zone</span>: canvas,
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">'up'</span>, <span class="hljs-string">'leave'</span>],
+    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

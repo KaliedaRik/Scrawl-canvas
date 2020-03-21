@@ -1,12 +1,11 @@
 // # Core user interaction
-//
 // A set of functions that are closely tied to the [core/document.js](./document.html) functionality, and a couple of additional coder convenience functions.
 //
 // Scrawl-canvas adds some event listeners (mouse movement, screen resize, scrolling) to the window object. These help maintain a centralizerd mouse/touch cursor tracking facility that updates here and then cascades and localizes to artefacts (stacks, canvases and element wrapper objects) which need to keep track of a __local, immediately updated mouse/touch coordinate__.
 //
 // Checks to see if events have occurred happen once per requestAnimationFrame tick - this is to choke the more eager event listeners which can, at times, fire thousands of times a second.
 
-// Imports
+// #### Imports
 import * as library from "./library.js";
 import { xt, xta, isa_dom, isa_fn, defaultNonReturnFunction } from "./utilities.js";
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "./document.js";
@@ -485,6 +484,7 @@ const makeDragZone = function (items = {}) {
     else return kill;
 };
 
+// #### Exports
 export {
     uiSubscribedElements,
     currentCorePosition,

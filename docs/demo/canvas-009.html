@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>canvas-009.js</title>
+  <title>Demo Canvas 009</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>canvas-009.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-canvas-009">Demo Canvas 009</h2>
+              <h1 id="demo-canvas-009">Demo Canvas 009</h1>
+<p>Pattern styles; Entity web link anchors; Dynamic accessibility</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-009.html">Pattern styles; Entity web link anchors; Dynamic accessibility</a></p>
+              <p><a href="../../demo/canvas-009.html">Run code</a></p>
 
             </div>
             
@@ -308,9 +293,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Google Analytics code - loaded in the normal way through markup in the canvas-009.html file (lines 11-21)</p>
+              <h4 id="google-analytics">Google Analytics</h4>
+<p>We load GA code in the normal way through markup in the dom-006.html file (lines 11-21), and get a handle on the <strong>ga</strong> object here</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-built_in">window</span>[<span class="hljs-built_in">window</span>[<span class="hljs-string">'GoogleAnalyticsObject'</span>] || <span class="hljs-string">'ga'</span>],
+    myTracker;</pre></div></div>
             
         </li>
         
@@ -321,9 +310,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Create a new tracker to handle canvas interaction, and set some attributes on it. </p>
+              <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. </p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>ga(<span class="hljs-string">'create'</span>, <span class="hljs-string">'UA-000000-0'</span>, <span class="hljs-string">'auto'</span>, <span class="hljs-string">'demoCanvasTracker'</span>);</pre></div></div>
             
         </li>
         
@@ -338,12 +329,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-built_in">window</span>[<span class="hljs-built_in">window</span>[<span class="hljs-string">'GoogleAnalyticsObject'</span>] || <span class="hljs-string">'ga'</span>],
-    myTracker;
-
-ga(<span class="hljs-string">'create'</span>, <span class="hljs-string">'UA-000000-0'</span>, <span class="hljs-string">'auto'</span>, <span class="hljs-string">'demoCanvasTracker'</span>);
-
-ga(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>ga(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     myTracker = ga.getByName(<span class="hljs-string">'demoCanvasTracker'</span>);
     myTracker.set(<span class="hljs-string">'transport'</span>, <span class="hljs-string">'beacon'</span>);
     myTracker.set(<span class="hljs-string">'campaignKeyword'</span>, <span class="hljs-string">'Scrawl-canvas demo'</span>);
@@ -358,7 +344,7 @@ ga(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Canvas work - scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
@@ -595,8 +581,7 @@ canvas.base.set({
             <div class="content"><div class='highlight'><pre>        clickAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
             <span class="hljs-keyword">return</span> <span class="hljs-string">`ga('demoCanvasTracker.send', 'event', 'Outbound link', 'click', '<span class="hljs-subst">${<span class="hljs-keyword">this</span>.href}</span>')`</span>;
-        },
-    },</pre></div></div>
+        },</pre></div></div>
             
         </li>
         
@@ -607,11 +592,13 @@ canvas.base.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas&gt; element. Note that ‘this’ refers to the entity object, meaning the functions can be safely cloned into other entitys.</p>
+              <p>Include focus and blur actions, which will trigger the onEnter and onLeave functions (below) for visitors using non-mouse/touch navigation (for example: keyboard tabbing)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    onEnter: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        focusAction: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">blurAction</span>: <span class="hljs-literal">true</span>,
+    },</pre></div></div>
             
         </li>
         
@@ -621,6 +608,21 @@ canvas.base.set({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas&gt; element. Note that ‘this’ refers to the entity object, meaning the functions can be safely cloned into other entitys.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    onEnter: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Update the block entity’s visual display</p>
 
@@ -633,11 +635,11 @@ canvas.base.set({
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>This is where we update the accessibility information tied to the canvas element. We’re using the anchor attribute object’s description value to supply details of what actions will happen when the user clicks on the canvas while the mouse is over the block entity.</p>
 
@@ -651,11 +653,11 @@ canvas.base.set({
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Track the action in Google Analytics</p>
 
@@ -669,11 +671,11 @@ canvas.base.set({
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Reset the block entity’s visual display</p>
 
@@ -686,11 +688,11 @@ canvas.base.set({
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Reset the accessibility information tied to the canvas element.</p>
 
@@ -704,11 +706,11 @@ canvas.base.set({
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Track the action in Google Analytics</p>
 
@@ -720,11 +722,11 @@ canvas.base.set({
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Used by the Scrawl-canvas click event, below. This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor’s clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology</p>
 
@@ -735,11 +737,11 @@ canvas.base.set({
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Track the action in Google Analytics</p>
 
@@ -750,11 +752,11 @@ canvas.base.set({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Trigger the click event on the anchor element we added to the DOM</p>
 
@@ -812,86 +814,24 @@ canvas.base.set({
         </li>
         
         
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Demonstrate zoned actions on a canvas element as a result of user interaction</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <ul>
+              <p>Demonstrate zoned actions on a canvas element as a result of user interaction</p>
+<ul>
 <li>Available cascadeEventAction arguments are: ‘enter’, ‘leave’, ‘down’, or ‘up’</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <ul>
 <li>Also, the ‘move’ argument will trigger enter and leave actions on the entitys, as appropriate to each</li>
 </ul>
+<p>In this case, moving the mouse cursor over a block entity will increase its line width, as specified in the <strong>onEnter</strong> and <strong>onLeave</strong> functions in the block factories above. </p>
+<p>Additionally, it will update the &lt;canvas&gt; element’s title attribute (for tool tips) and its ARIA label value (for accessibility)</p>
+<p>The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates </p>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
-              </div>
-              <p>In this case, moving the mouse cursor over a block entity will increase its line width, as specified in the <strong>onEnter</strong> and <strong>onLeave</strong> functions in the block factories above. </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p>Additionally, it will update the &lt;canvas&gt; element’s title attribute (for tool tips) and its ARIA label value (for accessibility)</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <p>The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> interactionResults;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> interactionResults = <span class="hljs-string">''</span>;
 <span class="hljs-keyword">let</span> interactions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">if</span> (canvas.here.active) interactionResults = canvas.cascadeEventAction(<span class="hljs-string">'move'</span>);
@@ -902,26 +842,14 @@ scrawl.addListener(<span class="hljs-string">'move'</span>, interactions, canvas
         </li>
         
         
-        <li id="section-33">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Demonstrate entity-based anchor (href links) functionality</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p>In this case, clicking on one of the tiles will open a related Wikipedia page in a new browser tab - as defined in the  <strong>onUp</strong> function in the block factories above</p>
+              <p>To capture other user interaction with the &lt;a&gt; DOM elements which, while being visually hidden, are still accessible - for instance when a user keyboard-tabs through the web page</p>
+<p>In this case, clicking on one of the tiles will open a related Wikipedia page in a new browser tab - as defined in the  <strong>onUp</strong> function in the block factories above</p>
 
             </div>
             
@@ -934,13 +862,14 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         </li>
         
         
-        <li id="section-35">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
@@ -957,10 +886,204 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Hits: ${interactionResults}
-Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLength()}; vector: ${scrawl.vectorPoolLength()}; quaternion: ${scrawl.quaternionPoolLength()}`;
+Hits: ${interactionResults}`;
     };
 }();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Create the Display cycle animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>To test artefact kill functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> killArtefact = <span class="hljs-function">(<span class="hljs-params">name, anchorname, time, finishResurrection</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">let</span> groupname = <span class="hljs-string">'mycanvas_base'</span>,
+        packet;
+
+    <span class="hljs-keyword">let</span> checkGroupBucket = <span class="hljs-function">(<span class="hljs-params">name, groupname</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> res = scrawl.library.group[groupname].artefactBuckets.filter(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.name === name );
+        <span class="hljs-keyword">return</span> (res.length) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>;
+    };
+
+    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
+    anchor removed: <span class="hljs-subst">${(scrawl.library.anchor[anchorname]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>`</span>);
+
+        packet = scrawl.library.artefact[name].saveAsPacket();
+
+        scrawl.library.artefact[name].kill();
+
+        setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
+    anchor removed: <span class="hljs-subst">${(scrawl.library.anchor[anchorname]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>`</span>);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
+    anchor removed: <span class="hljs-subst">${(scrawl.library.anchor[anchorname]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>`</span>);
+
+                finishResurrection();
+
+            }, <span class="hljs-number">100</span>);
+        }, <span class="hljs-number">100</span>);
+    }, time);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>We use the <strong>canvas</strong> and <strong>myTracker</strong> variables in our blocks’ onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file’s code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be ‘undefined’. So we need to reset the block’s ‘on…’ functions (in this module file’s code) after the block has resurrected</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>killArtefact(<span class="hljs-string">'brick-in-marble'</span>, <span class="hljs-string">'wikipedia-brick-link'</span>, <span class="hljs-number">2000</span>, () =&gt; {
+
+    scrawl.library.artefact[<span class="hljs-string">'brick-in-marble'</span>].set({
+
+        <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">30</span> });
+            canvas.set({
+                <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> tile`</span>,
+                <span class="hljs-attr">label</span>: <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'anchorDescription'</span>),
+            });
+            myTracker.send(<span class="hljs-string">'event'</span>, <span class="hljs-string">'Canvas Entity'</span>, <span class="hljs-string">'hover start'</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>`</span>);
+        },
+        <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span> });
+            canvas.set({
+                <span class="hljs-attr">title</span>: <span class="hljs-string">''</span>,
+                <span class="hljs-attr">label</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span> canvas element`</span>,
+            });
+            myTracker.send(<span class="hljs-string">'event'</span>, <span class="hljs-string">'Canvas Entity'</span>, <span class="hljs-string">'hover end'</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>`</span>);
+        },
+        <span class="hljs-attr">onUp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            myTracker.send(<span class="hljs-string">'event'</span>, <span class="hljs-string">'Canvas Entity Link'</span>, <span class="hljs-string">'click'</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span> <span class="hljs-subst">${<span class="hljs-keyword">this</span>.anchor.href}</span>`</span>);
+            <span class="hljs-keyword">this</span>.clickAnchor();
+        },
+    });
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>To test styles (Pattern) kill functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> killStyle = <span class="hljs-function">(<span class="hljs-params">name, time, finishResurrection</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">let</span> packet;
+
+    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+    removed from styles: <span class="hljs-subst">${(scrawl.library.styles[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from stylesnames: <span class="hljs-subst">${(scrawl.library.stylesnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>`</span>);
+
+        packet = scrawl.library.styles[name].saveAsPacket();
+
+        scrawl.library.styles[name].kill();
+
+        setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+    removed from styles: <span class="hljs-subst">${(scrawl.library.styles[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from stylesnames: <span class="hljs-subst">${(scrawl.library.stylesnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>`</span>);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+    removed from styles: <span class="hljs-subst">${(scrawl.library.styles[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from stylesnames: <span class="hljs-subst">${(scrawl.library.stylesnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>`</span>);
+
+                finishResurrection();
+
+            }, <span class="hljs-number">100</span>);
+        }, <span class="hljs-number">100</span>);
+    }, time);
+};
+
+killStyle(<span class="hljs-string">'marble-pattern'</span>, <span class="hljs-number">3000</span>, () =&gt; {</pre></div></div>
             
         </li>
         
@@ -971,15 +1094,17 @@ Pools - cell: ${scrawl.cellPoolLength()}; coordinate: ${scrawl.coordinatePoolLen
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>Create the Animation loop which will run the Display cycle</p>
+              <p>Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>    scrawl.library.entity[<span class="hljs-string">'brick-in-marble'</span>].set({
+        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'marble-pattern'</span>,
+    });
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
+    scrawl.library.entity[<span class="hljs-string">'marble-in-water'</span>].set({
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'marble-pattern'</span>,
+    });
 });</pre></div></div>
             
         </li>

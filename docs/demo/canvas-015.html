@@ -249,16 +249,6 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -362,6 +352,8 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">boundingBoxColor</span>: <span class="hljs-string">'red'</span>,
 
+    <span class="hljs-attr">exposeText</span>: <span class="hljs-literal">true</span>,
+
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'myphrase_draw'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">'38%'</span>,
@@ -437,28 +429,6 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Wheel pivot to check placement of start on first Phrase entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.makeWheel({
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'myphrase_fill'</span>,
-    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
               <p>Create the drag-and-drop zone</p>
 
             </div>
@@ -473,11 +443,11 @@ canvas.set({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
@@ -505,11 +475,11 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Create the Animation loop which will run the Display cycle</p>
 
@@ -520,7 +490,86 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
     <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
+});
+
+<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>To test kill functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> killArtefact = <span class="hljs-function">(<span class="hljs-params">name, time</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">let</span> groupname = <span class="hljs-string">'mycanvas_base'</span>,
+        packet;
+
+    <span class="hljs-keyword">let</span> checkGroupBucket = <span class="hljs-function">(<span class="hljs-params">name, groupname</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> res = scrawl.library.group[groupname].artefactBuckets.filter(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.name === name );
+        <span class="hljs-keyword">return</span> (res.length) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>;
+    };
+
+    <span class="hljs-keyword">let</span> checkTextHold = <span class="hljs-function">(<span class="hljs-params">name</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">`#<span class="hljs-subst">${name}</span>-text-hold`</span>);
+        <span class="hljs-keyword">return</span> (el) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>;
+    };
+
+    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
+    text hold removed from DOM: <span class="hljs-subst">${checkTextHold(name)}</span>`</span>);
+
+        packet = scrawl.library.artefact[name].saveAsPacket();
+
+        scrawl.library.artefact[name].kill();
+
+        setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
+    text hold removed from DOM: <span class="hljs-subst">${checkTextHold(name)}</span>`</span>);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>
+    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
+    text hold removed from DOM: <span class="hljs-subst">${checkTextHold(name)}</span>`</span>);
+            }, <span class="hljs-number">100</span>);
+        }, <span class="hljs-number">100</span>);
+    }, time);
+};
+
+killArtefact(<span class="hljs-string">'myphrase_fill'</span>, <span class="hljs-number">4000</span>);
+killArtefact(<span class="hljs-string">'myphrase_fillAndDraw'</span>, <span class="hljs-number">5000</span>);
+killArtefact(<span class="hljs-string">'myphrase_multiline'</span>, <span class="hljs-number">6000</span>);</pre></div></div>
             
         </li>
         

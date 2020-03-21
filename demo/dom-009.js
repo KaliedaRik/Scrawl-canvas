@@ -1,16 +1,14 @@
-// ## Demo DOM 009
+// # Demo DOM 009
+// Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
 
-// [Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate](../../demo/dom-009.html)
+// [Run code](../../demo/dom-009.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene variables
+// #### Scene setup
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack;
 
-
-
-// Scene setup
 stack.set({
     width: 600,
     height: 600,
@@ -66,34 +64,40 @@ circleGroup.artefacts.forEach(name => {
 
 // Create a group to hold the buttons (also: test Group cloning and packet functionality)
 console.log(circleGroup.saveAsPacket());
-//    RESULTS:
-//    [
-//        "circles",
-//        "Group",
-//        "group",
-//        {
-//            "name":"circles",
-//            "artefacts":["f_0","f_1","f_2","f_3",etc],
-//            "host":"mystack"
-//        }
-//    ]
+// ```
+// RESULTS:
+// [
+//     "circles",
+//     "Group",
+//     "group",
+//     {
+//         "name":"circles",
+//         "artefacts":["f_0","f_1","f_2","f_3",etc],
+//         "host":"mystack"
+//     }
+// ]
+// ```
 
+
+// Test group cloning
 let buttonGroup = circleGroup.clone({
     name: 'buttons',
 }).clearArtefacts().moveArtefactsIntoGroup('start_animation', 'stop_animation', 'start_listeners', 'stop_listeners');
 
 console.log(buttonGroup.saveAsPacket());
-//    RESULTS:
-//    [
-//        "buttons",
-//        "Group",
-//        "group",
-//        {
-//            "name":"buttons",
-//            "artefacts":["start_animation","stop_animation","start_listeners","stop_listeners"],
-//            "host":"mystack"
-//        }
-//    ]
+// ```
+// RESULTS:
+// [
+//     "buttons",
+//     "Group",
+//     "group",
+//     {
+//         "name":"buttons",
+//         "artefacts":["start_animation","stop_animation","start_listeners","stop_listeners"],
+//         "host":"mystack"
+//     }
+// ]
+// ```
 
 
 // User controls setup
@@ -127,7 +131,7 @@ artefact.stop_listeners.set({
     },
 });
 
-// The apply function triggers the artefact to render itself outside of the Scrawl-canvas display cycle - this will then trigger artefacts (in this case the 50 circles) to recalculate their positions so they can correctly place themselves within the Stack
+// The `apply` function triggers the artefact to render itself outside of the Scrawl-canvas display cycle - this will then trigger artefacts (in this case the 50 circles) to recalculate their positions so they can correctly place themselves within the Stack
 stack.apply();
 
 
@@ -135,6 +139,7 @@ stack.apply();
 let targetsLength = 0;
 
 
+// #### Scene animation
 // Clean up circles before the start of next display cycle
 let reviewCircleClasses = function () {
 
@@ -179,7 +184,7 @@ Hits: ${targetsLength}`;
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -189,6 +194,7 @@ scrawl.makeRender({
 });
 
 
+// #### User interaction
 // Event listener for the buttons
 let buttonControls = function () {
 
@@ -222,7 +228,7 @@ let buttonControls = function () {
             case 'start_animation':
                 scrawl.startCoreAnimationLoop();
 
-                // the updateDomAttributes function is the same as using .set({ domAttributes: { whatever: 'something' }})
+                // the `updateDomAttributes` function is the same as using `.set({ domAttributes: { whatever: 'something' }})`
                 startAnimationButton.updateDomAttributes('disabled', 'disabled');
                 stopAnimationButton.updateDomAttributes('disabled', '');
                 break;
@@ -256,4 +262,5 @@ let buttonControls = function () {
 
 scrawl.addListener('up', buttonControls, '.controls');
 
+// #### Development and testing
 console.log(scrawl.library);

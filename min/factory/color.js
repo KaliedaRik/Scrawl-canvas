@@ -22,10 +22,6 @@ r: 0,
 g: 0,
 b: 0,
 a: 1,
-rShift: 0,
-gShift: 0,
-bShift: 0,
-aShift: 0,
 rMax: 255,
 gMax: 255,
 bMax: 255,
@@ -34,6 +30,10 @@ rMin: 0,
 gMin: 0,
 bMin: 0,
 aMin: 0,
+rShift: 0,
+gShift: 0,
+bShift: 0,
+aShift: 0,
 rBounce: false,
 gBounce: false,
 bBounce: false,
@@ -203,10 +203,21 @@ b = round(temp[2]);
 }
 else if (/rgba\(/.test(items)) {
 temp = items.match(/([0-9.]+\b)/g);
-r = temp[0];
-g = temp[1];
-b = temp[2];
-a = temp[3];
+if (/%/.test(items)) {
+r = round((temp[0] / 100) * 255);
+g = round((temp[1] / 100) * 255);
+b = round((temp[2] / 100) * 255);
+a = round(temp[3] / 100);
+}
+else {
+r = round(temp[0]);
+g = round(temp[1]);
+b = round(temp[2]);
+a = round(temp[3]);
+}
+}
+else if (/hsl\(/.test(items) || /hsla\(/.test(items)) {
+r = g = b = a = 0;
 }
 else if (items === 'transparent') r = g = b = a = 0;
 else {
@@ -374,12 +385,10 @@ whitesmoke: 'f5f5f5',
 yellow: 'ffff00',
 yellowgreen: '9acd32'
 };
-const colorList = Object.keys(P.colorLibrary);
 const makeColor = function (items) {
 return new Color(items);
 };
 constructors.Color = Color;
 export {
 makeColor,
-colorList,
 };

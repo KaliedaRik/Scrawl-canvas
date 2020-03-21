@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>RenderAnimation factory</title>
+  <title>renderAnimation.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -291,6 +291,12 @@
     
     <ul class="sections">
         
+          <li id="title">
+              <div class="annotation">
+                  <h1>renderAnimation.js</h1>
+              </div>
+          </li>
+        
         
         
         <li id="section-1">
@@ -299,7 +305,25 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>NEEDS UPDATING TO NEW FORMAT</p>
+<h1 id="renderanimation-factory">RenderAnimation factory</h1>
+<p>RenderAnimation objects are animations that aim to simplify coding up Display cycles. They remove the need to worry about promises, while at the same time exposing a suite of Display cycle hooks - attributes which can accept a function to be run at various points during a Display cycle </p>
+<ul>
+<li><strong>afterCreated</strong> - a run-only-once function which will trigger after the first display/animation cycle completes</li>
+<li><strong>commence</strong> - runs at the start of the display cycle, before the ‘clear’ action</li>
+<li><strong>afterClear</strong> - runs between the display cycle ‘clear’ and ‘compile’ actions</li>
+<li><strong>afterCompile</strong> - runs between the display cycle ‘compile’ and ‘show’ actions</li>
+<li><strong>afterShow</strong> - runs at the end of each display cycle, after the ‘show’ action</li>
+<li><strong>error</strong> - an error function can be used to report issues should the internalized promise chain break down for any particular reason</li>
+</ul>
+<p>Note that all the above functions should be normal, synchronous functions. The Animation object will run them within its main, asynchronous (Promise-based) function.</p>
+<p>The RenderAnimation object also supports the Animation object’s <strong>animation hook functions</strong>:</p>
+<ul>
+<li><strong>onRun</strong> - triggers each time the RenderAnimation object’s .run function is invoked</li>
+<li><strong>onHalt</strong> - triggers each time the RenderAnimation object’s .halt function is invoked</li>
+<li><strong>onKill</strong> - triggers each time the RenderAnimation object’s .kill function is invoked</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +335,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="renderanimation-factory">RenderAnimation factory</h1>
+              <h4 id="instantiate-objects-from-the-factory">Instantiate objects from the factory</h4>
 
             </div>
             
@@ -323,109 +347,6 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>RenderAnimation objects are animations that aim to simplify coding up Display cycles. They remove the need to worry about promises, while at the same time exposing a suite of Display cycle hooks - attributes which can accept a function to be run at various points during a Display cycle </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <ul>
-<li><strong>afterCreated</strong> - a run-only-once function which will trigger after the first display/animation cycle completes</li>
-<li><strong>commence</strong> - runs at the start of the display cycle, before the ‘clear’ action</li>
-<li><strong>afterClear</strong> - runs between the display cycle ‘clear’ and ‘compile’ actions</li>
-<li><strong>afterCompile</strong> - runs between the display cycle ‘compile’ and ‘show’ actions</li>
-<li><strong>afterShow</strong> - runs at the end of each display cycle, after the ‘show’ action</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <ul>
-<li><strong>error</strong> - an error function can be used to report issues should the internalized promise chain break down for any particular reason</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Note that all the above functions should be normal, synchronous functions. The Animation object will run them within its main, asynchronous (Promise-based) function.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>The RenderAnimation object also supports the Animation object’s <strong>animation hook functions</strong>:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <ul>
-<li><strong>onRun</strong> - triggers each time the RenderAnimation object’s .run function is invoked</li>
-<li><strong>onHalt</strong> - triggers each time the RenderAnimation object’s .halt function is invoked</li>
-<li><strong>onKill</strong> - triggers each time the RenderAnimation object’s .kill function is invoked</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <h4 id="instantiate-objects-from-the-factory">Instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>   // Function to display frames-per-second data, and other information relevant to the demo
    let report = function () {</p>
@@ -452,13 +373,109 @@
         </li>
         
         
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>In addition to RenderAnimation attributes, the argument object can include two additional flags, which influence the make functionality:</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <ul>
+<li><strong>delay</strong> - when set to true, will prevent the animation running immediately; to start the animation, invoke its <strong>run</strong> function</li>
+<li><strong>observe</strong> - when set to true, will add an IntersectionObserver to the target’s DOM element using the core/document.js <strong>makeAnimationObserver</strong> function, which in turn assigns a disconnect function to the RenderAnimation.observe attribute</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h4 id="library-storage-yes">Library storage: YES</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <ul>
+<li>scrawl.library.animation</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h4 id="clone-functionality-no">Clone functionality: NO</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Clone functionality is disabled for all animation objects, and packet functionality is severely curtailed.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>The same render animation can be applied to multiple targets as part of the factory’s makeRender function, by setting the target attribute to an array containing either the name-String of each target, or the target object itself (Canvas, Stack), or a mix of both.</p>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>In addition to RenderAnimation attributes, the argument object can include two additional flags, which influence the make functionality:</p>
+              <h4 id="kill-functionality">Kill functionality:</h4>
 
             </div>
             
@@ -471,10 +488,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <ul>
-<li><strong>delay</strong> - when set to true, will prevent the animation running immediately; to start the animation, invoke its <strong>run</strong> function</li>
-<li><strong>observe</strong> - when set to true, will add an IntersectionObserver to the target’s DOM element using the core/document.js <strong>makeAnimationObserver</strong> function, which in turn assigns a disconnect function to the RenderAnimation.observe attribute</li>
-</ul>
+              <p>TODO: review and update kill functionality through the entire Scrawl-canvas system</p>
 
             </div>
             
@@ -486,99 +500,6 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <h4 id="library-storage-yes">Library storage: YES</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <ul>
-<li>scrawl.library.animation</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <h4 id="clone-functionality-no">Clone functionality: NO</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Clone functionality is disabled for all animation objects, and packet functionality is severely curtailed.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>The same render animation can be applied to multiple targets as part of the factory’s makeRender function, by setting the target attribute to an array containing either the name-String of each target, or the target object itself (Canvas, Stack), or a mix of both.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality:</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <p>TODO: review and update kill functionality through the entire Scrawl-canvas system</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h2 id="imports">Imports</h2>
 
@@ -595,11 +516,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h2 id="renderanimation-constructor">RenderAnimation constructor</h2>
 
@@ -612,11 +533,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Handle cases where no target has been defined - the animation will affect all stacks and canvases</p>
 
@@ -631,11 +552,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Handle cases where we have multiple targets - each needs its own render animation</p>
 
@@ -659,11 +580,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Default case where we have a single target</p>
 
@@ -674,11 +595,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Without a target, we can progress no further</p>
 
@@ -689,11 +610,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>All should be good - proceed with animation creation</p>
 
@@ -704,11 +625,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>These attributes are the same as for the Animation object</p>
 
@@ -723,11 +644,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>These attributes are specific to RenderAnimation</p>
 
@@ -749,11 +670,11 @@
         </li>
         
         
-        <li id="section-29">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>The all-important fn function</p>
 
@@ -792,11 +713,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Register in Scrawl-canvas library</p>
 
@@ -814,11 +735,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h2 id="renderanimation-object-prototype-setup">RenderAnimation object prototype setup</h2>
 
@@ -834,11 +755,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Apply mixins to prototype object</p>
 
@@ -849,11 +770,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h2 id="define-default-attributes">Define default attributes</h2>
 
@@ -864,11 +785,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations</p>
 
@@ -879,11 +800,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>The animation object supports some <strong>animation hook functions</strong>:</p>
 
@@ -892,11 +813,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <ul>
 <li>onRun - triggers each time the animation object’s .run function is invoked</li>
@@ -913,11 +834,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Display cycle hooks</p>
 
@@ -933,11 +854,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Target</p>
 
@@ -950,11 +871,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <h2 id="packetclone-management">Packet/Clone management</h2>
 <p>This functionality is disabled for RenderAnimation objects</p>
@@ -970,11 +891,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <h2 id="define-prototype-functions">Define prototype functions</h2>
 
@@ -983,11 +904,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Start the animation, if it is not already running</p>
 
@@ -1004,11 +925,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Returns true if animation is running; false otherwise</p>
 
@@ -1022,11 +943,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Stop the animation, if it is already running</p>
 
@@ -1043,11 +964,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Stop the animation if it is already running, and remove it from the Scrawl-canvas library</p>
 
@@ -1067,11 +988,11 @@ P.clone = defaultThisReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <h2 id="exported-factory-function">Exported factory function</h2>
 

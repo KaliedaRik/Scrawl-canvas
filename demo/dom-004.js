@@ -1,10 +1,11 @@
-// ## Demo DOM 004
+// # Demo DOM 004
+// Limitless rockets (clone and destroy elements, tweens, tickers)
 
-// [Limitless rockets (clone and destroy elements, tweens, tickers)](../../demo/dom-004.html)
+// [Run code](../../demo/dom-004.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let library = scrawl.library,
     artefact = library.artefact,
     stack = artefact.mystack;
@@ -46,6 +47,7 @@ let tween = scrawl.makeTween({
 }).removeFromTicker();
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -75,7 +77,7 @@ animation - ${n.length}, ${library.animationnames.length}: ${n.join(', ')}`;
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -84,6 +86,7 @@ scrawl.makeRender({
 });
 
 
+// #### User interaction
 // Create event listener to generate and start new element and tween
 let flyRocket = function(e) {
 
@@ -107,5 +110,6 @@ let flyRocket = function(e) {
 };
 scrawl.addNativeListener('click', flyRocket, stack.domElement);
 
-console.log(scrawl.library);
 
+// #### Development and testing
+console.log(scrawl.library);

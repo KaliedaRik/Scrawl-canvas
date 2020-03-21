@@ -299,7 +299,26 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="element-factory">Element factory</h1>
+<p>The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity positioning and dimensioning functionality.</p>
+<ul>
+<li>Entitys exist in a Cell environment</li>
+<li>They can position themselves within that Cell either <strong>absolutely</strong> (px coordinates), or <strong>relatively</strong> (% coordinates, with values relative to the Cell’s dimensions), or <strong>by reference</strong> (using other entity’s coordinates to calculate their own coordinates - <code>pivot</code>, <code>mimic</code>, <code>path</code>)</li>
+<li>They can also base their dimensions on absolute (px) or relative (%) values</li>
+<li>They can be <strong>animated</strong> directly (<code>set</code>, <code>deltaSet</code>), or through automation (<code>delta</code> object), or through the Scrawl-canvas <code>tween</code> functionality</li>
+<li>They can be stored and retrieved (‘packet’ functionality), cloned (‘clone’, based on packets) and killed (‘kill’ functions)</li>
+</ul>
+<p><strong>A Stack is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
+<pre><code>Stack    ~~&gt; Canvas/Cell  
+Element  ~~&gt; Entity (eg Block)  </code></pre><p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
+<ul>
+<li>Stack elements have <code>relative</code> positioning within the DOM</li>
+<li>Element elements have <code>absolute</code> positioning within the Stack</li>
+</ul>
+<p>The <code>makeElement</code> function is not exported by the scrawl object. To create a new Element within a Stack, use <code>mystack.addNewElement({})</code>.</p>
+<p>Element wrapper objects use the <strong>base</strong>, <strong>position</strong>, <strong>anchor</strong> and <strong>dom</strong> mixins. Thus Element wrappers are also <strong>artefact</strong> objects. As such, Elements can be used (almost) like any other artefact; in particular, other artefacts - including any canvas-based entity - can use Elements as their pivot or mimic targets.</p>
+<p>Element wrappers are included in the Scrawl-canvas packet system; they can be saved and cloned. Killing an Element wrapper will remove its DOM element from the document.</p>
+
             </div>
             
         </li>
@@ -311,7 +330,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="element-factory">Element factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li>All stack demos include examples of using Elements. In particular:</li>
+<li><a href="../../demo/dom-002.html">DOM-002</a> - Element mouse, pivot and mimic functionality</li>
+<li><a href="../../demo/dom-003.html">DOM-003</a> - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack</li>
+<li><a href="../../demo/dom-004.html">DOM-004</a> - Limitless rockets (clone and destroy elements, tweens, tickers)</li>
+<li><a href="../../demo/dom-006.html">DOM-006</a> - Tween actions on a DOM element; tracking tween and ticker activity (analytics)</li>
+<li><a href="../../demo/dom-013.html">DOM-013</a> - Artefact collision detection - DOM artefacts</li>
+<li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
+</ul>
 
             </div>
             
@@ -324,72 +352,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -407,13 +370,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="element-constructor">Element constructor</h2>
+              <h4 id="element-constructor">Element constructor</h4>
 
             </div>
             
@@ -429,13 +392,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Scrawl-canvas does not retain an Element’s textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes <strong>.text</strong> (for textContent, which automatically escapes all HTML-related tags and entities) and <strong>.content</strong> (which should respect HTML tags and entities) </p>
+              <p>Scrawl-canvas does not retain an Element’s textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes <code>text</code> (for textContent, which automatically escapes all HTML-related tags and entities) and <code>content</code> (which should respect HTML tags and entities) </p>
 
             </div>
             
@@ -472,13 +435,13 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="element-object-prototype-setup">Element object prototype setup</h2>
+              <h4 id="element-prototype">Element prototype</h4>
 
             </div>
             
@@ -491,13 +454,19 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/position.html">position</a></li>
+<li><a href="../mixin/anchor.html">anchor</a></li>
+<li><a href="../mixin/dom.html">dom</a></li>
+</ul>
 
             </div>
             
@@ -509,43 +478,55 @@ P = domMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <h2 id="packet-management">Packet management</h2>
-<p>Nothing additional to do here?</p>
+              <h4 id="element-attributes">Element attributes</h4>
+<p>No additional attributes required beyond those supplied by the mixins</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h2 id="kill-functionality">Kill functionality</h2>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
             
@@ -559,13 +540,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -574,26 +555,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>This is the preferred way to update an element’s text content because the text supplied in the argument is not treated as HTML by the browser. </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>When we update the DOM attribute <strong>element.textContent</strong>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
+              <p><code>text</code> - <strong>this is the preferred way to update an element’s text content</strong> because the text supplied in the argument is not treated as HTML by the browser. </p>
+<p>When we update the DOM attribute <code>element.textContent</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
 
             </div>
             
@@ -615,26 +584,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p><strong>WARNING - S.content is a dangerous function!</strong> It does not perform any character escaping before inserting the supplied argument into the element. Raw HTML (including, for instance, &lt;script&gt; tags) will be added to the DOM. It’s up to the coder to make sure this content is safe!</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>When we update the DOM attribute <strong>element.innerHTML</strong>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
+              <p><code>content</code> - <strong>WARNING - this is a dangerous function!</strong> It does not perform any character escaping before inserting the supplied argument into the element. Raw HTML (including, for instance, &lt;script&gt; tags) will be added to the DOM. It’s up to the developer to make sure this content is safe!</p>
+<p>When we update the DOM attribute <code>element.innerHTML</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
 
             </div>
             
@@ -656,26 +613,26 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-22">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function.</p>
 
             </div>
             
@@ -687,52 +644,31 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Adds a new &lt;canvas&gt; element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element’s dimensions, positioning, scale and 3D rotational values)</p>
+              <h4 id="component-related-functions">Component-related functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>The function can accept a Javascript object argument containing key:value pairs which will be used to set up the new canvas’s attributes after it has been created.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>To make the canvas look as if it is in front of the element, set the element’s opacity CSS attribute to 0</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>This function is used when adding a Scrawl-canvas component to a stacked element.</p>
+              <p><code>addCanvas</code> - adds a new &lt;canvas&gt; element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element’s dimensions, positioning, scale and 3D rotational values)</p>
+<ul>
+<li>The function can accept a Javascript object argument containing key:value pairs which will be used to set up the new canvas’s attributes after it has been created.</li>
+<li>To make the canvas look as if it is in front of the element, set the element’s opacity CSS attribute to 0</li>
+<li>This function is used when adding a Scrawl-canvas component to a stacked element.</li>
+</ul>
 
             </div>
             
@@ -786,14 +722,59 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code>Get a handle to a Stack wrapper
+<span class="hljs-keyword">let</span> stack = scrawl.library.stack.mystack;
 
+stack.addNewElement({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'list'</span>,
+    <span class="hljs-attr">tag</span>: <span class="hljs-string">'ul'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-string">'25%'</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">80</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">400</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">120</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">roll</span>: <span class="hljs-number">30</span>,
+
+    <span class="hljs-attr">classes</span>: <span class="hljs-string">'red-text'</span>,
+
+    <span class="hljs-attr">content</span>: <span class="hljs-string">`&lt;li&gt;unordered list&lt;/li&gt;
+&lt;li&gt;with several&lt;/li&gt;
+&lt;li&gt;bullet points&lt;/li&gt;`</span>,
+
+    <span class="hljs-attr">css</span>: {
+        <span class="hljs-attr">font</span>: <span class="hljs-string">'12px fantasy'</span>,
+        <span class="hljs-attr">paddingInlineStart</span>: <span class="hljs-string">'20px'</span>,
+        <span class="hljs-attr">paddingTop</span>: <span class="hljs-string">'0.5em'</span>,
+        <span class="hljs-attr">margin</span>: <span class="hljs-string">'0'</span>,
+        <span class="hljs-attr">border</span>: <span class="hljs-string">'1px solid red'</span>,
+        <span class="hljs-attr">cursor</span>: <span class="hljs-string">'grab'</span>,
+    },
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'list-no-border'</span>,
+
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">250</span>,
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">1.25</span>,
+    <span class="hljs-attr">pitch</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">yaw</span>: <span class="hljs-number">80</span>,
+
+    <span class="hljs-attr">css</span>: {
+        <span class="hljs-attr">border</span>: <span class="hljs-number">0</span>,
+    },
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
@@ -801,9 +782,22 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Element(items);
 };
 
-constructors.Element = Element;
+constructors.Element = Element;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeElement,
 };</pre></div></div>
             

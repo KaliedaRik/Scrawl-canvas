@@ -15,12 +15,6 @@ return [this.x, this.y];
 P.getXYZCoordinate = function () {
 return [this.x, this.y, this.z];
 };
-P.zero = function () {
-this.x = 0;
-this.y = 0;
-this.z = 0;
-return this;
-};
 P.setX = function (x) {
 if (!xt(x)) throw new Error(`${this.name} Vector error - setX() arguments error: ${x}`);
 this.x = x;
@@ -62,6 +56,12 @@ let {x, y, z} = item;
 if (isa_number(x)) this.x = x;
 if (isa_number(y)) this.y = y;
 if (isa_number(z)) this.z = z;
+return this;
+};
+P.zero = function () {
+this.x = 0;
+this.y = 0;
+this.z = 0;
 return this;
 };
 P.vectorAdd = function (item = {}) {
@@ -137,12 +137,8 @@ this.z /= val;
 return this;
 };
 const vectorPool = [];
-let vectorPoolCount = 0;
 const requestVector = function (x, y, z) {
-if (!vectorPool.length) {
-vectorPool.push(new Vector());
-vectorPoolCount++;
-}
+if (!vectorPool.length) vectorPool.push(new Vector());
 let v = vectorPool.shift();
 v.set(x, y, z);
 return v

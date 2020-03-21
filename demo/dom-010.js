@@ -1,13 +1,16 @@
-// ## Demo DOM 010
+// # Demo DOM 010
+// Add and remove (kill) Scrawl-canvas stack elements programmatically
 
-// [Add and remove (demolish) Scrawl-canvas stack elements programmatically](../../demo/dom-010.html)
+// [Run code](../../demo/dom-010.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let library = scrawl.library;
 
 
+// #### Scene animation
+// Function that updates the live report on user activity
 let report = function () {
 
     let testTicker = Date.now(),
@@ -41,7 +44,7 @@ element - ${el.length}, ${elementnames.length}: [${(elementnames).join(', ')}]`;
 }();
 
 
-// Animation loop - can't use .makeRender() in this case because there's no initial stack/canvas arterfact to render. Using .makeAnimation() and .render() - both of which use promises - instead
+// Animation loop - can't use `scrawl.makeRender` in this case because there's no initial stack/canvas arterfact to render. Using `scrawl.makeAnimation` which in turn runs `scrawl.render` instead
 scrawl.makeAnimation({
 
     name: 'demo-animation',
@@ -62,10 +65,10 @@ scrawl.makeAnimation({
 });
 
 
-// User interaction - buttons listener
+// #### User interaction
+// Buttons listener - the control buttons are never part of a Scrawl-canvas stack
 let controls = function () {
 
-    // the control buttons are never part of a Scrawl-canvas stack
     let b1 = document.querySelector('#action_1'),
         b2 = document.querySelector('#action_2'),
         b3 = document.querySelector('#action_3'),
@@ -138,4 +141,5 @@ let controls = function () {
 
 scrawl.addListener('up', controls, '.controls');
 
+// #### Development and testing
 console.log(scrawl.library);

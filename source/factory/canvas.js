@@ -1,18 +1,34 @@
-
 // # Canvas factory
+// Scrawl-canvas mediates between its system and &lt;canvas> elements in the DOM using Canvas wrapper objects. The wrapper includes a handle to the visible element, but most work is done on a second &lt;canvas> element - the __base Cell__ - which is not part of the DOM, thus excluded from a browser's Document interface (including events).
+// 
+// The Canvas factory is not used directly; the factory is not exported as part of the __scrawl object__ during Scrawl-canvas initialization. Instead, wrappers can be created for DOM-based &lt;canvas> elements using the following scrawl functions:
+// + `scrawl.getCanvas` - locates a &lt;canvas> element in the DOM and creates a wrapper for it.
+// + `scrawl.addCanvas` - generates a new &lt;canvas> element, creates a wrapper for it, then adds it to the DOM.
+//
+// During initialization Scrawl-canvas will search the DOM tree and automatically create Canvas wrappers for all the &lt;canvas> elements it discovers. The first &lt;canvas> element discovered becomes the __current canvas__; all entitys created without a specified `group` attribute will be assigned to that element's wrapper's base Cell's Group object. We can change the current canvas by invoking the `scrawl.setCurrentCanvas` function.
+// 
+// A canvas wrapper can include more than one Cell object. It will always include a base Cell object; additional Cells can be treated as ___cell layers___ and/or normal artefacts contributing to the final display.
+//
+// During their creation, Canvas wrappers will directly modify the DOM, adding &lt;div> and &lt;nav> elements to it. These new elements are used as _holds_ where the Canvas will store data and text, mainly to expose &lt;a> links and &lt;p> blocks which expose scene details to assistive technologies (accessibility). These additional elements have zero dimensions and should not affect the layout or painting of the rest of the web page.
+//
+// Canvas wrapper objects use the __base__, __position__, __dom__ and __anchor__ mixins. Thus Canvas wrappers are also __artefact__ objects: if a &lt;canvas> element is a direct child of a Stack wrapper's element then it can be positioned, dimensioned and rotated like any other artefact.
+//
+// By default, all Canvas wrappers will track mouse/touch movements across their &lt;canvas> elements, supplying this data to constituent Cell objects and artefacts as-and-when-required.
+//
+// Canvas wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle. These functions are asynchronous, returning Promises.
+//
+// Canvas wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Canvas wrapper will remove its &lt;canvas> element from the DOM, alongside the additional elements added to the DOM during Canvas creation.
 
-// TODO - documentation
 
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// #### Demos:
+// + All canvas and component demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
+// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
+// + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
+// + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
+// + [Component-001](../../demo/component-001.html) - Scrawl-canvas DOM element components
 
 
-// ## Imports
+// #### Imports
 import { cell, constructors, artefact, group } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, xt, 
@@ -29,7 +45,7 @@ import anchorMix from '../mixin/anchor.js';
 import domMix from '../mixin/dom.js';
 
 
-// ## Canvas constructor
+// #### Canvas constructor
 const Canvas = function (items = {}) {
 
     let g, el;
@@ -101,7 +117,7 @@ const Canvas = function (items = {}) {
         pushUnique(rootElements, this.name);
         setRootElementsSort();
 
-        // Accessibility
+        // ##### Accessibility
         if (!el.getAttribute('role')) el.setAttribute('role', 'img');
 
         let navigation = document.createElement('nav');
@@ -147,6 +163,7 @@ const Canvas = function (items = {}) {
         this.cleanAria();
     }
 
+    this.dirtyCells = true;
     this.apply();
 
     if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
@@ -155,7 +172,7 @@ const Canvas = function (items = {}) {
 };
 
 
-// ## Canvas object prototype setup
+// #### Canvas prototype
 let P = Canvas.prototype = Object.create(Object.prototype);
 P.type = 'Canvas';
 P.lib = 'canvas';
@@ -163,52 +180,54 @@ P.isArtefact = true;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [position](../mixin/position.html)
+// + [anchor](../mixin/anchor.html)
+// + [dom](../mixin/dom.html)
 P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
 P = domMix(P);
 
 
-// ## Define default attributes
+// #### Canvas attributes
 let defaultAttributes = {
 
-
-// TODO - documentation
-
-// TO TEST - position needs to change to 'absolute' when Canvas element is an artefact associated with a stack. But canvas elements can also be created independently of any stack, in which case position:relative should suffice
+// __position__ - the CSS position value for the &lt;canvas> element. This value will be set to `absolute` when the element is an artefact associated with a Stack; `relative` in other cases.
     position: 'relative',
 
 
-// TODO - documentation
+// __trackHere__ - Boolean flag to indicate whether the Canvas object should participate in the Scrawl-canvas mouse/touch tracking functionality; the functionality can be switched off by setting the flag to false (via `set`).
     trackHere: true,
 
-// TODO - documentation
-    dirtyCells: true,
-
-// TODO - documentation
+// __fit__ - String indicating how the base Cell should copy its contents over to the &lt;canvas> element as the final step in the Display cycle. Accepted values are: `fill`, `contain`, `cover`, `none` (but not `scale-down`).
+// 
+// The aim of this functionality is to replicate the CSS `object-fit` property - [detailed here](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) - for &lt;canvas> elements. Unlike the CSS property, we apply the fit attribute to the Canvas wrapper, not the element itself or its parent element.
     fit: 'none',
 
+// __isComponent__ - set to true if canvas is being used as part of a Scrawl-canvas component.
+    isComponent: false,
 
-// #### Accessibility attributes
-
-// + __title__ attribute is applied to the &lt;canvas> element's 'title' attribute, and will appear as a tooltip when the user hovers over the canvas
-
-// + __label__ and __description__ attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas> element using 'aria-labelledby' and 'aria-describedby' attributes
-
-// If no label value is supplied to the canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual .set() functionality.
+// ##### Accessibility attributes
+// &lt;canvas> elements are __raster images__ - they contain no information within their content (beyond pixel data) which can be analyzed or passed on to the browser or other device. The element _can_ include `title` and various `item` attributes (alongside custom `data-` attributes) but inclusion of these depends entirely on the developer remembering to include them when coding up a web page.
+// 
+// Scrawl-canvas attempts to automate _some_ (but not _all_) accessibility work through inclusion of the following Canvas attributes (specifically, Scrawl-canvas implements [ARIA attributes](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)):
+// + __title__ - this attribute is applied to the &lt;canvas> element's 'title' attribute, and will appear as a tooltip when the user hovers over the canvas
+// + __label__ and __description__ - these attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas> element using `aria-labelledby` and `aria-describedby` attributes
+//
+// If no label value is supplied to the Canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual `set()` functionality.
+//
+// Beyond the Canvas object, Scrawl-canvas also encourages Phrase entitys (which handle graphical text in the canvas display) to expose their content to the DOM, to make it accessible. Also, any artefact given an Anchor link will expose the Anchor's &lt;a> element in the DOM, which allows the canvas display to become part of the document's navigation (for example, by keyboard tabbing).
     title: '',
     label: '',
     description: '',
 
-
-// Set to true if canvas is being used as part of a Scrawl-canvas component
-    isComponent: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet/Clone management
+// #### Packet/Clone management
 // This functionality is disabled for Canvas objects
 P.stringifyFunction = defaultNonReturnFunction;
 P.processPacketOut = defaultNonReturnFunction;
@@ -217,7 +236,7 @@ P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
 
 
-// ## Kill functionality
+// #### Kill functionality
 P.kill = function () {
 
     // rootElements and uiSubscribedElements arrays
@@ -244,96 +263,40 @@ P.kill = function () {
 }
 
 
-// ## Define attribute getters and setters
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// TODO - documentation
+// `fit`
 P.fitDefaults = ['fill', 'contain', 'cover'];
 S.fit = function (item) {
 
     this.fit = (this.fitDefaults.indexOf(item) >= 0) ? item : 'none';
 };
 
-// TODO - documentation
-G.alpha = function () {
-
-    return this.base.alpha;
-};
-
-G.backgroundColor = function () {
-
-    return this.base.backgroundColor;
-};
-
-G.composite = function () {
-
-    return this.base.composite;
-};
-
-S.alpha = function (item) {
-
-    if (this.base) {
-
-        this.base.set({
-            alpha: item
-        });
-    }
-};
-
-// TODO - documentation
-S.backgroundColor = function (item) {
-
-    if (this.base) {
-
-        this.base.set({
-            backgroundColor: item
-        });
-    }
-};
-
-// TODO - documentation
+// `title` - String
 S.title = function (item) {
 
     this.title = item;
     this.dirtyAria = true;
 };
 
+// `label` - String
 S.label = function (item) {
 
     this.label = item;
     this.dirtyAria = true;
 };
 
+// `description` - String
 S.description = function (item) {
 
     this.description = item;
     this.dirtyAria = true;
 };
 
-// TODO - documentation
-S.composite = function (item) {
-
-    if (this.base) {
-        this.base.set({
-            composite: item
-        });
-    }
-};
-
-// TODO - documentation
-D.alpha = function(item) {
-
-    if (this.base) {
-
-        this.base.deltaSet({
-            alpha: item
-        });
-    }
-};
-
-// TODO - documentation
+// `trackHere` - Boolean
 S.trackHere = function(bool) {
 
     if (xt(bool)) {
@@ -345,18 +308,73 @@ S.trackHere = function(bool) {
     }
 };
 
+// ##### Get and set base cell attributes
+// For convenience, Scrawl-canvas allows us to get/set a limited number of base Cell attributes via their Canvas wrapper's `get`, `set` and `deltaSet` functions. We can set and deltaSet other base Cell attributes by invoking the `mycanvas.setBase` and `mycanvas.deltaSetBase` functions.
+
+// `backgroundColor` - String. We can set the base Cell's background color to any CSS color String value
+G.backgroundColor = function () {
+
+    return this.base.backgroundColor;
+};
+S.backgroundColor = function (item) {
+
+    if (this.base) {
+
+        this.base.set({
+            backgroundColor: item
+        });
+    }
+};
+
+// `alpha` - float Number between 0.0 and 1.0. When the base Cell stamps itself onto the Canvas wrapper's &lt;canvas> element, it can set the element's engine to a `globalAlpha` value stored in the Cell's alpha attribute.
+G.alpha = function () {
+
+    return this.base.alpha;
+};
+S.alpha = function (item) {
+
+    if (this.base) {
+
+        this.base.set({
+            alpha: item
+        });
+    }
+};
+D.alpha = function(item) {
+
+    if (this.base) {
+
+        this.base.deltaSet({
+            alpha: item
+        });
+    }
+};
+
+// `composite` - String. When the base Cell stamps itself onto the Canvas wrapper's &lt;canvas> element, it can set the element's engine to a `globalCompositeOperation` value stored in the Cell's composite attribute.
+G.composite = function () {
+
+    return this.base.composite;
+};
+S.composite = function (item) {
+
+    if (this.base) {
+        this.base.set({
+            composite: item
+        });
+    }
+};
 
 
-// ## Define prototype functions
+// #### Prototype functions
 
-// TODO - documentation
+// `setAsCurrentCanvas` - invoke function (without arguments) to make this Canvas wrapper the __current canvas__ for future entity generation operations. This is additional to the `scrawl.setCurrentCanvas` function.
 P.setAsCurrentCanvas = function () {
 
     if (this.base) setCurrentCanvas(this);
     return this;
 };
 
-// TODO - documentation
+// `setBase` - pass the argument object through to the base Cell's `set` function.
 P.setBase = function (items) {
 
     if (this.base) {
@@ -367,7 +385,7 @@ P.setBase = function (items) {
     return this;
 };
 
-// TODO - documentation
+// `deltaSetBase` - pass the argument object through to the base Cell's `deltaSet` function.
 P.deltaSetBase = function (items) {
 
     if (this.base) {
@@ -378,13 +396,13 @@ P.deltaSetBase = function (items) {
     return this;
 };
 
-// TODO - documentation
+// Internal function - passes the Canvas wrapper's current __here__ object and __fit__ attribute to the base Cell for further processing
 P.updateBaseHere = function () {
 
     if (this.base) this.base.updateBaseHere(this.here, this.fit);
 };
 
-// TODO - documentation
+// Internal helper function
 P.setBaseHelper = function () {
 
     let items = {};
@@ -403,7 +421,7 @@ P.setBaseHelper = function () {
     this.updateCells(items);
 };
 
-// TODO - documentation
+// `updateCells` - internal function. Iterate through all Cells registered in the wrapper's __cells__ Array and set a range of dirty flags on them, for future processing by each Cell.
 P.updateCells = function (items = {}) {
 
     this.cells.forEach(name => {
@@ -423,7 +441,7 @@ P.updateCells = function (items = {}) {
     });
 };
 
-// TODO - documentation
+// `buildCell` - internal helper function, called by the Canvas constructor
 P.buildCell = function (items = {}) {
 
     let host = items.host || false;
@@ -437,7 +455,7 @@ P.buildCell = function (items = {}) {
     return mycell;
 };
 
-// TODO - documentation
+// `cleanDimensionsAdditionalActions` - overwrites mixin/position function. Promulgates canvas dimension changes through to all Cells in the wrapper's cells Array.
 P.cleanDimensionsAdditionalActions = function () {
 
     if (this.cells) {
@@ -450,7 +468,7 @@ P.cleanDimensionsAdditionalActions = function () {
     this.dirtyDomDimensions = true;
 };
 
-// TODO - documentation
+// `addCell` - add a Cell object to the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
 P.addCell = function (item) {
 
     item = (item.substring) ? item : item.name || false;
@@ -464,7 +482,7 @@ P.addCell = function (item) {
     return item;
 };
 
-// TODO - documentation
+// `removeCell` - remove a Cell object from the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
 P.removeCell = function (item) {
 
     item = (item.substring) ? item : item.name || false;
@@ -478,9 +496,7 @@ P.removeCell = function (item) {
 };
 
 
-// TODO - is this all that is needed? 
-
-// Assume that killing a cell involves also killing its associated group(s) and any entitys, tweens, filters etc currently associated with it?
+// `killCell` - invoke a Cell object's __kill__ function; argument can be the Cell's name-String, or the Cell object itself
 P.killCell = function (item) {
 
     let mycell = (item.substring) ? cell[item] : item;
@@ -492,7 +508,10 @@ P.killCell = function (item) {
 };
 
 
-// TODO - documentation
+// ##### Display cycle functions
+
+// `clear` - For Cell objects in the wrapper's __cells__ (and associated) Arrays (returns a Promise):
+// + if the Cell object's `cleared` flag is true, invoke the Cell's `clear` function 
 P.clear = function () {
 
     let self = this;
@@ -511,7 +530,9 @@ P.clear = function () {
     });
 };
 
-// TODO - documentation
+// `compile` - For Cell objects in the wrapper's __cells__ (and associated) Arrays (returns a Promise):
+// + sort Cell objects depending on their `compileOrder` attribute - Cells with lower order values will be processed first
+// + if the Cell object's `compiled` flag is true, invoke the Cell's `compile` function 
 P.compile = function () {
 
     let self = this;
@@ -532,7 +553,13 @@ P.compile = function () {
     });
 };
 
-// TODO - documentation
+// `show` - For Cell objects in the wrapper's __cells__ (and associated) Arrays (returns a Promise):
+// + sort Cell objects depending on their `showOrder` attribute - Cells with lower order values will be processed first
+// + if the Cell object's `shown` flag is true, invoke the Cell's `show` function 
+//
+// And then:
+// + copy the base Cells display over to the Canvas wrapper's &lt;canvas> element
+// + update ARIA and other associated metadata
 P.show = function(){
 
     let self = this;
@@ -563,7 +590,7 @@ P.show = function(){
     });
 };
 
-// TODO - documentation
+// `render` - orchestrate a single Display cycle - clear, then compile, then show (returns a Promise).
 P.render = function () {
 
     let self = this;
@@ -578,7 +605,13 @@ P.render = function () {
     });
 };
 
-// TODO - documentation
+// `cleanCells` - internal function triggered each time there is an update to the __cells__ Array attribute, or a constituent Cell sets the Canvas wrapper's `dirtyCell` flag.
+// + Cell objects include attribute flags - `cleared`, `compiled`, `shown` - which tell their Canvas wrapper whether they should be included in each part of the Display cycle
+// + For the compile and show steps, Cell objects also include attributes - `compileOrder`, `showOrder` - indicating the order in which they should be processed (compared to other Cell objects). 
+// + The sorting algorithm for all three operations is a bucket sort. 
+// + The results of these operations are deposited in three internal Arrays which are used as part of the Canvas wrapper's clear/compile/show functionality.
+//
+// We do things this way because there may be situations where a Cell needs to calculate and compile before another cell, but should be shown (applied to) the base Cell after the other Cells (so it appears on top of them).
 P.cleanCells = function () {
 
     this.dirtyCells = false;
@@ -622,15 +655,12 @@ P.cleanCells = function () {
 };
 
 
-// Trigger event action responses in (visible) entitys at the current mouse/touch 
-
-// Trigger event action responses in (visible) entitys at the current canvas element _here_ attribute coordinates
-
-// + Available cascadeEventAction arguments are: 'enter', 'leave', 'down', or 'up'
-
-// + A 'move' argument can also be used, which will trigger enter and leave actions on the entitys, as appropriate to each
-
-// Function returns an Array of name Strings for the entitys at the current mouse cursor coordinates 
+// ##### Handling DOM events
+// `cascadeEventAction` - The Canvas wrapper's &lt;canvas> element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups' artefacts. 
+//
+// This allows us to 'regionalize' various parts of the &lt;canvas> element so that they respond in a similar way to an HTML __image map__ (defined using &lt;map> and &lt;area> elements) 
+// + Cascaded events are limited to mouse and touch events, which Scrawl-canvas bundles together into 5 types of event: `down`, `up` (which also captures click events), `enter`, `leave`, `move`.
+// + Returns an Array of name Strings for the entitys at the current mouse cursor coordinates; the Array is also accessible from the Canvas wrapper's `currentActiveEntityNames` attribute.
 P.cascadeEventAction = function (action) {
 
     if (!this.currentActiveEntityNames) this.currentActiveEntityNames = [];
@@ -724,7 +754,7 @@ P.cascadeEventAction = function (action) {
     return this.currentActiveEntityNames;
 };
 
-// TODO - documentation
+// `cleanAria` - internal function; transfers updated __title__, __label__ and __description__ attribute values into the relevant DOM elements
 P.cleanAria = function () {
 
     this.dirtyAria = false;
@@ -734,14 +764,15 @@ P.cleanAria = function () {
 }
 
 
-
-// ## Exported factory function
+// #### Factory
 const makeCanvas = function (items) {
     return new Canvas(items);
 };
 
 constructors.Canvas = Canvas;
 
+
+// #### Exports
 export {
     makeCanvas,
 };

@@ -1,16 +1,18 @@
-// ## Demo DOM 012
+// # Demo DOM 012
+// Add and remove (kill) Scrawl-canvas canvas elements programmatically
 
-// [Add and remove (demolish) Scrawl-canvas canvas elements programmatically](../../demo/dom-012.html)
+// [Run code](../../demo/dom-012.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let library = scrawl.library,
     artefact = library.artefact,
     canvasnames = library.canvasnames,
     mystack = artefact.mystack;
 
 
+// #### Scene animation
 let report = function () {
 
     let testTicker = Date.now(),
@@ -46,7 +48,9 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
 }();
 
 
-// Animation loop - can't use .makeRender() in this case because there's no initial stack/canvas arterfact to render. Using .makeAnimation() and .render() - which use promises - instead
+// Animation loop 
+//
+// We can't use `.makeRender()` in this case because there's no initial stack/canvas arterfact to render. Using `.makeAnimation()` and `.render()` - which use promises - instead
 scrawl.makeAnimation({
 
     name: 'demo-animation',
@@ -67,7 +71,7 @@ scrawl.makeAnimation({
 });
 
 
-// User interaction - buttons listener
+// #### User interaction
 let controls = function () {
 
     // the control buttons are never part of a Scrawl-canvas stack
@@ -97,19 +101,20 @@ let controls = function () {
     });
 
     console.log(colorFactory.saveAsPacket());
-    //    RESULTS:
-    //
-    //    [
-    //        "myColorObject",
-    //        "Color",
-    //        "styles",
-    //        {
-    //            "name":"myColorObject",
-    //            "rMax":200,
-    //            "gMax":50,
-    //            "bMax":10
-    //        }
-    //    ]
+    // ```
+    // RESULTS:
+    // [
+    //     "myColorObject",
+    //     "Color",
+    //     "styles",
+    //     {
+    //         "name":"myColorObject",
+    //         "rMax":200,
+    //         "gMax":50,
+    //         "bMax":10
+    //     }
+    // ]
+    // ```
 
     return function (e) {
 

@@ -1,18 +1,40 @@
-
 // # Stack factory
+// The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity positioning and dimensioning functionality.
+// + Entitys exist in a Cell environment
+// + They can position themselves within that Cell either __absolutely__ (px coordinates), or __relatively__ (% coordinates, with values relative to the Cell's dimensions), or __by reference__ (using other entity's coordinates to calculate their own coordinates - `pivot`, `mimic`, `path`)
+// + They can also base their dimensions on absolute (px) or relative (%) values
+// + They can be __animated__ directly (`set`, `deltaSet`), or through automation (`delta` object), or through the Scrawl-canvas `tween` functionality
+// + They can be stored and retrieved ('packet' functionality), cloned ('clone', based on packets) and killed ('kill' functions)
+// 
+// __A Stack is a wrapper object around a DOM element__, whose direct children are given Scrawl-canvas Element wrappers:
+// ```
+// Stack    ~~> Canvas/Cell  
+// Element  ~~> Entity (eg Block)  
+// ```
+// During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
+// + Stack elements have `relative` positioning within the DOM
+// + Element elements have `absolute` positioning within the Stack
+//
+// The Stack factory is not used directly; the factory is not exported as part of the __scrawl object__ during Scrawl-canvas initialization. Instead, wrappers can be created for a DOM-based &lt;div> element using the following scrawl function:
+// + `scrawl.addStack` - generates a new &lt;div> element, creates a wrapper for it, then adds it to the DOM.
+//
+// Stack wrapper objects use the __base__, __position__, __anchor__, __cascade__ and __dom__ mixins. Thus Stack wrappers are also __artefact__ objects: if a Stack's DOM element is a direct child of another Stack wrapper's element then it can be positioned, dimensioned and rotated like any other artefact.
+//
+// By default, all Stack wrappers will track mouse/touch movements across their DOM element, supplying this data to constituent Canvas objects and artefacts as-and-when-required.
+//
+// Stack wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle. These functions are asynchronous, returning Promises.
+//
+// Stack wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Stack wrapper will remove its DOM element from the document - __including all Elements and Canvases that it contains__.
 
-// TODO - documentation
 
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// #### Demos:
+// + All stack demos include Stack wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
+// + [DOM-001](../../demo/dom-001.html) - Loading the scrawl-canvas library using a script tag in the HTML code
+// + [DOM-003](../../demo/dom-003.html) - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
+// + [DOM-010](../../demo/dom-010.html) - Add and remove (kill) Scrawl-canvas Stack elements programmatically
 
 
-// ## Imports
+// #### Imports
 import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
@@ -29,7 +51,7 @@ import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 
 
-// ## Stack constructor
+// #### Stack constructor
 const Stack = function (items = {}) {
 
     let g, el;
@@ -81,7 +103,7 @@ const Stack = function (items = {}) {
 };
 
 
-// ## Stack object prototype setup
+// #### Stack prototype
 let P = Stack.prototype = Object.create(Object.prototype);
 P.type = 'Stack';
 P.lib = 'stack';
@@ -89,7 +111,12 @@ P.isArtefact = true;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [position](../mixin/position.html)
+// + [anchor](../mixin/anchor.html)
+// + [cascade](../mixin/cascade.html)
+// + [dom](../mixin/dom.html)
 P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
@@ -97,27 +124,24 @@ P = cascadeMix(P);
 P = domMix(P);
 
 
-// ## Define default attributes
+// #### Stack attributes
 let defaultAttributes = {
 
-// TODO - documentation
+// __position__, __perspective__ - while most of the Stack wrapper's DOM element's attributes are handled through CSS, Scrawl-canvas takes control of some positioning-related attributes. Most of these are defined in the [dom mixin](../mixin/dom.html) - but the position and perspective attributes are managed in this module
     position: 'relative',
-
-// TODO - documentation
     perspective: null,
 
-// TODO - documentation
+// __trackHere__ - Boolean flag to indicate whether the Stack object should participate in the Scrawl-canvas mouse/touch tracking functionality; the functionality can be switched off by setting the flag to false (via `set`).
     trackHere: true,
 
-
-// This is all about a mad idea I had for making stacks 'responsive' to viewport changes. It needs a lot more thinking through. Search on 'isResponsive' to find the relevant function below
+// TODO: This is all about a mad idea we may have for making stacks 'responsive' to viewport changes. It needs a lot more thinking through. Search on 'isResponsive' to find the relevant function below
     isResponsive: false,
     containElementsInHeight: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet/Clone management
+// #### Packet/Clone management
 // This functionality is disabled for Stack objects
 P.stringifyFunction = defaultNonReturnFunction;
 P.processPacketOut = defaultNonReturnFunction;
@@ -126,7 +150,7 @@ P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
 
 
-// ## Kill functionality
+// #### Kill functionality
 P.kill = function () {
 
     let myname = this.name;
@@ -153,12 +177,15 @@ P.kill = function () {
 }
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// TODO - documentation
+// Similar to start, handle, dimensions, etc Scrawl-canvas supplies some pseudo-attributes to help set and manage the Stack wrapper's `perspective` object:
+// + `perspectiveX`
+// + `perspectiveY`
+// + `perspectiveZ`
 G.perspectiveX = function () {
 
     return this.perspective.x;
@@ -172,7 +199,6 @@ G.perspectiveZ = function () {
     return this.perspective.z;
 };
 
-// TODO - documentation
 S.perspectiveX = function (item) {
 
     this.perspective.x = item;
@@ -207,10 +233,9 @@ D.perspectiveY = function (item) {
 };
 
 
+// #### Prototype functions
 
-// ## Define prototype functions
-
-// TODO - documentation
+// `updateArtefacts` - internal function. Iterate through all Element and Canvas wrappers associated with the Stack wrapper's Group object and set a range of dirty flags on them, for future processing by each as appropriate.
 P.updateArtefacts = function (items = {}) {
 
     this.groupBuckets.forEach(grp => {
@@ -230,7 +255,7 @@ P.updateArtefacts = function (items = {}) {
     });
 };
 
-// TODO - documentation
+// `cleanDimensionsAdditionalActions` - overwrites mixin/position function. Promulgates Stack dimension changes through to all Element and Canvas wrappers associated with the Stack wrapper's Group object.
 P.cleanDimensionsAdditionalActions = function () {
 
     if (this.groupBuckets) {
@@ -251,7 +276,7 @@ P.cleanDimensionsAdditionalActions = function () {
     this.dirtyCollision = true;
 };
 
-// TODO - documentation
+// `cleanPerspective` - internal function
 P.cleanPerspective = function () {
 
     this.dirtyPerspective = false;
@@ -272,10 +297,12 @@ P.cleanPerspective = function () {
 };
 
 
-// Scrawl-canvas Stack artefacts cannot have 'String%' dimensions, which means they have absolute dimensions -because everything that relies on 'String%' dimensions needs an absolute (number) value for their calculations at the root, which is the stack. 
-
+// TODO - experimental! `checkResponsive`
+//
+// Scrawl-canvas Stack artefacts - at the __root__ level - cannot have 'String%' dimensions, which means they have absolute dimensions - because everything that relies on 'String%' dimensions needs an absolute (number) value for their calculations at the root, which is the stack. 
+//
 // But we still need to make Stacks responsive. We do this by checking if the viewport dimensions have changed (a resize action has taken place) and - if yes - update the stack's absolute dimensions accordingly ... if the __isResponsive__ flag has been set to true for the Stack (default is 'false' - may change this in due course).
-
+//
 // We call this check in the __clear__ function below, because it's doing nothing else useful at the moment and it makes sense to get updates in place here before everything launches into the compile part of the display cycle
 P.checkResponsive = function () {
 
@@ -313,7 +340,10 @@ P.checkResponsive = function () {
     }
 };
 
-// TODO - documentation
+
+// ##### Display cycle functions
+
+// `clear`
 P.clear = function () {
 
     this.checkResponsive();
@@ -321,7 +351,7 @@ P.clear = function () {
     return Promise.resolve(true);
 };
 
-// TODO - documentation
+// `compile`
 P.compile = function () {
 
     let self = this;
@@ -346,7 +376,7 @@ P.compile = function () {
     })
 };
 
-// TODO - documentation
+// `show`
 P.show = function () {
 
     return new Promise((resolve) => {
@@ -356,7 +386,7 @@ P.show = function () {
     });
 };
 
-// TODO - documentation
+// `render`
 P.render = function () {
 
     let self = this;
@@ -370,7 +400,7 @@ P.render = function () {
     });
 };
 
-// TODO - documentation
+// `addExistingDomElements` - argument is a CSS query search String. All elements in the DOM matching the search will be __moved__ into the Stack wrapper's DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements' CSS attributes, they will be __positioned absolutely__ within the Stack and given start, handle and offset values of `[0, 0]`. 
 P.addExistingDomElements = function (search) {
 
     let elements, el, captured, i, iz;
@@ -401,14 +431,10 @@ P.addExistingDomElements = function (search) {
     return this;
 };
 
-
-// Takes an 'items' object as an argument. The only required attribute of the argument is __.tag__, which determines the type of element that will be created (for example - setting tag to 'div' will create a new &lt;div> element)
-
-// Any other Element artefact attribute can also be included in the argument object, including __.text__ and __.content__ attributes to set the new DOM Element's textContent and innerHTML attributes.
-
-// If position and dimension values are not included in the argument, the element will be given default values of [0,0] for start, offset and handle; and dimensions of 100px width and height.
-
-// The new element will also default to a CSS box-sizing style value of 'border-box', unless the argument's __.boxSizing__ attribute has been set to 'content-box' - this will override any 'borderBox' attribute value in the argument's __.css__ object (if one has been included)
+// `addNewElement` - takes an 'items' object as an argument. The only required attribute of the argument is __tag__, which determines the type of element that will be created (for example - setting tag to 'div' will create a new &lt;div> element)
+// + Any other Element artefact attribute can also be included in the argument object, including __text__ and __content__ attributes to set the new DOM Element's textContent and innerHTML attributes.
+// + If position and dimension values are not included in the argument, the element will be given default values of [0,0] for start, offset and handle; and dimensions of 100px width and height.
+// + The new element will also default to a CSS box-sizing style value of 'border-box', unless the argument's __boxSizing__ attribute has been set to 'content-box' - this will override any 'borderBox' attribute value in the argument's __.css__ object (if one has been included)
 P.addNewElement = function (items = {}) {
 
     if (items.tag) {
@@ -437,7 +463,7 @@ P.addNewElement = function (items = {}) {
 };
 
 
-// ## Exported factory function
+// #### Factory
 const makeStack = function (items) {
 
     return new Stack(items);
@@ -445,6 +471,8 @@ const makeStack = function (items) {
 
 constructors.Stack = Stack;
 
+
+// #### Exports
 export {
     makeStack,
 };

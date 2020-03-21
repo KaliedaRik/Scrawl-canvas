@@ -5,19 +5,19 @@ return new Uint8Array(Array.prototype.slice.call(this, begin, end));
 }
 });
 }
-let packet,
-image,
-iWidth,
-data,
-cache,
-tiles,
-localX,
-localY,
-localWidth,
-localHeight,
-filters,
-filter,
-action;
+let packet;
+let image;
+let iWidth;
+let data;
+let cache;
+let tiles;
+let localX;
+let localY;
+let localWidth;
+let localHeight;
+let filters;
+let filter;
+let action;
 onmessage = function (e) {
 let i, iz;
 packet = e.data;

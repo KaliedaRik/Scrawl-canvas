@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>test-001.js</title>
+  <title>Component definitions</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -36,12 +36,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>test-001.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -50,7 +44,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="component-definitions">Component definitions</h1>
+<p>Component definitions are functions that take a DOM element and manipulate it to supply it with additional functionality, including the ability to add Scrawl-canvas displays and animations to the DOM element</p>
+
             </div>
             
         </li>
@@ -62,8 +58,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h2 id="scrawl-canvas-component-definition-functions">Scrawl-canvas component definition functions</h2>
+              <p>Example of how a Javascript module can import and use a component definition:</p>
+<pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
+<span class="hljs-keyword">import</span> { myScrawlComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/component/definition/file.js'</span>;
 
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> myScrawlComponent(el));</code></pre>
             </div>
             
         </li>
@@ -75,72 +75,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Component definitions are functions that take a DOM element and manipulate it to supply it with additional functionality, including the ability to add Scrawl-canvas displays and animations to the DOM element</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Example of how a Javascript module can import and use a component definition:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
-<span class="hljs-keyword">import</span> { myScrawlComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/component/definition/file.js'</span>;</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> myScrawlComponent(el));</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
               <p>Component definition functions can be written in any way the developer sees fit - a developer could write a component definition so that it:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <ul>
+<ul>
 <li>can accept additional data to help further personalize how the component gets built</li>
 <li>visits remote APIs to gather additional data as part of the component build</li>
 <li>holds local state for the component</li>
@@ -153,26 +89,14 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>At a minimum, a component definition function will need to take a DOM element (or a pointer to it) as an argument. Note that Scrawl-canvas will manipulate the element in the following ways to make it work as a component:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <ul>
+<ul>
 <li>the element’s CSS ‘position’ value, if set to ‘static’ (the default value), will change to either ‘relative’ or ‘absolute’ - this is required to get any added canvas to <em>stick to</em> its element in the final display</li>
 <li>it will also be given a unique Scrawl-canvas identifier in a new <strong>data-scrawl-name</strong> attribute on the element</li>
 <li>the new &lt;canvas&gt; element will be added to the element as its <em>first child</em>; the canvas will be absolutely positioned within the element</li>
@@ -186,26 +110,14 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-11">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>For the sake of fellow developers, each component definition function should come with some documentation to explain:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <ul>
+<ul>
 <li>the purpose and usage of the component that the definition function will deliver/render</li>
 <li>any effects (beyond those explained above) that componentization will have on the DOM element and any child elements it may contain</li>
 <li>what input the function requires, and in what format and argument order</li>
@@ -217,11 +129,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-13">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Each of the following component definition functions could live in its own file; we can also bundle components together so that related components can be imported into another Javascript module using a single <strong>import</strong> statement in that file</p>
 
@@ -230,11 +142,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-14">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>BOILERPLATE: import the Scrawl-canvas object - the path to the file will vary according to where in a particular site’s server’s directory structure the Scrawl-canvas files have been placed</p>
 
@@ -245,121 +157,27 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-15">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h3 id="spotlight-text-component">‘Spotlight text’ component</h3>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p><strong>Purpose:</strong> adds a spotlight effect to an element. When the user hovers the mouse over the element, a ‘spotlight’ gradient will track the mouse’s movements.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p><strong>Function input:</strong> the DOM element, or a handle to it, as the only argument.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p><strong>Function output:</strong> a Javascript object will be returned, containing the following attributes</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <pre><code>{
+<p><strong>Purpose:</strong> adds a spotlight effect to an element. When the user hovers the mouse over the element, a ‘spotlight’ gradient will track the mouse’s movements.</p>
+<p><strong>Function input:</strong> the DOM element, or a handle to it, as the only argument.</p>
+<p><strong>Function output:</strong> a Javascript object will be returned, containing the following attributes</p>
+<pre><code>{
     element     <span class="hljs-comment">// the Scrawl-canvas wrapper for the DOM element supplied to the function</span>
     canvas      <span class="hljs-comment">// the Scrawl-canvas wrapper for the component's canvas</span>
     animation   <span class="hljs-comment">// the Scrawl-canvas animation object</span>
     demolish    <span class="hljs-comment">// remove the component from the Scrawl-canvas library</span>
-}</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p><strong>Usage example:</strong></p>
+}</code></pre><h5 id="usage-example">Usage example:</h5>
+<pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
+<span class="hljs-keyword">import</span> { spotlightText } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
-<span class="hljs-keyword">import</span> { spotlightText } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> spotlightText(el));</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p><strong>Effects on the element:</strong> no additional effects.</p>
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> spotlightText(el));</code></pre><p><strong>Effects on the element:</strong> no additional effects.</p>
 
             </div>
             
@@ -368,11 +186,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-24">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Define some variables and functions we’ll be using as part of the component build</p>
 
@@ -383,11 +201,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-25">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Define the gradient</p>
 
@@ -407,11 +225,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-26">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>This animation hook uses the variables and gradient we defined above</p>
 <ul>
@@ -433,11 +251,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-27">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>The block entity swaps between the gradient and a color fill, dependent on user interaction</p>
 
@@ -454,11 +272,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-28">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Generate the component for the DOM element</p>
 
@@ -469,11 +287,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-29">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>(<strong>required</strong>) The DOM element we are about to componentize</p>
 
@@ -484,68 +302,35 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-30">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>(<strong>optional</strong>) An array of animation hook functions with the following attributes</p>
+              <p>(<strong>optional</strong>) An array of animation hook functions with the following attributes
+<code>commence</code> - for an preparatory work required before the display cycle kicks off
+<code>afterClear</code> - runs between the ‘clear’ and ‘compile’ stages of the display cycle
+<code>afterCompile</code> - runs between the ‘compile’ and ‘show’ stages of the display cycle
+<code>afterShow</code> - for any cleanup work required after the display cycle completes
+<code>error</code> - a function to run when an error in the display cycle occurs</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        animationHooks: {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        animationHooks: {
+            <span class="hljs-attr">commence</span>: checkMouseHover,
+        },</pre></div></div>
             
         </li>
         
         
-        <li id="section-31">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p><em>commence</em> - for an preparatory work required before the display cycle kicks off</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            commence: checkMouseHover,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <p><em>afterClear</em> - runs between the ‘clear’ and ‘compile’ stages of the display cycle
-<em>afterCompile</em> - runs between the ‘compile’ and ‘show’ stages of the display cycle
-<em>afterShow</em> - for any cleanup work required after the display cycle completes
-<em>error</em> - a function to run when an error in the display cycle occurs</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <p>(<strong>optional</strong>) Options we can supply for the IntersectionObserver </p>
-<ul>
-<li>see <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API</a></li>
-<li>defaults are usually good enough<ul>
-<li>changing the ‘threshold’ value is probably the most useful option to play with</li>
-</ul>
-</li>
-</ul>
+              <p>(<strong>optional</strong>) Options we can supply for the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>. Defaults are usually good enough; changing the ‘threshold’ value is probably the most useful option to play with</p>
 
             </div>
             
@@ -554,11 +339,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-34">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>(<strong>optional</strong> - default: true) Scrawl-canvas components don’t have to include a canvas!</p>
 
@@ -569,17 +354,13 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-35">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>(<strong>optional</strong>, and only useful if we are including a canvas) - canvas-specific options</p>
-<ul>
-<li>the most useful attribute is (probably) <strong>fit</strong>, whose value can be one of:
-‘contain’, ‘cover’, ‘fill’, or ‘none’ (the default value)</li>
-</ul>
+              <p>(<strong>optional</strong>, and only useful if we are including a canvas) - canvas-specific options. The most useful attribute is (probably) <strong>fit</strong>, whose value can be one of: <code>contain</code>, <code>cover</code>, <code>fill</code>, or <code>none</code> (the default value)</p>
 
             </div>
             
@@ -589,11 +370,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-36">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>NOTE: makeComponent() defines its own <strong>afterClear</strong> animation hook</p>
 <ul>
@@ -601,19 +382,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 <li>overwriting this hook here will lose that functionality!</li>
 <li>instead, use the <strong>commence</strong> animation hook for all display cycle preparations</li>
 </ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <p>Once the component is built, we can supply values to our previously defined variables</p>
+<p>Once the component is built, we can supply values to our previously defined variables</p>
 
             </div>
             
@@ -622,16 +391,13 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-38">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>Set the canvas as the current canvas</p>
-<ul>
-<li>not required, it just makes things simpler for building artefacts etc</li>
-</ul>
+              <p>Set the canvas as the current canvas - not required, it just makes things simpler for building artefacts etc</p>
 
             </div>
             
@@ -641,11 +407,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-39">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Define the block which will (sometimes) display our spotlingt gradient</p>
 
@@ -682,16 +448,13 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-40">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>Return the component, so coders can access the component’s parts</p>
-<ul>
-<li>in case they need to tweak the output to meet the web page’s specific requirements</li>
-</ul>
+              <p>Return the component, so coders can access the component’s parts - in case they need to tweak the output to meet the web page’s specific requirements</p>
 
             </div>
             
@@ -701,166 +464,42 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-41">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h3 id="jazzy-button-component">‘Jazzy button’ component</h3>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p><strong>Purpose:</strong> display the number of times a user has clicked on a button element; animate the text and its line when the user clicks on the button.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
-              <p><strong>Function input:</strong> a &lt;button&gt; element, or any other block-displayed DOM element containing no child elements.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <p><strong>Function output:</strong> </p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
-              </div>
-              <pre><code>{
+<p><strong>Purpose:</strong> display the number of times a user has clicked on a button element; animate the text and its line when the user clicks on the button.
+<strong>Function input:</strong> a &lt;button&gt; element, or any other block-displayed DOM element containing no child elements.</p>
+<p><strong>Function output:</strong> </p>
+<pre><code>{
     element           <span class="hljs-comment">// wrapper</span>
     canvas            <span class="hljs-comment">// wrapper</span>
     animation         <span class="hljs-comment">// object</span>
-    demolish          <span class="hljs-comment">// function</span></code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
-              </div>
-              <pre><code>    artefacts {
+    demolish          <span class="hljs-comment">// function</span>
+
+    artefacts {
         trackLine     <span class="hljs-comment">// Shape entity</span>
         label         <span class="hljs-comment">// Phrase entity</span>
-    }</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
-              </div>
-              <pre><code>    assets {
+    }
+
+    assets {
         lineGradient  <span class="hljs-comment">// Gradient wrapper</span>
-    }</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
-              </div>
-              <pre><code>    functions {
+    }
+
+    functions {
         setClickText  <span class="hljs-comment">// increase the number of clicks recorded on the button</span>
         textTween     <span class="hljs-comment">// Tween animation function</span>
         gradientTween <span class="hljs-comment">// Tween animation function</span>
     }
-}</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
-              </div>
-              <p><strong>Usage example:</strong></p>
+}</code></pre><h5 id="usage-example">Usage example:</h5>
+<pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
+<span class="hljs-keyword">import</span> { jazzyButton } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
-<span class="hljs-keyword">import</span> { jazzyButton } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> jazzyButton(el));</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
-              </div>
-              <p><strong>Effects on the element:</strong> no additional effects.</p>
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> jazzyButton(el));</code></pre><p><strong>Effects on the element:</strong> no additional effects.</p>
 
             </div>
             
@@ -884,11 +523,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-53">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>define the text we’ll be displaying in the button</p>
 
@@ -900,11 +539,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-54">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>A path for the text to animate along, together with a gradient for its strokeStyle</p>
 
@@ -944,11 +583,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-55">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>The phrase entity that will display the text</p>
 
@@ -971,11 +610,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-56">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Animate the phrase entity along the line when button element is clicked</p>
 
@@ -1010,11 +649,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-57">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Animate the gradient for the Line the text moves along</p>
 
@@ -1046,11 +685,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-58">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Increase the local counter; update the Phrase entity with new text</p>
 
@@ -1065,11 +704,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-59">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Both tweens need to halt and restart if user clicks on them while they are running</p>
 
@@ -1110,104 +749,22 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-60">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <h3 id="page-performance-reporter">‘Page performance’ reporter</h3>
+<p><strong>Purpose:</strong> (roughly) measure and display the time taken between calls to RequestAnimationFrame, and the resultant animated frames-per-second performance of the web page.</p>
+<p><strong>Function input:</strong> an empty &lt;div&gt; element.</p>
+<p><strong>Function output:</strong> true if component builds; false otherwise</p>
+<h5 id="usage-example">Usage example:</h5>
+<pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
+<span class="hljs-keyword">import</span> { pagePerformance } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-61">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
-              </div>
-              <p><strong>Purpose:</strong> (roughly) measure and display the time taken between calls to RequestAnimationFrame, and the resultant animated frames-per-second performance of the web page.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-62">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
-              </div>
-              <p><strong>Function input:</strong> an empty &lt;div&gt; element.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-63">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
-              </div>
-              <p><strong>Function output:</strong> true if component builds; false otherwise</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-64">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
-              </div>
-              <p><strong>Usage example:</strong></p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-65">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
-<span class="hljs-keyword">import</span> { pagePerformance } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-66">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> pagePerformance(el));</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-67">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
-              </div>
-              <p><strong>Effects on the element:</strong> updates the &lt;div&gt; element’s innerHTML data, which will replace any child elements or text placed between the element’s opening and closing tags.</p>
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> pagePerformance(el));</code></pre><p><strong>Effects on the element:</strong> updates the &lt;div&gt; element’s innerHTML data, which will replace any child elements or text placed between the element’s opening and closing tags.</p>
 
             </div>
             
@@ -1245,13 +802,13 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-68">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>Export the component definition functions</p>
+              <h4 id="exports">Exports</h4>
 
             </div>
             

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>dom-011.js</title>
+  <title>Demo DOM 011</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>dom-011.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-dom-011">Demo DOM 011</h2>
+              <h1 id="demo-dom-011">Demo DOM 011</h1>
+<p>Canvas controller ‘fit’ attribute; Cell positioning (mouse)</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/dom-011.html">Canvas controller ‘fit’ attribute; Cell positioning (mouse)</a></p>
+              <p><a href="../../demo/dom-011.html">Run code</a></p>
 
             </div>
             
@@ -308,7 +293,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
@@ -367,9 +352,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>The ‘fit’ attribute comes into play when the displayed canvas element and its hidden canvas companion (the base canvas) have different dimensions. The hidden canvas is copied over to the displayed canvas at the end of every display cycle.</p>
+              <p>The <code>fit</code> attribute comes into play when the displayed canvas element and its hidden canvas companion (the base canvas) have different dimensions. The hidden canvas is copied over to the displayed canvas at the end of every display cycle.</p>
+<p>We can influence how this copy happens by setting the <code>fit</code> attribute to an appropriate String value (‘fill’, ‘contain’, ‘cover’, or ‘none’). These replicate the effect of the CSS object-fit property (see <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit</a>)</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    fit: <span class="hljs-string">'fill'</span>,</pre></div></div>
             
         </li>
         
@@ -380,22 +368,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>We can influence how this copy happens by setting the ‘fit’ attribute to an appropriate String value (‘fill’, ‘contain’, ‘cover’, or ‘none’). These replicate the effect of the CSS object-fit property (see <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit</a>)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    fit: <span class="hljs-string">'fill'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
               <p>We’ve given the Stack element a 1px border. We need to compensate for this (and any top/left padding) when aligning the canvas element within the stack. if we don’t do this, we get a 1px white line between the stack border and the canvas (on the top and left edges)</p>
+<p>TODO - fix this. Annoying.</p>
 
             </div>
             
@@ -406,11 +380,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>The base canvas - every displayed canvas element has at least one hidden (‘base’) canvas companion - does not need to replicate the displayed canvas. For instance, it can have different dimensions. The base canvas is copied over to the displayed canvas at the end of every display cycle.</p>
 
@@ -425,11 +399,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>A displayed canvas can have more than one hidden canvas. These additional ‘cells’ - which act much like traditional animation cels (see <a href="https://en.wikipedia.org/wiki/Cel">https://en.wikipedia.org/wiki/Cel</a>) - will be copied onto the ‘base’ canvas before the it gets copied over to the displayed cell at the end of every display cycle.</p>
 
@@ -451,13 +425,14 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Function to check whether mouse cursor is over the canvas element within the stack, and lock the element artefact accordingly</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to check whether mouse cursor is over the canvas element within the stack, and lock the element artefact accordingly</p>
 
             </div>
             
@@ -500,11 +475,11 @@ let report = function () {
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Create the Animation loop which will run the Display cycle. Note that we don’t have to define a target - useful for when we want to cascade through multiple stacks (which don’t themselves trigger canvas redraws, just canvas positioning) and multiple canvases</p>
 
@@ -520,13 +495,14 @@ let report = function () {
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Event listeners</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Event listeners</p>
 
             </div>
             
@@ -564,11 +540,11 @@ scrawl.observeAndUpdate({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Set the DOM input values</p>
 
@@ -581,92 +557,24 @@ scrawl.observeAndUpdate({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Dev tip 1: Scrawl-canvas doesn’t add a namespace object to the Javascript global object. To see what’s going on in the Scrawl-canvas library - where all relevant SC objects are held - console log it (in the code file, not directly in the browser console):</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-built_in">console</span>.log(scrawl.library);</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <ul>
+              <h4 id="development-and-testing">Development and testing</h4>
+<p><strong>Dev tip 1:</strong> Scrawl-canvas doesn’t add a namespace object to the Javascript global object. To see what’s going on in the Scrawl-canvas library - where all relevant SC objects are held - console log it (in the code file, not directly in the browser console):</p>
+<p><code>console.log(scrawl.library);</code></p>
+<ul>
 <li>doesn’t update in real time, but closing and opening the object in the console should reveal values at the point in time when it is reopened</li>
 <li>In Chrome console (at least), the various objects in the library will be listed with their object type eg Stack, Canvas, Cell, etc</li>
 </ul>
+<p>If you only want to view a specific part of the library - for example, just artefacts - console log it out in the same way:</p>
+<p><code>console.log(scrawl.library.artefact);</code></p>
+<p><strong>Dev tip 2:</strong> to see what’s going on in any hidden canvas, temporarily add it to the bottom of the page, or insert it wherever using appropriate DOM API functionality:</p>
+<p><code>document.body.appendChild(scrawl.library.cell[NAME].element);</code></p>
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>If you only want to view a specific part of the library - for example, just artefacts - console log it out in the same way:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-built_in">console</span>.log(scrawl.library.artefact);</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>Dev tip 2: to see what’s going on in any hidden canvas, temporarily add it to the bottom of the page, or insert it wherever using appropriate DOM API functionality:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-built_in">document</span>.body.appendChild(scrawl.library.cell[NAME].element);</code></pre>
             </div>
             
         </li>

@@ -1,10 +1,11 @@
-// ## Demo Canvas 004 
+// # Demo Canvas 004 
+// Radial gradients
 
-// [Radial gradients](../../demo/canvas-004.html)
+// [Run code](../../demo/canvas-004.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
@@ -41,6 +42,7 @@ scrawl.makeBlock({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -62,7 +64,7 @@ End - x: ${graddy.get('endX')}; y: ${graddy.get('endY')}; radius: ${graddy.get('
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -71,7 +73,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### User interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -132,3 +135,5 @@ document.querySelector('#red').value = 0;
 document.querySelector('#blue').value = 0;
 
 
+// #### Development and testing
+console.log(scrawl.library);

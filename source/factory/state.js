@@ -1,25 +1,25 @@
-
 // # State factory
+// Scrawl-canvas uses State objects to keep track of Cell object [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) rendering engine state. 
+//
+// Every entity object also has a State object. Before an entity is 'stamped' onto a Cell &lt;canvas> their State objects are compared, to draw up a list of changes required by the entity to bring the engine's state into alignment.
+// + State objects are not stored in the Scrawl-canvas library; they can only be accessed through their Cell or entity object.
+// + State objects __can be shared__ between entity Objects, either by setting one entity object's state attribute to another entity's State object, or by setting a `sharedState` flag in the argument object when cloning a new entity from an existing one.
+// + Entitys can skip the engine comparison step during their Display cycle stamp functionality by setting their `noCanvasEngineUpdates` flag to true.
+// + State attributes can be updated directly on the Entity or Cell using those object's normal `set` and `deltaSet` functions.
+// + State objects will be saved, cloned and killed as part of the Cell or entity save/clone/kill functionality.
 
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// #### Demos:
+// + All Canvas demos make use of the State object.
 
 
-// ## Imports
+// #### Imports
 import { constructors, entity, styles } from '../core/library.js';
 import { isa_obj, xt, xtGet } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
 
-// ## State constructor
+// #### State constructor
 const State = function (items = {}) {
 
     this.set(this.defs);
@@ -30,46 +30,36 @@ const State = function (items = {}) {
 };
 
 
-
-// ## State object prototype setup
+// #### State prototype
 let P = State.prototype = Object.create(Object.prototype);
 P.type = 'State';
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
-// ## Define default attributes
+// #### State attributes
 P.defs = {
 
-
-// Color, gradient or pattern used to fill a entity. Can be:
-
-// + Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
+// ##### Fills and Strokes
+// __fillStyle__ and __strokeStyle__ - color, gradient or pattern used to outline or fill a entity. Can be:
+// + CSS format color String - `#fff`, `#ffffff`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
 // + GRADIENTNAME String
 // + RADIALGRADIENTNAME String
 // + PATTERNNAME String
     fillStyle: 'rgba(0,0,0,1)',
-
-
-// Color, gradient or pattern used to outline a entity. Can be:
-
-// + Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
-// + COLORNAME String
-// + GRADIENTNAME String
-// + RADIALGRADIENTNAME String
-// + PATTERNNAME String
     strokeStyle: 'rgba(0,0,0,1)',
 
 
-// Entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque
+// ##### Miscellaneous engine settings
+// __globalAlpha__ - entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque
     globalAlpha: 1,
 
 
-// Compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include
-
+// __globalCompositeOperation__ - compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include
 // + 'source-over'
 // + 'source-atop'
 // + 'source-in'
@@ -82,84 +72,73 @@ P.defs = {
 // + 'darker'
 // + 'copy'
 // + 'xor'
-
-// _Be aware that different browsers render these operations in different ways, and some options are not supported by all browsers_
+// + any other permitted value - be aware that different browsers may render these operations in different ways, and some options are not supported by all browsers.
     globalCompositeOperation: 'source-over',
 
 
-// Line width, in pixels
+// ##### Stroke line styling
+// __lineWidth__ - in pixels
     lineWidth: 1,
 
 
-// Line cap styling. Permitted values include:
-
+// __lineCap__ - how the ends of lines will display. Permitted values include:
 // + 'butt'
 // + 'round'
 // + 'square'
     lineCap: 'butt',
 
 
-// Line join styling. Permitted values include:
-
+// __lineJoin__ - how line joints will display. Permitted values include:
 // + 'miter'
 // + 'round'
 // + 'bevel'
     lineJoin: 'miter',
 
 
-// Line dash format - an array of Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern
+// __lineDash__ - an array of integer Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern
     lineDash: null,
 
 
-// Line dash offset - distance along the entity's outline at which to start the line dash. Changing this value can be used to create a 'marching ants effect
+// __lineDashOffset__ - distance along the entity's outline at which to start the line dash. Changing this value can be used to create a 'marching ants effect
     lineDashOffset: 0,
 
 
-// miterLimit - affecting the 'pointiness' of the line join where two lines join at an acute angle
+// __miterLimit__ - affecting the 'pointiness' of the line join where two lines join at an acute angle
     miterLimit: 10,
 
 
-// Horizontal offset of a entity's shadow, in pixels
+// ##### Shadow styling
+// If these attributes are set to values different from their defaults, then the shadowing effect will have consequences on how the entity displays. Scrawl-canvas uses a 2-step procedure to displaying both an entity's fill and stroke, applying one before the other - `method` __fillThenDraw__, __drawThenFill__. The shadow will be applied for both operations, which leads to the second operation applying a shadow over the first operation.
+//
+// If this is not the desired effect - we want the stroke and fill to display as a unified whole, with the shadow underneath them both - we can use `method` __fillAndDraw__, __drawAndFill__.
+//
+// The __clear__ `method` will also include any shadow effect.
+
+// __shadowOffsetX__, __shadowOffsetY__ - horizontal and vertical offsets for a entity's shadow, in Number pixels
     shadowOffsetX: 0,
-
-
-// Vertical offset of a entity's shadow, in pixels
     shadowOffsetY: 0,
 
 
-// Blur border for a entity's shadow, in pixels
+// __shadowBlur__ - the blur width for a entity's shadow, in Number pixels
     shadowBlur: 0,
 
 
-// Color used for entity shadow effect. Can be:
-
-// + Cascading Style Sheet format color String - '#fff', '#ffffff', 'rgb(255,255,255)', 'rgba(255,255,255,1)', 'white'
+// __shadowColor__ - the color used for an entity's shadow effect. Can be:
+// + CSS format color String - `#fff`, `#ffffff`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
 // + COLORNAME String
     shadowColor: 'rgba(0,0,0,0)',
 
 
-// Cascading Style Sheet font String, for Phrase entitys
+// ##### Font styling
+
+// __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.
     font: '12px sans-serif',
-
-
-// Following values are permitted according to Canvas API specs: 'left', 'center', 'right', 'start', 'end'
-
-// TODO: check how setting this value to different values affects Scrawl-canvas functionality
-// - because at the moment I ignore it, beyond setting it on the canvas2d rendering engine
     textAlign: 'start',
-
-
-// Following values are permitted according to Canvas API specs: 'top', 'hanging', 'middle', 'alphabetic', 'ideographic', 'bottom'
-
-// TODO: find a (sane) way to interrogate fonts to find out the values - from font tables? - given for these settings
-// - because if I can do that, then I can work out the bounding box
     textBaseline: 'alphabetic',
 };
 
 
-// ## Packet management
-
-// Overwriting base mixin functions. Nothing to add to base mixin arrays
+// #### Packet management
 P.processPacketOut = function (key, value, includes) {
 
     let result = true;
@@ -193,9 +172,15 @@ P.finalizePacketOut = function (copy, items) {
 };
 
 
-// ## Define attribute getters and setters
+// #### Clone management
+// Handled by Cell and entity objects, not by the State object
 
-// TODO - documentation
+
+// #### Kill management
+// Handled by Cell and entity objects, not by the State object
+
+
+// #### Get, Set, deltaSet
 P.set = function (items) {
 
     let key, i, iz,
@@ -232,7 +217,6 @@ let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// TODO - documentation
 S.fillStyle = function (item) {
 
     let temp;
@@ -247,7 +231,6 @@ S.fillStyle = function (item) {
     }
 };
 
-// TODO - documentation
 S.strokeStyle = function (item) {
 
     let temp;
@@ -263,14 +246,16 @@ S.strokeStyle = function (item) {
 };
 
 
-// ## Define prototype functions
+// #### Prototype functions
+
+// Internal arrays used by a number of Style functions
 P.allKeys = Object.keys(P.defs);
 P.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
 P.lineKeys = ['lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'];
 P.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];
 P.textKeys = ['font'];
 
-// TODO - documentation
+// `getChanges` is the key function performed by State objects. This is where the entity's state is compared to a Cell engine's current state, to identify which engine attributes need to change to bring it into alignment with the entity object's requirements
 P.getChanges = function (ent, engineState) {
 
     let mainKeys = this.mainKeys,
@@ -384,7 +369,7 @@ P.getChanges = function (ent, engineState) {
     return result;
 };
 
-// TODO - documentation
+// The `setStateFromEngine` function takes a CanvasRenderingContext2D engine object and updates its own attributes to match the engine's current state.
 P.setStateFromEngine = function (engine) {
 
     let keys = this.allKeys,
@@ -403,7 +388,8 @@ P.setStateFromEngine = function (engine) {
 };
 
 
-// ## Exported factory function
+// #### Factory
+// Only used internally by Cell and entity factory functions
 const makeState = function (items) {
 
     return new State(items);
@@ -411,6 +397,7 @@ const makeState = function (items) {
 
 constructors.State = State;
 
+// #### Exports
 export {
     makeState,
 };

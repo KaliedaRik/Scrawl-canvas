@@ -1,25 +1,53 @@
-
 // # Filter factory
+// Filters take in an image representation of an entity, Group of entitys or a Cell display and, by manipulating the image's data, return an updated image which replaces those entitys or cell in the final output display.
+//
+// Scrawl-canvas defines its filters in __Filter objects__, detailed in this module. The functionality to make use of these objects is coded up in the [filter mixin](../mixin/filter.html), which is used by the Cell, Group and all entity factories.
+//
+// Scrawl-canvas uses a [web worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) to generate filter outputs - defined in the [filter web worker](../worker/filter.html). It supports a number of common filter algorithms:
+// + `grayscale` - desaturates the image
+// + `sepia` - desaturates the image, then 'antiques' it by adding back some yellow tone
+// + `invert` - turns white into black, and similar across the spectrum
+// + `red` - suppresses the image's green and blue channels
+// + `green` - suppresses the image's red and blue channels
+// + `blue` - suppresses the image's red and green channels
+// + `notred` - suppresses the image's red channel
+// + `notgreen` - suppresses the image's green channel
+// + `notblue` - suppresses the image's blue channel
+// + `cyan` - averages the image's blue and green channels, and suppresses the red channel
+// + `magenta` - averages the image's red and blue channels, and suppresses the green channel
+// + `yellow` - averages the image's red and green channels, and suppresses the blue channel
+// + `brightness` - multiplies the red, green and blue channel values by a value supplied in the `filter.level` attribute
+// + `saturation` - multiplies the red, green and blue channel values by a value supplied in the `filter.level` attribute, then normalizes the result
+// + `threshold` - desaturates each pixel then tests it against `filter.level` value; those pixels below the level are set to the `filter.lowRGB` values while the rest are set to the `filter.highRGB` values
+// + `channels` - multiply each pixel's channel values by the values set in the `filter.RGB` attributes
+// + `channelstep` - divide, floor, and then multiply each pixel's channel values by the values set in the `filter.RGB` attributes
+// + `tint` - a more fine-grained form of the channels filter
+// + `chroma` - (the green-screen effect) - will evaluate each pixel against a range array; pixels that fall within the range are set to transparent
+// + `pixelate` - create tiles - whose dimensions and positions are determined by values set in the filter `tileWidth`, `tileHeight`, `offsetX` and `offsetY` attributes - across the image and then average the pixels in each tile to a single color
+// + `blur` - creates a blurred image. Note: can be slow across larger images! The degree of the blur - which does not follow conventional algorithms such as gaussian - is determined by the filter attribute values for `radius` (number), `passes` (number) and `shrink` (boolean)
+// + `matrix` - apply a 3x3 matrix transform to each of the image's pixels
+// + `matrix5` - apply a 5x5 matrix transform to each of the image's pixels
+// 
+// Scrawl-canvas can also use __user-defined filters__.
+//
+// Filters use the __base__ mixin, thus they come equipped with packet functionality, alongside clone and kill functions.
+//
+// Note that [CSS-mediated filters](https://developer.mozilla.org/en-US/docs/Web/CSS/filter) - `url()`, `blur()`, `brightness()`, `contrast()`, `drop-shadow()`, `grayscale()`, `hue-rotate()`, `invert()`, `opacity()`, `saturate()`, `sepia()` - can also be applied to DOM elements wrapped into Scrawl-canvas objects (Stack, Element, Canvas) in the normal way. Browsers will apply CSS filters as the final operation in their paint routines.
 
-// TODO - documentation
 
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// #### Demos:
+// + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
+// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets; save and load a range of different entitys
 
 
-// ## Imports
+// #### Imports
 import { constructors, cell, group, entity } from '../core/library.js';
 import { mergeOver, removeItem } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
 
-// ## Filter constructor
+// #### Filter constructor
 const Filter = function (items = {}) {
 
     this.makeName(items.name);
@@ -30,7 +58,7 @@ const Filter = function (items = {}) {
 };
 
 
-// ## Filter object prototype setup
+// #### Filter prototype
 let P = Filter.prototype = Object.create(Object.prototype);
 P.type = 'Filter';
 P.lib = 'filter';
@@ -38,11 +66,12 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
-// ## Define default attributes
+// #### Filter attributes
 let defaultAttributes = {
 
 
@@ -51,21 +80,21 @@ let defaultAttributes = {
 
 
 // The following methods require no further attributes: 
-
-//     grayscale, sepia, invert
-//     red, green, blue
-//     notred, notgreen, notblue
-//     cyan, magenta, yellow
+//
+//     `grayscale`, `sepia`, `invert`
+//     `red`, `green`, `blue`
+//     `notred`, `notgreen`, `notblue`
+//     `cyan`, `magenta`, `yellow`
 
 
 // The following methods require the __level__ attribute:
-
-//     brightness, saturation, threshold
+//
+//     `brightness`, `saturation`, `threshold`
     level: 0,
 
 
 
-// The threshhold filter will default to setting (desaturated) pixels below a given level (0 - 255) to black, and those above the level to white. These colours can be changed by using the __low__ and __high__ channel attributes
+// The `threshhold` filter will default to setting (desaturated) pixels below a given level (0 - 255) to black, and those above the level to white. These colours can be changed by using the __low__ and __high__ channel attributes
     lowRed: 0,
     lowGreen: 0,
     lowBlue: 0,
@@ -74,13 +103,13 @@ let defaultAttributes = {
     highBlue: 255,
 
 
-// The channels and channelstep methods make use of the __red__, __green__ and __blue__ attributes
+// The `channels` and `channelstep` methods make use of the __red__, __green__ and __blue__ attributes
     red: 0,
     green: 0,
     blue: 0,
 
 
-// The __tint__ method uses nine attributes
+// The `tint` method uses nine attributes
     redInRed: 0,
     redInGreen: 0,
     redInBlue: 0,
@@ -92,15 +121,14 @@ let defaultAttributes = {
     blueInBlue: 0,
 
 
-// The __pixelate__ method requires tile dimensions and, optionally, offset coordinates which should not exceed the tile dimensions
+// The `pixelate` method requires tile dimensions and, optionally, offset coordinates which should not exceed the tile dimensions
     offsetX: 0,
     offsetY: 0,
     tileWidth: 1,
     tileHeight: 1,
 
 
-// The __blur__ method uses the following attributes:
-
+// The `blur` method uses the following attributes:
 // + the __radius__ of the blur effect, in pixels
 // + the __passes__ attribute (1+) determines how many times the blur filter will iterate
 // + the __shrinkingRadius__ flag reduces the radius by approx 70% on each successive pass
@@ -111,8 +139,8 @@ let defaultAttributes = {
     includeAlpha: false,
 
 
-// The __matrix__ method requires a weights attribute - an array of 9 numbers in the following format:
-
+// The `matrix` method requires a weights attribute - an array of 9 numbers in the following format:
+//
 //     weights: [
 //         topLeftWeight,
 //         topCenterWeight,
@@ -124,26 +152,26 @@ let defaultAttributes = {
 //         bottomCenterWeight,
 //         bottomRightWeight,
 //     ]
-
+//
 // ... where the top row is the row above the home pixel, etc
-
+//
 // The method also makes use of the __includeAlpha__ attribute.
 
-// The __matrix5__ method is the same as the matrix method except that its weights array should contain 25 elements, to cover all the positions (from top-left corner) in a 5x5 grid
+// The `matrix5` method is the same as the matrix method except that its weights array should contain 25 elements, to cover all the positions (from top-left corner) in a 5x5 grid
     weights: null,
 
 
-// The __ranges__ attribute - used by the __chroma__ method - needs to be an array of arrays with the following format:
-
+// The __ranges__ attribute - used by the `chroma` method - needs to be an array of arrays with the following format:
+//
 //     [[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]
-
+//
 // ... multiple ranges can be defined - for instance to key out the lightest and darkest hues:
-
+//
 //     ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]]
     ranges: null,
 
 
-// The user-defined filter should be set as a a string of the function's contents (the bits between the { curly braces }). The function can take no arguments, and can only use variables defined above (or the udn attributes below). The function can use 'self' variables supplied by the web worker - see the worker/filter.js for more information
+// The `user-defined` filter should be set as a String value of the function's contents (the bits between the { curly braces }) on the __userDefined__ attribute. The function can take no arguments, and can only use variables defined above (or the __udVariableN__ attributes below). The function can also use __self__ variables supplied by the web worker - see the worker/filter.js for more information
     userDefined: '',
     udVariable0: '',
     udVariable1: '',
@@ -159,11 +187,16 @@ let defaultAttributes = {
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
-// No additional packet management required
+// #### Packet management
+// No additional packet functionality required
 
 
-// ## Kill functionality
+// #### Clone management
+// No additional clone functionality required
+
+
+// #### Kill management
+// Overwrites ./mixin/base.js
 P.kill = function () {
 
     let myname = this.name;
@@ -196,15 +229,19 @@ P.kill = function () {
 };
 
 
-// ## Define getter, setter and deltaSetter functions
-// None defined
+// #### Get, Set, deltaSet
+// No additional functionality required
 
 
-// ## Filter webworker pool
+// #### Prototype functions
+// No additional prototype functions defined
 
-// TODO - documentation
+
+// #### Filter webworker pool
+// Because starting a web worker is an expensive operation, and a number of different filters may be required to render displays across a number of different &lt;canvas> elements in a web page, Scrawl-canvas operates a pool of web workers to perform work as-and-when required.
 const filterPool = [];
 
+// `Exported function` __requestFilterWorker__
 const requestFilterWorker = function () {
 
     if (!filterPool.length) filterPool.push(buildFilterWorker());
@@ -212,11 +249,13 @@ const requestFilterWorker = function () {
     return filterPool.shift();
 };
 
+// `Exported function` __releaseFilterWorker__ - to avoid memory leaks, ___all requested filter workers MUST be released back to the filter pool as soon as their work has completed___.
 const releaseFilterWorker = function (f) {
 
     filterPool.push(f);
 };
 
+// __buildFilterWorker__ - create a new filter web worker
 const buildFilterWorker = function () {
 
     let path = import.meta.url.slice(0, -('factory/filter.js'.length))
@@ -225,13 +264,15 @@ const buildFilterWorker = function () {
         `${path}worker/filter.js` : 
         `${path}worker/filter.js`;
 
-    // Sept 2019 - chrome does not yet support module
+    // Sept 2019 - chrome does not yet support module workers
+    // ```
     // return new Worker(filterUrl, {type: 'module'});
+    // ```
     return new Worker(filterUrl);
 };
 
 
-// TODO - documentation
+// `Exported function` __actionFilterWorker__ - send a task to the filter web worker, and retrieve the resulting image. This function returns a Promise.
 const actionFilterWorker = function (worker, items) {
 
     return new Promise((resolve, reject) => {
@@ -253,7 +294,56 @@ const actionFilterWorker = function (worker, items) {
 };
 
 
-// ## Exported factory function
+// #### Factory
+// ```
+// scrawl.makeFilter({
+//
+//     name: 'my-grayscale-filter',
+//     method: 'grayscale',
+//
+// }).clone({
+//
+//     name: 'my-sepia-filter',
+//     method: 'sepia',
+// });
+//
+// scrawl.makeFilter({
+//
+//     name: 'my-chroma-filter',
+//     method: 'chroma',
+//     ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]],
+// });
+//
+// scrawl.makeFilter({
+//
+//     name: 'venetian-blinds-filter',
+//     method: 'userDefined',
+//
+//     level: 9,
+//
+//     userDefined: `
+//         let i, iz, j, jz,
+//             level = filter.level || 6,
+//             halfLevel = level / 2,
+//             yw, transparent, pos;
+//
+//         for (i = localY, iz = localY + localHeight; i < iz; i++) {
+//
+//             transparent = (i % level > halfLevel) ? true : false;
+//
+//             if (transparent) {
+//
+//                 yw = (i * iWidth) + 3;
+//              
+//                 for (j = localX, jz = localX + localWidth; j < jz; j ++) {
+//
+//                     pos = yw + (j * 4);
+//                     data[pos] = 0;
+//                 }
+//             }
+//         }`,
+// });
+// ```
 const makeFilter = function (items) {
 
     return new Filter(items);
@@ -261,6 +351,8 @@ const makeFilter = function (items) {
 
 constructors.Filter = Filter;
 
+
+// #### Exports
 export {
     makeFilter,
     requestFilterWorker,

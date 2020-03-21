@@ -31,8 +31,7 @@ P.finalizePacketOut = function (copy, items) {
 if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
 return copy;
 };
-let G = P.getters,
-S = P.setters;
+let S = P.setters;
 S.revert = function (item) {
 this.revert = item;
 if (typeof this.revert !== 'function') this.revert = defaultNonReturnFunction;

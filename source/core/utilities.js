@@ -1,28 +1,27 @@
 // # Core utility functions
+// A ragtag collection of helper functions which other modules can import and use
 
-// TODO - documentation
-
-
-
-// ## Imports
+// #### Imports
 import * as library from "./library.js";
 
+// #### Functions
 
 // __addStrings__ adds the two arguments together and returns a percentage string value if either of the values was a string; 
-
+//
 // Examples:
-
-//     addStrings(20, 40);
-//     -> '60%'
-    
-//     addStrings('20%', 40);
-//     -> '60%'
-    
-//     addStrings(20, '40%');
-//     -> '60%'
-    
-//     addStrings('20%', '40%');
-//     -> '60%'
+// ```
+// addStrings(20, 40);
+// -> '60%'
+//    
+// addStrings('20%', 40);
+// -> '60%'
+//  
+// addStrings(20, '40%');
+// -> '60%'
+//  
+// addStrings('20%', '40%');
+// -> '60%'
+// ```
 
 const addStrings = (current, delta) => {
 
@@ -49,14 +48,15 @@ const capitalize = (s) => {
 
 
 // __convertLength__ takes a value, checks if it is a percent value and - if true - returns a value relative to the supplied length; otherwise returns the value as a number
-
+//
 // Examples:
-
-//     convertLength(20, 40);
-//     -> 20
-    
-//     convertLength('20%', 40);
-//     -> 8
+// ```
+// convertLength(20, 40);
+// -> 20
+//    
+// convertLength('20%', 40);
+// -> 8
+// ```
 const convertLength = (val, len) => {
 
     if (!xt(val)) throw new Error(`core/base error - convertLength() bad value argument: ${val}`);
@@ -91,20 +91,21 @@ const convertLength = (val, len) => {
 
 
 // __convertTime__ converts a time value into its component string suffix and (millisecond) number value properties; returns an array
-
+//
 // Examples:
-
-//     convertTime(5000);
-//     -> ['ms', 5000]
-    
-//     convertTime('50%');
-//     -> ['%', 50]
-    
-//     convertTime('5000ms'); 
-//     -> ['ms', 5000]
-    
-//     convertTime('5s');
-//     -> ['ms', 5000]
+// ```
+// convertTime(5000);
+// -> ['ms', 5000]
+//    
+// convertTime('50%');
+// -> ['%', 50]
+//  
+// convertTime('5000ms'); 
+// -> ['ms', 5000]
+//  
+// convertTime('5s');
+// -> ['ms', 5000]
+// ```
 const convertTime = (item) => {
 
     let a, timeUnit, timeValue;
@@ -149,7 +150,7 @@ const defaultBlankStringReturnFunction = () => '';
 const defaultPromiseReturnFunction = () => Promise.resolve(true);
 
 
-// Return the value provided if it is an integer number and, if it isn't, return 0
+// __ensureInteger__ - return the value provided if it is an integer number and, if it isn't, return 0
 const ensureInteger = (val) => {
 
     val = parseInt(val, 10);
@@ -158,7 +159,7 @@ const ensureInteger = (val) => {
 };
 
 
-// Return the value provided if it is a positive integer number and, if it isn't, return 0
+// __ensurePositiveInteger__ - return the value provided if it is a positive integer number and, if it isn't, return 0
 const ensurePositiveInteger = (val) => {
 
     val = parseInt(val, 10);
@@ -167,7 +168,7 @@ const ensurePositiveInteger = (val) => {
 };
 
 
-// Return the value provided as a floating point number of given precision; return 0 if not a number
+// __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
 const ensureFloat = (val, precision) => {
 
     val = parseFloat(val);
@@ -179,7 +180,7 @@ const ensureFloat = (val, precision) => {
 };
 
 
-// Return the value provided as a positive floating point number of given precision; return 0 if not a number
+// __ensurePositiveFloat__ - return the value provided as a positive floating point number of given precision; return 0 if not a number
 const ensurePositiveFloat = (val, precision) => {
 
     val = parseFloat(val);
@@ -191,7 +192,7 @@ const ensurePositiveFloat = (val, precision) => {
 };
 
 
-// TODO - documentation
+// __ensureString__ - return a String representation of the value
 const ensureString = (val) => {
 
     return (val.substring) ? val : val.toString;
@@ -262,7 +263,7 @@ const isa_video = item => (Object.prototype.toString.call(item) === '[object HTM
 
 // __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
 
-// Used by gradients
+// __locateTarget__ - Used by gradients
 const locateTargetSections = ['artefact', 'group', 'animation', 'tween', 'styles'];
 const locateTarget = (item) => {
 
@@ -282,14 +283,15 @@ const locateTarget = (item) => {
 
 
 // __mergeInto__ takes two objects and merges the attributes of one into the other. This function mutates the 'original' object rather than generating a third, new onject
-
+//
 // Example:
-
-//     var original = { name: 'Peter', age: 42, job: 'lawyer' };
-//     var additional = { age: 32, job: 'coder', pet: 'cat' };
-//     scrawl.utils.mergeInto(original, additional);
-    
-//     -> { name: 'Peter', age: 42, job: 'lawyer', pet: 'cat' }
+// ```
+// var original = { name: 'Peter', age: 42, job: 'lawyer' };
+// var additional = { age: 32, job: 'coder', pet: 'cat' };
+// scrawl.utils.mergeInto(original, additional);
+//
+// -> { name: 'Peter', age: 42, job: 'lawyer', pet: 'cat' }
+// ```
 const mergeInto = (original, additional) => {
 
     if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeInto() error - insufficient arguments supplied ${original}, ${additional}`);
@@ -303,14 +305,15 @@ const mergeInto = (original, additional) => {
 
 
 // __mergeOver__ takes two objects and writes the attributes of one over the other. This function mutates the 'original' object rather than generating a third, new onject
-
+//
 // Example:
-
-//     var original = { name: 'Peter', age: 42, job: 'lawyer' };
-//     var additional = { age: 32, job: 'coder', pet: 'cat' };
-//     scrawl.utils.mergeOver(original, additional);
-    
-//     -> { name: 'Peter', age: 32, job: 'coder', pet: 'cat' }
+// ```
+// var original = { name: 'Peter', age: 42, job: 'lawyer' };
+// var additional = { age: 32, job: 'coder', pet: 'cat' };
+// scrawl.utils.mergeOver(original, additional);
+//
+// -> { name: 'Peter', age: 32, job: 'coder', pet: 'cat' }
+// ```
 const mergeOver = (original, additional) => {
 
     if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeOver() error - insufficient arguments supplied ${original}, ${additional}`);
@@ -324,14 +327,15 @@ const mergeOver = (original, additional) => {
 
 
 // __mergeDiscard__ iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object
-
+//
 // Example:
-
-//     var original = { name: 'Peter', age: 42, job: 'lawyer' };
-//     var additional = { age: 32, job: null, pet: 'cat' };
-//     scrawl.utils.mergeOver(original, additional);
-    
-//     -> { name: 'Peter', age: 32, pet: 'cat' }
+// ```
+// var original = { name: 'Peter', age: 42, job: 'lawyer' };
+// var additional = { age: 32, job: null, pet: 'cat' };
+// scrawl.utils.mergeOver(original, additional);
+//    
+// -> { name: 'Peter', age: 32, pet: 'cat' }
+// ```
 const mergeDiscard = (original, additional) => {
 
     if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeDiscard() error - insufficient arguments supplied ${original}, ${additional}`);
@@ -346,15 +350,16 @@ const mergeDiscard = (original, additional) => {
 
 
 // __pushUnique__ adds a value to the end of an array, if that value is not already present in the array. This function mutates the array
-
+//
 // Example:
-
-//     var myarray = ['apple', 'orange'];
-//     scrawl.utils.pushUnique(myarray, 'apple');    
-//     -> ['apple', 'orange']
-    
-//     scrawl.utils.pushUnique(myarray, 'banana');
-//     -> ['apple', 'orange', 'banana']
+// ```
+// var myarray = ['apple', 'orange'];
+// scrawl.utils.pushUnique(myarray, 'apple');    
+// -> ['apple', 'orange']
+//
+// scrawl.utils.pushUnique(myarray, 'banana');
+// -> ['apple', 'orange', 'banana']
+// ```
 const pushUnique = (myArray, potentialMember) => {
 
     if (!xta(myArray, potentialMember)) throw new Error(`core/utilities pushUnique() error - insufficient arguments supplied ${myArray}, ${potentialMember}`);
@@ -375,15 +380,16 @@ const pushUnique = (myArray, potentialMember) => {
 
 
 // __removeItem__ removes a value from an array. This function mutates the array
-
+//
 // Example:
-
-//     var myarray = ['apple', 'orange'];
-//     scrawl.utils.removeItem(myarray, 'banana');   
-//     -> ['apple', 'orange']
-    
-//     scrawl.utils.removeItem(myarray, 'apple');    
-//     -> ['orange']
+// ```
+// var myarray = ['apple', 'orange'];
+// scrawl.utils.removeItem(myarray, 'banana');   
+// -> ['apple', 'orange']
+//
+// scrawl.utils.removeItem(myarray, 'apple');    
+// -> ['orange']
+// ```
 const removeItem = (myArray, unwantedMember) => {
 
     if (!xta(myArray, unwantedMember)) throw new Error(`core/utilities removeItem() error - insufficient arguments supplied ${myArray}, ${unwantedMember}`);
@@ -413,41 +419,8 @@ const xtGet = (...args) => args.find(item => typeof item != 'undefined');
 // __xto__ checks to make sure that at least one of the arguments supplied to the function exists (is not 'undefined')
 const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true : false;
 
-// https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 
-// TODO - consider removing these functions - was for a failed solution a few years back, I think.
-const btoaUTF16 = function (sString) {
-
-    console.log(sString.length, sString)
-    sString = sString.replace(/\0/g, '');
-    console.log(sString.length)
-    let aUTF16CodeUnits = new Uint16Array(sString.length);
-
-    Array.prototype.forEach.call(aUTF16CodeUnits, function (el, idx, arr) { 
-        arr[idx] = sString.charCodeAt(idx); 
-    });
-
-    let result = btoa(String.fromCharCode.apply(null, new Uint8Array(aUTF16CodeUnits.buffer)));
-
-    console.log(result)
-    console.log(atobUTF16(result))
-    return result;
-};
-
-const atobUTF16 = function (sBase64) {
-
-    let sBinaryString = atob(sBase64), 
-        aBinaryView = new Uint8Array(sBinaryString.length);
-
-    Array.prototype.forEach.call(aBinaryView, function (el, idx, arr) { 
-        arr[idx] = sBinaryString.charCodeAt(idx); 
-    });
-
-    return String.fromCharCode.apply(null, new Uint16Array(aBinaryView.buffer));
-};
-
-
-// TODO - documentation
+// #### Exports
 export {
     addStrings,
     convertLength,
@@ -488,7 +461,4 @@ export {
     xta,
     xtGet,
     xto, 
-
-    atobUTF16,
-    btoaUTF16,
 };

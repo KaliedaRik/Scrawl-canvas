@@ -1,10 +1,12 @@
-// ## Demo DOM 003
+// # Demo DOM 003
+// Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
 
-// [Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack](../../demo/dom-003.html)
+// [Run code](../../demo/dom-003.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup - create some variables for use elsewhere in the script
+// #### Scene setup
+// Create some variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     current, here;
@@ -138,7 +140,7 @@ stack.addNewElement({
 
 // Handle the pre-existing SVG elements that have been automatically imported into the stack
 
-// SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt drag-and-drop functionality (because: collision functionality not implemented). We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.
+// SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt __drag-and-drop__ functionality (because: collision functionality not implemented). We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.
 stack.addNewElement({
 
     name: 'weather-icon-dragger',
@@ -188,6 +190,7 @@ artefact['simple-svg'].set({
 });
 
 
+// #### User interaction
 // Create the drag-and-drop zone
 scrawl.makeDragZone({
 
@@ -197,6 +200,7 @@ scrawl.makeDragZone({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -215,7 +219,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -223,4 +227,5 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+// #### Development and testing
 console.log(scrawl.library);

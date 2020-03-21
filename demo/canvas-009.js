@@ -1,19 +1,19 @@
-// ## Demo Canvas 009 
+// # Demo Canvas 009 
+// Pattern styles; Entity web link anchors; Dynamic accessibility
 
-// [Pattern styles; Entity web link anchors; Dynamic accessibility](../../demo/canvas-009.html)
+// [Run code](../../demo/canvas-009.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Google Analytics code - loaded in the normal way through markup in the canvas-009.html file (lines 11-21)
-
-// Create a new tracker to handle canvas interaction, and set some attributes on it. 
-
-// We can then incorporate the tracker's functionality in our various hook functions defined further down in this script
+// #### Google Analytics
+// We load GA code in the normal way through markup in the dom-006.html file (lines 11-21), and get a handle on the __ga__ object here
 let ga = window[window['GoogleAnalyticsObject'] || 'ga'],
     myTracker;
 
+// Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. 
 ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 
+// We can then incorporate the tracker's functionality in our various hook functions defined further down in this script
 ga(function() {
     myTracker = ga.getByName('demoCanvasTracker');
     myTracker.set('transport', 'beacon');
@@ -21,7 +21,7 @@ ga(function() {
 });
 
 
-// Canvas work - scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 
@@ -240,15 +240,13 @@ scrawl.makeBlock({
 
 
 // Demonstrate zoned actions on a canvas element as a result of user interaction
-
-// * Available cascadeEventAction arguments are: 'enter', 'leave', 'down', or 'up'
-
-// * Also, the 'move' argument will trigger enter and leave actions on the entitys, as appropriate to each
-
+// + Available cascadeEventAction arguments are: 'enter', 'leave', 'down', or 'up'
+// + Also, the 'move' argument will trigger enter and leave actions on the entitys, as appropriate to each
+//
 // In this case, moving the mouse cursor over a block entity will increase its line width, as specified in the __onEnter__ and __onLeave__ functions in the block factories above. 
-
+//
 // Additionally, it will update the &lt;canvas> element's title attribute (for tool tips) and its ARIA label value (for accessibility)
-
+//
 // The cascadeEventAction function returns an Array of name Strings for the entitys at the current mouse cursor coordinates 
 let interactionResults = '';
 let interactions = function () {
@@ -259,11 +257,7 @@ let interactions = function () {
 scrawl.addListener('move', interactions, canvas.domElement);
 
 // To capture other user interaction with the &lt;a> DOM elements which, while being visually hidden, are still accessible - for instance when a user keyboard-tabs through the web page
-
-
-
-// Demonstrate entity-based anchor (href links) functionality
-
+//
 // In this case, clicking on one of the tiles will open a related Wikipedia page in a new browser tab - as defined in the  __onUp__ function in the block factories above
 let mylinks = function () {
 
@@ -272,6 +266,7 @@ let mylinks = function () {
 scrawl.addListener('up', mylinks, canvas.domElement);
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -291,7 +286,7 @@ Hits: ${interactionResults}`;
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -299,6 +294,8 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+
+// #### Development and testing
 console.log(scrawl.library);
 
 // To test artefact kill functionality

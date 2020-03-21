@@ -1,6 +1,6 @@
 // ## Demo DOM 005
 
-// [3d animated cube](../../demo/dom-005.html)
+// [DOM tween stress test](../../demo/dom-005.html)
 import scrawl from '../source/scrawl.js'
 
 

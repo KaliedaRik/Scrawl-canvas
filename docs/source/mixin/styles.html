@@ -299,7 +299,23 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="styles-mixin">Styles mixin</h1>
+<p>The styles mixin contains most of the code required for the <a href="../factory/gradient.html">Gradient</a> and <a href="../factory/radialGradient.html">RadialGradient</a> styles factories. It is not used by the other styles objects (Color, Pattern).</p>
+<ul>
+<li>the <strong>start</strong> and <strong>end</strong> positioning attributes are defined here rather than in the factories</li>
+<li>gradient-type styles manage their color stops in <a href="../factory/palette.html">Palette factory</a> objects; that functionality is entirely defined here</li>
+</ul>
+<p>The Canvas API CanvasRenderingContext2D interface defines two types of gradient: <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient">linear</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient">radial</a>.</p>
+<ul>
+<li>the <code>createLinearGradient</code> method creates a gradient along the line connecting two given coordinates (<strong>start</strong> and <strong>end</strong>) which are absolute values (measured in pixels) from the &lt;canvas&gt; elements top-left corner</li>
+<li>the <code>createRadialGradient</code> method creates a radial gradient using the size and coordinates of two circles.</li>
+</ul>
+<p>Common to both types of gradient is the idea of a start coordinate and an end coordinate, supplied in pixels. </p>
+<ul>
+<li>Scrawl-canvas extends this idea so that the coordinates can be supplied as a percentage value (String%) of the host Cell’s dimensions. </li>
+<li>Furthermore Scrawl-canvas allows each entity that uses a Gradient-type style to indicate whether the reference box should be that of the host Cell, or of the entity itself, through their <code>lockFillStyleToEntity</code> and <code>lockStrokeStyleToEntity</code> attribute flags.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,9 +327,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="styles-mixin">Styles mixin</h1>
+              <h4 id="imports">Imports</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { entity, asset, palette } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { addStrings, defaultNonReturnFunction, mergeOver, xt, isa_obj, mergeDiscard } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+
+<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/coordinate.js'</span>;
+<span class="hljs-keyword">import</span> { makePalette } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/palette.js'</span>;</pre></div></div>
             
         </li>
         
@@ -324,9 +346,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Note: this mixin needs to be applied after the position mixin in order to work properly</p>
+              <h4 id="export-function">Export function</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -337,9 +361,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="shared-attributes">Shared attributes</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -350,17 +376,21 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="imports">Imports</h2>
+              <p><strong>start</strong>, <strong>end</strong> - Gradient-type styles use Coordinate factory Arrays to hold details of their start and end coordinates. The following <em>pseudo-attributes</em> can also be used to reference these values:</p>
+<ul>
+<li>for the start coordinate, <strong>startX</strong> and <strong>startY</strong></li>
+<li>for the end coordinate, <strong>endX</strong> and <strong>endY</strong></li>
+</ul>
+<p>In all cases, the attribute values can be Numbers, which indicate absolute pixel coordinates, or String% values for coordinates calculated relative to either Cell or entity current dimensions </p>
+<ul>
+<li>for the <code>x</code> coordinate, the Strings <strong>left</strong>, <strong>center</strong> and <strong>right</strong> are also supported</li>
+<li>for the <code>y</code> coordinate, the Strings <strong>top</strong>, <strong>center</strong> and <strong>bottom</strong> are also supported</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { entity, asset, palette } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { addStrings, defaultNonReturnFunction, mergeOver, xt, isa_obj, mergeDiscard } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-
-<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/coordinate.js'</span>;
-<span class="hljs-keyword">import</span> { makePalette } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/palette.js'</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        start: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">end</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -371,9 +401,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="define-attributes">Define attributes</h2>
+              <p><strong>palette</strong> - Every gradient requires a Palette object containing color stop instructions</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        palette: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -384,11 +416,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>All factories using the position mixin will add these to their prototype objects</p>
+              <p><strong>paletteStart</strong>, <strong>paletteEnd</strong> - We don’t need to use the entire palette when building a gradient; we can restrict the palette using these start and end attributes.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        paletteStart: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">paletteEnd</span>: <span class="hljs-number">999</span>,</pre></div></div>
             
         </li>
         
@@ -399,54 +432,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>(Radial)Gradient styles uses the position mixin to supply attributes and functions for handling the gradient’s start and end coordinates.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        start: <span class="hljs-literal">null</span>,
-        <span class="hljs-attr">end</span>: <span class="hljs-literal">null</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>Every gradient requires a palette of color stop instructions</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        palette: <span class="hljs-literal">null</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>We don’t need to use the entire palette when building a context gradient; we can restrict the palette using these start and end attributes</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        paletteStart: <span class="hljs-number">0</span>,
-        <span class="hljs-attr">paletteEnd</span>: <span class="hljs-number">999</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <p>The cyclePalette attribute tells the Palette object how to handle situations where paletteStart &gt; paletteEnd</p>
+              <p>The <strong>cyclePalette</strong> attribute tells the Palette object how to handle situations where the paletteStart value is greater than the paletteEnd value:</p>
 <ul>
 <li>when false, we reverse the color stops</li>
 <li>when true, we keep the normal order of color stops and pass through the 1/0 border</li>
@@ -461,13 +447,13 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
@@ -483,13 +469,27 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <h2 id="kill-functionality---overwrites-mixinbasejs">Kill functionality - overwrites ./mixin/base.js</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
             
@@ -502,11 +502,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Remove style from all entity state objects</p>
 
@@ -529,11 +529,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Remove style from the Scrawl-canvas library</p>
 
@@ -547,13 +547,13 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -564,13 +564,13 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>start</code>, <code>startX</code>, <code>startY</code></p>
 
             </div>
             
@@ -578,37 +578,11 @@
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">0</span>];
     };
-
     G.startY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">1</span>];
     };
-
-
-    G.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentEnd[<span class="hljs-number">0</span>];
-    };
-
-    G.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentEnd[<span class="hljs-number">1</span>];
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.startX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+    S.startX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
@@ -616,7 +590,6 @@
             <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
         }
     };
-
     S.startY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
@@ -625,27 +598,23 @@
             <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
         }
     };
-
     S.start = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
         <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'start'</span>, x, y);
         <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     };
-
     D.startX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.start;
         c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
         <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     };
-
     D.startY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.start;
         c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
         <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     };
-
     D.start = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
         <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'start'</span>, x, y);
@@ -655,17 +624,25 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>end</code>, <code>endX</code>, <code>endY</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    G.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentEnd[<span class="hljs-number">0</span>];
+    };
+    G.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentEnd[<span class="hljs-number">1</span>];
+    };
+    S.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
@@ -673,7 +650,6 @@
             <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
         }
     };
-
     S.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
@@ -682,27 +658,23 @@
             <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
         }
     };
-
     S.end = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
         <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'end'</span>, x, y);
         <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
     };
-
     D.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.end;
         c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
         <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
     };
-
     D.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.end;
         c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
         <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
     };
-
     D.end = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
         <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'end'</span>, x, y);
@@ -712,13 +684,13 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>palette</code> - argument has to be a Palette object</p>
 
             </div>
             
@@ -730,13 +702,13 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>paletteStart</code> - argument must be a positive integer Number in the range 0 - 999</p>
 
             </div>
             
@@ -749,17 +721,6 @@
             <span class="hljs-keyword">if</span>(item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-keyword">this</span>.paletteStart = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
         }
     };
-
-    S.paletteEnd = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (item.toFixed) {
-
-            <span class="hljs-keyword">this</span>.paletteEnd = item;
-            
-            <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-keyword">this</span>.paletteEnd = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
-        }
-    };
-
     D.paletteStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
         <span class="hljs-keyword">let</span> p;
@@ -775,6 +736,29 @@
             }
 
             <span class="hljs-keyword">this</span>.paletteStart = p;
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p><code>paletteEnd</code> - argument must be a positive integer Number in the range 0 - 999</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.paletteEnd = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (item.toFixed) {
+
+            <span class="hljs-keyword">this</span>.paletteEnd = item;
+            
+            <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-keyword">this</span>.paletteEnd = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
         }
     };
 
@@ -794,9 +778,22 @@
 
             <span class="hljs-keyword">this</span>.paletteEnd = p;
         }
-    };
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p><code>colors</code> - We can pass through an array of palette color objects to the Palette object by setting it on the gradient-type styles object</p>
 
-    S.colors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.colors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
         <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.palette;
 
@@ -806,13 +803,13 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>delta</code> - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes</p>
 
             </div>
             
@@ -824,26 +821,26 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <h2 id="define-functions-to-be-added-to-the-factory-prototype">Define functions to be added to the factory prototype</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
+              <p><code>get</code> - Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
 
             </div>
             
@@ -878,13 +875,13 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
+              <p><code>set</code> - Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
 
             </div>
             
@@ -923,13 +920,13 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
+              <p><code>setDelta</code> - Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
 
             </div>
             
@@ -968,13 +965,13 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>setCoordinateHelper</code> - internal helper function</p>
 
             </div>
             
@@ -992,9 +989,22 @@
             c[<span class="hljs-number">0</span>] = x;
             c[<span class="hljs-number">1</span>] = y;
         }
-    };
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p><code>setDeltaCoordinateHelper</code> - internal helper function</p>
 
-    P.setDeltaCoordinateHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">label, x, y</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.setDeltaCoordinateHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">label, x, y</span>) </span>{
 
         <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>[label],
             myX = c[<span class="hljs-number">0</span>],
@@ -1021,7 +1031,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>updateByDelta</code> - manually force the gradient-type styles object to update its attributes by the values supplied in its delta attribute</p>
 
             </div>
             
@@ -1041,7 +1051,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>stylesInit</code> - common functionality invoked by gradient-type factory constructors</p>
 
             </div>
             
@@ -1078,7 +1088,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>This is where we have to calculate all the stuff necessary to get the ctx gradient object attached to the ctx, so we can use it for upcoming fillStyle and strokeStyle settings on the engine. We have to create the ctx gradient and return it. </p>
+              <p><code>getData</code> - Every styles object (Gradient, RadialGradient, Pattern, Color, Cell) needs to include a <strong>getData</strong> function. This is invoked by Cell objects during the Display cycle <code>compile</code> step, when it takes an entity State object and updates its &lt;canvas&gt; element’s context engine to bring it into alignment with requirements.</p>
 
             </div>
             
@@ -1154,7 +1164,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanStyle</code> - internal function invoked as part of the gradient-type object’s <code>getData</code> function. The style has to be cleaned every time it is applied to a Cell’s engine because it can never know which Cell is invoking it, or for which entity it is to be used.</p>
 
             </div>
             
@@ -1191,7 +1201,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanPosition</code> - internal function invoked as part of the gradient-type object’s <code>cleanStyle</code> function.</p>
 
             </div>
             
@@ -1221,7 +1231,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>finalizeCoordinates</code> - internal function invoked as part of the gradient-type object’s <code>getData</code> function.</p>
 
             </div>
             
@@ -1260,7 +1270,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>Do stuff here for startRadius, endRadius, producing local variants - overwritten in factory-radialgradient.js file</p>
+              <p><code>cleanRadius</code> - overwritten by the RadialGradient factory</p>
 
             </div>
             
@@ -1275,7 +1285,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <p>Just in case something went wrong with loading other styles files, which must overwrite this function, we can return transparent color here</p>
+              <p><code>buildStyle</code> - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here</p>
 
             </div>
             

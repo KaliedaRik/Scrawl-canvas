@@ -1,10 +1,11 @@
-// ## Demo Canvas 014 
+// # Demo Canvas 014 
+// Line, quadratic and bezier Shapes - control lock alternatives
 
-// [Line, quadratic and bezier Shapes - control lock alternatives](../../demo/canvas-014.html)
+// [Run code](../../demo/canvas-014.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.canvas.mycanvas;
 
 canvas.set({
@@ -14,7 +15,7 @@ canvas.set({
     }
 });
 
-// Define the artefacts that will be used as pivots and paths before the artefacts that use them as such
+// Define the entitys that will be used as pivots and paths before the entitys that use them as such
 scrawl.makeWheel({
 
     name: 'pin-1',
@@ -69,7 +70,7 @@ let pins = scrawl.makeGroup({
 }).addArtefacts('pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5', 'pin-6', 'pin-7');
 
 
-// Now start defining the Shape lines. Bezier, Quadratic and Line Shapes can 'pivot' and 'path' (but not 'mimic') their control coordinates to other artefacts, similar to how start coordinates operate.
+// Now start defining the Shape lines. Bezier, Quadratic and Line Shapes can `pivot` and `path` their control coordinates to other artefacts, similar to how start coordinates operate.
 scrawl.makeQuadratic({
 
     name: 'my-quad',
@@ -77,7 +78,7 @@ scrawl.makeQuadratic({
     pivot: 'pin-1',
     lockTo: 'pivot',
 
-    // The normal action when the Start coordinates for Bezier, Quadratic and Line Shapes change is that the entire shape moves to the new coordinates. In this demo, we don't want that; when a user drags the wheel on which the shape's start coordinates pivots, we want the shape to 'change shape'. We can make sure this happens by setting the 'useStartAsControlPoint' attribute to true.
+    // The normal action when the Start coordinates for Bezier, Quadratic and Line Shapes change is that the entire shape moves to the new coordinates. In this demo, we don't want that; when a user drags the wheel on which the shape's start coordinates pivots, we want the shape to 'change shape'. We can make sure this happens by setting its `useStartAsControlPoint` attribute to true.
     useStartAsControlPoint: true,
 
     controlPivot: 'pin-2',
@@ -138,6 +139,7 @@ scrawl.makeLine({
     strokeStyle: 'black',
     method: 'draw',
 
+    // Delta animate the path-line entity along the lengths of the bezier and quadratic Shape entitys
     delta: {
         pathPosition: 0.0015,
         endPathPosition: 0.0015,
@@ -146,7 +148,7 @@ scrawl.makeLine({
     useAsPath: true,
 });
 
-// the 'mouse-line' shape has its start coordinates permanently fixed to the center opf the screen, while its end coordinates alternate between tracking a point along the 'path-line' shape, and the mouse cursor when it is moving over the canvas
+// the 'mouse-line' shape has its start coordinates permanently fixed to the center of the screen, while its end coordinates alternate between tracking a point along the 'path-line' shape, and the mouse cursor when it is moving over the canvas
 scrawl.makeLine({
 
     name: 'mouse-line',
@@ -155,7 +157,9 @@ scrawl.makeLine({
     startY: 'center',
     useStartAsControlPoint: true,
 
-    // ISSUE: Setting 'endPathPosition' to value 0.5 causes the arrow line to momentarily disappear at a few (regular!) intervals when the line is shorter. Setting the value to 0.499 fixes the issue. TODO: investigate further, when time allows.
+    // ISSUE: Setting 'endPathPosition' to value 0.5 causes the arrow line to momentarily disappear at a few (regular!) intervals when the line is shorter. Setting the value to 0.499 fixes the issue.
+    //
+    // TODO: investigate further, when time allows.
     endPath: 'path-line',
     endPathPosition: 0.499,
     endLockTo: 'path',
@@ -215,7 +219,7 @@ scrawl.makeWheel({
 });
 
 
-// We can always grab a handle to any canvas entity by reference to its entry in the Scrawl-canvas library. Entitys are stored in both the 'artefact' and the 'entity' sections of the library
+// We can always grab a handle to any canvas entity by reference to its entry in the Scrawl-canvas library. Entitys are stored in both the `artefact` and the `entity` sections of the library
 let arrow = scrawl.library.entity['mouse-line'];
 
 
@@ -239,6 +243,7 @@ scrawl.makePicture({
     lockTo: 'path',
     addPathRotation: true,
 
+    // Delta animate the bunny at the same speed as the path-line animates
     delta: {
         pathPosition: 0.0015,
     }
@@ -251,6 +256,7 @@ scrawl.makePicture({
 });
 
 
+// #### User interaction
 // Create the drag-and-drop zone
 scrawl.makeDragZone({
 
@@ -280,6 +286,7 @@ let mouseCheck = function () {
 }();
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -298,7 +305,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -307,6 +314,8 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+
+// #### Development and testing
 console.log(scrawl.library);
 
 // To test kill functionality

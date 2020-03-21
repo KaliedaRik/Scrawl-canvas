@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>dom-006.js</title>
+  <title>Demo DOM 006</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -249,28 +249,12 @@
                   ./demo/dom-015.js
                 </a>
               
-                
-                <a class="source" href="../min/scrawl.html">
-                  ./min/scrawl.js
-                </a>
-              
-                
-                <a class="source" href="../source/scrawl.html">
-                  ./source/scrawl.js
-                </a>
-              
             </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>dom-006.js</h1>
-              </div>
-          </li>
         
         
         
@@ -280,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-dom-006">Demo DOM 006</h2>
+              <h1 id="demo-dom-006">Demo DOM 006</h1>
+<p>Tween actions on a DOM element; tracking tween and ticker activity (analytics)</p>
 
             </div>
             
@@ -293,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/dom-006.html">Tween actions on a DOM element; tracking tween and ticker activity (analytics)</a></p>
+              <p><a href="../../demo/dom-006.html">Run code</a></p>
 
             </div>
             
@@ -308,9 +293,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Google Analytics code - loaded in the normal way through markup in the dom-006.html file (lines 11-21)</p>
+              <h4 id="google-analytics">Google Analytics</h4>
+<p>We load GA code in the normal way through markup in the dom-006.html file (lines 11-21), and get a handle on the <strong>ga</strong> object here</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-built_in">window</span>[<span class="hljs-built_in">window</span>[<span class="hljs-string">'GoogleAnalyticsObject'</span>] || <span class="hljs-string">'ga'</span>],
+    myTracker;</pre></div></div>
             
         </li>
         
@@ -325,6 +314,8 @@
 
             </div>
             
+            <div class="content"><div class='highlight'><pre>ga(<span class="hljs-string">'create'</span>, <span class="hljs-string">'UA-000000-0'</span>, <span class="hljs-string">'auto'</span>, <span class="hljs-string">'demoCanvasTracker'</span>);</pre></div></div>
+            
         </li>
         
         
@@ -338,12 +329,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-built_in">window</span>[<span class="hljs-built_in">window</span>[<span class="hljs-string">'GoogleAnalyticsObject'</span>] || <span class="hljs-string">'ga'</span>],
-    myTracker;
-
-ga(<span class="hljs-string">'create'</span>, <span class="hljs-string">'UA-000000-0'</span>, <span class="hljs-string">'auto'</span>, <span class="hljs-string">'demoCanvasTracker'</span>);
-
-ga(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>ga(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     myTracker = ga.getByName(<span class="hljs-string">'demoCanvasTracker'</span>);
     myTracker.set(<span class="hljs-string">'transport'</span>, <span class="hljs-string">'beacon'</span>);
     myTracker.set(<span class="hljs-string">'campaignKeyword'</span>, <span class="hljs-string">'Scrawl-canvas demo'</span>);
@@ -358,15 +344,28 @@ ga(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span 
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> artefact = scrawl.library.artefact,
     stack = artefact.mystack,
-    element = artefact.myelement;
+    element = artefact.myelement;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Grab a handle to the ‘boat’ element, then clone it</p>
 
-element.set({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>element.set({
     <span class="hljs-attr">startX</span>: <span class="hljs-string">'center'</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">'center'</span>,
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
@@ -400,23 +399,53 @@ element.set({
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Create, and start, tickers and tweens</p>
+              <p>Create tickers - testing Ticker clone and packet functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ticker = scrawl.makeTicker({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'myTicker'</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> modelTicker = scrawl.makeTicker({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'modelTicker'</span>,
     <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">duration</span>: <span class="hljs-string">'12s'</span>
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Test Ticker cloning</p>
 
-scrawl.makeTween({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ticker = modelTicker.clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myTicker'</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Create, and start, tweens - testing Tween clone and packet functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeTween({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'myTween'</span>,
     <span class="hljs-attr">targets</span>: element,
     <span class="hljs-attr">ticker</span>: <span class="hljs-string">'myTicker'</span>,
@@ -457,11 +486,11 @@ scrawl.makeTween({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Build timeline actions</p>
 
@@ -536,26 +565,14 @@ scrawl.makeAction({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Add some Google Analytics progress actions to one of the tickers</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>ISSUE: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. I don’t consider this to be a show stopper.</p>
+<p>TODO: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. I don’t consider this to be a show stopper.</p>
 
             </div>
             
@@ -604,11 +621,11 @@ scrawl.makeAction({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Also add some Google Analytics code to one of the tweens</p>
 
@@ -630,13 +647,14 @@ smallboat.set({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Start the animation</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Start the tween animation</p>
 
             </div>
             
@@ -646,11 +664,11 @@ smallboat.run();</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
@@ -675,13 +693,13 @@ smallboat.run();</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Create the Animation loop which will run the Display cycle</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
@@ -695,13 +713,14 @@ smallboat.run();</pre></div></div>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>The event listener will reverse direction on the larger boats, while halting/restarting the smallest boat</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Event listener will reverse direction on the larger boats, while halting/restarting the smallest boat</p>
 
             </div>
             
@@ -715,10 +734,103 @@ smallboat.run();</pre></div></div>
     <span class="hljs-keyword">if</span> (smallboat.isRunning()) smallboat.halt();
     <span class="hljs-keyword">else</span> smallboat.resume();
 };
+scrawl.addNativeListener(<span class="hljs-string">'click'</span>, changeDirection, stack.domElement);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
 
-scrawl.addNativeListener(<span class="hljs-string">'click'</span>, changeDirection, stack.domElement);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Test Tween object packet</p>
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library.tween.mySecondClonedTween.saveAsPacket())</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <pre><code>RESULT:
+[
+    <span class="hljs-string">"mySecondClonedTween"</span>,
+    <span class="hljs-string">"Tween"</span>,
+    <span class="hljs-string">"tween"</span>,
+    {
+        <span class="hljs-string">"name"</span>:<span class="hljs-string">"mySecondClonedTween"</span>,
+        <span class="hljs-string">"ticker"</span>:<span class="hljs-string">"mySecondClonedTween_ticker"</span>,
+        <span class="hljs-string">"action"</span>:<span class="hljs-string">"~~~"</span>,
+        <span class="hljs-string">"duration"</span>:<span class="hljs-string">"10s"</span>,
+        <span class="hljs-string">"commenceAction"</span>:<span class="hljs-string">"~~~"</span>,
+        <span class="hljs-string">"completeAction"</span>:<span class="hljs-string">"~~~"</span>,
+        <span class="hljs-string">"targets"</span>:[<span class="hljs-string">"mythirdelement"</span>],
+        <span class="hljs-string">"definitions"</span>:[
+            {<span class="hljs-string">"attribute"</span>:<span class="hljs-string">"roll"</span>,<span class="hljs-string">"start"</span>:<span class="hljs-number">-40</span>,<span class="hljs-string">"end"</span>:<span class="hljs-number">320</span>}
+        ]
+    }
+]</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Test Ticker object packet</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(modelTicker.saveAsPacket());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <pre><code>RESULT:
+[
+    <span class="hljs-string">"modelTicker"</span>,
+    <span class="hljs-string">"Ticker"</span>,
+    <span class="hljs-string">"animationtickers"</span>,
+    {
+        <span class="hljs-string">"name"</span>:<span class="hljs-string">"modelTicker"</span>,
+        <span class="hljs-string">"duration"</span>:<span class="hljs-string">"12s"</span>,
+        <span class="hljs-string">"cycles"</span>:<span class="hljs-number">0</span>
+    }
+]</code></pre>
+            </div>
             
         </li>
         

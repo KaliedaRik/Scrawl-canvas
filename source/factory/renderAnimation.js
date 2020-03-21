@@ -1,20 +1,17 @@
-
+// NEEDS UPDATING TO NEW FORMAT
+//
 // # RenderAnimation factory
-
 // RenderAnimation objects are animations that aim to simplify coding up Display cycles. They remove the need to worry about promises, while at the same time exposing a suite of Display cycle hooks - attributes which can accept a function to be run at various points during a Display cycle 
-
 // + __afterCreated__ - a run-only-once function which will trigger after the first display/animation cycle completes
 // + __commence__ - runs at the start of the display cycle, before the 'clear' action
 // + __afterClear__ - runs between the display cycle 'clear' and 'compile' actions
 // + __afterCompile__ - runs between the display cycle 'compile' and 'show' actions
 // + __afterShow__ - runs at the end of each display cycle, after the 'show' action
-
 // + __error__ - an error function can be used to report issues should the internalized promise chain break down for any particular reason
-
+//
 // Note that all the above functions should be normal, synchronous functions. The Animation object will run them within its main, asynchronous (Promise-based) function.
-
+//
 // The RenderAnimation object also supports the Animation object's __animation hook functions__:
-
 // + __onRun__ - triggers each time the RenderAnimation object's .run function is invoked
 // + __onHalt__ - triggers each time the RenderAnimation object's .halt function is invoked
 // + __onKill__ - triggers each time the RenderAnimation object's .kill function is invoked
