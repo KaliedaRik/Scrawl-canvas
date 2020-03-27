@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>anchor.js</title>
+  <title>Anchor mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -291,12 +291,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>anchor.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -305,7 +299,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>REDO TO MATCH NEW LAYOUT</p>
+              <h1 id="anchor-mixin">Anchor mixin</h1>
+<p>The <a href="./factory/anchor.js">anchor object</a> holds all the data and functionality required to turn an artefact into an HTML clickable link - &lt;a&gt; element - to external URLs. This mixin adds functionality to artefacts for creating and managing anchor objects.</p>
+<p>Each artifact can have a maximum of one anchor object associated with it.</p>
 
             </div>
             
@@ -318,15 +314,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="anchor-mixin">Anchor mixin</h1>
-<p>This mixin adds functionality to artefacts, which allows them to act as an anchor - a link - to external URLs (eg web pages). </p>
-<p>In Scrawl-canvas, an anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in the factory file (./factory/anchor.js). This mixin makes it easy for the user to gain access to the anchor object via the artefact object.</p>
-<h3 id="examples-of-using-anchors">Examples of using anchors:</h3>
-<pre><code><span class="hljs-comment">// get a handle on the canvas where the block/link will be defined </span>
-<span class="hljs-comment">// (in this case a canvas with id="mycanvas")</span>
-<span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
-canvas.setAsCurrentCanvas();</code></pre>
+              <h4 id="imports">Imports</h4>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { makeAnchor } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/anchor.js'</span>;
+<span class="hljs-keyword">import</span> { scrawlNavigationHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;</pre></div></div>
             
         </li>
         
@@ -337,9 +332,11 @@ canvas.setAsCurrentCanvas();</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <pre><code><span class="hljs-comment">// Define a block entity</span>
-scrawl.makeBlock({</code></pre>
+              <h4 id="export-function">Export function</h4>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -350,8 +347,11 @@ scrawl.makeBlock({</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <pre><code>    name: <span class="hljs-string">'demo-anchor-block'</span>,</code></pre>
+              <h4 id="shared-attributes">Shared attributes</h4>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -362,9 +362,13 @@ scrawl.makeBlock({</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <pre><code>    width: <span class="hljs-string">'40%'</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">'40%'</span>,</code></pre>
+              <p><strong>anchor</strong> - a handle to the anchor object. When creating or setting an artefact this can be supplied in the argument object as a Javascript object containing the data required to create the anchor.</p>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        anchor: <span class="hljs-literal">null</span>,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -375,8 +379,9 @@ scrawl.makeBlock({</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <pre><code>    startX: <span class="hljs-string">'25%'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'25%'</span>,</code></pre>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
+
             </div>
             
         </li>
@@ -388,12 +393,9 @@ scrawl.makeBlock({</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <pre><code>    <span class="hljs-comment">// Define the anchor object's attributes</span>
-    <span class="hljs-attr">anchor</span>: {
-        <span class="hljs-attr">name</span>: <span class="hljs-string">'wikipedia-water-link'</span>,
-        <span class="hljs-attr">href</span>: <span class="hljs-string">'https://en.wikipedia.org/wiki/Water'</span>,
-        <span class="hljs-attr">description</span>: <span class="hljs-string">'Link to the Wikipedia article on water (opens in new tab)'</span>,
-    },</code></pre>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
             </div>
             
         </li>
@@ -405,10 +407,15 @@ scrawl.makeBlock({</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <pre><code>    <span class="hljs-comment">// Add an action to take when user clicks on the block entity</span>
-    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">this</span>.clickAnchor,
-});</code></pre>
+              <h4 id="kill-management">Kill management</h4>
+<p><code>demolishAnchor</code> - Note that a <code>handlePacketAnchor</code> function is also defined in the <a href="./position.html">position</a> mixin, to manage the surrounding kill functionality.</p>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.demolishAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.demolish();
+    };</pre></div></div>
             
         </li>
         
@@ -419,101 +426,7 @@ scrawl.makeBlock({</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <pre><code><span class="hljs-comment">// Add a listener to propagate DOM-detected click events on our canvas </span>
-<span class="hljs-comment">// back into the Scrawl-canvas event system</span>
-<span class="hljs-keyword">let</span> mylinks = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> canvas.cascadeEventAction(<span class="hljs-string">'up'</span>);
-scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domElement);</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-<span class="hljs-keyword">import</span> { makeAnchor } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/anchor.js'</span>;
-<span class="hljs-keyword">import</span> { scrawlNavigationHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <h2 id="define-attributes">Define attributes</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <p>All factories using the anchor mixin will add these attributes to their prototype objects</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <p>Add an anchor attribute to the artefact - acts as a handle to the anchor object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        anchor: <span class="hljs-literal">null</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p>The mixin includes functionality to pass anchor-related attribute values through to its anchor object when the object is created or updated. Those attributes are stored in the anchor object, not the artefact object.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    };
-    P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -524,13 +437,36 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         </li>
         
         
-        <li id="section-16">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>These Get functions pass calls on the artefact object through to the artefact’s associated anchor object (if it exists). As all of the attributes are strings, the Get functions will return ‘’ strings if there is no anchor object currently assigned to the artefact.</p>
+              <p>The following attributes (which largely map to <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">HTML anchor attributes</a>) can be included in the argument object passed to the artefact’s factory and <code>set</code> functions, or passed as a String to the <code>get</code> function:</p>
+<pre><code>artefact.anchorDescription       ~~&gt;  anchor.description
+artefact.anchorType              ~~&gt;  anchor.type
+artefact.anchorTarget            ~~&gt;  anchor.target
+artefact.anchorRel               ~~&gt;  anchor.rel
+artefact.anchorReferrerPolicy    ~~&gt;  anchor.referrerPolicy
+artefact.anchorPing              ~~&gt;  anchor.ping
+artefact.anchorHreflang          ~~&gt;  anchor.hreflang
+artefact.anchorHref              ~~&gt;  anchor.href
+artefact.anchorDownload          ~~&gt;  anchor.download
+artefact.anchorFocusAction       ~~&gt;  anchor.focusAction
+artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p><strong>anchorDescription</strong></p>
 
             </div>
             
@@ -539,45 +475,130 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'description'</span>);
         <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
     };
-    G.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    S.anchorDescription = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.description(item);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><strong>anchorType</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    G.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'type'</span>);
         <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
     };
-    G.anchorTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    S.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.anchorType(item);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p><strong>anchorTarget</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    G.anchorTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'target'</span>);
         <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
     };
-    G.anchorRel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    S.anchorTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.target(item);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><strong>anchorRel</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    G.anchorRel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'rel'</span>);
         <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
     };
-    G.anchorReferrerPolicy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    S.anchorRel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.rel(item);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p><strong>anchorReferrerPolicy</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    G.anchorReferrerPolicy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'referrerpolicy'</span>);
         <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
     };
-    G.anchorPing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    S.anchorReferrerPolicy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.referrerpolicy(item);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p><strong>anchorPing</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    G.anchorPing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'ping'</span>);
         <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
     };
-    G.anchorHreflang = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    S.anchorPing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'hreflang'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
-    };
-    G.anchorHref = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'href'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
-    };
-    G.anchorDownload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'download'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.ping(item);
     };</pre></div></div>
             
         </li>
@@ -589,9 +610,20 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>The following attributes can be included in the object passed to the artefact’s set() function:</p>
+              <p><strong>anchorHreflang</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    G.anchorHreflang = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'hreflang'</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+    };
+    S.anchorHreflang = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.hreflang(item);
+    };</pre></div></div>
             
         </li>
         
@@ -602,21 +634,20 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <ul>
-<li>anchorDescription</li>
-<li>anchorType</li>
-<li>anchorTarget</li>
-<li>anchorRel</li>
-<li>anchorReferrerPolicy</li>
-<li>anchorPing</li>
-<li>anchorHreflang</li>
-<li>anchorHref (required if the anchor is to work as a URL link to external web pages)</li>
-<li>anchorDownload</li>
-<li>anchorFocusAction</li>
-<li>anchorBlurAction</li>
-</ul>
+              <p><strong>anchorHref</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    G.anchorHref = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'href'</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+    };
+    S.anchorHref = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.href(item);
+    };</pre></div></div>
             
         </li>
         
@@ -627,72 +658,19 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Also, the artefact’s set() function can include a single <strong>anchor</strong> attribute, whose value should be an object containing some of the above attribute key:value pairs</p>
+              <p><strong>anchorDownload</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.anchorDescription = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    G.anchorDownload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.description(item);
-    };
-    S.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.anchorType(item);
-    };
-    S.anchorTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.target(item);
-    };
-    S.anchorRel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.rel(item);
-    };
-    S.anchorReferrerPolicy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.referrerpolicy(item);
-    };
-    S.anchorPing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.ping(item);
-    };
-    S.anchorHreflang = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.hreflang(item);
-    };
-    S.anchorHref = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.href(item);
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'download'</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
     };
     S.anchorDownload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.download(item);
-    };
-
-    S.anchorFocusAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.focusAction(item);
-    };
-
-    S.anchorBlurAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.blurAction(item);
-    };
-
-    S.anchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.anchor.set(items);
     };</pre></div></div>
             
         </li>
@@ -704,7 +682,92 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>These functions handle adding an anchor object to an artefact, or rebuilding it, or deleting it from the artefact. Each artifact can have a maximum of one anchor object associated with it.</p>
+              <p><strong>anchorFocusAction</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.anchorFocusAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.focusAction(item);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p><strong>anchorBlurAction</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.anchorBlurAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.blurAction(item);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>The artefact’s factory and <code>set</code> functions’ argument object can include a single <strong>anchor</strong> attribute, whose value should be an object containing anchor key:value pairs</p>
+<pre><code>artefact.set({
+
+    <span class="hljs-attr">anchor</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">target</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">rel</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">referrerPolicy</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">ping</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">hreflang</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">href</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">download</span>: <span class="hljs-string">'value'</span>,
+    },
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.anchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.anchor.set(items);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>The <code>buildAnchor</code> function triggers the (re)build of the &lt;a&gt; element and adds it to the DOM</p>
+<p>Scrawl-canvas generated anchor links are kept in hidden &lt;nav&gt; elements - either the Canvas object’s nav, or the Scrawl-canvas default nav (referenced by <em>scrawlNavigationHold</em>) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body&gt; element when it first runs. </p>
+<p>This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)</p>
 
             </div>
             
@@ -719,9 +782,22 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         items.hold = <span class="hljs-keyword">this</span>.getAnchorHold();
 
         <span class="hljs-keyword">this</span>.anchor = makeAnchor(items);
-    };
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p><code>getAnchorHold</code> - internal function. Locate the current DOM hold element allocated for hosting &lt;a&gt; elements.</p>
 
-    P.getAnchorHold = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.getAnchorHold = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">let</span> entityHost = <span class="hljs-keyword">this</span>.currentHost;
 
@@ -739,28 +815,36 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         <span class="hljs-keyword">this</span>.dirtyAnchorHold = <span class="hljs-literal">true</span>;
 
         <span class="hljs-keyword">return</span> scrawlNavigationHold;
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p><code>rebuildAnchor</code> - triggers the Anchor object’s <code>build</code> function</p>
 
-    P.rebuildAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.rebuildAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.build();
-    };
-
-    P.demolishAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.demolish();
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Function to pass a user click (or whatever event has been set up) on the artefact through to the anchor object, for action.</p>
+              <p><code>clickAnchor</code> - function to pass a user click (or whatever event has been set up) on the artefact through to the anchor object, for action.</p>
 
             </div>
             
@@ -772,11 +856,11 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, mylinks, canvas.domEle
         </li>
         
         
-        <li id="section-22">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

@@ -1,59 +1,83 @@
-
 // # Tween mixin
+// This mixin defines attributes and functions shared by [Tween](../factory/tween.html) objects and [Action](../factory/action.html) objects
+// + [Ticker](../factory/ticker.html) objects do not use this mixin
 
-// TODO - documentation
 
-
-// ## Imports
+// #### Imports
 import { constructors, animationtickers } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
 
+
+// #### Export function
 export default function (P = {}) {
 
 
-// ## Define attributes
-
-// All factories using the filter mixin will add these to their prototype objects
+// #### Shared attributes
     let defaultAttributes = {
 
-// TODO - documentation
+// __order__ - integer Number (defaults to `1`) - the order in which Tween/Actions run is determined by their order value: Tween/Actions with a lower order value run before those with a higher value
+// + Run order for Tween/Actions with the same order value is determined by the order in which they are defined in code 
+        order: 1,
+
+// __ticker__ - String - the name-String of the Ticker the Tween/Action uses for its timeline
         ticker: '',
 
-// TODO - documentation
+// __targets__ - Array containing the Scrawl-canvas objects on which the Tween/Action will act; one Tween/Action can modify attributes in multiple objects
         targets: null,
 
-// TODO - documentation
+// __time__ - the timeline time when the Tween/Action activates and runs.
+// + Tween/Actions given a time value of `0` will run as soon as their associated Ticker timeline runs; values greater than 0 will delay their run until that time is reached on the timeline.
+// + Time can be set as a Number value representing microseconds
+// + It can also be set as a time string - `3s` is 3000 microseconds; `200ms` is 200 milliseconds
+// + Or it can be set as a percentage String - `30%` - measured against the duration of the Ticker timeline.
         time: 0,
 
-// TODO - documentation
+// __action__ - a user-defined function which will run every time the Tween/Action completes an update - generally once each Display cycle while the Tween/Action is running
         action: null,
 
-// TODO - documentation
+// __reverseOnCycleEnd__ - Boolean flag; when set, the Tween/Action will reverse its direction and continue running, rather than halt.
         reverseOnCycleEnd: false,
 
-// TODO - documentation - does this need to be in the defs object?
+// __reversed__ - internal Boolean flag indicating whether the Tween/Action is running in `forwards` or `backwards` mode
         reversed: false,
-
-// TODO - documentation
-        order: 1
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-
-// ## Packet management
-
-// Packet management functionality found in factory/tween.js and factory/action.js
-
-// ... factory/ticker.js does not use this mixin
+// #### Packet management
+// No additional packet functionality defined here
 
 
+// #### Clone management
+// No additional clone functionality defined here
 
-// ## Define getter, setter and deltaSetter functions
+
+// #### Kill management
+    P.kill = function () {
+
+        let t,
+            ticker = this.ticker;
+
+        if (ticker === `${this.name}_ticker`) {
+
+            t = animationtickers[ticker];
+            
+            if (t) t.kill();
+        }
+        else if (ticker) this.removeFromTicker(ticker);
+
+        this.deregister();
+
+        return true;
+    };
+
+
+// #### Get, Set, deltaSet
     let G = P.getters,
         S = P.setters;
 
-// TODO - documentation
+// __targets__
+// + the getter returns a fresh copy of the current targets Array
     G.targets = function () {
 
         return [].concat(this.targets);
@@ -64,7 +88,7 @@ export default function (P = {}) {
         this.setTargets(item);
     };
 
-// TODO - documentation
+// __action__
     S.action = function (item) {
 
         this.action = item;
@@ -73,10 +97,10 @@ export default function (P = {}) {
     };
 
 
-// ## Define functions to be added to the factory prototype
+// #### Prototype functions
 
-
-// TODO - documentation
+// `calculateEffectiveTime`
+// The ___effective time___ is the time, relative to the Tween/Action's associated Ticker timeline, when the Tween/Action will start running
     P.calculateEffectiveTime = function (item) {
 
         let time = xtGet(item, this.time),
@@ -106,7 +130,7 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
+// `addToTicker`
     P.addToTicker = function (item) {
 
         let tick;
@@ -127,6 +151,7 @@ export default function (P = {}) {
         return this;
     };
 
+// `removeFromTicker`
     P.removeFromTicker = function (item) {
 
         let tick;
@@ -146,7 +171,7 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
+// `setTargets`
     P.setTargets = function (items) {
 
         items = [].concat(items);
@@ -173,7 +198,7 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
+// `addToTargets`
     P.addToTargets = function (items) {
 
         items = [].concat(items);
@@ -195,6 +220,7 @@ export default function (P = {}) {
         return this;
     };
 
+// `removeFromTargets`
     P.removeFromTargets = function (items) {
 
         items = [].concat(items);
@@ -242,6 +268,7 @@ export default function (P = {}) {
         return this;
     };
 
+// `checkForTarget`
     P.checkForTarget = function (item) {
 
         if (!item.substring) return false;
@@ -249,23 +276,6 @@ export default function (P = {}) {
         return this.targets.some(t => t.name === item);
     };
 
-// TODO - documentation
-    P.kill = function () {
-
-        let t;
-
-        if (this.ticker === this.name + '_ticker') {
-
-            t = animationtickers[this.ticker];
-            
-            if (t) t.kill();
-        }
-        else if (this.ticker) this.removeFromTicker(this.ticker);
-
-        this.deregister();
-
-        return true;
-    };
 
 // Return the prototype
     return P;

@@ -547,7 +547,7 @@ export default function (P = {}) {
         return 'rgba(0,0,0,0)';
     };
 
-// TODO - documentation
+// `addStopsToGradient` - internal function, called by the `buildStyle` function (which is overwritten by the Gradient and RadialGradient factories)
     P.addStopsToGradient = function (gradient, start, stop, cycle) {
 
         if (this.palette) return this.palette.addStopsToGradient(gradient, start, stop, cycle);
@@ -555,7 +555,52 @@ export default function (P = {}) {
         return gradient;
     };
 
-// TODO - documentation
+// #### Gradients and color stops
+// The [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) uses a rather convoluted way to add color data to a [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) interface object: 
+// + the object is created first on the &lt;canvas> context engine where it is to be applied, with __start__ and __end__ coordinates, 
+// + then color stops are _individually_ added to it afterwards. 
+// + This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient. 
+// + And only one gradient may be applied to the context engine at any time.
+//
+// The specificity of the above requirements - in particular relating to position coordinates - and the inability to update the CanvasGradient beyond adding color stops to it, means that storing these objects for future use is not a useful proposition ... especially in a dynamic environment where we want the gradient to move in-step with an entity, or animate its colors in some way.
+//
+// Scrawl-canvas overcomes this problem through the use of [Palette objects](../factory/palette.html) which separate a gradient-type style's color-stop data from its positioning data. We treat Canvas API `CanvasGradient` objects as use-once-and-dispose objects, generating them in a just-in-time fashion for each entity's `stamp` operation in the Display cycle.
+//
+// Palette objects store their color data in a `colors` attribute object:
+// ```
+// {
+//     name: "mygradient_palette",
+//     colors: {
+//         "0 ": [0, 0, 0, 1],
+//         "350 ": [255, 0, 0, 1],
+//         "650 ": [0, 0, 255, 1],
+//         "999 ": [255, 255, 255, 1],
+//         "index-label-between-0-and-999 ": [redValue, greenValue, blueValue, alphaValue]
+//     },
+// }
+// ``` 
+// To `set` the Palette object's `colors` object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:
+// + the color object attribute labels MUST include a space after the String number; and 
+// + the number itself must be a positive integer in the range 0-999:
+//
+// ``` 
+// myGradient.set({
+//
+//     colors: {
+//
+//         '0 ': 'black',
+//         '350 ': 'red',
+//         '650 ': 'blue',
+//         '999 ': 'white'
+//     },
+// });
+// ``` 
+//
+// The following __convenience functions__ are supplied to make adding, deleting and managing Palette object color stop data easier than the above:
+
+// `updateColor` - add or update a gradient-type style's Palette object with a color.
+// + __index__ - positive integer Number between 0 and 999 inclusive
+// + __color__ - CSS color String
     P.updateColor = function (index, color) {
 
         if (this.palette) this.palette.updateColor(index, color);
@@ -563,7 +608,8 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
+// `removeColor` - remove a gradient-type style's Palette object color from a specified index
+// + __index__ - positive integer number between 0 and 999 inclusive
     P.removeColor = function (index) {
 
         if (this.palette) this.palette.removeColor(index);

@@ -1,15 +1,4 @@
-
 // # Pattern factory
-
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
 
 
 // ## Imports

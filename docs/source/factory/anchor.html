@@ -665,15 +665,15 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'cl
               </div>
               <p>While the Scrawl-canvas anchor object keeps copies of all of its &lt;a&gt; DOM element’s attributes locally, they also need to be updated on that element. Most of the setter functions manage this using the <code>anchor.update()</code> helper function.</p>
 <p>The artefact with which an anchor object is associated maps these attributes to itself as follows:</p>
-<pre><code>anchor.description     -&gt; artefact.anchorDescription
-anchor.type            -&gt; artefact.anchorType
-anchor.target          -&gt; artefact.anchorTarget
-anchor.rel             -&gt; artefact.anchorRel
-anchor.referrerPolicy  -&gt; artefact.anchorReferrerPolicy
-anchor.ping            -&gt; artefact.anchorPing
-anchor.hreflang        -&gt; artefact.anchorHreflang
-anchor.href            -&gt; artefact.anchorHref
-anchor.download        -&gt; artefact.anchorDownload</code></pre><p>One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an ‘anchor’ attribute:</p>
+<pre><code>anchor.description     ~~&gt; artefact.anchorDescription
+anchor.type            ~~&gt; artefact.anchorType
+anchor.target          ~~&gt; artefact.anchorTarget
+anchor.rel             ~~&gt; artefact.anchorRel
+anchor.referrerPolicy  ~~&gt; artefact.anchorReferrerPolicy
+anchor.ping            ~~&gt; artefact.anchorPing
+anchor.hreflang        ~~&gt; artefact.anchorHreflang
+anchor.href            ~~&gt; artefact.anchorHref
+anchor.download        ~~&gt; artefact.anchorDownload</code></pre><p>One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an ‘anchor’ attribute:</p>
 <pre><code>artefact.set({
 
     <span class="hljs-attr">anchor</span>: {

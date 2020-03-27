@@ -2,15 +2,26 @@ import { constructors, animationtickers } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
 export default function (P = {}) {
 let defaultAttributes = {
+order: 1,
 ticker: '',
 targets: null,
 time: 0,
 action: null,
 reverseOnCycleEnd: false,
 reversed: false,
-order: 1
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.kill = function () {
+let t,
+ticker = this.ticker;
+if (ticker === `${this.name}_ticker`) {
+t = animationtickers[ticker];
+if (t) t.kill();
+}
+else if (ticker) this.removeFromTicker(ticker);
+this.deregister();
+return true;
+};
 let G = P.getters,
 S = P.setters;
 G.targets = function () {
@@ -129,16 +140,6 @@ return this;
 P.checkForTarget = function (item) {
 if (!item.substring) return false;
 return this.targets.some(t => t.name === item);
-};
-P.kill = function () {
-let t;
-if (this.ticker === this.name + '_ticker') {
-t = animationtickers[this.ticker];
-if (t) t.kill();
-}
-else if (this.ticker) this.removeFromTicker(this.ticker);
-this.deregister();
-return true;
 };
 return P;
 };

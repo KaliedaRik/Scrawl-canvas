@@ -299,7 +299,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="palette-factory">Palette factory</h1>
+<p>Scrawl-canvas uses Palette objects to handle color management for its <a href="./gradient.html">Gradient</a> and <a href="./radialGradient.html">RadialGradient</a> styles.</p>
+<ul>
+<li>Every gradient-type object gets a Palette object as part of its construction, stored in its <code>palette</code> attribute.</li>
+<li>While Palette objects have their own section in the scrawl library, we don’t actually use that functionality - unlike entity State objects, Palette objects cannot be shared between gradients.</li>
+<li>Developers should never need to interact with Palette objects directly; gradient-type styles include functions for adding and manipulating gradient color stops.</li>
+<li>Packet, clone and kill functionality is also managed through the gradient-type style objects.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,8 +319,41 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="palette-factory">Palette factory</h1>
+              <h5 id="gradients-and-color-stops">Gradients and color stops</h5>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a> uses a rather convoluted way to add color data to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> interface object: </p>
+<ul>
+<li>the object is created first on the &lt;canvas&gt; context engine where it is to be applied, with <strong>start</strong> and <strong>end</strong> coordinates, </li>
+<li>then color stops are <em>individually</em> added to it afterwards. </li>
+<li>This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient. </li>
+<li>And only one gradient may be applied to the context engine at any time.</li>
+</ul>
+<p>The specificity of the above requirements - in particular relating to position coordinates - and the inability to update the CanvasGradient beyond adding color stops to it, means that storing these objects for future use is not a useful proposition … especially in a dynamic environment where we want the gradient to move in-step with an entity, or animate its colors in some way.</p>
+<p>Scrawl-canvas overcomes this problem through the use of <a href="../factory/palette.html">Palette objects</a> which separate a gradient-type style’s color-stop data from its positioning data. We treat Canvas API <code>CanvasGradient</code> objects as use-once-and-dispose objects, generating them in a just-in-time fashion for each entity’s <code>stamp</code> operation in the Display cycle.</p>
+<p>Palette objects store their color data in a <code>colors</code> attribute object:</p>
+<pre><code>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"mygradient_palette"</span>,
+    <span class="hljs-attr">colors</span>: {
+        <span class="hljs-string">"0 "</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">"350 "</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">"650 "</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">"999 "</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">"index-label-between-0-and-999 "</span>: [redValue, greenValue, blueValue, alphaValue]
+    },
+}</code></pre><p>To <code>set</code> the Palette object’s <code>colors</code> object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:</p>
+<ul>
+<li>the color object attribute labels MUST include a space after the String number; and </li>
+<li>the number itself must be a positive integer in the range 0-999:</li>
+</ul>
+<pre><code>myGradient.set({
 
+    <span class="hljs-attr">colors</span>: {
+
+        <span class="hljs-string">'0 '</span>: <span class="hljs-string">'black'</span>,
+        <span class="hljs-string">'350 '</span>: <span class="hljs-string">'red'</span>,
+        <span class="hljs-string">'650 '</span>: <span class="hljs-string">'blue'</span>,
+        <span class="hljs-string">'999 '</span>: <span class="hljs-string">'white'</span>
+    },
+});</code></pre>
             </div>
             
         </li>
@@ -324,7 +365,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-003.html">Canvas-003</a> - Linear gradients</li>
+<li><a href="../../demo/canvas-004.html">Canvas-004</a> - Radial gradients</li>
+<li><a href="../../demo/canvas-005.html">Canvas-005</a> - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween</li>
+<li><a href="../../demo/canvas-022.html">Canvas-022</a> - Grid entity - basic functionality (color, gradients)</li>
+</ul>
 
             </div>
             
@@ -337,59 +384,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -403,13 +398,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="palette-constructor">Palette constructor</h2>
+              <h4 id="palette-constructor">Palette constructor</h4>
 
             </div>
             
@@ -432,13 +427,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="palette-object-prototype-setup">Palette object prototype setup</h2>
+              <h4 id="palette-prototype">Palette prototype</h4>
 
             </div>
             
@@ -452,13 +447,16 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+</ul>
 
             </div>
             
@@ -467,13 +465,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="palette-attributes">Palette attributes</h4>
 
             </div>
             
@@ -482,13 +480,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>The colors object is a raw Javascript object which uses stop values (0 - 999) as keys and an [r(0-255), g(0-255), b(0-255), a(0-1)] array as values. </p>
+              <p>The <strong>colors</strong> object is a raw Javascript object which uses stop values <code>(&#39;0 &#39; - &#39;999 &#39;)</code> as keys and an <code>[r(0-255), g(0-255), b(0-255), a(0-1)]</code> array as values. </p>
 
             </div>
             
@@ -497,13 +495,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>The stops array is a fixed Array of length 1000 containing rgba color strings for each index. </p>
+              <p>The <strong>stops</strong> array is a fixed Array of length 1000 containing rgba color strings for each index. </p>
 
             </div>
             
@@ -512,13 +510,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>If the cyclic flag is set, then we know to calculate appropriate stop values between the last key color and the first key color, thus allowing for smooth crossing of the 1 -&gt; 0 stops boundary</p>
+              <p>If the <strong>cyclic</strong> flag is set, then we know to calculate appropriate stop values between the last key color and the first key color, thus allowing for smooth crossing of the 1 -&gt; 0 stops boundary</p>
 
             </div>
             
@@ -529,13 +527,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
@@ -544,13 +542,41 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -560,13 +586,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>No checking is done prior to assigning the colors object to the colors attribute beyond verifying that the argument value is an object.</p>
+              <p><strong>colors</strong> - No checking is done prior to assigning the colors object to the colors attribute beyond verifying that the argument value is an object.</p>
 
             </div>
             
@@ -593,17 +619,45 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p><strong>stops</strong> - Do nothing. The stops array needs to be kept private, its values set only via the <code>recalculate</code> function, which happens whenever the <code>dirtyPalette</code> attribute is set to true.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.stops = defaultNonReturnFunction;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Do nothing. The stops array needs to be kept private, its values set only via the recalculate function, which happens whenever the dirtyPalette attribute is set to true.</p>
+              <p><code>recalculateHold</code> - internal variable</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.stops = defaultNonReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.recalculateHold = [];</pre></div></div>
             
         </li>
         
@@ -614,48 +668,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.recalculateHold = [];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>Question: possible tasks for web worker?</p>
+              <p><code>recalculate</code> - populate the stops Array with CSS color Strings, as determined by colors stored in the <code>colors</code> object</p>
 
             </div>
             
@@ -763,13 +776,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>makeColorString</code> - internal helper function</p>
 
             </div>
             
@@ -795,13 +808,17 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>updateColor</code> - add or update a gradient-type style’s Palette object with a color.</p>
+<ul>
+<li><strong>index</strong> - positive integer Number between 0 and 999 inclusive</li>
+<li><strong>color</strong> - CSS color String</li>
+</ul>
 
             </div>
             
@@ -826,13 +843,16 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>removeColor</code> - remove a gradient-type style’s Palette object color from a specified index</p>
+<ul>
+<li><strong>index</strong> - positive integer number between 0 and 999 inclusive</li>
+</ul>
 
             </div>
             
@@ -854,13 +874,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>addStopsToGradient</code> - complete the construction of the Canvas API CanvasGradient object</p>
 
             </div>
             
@@ -883,11 +903,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Option 1 start == end, cycle irrelevant</p>
 
@@ -898,11 +918,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Option 2: start &lt; end, cycle irrelevant</p>
 
@@ -933,11 +953,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Option 3: start &gt; end, cycle = true</p>
 
@@ -967,11 +987,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Option 4: start &gt; end, cycle = false</p>
 
@@ -1003,11 +1023,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>No gradient: no colors</p>
 
@@ -1019,30 +1039,32 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>We add a Color object to the Palette prototype - one object is used for all the calculations preformed by all Palette objects</p>
+              <p><code>factory</code> - We add a Scrawl-canvas <a href="./color.html">Color object</a> to the Palette factory prototype - one object is used for all the calculations preformed by all Palette objects</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.factory = makeColor({
-    <span class="hljs-attr">opaque</span>: <span class="hljs-literal">false</span>
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'palette-factory-color-calculator'</span>,
+    <span class="hljs-attr">opaque</span>: <span class="hljs-literal">false</span>,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-34">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
 
             </div>
             
@@ -1050,9 +1072,22 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Palette(items);
 };
 
-constructors.Palette = Palette;
+constructors.Palette = Palette;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makePalette,
 };</pre></div></div>
             

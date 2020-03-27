@@ -65,7 +65,11 @@ scrawl.makeAnimation({
                 report();
                 resolve(true);
             })
-            .catch(err => reject(err));
+            .catch(err => {
+
+                console.log('demo-animation error', err);
+                reject(false);
+            });
         });
     }
 });
@@ -128,7 +132,10 @@ let controls = function () {
                 b2.disabled = '';
 
                 stackCanvas = scrawl.addCanvas({
+
+                    // Test to make sure host attribute accepts both Stack object and CSS search String
                     host: (Math.random() > 0.5) ? mystack : '#mystack',
+
                     name: 'my-new-canvas',
                     width: 300,
                     height: 50,
@@ -172,3 +179,7 @@ let controls = function () {
     };
 }();
 scrawl.addListener('up', controls, '.controls');
+
+
+// #### Development and testing
+console.log(scrawl.library);

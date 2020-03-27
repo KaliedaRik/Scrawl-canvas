@@ -128,10 +128,21 @@ P.finalizePacketOut = defaultNonReturnFunction;
 P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
 P.kill = function () {
-removeItem(rootElements, this.name);
+let name = this.name,
+host = this.host,
+h, g;
+removeItem(rootElements, name);
 setRootElementsSort();
-removeItem(uiSubscribedElements, this.name);
-if (group[this.name]) group[this.name].kill();
+removeItem(uiSubscribedElements, name);
+if (host && host !== 'root') {
+h = (this.currentHost) ? this.currentHost : artefact[host];
+if (h) {
+h.removeGroups(name);
+g = group[h.name];
+if (g) g.removeArtefacts(name);
+}
+}
+if (group[name]) group[name].kill();
 this.base.kill();
 this.navigation.remove();
 this.textHold.remove();

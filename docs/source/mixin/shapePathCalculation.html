@@ -299,7 +299,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="shape-path-calculation">Shape path calculation</h1>
+<p>The function, and its helper functions, translates SVG path data string - example: <code>M0,0H100V100H-100V-100z</code> - into data which can be used to construct the a Path2D object which can be consumed by the canvasRenderingContext2D engine’s <code>fill</code>, <code>stroke</code> and <code>isPointInPath</code> functions</p>
+<ul>
+<li>TODO: this file is in the wrong place: it’s not a mixin; it exports a single function currently imported only by ./factory.shape.js; and it duplicates Vector code</li>
+<li>Code has been separated out into its own file because it is a potential candidate for hiving off to a web worker</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +317,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="shape-path-calculation">Shape path calculation</h1>
+              <h4 id="imports">Imports</h4>
+<p>No imports required</p>
 
             </div>
             
@@ -324,9 +331,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>The function, and its helper functions, translates SVG path data string - example: ‘M0,0H100V100H-100V-100z’ - into data which can be used to construct the a Path2D object which can be consumed by the canvasRenderingContext2D engine’s ‘fill’, ‘stroke’ and ‘isPointInPath’ functions</p>
+              <h4 id="export-function">Export function</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d, scale, start, useAsPath, precision</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -337,61 +346,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Separated out into its own file because it is a potential candidate for hiving off to a web worker</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>No imports required</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h2 id="exports">Exports</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d, scale, start, useAsPath, precision</span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>setup local variables</p>
+              <p>Setup local variables</p>
 
             </div>
             
@@ -422,13 +377,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>local function to populate the temporary myData array with data for every path partial</p>
+              <p>Local function to populate the temporary myData array with data for every path partial</p>
 
             </div>
             
@@ -458,13 +413,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>the purpose of this loop is to </p>
+              <p>The purpose of this loop is to </p>
 <ol>
 <li>convert all point values fromn strings to floats</li>
 <li>scale every value</li>
@@ -704,13 +659,13 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>this loop builds the local path string</p>
+              <p>This loop builds the local path string</p>
 
             </div>
             
@@ -742,13 +697,13 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box </p>
+              <p>Calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box </p>
 
             </div>
             
@@ -757,13 +712,13 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>request a vector - used for reflection points</p>
+              <p>Request a vector - used for reflection points</p>
 
             </div>
             
@@ -772,13 +727,13 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>this loop calculates this.units array data</p>
+              <p>This loop calculates this.units array data</p>
 <ul>
 <li>because the lengths calculations requires absolute coordinates</li>
 <li>and TtSs path units use reflective coordinates</li>
@@ -903,11 +858,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>calculate bounding box dimensions</p>
 
@@ -929,26 +884,16 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>consider whether we could swap out this vector stuff for a pool coordinate?</p>
+              <h4 id="locally-defined-vector">Locally defined Vector</h4>
+<ul>
+<li>TODO: consider whether we could swap out this vector stuff for a pool coordinate?</li>
+</ul>
 
             </div>
             
@@ -978,13 +923,26 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="helper-functions">Helper functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><code>getShapeUnitMetaData</code></p>
 
             </div>
             
@@ -998,13 +956,13 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>we want to separate out linear species before going into the while loop</p>
+              <p>We want to separate out linear species before going into the while loop</p>
 <ul>
 <li>because these calculations will be simple</li>
 </ul>
@@ -1063,13 +1021,13 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>stop the while loop if we’re getting close to the true length of the curve</p>
+              <p>Stop the while loop if we’re getting close to the true length of the curve</p>
 
             </div>
             
@@ -1082,13 +1040,13 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>stop the while loop after checking a maximum of 129 points along the curve</p>
+              <p>Stop the while loop after checking a maximum of 129 points along the curve</p>
 
             </div>
             
@@ -1106,13 +1064,13 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getXY</code></p>
 
             </div>
             

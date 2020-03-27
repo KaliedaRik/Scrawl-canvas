@@ -44,12 +44,23 @@ const sortRootElements = function () {
 
         rootElements.forEach((item) => {
 
-            let art = artefact[item],
-                order = (art) ? floor(art.order) : 0;
+            // let art = artefact[item],
+            //     order = (art) ? floor(art.order) : 0;
 
-            if (!buckets[order]) buckets[order] = [];
+            // if (!buckets[order]) buckets[order] = [];
             
-            buckets[order].push(art.name);
+            // buckets[order].push(art.name);
+
+            let art = artefact[item];
+
+            if (art) {
+
+                let order = floor(art.order) || 0;
+
+                if (!buckets[order]) buckets[order] = [];
+                
+                buckets[order].push(art.name);
+            }
         });
 
         rootElements_sorted = buckets.reduce((a, v) => a.concat(v), []);
@@ -57,7 +68,6 @@ const sortRootElements = function () {
 };
 
 // #### Stack discovery
-//
 // `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them. 
 //
 // This function will also create wrappers for all __direct child elements__ (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.
@@ -234,7 +244,6 @@ const addStack = function (items = {}) {
 };
 
 // #### Canvas discovery
-//
 // `Exported function` (to modules). Parse the DOM, looking for &lt;canvas> elements; then create __Canvas__ artefact and __Cell__ asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.
 const getCanvases = function () {
 
@@ -345,7 +354,12 @@ const addCanvas = function (items = {}) {
 
         let temphost = artefact[host];
 
-        if (!temphost && host) host = document.querySelector(host);
+        if (!temphost && host) {
+
+            host = document.querySelector(host);
+
+            if (host) mygroup = host.id;
+        }
         else host = temphost;
     }
 
@@ -593,8 +607,7 @@ const actionNativeListener = function (evt, fn, targ, action) {
     });
 };
 
-// ## The Display cycle
-//
+// #### The Display cycle
 // Scrawl-canvas breaks down the Display cycle into three parts: __clear__; __compile__; and __show__. These can be triggered either as a single, combined __render__ operation, or separately as-and-when needed.
 //
 // The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element's controller's __order__ attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value
@@ -603,7 +616,7 @@ const actionNativeListener = function (evt, fn, targ, action) {
 //
 // Note that Scrawl-canvas supplies a convenience function - __makeRender()__ - for automating the process of creating an animation object to handle the Display cycle
 
-// #### Clear
+// ##### Clear
 //
 // + For canvas artefacts, clear its Cell assets' display (reset all pixels to 0, or the designated background color) ready for them to be redrawn
 // + For stack artefacts - no action required
@@ -615,7 +628,7 @@ const clear = function (...items) {
     return displayCycleBatchProcess('clear');
 };
 
-// #### Compile
+// ##### Compile
 //
 // + For both canvas and stack artefacts, perform necessary entity/element positional calculations
 // + Additionally for canvas artefacts, stamp associated entitys onto the canvas's constituent cell assets
@@ -627,7 +640,7 @@ const compile = function (...items) {
     return displayCycleBatchProcess('compile');
 };
 
-// #### Show
+// ##### Show
 //
 // + For canvas artefacts, stamp additional 'layer' canvases onto the base canvas, then copy the base canvas onto the display canvas
 // + For stack artefacts - invoke the __domShow__ function, if any of its constituent elements require DOM-related updating
@@ -639,7 +652,7 @@ const show = function (...items) {
     return displayCycleBatchProcess('show');
 };
 
-// #### Render
+// ##### Render
 //
 // + Orchestrate the clear, compile and show actions on each stack and canvas DOM element
 
@@ -663,7 +676,7 @@ const displayCycleBatchProcess = function (method) {
 
         let promises = [];
 
-        rootElements_sorted.forEach((name) => {
+        rootElements_sorted.forEach(name => {
 
             let item = artefact[name];
 
@@ -672,13 +685,12 @@ const displayCycleBatchProcess = function (method) {
 
         Promise.all(promises)
         .then(() => resolve(true))
-        .catch((err) => reject(false));
+        .catch(err => reject(err));
     })
 };
 
 
-// ## DOM element updates
-//
+// #### DOM element updates
 // Scrawl-canvas will batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don't maintain a full/comprehensive 'shadow' or 'virtual' DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.
 //
 // The decision on whether to update a DOM element is mediated through a suite of 'dirty' flags assigned on the Scrawl-canvas artefact object which wraps each DOM element. As part of the compile component of the Scrawl-canvas Display cycle, the code will take a decision on whether the DOM element needs to be updated and insert the artefact's name in the __domShowElements__ array, and set the __domShowRequired__ flag to true, which will then trigger the __domShow()__ function to run at the end of each Display cycle.
@@ -837,7 +849,6 @@ const domShow = function (singleArtefact = '') {
 };
 
 // #### DOM Holding areas
-//
 // `Exported handles` (to modules). During its initialization phase, Scrawl-canvas will add two hidden 'hold' elements at the top and bottom of the document body where it can add additional elements as-and-when required. 
 
 // Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas> elements to inform non-visual website visitors about content in the canvas.

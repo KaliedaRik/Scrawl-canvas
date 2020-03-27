@@ -13,10 +13,12 @@ if (rootElementsSort) {
 rootElementsSort = false;
 let buckets = [];
 rootElements.forEach((item) => {
-let art = artefact[item],
-order = (art) ? floor(art.order) : 0;
+let art = artefact[item];
+if (art) {
+let order = floor(art.order) || 0;
 if (!buckets[order]) buckets[order] = [];
 buckets[order].push(art.name);
+}
 });
 rootElements_sorted = buckets.reduce((a, v) => a.concat(v), []);
 }
@@ -194,7 +196,10 @@ height = items.height || 150,
 position = 'relative';
 if (host.substring) {
 let temphost = artefact[host];
-if (!temphost && host) host = document.querySelector(host);
+if (!temphost && host) {
+host = document.querySelector(host);
+if (host) mygroup = host.id;
+}
 else host = temphost;
 }
 if (host) {
@@ -369,13 +374,13 @@ else if (rootElementsSort) sortRootElements();
 const displayCycleBatchProcess = function (method) {
 return new Promise((resolve, reject) => {
 let promises = [];
-rootElements_sorted.forEach((name) => {
+rootElements_sorted.forEach(name => {
 let item = artefact[name];
 if (item && item[method]) promises.push(item[method]());
 })
 Promise.all(promises)
 .then(() => resolve(true))
-.catch((err) => reject(false));
+.catch(err => reject(err));
 })
 };
 const domShowElements = [];

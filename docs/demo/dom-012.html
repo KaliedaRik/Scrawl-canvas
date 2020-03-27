@@ -377,7 +377,11 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
                 report();
                 resolve(<span class="hljs-literal">true</span>);
             })
-            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
+            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'demo-animation error'</span>, err);
+                reject(<span class="hljs-literal">false</span>);
+            });
         });
     }
 });</pre></div></div>
@@ -496,8 +500,23 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
                 b1.disabled = <span class="hljs-string">'disabled'</span>;
                 b2.disabled = <span class="hljs-string">''</span>;
 
-                stackCanvas = scrawl.addCanvas({
-                    <span class="hljs-attr">host</span>: (<span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span>) ? mystack : <span class="hljs-string">'#mystack'</span>,
+                stackCanvas = scrawl.addCanvas({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Test to make sure host attribute accepts both Stack object and CSS search String</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    host: (<span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span>) ? mystack : <span class="hljs-string">'#mystack'</span>,
+
                     <span class="hljs-attr">name</span>: <span class="hljs-string">'my-new-canvas'</span>,
                     <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
                     <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,
@@ -541,6 +560,21 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
     };
 }();
 scrawl.addListener(<span class="hljs-string">'up'</span>, controls, <span class="hljs-string">'.controls'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

@@ -15,6 +15,7 @@ handle: null,
 offset: null,
 dimensions: null,
 delta: null,
+noDeltaUpdates: false,
 pivot: '',
 pivotCorner: '',
 pivoted: null,
@@ -26,10 +27,6 @@ pathPosition: 0,
 addPathHandle: false,
 addPathOffset: true,
 addPathRotation: false,
-controlSubscriber: null,
-startControlSubscriber: null,
-endControlSubscriber: null,
-endSubscriber: null,
 mimic: '',
 mimicked: null,
 useMimicDimensions: false,
@@ -51,7 +48,6 @@ roll: 0,
 collides: false,
 sensorSpacing: 50,
 noUserInteraction: false,
-noDeltaUpdates: false,
 noPositionDependencies: false,
 noCanvasEngineUpdates: false,
 noFilters: false,
@@ -117,6 +113,36 @@ return this.currentStart[1];
 G.start = function () {
 return [].concat(this.currentStart);
 };
+S.startX = function (coord) {
+if (coord != null) {
+this.start[0] = coord;
+this.dirtyStart = true;
+}
+};
+S.startY = function (coord) {
+if (coord != null) {
+this.start[1] = coord;
+this.dirtyStart = true;
+}
+};
+S.start = function (x, y) {
+this.setCoordinateHelper('start', x, y);
+this.dirtyStart = true;
+};
+D.startX = function (coord) {
+let c = this.start;
+c[0] = addStrings(c[0], coord);
+this.dirtyStart = true;
+};
+D.startY = function (coord) {
+let c = this.start;
+c[1] = addStrings(c[1], coord);
+this.dirtyStart = true;
+};
+D.start = function (x, y) {
+this.setDeltaCoordinateHelper('start', x, y);
+this.dirtyStart = true;
+};
 G.handleX = function () {
 return this.currentHandle[0];
 };
@@ -126,6 +152,36 @@ return this.currentHandle[1];
 G.handle = function () {
 return [].concat(this.currentHandle);
 };
+S.handleX = function (coord) {
+if (coord != null) {
+this.handle[0] = coord;
+this.dirtyHandle = true;
+}
+};
+S.handleY = function (coord) {
+if (coord != null) {
+this.handle[1] = coord;
+this.dirtyHandle = true;
+}
+};
+S.handle = function (x, y) {
+this.setCoordinateHelper('handle', x, y);
+this.dirtyHandle = true;
+};
+D.handleX = function (coord) {
+let c = this.handle;
+c[0] = addStrings(c[0], coord);
+this.dirtyHandle = true;
+};
+D.handleY = function (coord) {
+let c = this.handle;
+c[1] = addStrings(c[1], coord);
+this.dirtyHandle = true;
+};
+D.handle = function (x, y) {
+this.setDeltaCoordinateHelper('handle', x, y);
+this.dirtyHandle = true;
+};
 G.offsetX = function () {
 return this.currentOffset[0];
 };
@@ -134,6 +190,36 @@ return this.currentOffset[1];
 };
 G.offset = function () {
 return [].concat(this.currentOffset);
+};
+S.offsetX = function (coord) {
+if (coord != null) {
+this.offset[0] = coord;
+this.dirtyOffset = true;
+}
+};
+S.offsetY = function (coord) {
+if (coord != null) {
+this.offset[1] = coord;
+this.dirtyOffset = true;
+}
+};
+S.offset = function (x, y) {
+this.setCoordinateHelper('offset', x, y);
+this.dirtyOffset = true;
+};
+D.offsetX = function (coord) {
+let c = this.offset;
+c[0] = addStrings(c[0], coord);
+this.dirtyOffset = true;
+};
+D.offsetY = function (coord) {
+let c = this.offset;
+c[1] = addStrings(c[1], coord);
+this.dirtyOffset = true;
+};
+D.offset = function (x, y) {
+this.setDeltaCoordinateHelper('offset', x, y);
+this.dirtyOffset = true;
 };
 G.width = function () {
 return this.currentDimensions[0];
@@ -174,108 +260,6 @@ D.dimensions = function (w, h) {
 this.setDeltaCoordinateHelper('dimensions', w, h);
 this.dirtyDimensions = true;
 }
-S.startX = function (coord) {
-if (coord != null) {
-this.start[0] = coord;
-this.dirtyStart = true;
-}
-};
-S.startY = function (coord) {
-if (coord != null) {
-this.start[1] = coord;
-this.dirtyStart = true;
-}
-};
-S.start = function (x, y) {
-this.setCoordinateHelper('start', x, y);
-this.dirtyStart = true;
-};
-D.startX = function (coord) {
-let c = this.start;
-c[0] = addStrings(c[0], coord);
-this.dirtyStart = true;
-};
-D.startY = function (coord) {
-let c = this.start;
-c[1] = addStrings(c[1], coord);
-this.dirtyStart = true;
-};
-D.start = function (x, y) {
-this.setDeltaCoordinateHelper('start', x, y);
-this.dirtyStart = true;
-};
-S.handleX = function (coord) {
-if (coord != null) {
-this.handle[0] = coord;
-this.dirtyHandle = true;
-}
-};
-S.handleY = function (coord) {
-if (coord != null) {
-this.handle[1] = coord;
-this.dirtyHandle = true;
-}
-};
-S.handle = function (x, y) {
-this.setCoordinateHelper('handle', x, y);
-this.dirtyHandle = true;
-};
-D.handleX = function (coord) {
-let c = this.handle;
-c[0] = addStrings(c[0], coord);
-this.dirtyHandle = true;
-};
-D.handleY = function (coord) {
-let c = this.handle;
-c[1] = addStrings(c[1], coord);
-this.dirtyHandle = true;
-};
-D.handle = function (x, y) {
-this.setDeltaCoordinateHelper('handle', x, y);
-this.dirtyHandle = true;
-};
-S.offsetX = function (coord) {
-if (coord != null) {
-this.offset[0] = coord;
-this.dirtyOffset = true;
-}
-};
-S.offsetY = function (coord) {
-if (coord != null) {
-this.offset[1] = coord;
-this.dirtyOffset = true;
-}
-};
-S.offset = function (x, y) {
-this.setCoordinateHelper('offset', x, y);
-this.dirtyOffset = true;
-};
-D.offsetX = function (coord) {
-let c = this.offset;
-c[0] = addStrings(c[0], coord);
-this.dirtyOffset = true;
-};
-D.offsetY = function (coord) {
-let c = this.offset;
-c[1] = addStrings(c[1], coord);
-this.dirtyOffset = true;
-};
-D.offset = function (x, y) {
-this.setDeltaCoordinateHelper('offset', x, y);
-this.dirtyOffset = true;
-};
-G.dragOffsetX = function () {
-return this.dragOffset[0];
-};
-G.dragOffsetY = function () {
-return this.dragOffset[1];
-};
-S.dragOffsetX = defaultNonReturnFunction;
-S.dragOffsetY = defaultNonReturnFunction;
-S.dragOffset = defaultNonReturnFunction;
-D.dragOffsetX = defaultNonReturnFunction;
-D.dragOffsetY = defaultNonReturnFunction;
-D.dragOffset = defaultNonReturnFunction;
 S.sensorSpacing = function (val) {
 this.sensorSpacing = val;
 this.dirtyCollision = true;
@@ -1021,6 +1005,17 @@ P.getSensors = function () {
 let [entityRadius, entitySensors] = this.cleanCollisionData();
 return entitySensors;
 }
+P.getPathData = function () {
+let pathPos = this.pathPosition,
+path = this.path,
+currentPathData;
+if (path) {
+currentPathData = path.getPathPositionData(pathPos);
+if (this.addPathRotation) this.dirtyRotation = true;
+return currentPathData;
+}
+return false;
+};
 P.checkHit = function (items = [], mycell) {
 if (this.noUserInteraction) return false;
 if (!this.pathObject || this.dirtyPathObject) {
@@ -1060,6 +1055,28 @@ artefact: this
 }
 if (poolCellFlag) releaseCell(mycell);
 return false;
+};
+P.pickupArtefact = function (items = {}) {
+let {x, y} = items;
+if (xta(x, y)) {
+this.isBeingDragged = true;
+this.currentDragCache.set(this.currentDragOffset);
+this.currentDragOffset.set(this.currentStart).subtract([x, y]);
+this.order += 9999;
+this.group.batchResort = true;
+if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
+}
+return this;
+};
+P.dropArtefact = function () {
+this.start.set(this.currentStartCache).add(this.currentDragOffset);
+this.dirtyStart = true;
+this.currentDragOffset.set(this.currentDragCache);
+this.order = (this.order >= 9999) ? this.order - 9999 : 0;
+this.group.batchResort = true;
+if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
+this.isBeingDragged = false;
+return this;
 };
 P.updatePositionSubscribers = function () {
 this.dirtyPositionSubscribers = false;
@@ -1131,38 +1148,5 @@ this.dirtyMimicDimensions = false;
 };
 P.updatePathSubscribers = defaultNonReturnFunction;
 P.updateImageSubscribers = defaultNonReturnFunction;
-P.getPathData = function () {
-let pathPos = this.pathPosition,
-path = this.path,
-currentPathData;
-if (path) {
-currentPathData = path.getPathPositionData(pathPos);
-if (this.addPathRotation) this.dirtyRotation = true;
-return currentPathData;
-}
-return false;
-};
-P.pickupArtefact = function (items = {}) {
-let {x, y} = items;
-if (xta(x, y)) {
-this.isBeingDragged = true;
-this.currentDragCache.set(this.currentDragOffset);
-this.currentDragOffset.set(this.currentStart).subtract([x, y]);
-this.order += 9999;
-this.group.batchResort = true;
-if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
-}
-return this;
-};
-P.dropArtefact = function () {
-this.start.set(this.currentStartCache).add(this.currentDragOffset);
-this.dirtyStart = true;
-this.currentDragOffset.set(this.currentDragCache);
-this.order = (this.order >= 9999) ? this.order - 9999 : 0;
-this.group.batchResort = true;
-if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
-this.isBeingDragged = false;
-return this;
-};
 return P;
 };

@@ -17,9 +17,6 @@ trackHere: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['domElement', 'pathCorners', 'rotation']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
 P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 P.processDOMPacketOut = function (key, value, includes) {
 return this.processFactoryPacketOut(key, value, includes);
@@ -83,20 +80,20 @@ S.roll = function (item) {
 this.roll = this.checkRotationAngle(item);
 this.dirtyRotation = true;
 };
-S.pitch = function (item) {
-this.pitch = this.checkRotationAngle(item);
-this.dirtyRotation = true;
-};
-S.yaw = function (item) {
-this.yaw = this.checkRotationAngle(item);
-this.dirtyRotation = true;
-};
 D.roll = function (item) {
 this.roll = this.checkRotationAngle(this.roll + item);
 this.dirtyRotation = true;
 };
+S.pitch = function (item) {
+this.pitch = this.checkRotationAngle(item);
+this.dirtyRotation = true;
+};
 D.pitch = function (item) {
 this.pitch = this.checkRotationAngle(this.pitch + item);
+this.dirtyRotation = true;
+};
+S.yaw = function (item) {
+this.yaw = this.checkRotationAngle(item);
 this.dirtyRotation = true;
 };
 D.yaw = function (item) {
@@ -123,6 +120,95 @@ if (angle < -180 || angle > 180) {
 angle += (angle > 0) ? -360 : 360;
 }
 return angle;
+};
+P.updateDomAttributes = function (items, value) {
+if (this.domElement) {
+let el = this.domElement;
+if (items.substring && xt(value)) {
+if (value) el.setAttribute(items, value);
+else el.removeAttribute(items);
+}
+else if (isa_obj(items)) {
+Object.entries(items).forEach(([item, val]) => {
+if (val) el.setAttribute(item, val);
+else el.removeAttribute(item);
+});
+}
+}
+return this;
+};
+P.initializeDomLayout = function (items) {
+let el = items.domElement,
+elStyle = el.style;
+if (el && items.setInitialDimensions) {
+let dims = el.getBoundingClientRect(),
+trans = el.style.transform,
+transOrigin = el.style.transformOrigin,
+host = false,
+hostDims;
+if (items && items.host) {
+host = items.host;
+if (host.substring && artefact[host]) host = artefact[host];
+}
+this.currentDimensions[0] = dims.width;
+this.currentDimensions[1] = dims.height;
+items.width = dims.width;
+items.height = dims.height;
+if (el.className) items.classes = el.className;
+if (host && host.domElement) {
+hostDims = host.domElement.getBoundingClientRect();
+if (hostDims) {
+items.startX = dims.left - hostDims.left;
+items.startY = dims.top - hostDims.top;
+}
+}
+if (this.type === 'Stack') {
+if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
+items.perspectiveZ = (xt(elStyle.perspective) && elStyle.perspective) ? parseFloat(elStyle.perspective) : 0;
+}
+let perspectiveOrigin = elStyle.perspectiveOrigin;
+if (perspectiveOrigin.length) {
+perspectiveOrigin = perspectiveOrigin.split(' ');
+if (perspectiveOrigin.length > 0 && !xt(items.perspective) && !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[0];
+if (!xt(items.perspective) && !xt(items.perspectiveY)) {
+if (perspectiveOrigin.length > 1) items.perspectiveY = perspectiveOrigin[1];
+else items.perspectiveY = perspectiveOrigin[0];
+}
+}
+}
+}
+};
+P.checkForResize = function () {
+let el = this.domElement;
+if (el) {
+let dims = el.getBoundingClientRect(),
+flag = false;
+if (this.currentDimensions[0] !== dims.width) {
+this.dimensions[0] = this.currentDimensions[0] = dims.width;
+flag = true;
+}
+if (this.currentDimensions[1] !== dims.height) {
+this.dimensions[1] = this.currentDimensions[1] = dims.height;
+flag = true;
+}
+if (flag && (this.type === 'Stack')) this.triggerResizeCascade();
+}
+};
+P.triggerResizeCascade = function () {
+let gBucket = this.groupBuckets,
+aBucket;
+if (gBucket && gBucket.length) {
+gBucket.forEach(grp => {
+aBucket = grp.artefactBuckets;
+if (aBucket && aBucket.length) {
+aBucket.forEach(art => {
+if (art) {
+art.dirtyDimensions = true;
+}
+})
+}
+})
+}
 };
 P.addClasses = function (item) {
 if (item.substring) {
@@ -155,24 +241,8 @@ this.dirtyClasses = true;
 }
 return this;
 };
-P.updateDomAttributes = function (items, value) {
-if (this.domElement) {
-let el = this.domElement;
-if (items.substring && xt(value)) {
-if (value) el.setAttribute(items, value);
-else el.removeAttribute(items);
-}
-else if (isa_obj(items)) {
-Object.entries(items).forEach(([item, val]) => {
-if (val) el.setAttribute(item, val);
-else el.removeAttribute(item);
-});
-}
-}
-return this;
-};
 P.addPathCorners = function () {
-if (!this.noUserInteraction) {
+if (this.domElement && !this.noUserInteraction) {
 let pointMaker = function () {
 let p = document.createElement('div');
 p.style.width = 0;
@@ -280,7 +350,7 @@ return [x, y];
 };
 P.cleanPathObject = function () {
 this.dirtyPathObject = false;
-if (!this.noUserInteraction) {
+if (this.domElement && !this.noUserInteraction) {
 if (!this.pathCorners.length) this.addPathCorners();
 if (!this.currentCornersData) this.currentCornersData = [];
 let cornerData = this.currentCornersData;
@@ -367,6 +437,46 @@ sensors.push([partX, partY]);
 }
 }
 };
+P.checkHit = function (items = [], mycell) {
+if (this.noUserInteraction) return false;
+if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
+this.cleanPathObject();
+this.dirtyCollision = false;
+}
+let tests = (!Array.isArray(items)) ?  [items] : items,
+poolCellFlag = false;
+if (!mycell) {
+mycell = requestCell();
+poolCellFlag = true;
+}
+let engine = mycell.engine,
+stamp = this.currentStampPosition,
+x = stamp[0],
+y = stamp[1],
+tx, ty;
+if (tests.some(test => {
+if (Array.isArray(test)) {
+tx = test[0];
+ty = test[1];
+}
+else if (xta(test, test.x, test.y)) {
+tx = test.x;
+ty = test.y;
+}
+else return false;
+if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+return engine.isPointInPath(this.pathObject, tx, ty);
+}, this)) {
+if (poolCellFlag) releaseCell(mycell);
+return {
+x: tx,
+y: ty,
+artefact: this,
+};
+}
+if (poolCellFlag) releaseCell(mycell);
+return false;
+};
 P.cleanRotation = function () {
 this.dirtyRotation = false;
 if (!this.rotation || !isa_quaternion(this.rotation)) this.rotation = makeQuaternion();
@@ -412,79 +522,6 @@ P.cleanContent = function () {
 this.dirtyContent = false;
 let el = this.domElement;
 if (el) this.dirtyDimensions = true;
-};
-P.initializeDomLayout = function (items) {
-let el = items.domElement,
-elStyle = el.style;
-if (el && items.setInitialDimensions) {
-let dims = el.getBoundingClientRect(),
-trans = el.style.transform,
-transOrigin = el.style.transformOrigin,
-host = false,
-hostDims;
-if (items && items.host) {
-host = items.host;
-if (host.substring && artefact[host]) host = artefact[host];
-}
-this.currentDimensions[0] = dims.width;
-this.currentDimensions[1] = dims.height;
-items.width = dims.width;
-items.height = dims.height;
-if (el.className) items.classes = el.className;
-if (host && host.domElement) {
-hostDims = host.domElement.getBoundingClientRect();
-if (hostDims) {
-items.startX = dims.left - hostDims.left;
-items.startY = dims.top - hostDims.top;
-}
-}
-if (this.type === 'Stack') {
-if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
-items.perspectiveZ = (xt(elStyle.perspective) && elStyle.perspective) ? parseFloat(elStyle.perspective) : 0;
-}
-let perspectiveOrigin = elStyle.perspectiveOrigin;
-if (perspectiveOrigin.length) {
-perspectiveOrigin = perspectiveOrigin.split(' ');
-if (perspectiveOrigin.length > 0 && !xt(items.perspective) && !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[0];
-if (!xt(items.perspective) && !xt(items.perspectiveY)) {
-if (perspectiveOrigin.length > 1) items.perspectiveY = perspectiveOrigin[1];
-else items.perspectiveY = perspectiveOrigin[0];
-}
-}
-}
-}
-};
-P.checkForResize = function () {
-let el = this.domElement;
-if (el) {
-let dims = el.getBoundingClientRect(),
-flag = false;
-if (this.currentDimensions[0] !== dims.width) {
-this.dimensions[0] = this.currentDimensions[0] = dims.width;
-flag = true;
-}
-if (this.currentDimensions[1] !== dims.height) {
-this.dimensions[1] = this.currentDimensions[1] = dims.height;
-flag = true;
-}
-if (flag && (this.type === 'Stack')) this.triggerResizeCascade();
-}
-};
-P.triggerResizeCascade = function () {
-let gBucket = this.groupBuckets,
-aBucket;
-if (gBucket && gBucket.length) {
-gBucket.forEach(grp => {
-aBucket = grp.artefactBuckets;
-if (aBucket && aBucket.length) {
-aBucket.forEach(art => {
-if (art) {
-art.dirtyDimensions = true;
-}
-})
-}
-})
-}
 };
 P.prepareStamp = function () {
 if (this.actionResize) this.checkForResize();
@@ -559,46 +596,6 @@ self.dirtyScale = true;
 resolve(true);
 });
 };
-P.checkHit = function (items = [], mycell) {
-if (this.noUserInteraction) return false;
-if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
-this.cleanPathObject();
-this.dirtyCollision = false;
-}
-let tests = (!Array.isArray(items)) ?  [items] : items,
-poolCellFlag = false;
-if (!mycell) {
-mycell = requestCell();
-poolCellFlag = true;
-}
-let engine = mycell.engine,
-stamp = this.currentStampPosition,
-x = stamp[0],
-y = stamp[1],
-tx, ty;
-if (tests.some(test => {
-if (Array.isArray(test)) {
-tx = test[0];
-ty = test[1];
-}
-else if (xta(test, test.x, test.y)) {
-tx = test.x;
-ty = test.y;
-}
-else return false;
-if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
-return engine.isPointInPath(this.pathObject, tx, ty);
-}, this)) {
-if (poolCellFlag) releaseCell(mycell);
-return {
-x: tx,
-y: ty,
-artefact: this,
-};
-}
-if (poolCellFlag) releaseCell(mycell);
-return false;
-};
 P.apply = function() {
 applyCoreResizeListener();
 this.prepareStamp();
@@ -609,7 +606,7 @@ domShow(self.name);
 self.dirtyPathObject = true;
 self.cleanPathObject();
 })
-.catch(() => {});
+.catch(err => console.log(err));
 };
 return P;
 };

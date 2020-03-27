@@ -83,9 +83,9 @@ const animationLoop = function () {
 
     if (resortBatchAnimations) sortAnimations();
 
-    animate_sorted.forEach((item) => {
+    animate_sorted.forEach(item => {
 
-        if (item.fn) promises.push(item.fn());
+        if (item && item.fn) promises.push(item.fn());
     });
 
     Promise.all(promises)
@@ -93,7 +93,7 @@ const animationLoop = function () {
 
         if (doAnimation) window.requestAnimationFrame(() => animationLoop());
     })
-    .catch((err) => console.log('animationLoop error: ', err.message));
+    .catch(err => console.log('animationLoop error: ', err));
 };
 
 // `Exported function` (modules and scrawl object). Start the RAF function running

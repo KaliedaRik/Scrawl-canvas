@@ -1,20 +1,17 @@
-
 // # Shape path calculation
+// The function, and its helper functions, translates SVG path data string - example: `M0,0H100V100H-100V-100z` - into data which can be used to construct the a Path2D object which can be consumed by the canvasRenderingContext2D engine's `fill`, `stroke` and `isPointInPath` functions
+// + TODO: this file is in the wrong place: it's not a mixin; it exports a single function currently imported only by ./factory.shape.js; and it duplicates Vector code
+// + Code has been separated out into its own file because it is a potential candidate for hiving off to a web worker
 
-// The function, and its helper functions, translates SVG path data string - example: 'M0,0H100V100H-100V-100z' - into data which can be used to construct the a Path2D object which can be consumed by the canvasRenderingContext2D engine's 'fill', 'stroke' and 'isPointInPath' functions
 
-// Separated out into its own file because it is a potential candidate for hiving off to a web worker
-
-
-// ## Imports
-
+// #### Imports
 // No imports required
 
 
-// ## Exports
+// #### Export function
 export default function (d, scale, start, useAsPath, precision) {
 
-    // setup local variables
+    // Setup local variables
     let points = [],
         myData = [],
         command = '',
@@ -39,7 +36,7 @@ export default function (d, scale, start, useAsPath, precision) {
     let reflectX = 0,
         reflectY = 0;
 
-    // local function to populate the temporary myData array with data for every path partial
+    // Local function to populate the temporary myData array with data for every path partial
     let buildArrays = (thesePoints) => {
 
         myData.push({
@@ -63,7 +60,7 @@ export default function (d, scale, start, useAsPath, precision) {
         oldY = curY;
     };
 
-    // the purpose of this loop is to 
+    // The purpose of this loop is to 
     // 1. convert all point values fromn strings to floats
     // 2. scale every value
     // 3. relativize every value to the last stated cursor position
@@ -295,7 +292,7 @@ export default function (d, scale, start, useAsPath, precision) {
         }
     }
 
-    // this loop builds the local path string
+    // This loop builds the local path string
     for (i = 0, iz = myData.length; i < iz; i++) {
 
         let curData = myData[i],
@@ -321,15 +318,15 @@ export default function (d, scale, start, useAsPath, precision) {
 
     returnObject.localPath = localPath;
 
-    // calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box 
+    // Calculates unit lengths and sum of lengths, alongside obtaining data to build a more accurate bounding box 
     if (useAsPath) {
 
-        // request a vector - used for reflection points
+        // Request a vector - used for reflection points
         let v = vector;
 
-        // this loop calculates this.units array data
-        // - because the lengths calculations requires absolute coordinates
-        // - and TtSs path units use reflective coordinates
+        // This loop calculates this.units array data
+        // + because the lengths calculations requires absolute coordinates
+        // + and TtSs path units use reflective coordinates
         for (i = 0, iz = myData.length; i < iz; i++) {
 
             let curData = myData[i],
@@ -459,9 +456,8 @@ export default function (d, scale, start, useAsPath, precision) {
 };
 
 
-// TODO - documentation
-
-// consider whether we could swap out this vector stuff for a pool coordinate?
+// #### Locally defined Vector
+// + TODO: consider whether we could swap out this vector stuff for a pool coordinate?
 const vector = {
 
     x: 0,
@@ -485,7 +481,9 @@ const rotateVector = function (v, angle) {
     v.y = mag * Math.sin(arg);
 };
 
-// TODO - documentation
+// #### Helper functions
+
+// `getShapeUnitMetaData`
 const getShapeUnitMetaData = function (species, precision, args) {
 
     let xPts = [],
@@ -493,8 +491,8 @@ const getShapeUnitMetaData = function (species, precision, args) {
         len = 0,
         w, h;
 
-    // we want to separate out linear species before going into the while loop
-    // - because these calculations will be simple
+    // We want to separate out linear species before going into the while loop
+    // + because these calculations will be simple
     if (species === 'linear') {
 
         let [sx, sy, ex, ey] = args;
@@ -544,14 +542,14 @@ const getShapeUnitMetaData = function (species, precision, args) {
                 oldY = y;
             }
 
-            // stop the while loop if we're getting close to the true length of the curve
+            // Stop the while loop if we're getting close to the true length of the curve
             if (newLength < len + precision) flag = true;
 
             len = newLength;
 
             step /= 2;
 
-            // stop the while loop after checking a maximum of 129 points along the curve
+            // Stop the while loop after checking a maximum of 129 points along the curve
             if (step < 0.004) flag = true;
         }
     }
@@ -563,7 +561,7 @@ const getShapeUnitMetaData = function (species, precision, args) {
     };
 };
 
-// TODO - documentation
+// `getXY`
 const getXY = {
 
     getBezierXY: function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {

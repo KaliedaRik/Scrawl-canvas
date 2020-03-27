@@ -299,7 +299,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="asset-mixin">Asset mixin</h1>
+<p>The asset factories - <strong>imageAsset</strong>, <strong>spriteAsset</strong>, and <strong>videoAsset</strong> - are wrappers around images and videos which can either be pulled from the current document (DOM-based assets) or fetched from the server using an URL address.</p>
+<ul>
+<li>Assets are used (consumed) by Picture entitys and Pattern styles.</li>
+<li>This mixin adds functionality common to all three factories to them as part of their initialization.</li>
+<li>The mixin is also used by the <strong>cell</strong> factory, as &lt;canvas&gt; elements can be used by Picture entitys and Pattern styles as their image sources.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +318,25 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="asset-mixin">Asset mixin</h1>
+              <p>Assets can be loaded into scrawl using dedicated import and create functions:</p>
+<ul>
+<li><code>scrawl.importImage</code></li>
+<li><code>scrawl.importDomImage</code></li>
+<li><code>scrawl.importDomVideo</code></li>
+<li><code>scrawl.importVideo</code></li>
+<li><code>scrawl.importMediaStream</code></li>
+<li><code>scrawl.importSprite</code></li>
+<li><code>scrawl.createImageFromCell</code></li>
+<li><code>scrawl.createImageFromGroup</code></li>
+<li><code>scrawl.createImageFromEntity</code></li>
+</ul>
+<p>Assets will also be created when Picture entitys or Pattern styles are defined using a ‘scrawl.make’ function (<code>makePicture</code>, <code>makePattern</code>), or updated with the <code>set</code> function, where the <em>imageSource</em>, <em>videoSource</em> or <em>spriteSource</em> key in the argument object has been set to a valid URL path string.</p>
+<p>Be aware that <strong>loading assets takes time!</strong> </p>
+<ul>
+<li>Performing a single render operation immediately after defining or updating a Picture entity or Pattern style will almost certainly fail to render the expected image/sprite/video in the canvas. </li>
+<li>The load functionality is asynchronous (using Promises). </li>
+<li>To display the resulting images in the canvas, it needs to be running an animation object (for instance, <strong>scrawl.makeRender</strong>) so that updates appear as soon as they have loaded, as part of the animation’s Display cycle functionality.</li>
+</ul>
 
             </div>
             
@@ -324,9 +349,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>The asset factories - <strong>imageAsset</strong>, <strong>spriteAsset</strong>, and <strong>videoAsset</strong> - are wrappers around images and videos which can either be pulled from the current document (DOM-based assets) or fetched from the server using an URL address.</p>
+              <h4 id="imports">Imports</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
             
         </li>
         
@@ -337,9 +364,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Assets are used (consumed) by Picture entitys and Pattern styles.</p>
+              <h4 id="export-function">Export function</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -350,9 +379,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>This mixin adds functionality common to all three factories to them as part of their initialization.</p>
+              <h4 id="shared-attributes">Shared attributes</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -363,9 +394,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>The mixin is also used by the <strong>cell</strong> factory, as &lt;canvas&gt; elements can be used by Picture entitys and Pattern styles as their image sources.</p>
+              <p><strong>sourceLoaded</strong> - A flag to indicate that the source image or video has completed sufficient loading (or streaming) to be usefully consumed by Picture entitys and Pattern styles.</p>
+<ul>
+<li><strong>Note that this flag cannot be directly or indirectly set.</strong> The asset wrapper’s functionality will handle the checking of load progress, and notify its subscribers that the load has completed as-and-when required.</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        sourceLoaded: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -376,9 +412,19 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p><strong>TO BE AWARE:</strong> </p>
+              <p><strong>source</strong> - A handle to the DOM element supplying the image - either an &lt;img&gt;, &lt;video&gt; or &lt;canvas&gt; element.</p>
+<ul>
+<li>Note that the <strong><em>Web Canvas API does not support</em></strong> using the &lt;picture&gt; element as a legitimate image source. </li>
+<li>However most browsers allow the &lt;img&gt; element to use <strong>srcset</strong> and <strong>sizes</strong> attributes, which will give them the same type of functionality as picture elements - for example to determine the most appropriately sized image file for the browser/device’s viewport dimensions.</li>
+<li>Asset wrappers will detect, and handle actions required, if/when a browser decides to download a new image file, to update the &lt;img&gt; element with a more detailed image, for instance when the browser viewport changes its dimensions, or a device is rotated from portrait to landscape viewing.</li>
+<li>The web Canvas API claims that <strong>SVG</strong> images can be used as legitimate image sources for the canvas element. To make this happen, the SVG file needs to be set as the src attribute of an &lt;img&gt; element, and the resulting image will be entirely static, and rasterized! </li>
+<li>For this reason, we don’t recommend trying to use SVG files for canvas image sources; instead, the SVG can be included in a Scrawl-canvas display by adding it - as an &lt;svg&gt; element - to a Scrawl-canvas stack (see Demo DOM-003 for an example of this approach).</li>
+<li><strong><em>Be aware that this attribute cannot be directly or indirectly set.</em></strong> Scrawl-canvas will update it as part of its asset loading and wrapper creation functionality.</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        source: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -389,11 +435,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <ul>
-<li>Assets can be loaded into scrawl using either a dedicated ‘scrawl.import’ function - <strong>importImage</strong>, <strong>importDomImage</strong>, <strong>importDomVideo</strong>, <strong>importVideo</strong>, <strong>importMediaStream</strong>, <strong>importSprite</strong> - or ‘scrawl.create’ function () - <strong>createImageFromCell</strong>, <strong>createImageFromGroup</strong>, <strong>createImageFromEntity</strong>.</li>
+              <p><strong>subscribers</strong> - An Array containing the Picture entity and Pattern style Objects, who wish to use the asset as their source. </p>
+<ul>
+<li>Pictures and Patterns may subscribe to a maximum of ONE asset at any given time, though they may set/update that asset subscription to a different asset whenever required (which involves unsubscribing their existing asset).</li>
+<li><strong><em>Note that the contents of this Array cannot be directly or indirectly set.</em></strong> Picture entitys and Pattern styles will subscribe and unsubscribe to an asset as part of their source acquisition functionality (via the asset wrapper’s <strong>subscribe</strong> and <strong>unsubscribe</strong> functions).</li>
 </ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        subscribers: <span class="hljs-literal">null</span>,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -404,11 +456,22 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <ul>
-<li>Assets will also be created when Picture entitys or Pattern styles are defined using a ‘scrawl.make’ function (<strong>makePicture</strong>, <strong>makePattern</strong>), or updated with the <strong>.set()</strong> function, where the <em>imageSource</em>, <em>videoSource</em> or <em>spriteSource</em> key in the argument object has been set to a valid URL path string.</li>
-</ul>
+              <h4 id="packet-management">Packet management</h4>
+<p>Assets do not include their source images (or videos!) in their packet output. They do include the String name values of each of their subscribers.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'sourceLoaded'</span>, <span class="hljs-string">'source'</span>, <span class="hljs-string">'subscribers'</span>]);
+
+
+    P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.subscribers &amp;&amp; <span class="hljs-keyword">this</span>.subscribers.length) {
+
+            copy.subscribers = <span class="hljs-keyword">this</span>.subscribers.map(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> sub.name);
+        }
+        <span class="hljs-keyword">return</span> copy;
+    };</pre></div></div>
             
         </li>
         
@@ -419,9 +482,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <ul>
-<li><strong>Loading assets takes time!</strong> Performing a single render operation after defining or updating a Picture entity or Pattern style will almost certainly fail to render the expected image/sprite/video in the canvas. The load functionality is asynchronous (using Promises). To display the resulting images in the canvas, it needs to be running an animation object (for instance, <strong>scrawl.makeRender</strong>) so that updates appear as soon as they have loaded, as part of the animation’s display cycle functionality.</li>
-</ul>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
 
             </div>
             
@@ -434,13 +496,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="kill-management">Kill management</h4>
+<p>TODO </p>
+<ul>
+<li>work out whether, and how, we get rid of an asset wrapper. </li>
+<li>if we get rid of the wrapper, do we also get rid of the source element?</li>
+<li>This functionality disabled at the moment, both here and in the asset factories (except cell)</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -451,197 +515,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="define-attributes">Define attributes</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <p>All factories using the asset mixin will add these to their prototype objects</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p>A flag to indicate that the source image or video has completed sufficient loading (or streaming) to be usefully consumed by Picture entitys and Pattern styles.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p><strong>Note that this flag cannot be directly or indirectly set.</strong> The asset wrapper’s functionality will handle the checking of load progress, and notify its subscribers that the load has completed as-and-when required.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        sourceLoaded: <span class="hljs-literal">false</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>A handle to the DOM element supplying the image - either an &lt;img&gt;, &lt;video&gt; or &lt;canvas&gt; element.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>Note that the <strong>web Canvas API does not support</strong> using the &lt;picture&gt; element as a legitimate image source. However most browsers allow the &lt;img&gt; element to use <strong>srcset</strong> and <strong>sizes</strong> attributes, which will give them the same type of functionality as picture elements - for example to determine the most appropriately sized image file for the browser/device’s viewport dimensions.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>Asset wrappers will detect, and handle actions required, if/when a browser decides to download a new image file, to update the &lt;img&gt; element with a more detailed image, for instance when the browser viewport changes its dimensions, or a device is rotated from portrait to landscape viewing.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <p>The web Canvas API claims that <strong>SVG</strong> images can be used as legitimate image sources for the canvas element. To make this happen, the SVG file needs to be set as the src attribute of an &lt;img&gt; element, and the resulting image will be entirely static, and rasterized! For this reason, we don’t recommend trying to use SVG files for canvas image sources; instead, the SVG can be included in a Scrawl-canvas display by adding it - as an &lt;svg&gt; element - to a Scrawl-canvas stack (see Demo DOM-003 for an example of this approach).</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p><strong>Note that this attribute cannot be directly or indirectly set.</strong> Scrawl-canvas will update it as part of its asset loading and wrapper creation functionality.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        source: <span class="hljs-literal">null</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>An Array containing the Picture entity and Pattern style Objects, who wish to use the asset as their source. Pictures and Patterns may subscribe to a maximum of ONE asset at any given time, though they may set/update that asset subscription to a different asset whenever required (which involves unsubscribing their existing asset).</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p><strong>Note that the contents of this Array cannot be directly or indirectly set.</strong> Picture entitys and Pattern styles will subscribe and unsubscribe to an asset as part of their source acquisition functionality (via the asset wrapper’s <strong>subscribe</strong> and <strong>unsubscribe</strong> functions).</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        subscribers: <span class="hljs-literal">null</span>,
-    };
-    P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <h2 id="packet-management">Packet management</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'sourceLoaded'</span>, <span class="hljs-string">'source'</span>, <span class="hljs-string">'subscribers'</span>]);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>Assets do not include their source images (or videos!) in their packet output. They do include the String name values of each of their subscribers.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.subscribers &amp;&amp; <span class="hljs-keyword">this</span>.subscribers.length) {
-
-            copy.subscribers = <span class="hljs-keyword">this</span>.subscribers.map(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> sub.name);
-        }
-        <span class="hljs-keyword">return</span> copy;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -652,13 +526,13 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>imageAsset.js and videoAsset.js overwrite this function, thus only put here so cell.js also gains the function - which I don’t think it will ever need as cells ARE their own source.</p>
+              <p><strong>source</strong> - imageAsset.js and videoAsset.js overwrite this function, thus only put here so cell.js also gains the function - which I don’t think it will ever need as cells ARE their own source.</p>
 
             </div>
             
@@ -669,11 +543,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>No action required for Canvas objects as they don’t have a source; they ARE the source!</p>
 
@@ -686,26 +560,13 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Disable the ability to set the subscribers Array directly.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions.</p>
+              <p><strong>subscribers</strong> - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions.</p>
 
             </div>
             
@@ -714,26 +575,26 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <h2 id="define-functions-to-be-added-to-the-factory-prototype">Define functions to be added to the factory prototype</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-31">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Common actions required by <strong>imageAsset</strong>, <strong>spriteAsset</strong>, and <strong>videoAsset</strong> factories as part if their instance constructor work.</p>
+              <p><code>assetConstructor</code> - Common actions required by <strong>imageAsset</strong>, <strong>spriteAsset</strong>, and <strong>videoAsset</strong> factories as part if their instance constructor work.</p>
 
             </div>
             
@@ -753,101 +614,96 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>TODO </p>
+              <h5 id="subscribe-and-unsubscribe-to-an-asset">Subscribe and unsubscribe to an asset</h5>
+<p><code>subscribe</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.subscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (sub &amp;&amp; sub.name) {
+
+            <span class="hljs-keyword">let</span> name = sub.name;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.subscribers.every(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name !== name)) <span class="hljs-keyword">this</span>.subscribeAction(sub);
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p><code>subscribeAction</code> - separated out because cells handle things differently (they ARE the source)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.subscribeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.subscribers.push(sub);
+        sub.asset = <span class="hljs-keyword">this</span>;
+        sub.source = <span class="hljs-keyword">this</span>.source;
+        <span class="hljs-keyword">this</span>.notifySubscriber(sub);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p><code>unsubscribe</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.unsubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (sub.name) {
+
+            <span class="hljs-keyword">let</span> name = sub.name,
+                index = <span class="hljs-keyword">this</span>.subscribers.findIndex(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name === name);
+
+            <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span>) {
+
+                sub.source = <span class="hljs-literal">null</span>;
+                sub.asset = <span class="hljs-literal">null</span>;
+                sub.sourceNaturalHeight = <span class="hljs-number">0</span>;
+                sub.sourceNaturalWidth = <span class="hljs-number">0</span>;
+                sub.sourceLoaded = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">this</span>.subscribers.splice(index, <span class="hljs-number">1</span>)
+            }
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p><code>notifySubscribers</code> - Subscriber notification in the asset factories will happen when something changes with the image. Changes vary across the different types of asset:</p>
 <ul>
-<li>work out whether, and how, we get rid of an asset wrapper. </li>
-<li>if we get rid of the wrapper, do we also get rid of the source element?</li>
+<li><strong>imageAsset</strong> - needs to update its subscribers when an image completes loading - or, for &lt;img&gt; sources with srcset (and sizes) attributes, when the image completes a reload of its source data.</li>
+<li><strong>spriteAsset</strong> - will also update its subscribers each time it moves to a new sprite image frame, if the sprite is being animated</li>
+<li><strong>videoAsset</strong> - will update its subscribers for every RAF tick while the video is playing, or if the video is halted and seeks to a different time in the video play stream.</li>
 </ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <p>This functionality disabled at the moment, both here and in the asset factories (except cell)</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p>Subscriber notification in the asset factories will happen when something changes with the image. Changes vary across the different types of asset:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <ul>
-<li>imageAsset - needs to update its subscribers when an image completes loading - or, for &lt;img&gt; sources with srcset (and sizes) attributes, when the image completes a reload of its source data.</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <ul>
-<li>spriteAsset - will also update its subscribers each time it moves to a new sprite image frame, if the sprite is being animated</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <ul>
-<li>videoAsset - will update its subscribers for every RAF tick while the video is playing, or if the video is halted and seeks to a different time in the video play stream.</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
-              </div>
-              <p>All notifications are push; the notification is achieved by setting various attributes and flags in each subscriber.</p>
+<p>All notifications are push; the notification is achieved by setting various attributes and flags in each subscriber.</p>
 
             </div>
             
@@ -871,118 +727,11 @@
         </li>
         
         
-        <li id="section-39">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
-              </div>
-              <p>The subscribe/unsubscribe functions.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>TODO: </p>
-<ul>
-<li>during kill/dismantle activity, Picture entitys and Pattern styles MUST remove themselves from their current asset’s subscribers Array; failure to do so may lead to errors when the asset attempts to update an object that no longer exists, except as a reference to the subscriber Object in the subscribers Array.</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <ul>
-<li>failure to remove the killed entity/style will also lead to library bloat and memory issues.</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p>Thus: make sure that all asset wrappers are properly unsubscribing from assets when they suicide.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.subscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (sub &amp;&amp; sub.name) {
-
-            <span class="hljs-keyword">let</span> name = sub.name;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.subscribers.every(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name !== name)) <span class="hljs-keyword">this</span>.subscribeAction(sub);
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
-              <p>Separated out because cells handle things differently (they ARE the source)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.subscribeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.subscribers.push(sub);
-        sub.asset = <span class="hljs-keyword">this</span>;
-        sub.source = <span class="hljs-keyword">this</span>.source;
-        <span class="hljs-keyword">this</span>.notifySubscriber(sub);
-    };
-
-    P.unsubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (sub.name) {
-
-            <span class="hljs-keyword">let</span> name = sub.name,
-                index = <span class="hljs-keyword">this</span>.subscribers.findIndex(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name === name);
-
-            <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span>) {
-
-                sub.source = <span class="hljs-literal">null</span>;
-                sub.asset = <span class="hljs-literal">null</span>;
-                sub.sourceNaturalHeight = <span class="hljs-number">0</span>;
-                sub.sourceNaturalWidth = <span class="hljs-number">0</span>;
-                sub.sourceLoaded = <span class="hljs-literal">false</span>;
-                <span class="hljs-keyword">this</span>.subscribers.splice(index, <span class="hljs-number">1</span>)
-            }
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

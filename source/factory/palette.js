@@ -1,18 +1,61 @@
-
 // # Palette factory
-
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// Scrawl-canvas uses Palette objects to handle color management for its [Gradient](./gradient.html) and [RadialGradient](./radialGradient.html) styles.
+// + Every gradient-type object gets a Palette object as part of its construction, stored in its `palette` attribute.
+// + While Palette objects have their own section in the scrawl library, we don't actually use that functionality - unlike entity State objects, Palette objects cannot be shared between gradients.
+// + Developers should never need to interact with Palette objects directly; gradient-type styles include functions for adding and manipulating gradient color stops.
+// + Packet, clone and kill functionality is also managed through the gradient-type style objects.
 
 
-// ## Imports
+// ##### Gradients and color stops
+// The [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) uses a rather convoluted way to add color data to a [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) interface object: 
+// + the object is created first on the &lt;canvas> context engine where it is to be applied, with __start__ and __end__ coordinates, 
+// + then color stops are _individually_ added to it afterwards. 
+// + This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient. 
+// + And only one gradient may be applied to the context engine at any time.
+//
+// The specificity of the above requirements - in particular relating to position coordinates - and the inability to update the CanvasGradient beyond adding color stops to it, means that storing these objects for future use is not a useful proposition ... especially in a dynamic environment where we want the gradient to move in-step with an entity, or animate its colors in some way.
+//
+// Scrawl-canvas overcomes this problem through the use of [Palette objects](../factory/palette.html) which separate a gradient-type style's color-stop data from its positioning data. We treat Canvas API `CanvasGradient` objects as use-once-and-dispose objects, generating them in a just-in-time fashion for each entity's `stamp` operation in the Display cycle.
+//
+// Palette objects store their color data in a `colors` attribute object:
+// ```
+// {
+//     name: "mygradient_palette",
+//     colors: {
+//         "0 ": [0, 0, 0, 1],
+//         "350 ": [255, 0, 0, 1],
+//         "650 ": [0, 0, 255, 1],
+//         "999 ": [255, 255, 255, 1],
+//         "index-label-between-0-and-999 ": [redValue, greenValue, blueValue, alphaValue]
+//     },
+// }
+// ``` 
+// To `set` the Palette object's `colors` object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:
+// + the color object attribute labels MUST include a space after the String number; and 
+// + the number itself must be a positive integer in the range 0-999:
+//
+// ``` 
+// myGradient.set({
+//
+//     colors: {
+//
+//         '0 ': 'black',
+//         '350 ': 'red',
+//         '650 ': 'blue',
+//         '999 ': 'white'
+//     },
+// });
+// ``` 
+
+
+// #### Demos:
+// + [Canvas-003](../../demo/canvas-003.html) - Linear gradients
+// + [Canvas-004](../../demo/canvas-004.html) - Radial gradients
+// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
+// + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
+
+
+// #### Imports
 import { constructors } from '../core/library.js';
 import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta, pushUnique } from '../core/utilities.js';
 
@@ -21,7 +64,7 @@ import { makeColor } from './color.js';
 import baseMix from '../mixin/base.js';
 
 
-// ## Palette constructor
+// #### Palette constructor
 const Palette = function (items = {}) {
 
 
@@ -39,7 +82,7 @@ const Palette = function (items = {}) {
 };
 
 
-// ## Palette object prototype setup
+// #### Palette prototype
 let P = Palette.prototype = Object.create(Object.prototype);
 
 P.type = 'Palette';
@@ -48,39 +91,44 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
-// ## Define default attributes
+// #### Palette attributes
 let defaultAttributes = {
 
-
-// The colors object is a raw Javascript object which uses stop values (0 - 999) as keys and an [r(0-255), g(0-255), b(0-255), a(0-1)] array as values. 
+// The __colors__ object is a raw Javascript object which uses stop values `('0 ' - '999 ')` as keys and an `[r(0-255), g(0-255), b(0-255), a(0-1)]` array as values. 
     colors: null,
 
-
-
-// The stops array is a fixed Array of length 1000 containing rgba color strings for each index. 
+// The __stops__ array is a fixed Array of length 1000 containing rgba color strings for each index. 
     stops: null,
 
-
-// If the cyclic flag is set, then we know to calculate appropriate stop values between the last key color and the first key color, thus allowing for smooth crossing of the 1 -> 0 stops boundary
+// If the __cyclic__ flag is set, then we know to calculate appropriate stop values between the last key color and the first key color, thus allowing for smooth crossing of the 1 -> 0 stops boundary
     cyclic: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
+// #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['stops']);
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Clone management
+// No additional clone functionality required
+
+
+// #### Kill management
+// No additional kill functionality required
+
+
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters;
 
 
-// No checking is done prior to assigning the colors object to the colors attribute beyond verifying that the argument value is an object.
+// __colors__ - No checking is done prior to assigning the colors object to the colors attribute beyond verifying that the argument value is an object.
 S.colors = function (item) {
 
     if (isa_obj(item)) {
@@ -102,19 +150,16 @@ S.colors = function (item) {
 };
 
 
-// Do nothing. The stops array needs to be kept private, its values set only via the recalculate function, which happens whenever the dirtyPalette attribute is set to true.
+// __stops__ - Do nothing. The stops array needs to be kept private, its values set only via the `recalculate` function, which happens whenever the `dirtyPalette` attribute is set to true.
 S.stops = defaultNonReturnFunction;
 
 
-// ## Define prototype functions
+// #### Prototype functions
 
-// TODO - documentation
+// `recalculateHold` - internal variable
 P.recalculateHold = [];
 
-
-// TODO - documentation
-
-// Question: possible tasks for web worker?
+// `recalculate` - populate the stops Array with CSS color Strings, as determined by colors stored in the `colors` object
 P.recalculate = function () {
 
     let keys, i, iz, j, jz, cursor, diff, 
@@ -216,8 +261,7 @@ P.recalculate = function () {
     }
 };
 
-
-// TODO - documentation
+// `makeColorString` - internal helper function
 P.makeColorString = function (item) {
 
     let f = Math.floor,
@@ -237,8 +281,9 @@ P.makeColorString = function (item) {
     return `rgba(${r},${g},${b},${a})`;
 };
 
-
-// TODO - documentation
+// `updateColor` - add or update a gradient-type style's Palette object with a color.
+// + __index__ - positive integer Number between 0 and 999 inclusive
+// + __color__ - CSS color String
 P.updateColor = function (index, color) {
 
     let f = this.factory;
@@ -257,7 +302,8 @@ P.updateColor = function (index, color) {
     }
 };
 
-// TODO - documentation
+// `removeColor` - remove a gradient-type style's Palette object color from a specified index
+// + __index__ - positive integer number between 0 and 999 inclusive
 P.removeColor = function (index) {
     
     if (xt(index)) {
@@ -273,7 +319,7 @@ P.removeColor = function (index) {
     }
 };
 
-// TODO - documentation
+// `addStopsToGradient` - complete the construction of the Canvas API CanvasGradient object
 P.addStopsToGradient = function (gradient, start, end, cycle) {
 
     let stops = this.stops,
@@ -365,21 +411,23 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
     else return 'rgba(0,0,0,0)';
 };
 
-
-// We add a Color object to the Palette prototype - one object is used for all the calculations preformed by all Palette objects
+// `factory` - We add a Scrawl-canvas [Color object](./color.html) to the Palette factory prototype - one object is used for all the calculations preformed by all Palette objects
 P.factory = makeColor({
-    opaque: false
+
+    name: 'palette-factory-color-calculator',
+    opaque: false,
 });
 
 
-
-// ## Exported factory function
+// #### Factory
 const makePalette = function (items) {
     return new Palette(items);
 };
 
 constructors.Palette = Palette;
 
+
+// #### Exports
 export {
     makePalette,
 };

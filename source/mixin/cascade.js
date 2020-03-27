@@ -1,42 +1,52 @@
-
 // # Cascade mixin
+// This mixin sets up the Scrawl-canvas functionality required to perform its __Display cycle__.
+// + The Display cycle is initiated by Stack and DOM-related Cell wrappers (generally Canvas wrappers) - __controller objects__
+// + The cycle cascades from the wrappers to all artefact objects associated with them, as mediated by Group objects.
+//
+// The mixin also includes code to assist __drag-and-drop__ functionality.
 
-// TODO - documentation
 
-
-// ## Imports
+// #### Imports
 import { group } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, xtGet } from '../core/utilities.js';
 
+
+// #### Export function
 export default function (P = {}) {
 
 
-// ## Define attributes
-
-// All factories using the cascade mixin will add these to their prototype objects
+// #### Shared attributes
     let defaultAttributes = {
-
 
 // The __groups__ attribute holds the String names of all the Group objects associated with the controller object.
         groups: null,
 
-
 // The __groupBuckets__ attribute holds a reference to each Group object, in a set of arrays grouping Groups according to their order values.
         groupBuckets: null,
 
-
-// The __batchResort__ flag determines whether the groups will be sorted by their order value before instructions get passed to each in sequence. Best to leave this flag alone to do its job.
+// The __batchResort__ Boolean flag determines whether the Groups will be sorted by their order value before instructions get passed to each in sequence. Best to leave this flag alone to do its job.
         batchResort: true,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Packet management
+// No additional packet functionality required
+
+
+// #### Clone management
+// No additional clone functionality required
+
+
+// #### Kill management
+// No additional kill functionality required
+
+
+// #### Get, Set, deltaSet
     let G = P.getters,
         S = P.setters;
 
-
-// TODO - documentation
+// __groups__
     G.groups = function () {
 
         return [].concat(this.groups);
@@ -49,10 +59,9 @@ export default function (P = {}) {
     };
 
 
-// ## Define functions to be added to the factory prototype
+// #### Prototype functions
 
-
-// TODO - documentation
+// `sortGroups` - internal function - Groups are sorted from the __groups__ Array into the __groupBuckets__ array using a bespoke bucket sort algorithm, based on each Group object's __order__ attribute
     P.sortGroups = function (force = false) {
 
         if (this.batchResort) {
@@ -78,7 +87,7 @@ export default function (P = {}) {
     };
 
 
-// TODO - documentation
+// `initializeCascade` - internal function used by factory constructors
     P.initializeCascade = function () {
 
         this.groups = [];
@@ -86,7 +95,10 @@ export default function (P = {}) {
     };
 
 
-// Groups should be added to, and removed from, the controller object using the __addGroups__ and __removeGroups__ functions. The argument can be one or more group object's name attribute, or the group object(s) itself.
+// ##### Group management
+// Groups should be added to, and removed from, the controller object using the __addGroups__ and __removeGroups__ functions. The argument can be one or more Group object's name attribute, or the Group object(s) itself.
+
+// `addGroups`
     P.addGroups = function (...args) {
 
         args.forEach( item => {
@@ -100,6 +112,7 @@ export default function (P = {}) {
         return this;
     };
 
+// `removeGroups`
     P.removeGroups = function (...args) {
 
         args.forEach( item => {
@@ -114,7 +127,7 @@ export default function (P = {}) {
     };
 
 
-// DRY function to handle a number of actions.
+// `cascadeAction` - internal helper function used by the functions below
     P.cascadeAction = function (items, action) {
 
         this.groups.forEach( groupname => {
@@ -129,7 +142,7 @@ export default function (P = {}) {
     };
 
 
-// Update all artefact objects in all the controller object's groups using the __updateArtefacts__ function. The supplied argument will be passed on to each artefact's _setDelta_ function.
+// `updateArtefacts` - Update all artefact objects in all the controller object's Groups. The supplied argument will be passed on to each artefact's `setDelta` function.
     P.updateArtefacts = function (items) {
 
         this.cascadeAction(items, 'updateArtefacts');
@@ -137,33 +150,35 @@ export default function (P = {}) {
     };
 
 
-// Set all artefact objects in all the controller object's groups using the __setArtefacts__ function. The supplied argument will be passed on to each artefact's _set_ functions
+// `updateArtefacts` - Set all artefact objects in all the controller object's Groups. The supplied argument will be passed on to each artefact's `set` functions
     P.setArtefacts = function (items) {
 
         this.cascadeAction(items, 'setArtefacts');
         return this;
     };
 
-// TODO - documentation
+// `addArtefactClasses` - specific to DOM-related artefacts (Stack, Canvas, Element)
     P.addArtefactClasses = function (items) {
 
         this.cascadeAction(items, 'addArtefactClasses');
         return this;
     };
 
+// `removeArtefactClasses` - specific to DOM-related artefacts (Stack, Canvas, Element)
     P.removeArtefactClasses = function (items) {
 
         this.cascadeAction(items, 'removeArtefactClasses');
         return this;
     };
 
-// TODO - documentation
+// `updateByDelta` - triggers the related artefact function, to update (add) its attributes by values held in its `delta` object attribute
     P.updateByDelta = function () {
 
         this.cascadeAction(false, 'updateByDelta');
         return this;
     };
 
+// `reverseByDelta` - triggers the related artefact function, to reverse (subtract) its attributes by values held in its `delta` object attribute
     P.reverseByDelta = function () {
 
         this.cascadeAction(false, 'reverseByDelta');
@@ -171,7 +186,12 @@ export default function (P = {}) {
     };
 
 
-// The __getArtefactAt__ function checks to see if any of the controller object's groups' artefacts are located at the supplied coordinates in the argument object. The first artefact to report back as being at that coordinate will be returned by the function; where no artefacts are present at that coordinate the function returns false. The artefact with the highest order attribute value will be returned first. This function forms part of the Scrawl-canvas library's __drag-and-drop__ functionality.
+// ##### Collision detection
+// The `getArtefactAt` function checks to see if any of the controller object's Groups' artefacts are located at the supplied coordinates in the argument object. 
+// + The first artefact to report back as being at that coordinate will be returned by the function
+// + Where no artefacts are present at that coordinate the function returns false. 
+// + The artefact with the highest order attribute value will be returned first. 
+// + This function forms part of the Scrawl-canvas __drag-and-drop__ functionality.
     P.getArtefactAt = function (items) {
 
         items = xtGet(items, this.here, false);
@@ -196,7 +216,9 @@ export default function (P = {}) {
     };
 
 
- // The __getAllArtefactsAt__ function returns all of the controller object's groups' artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first. The function will always return an array of artefact objects.
+ // The `getAllArtefactsAt` function returns all of the controller object's Groups' artefacts located at the supplied coordinates in the argument object. 
+ // + The artefact with the highest order attribute value will be returned first. 
+ // + The function will always return an array of artefact objects, or an empty Array
     P.getAllArtefactsAt = function (items) {
 
         items = xtGet(items, this.here, false);

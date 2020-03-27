@@ -204,7 +204,8 @@ return gradient;
 else return 'rgba(0,0,0,0)';
 };
 P.factory = makeColor({
-opaque: false
+name: 'palette-factory-color-calculator',
+opaque: false,
 });
 const makePalette = function (items) {
 return new Palette(items);

@@ -7,6 +7,9 @@ let defaultAttributes = {
 anchor: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
+P.demolishAnchor = function () {
+if (this.anchor) this.anchor.demolish();
+};
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -14,69 +17,69 @@ G.anchorDescription = function () {
 if (this.anchor) return this.anchor.get('description');
 return '';
 };
-G.anchorType = function () {
-if (this.anchor) return this.anchor.get('type');
-return '';
-};
-G.anchorTarget = function () {
-if (this.anchor) return this.anchor.get('target');
-return '';
-};
-G.anchorRel = function () {
-if (this.anchor) return this.anchor.get('rel');
-return '';
-};
-G.anchorReferrerPolicy = function () {
-if (this.anchor) return this.anchor.get('referrerpolicy');
-return '';
-};
-G.anchorPing = function () {
-if (this.anchor) return this.anchor.get('ping');
-return '';
-};
-G.anchorHreflang = function () {
-if (this.anchor) return this.anchor.get('hreflang');
-return '';
-};
-G.anchorHref = function () {
-if (this.anchor) return this.anchor.get('href');
-return '';
-};
-G.anchorDownload = function () {
-if (this.anchor) return this.anchor.get('download');
-return '';
-};
 S.anchorDescription = function (item) {
 if (!this.anchor) this.buildAnchor();
 if (this.anchor) this.anchor.setters.description(item);
+};
+G.anchorType = function () {
+if (this.anchor) return this.anchor.get('type');
+return '';
 };
 S.anchorType = function (item) {
 if (!this.anchor) this.buildAnchor();
 if (this.anchor) this.anchor.setters.anchorType(item);
 };
+G.anchorTarget = function () {
+if (this.anchor) return this.anchor.get('target');
+return '';
+};
 S.anchorTarget = function (item) {
 if (!this.anchor) this.buildAnchor();
 if (this.anchor) this.anchor.setters.target(item);
+};
+G.anchorRel = function () {
+if (this.anchor) return this.anchor.get('rel');
+return '';
 };
 S.anchorRel = function (item) {
 if (!this.anchor) this.buildAnchor();
 if (this.anchor) this.anchor.setters.rel(item);
 };
+G.anchorReferrerPolicy = function () {
+if (this.anchor) return this.anchor.get('referrerpolicy');
+return '';
+};
 S.anchorReferrerPolicy = function (item) {
 if (!this.anchor) this.buildAnchor();
 if (this.anchor) this.anchor.setters.referrerpolicy(item);
+};
+G.anchorPing = function () {
+if (this.anchor) return this.anchor.get('ping');
+return '';
 };
 S.anchorPing = function (item) {
 if (!this.anchor) this.buildAnchor();
 if (this.anchor) this.anchor.setters.ping(item);
 };
+G.anchorHreflang = function () {
+if (this.anchor) return this.anchor.get('hreflang');
+return '';
+};
 S.anchorHreflang = function (item) {
 if (!this.anchor) this.buildAnchor();
 if (this.anchor) this.anchor.setters.hreflang(item);
 };
+G.anchorHref = function () {
+if (this.anchor) return this.anchor.get('href');
+return '';
+};
 S.anchorHref = function (item) {
 if (!this.anchor) this.buildAnchor();
 if (this.anchor) this.anchor.setters.href(item);
+};
+G.anchorDownload = function () {
+if (this.anchor) return this.anchor.get('download');
+return '';
 };
 S.anchorDownload = function (item) {
 if (!this.anchor) this.buildAnchor();
@@ -116,9 +119,6 @@ return scrawlNavigationHold;
 }
 P.rebuildAnchor = function () {
 if (this.anchor) this.anchor.build();
-};
-P.demolishAnchor = function () {
-if (this.anchor) this.anchor.demolish();
 };
 P.clickAnchor = function () {
 if (this.anchor) this.anchor.click();

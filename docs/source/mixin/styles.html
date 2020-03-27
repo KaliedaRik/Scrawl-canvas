@@ -1303,7 +1303,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>addStopsToGradient</code> - internal function, called by the <code>buildStyle</code> function (which is overwritten by the Gradient and RadialGradient factories)</p>
 
             </div>
             
@@ -1323,7 +1323,58 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="gradients-and-color-stops">Gradients and color stops</h4>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a> uses a rather convoluted way to add color data to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> interface object: </p>
+<ul>
+<li>the object is created first on the &lt;canvas&gt; context engine where it is to be applied, with <strong>start</strong> and <strong>end</strong> coordinates, </li>
+<li>then color stops are <em>individually</em> added to it afterwards. </li>
+<li>This needs to be done for every gradient applied to a context engine before any fill or stroke operation using that gradient. </li>
+<li>And only one gradient may be applied to the context engine at any time.</li>
+</ul>
+<p>The specificity of the above requirements - in particular relating to position coordinates - and the inability to update the CanvasGradient beyond adding color stops to it, means that storing these objects for future use is not a useful proposition … especially in a dynamic environment where we want the gradient to move in-step with an entity, or animate its colors in some way.</p>
+<p>Scrawl-canvas overcomes this problem through the use of <a href="../factory/palette.html">Palette objects</a> which separate a gradient-type style’s color-stop data from its positioning data. We treat Canvas API <code>CanvasGradient</code> objects as use-once-and-dispose objects, generating them in a just-in-time fashion for each entity’s <code>stamp</code> operation in the Display cycle.</p>
+<p>Palette objects store their color data in a <code>colors</code> attribute object:</p>
+<pre><code>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"mygradient_palette"</span>,
+    <span class="hljs-attr">colors</span>: {
+        <span class="hljs-string">"0 "</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">"350 "</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">"650 "</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">"999 "</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">"index-label-between-0-and-999 "</span>: [redValue, greenValue, blueValue, alphaValue]
+    },
+}</code></pre><p>To <code>set</code> the Palette object’s <code>colors</code> object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:</p>
+<ul>
+<li>the color object attribute labels MUST include a space after the String number; and </li>
+<li>the number itself must be a positive integer in the range 0-999:</li>
+</ul>
+<pre><code>myGradient.set({
+
+    <span class="hljs-attr">colors</span>: {
+
+        <span class="hljs-string">'0 '</span>: <span class="hljs-string">'black'</span>,
+        <span class="hljs-string">'350 '</span>: <span class="hljs-string">'red'</span>,
+        <span class="hljs-string">'650 '</span>: <span class="hljs-string">'blue'</span>,
+        <span class="hljs-string">'999 '</span>: <span class="hljs-string">'white'</span>
+    },
+});</code></pre><p>The following <strong>convenience functions</strong> are supplied to make adding, deleting and managing Palette object color stop data easier than the above:</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p><code>updateColor</code> - add or update a gradient-type style’s Palette object with a color.</p>
+<ul>
+<li><strong>index</strong> - positive integer Number between 0 and 999 inclusive</li>
+<li><strong>color</strong> - CSS color String</li>
+</ul>
 
             </div>
             
@@ -1337,13 +1388,16 @@
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>removeColor</code> - remove a gradient-type style’s Palette object color from a specified index</p>
+<ul>
+<li><strong>index</strong> - positive integer number between 0 and 999 inclusive</li>
+</ul>
 
             </div>
             
@@ -1357,11 +1411,11 @@
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

@@ -66,11 +66,7 @@ scale: 1,
 localizeHere: false,
 repeat: 'repeat',
 isBase: false,
-element: null,
-engine: null,
-state: null,
 controller: null,
-sourceNaturalDimensions: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 delete P.defs.source;
@@ -136,18 +132,20 @@ return undef;
 G.width = function () {
 return this.currentDimensions[0] || this.element.getAttribute('width');
 };
-G.height = function () {
-return this.currentDimensions[1] || this.element.getAttribute('height');
-};
-S.source = function () {};
 S.width = function (item) {
 this.dimensions[0] = item;
 this.dirtyDimensions = true;
+};
+G.height = function () {
+return this.currentDimensions[1] || this.element.getAttribute('height');
 };
 S.height = function (item) {
 this.dimensions[1] = item;
 this.dirtyDimensions = true;
 };
+S.source = function () {};
+S.engine = function (item) {};
+S.state = function (item) {};
 S.element = function (item) {
 if(isa_canvas(item)) this.installElement(item);
 };
@@ -171,8 +169,6 @@ S.showOrder = function (item) {
 this.showOrder = item;
 this.updateControllerCells();
 };
-S.engine = function (item) {};
-S.state = function (item) {};
 S.stashX = function (val) {
 if (!this.stashCoordinates) this.stashCoordinates = [0, 0];
 this.stashCoordinates[0] = val;
@@ -781,13 +777,6 @@ here.active = active;
 controllerHere.baseActive = active;
 }
 };
-P.demolishCell = function () {
-if (this.controller) this.controller.removeCell(this.name);
-let grp = group[this.name];
-if (grp) grp.demolishGroup();
-this.deregister();
-return true;
-};
 P.prepareStamp = function () {
 if (this.dirtyScale) this.cleanScale();
 if (this.dirtyDimensions) this.cleanDimensions();
@@ -866,7 +855,6 @@ else engine.setTransform(reverse, 0, 0, upend, x, y);
 return this;
 };
 const cellPool = [];
-let cellPoolCount = 0;
 P.poolDefs = {
 element: null,
 engine: null,
@@ -882,7 +870,6 @@ cellPool.push(makeCell({
 name: `pool_${generateUuid()}`,
 isPool: true
 }));
-cellPoolCount++;
 }
 return cellPool.shift();
 };

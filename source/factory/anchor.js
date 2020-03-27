@@ -158,15 +158,15 @@ S.hold = function (item) {
 //
 // The artefact with which an anchor object is associated maps these attributes to itself as follows:
 // ```
-// anchor.description     -> artefact.anchorDescription
-// anchor.type            -> artefact.anchorType
-// anchor.target          -> artefact.anchorTarget
-// anchor.rel             -> artefact.anchorRel
-// anchor.referrerPolicy  -> artefact.anchorReferrerPolicy
-// anchor.ping            -> artefact.anchorPing
-// anchor.hreflang        -> artefact.anchorHreflang
-// anchor.href            -> artefact.anchorHref
-// anchor.download        -> artefact.anchorDownload
+// anchor.description     ~~> artefact.anchorDescription
+// anchor.type            ~~> artefact.anchorType
+// anchor.target          ~~> artefact.anchorTarget
+// anchor.rel             ~~> artefact.anchorRel
+// anchor.referrerPolicy  ~~> artefact.anchorReferrerPolicy
+// anchor.ping            ~~> artefact.anchorPing
+// anchor.hreflang        ~~> artefact.anchorHreflang
+// anchor.href            ~~> artefact.anchorHref
+// anchor.download        ~~> artefact.anchorDownload
 // ```
 // One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an 'anchor' attribute:
 // ```

@@ -31,19 +31,6 @@ this.set(items);
 if (items.subscribe) this.subscribers.push(items.subscribe);
 return this;
 };
-P.notifySubscribers = function () {
-this.subscribers.forEach(sub => this.notifySubscriber(sub), this);
-};
-P.notifySubscriber = function (sub) {
-sub.sourceNaturalWidth = this.sourceNaturalWidth;
-sub.sourceNaturalHeight = this.sourceNaturalHeight;
-sub.sourceLoaded = this.sourceLoaded;
-sub.source = this.source;
-sub.dirtyImage = true;
-sub.dirtyCopyStart = true;
-sub.dirtyCopyDimensions = true;
-sub.dirtyImageSubscribers = true;
-};
 P.subscribe = function (sub = {}) {
 if (sub && sub.name) {
 let name = sub.name;
@@ -69,6 +56,19 @@ sub.sourceLoaded = false;
 this.subscribers.splice(index, 1)
 }
 }
+};
+P.notifySubscribers = function () {
+this.subscribers.forEach(sub => this.notifySubscriber(sub), this);
+};
+P.notifySubscriber = function (sub) {
+sub.sourceNaturalWidth = this.sourceNaturalWidth;
+sub.sourceNaturalHeight = this.sourceNaturalHeight;
+sub.sourceLoaded = this.sourceLoaded;
+sub.source = this.source;
+sub.dirtyImage = true;
+sub.dirtyCopyStart = true;
+sub.dirtyCopyDimensions = true;
+sub.dirtyImageSubscribers = true;
 };
 return P;
 };

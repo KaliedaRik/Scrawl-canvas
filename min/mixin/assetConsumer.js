@@ -25,16 +25,6 @@ if (oldAsset.name !== newAsset) oldAsset.unsubscribe(this);
 this.asset = newAsset;
 this.dirtyAsset = true;
 };
-P.cleanAsset = function () {
-let ast = this.asset;
-if (ast && ast.substring) {
-let myAsset = asset[ast];
-if (myAsset) {
-this.dirtyAsset = false;
-myAsset.subscribe(this);
-}
-}
-};
 S.imageSource = function (item) {
 let results = importImage(item);
 if (results) {
@@ -64,6 +54,16 @@ let myAsset = asset[result];
 if (myAsset) {
 let oldAsset = this.asset;
 if (oldAsset && oldAsset.unsubscribe) oldAsset.unsubscribe(this);
+myAsset.subscribe(this);
+}
+}
+};
+P.cleanAsset = function () {
+let ast = this.asset;
+if (ast && ast.substring) {
+let myAsset = asset[ast];
+if (myAsset) {
+this.dirtyAsset = false;
 myAsset.subscribe(this);
 }
 }

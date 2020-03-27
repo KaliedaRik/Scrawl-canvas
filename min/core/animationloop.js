@@ -25,14 +25,14 @@ animate_sorted = buckets.reduce((a, v) => a.concat(v), []);
 const animationLoop = function () {
 let promises = [];
 if (resortBatchAnimations) sortAnimations();
-animate_sorted.forEach((item) => {
-if (item.fn) promises.push(item.fn());
+animate_sorted.forEach(item => {
+if (item && item.fn) promises.push(item.fn());
 });
 Promise.all(promises)
 .then(() => {
 if (doAnimation) window.requestAnimationFrame(() => animationLoop());
 })
-.catch((err) => console.log('animationLoop error: ', err.message));
+.catch(err => console.log('animationLoop error: ', err));
 };
 const startCoreAnimationLoop = function () {
 doAnimation = true;

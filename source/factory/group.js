@@ -88,7 +88,27 @@ P.packetExclusions = pushUnique(P.packetExclusions, ['artefactBuckets', 'batchRe
 
 
 // #### Clone management
-// No additional clone functionality required
+P.postCloneAction = function(clone, items) {
+
+    let host;
+
+    if (items.host) {
+
+        host = artefact[items.host];
+    }
+    else {
+
+        host = (this.currentHost) ? this.currentHost : (this.host) ? artefact[this.host] : false;
+    }
+
+    if (host) {
+
+        host.addGroups(clone.name);
+        if (!clone.host) clone.host = host.name;
+    }
+
+    return clone;
+};
 
 
 // #### Kill management

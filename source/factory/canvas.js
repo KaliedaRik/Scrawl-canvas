@@ -239,14 +239,32 @@ P.clone = defaultThisReturnFunction;
 // #### Kill functionality
 P.kill = function () {
 
+    let name = this.name,
+        host = this.host,
+        h, g;
+
     // rootElements and uiSubscribedElements arrays
-    removeItem(rootElements, this.name);
+    removeItem(rootElements, name);
     setRootElementsSort();
 
-    removeItem(uiSubscribedElements, this.name);
+    removeItem(uiSubscribedElements, name);
 
-    // Groups
-    if (group[this.name]) group[this.name].kill();
+    // Host and host Group
+    if (host && host !== 'root') {
+
+        h = (this.currentHost) ? this.currentHost : artefact[host];
+
+        if (h) {
+
+            h.removeGroups(name);
+
+            g = group[h.name];
+            if (g) g.removeArtefacts(name);
+        }
+    }
+
+    // Canvas Group
+    if (group[name]) group[name].kill();
 
     // Base Cell
     this.base.kill();

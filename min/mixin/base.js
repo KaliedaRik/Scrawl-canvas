@@ -7,10 +7,6 @@ P.defs = {};
 P.getters = {};
 P.setters = {};
 P.deltaSetters = {};
-let defaultAttributes = {
-name: '',
-};
-P.defs = mergeOver(P.defs, defaultAttributes);
 P.get = function (item) {
 if (xt(item)) {
 let getter = this.getters[item];
@@ -53,29 +49,10 @@ else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], valu
 }
 return this;
 };
-P.clone = function (items = {}) {
-let myName = this.name,
-myPacket, myTicker, myAnchor;
-this.name = items.name || '';
-if (items.useNewTicker) {
-myTicker = this.ticker;
-this.ticker = null;
-myPacket = this.saveAsPacket();
-this.ticker = myTicker;
-}
-else myPacket = this.saveAsPacket();
-this.name = myName;
-let clone = this.actionPacket(myPacket);
-this.packetFunctions.forEach(func => {
-if (this[func]) clone[func] = this[func];
-});
-clone = this.postCloneAction(clone, items);
-clone.set(items);
-return clone;
+let defaultAttributes = {
+name: '',
 };
-P.postCloneAction = function (clone, items) {
-return clone;
-};
+P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = [];
 P.packetExclusionsByRegex = [];
 P.packetCoordinates = [];
@@ -259,6 +236,32 @@ else obj[item] = defaultNonReturnFunction;
 }
 }
 };
+P.clone = function (items = {}) {
+let myName = this.name,
+myPacket, myTicker, myAnchor;
+this.name = items.name || '';
+if (items.useNewTicker) {
+myTicker = this.ticker;
+this.ticker = null;
+myPacket = this.saveAsPacket();
+this.ticker = myTicker;
+}
+else myPacket = this.saveAsPacket();
+this.name = myName;
+let clone = this.actionPacket(myPacket);
+this.packetFunctions.forEach(func => {
+if (this[func]) clone[func] = this[func];
+});
+clone = this.postCloneAction(clone, items);
+clone.set(items);
+return clone;
+};
+P.postCloneAction = function (clone, items) {
+return clone;
+};
+P.kill = function () {
+return this.deregister();
+}
 P.makeName = function (item) {
 if (item && item.substring && library[`${this.lib}names`].indexOf(item) < 0) this.name = item;
 else this.name = generateUuid();
@@ -296,8 +299,5 @@ removeItem(arr, this.name);
 delete mylib[this.name];
 return this;
 };
-P.kill = function () {
-return this.deregister();
-}
 return P;
 };

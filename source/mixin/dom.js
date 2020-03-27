@@ -1,10 +1,17 @@
-
 // # dom mixin
+// This mixin builds on the base and position mixins to give DOM elements (Scrawl-canvas Stack, Canvas and Element wrapper objects) the ability to act as __artefacts__ in a Scrawl-canvas stack environment.
+// + Absolute and relative positioning and dimensioning
+// + Positioning in the 3rd (z) dimension (absolute values only)
+// + Use other artefacts as `pivot`, `mimic` and `path` objects
+// + Allow other artefacts to use Element objects as their pivot or mimic object
+// + Track the real (3D) positions of the DOM element's corners, so that they can participate in collision detection functionality (for example, drag-and-drop)
+// + Allow other artefacts to use Element object corners as their pivot reference
+// + 3D-rotation management - extending beyond `roll` (z) rotation to include `pitch` (x) and `yaw` (y) rotations
+// + DOM element class and CSS management
+// + Real-time localized mouse/pointer cursor coordinate tracking
 
-// TODO - documentation
 
-
-// ## Imports
+// #### Imports
 import { constructors, artefact, group } from '../core/library.js';
 import { generateUuid, mergeOver, pushUnique, removeItem, isa_obj, isa_fn, isa_dom, isa_quaternion, xt, addStrings, xta } from '../core/utilities.js';
 import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
@@ -12,78 +19,70 @@ import { addDomShowElement, setDomShowRequired, domShow } from '../core/document
 
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
 
+
+// #### Export function
 export default function (P = {}) {
 
 
-// ## Define attributes
-
-// All factories using the dom mixin will add these to their prototype objects
+// #### Shared attributes
+// TODO: we need to test how various Javascript frameworks interact with Scrawl-canvas functionality in this area. In particular: [vue.js](https://vuejs.org/); [React](https://reactjs.org/); [Svelte](https://svelte.dev/)
     let defaultAttributes = {
 
 
-// TODO - documentation - don't think this needs to be in the defs object
+// __domElement__ - Wrapper objects reference handle to its DOM element
         domElement: '',
 
 
-// TODO - documentation
+// __pitch__, __yaw__ - rotation management in the `x` and `y` axes, to go with the __roll__ attribute (for `z` axis rotation) defined in the position mixin. Like roll, values should be Numbers representing ___degrees___ (not radians)
         pitch: 0,
         yaw: 0,
 
 
-// Unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d box (as such) to act as a length for relative N% strings (and 'front', 'center', 'back' strings would be equally nonsensical)
+// __offsetZ__ - Number - unlike the X and Y offsets, offsetZ can only ever be a number as there is no 3d box (as such) to act as a length for relative N% strings (and 'front', 'center', 'back' strings would be equally nonsensical)
         offsetZ: 0,
 
-
-// TODO - documentation
-        pathCorners: null,            // does this need to be in dims object?
-        collisionPath: null,          // does this need to be in dims object?
-        collisionPoints: null,        // does this need to be in dims object?
-
-// TODO - documentation
+// __css__ - a Javascript Object to hold key:value CSS values. Scrawl-canvas does not track any non-positioning-related CSS attributes; this attribute is a convenience function to allow developers to add CSS to the DOM element's `style` attribute.
+// + Styles added to DOM elements using this object are applied directly to the element, thus having precedence over all other CSS declarations such as those included in a &lt;style> tag in the document, or in a CSS style sheet file.
         css: null,
 
-// TODO - documentation
+// __classes__ - a String representation of the DOM element's `classNode` attribute.
         classes: '',
 
-
-// TODO - do we want this in the defs object?
-        currentTransformString: '',            // does this need to be in dims object?
-        currentTransformOriginString: '',    // does this need to be in dims object?
-
-
-// TODO - do we want this in the defs object?
-        rotation: null,                        // does this need to be in dims object?
-
-// TODO - documentation
+// __position__ - a String representation of the DOM element's `position` attribute.
+// + by default all Scrawl-canvas Stack, Canvas and Element wrapper DOM elements are given a position value of `absolute`
+// + root Stack and Canvas wrappers have a position value of `relative` - this is to make sure their DOM elements remain in the document flow, thus attempting to minimize Scrawl-canvas's impact on the wider environment
+// + other possible values - except `static` - will be respected if they are explicitly set on the DOM elements prior to Scrawl-canvas initialization.
         position: 'absolute',
 
-
-// ... relates to dimensions somehow
+// __actionResize__ - Boolean - relates to dimensions somehow?
+//
 // TODO: check if we're actually using this attribute anywhere
-//     - has been used in demos DOM-007 and DOM-011
-//         - check to see if it actually having any effect
-//         - or if other functionality could (already?) handle the issues it is supposed to be addressing 
+// + has been used in demos DOM-007 and DOM-011
+// + check to see if it actually having any effect
+// + or if other functionality could (already?) handle the issues it is supposed to be addressing 
         actionResize: false,
 
-// TODO - documentation
+// __trackHere__ - Boolean flag - when set, Scrawl-canvas will track mouse/touch cursor's _local_ position (relative to top-left corner) over the wrapper's DOM element
+// + Stack and Canvas wrappers have this flag set to true, by default
+// + Element wrappers default to false, as expected
         trackHere: false,
+
+// __domAttributes__ - pseudo-attribute which is not retained by the wrapper object. See `updateDomAttributes` function below for details on how to use this functionality when creating or updating (via `set`), for example, Element objects
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-
-// ## Packet management
+// #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['domElement', 'pathCorners', 'rotation']);
-    P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-    P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-    P.packetObjects = pushUnique(P.packetObjects, []);
     P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
+// `processDOMPacketOut` - internal helper function
     P.processDOMPacketOut = function (key, value, includes) {
 
         return this.processFactoryPacketOut(key, value, includes);
     };
 
+// `processFactoryPacketOut` - internal helper function
     P.processFactoryPacketOut = function (key, value, includes) {
 
         let result = true;
@@ -93,6 +92,7 @@ export default function (P = {}) {
         return result;
     };
 
+// `finalizePacketOut` - internal helper function
     P.finalizePacketOut = function (copy, items) {
 
         if (isa_dom(this.domElement)) {
@@ -114,7 +114,8 @@ export default function (P = {}) {
     };
 
 
-// Overwrites postCloneAction function in mixin/base.js
+// #### Clone management
+// `postCloneAction` - internal helper function
     P.postCloneAction = function(clone, items) {
 
         if (this.onEnter) clone.onEnter = this.onEnter;
@@ -126,11 +127,15 @@ export default function (P = {}) {
     };
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Kill management
+// No additional kill functionality required
+
+
+// #### Get, Set, deltaSet
     let S = P.setters,
         D = P.deltaSetters;
 
-// TODO - documentation
+// `trackHere`
     S.trackHere = function (item) {
 
         this.trackHere = item;
@@ -139,7 +144,7 @@ export default function (P = {}) {
         else removeItem(uiSubscribedElements, this.name);
     };
 
-// TODO - documentation
+// `actionResize`
     S.actionResize = function (item) {
 
         this.actionResize = item;
@@ -152,21 +157,21 @@ export default function (P = {}) {
         }
     };
 
-// TODO - documentation
+// `position`
     S.position = function (item) {
 
         this.position = item;
         this.dirtyPosition = true;
     };
 
-// TODO - documentation
+// `visibility`
     S.visibility = function (item) {
 
         this.visibility = item;
         this.dirtyVisibility = true;
     };
 
-// TODO - documentation
+// `offsetZ`
     S.offsetZ = function (item) {
 
         this.offsetZ = item;
@@ -179,44 +184,43 @@ export default function (P = {}) {
         this.dirtyOffsetZ = true;
     };
 
-// TODO - documentation
+// `roll`
     S.roll = function (item) {
 
         this.roll = this.checkRotationAngle(item);
         this.dirtyRotation = true;
     };
-
-    S.pitch = function (item) {
-
-        this.pitch = this.checkRotationAngle(item);
-        this.dirtyRotation = true;
-    };
-
-    S.yaw = function (item) {
-
-        this.yaw = this.checkRotationAngle(item);
-        this.dirtyRotation = true;
-    };
-
     D.roll = function (item) {
 
         this.roll = this.checkRotationAngle(this.roll + item);
         this.dirtyRotation = true;
     };
 
+// `pitch`
+    S.pitch = function (item) {
+
+        this.pitch = this.checkRotationAngle(item);
+        this.dirtyRotation = true;
+    };
     D.pitch = function (item) {
 
         this.pitch = this.checkRotationAngle(this.pitch + item);
         this.dirtyRotation = true;
     };
 
+// `yaw`
+    S.yaw = function (item) {
+
+        this.yaw = this.checkRotationAngle(item);
+        this.dirtyRotation = true;
+    };
     D.yaw = function (item) {
 
         this.yaw = this.checkRotationAngle(this.yaw + item);
         this.dirtyRotation = true;
     };
 
-// TODO - documentation
+// `css`
     S.css = function (item) {
 
         this.css = (this.css) ? mergeOver(this.css, item) : item;
@@ -224,7 +228,7 @@ export default function (P = {}) {
         this.dirtyCss = true;
     };
 
-// TODO - documentation
+// `classes`
     S.classes = function (item) {
 
         this.classes = item;
@@ -232,7 +236,7 @@ export default function (P = {}) {
         this.dirtyClasses = true;
     };
 
-// TODO - documentation
+// `collides`
     S.collides = function (item) {
 
         this.collides = item;
@@ -240,13 +244,16 @@ export default function (P = {}) {
         if (item) this.dirtyPathObject = true;
     };
 
-// TODO - documentation
+// `domAttributes` - see `updateDomAttributes` below
     S.domAttributes = function (item) {
 
         this.updateDomAttributes(item);
     }
 
-// TODO - documentation
+
+// #### Prototype functions
+
+// `checkRotationAngle` - internal function - a quick check for rotational (`roll`, `pitch`, `yaw`) setter/deltaSetter functionality. Attempts to keep values of these attributes between -360 and + 360
     P.checkRotationAngle = function (angle) {
 
         if (angle < -180 || angle > 180) {
@@ -256,7 +263,172 @@ export default function (P = {}) {
         return angle;
     };
 
-// TODO - documentation
+// `updateDomAttributes` - DOM wrapper objects do not keep track of their DOM element attribute values; this function is a convenience function to make updating those attributes a bit easier. Function arguments can be one of:
+// + `(attribute-String, value)`
+// + `({attribute-String: value, attribute-String: value, etc})`
+    P.updateDomAttributes = function (items, value) {
+
+        if (this.domElement) {
+
+            let el = this.domElement;
+
+            if (items.substring && xt(value)) {
+
+                if (value) el.setAttribute(items, value);
+                else el.removeAttribute(items);
+            }
+            else if (isa_obj(items)) {
+
+                Object.entries(items).forEach(([item, val]) => {
+
+                    if (val) el.setAttribute(item, val);
+                    else el.removeAttribute(item);
+                });
+            }
+        }
+        return this;
+    };
+
+// `initializeDomLayout` - internal function 
+// + Used by factory constructors to help wrap DOM elements in a Stack, Canvas or Element wrapper
+// + TODO - there's a lot of improvements we can do here - the aim should be to create the wrapper object and update the objects DOM element's style and dimensions attributes - specifically shifting `position` from "static" to "absolute" - in a way that does not disturb the page view in any way whatsoever (pixel-perfect!) so website visitors are completely unaware that the work has taken place
+    P.initializeDomLayout = function (items) {
+
+        let el = items.domElement,
+            elStyle = el.style;
+
+        // elStyle.boxSizing = 'border-box';
+
+        if (el && items.setInitialDimensions) {
+
+            let dims = el.getBoundingClientRect(),
+                trans = el.style.transform,
+                transOrigin = el.style.transformOrigin,
+                host = false,
+                hostDims;
+
+            if (items && items.host) {
+
+                host = items.host;
+
+                if (host.substring && artefact[host]) host = artefact[host];
+            }
+
+            // TODO - discover scale
+
+            // discover dimensions (width, height)
+            this.currentDimensions[0] = dims.width;
+            this.currentDimensions[1] = dims.height;
+            items.width = dims.width;
+            items.height = dims.height;
+
+            // recover classes already assigned to the element
+            if (el.className) items.classes = el.className;
+
+            // go with lock defaults - no work required
+
+            // discover start (boundingClientRect - will be the difference between this object and its host (parent) object 'top' and 'left' values)
+            if (host && host.domElement) {
+
+                hostDims = host.domElement.getBoundingClientRect();
+
+                if (hostDims) {
+
+                    items.startX = dims.left - hostDims.left;
+                    items.startY = dims.top - hostDims.top;
+                }
+            }
+
+
+            // TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?
+
+            // TODO discover handle (transform, transformOrigin)
+
+            // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
+
+            // for Stack artefacts only, discover perspective and perspective-origin values
+            if (this.type === 'Stack') {
+
+                // TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
+                if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
+
+                    // TODO - this isn't working! 
+                    items.perspectiveZ = (xt(elStyle.perspective) && elStyle.perspective) ? parseFloat(elStyle.perspective) : 0;
+                }
+
+                let perspectiveOrigin = elStyle.perspectiveOrigin;
+
+                if (perspectiveOrigin.length) {
+
+                    perspectiveOrigin = perspectiveOrigin.split(' ');
+
+                    if (perspectiveOrigin.length > 0 && !xt(items.perspective) && !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[0];
+
+                    if (!xt(items.perspective) && !xt(items.perspectiveY)) {
+
+                        if (perspectiveOrigin.length > 1) items.perspectiveY = perspectiveOrigin[1];
+                        else items.perspectiveY = perspectiveOrigin[0];
+                    }
+                }
+            }
+        }
+    };
+
+// `checkForResize`
+    P.checkForResize = function () {
+
+        let el = this.domElement;
+
+        if (el) {
+
+            let dims = el.getBoundingClientRect(),
+                flag = false;
+
+            if (this.currentDimensions[0] !== dims.width) {
+
+                this.dimensions[0] = this.currentDimensions[0] = dims.width;
+                flag = true;
+            }
+
+            if (this.currentDimensions[1] !== dims.height) {
+
+                this.dimensions[1] = this.currentDimensions[1] = dims.height;
+                flag = true;
+            }
+
+            if (flag && (this.type === 'Stack')) this.triggerResizeCascade();
+        }
+    };
+
+// `triggerResizeCascade`
+    P.triggerResizeCascade = function () {
+
+        let gBucket = this.groupBuckets,
+            aBucket;
+
+        if (gBucket && gBucket.length) {
+
+            gBucket.forEach(grp => {
+
+                aBucket = grp.artefactBuckets;
+
+                if (aBucket && aBucket.length) {
+
+                    aBucket.forEach(art => {
+
+                        if (art) {
+
+                            art.dirtyDimensions = true;
+                        }
+                    })
+                }
+            })
+        }
+    };
+
+// ##### DOM element class attribute management
+
+// `addClasses`
     P.addClasses = function (item) {
 
         if (item.substring) {
@@ -276,6 +448,7 @@ export default function (P = {}) {
         return this;
     };
 
+// `removeClasses`
     P.removeClasses = function (item) {
 
         if (item.substring) {
@@ -301,35 +474,13 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
-    P.updateDomAttributes = function (items, value) {
+// ##### DOM element corners management
+// Scrawl-canvas keeps track of its DOM wrapper element's positions by creating four zero-dimension &lt;div> elements and adding them as absolutely positioned children to the element. We can then get these children to report on their real coordinates (even when the parent is 3D rotated) by calling `getClientRects` on them.
 
-        if (this.domElement) {
-
-            let el = this.domElement;
-
-            if (items.substring && xt(value)) {
-
-                if (value) el.setAttribute(items, value);
-                else el.removeAttribute(items);
-            }
-            else if (isa_obj(items)) {
-
-                Object.entries(items).forEach(([item, val]) => {
-
-                    if (val) el.setAttribute(item, val);
-                    else el.removeAttribute(item);
-                });
-            }
-
-        }
-        return this;
-    };
-
-// TODO - documentation
+// `addPathCorners`
     P.addPathCorners = function () {
 
-        if (!this.noUserInteraction) {
+        if (this.domElement && !this.noUserInteraction) {
 
             let pointMaker = function () {
 
@@ -380,7 +531,7 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
+// `checkCornerPositions`
     P.checkCornerPositions = function (corner) {
 
         let pathCorners = this.pathCorners;
@@ -447,7 +598,7 @@ export default function (P = {}) {
         }
     }
 
-// TODO - documentation
+// `getCornerCoordinate`
     P.getCornerCoordinate = function (corner, coordinate) {
 
         let x, y;
@@ -482,12 +633,17 @@ export default function (P = {}) {
         return [x, y];
     };
 
-// TODO - documentation
+
+// ##### Collision detection
+
+// `cleanPathObject`
+// + Scrawl-canvas uses the DOM wrapper element's child &lt;div> elements' position coordinates to build a `Path2D object` (which will be some form of trapezium). 
+// + We can now perform collision detection in the same way as we do for Canvas-based entity objects using `CanvasRenderingContext2D.isPointInPath`
     P.cleanPathObject = function () {
 
         this.dirtyPathObject = false;
 
-        if (!this.noUserInteraction) {
+        if (this.domElement && !this.noUserInteraction) {
 
             if (!this.pathCorners.length) this.addPathCorners();
 
@@ -505,10 +661,8 @@ export default function (P = {}) {
         }
     };
 
-
-// TODO - documentation
-
-// Overwrites mixin/position.js function
+// `calculateSensors`
+// + Overwrites mixin/position.js function
     P.calculateSensors = function () {
 
         if (!this.noUserInteraction) {
@@ -608,7 +762,70 @@ export default function (P = {}) {
         }
     };
 
-// TODO - documentation
+// `checkHit`
+    P.checkHit = function (items = [], mycell) {
+
+        if (this.noUserInteraction) return false;
+
+        if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
+
+            this.cleanPathObject();
+            this.dirtyCollision = false;
+        }
+
+        let tests = (!Array.isArray(items)) ?  [items] : items,
+            poolCellFlag = false;
+
+        if (!mycell) {
+
+            mycell = requestCell();
+            poolCellFlag = true;
+        }
+
+        let engine = mycell.engine,
+            stamp = this.currentStampPosition,
+            x = stamp[0],
+            y = stamp[1],
+            tx, ty;
+
+        if (tests.some(test => {
+
+            if (Array.isArray(test)) {
+
+                tx = test[0];
+                ty = test[1];
+            }
+            else if (xta(test, test.x, test.y)) {
+
+                tx = test.x;
+                ty = test.y;
+            }
+            else return false;
+
+            if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+
+            return engine.isPointInPath(this.pathObject, tx, ty);
+
+        }, this)) {
+
+            if (poolCellFlag) releaseCell(mycell);
+
+            return {
+                x: tx,
+                y: ty,
+                artefact: this,
+            };
+        }
+        
+        if (poolCellFlag) releaseCell(mycell);
+        
+        return false;
+    };
+
+
+// ##### Display cycle functionality
+
+// `cleanRotation`
     P.cleanRotation = function () {
 
         this.dirtyRotation = false;
@@ -668,14 +885,14 @@ export default function (P = {}) {
         if (this.mimicked && this.mimicked.length) this.dirtyMimicRotation = true;
     };
 
-// TODO - documentation
+// `cleanOffsetZ`
     P.cleanOffsetZ = function () {
 
         // nothing to do here - function only exists in case we need to do stuff in future Scrawl-canvas version
         this.dirtyOffsetZ = false;
     };
 
-// TODO - documentation
+// `cleanContent`
     P.cleanContent = function () {
 
         this.dirtyContent = false;
@@ -685,139 +902,7 @@ export default function (P = {}) {
         if (el) this.dirtyDimensions = true;
     };
 
-// TODO - documentation
-    P.initializeDomLayout = function (items) {
-
-        let el = items.domElement,
-            elStyle = el.style;
-
-        if (el && items.setInitialDimensions) {
-
-            let dims = el.getBoundingClientRect(),
-                trans = el.style.transform,
-                transOrigin = el.style.transformOrigin,
-                host = false,
-                hostDims;
-
-            if (items && items.host) {
-
-                host = items.host;
-
-                if (host.substring && artefact[host]) host = artefact[host];
-            }
-
-            // TODO - discover scale
-
-            // discover dimensions (width, height)
-            this.currentDimensions[0] = dims.width;
-            this.currentDimensions[1] = dims.height;
-            items.width = dims.width;
-            items.height = dims.height;
-
-            // recover classes already assigned to the element
-            if (el.className) items.classes = el.className;
-
-            // go with lock defaults - no work required
-
-            // discover start (boundingClientRect - will be the difference between this object and its host (parent) object 'top' and 'left' values)
-            if (host && host.domElement) {
-
-                hostDims = host.domElement.getBoundingClientRect();
-
-                if (hostDims) {
-
-                    items.startX = dims.left - hostDims.left;
-                    items.startY = dims.top - hostDims.top;
-                }
-            }
-
-
-            // TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?
-
-            // TODO discover handle (transform, transformOrigin)
-
-            // TODO go with rotation (pitch, yaw, roll) defaults - no further work required?
-
-            // for Stack artefacts only, discover perspective and perspective-origin values
-            if (this.type === 'Stack') {
-
-                // TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
-                if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
-
-                    // TODO - this isn't working! 
-                    items.perspectiveZ = (xt(elStyle.perspective) && elStyle.perspective) ? parseFloat(elStyle.perspective) : 0;
-                }
-
-                let perspectiveOrigin = elStyle.perspectiveOrigin;
-
-                if (perspectiveOrigin.length) {
-
-                    perspectiveOrigin = perspectiveOrigin.split(' ');
-
-                    if (perspectiveOrigin.length > 0 && !xt(items.perspective) && !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[0];
-
-                    if (!xt(items.perspective) && !xt(items.perspectiveY)) {
-
-                        if (perspectiveOrigin.length > 1) items.perspectiveY = perspectiveOrigin[1];
-                        else items.perspectiveY = perspectiveOrigin[0];
-                    }
-                }
-            }
-        }
-    };
-
-// TODO - documentation
-    P.checkForResize = function () {
-
-        let el = this.domElement;
-
-        if (el) {
-
-            let dims = el.getBoundingClientRect(),
-                flag = false;
-
-            if (this.currentDimensions[0] !== dims.width) {
-
-                this.dimensions[0] = this.currentDimensions[0] = dims.width;
-                flag = true;
-            }
-
-            if (this.currentDimensions[1] !== dims.height) {
-
-                this.dimensions[1] = this.currentDimensions[1] = dims.height;
-                flag = true;
-            }
-
-            if (flag && (this.type === 'Stack')) this.triggerResizeCascade();
-        }
-    };
-
-    P.triggerResizeCascade = function () {
-
-        let gBucket = this.groupBuckets,
-            aBucket;
-
-        if (gBucket && gBucket.length) {
-
-            gBucket.forEach(grp => {
-
-                aBucket = grp.artefactBuckets;
-
-                if (aBucket && aBucket.length) {
-
-                    aBucket.forEach(art => {
-
-                        if (art) {
-
-                            art.dirtyDimensions = true;
-                        }
-                    })
-                }
-            })
-        }
-    };
-
-// TODO - documentation
+// `prepareStamp` - check all the dirty flags and call the appropriate `clean` functions if they are set
     P.prepareStamp = function () {
 
         if (this.actionResize) this.checkForResize();
@@ -857,7 +942,17 @@ export default function (P = {}) {
         if (this.domElement && this.collides) this.dirtyPathObject = true;
     };
 
-// TODO - documentation
+// `stamp` - builds a set of Strings which can then be applied to the DOM wrapper's element's `style` attribute.
+// + The functionality for performing the update is defined in the [document](../core/document.html) module's `domShow` function, which will be called for each DOM-based artefact during the 'show' stage of the Display cycle
+// + Function returns a promise
+//
+// Only DOM elements whose attribute values have changed will be updated - as made clear by setting the appropriate dirty flags. Affected style attributes are: 
+// + `perspectiveOrigin` and `perspective` - Stack wrappers only
+// + `position` (relative vs absolute, not position within a Stack)
+// + `width` and `height` - for dimensions
+// + `transformOrigin` - relating to wrapper `handle` values
+// + `transform` - for positioning and rotation within a Stack element
+// + `display` - for visibility
     P.stamp = function () {
 
         let self = this;
@@ -934,72 +1029,8 @@ export default function (P = {}) {
     };
 
 
-// TODO - documentation
-
-// Overwrites mixin/position.js function
-    P.checkHit = function (items = [], mycell) {
-
-        if (this.noUserInteraction) return false;
-
-        if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
-
-            this.cleanPathObject();
-            this.dirtyCollision = false;
-        }
-
-        let tests = (!Array.isArray(items)) ?  [items] : items,
-            poolCellFlag = false;
-
-        if (!mycell) {
-
-            mycell = requestCell();
-            poolCellFlag = true;
-        }
-
-        let engine = mycell.engine,
-            stamp = this.currentStampPosition,
-            x = stamp[0],
-            y = stamp[1],
-            tx, ty;
-
-        if (tests.some(test => {
-
-            if (Array.isArray(test)) {
-
-                tx = test[0];
-                ty = test[1];
-            }
-            else if (xta(test, test.x, test.y)) {
-
-                tx = test.x;
-                ty = test.y;
-            }
-            else return false;
-
-            if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
-
-            return engine.isPointInPath(this.pathObject, tx, ty);
-
-        }, this)) {
-
-            if (poolCellFlag) releaseCell(mycell);
-
-            return {
-                x: tx,
-                y: ty,
-                artefact: this,
-            };
-        }
-        
-        if (poolCellFlag) releaseCell(mycell);
-        
-        return false;
-    };
-
-
-// TODO - documentation
-
-// I really don't like this functionality - see if we can purge it from the code base?
+// `apply`
+// + I really don't like this functionality - see if we can purge it from the code base?
     P.apply = function() {
 
         applyCoreResizeListener();
@@ -1015,7 +1046,7 @@ export default function (P = {}) {
             self.dirtyPathObject = true;
             self.cleanPathObject();
         })
-        .catch(() => {});
+        .catch(err => console.log(err));
     };
 
 // Return the prototype

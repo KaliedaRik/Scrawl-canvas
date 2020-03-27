@@ -24,9 +24,6 @@ onUp: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
 P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 P.processEntityPacketOut = function (key, value, includes) {
 return this.processFactoryPacketOut(key, value, includes);
@@ -155,14 +152,6 @@ this.set(items);
 this.midInitActions(items);
 };
 P.midInitActions = defaultNonReturnFunction;
-P.simpleStamp = function (host, changes = {}) {
-if (host && host.type === 'Cell') {
-this.currentHost = host;
-this.set(changes);
-this.prepareStamp();
-this.regularStampSynchronousActions();
-}
-};
 P.prepareStamp = function() {
 if (this.dirtyHost) {
 this.dirtyHost = false;
@@ -194,42 +183,6 @@ this.buildAnchor(this.anchor);
 }
 };
 P.cleanPathObject = defaultNonReturnFunction;
-P.draw = function (engine) {
-engine.stroke(this.pathObject);
-};
-P.fill = function (engine) {
-engine.fill(this.pathObject, this.winding);
-};
-P.drawAndFill = function (engine) {
-let p = this.pathObject;
-engine.stroke(p);
-this.currentHost.clearShadow();
-engine.fill(p, this.winding);
-};
-P.fillAndDraw = function (engine) {
-let p = this.pathObject;
-engine.stroke(p);
-this.currentHost.clearShadow();
-engine.fill(p, this.winding);
-engine.stroke(p);
-};
-P.drawThenFill = function (engine) {
-let p = this.pathObject;
-engine.stroke(p);
-engine.fill(p, this.winding);
-};
-P.fillThenDraw = function (engine) {
-let p = this.pathObject;
-engine.fill(p, this.winding);
-engine.stroke(p);
-};
-P.clear = function (engine) {
-let gco = engine.globalCompositeOperation;
-engine.globalCompositeOperation = 'destination-out';
-engine.fill(this.pathObject, this.winding);
-engine.globalCompositeOperation = gco;
-};
-P.none = function (engine) {}
 P.stamp = function (force = false, host, changes) {
 let filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
 if (force) {
@@ -246,6 +199,16 @@ if (this.stashOutput || filterTest) return this.filteredStamp();
 else return this.regularStamp();
 }
 return Promise.resolve(false);
+};
+P.regularStamp = function () {
+let self = this;
+return new Promise((resolve, reject) => {
+if (self.currentHost) {
+self.regularStampSynchronousActions();
+resolve(true);
+}
+reject(false);
+});
 };
 P.filteredStamp = function(){
 if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
@@ -360,15 +323,13 @@ counter += 4;
 if (minX < maxX && minY < maxY) return [minX, minY, maxX - minX, maxY - minY];
 else return [0, 0, width, height];
 };
-P.regularStamp = function () {
-let self = this;
-return new Promise((resolve, reject) => {
-if (self.currentHost) {
-self.regularStampSynchronousActions();
-resolve(true);
+P.simpleStamp = function (host, changes = {}) {
+if (host && host.type === 'Cell') {
+this.currentHost = host;
+this.set(changes);
+this.prepareStamp();
+this.regularStampSynchronousActions();
 }
-reject(false);
-});
 };
 P.regularStampSynchronousActions = function () {
 let dest = this.currentHost;
@@ -382,5 +343,41 @@ if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 this[this.method](engine);
 }
 };
+P.draw = function (engine) {
+engine.stroke(this.pathObject);
+};
+P.fill = function (engine) {
+engine.fill(this.pathObject, this.winding);
+};
+P.drawAndFill = function (engine) {
+let p = this.pathObject;
+engine.stroke(p);
+this.currentHost.clearShadow();
+engine.fill(p, this.winding);
+};
+P.fillAndDraw = function (engine) {
+let p = this.pathObject;
+engine.stroke(p);
+this.currentHost.clearShadow();
+engine.fill(p, this.winding);
+engine.stroke(p);
+};
+P.drawThenFill = function (engine) {
+let p = this.pathObject;
+engine.stroke(p);
+engine.fill(p, this.winding);
+};
+P.fillThenDraw = function (engine) {
+let p = this.pathObject;
+engine.fill(p, this.winding);
+engine.stroke(p);
+};
+P.clear = function (engine) {
+let gco = engine.globalCompositeOperation;
+engine.globalCompositeOperation = 'destination-out';
+engine.fill(this.pathObject, this.winding);
+engine.globalCompositeOperation = gco;
+};
+P.none = function (engine) {}
 return P;
 };

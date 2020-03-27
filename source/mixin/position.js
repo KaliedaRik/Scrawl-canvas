@@ -1,10 +1,136 @@
-
 // # Position mixin
+// This mixin defines the key attributes and functionality of Scrawl-canvas __artefact objects__. 
 //
-// TODO - document the purpose of the mixin
+// We define an artefact as something that can be displayed in a Scrawl-canvas [Canvas](../factory/stack.html) or [Stack](../factory/stack.html) wrapper - both of which wrap DOM elements in the web page document - &lt;canvas>, and other DOM elements (most commonly a &lt;div> element), respectively.
+// + We call canvas based artefacts __entity objects__ - these objects represent a shape, path or image drawn in the canvas. 
+// + Entitys include: [Block](../factory/block.html); [Grid](../factory/grid.html); [Loom](../factory/loom.html); [Phrase](../factory/phrase.html) for text; [Picture](../factory/picture.html) for images, videos, etc; [Shape](../factory/shape.html)s of various types; and [Wheel](../factory/wheel.html).
+// + __Other artefacts__ live in stack containers. They include nested Stack wrappers, Canvas wrappers (which can exist outside of a stack); and [Element](../factory/element.html) wrappers for other direct child elements.
+//
+// ##### Positioning
+// Artefacts break away from the normal flow mechanisms of the HTML document; instead they are explicitly positioned within their containers in a variety of ways:
+// + __absolute__ positioning - where we give the artefact a coordinate, measured in pixels from the top left corner of the container (`[0, 0]`, `[347, 26.4]`, etc). 
+// + __relative__ positioning - where we supply the artefact with percentage coordinates, with `['0%', '0%']` representing the top left corner of the container, and `['100%', '100%']` its bottom right corner.
+// + __reference__ positioning - this is where an artefact will use another artefact's ___current___ (not given) coordinate to determine its own position. We can reference by `pivot`, or by `mimic`, or by `path`.
+//
+// Scrawl-canvas uses [Coordinate Arrays](../factory/coordinate.html) - `[x, y]` - for storing artefact coordinates. The ___Javascript types___ of the `x` and `y` parts of the coordinate can be either Numbers or Strings, and do not need to match each other: `['5%', 20]` and `[10, '15.4%']` are as valid as `[10, 20]` and `['5%', '15.4%']`.
+//
+// ##### The artefact 'rotation-reflection' point
+// Every artefact has a __start__ coordinate which, by default, is set at the artefact's top-left corner - even for Wheels and Shapes! 
+// + When we rotate an artefact, we rotate it around this coordinate. When we ___flip___ entity artefacts, we flip them around the artefact's local horizontal or vertical axis drawn through this coordinate. 
+// + Thus what we call a 'start' coordinate is in fact the artefact's __Rotation-Reflection__ point.
+//
+// The R-R point does not need to be at the artefact's top-left corner. We can move it by giving the artefact a __handle__ coordinate - a distance measured from the artefact's top-left corner. Just as for the start coordinate, we can set the handle coordinate using absolute, relative or reference values:
+// + __absolute__ handles - where we give the artefact a distance, measured in pixels from its top left corner . 
+// + __relative__ handles - where we supply the artefact with percentage distances measured against the artefact's own dimensions.
+// + __reference__ handles.
+// + In all cases, ___the distancing effect is along the artefact's local horizontal and vertical axes___ - if the artefact is rotated, then those axes will not be perpendicular to the containing Canvas or Stack axes.
+//
+// Normally this is enough information to position an artefact in its container. However there may be times when we need to move the artefact's R-R point a given distance along the container axes. We can achieve this by giving the artefact an __offset__ coordinate.
+// + __absolute__ offsets - where we give the artefact a distance, measured in pixels from its top left corner. 
+// + __relative__ offsets - where we supply the artefact with percentage distances measured against the ___container's dimensions___.
+// + __reference__ offsets.
+//
+// An artefact can have both a handle and an offset; handle distances move the R-R point along the artefact's axes (which may be diagonal lines), while offsets move it along the container's axes.
+//
+// ##### Artefact dimensions
+// Another use for Coordinate Arrays is to __set the artefact's dimensions - their width and height values__. In this case we can think of the coordinate in terms of `[w, h]`. All artefacts, except Shape and Loom entitys, require dimension data.
+//
+// Just as for positioning data, an artefact's dimensions data can be supplied in absolute, relative or reference terms:
+// + __absolute__ dimensions - where we give the artefact a width and height, measured in pixels from its top left corner. 
+// + __relative__ dimensions - where we supply the artefact with percentage widths and height values, measured against the ___container's dimensions___.
+// + __reference__ dimensions.
+//
+// ##### Artefact pseudo-attributes
+// Scrawl-canvas uses the following pseudo-attributes to make working with Coordinates easier:
+// + __startX__ and __startY__ - for getting and setting the `start` (R-R) Coordinate values
+// + __handleX__ and __handleY__ - for getting and setting the `handle` Coordinate values
+// + __offsetX__ and __offsetY__ - for getting and setting the `offset` Coordinate values
+// + __width__ and __height__ - for getting and setting the `dimensions` Coordinate values
+//
+// Scrawl-canvas also supports the following ___pseudo-values___, which can be used when setting __relative__ coordinates:
+// + `['left', 'top']` == `['0%', '0%']`
+// + `['center', 'center']` == `['50%', '50%']`
+// + `['bottom', 'right']` == `['100%', '100%']`
+//
+// ```
+// // The following code creates a block entity
+// // - half the width and height of its canvas
+// // - positioned in the middle of the canvas:
+// scrawl.makeBlock({
+//
+//     name: 'my-block',
+//
+//     startX: 'center',
+//     startY: 'center',
+//
+//     handleX: 'center',
+//     handleY: 'center',
+//
+//     width: '50%',
+//     height: '50%',
+//
+//     lineWidth: 10,
+//     fillStyle: 'blue',
+//     strokeStyle: 'red',
+//
+//     method: 'fillThenDraw',
+// });
+// ```
+//
+// ##### Referencing other artefacts
+// Scrawl-canvas allows an artefact to reference other artefacts. The referenced objects supply data back to the first artefact, which it then uses to update its position and dimensions. 
+// + This all happens automatically once the reference is set up, with updates occuring as part of the Scrawl-canvas __Display cycle__.
+// + To move a group of artefacts as a single unit, we can set up one as the reference artefact, with the rest using handles and offsets to supply distancing data from the reference. Updates to the reference artefact will now be transmitted automatically to all artefacts using it as their `pivot` or `mimic`.
+// 
+// We __create a reference__ by setting the value of one or more of the following attributes to a reference artefact's name-String, or to the object itself:
+// + `pivot` - once set, we can then use the referenced artefact's __start__ coordinate as this artefact's start value. With appropriate flags set, we can add this artefact's __handle__ and __offset__ coordinates to the start value.
+// + `mimic` - extends the 'pivot' concept to include dimensions, alongside adding this artefact's data to the referenced artefact's data in various ways.
+// + `path` - use a Shape entity's path to determine this artefact's position and rotation values.
+//
+// We __action a reference__ by setting this artefact's `lockTo` Array attribute. Ther lock array is similar to coordinate Arrays: it is a two-element array of Strings in the form `[x-lock, y-lock]`. Five lock strings are supported:
+// + `start` - use this artefact's own start (and other) values
+// + `pivot` - use the pivot reference artefact's start (and other) values
+// + `mimic` - use the mimic reference artefact's start (and other) values
+// + `path` - use the Shape entity's path to calculate this artefact's start (and rotation) values
+// + `mouse` - use the mouse/touch cursor's current position as the reference for this artefact's start value
+//
+// The __lockTo__ Array supports the pseudo-attributes __lockXTo__ and __lockYTo__ to make working with it easier.
+// + Setting `lockTo` sets both elements of the Array to the supplied String
+// + `lockXTo` and `lockYTo` allow us to separate the x and y coordinates
+//
+// For instance if we set the lock to `['start', 'mouse']` we can make the artefact track the mouse across the container along an (invisible) vertical line, whose position is determined by the artefact's x coordinate value.
+//
+// ##### Artefact rotation
+// Scrawl-canvas artefacts can be rotated around their __Rotation-Reflection point__: 
+// + Entity artefacts, being representations of 2-dimensional graphical shapes drawn on a &lt;canvas> element, are restricted to rotating around the R-R point's ___z-axis___.
+// + Other artefacts, when part of a Stack container, can be rotated in 3 dimensions along the R-R point's ___x-axis___, ___y-axis___ and ___z-axis___.
+//
+// Scrawl canvas measures rotations in __degrees__, not radians. An artefact's rotation values are stored in the following attributes:
+// + __roll__ - for `z-axis` rotations
+// + __yaw__ - for `y-axis` rotations
+// + __pitch__ - for `x-axis` rotations
+//
+// These __euler__ attributes are named after the [Aircraft principal axes](https://en.wikipedia.org/wiki/Aircraft_principal_axes) - mainly because I find it difficult to keep the mathematical representations in my head when thinking about rotations in 3 dimensions, but an image of an aircraft is a lot easier to visualize.
+// + Internally, Scrawl-canvas stores rotational data in [Quaternion objects](../factory/quaternion.html) rather than in matrices. 
+// 
+// Instead of 3D rotations, entity artefacts have two Boolean flags - __flipReverse__, __flipUpend__ - which determine the orientation of the entity when it stamps itself on the display. 
+// + a `reversed` entity is effectively flipped 180&deg; around a vertical line passing through that entity's rotation-reflection (start) point - a face looking to the right will now look to the left
+// + an `upended` entity is effectively flipped 180&deg; around a horizontal line passing through that entity's rotation-reflection (start) point - a normal face will now appear upside-down
+// 
+// We can ___emulate 3D rotations for Picture entity artefacts___ using the [Loom entity](../factory/loom.html) - see Demo [DOM-015](../../demo/dom-015.html) for an example of this in action.
+//
+// ##### Collision detection
+// The Scrawl-canvas collision detection system is entirely artefact-based
+// + By default, the CD system is disabled for artefacts
+// + However every artefact includes a `checkHit` function which reports whether a given Coordinate is in collision with it, using the Canvas API CanvasRenderingContext2D [isPointInPath](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/isPointInPath) function.
+// + We can enable an artefact's CD functionality by setting its __collides__ flag.
+// + When the `collides` flag is enabled, the artefact will (re)generate a set of __sensor point coordinates__ as part of any changes to its position and rotation.
+// + These sensor points sit along the artefact's ___stroke path___; their density is determined by the value of its __sensorSpacing__ attribute (default: 50px)
+// + The collision detection functionality itself is mediated by Group objects; we can get an artefact to feed in its sensor points to the Group's `getArtefactAt` or `getAllArtefactsAt` functions, which return a __hit report object__, or an Array of such objects, or false if no hits are detected.
+//
+// See Demos [Canvas-019](../../demo/canvas-019.html) and [DOM-013](../../demo/dom-013.html) for examples of this functionality in action.
 
-
-// ## Imports
+// #### Imports
 import { artefact, group, tween } from '../core/library.js';
 import { defaultNonReturnFunction, mergeOver, mergeInto, mergeDiscard, 
     isa_obj, isa_number, isa_boolean, xt, xta, xto, xtGet, 
@@ -14,181 +140,159 @@ import { currentCorePosition } from '../core/userInteraction.js';
 import { makeCoordinate } from '../factory/coordinate.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 
+
+// #### Export function
 export default function (P = {}) {
 
 
-// ## Define attributes
-//
-// All factories using the position mixin will add these to their prototype objects
+// #### Shared attributes
     let defaultAttributes = {
 
-
-// Every Scrawl-canvas artefact should belong to at least one group, and can belong to more than one group. Groups can be used for a variety of purposes, and play a major role in the __display cycle__ and in __collision detection__.
+// __group__ - every Scrawl-canvas artefact should belong to at least one Group, and can belong to more than one Group. Groups can be used for a variety of purposes, and play a major role in the __Display cycle__ and in __collision detection__.
+// + Most group-related functionality takes place elsewhere. An artefact's `group` attribute is used mainly as a 'convenience handle', to make moving an artefact from one Group to another a bit easier.
+// + As part of an artefact's initialization, the code will assign the artefact to a Group. We can indicate which Group to assign the new artefact to by setting the argument attribute to the Group's name attribute String, or to the Group itself - the set code will automatically update this attribute to a reference to the Group object:
 //
-// Most group-related functionality takes place elsewhere. An artefact's __group__ attribute is used mainly as a 'convenience handle', to make moving an artefact from one group to another a bit easier.
+// ```
+// let myGroup = scrawl.buildGroup({
+//     name: 'my-first-group',
+// });
 //
-// As part of an artefact's initialization, the code will assign the artefact to a group. We can indicate which group to assign the new artefact to by setting the argument attribute to the group's name attribute String, or to the group itself - the set code will automatically update this attribute to a reference to the Group object.
+// let myBlock = scrawl.makeBlock({
+//     group: myGroup,
+// });
+// ```
+// + Similarly the __set__ function's object argument can accept a name String, or the new group's object itself:
 //
-//     let myGroup = scrawl.buildGroup({
-//         name: 'my-first-group',
-//     });
+// ```
+// myBlock.set({
+//     group: 'my-first-group',
+// });
+// ```
+// + If no group value is supplied when building a new __entity__, then the ___current group___ will be assigned as the entity's group. This is a Scrawl-canvas 'global' value which will update whenever the user sets a Canvas wrapper as the current canvas:
 //
-//     let myBlock = scrawl.makeBlock({
-//         group: myGroup,
-//     });
-//
-// Similarly the __set__ function's object argument can accept a name String, or the new group's object itself
-
-//     myBlock.set({
-//         group: 'my-first-group',
-//     });
-//
-// If no group value is supplied when building a new __entity__, then the 'current group' will be assigned as the entity's group. This is a Scrawl-canvas 'global' value which will update whenever the user sets a canvas artefact as the current canvas:
-//
-//     scrawl.setCurrentCanvas('my-other-canvas');
-//
-// For some Canvas and Stack artefacts, the value of their group attribute will be set to "root" - this indicates that the stack or canvas is not contained within another stack.
-//
-// TODO: we need to decide whether we want a user-available scrawl.setCurrentStack function and, if yes, how that will impact on the core/document.js __currentGroup__ variable exported by that module - given that we will then have both currentStack and currentCanvas variables, but only one currentGroup variable shared between them.
+// ```
+// scrawl.setCurrentCanvas('my-other-canvas');
+// ```
+// + For some Canvas and Stack wrappers, the value of their group attribute will be set to `root` - this indicates that the wrapper's DOM element is not contained within another Stack.
+// + TODO: we need to decide whether we want a user-available scrawl.setCurrentStack function and, if yes, how that will impact on the core/document.js __currentGroup__ variable exported by that module - given that we will then have both currentStack and currentCanvas variables, but only one currentGroup variable shared between them.
         group: null,
 
 
-// The __visibility__ attribute is a boolean flag (default: true); when the flag is set, the display cycle functionality will run on the artefact.
-//
-// If the attribute's value is false, then the display cycle functionality will ignore the artefact. This has the following effects:
-//
-// + for DOM-based artefacts, the dom element will have its CSS tweaked to hide the element ("display: block" switches to "display: none")
-//
-// + for canvas-based entitys, the entity will be ignored during the display cycle's 'compile' step's action cascade
+// The __visibility__ attribute is a boolean flag (default: true); when the flag is set, the Display cycle functionality will run on the artefact. If the attribute's value is false, then the Display cycle functionality will ignore the artefact. This has the following effects:
+// + for DOM-based artefacts, the dom element will have its CSS tweaked to hide the element (`display: block` switches to `display: none`).
+// + for canvas-based entitys, the entity will be ignored during the Display cycle's `compile` step's Promise cascade.
         visibility: true,
 
 
-// The __order__ attribute - an integer Number (default: 0) - determines the order in which an artefact will be processed as part of a group. 
-//
-// For instance, entity artefacts with higher order values will be processed after those with lower values, with the effect that the entity will be displayed on top of those other entitys (and stamping over them if they overlap)
-//
-// Note that Group objects also have an order attribute: all artefacts in a group with a lower order value will be processed before those with a higher order value.
-//
-// Cell assets also have an order attribute, which has a similar effect: groups in cells with a lower order value are processed earlier than those in cells with higher order values.
-//
-// Finally, animation objects have order values; the same effect applies.
-//
-// __If the display of an artefact does not appear to be following the order value it has been given__, the problem may lie in either the order values assigned to that artefact's group, or host (cell, canvas, stack), or even the animation object that contributes to the display cycle.
+// The __order__ attribute - an integer Number (default: 0) - determines the order in which an artefact will be processed as part of a Group. 
+// + For instance, entity artefacts with higher order values will be processed after those with lower values, with the effect that the entity will be displayed on top of those other entitys (and stamping over them if they overlap)
+// + Note that Group objects also have an order attribute: all artefacts in a Group with a lower order value will be processed before those with a higher order value.
+// + Cell wrappers (a Canvas wrapper can have more than one Cell) have a `compileOrder` attribute which does the same job.
+// + Finally, Animation objects have order values; the same effect applies.
+// + ___If the display of an artefact does not appear to be following the order value it has been given___, the problem may lie in either the order values assigned to that artefact's Group, or host (Cell, Canvas, Stack), or even the Animation object that contributes to the Display cycle.
         order: 0,
 
 
-// The start coordinate represents an artefact's __rotation-reflexion point__, and is held in an [x, y] coordinate array. The default values are [0, 0].
+// The __start__ attribute represents an artefact's ___Rotation-Reflexion point___, and is held in an `[x, y]` Coordinate Array. The default values are `[0, 0]`, placing the artifact at the container object's (Cell, Stack) top-left corner.
+// ```
+// let myBlock = scrawl.makeBlock({
+//     startX: 20,
+//     startY: 'center',
+// });
 //
-// During the display cycle the start coordinate will be calculated with the results placed in a currentStart coordinate array; this calculation will only happen when an artefact's __dirtyStart__ flag has been set.
+// myBlock.set({
+//     start: [-100, '-12%'],
+// });
 //
-// Start coordinates can be __absolute__ (represented by a Number), or __relative__ (represented by a String):
+// myBlock.set({
+//     start: {
+//         x: 'left',
+//         y: 388.5,
+//     },
+// });
 //
-// + Absolute values are measured in pixels from the artefact's host's top left corner, with positive values moving to the right (x) or downwards (y) from that point. Values can be negative, and can be float values.
+// // Don't use string labels ('top', 'left', etc) when delta setting
+// myBlock.setDelta({
+//     startX: '-0.05%',
+// });
 //
-// + Relative values represent a percentage (eg: '42%') of the artefact's current dimensions - width for the x value, height for the y value. Again, values can be negative ('-12%') and can represent float values ('33.333%'). The following string aliases can also be used: 'top' or 'left' (both '0%'); 'bottom' or 'right' (both '100%'); and 'center' ('50%');
-//
-// Start coordinates can be set as part of an artefact's factory function, and updated using both that artefact's __set__ and __setDelta__ functions. The values can be presented as either an [x, y] Array, or an {x:value, y:value} Object, or using the pseudo-attributes __startX__ and __startY__
-//
-// NEVER set the start coordinate array directly, as those changes will not be picked up by the code! Directly setting startX or startY will also fail as those pseudo-attributes are not retained by the artefact.
-//
-//     let myBlock = scrawl.makeBlock({
-//         startX: 20,
-//         startY: 'center',
-//     });
-//
-//     myBlock.set({
-//         start: [-100, '-12%'],
-//     });
-//
-//     myBlock.set({
-//         start: {
-//             x: 'left',
-//             y: 388.5,
-//         },
-//     });
-//
-//     // Don't use string labels ('top', 'left', etc) when delta setting
-//     myBlock.setDelta({
-//         startX: '-0.05%'
-//     });
-//
-//     myBlock.setDelta({
-//         start: [1, '0.5%'],
-//     });
-//
-// The start attribute can also be included in an artefact's __delta__ object. These values will be added to the start coordinate (and recalculated into the currentStart coordinate) on every iteration of the display cycle:
-///
-//     let myBlock = scrawl.makeBlock({
-//         start: ['left', 500],
-//         delta: {
-//             startX: 0.5,
-//             startY: '-0.3',
-//         },
-//     });
+// myBlock.setDelta({
+//     start: [1, '0.5%'],
+// });
+// ```
+// + Start values DO NOT respect the artefact's `scale` attribute.
         start: null,
 
 
-// The handle coordinate represents an offset from the artefact's __rotation-reflexion__ point, and is held in an [x, y] coordinate array. The default values are [0, 0].
-//
-// During the display cycle the handle coordinate will be calculated with the results placed in a currentHandle coordinate array; this calculation will only happen when an artefact's __dirtyHandle__ flag has been set.
-//
-// Unlike the start attribute, __relative__ handle values ('20%', 'bottom') use the attribute's own dimensions to calculate their values. Setting the handle attribute to ['center', 'center'] will have the apparent effect of moving the artefact's display so that it's rotation-reflection point appears to be centered.
-//
-// Handle offsets are applied to the artefact after rotation; animating a handle value will move the artefact along its local x/y axes, not the host's axes!
-//
-// Everything that applies to the start attribute also applies to the handle attribute, except:
-// + We can set/update the attribute using the __handleX__ and __handleY__ pseudo-attributes.
-// + Handle values DO take an artefact's __scale__ attribute into account when calculating current values.
+// The __handle__ attribute represents a distance from the artefact's ___Rotation-Reflexion___ point, measured along the ___artefact's local axes___. It is held in an `[x, y]` Coordinate Array. The default values are `[0, 0]`.
+// + Handle values WILL respect the artefact's `scale` attribute.
         handle: null,
 
 
-// The offset coordinate represents an offset from the artefact's __rotation-reflexion__ point, and is held in an [x, y] coordinate array. The default values are [0, 0]. Offsets, unlike handles, shift the artefact along the horizontal (x) and vertical (y), ignoring the artefact's rotation.
-//
-// During the display cycle the offset coordinate will be calculated with the results placed in a currentOffset coordinate array; this calculation will only happen when an artefact's __dirtyOffset__ flag has been set.
-//
-// Everything that applies to the start attribute also applies to the offset attribute, except:
-// + We can set/update the attribute using the __offsetX__ and __offsetY__ pseudo-attributes.
-// + Offset values DO NOT take an artefact's __scale__ attribute into account when calculating current values.
-// + Using label strings ('top', 'center', etc) may have unexpected consequences - stick to Number or String% values instead.
+// The __offset__ attribute represents an offset from the artefact's ___Rotation-Reflexion___ point, measured along the ___container's axes___. It is held in an `[x, y]` Coordinate Array. The default values are `[0, 0]`.
+// + Offset values DO NOT respect the artefact's __scale__ attribute.
+// + the _pseudo-values_ `top`, `center`, etc have no meaning in the context of offsets.
         offset: null,
 
 
-// TODO - documentation
+// The __dimensions__ attribute represents the artefact's __width__ and __height__. It is held in a `[w, h]` Coordinate Array. The default values vary between different types of artefact.
+// + Dimensions values WILL respect the artefact's `scale` attribute.
         dimensions: null,
 
-// TODO - documentation
+// __delta__ - a Javascript object containing `{key:value, key:value, etc}` attributes. 
+// + As part of the Display cycle, delta values get added to artefact attribute values - this is a very simple form of animation.
+// + __noDeltaUpdates__ - Boolean flag to switch off the automatic application of delta attribute values as part of each iteration of the Display cycle.
+// + Delta updates can be invoked independently from the Display cycle by invoking `artefact.updateByDelta`, `artefact.reverseByDelta`.
+// + In addition to using `artefact.set`, we can also update the delta object values using `artefact.setDeltaValues`.
+//
+// ```
+// // This Block artefact will animate itself across the <canvas> element
+// // - it will move to the right and upwards until the `delta` values are updated
+// // - animation will stop when the `noDeltaUpdates` flag is set
+// let myBlock = scrawl.makeBlock({
+//     start: ['left', 500],
+//     delta: {
+//         startX: 0.5,
+//         startY: '-0.3',
+//     },
+//     noDeltaUpdates: false,
+// });
+// ```
         delta: null,
+        noDeltaUpdates: false,
 
-// TODO - documentation
+// __pivot__ - reference artefact object. Can also be set using the artefact's name-String.
         pivot: '',
 
-// DOM elements will use this to return either start or one of their corners
-        pivotCorner: '',         
+// __pivotCorner__ - Element artefacts allow other artefacts to use their corner positions as pivots, by setting this attribute to `topLeft`, `topRight`, `bottomRight` or `bottomLeft`; default is `''` to use the Element's start coordinate.
+        pivotCorner: '',  
+
+// __pivoted__ - internal Array holding details of the artefacts using this artefact as their pivot reference.
         pivoted: null,
 
+// __addPivotHandle__, __addPivotOffset__, __addPivotRotation__ - Boolean flags. When set, the artifact will add its own values to the reference artefact's values, rather than use them as replacement values.
         addPivotHandle: false,
         addPivotOffset: true,
         addPivotRotation: false,
 
-// TODO - documentation
+// __path__ - reference Shape entity object. Can also be set using the Shape's name-String.
         path: '',
 
+// __pathPosition__ - float Number between `0.0` - `1.0` representing the distance along the Shape path which is to be used as the reference coordinate.
         pathPosition: 0,
 
+// __addPathHandle__, __addPathOffset__, __addPathRotation__ - Boolean flags. When set, the artifact will add its own values to the reference artefact's values, rather than use them as replacement values.
         addPathHandle: false,
         addPathOffset: true,
         addPathRotation: false,
 
-// TODO: do these need to be in the defs object?
-        controlSubscriber: null,
-        startControlSubscriber: null,
-        endControlSubscriber: null,
-        endSubscriber: null,
-
-// TODO - documentation
+// __mimic__ - reference artefact object. Can also be set using the artefact's name-String.
         mimic: '',
+
+// __mimicked__ - internal Array holding details of the artefacts using this artefact as their mimic reference.
         mimicked: null,
 
+// __useMimic...__ - a set of Boolean flags determining which attributes should be taken from the mimic reference artefact. By default, the artefact will use its own attribute values; setting any of these flags changes the behaviour for that attribute.
         useMimicDimensions: false,
         useMimicScale: false,
         useMimicStart: false,
@@ -197,6 +301,7 @@ export default function (P = {}) {
         useMimicRotation: false,
         useMimicFlip: false,
 
+// __addOwn...ToMimic__ - a set of Boolean flags determining which mimic attributes should be added to this artefact's own attribute values. By default, none are added; setting any of these flags changes the behaviour for that attribute.
         addOwnDimensionsToMimic: false,
         addOwnScaleToMimic: false,
         addOwnStartToMimic: false,
@@ -205,53 +310,45 @@ export default function (P = {}) {
         addOwnRotationToMimic: false,
 
 
-// The __lockTo__ attribute is an [x-lock, y-lock] Array which determines where the artefact will look for its x and y start coordinates.
-//
-// Scrawl-canvas allows an artefact to use different sources - 'start' (the default), 'pivot', 'path', 'mimic', or 'mouse'
-//
-// Note: __setting an artefact's pivot, path or mimic attribute to another artefact__ is not enough to make the artefact start using that pivot as its source for positioning data. __The lockTo attribute must also be set!__ 
-//
-// This approach allows an artefact to keep references to up to three different artifacts (in the pivot, path and mimic attributes), dynamically swapping between them as and when required. It also allows the x coordinate to be calculated separately from the y coordinate, using a different source.
-//
-// The __mouse__ value will make the artefact use the current host's 'here' coordinates. Stack, element and canvas artefacts will include mouse coordinates localized to their top-left corner as part of there 'here' attribute, thus allowing any artefact locked to the mouse to update its start position every time the mouse (or touch) cursor moves.
-//
-// The lock values can be set as part of an artefact's factory function, and updated using that artefact's __set__ function. The values can be presented as either an [x, y] Array, or using the pseudo-attributes __lockXTo__ and __lockYTo__.
+// __lockTo__ - `[x-lock, y-lock]` Array; locks can be set to: `start` (the default), `pivot`, `path`, `mimic`, or `mouse`.
+// + The lock values can be set individually using the pseudo-attributes __lockXTo__ and __lockYTo__.
         lockTo: null,
 
 
-// All artefacts (except compound entities such as Loom) can be scaled by setting their __scale__ attribute to an appropriate integer or float Number value.
-//
-// + a value of __0__ effectively makes the artefact disappear from the display (though setting the artefact's __visibility__ flag to false is a more efficient approach)
-// + scale value __less than 1__ will shrink the artefact around its rotation-reflection point
-// + setting the value to _1_ (the default) removes all scaling effects on the artefact
-// + values __greater than 1__ will expand the artefact around its rotation-reflection point
+// All artefacts (except compound entities such as Loom) can be scaled by setting their __scale__ attribute to an appropriate float Number value:
+// + A value of __0__ effectively makes the artefact disappear from the display (though setting the artefact's __visibility__ flag to false is a more efficient approach).
+// + Scale value __less than 1__ will shrink the artefact around its rotation-reflection point.
+// + Setting the value to __1__ (the default) removes all scaling effects on the artefact.
+// + Values __greater than 1__ will expand the artefact around its rotation-reflection point.
         scale: 1,
 
-// TODO - documentation
+// __roll__ - float Number representing the artefact's rotation around the `z-axis` of its ___Rotation-Reflection point___.
+// + values represent ___degrees___, not radians.
+// + Some effort is made in the code to keep this value within the bounds of `-360` and `+360`. Value is measured in degrees (not radians!)
         roll: 0,
 
-// TODO - documentation
+// __collides__ - by default, artefacts do not perform collision detection; it has to be switched on by setting this Boolean flag.
+// + mouse/touch cursor position detection over the artefact - for a range of functionalities including _drag-and-drop_, hover state, etc - is enabled by default and cannot be switched off.
         collides: false,
+
+// __sensorSpacing__ - integer Number value representing the distance (measured in px) between collision detection sensors placed along the artefact's stroke path.
         sensorSpacing: 50,
 
 
-// #### Animation speed
+// ##### Animation speed
 //
-// Scrawl-canvas assumes that an artefact will be "ready for anything". However if we know beforehand that an artefact will not be requiring certain functionalities, we can switch them off; this will help make the artefact render more quickly. These __noXXX__ flags include:
+// Scrawl-canvas assumes that an artefact will be _ready for anything_. However if we know beforehand that an artefact will not be requiring certain functionalities, we can switch them off; this will help make the artefact render more quickly. These __noXXX__ flags include:
 //
-// + __noUserInteraction__ - switch off basic collision functionality (used by 'drag-and-drop') and ongoing update calculations
+// + __noUserInteraction__ - switch off basic collision functionality (used by 'drag-and-drop') and ongoing update calculations.
 //
-// + __noDeltaUpdates__ - switch off the automatic application of delta attribute values as part of each iteration of the Display cycle
+// + __noPositionDependencies__ - short-circuit the position calculations associated with pivot, mimic, path and mouse positioning.
 //
-// + __noPositionDependencies__ - short-circuit the position calculations associated with pivot, mimic, path and mouse positioning
+// + __noCanvasEngineUpdates__ - specifically for canvas entity artefacts, skip updating the host Cell wrapper's CanvasRenderingContext2D engine with the entity's [State](../factory/state.html) attributes - meaning that the entity will use the previously stamped entity's State values.
 //
-// + __noCanvasEngineUpdates__ - specifically for canvas entity artefacts, skip updating the CanvasRenderingContext2D with the entity's styling attributes - meaning that the entity will use the previously rendered entity's styling
+// + __noFilters__ - skip the checks for, and application of, [Filters](../factory/filter.html) to the entity artefact - even if filters have been added to the entity.
 //
-// + __noFilters__ - skip the checks for, and application of, filters to the entity artefact - even if filters have been added to the entity
-//
-// + __noPathUpdates__ - only calculate the artefact's path once - this disables updates to the artefact's handle and scale attributes 
+// + __noPathUpdates__ - only calculate the artefact's path once - this disables updates to the artefact's handle and scale attributes.
         noUserInteraction: false,
-        noDeltaUpdates: false,
         noPositionDependencies: false,
         noCanvasEngineUpdates: false,
         noFilters: false,
@@ -261,7 +358,7 @@ export default function (P = {}) {
 
 
 
-// ## Packet management
+// #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'mimicked', 'pivoted']);
     P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
     P.packetCoordinates = pushUnique(P.packetCoordinates, ['start', 'handle', 'offset']);
@@ -302,8 +399,11 @@ export default function (P = {}) {
     }
 
 
+// #### Clone management
+// No additional clone functionality defined here
 
-// ## Kill functionality
+
+// #### Kill management
     P.kill = function () {
 
         let myname = this.name
@@ -348,34 +448,13 @@ export default function (P = {}) {
 
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Get, Set, deltaSet
+// + The getter functions return the __current, pixel-based values__ for the `start`, `handle`, `offset` and `dimensions` attribute Coordinates.
     let G = P.getters,
         S = P.setters,
         D = P.deltaSetters;
 
-
-// These getter functions return the __current, pixel-based values__ for the pseudo-attributes associated with the 'start', 'handle', 'offset' and 'dimensions' attribute Arrays. These values will be different from those returned from the real attributes:
-//
-//     // for a block entity in a 100px x 100px canvas
-//
-//     let myBlock = scrawl.makeBlock({
-//         startX: '10%',
-//         startY: 'center',
-//         width: '40%',
-//         height: 20,
-//     });
-//
-//     myBlock.get('startX');          // 10
-//     myBlock.get('startY');          // 50
-//     myBlock.get('start');           // [10, 50]
-//
-//     myBlock.start                     // ['10%', 'center']
-//
-//     myBlock.get('width');           // 40
-//     myBlock.get('height');          // 20
-//     myBlock.get('dimensions');      // [40, 20]
-//
-//     myBlock.dimensions;              // ['40%', 20]
+// __start__, __startX__, __startY__
     G.startX = function () {
 
         return this.currentStart[0];
@@ -388,90 +467,6 @@ export default function (P = {}) {
 
         return [].concat(this.currentStart);
     };
-    G.handleX = function () {
-
-        return this.currentHandle[0];
-    };
-    G.handleY = function () {
-
-        return this.currentHandle[1];
-    };
-    G.handle = function () {
-
-        return [].concat(this.currentHandle);
-    };
-    G.offsetX = function () {
-
-        return this.currentOffset[0];
-    };
-    G.offsetY = function () {
-
-        return this.currentOffset[1];
-    };
-    G.offset = function () {
-
-        return [].concat(this.currentOffset);
-    };
-    G.width = function () {
-
-        return this.currentDimensions[0];
-    };
-    G.height = function () {
-
-        return this.currentDimensions[1];
-    };
-    G.dimensions = function () {
-
-        return [].concat(this.currentDimensions);
-    };
-
-
-// Changes to an artefact's dimensions attribute Array will set the __dirtyDimensions__ flag, which will cause the currentDimensions Array to be recalculated and cascaded to other artefacts.
-//
-// The pseudo-attributes __width__ and __height__ can also be used for setting an artefact's dimensions values.
-    S.width = function (val) {
-
-        if (val != null) {
-
-            this.dimensions[0] = val;
-            this.dirtyDimensions = true;
-        }
-    };
-    S.height = function (val) {
-
-        if (val != null) {
-
-            this.dimensions[1] = val;
-            this.dirtyDimensions = true;
-        }
-    };
-    S.dimensions = function (w, h) {
-
-        this.setCoordinateHelper('dimensions', w, h);
-        this.dirtyDimensions = true;
-    };
-    D.width = function (val) {
-
-        let c = this.dimensions;
-        c[0] = addStrings(c[0], val);
-        this.dirtyDimensions = true;
-    };
-    D.height = function (val) {
-
-        let c = this.dimensions;
-        c[1] = addStrings(c[1], val);
-        this.dirtyDimensions = true;
-    };
-    D.dimensions = function (w, h) {
-
-        this.setDeltaCoordinateHelper('dimensions', w, h);
-        this.dirtyDimensions = true;
-    }
-
-
-// Changes to an artefact's start attribute Array will set the __dirtyStart__ flag, which will cause the currentStart Array to be recalculated and cascaded to other artefacts.
-//
-// The pseudo-attributes __startX__ and __startY__ can also be used for setting an artefact's start values.
     S.startX = function (coord) {
 
         if (coord != null) {
@@ -511,10 +506,19 @@ export default function (P = {}) {
         this.dirtyStart = true;
     };
 
+// __handle__, __handleX__, __handleY__
+    G.handleX = function () {
 
-// Changes to an artefact's handle attribute Array will set the __dirtyHandle__ flag, which will cause the currentHandle Array to be recalculated and cascaded to other artefacts.
-//
-// The pseudo-attributes __handleX__ and __handleY__ can also be used for setting an artefact's handle values.
+        return this.currentHandle[0];
+    };
+    G.handleY = function () {
+
+        return this.currentHandle[1];
+    };
+    G.handle = function () {
+
+        return [].concat(this.currentHandle);
+    };
     S.handleX = function (coord) {
 
         if (coord != null) {
@@ -523,7 +527,6 @@ export default function (P = {}) {
             this.dirtyHandle = true;
         }
     };
-
     S.handleY = function (coord) {
 
         if (coord != null) {
@@ -532,37 +535,42 @@ export default function (P = {}) {
             this.dirtyHandle = true;
         }
     };
-
     S.handle = function (x, y) {
 
         this.setCoordinateHelper('handle', x, y);
         this.dirtyHandle = true;
     };
-
     D.handleX = function (coord) {
 
         let c = this.handle;
         c[0] = addStrings(c[0], coord);
         this.dirtyHandle = true;
     };
-
     D.handleY = function (coord) {
 
         let c = this.handle;
         c[1] = addStrings(c[1], coord);
         this.dirtyHandle = true;
     };
-
     D.handle = function (x, y) {
 
         this.setDeltaCoordinateHelper('handle', x, y);
         this.dirtyHandle = true;
     };
 
+// __offset__, __offsetX__, __offsetY__
+    G.offsetX = function () {
 
-// Changes to an artefact's offset attribute Array will set the __dirtyOffset__ flag, which will cause the currentOffset Array to be recalculated and cascaded to other artefacts.
-//
-// The pseudo-attributes __offsetX__ and __offsetY__ can also be used for setting an artefact's offset values.
+        return this.currentOffset[0];
+    };
+    G.offsetY = function () {
+
+        return this.currentOffset[1];
+    };
+    G.offset = function () {
+
+        return [].concat(this.currentOffset);
+    };
     S.offsetX = function (coord) {
 
         if (coord != null) {
@@ -602,28 +610,59 @@ export default function (P = {}) {
         this.dirtyOffset = true;
     };
 
+// __dimensions__, __width__, __height__
+    G.width = function () {
 
-// The __dragOffset__ Array is internal. We use it to store local offsets established as part of an artefact's dynamic drag/drop functionality.
-//
-// TODO: check whether any code is using artefact.get('dragOffset') - if not, we can delete these functions
-//     - dragOffset is purely internal, and should be of no interest to the user - thus no need to keep related getter/setter functions??
-    G.dragOffsetX = function () {
-
-        return this.dragOffset[0];
+        return this.currentDimensions[0];
     };
-    G.dragOffsetY = function () {
+    G.height = function () {
 
-        return this.dragOffset[1];
+        return this.currentDimensions[1];
     };
-    S.dragOffsetX = defaultNonReturnFunction;
-    S.dragOffsetY = defaultNonReturnFunction;
-    S.dragOffset = defaultNonReturnFunction;
-    D.dragOffsetX = defaultNonReturnFunction;
-    D.dragOffsetY = defaultNonReturnFunction;
-    D.dragOffset = defaultNonReturnFunction;
+    G.dimensions = function () {
 
+        return [].concat(this.currentDimensions);
+    };
+    S.width = function (val) {
 
-// The sensorSpacing attribute can be set/deltaSet. Value changes trigger the setting of the __dirtyCollision__ flag which eventually leads to the recalculation of sensor coordinates within and around the artefact's border.
+        if (val != null) {
+
+            this.dimensions[0] = val;
+            this.dirtyDimensions = true;
+        }
+    };
+    S.height = function (val) {
+
+        if (val != null) {
+
+            this.dimensions[1] = val;
+            this.dirtyDimensions = true;
+        }
+    };
+    S.dimensions = function (w, h) {
+
+        this.setCoordinateHelper('dimensions', w, h);
+        this.dirtyDimensions = true;
+    };
+    D.width = function (val) {
+
+        let c = this.dimensions;
+        c[0] = addStrings(c[0], val);
+        this.dirtyDimensions = true;
+    };
+    D.height = function (val) {
+
+        let c = this.dimensions;
+        c[1] = addStrings(c[1], val);
+        this.dirtyDimensions = true;
+    };
+    D.dimensions = function (w, h) {
+
+        this.setDeltaCoordinateHelper('dimensions', w, h);
+        this.dirtyDimensions = true;
+    }
+
+// __sensorSpacing__
     S.sensorSpacing = function (val) {
 
         this.sensorSpacing = val;
@@ -636,9 +675,7 @@ export default function (P = {}) {
     };
 
 
-// The __pivot__ setter function can accept either a pivot's 'name' attribute string, or the pivot object itself.
-//
-// Changing the pivot will set the __dirtyStampPositions__ and __dirtyStampHandlePositions__ flags.
+// __pivot__
     S.pivot = function (item) {
 
         if (isa_boolean(item) && !item) {
@@ -671,11 +708,7 @@ export default function (P = {}) {
     };
 
 
-// DOM-based artefacts ('stack', 'canvas'[1], 'element') supply __corner pivots__ in addition to the common __start pivot__. When an artefact pivots to a DOM-based artefact it can choose whether to pivot to that artefact's start coordinate (default: ''), or to one of the corner coordinates. The choice of corner is kept, as a string value, in the __pivotCorner__ attribute.
-//
-// The pivotCorner attribute can be one of: 'topLeft', 'topRight', 'bottomRight' or 'bottomLeft'
-//
-// [1] Canvas artefact corner marker &lt;div> elements routinely report their coordinates as [0, 0] - this is expected behaviour.
+// __pivotCorner__
     P.pivotCorners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
     S.pivotCorner = function (item) {
 
@@ -683,7 +716,7 @@ export default function (P = {}) {
     };
 
 
-// Boolean flags to tweak pivot-tracking behaviour. Each setter will also set the appropriate dirty flag for each tweaked attribute
+// __addPivotHandle__, __addPivotOffset__, __addPivotRotation__
     S.addPivotHandle = function (item) {
 
         this.addPivotHandle = item;
@@ -701,13 +734,7 @@ export default function (P = {}) {
     };
 
 
-// The __path__ setter function can accept either a path' 'name' attribute string, or the path's object itself.
-//
-// The __pathPosition__ setter accepts a positive float Number between the values of 0 and 1. The deltaSetter will check whether the resulting addition takes the pathPosition value beyond those values and correct accordingly.
-//
-// TODO: current functionality is for pathPosition to loop - is there a case for adding a pathPosition loop flag? If yes, then when that flag is false values < 0 would be corrected back to 0, and vals > 1 would be corrected back to 1.
-//
-// Changing the path or the pathPosition attributes will set the __dirtyStampPositions__ and __dirtyStampHandlePositions__ flags.
+// __path__
     S.path = function (item) {
 
         if (isa_boolean(item) && !item) {
@@ -738,6 +765,9 @@ export default function (P = {}) {
             }
         }
     };
+
+//  __pathPosition__
+// + TODO: current functionality is for pathPosition to loop - is there a case for adding a pathPosition loop flag? If yes, then when that flag is false values < 0 would be corrected back to 0, and vals > 1 would be corrected back to 1.
     S.pathPosition = function (item) {
 
         if (item < 0) item = Math.abs(item);
@@ -760,7 +790,7 @@ export default function (P = {}) {
     };
 
 
-// Boolean flags to tweak path-following behaviour. Each setter will also set the appropriate dirty flag for each tweaked attribute
+// __addPathHandle__, __addPathOffset__, __addPathRotation__
     S.addPathHandle = function (item) {
 
         this.addPathHandle = item;
@@ -778,9 +808,7 @@ export default function (P = {}) {
     };
 
 
-// The __mimic__ setter function can accept either a mimic artefact's 'name' attribute string, or the mimic object itself.
-//
-// Changing the mimic will set the __dirtyStampPositions__ and __dirtyStampHandlePositions__ flags.
+// __mimic__
     S.mimic = function (item) {
 
         if (isa_boolean(item) && !item) {
@@ -813,7 +841,7 @@ export default function (P = {}) {
     };
 
 
-// Boolean flags to tweak mimic-tracking behaviour. Each setter will also set the appropriate dirty flag for each tweaked attribute
+// __useMimicDimensions__, __useMimicScale__, __useMimicStart__, __useMimicHandle__, __useMimicOffset__, __useMimicRotation__
     S.useMimicDimensions = function (item) {
 
         this.useMimicDimensions = item;
@@ -844,6 +872,8 @@ export default function (P = {}) {
         this.useMimicRotation = item;
         this.dirtyRotation = true;
     };
+
+// __addOwnDimensionsToMimic__, __addOwnScaleToMimic__, __addOwnStartToMimic__, __addOwnHandleToMimic__, __addOwnOffsetToMimic__, __addOwnRotationToMimic__
     S.addOwnDimensionsToMimic = function (item) {
 
         this.addOwnDimensionsToMimic = item;
@@ -876,27 +906,7 @@ export default function (P = {}) {
     };
             
 
-// For ease of use, we supply the user with 3 functions for setting __positioning locks__ on the lockTo array:
-//
-// + The __lockXTo__ pseudo-attribute will update the x coordinate lock value.
-// + The __lockYTo__ pseudo-attribute will update the y coordinate lock value.
-// + the __lockTo__ attribute will update both the x and y coordinates. It can accept: either an [x, y] Array; or a String value, in which case both x and y lock values are updated to that value.
-//
-// Valid lock String values are: 'start' (the default), 'pivot', 'path', 'mimic', and 'mouse'.
-//
-//     Example: create a block entity that follows mouse movements in the horizontal plane only
-//
-//     let myBlock = scrawl.makeBlock({
-//         [... etc]
-//         lockXTo: 'mouse',
-//         lockYTo: 'start',
-//     });
-//
-//     ... update the block so that it acts like the mouse's cursor
-//
-//     myBlock.set({
-//         lockTo: 'mouse',
-//     });
+// __lockXTo__, __lockYTo__, __lockTo__
     S.lockTo = function (item) {
 
         if (Array.isArray(item)) {
@@ -922,7 +932,7 @@ export default function (P = {}) {
         this.dirtyLock = true;
     };
 
-// TODO - documentation
+// __roll__
     S.roll = function (item) {
 
         if (!isa_number(item)) throw new Error(`mixin/position error - S.roll() argument not a number: ${item}`);
@@ -939,10 +949,7 @@ export default function (P = {}) {
     };
 
 
-// TODO - check to see what happens when we apply a negative scale to an artefact
-//     - adapt one of the demos so that the scale value can be set to a negative value
-//     - decide if the results are something we want to keep as functionality
-//         - if negative scales leads to unwelcome effects, adapt function to only accept +ve values
+// __scale__
     S.scale = function (item) {
 
         if (!isa_number(item)) throw new Error(`mixin/position error - S.scale() argument not a number: ${item}`);
@@ -958,13 +965,13 @@ export default function (P = {}) {
         this.dirtyScale = true;
     };
 
-// TODO - documentation
+// __delta__
     S.delta = function (items = {}) {
 
         if (items) this.delta = mergeDiscard(this.delta, items);
     };
 
-// TODO - documentation
+// __host__ - internal function
     S.host = function (item) {
 
         if (item) {
@@ -982,7 +989,7 @@ export default function (P = {}) {
         this.dirtyOffset = true;
     };
 
-// TODO - documentation
+// __group__
     S.group = function (item) {
 
         let g;
@@ -1005,18 +1012,11 @@ export default function (P = {}) {
     };
 
 
-// ## Define functions to be added to the factory prototype
-//
-// Internal function to setup initial Arrays and Objects, including 'current...' and '...Subscriber' Arrays.
-//
-// It also creates a group 'dirty...' flags and sets them all to true. 
-//
-// Scrawl-canvas depends heavily on dirty flags. 
-//
-// + Changes to a Scrawl-canvas object via the __set()__ and __setDelta()__ functions will set relevant flags to true. 
-// + Then, during the compile stage of the display cycle, we will recalculate and update only those attributes tagged for cleaning by the dirty flags. 
-// + If nothing has happened to set any dirty flags to true since the last RequestAnimationFrame tick, then there's nothing new to calculate and we can proceed to displaying the object in the canvas (or stack) using existing calculated values.
-// + most calculated values are kept in attributes starting with 'current...' eg currentHandle, currentStampPosition, etc.
+// #### Prototype functions
+
+// `initializePositions` - Internal function called by all artefact factories 
+// + Setup initial Arrays and Objects, including `current...` and `...Subscriber` Arrays.
+// + Create a variety of `dirty...` flags, setting them all to true. 
     P.initializePositions = function () {
 
         this.dimensions = makeCoordinate();
@@ -1064,13 +1064,11 @@ export default function (P = {}) {
     P.initializeDomPositions = defaultNonReturnFunction;
 
 
-// Helper function used by the 'dimensions', 'start', 'handle' and 'offset' setter functions. Arguments are:
-//
-// + __label__ - either 'dimensions', 'start', 'handle' or 'offset'
-// + __x__ - this can be either an [x, y] array, or an {x: val, y: val} object, or a Number or %String value
-// + __y__ - if x is a number or string, then y should also be a number or string
-//
-// (The array and object versions can also be [w, h], or {w:val, h:val}, or {width:val, height:val})
+// `setCoordinateHelper` - internal helper function used by positional and dimensional setter (S.) functions. Arguments are:
+// + __label__ - either `dimensions`, `start`, `handle` or `offset`
+// + __x__ - this can be either an `[x, y]` Array, or an `{x: val, y: val}` object, or a Number, or %String value
+// + (for dimensions, `[w, h]`, or `{w: val, h: val}`, or `{width: val, height: val}`, etc)
+// + __y__ - if `x` is a Number or String, then `y` should also be a Number or String
     P.setCoordinateHelper = function (label, x, y) {
 
         let c = this[label];
@@ -1101,13 +1099,11 @@ export default function (P = {}) {
     };
 
 
-// Helper function used by the 'dimensions', 'start', 'handle' and 'offset' delta-setter functions. Arguments are:
-//
-// + __label__ - either 'dimensions', 'start', 'handle' or 'offset'
-// + __x__ - this can be either an [x, y] array, or an {x: val, y: val} object, or a Number or %String value
-// + __y__ - if x is a number or string, then y should also be a number or string
-
-// (The array and object versions can also be [w, h], or {w:val, h:val}, or {width:val, height:val})
+// `setCoordinateHelper` - internal helper function used by positional and dimensional delta-setter (D.) functions. Arguments are:
+// + __label__ - either `dimensions`, `start`, `handle` or `offset`
+// + __x__ - this can be either an `[x, y]` Array, or an `{x: val, y: val}` object, or a Number, or %String value
+// + (for dimensions, `[w, h]`, or `{w: val, h: val}`, or `{width: val, height: val}`, etc)
+// + __y__ - if `x` is a Number or String, then `y` should also be a Number or String
     P.setDeltaCoordinateHelper = function (label, x, y) {
 
         let c = this[label],
@@ -1139,8 +1135,7 @@ export default function (P = {}) {
         }
     };
 
-
-// This function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the __delta__ attribute object then those __delta animations__ will start playing immediately.
+// `updateByDelta` - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the __delta__ attribute object then those __delta animations__ will start playing immediately.
     P.updateByDelta = function () {
 
         this.setDelta(this.delta);
@@ -1149,7 +1144,7 @@ export default function (P = {}) {
     };
 
 
-// The opposite action to 'updateByDelta'; values in the __delta__ attribute object will be subtracted from the current value for that Scrawl-canvas object.
+// `reverseByDelta` - The opposite action to 'updateByDelta'; values in the __delta__ attribute object will be subtracted from the current value for that Scrawl-canvas object.
     P.reverseByDelta = function () {
 
         let temp = {};
@@ -1167,7 +1162,10 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
+// `setDeltaValues`
+// + TODO - the idea is that we can do things like 'add:1', 'subtract:5', 'multiply:6', 'divide:3.4', etc
+// + for this to work, we need to do do work here to split the val string on the ':'
+// + for now, just do reverse and zero numbers
     P.setDeltaValues = function (items = {}) {
 
         let delta = this.delta, 
@@ -1176,10 +1174,6 @@ export default function (P = {}) {
         Object.entries(items).forEach(([key, requirement]) => {
 
             if (xt(delta[key])) {
-
-                // TODO - the idea is that we can do things like 'add:1', 'subtract:5', 'multiply:6', 'divide:3.4', etc
-                // - for this to work, we need to do do work here to split the val string on the ':'
-                // - for now, just do reverse and zero numbers
 
                 action = requirement;
 
@@ -1215,14 +1209,13 @@ export default function (P = {}) {
     };
 
 
-// Internal function - return the 'host' object. Hosts can be various things, for instance:
-//
-// + Element artefacts will have a stack artefact as its host
-// + Stack and Canvas artifacts can also have a Stack host
-// + Cells will have either a canvas, or another cell, as their host
+// `getHost` - internal function - return the __host__ object. Hosts can be various things, for instance:
+// + Element wrapper will have a Stack as its host
+// + Stack and Canvas wrappers can also have a Stack host
+// + Cells will have either a Canvas, or another Cell, as their host
 // + Entity artefacts will use a Cell as their host
 //
-// All of the above can exist without a host (though in many cases this means they don't do much). Stack and Canvas artefacts will often be unhosted, sitting as root artefacts in the web page DOM
+// All of the above can exist without a host (though in many cases this means they don't do much). Stack and Canvas wrappers will often be unhosted, sitting as `root` elements in the web page DOM
     P.getHost = function () {
 
         if (this.currentHost) return this.currentHost;
@@ -1241,15 +1234,17 @@ export default function (P = {}) {
     };
 
 
-// The __here__ parameter is owned by Canvas, Stack and (if enabled) Element artefacts and is set on them by calling the core/userInteraction.js updateUiSubscribedElement() function - thus not defined or updated by the artefact itself.
+// `getHere` - the __here__ parameter is owned by Canvas, Stack and (if enabled) Element artefacts and is set on them by calling `updateUiSubscribedElement` - thus not defined or updated by the artefact itself.
 //
-//     here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}
+// ```
+// here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}
+// ```
 //
 // Cell assets also have a __here__ parameter, defined and updated by themselves with reference to their current Canvas host
-//
-//     here {x, y, w, h, xRatio, yRatio}
-//
-// NOTE: Canvas, Stack, Element (if enabled) and Cell all need to create their .here attribute immediately after they first calculate their currentDimensions Coordinate, which needs to happen as part of the constructor!
+// ```
+// here {x, y, w, h, xRatio, yRatio}
+// ```
+// + NOTE: Canvas, Stack, Element (if enabled) and Cell all need to create their `here` attribute immediately after they first calculate their `currentDimensions` Coordinate, which needs to happen as part of the constructor!
     P.getHere = function () {
 
         let host = this.getHost();
@@ -1273,8 +1268,10 @@ export default function (P = {}) {
         return currentCorePosition;
     };
 
+// #### Clean functions
+// Clean functions are triggered by artefacts as they prepare to stamp themselves into their host environment. The decision to trigger a clean function is mediated by various `dirty...` flags, which get set when the artefact is updated via `set` and `deltaSet` calls.
 
-// Helper function used by cleanStart, cleanHandle and cleanOffset functions
+// `cleanPosition` - internal helper function used by `cleanStart`, `cleanHandle` and `cleanOffset` functions
     P.cleanPosition = function (current, source, dimensions) {
 
         let val, dim;
@@ -1293,7 +1290,9 @@ export default function (P = {}) {
     };
 
 
-// Set the artefact's currentScale value. Scaling has widespread effects across a range of the artefact's other positional and display attributes. Artefacts may use other artefacts to set their own scale values (mimicking)
+// `cleanScale` - set the artefact's __currentScale__ value.
+// + Scaling has widespread effects across a range of the artefact's other positional and display attributes.
+// + Artefacts may use other artefacts to set their own scale values - `mimic`, `pivot`
     P.cleanScale = function () {
 
         this.dirtyScale = false;
@@ -1330,13 +1329,8 @@ export default function (P = {}) {
     };
 
 
-// Set the artefact's currentDimensions values, depending on: 
-//
-// + Their width and height - if these are set to absolute (Number) values
-// + Their host's width and height - if their own dimensions are set to %String values
-// + Another artefact's width and height - if they are mimicking that artefact's dimensions
-//
-// Dimensions DO scale - but scaling happens elsewhere
+// `cleanDimensions` - calculate the artefact's __currentDimensions__ Array
+// + Dimensions DO scale - but scaling happens elsewhere
     P.cleanDimensions = function () {
 
         this.dirtyDimensions = false;
@@ -1391,11 +1385,11 @@ export default function (P = {}) {
     };
 
 
-// This function gets overwritten by various (but not all) relevant factory files
+// `cleanDimensionsAdditionalActions` - overwritten by some artefact factory files
     P.cleanDimensionsAdditionalActions = defaultNonReturnFunction;
 
 
-// Clean function for __lock__ array - unsets the dirtyLock flag; sets the dirtyStart and dirtyHandle flags
+// `cleanLock` - clean function for __lockTo__ array
     P.cleanLock = function () {
 
         this.dirtyLock = false;
@@ -1405,9 +1399,8 @@ export default function (P = {}) {
     };
 
 
-// Clean function for __start__ arrays - if local 'here' tests pass, invokes cleanPosition() and unsets the dirtyStart flag
-//
-// Start values do NOT scale
+// `cleanStart` - calculate the artefact's __currentStart__ Array
+// + Start values do NOT scale
     P.cleanStart = function () {
 
         this.dirtyStart = false;
@@ -1427,9 +1420,8 @@ export default function (P = {}) {
     };
 
 
-// Clean function for __offset__ arrays - if local 'here' tests pass, invokes cleanPosition() and unsets the dirtyOffset flag; sets the dirtyStampPositions and, if needed, the dirtyMimicOffset flags
-//
-// Offset values do NOT scale
+// `cleanOffset` - calculate the artefact's __currentOffset__ Array
+// + Offset values do NOT scale
     P.cleanOffset = function () {
 
         this.dirtyOffset = false;
@@ -1451,12 +1443,10 @@ export default function (P = {}) {
     };
 
 
-// Clean function for __handle__ arrays - invokes cleanPosition() and unsets the dirtyHandle flag; sets the dirtyStampHandlePositions and, if needed, the dirtyMimicHandle flags
-//
-// Handle values DO scale - but scaling happens elsewhere:
-//
-// + DOM elements (stack, element, canvas) manage handle offset in their CSS transform string
-// + Entities manage it as part of each entity's 'path' calculation
+// `cleanHandle` - calculate the artefact's __currentHandle__ Array
+// + Handle values DO scale - but scaling happens elsewhere:
+// + DOM elements (Stack, Element, Canvas) manage handle offset in their CSS `transform` string
+// + Entities manage it as part of each entity's `cleanPath` calculation
     P.cleanHandle = function () {
 
         this.dirtyHandle = false;
@@ -1470,13 +1460,10 @@ export default function (P = {}) {
     };
 
 
-// Clean function for the various __rotation__ attributes (roll, pitch, yaw). This function only handles __currentRoll__ recalculations; the function is overridden in the mixin/dom.js module to deal with DOM element 3D rotations.
-//
-// Rotation calculations vary according to the object's 'lockTo', 'pivot', 'mimic' and 'path' attributes, as an artefact can be set to use other artefacts' rotation values instead of its own values.
-//
-// Artefacts to which this artefact has subscribed for pivot and mimic purposes will set dirty flags (dirtyPivotRotation, dirtyMimicRotation) in this artefact when their rotation values change; these flags will be unset if the appropriate local tests pass.
-//
-// If this artefact's rotation values change as a result of cleaning, it will set the dirtyPositionSubscribers flag so the update can cascade through to other artefacts using it as a pivot or mimic 
+// `cleanRotation` - calculate the artefact's __currentRotation__ value
+// + For entity artefacts, the value is a Number
+// + For DOM-based artefacts, the value will be a Quaternion object
+// + This function only handles the __roll__ attribute; it is overwritten in the [dom mixin](./dom.html) to extend coverage to __yaw__ and __pitch__ attributes
     P.cleanRotation = function () {
 
         this.dirtyRotation = false;
@@ -1532,19 +1519,14 @@ export default function (P = {}) {
     };
 
 
-// __stampPosition__ represents the combination of start and offset positions to determine where the top left corner of any artefact should be placed. It represents the real __rotation-reflection point__ around which the artefact will display.
-//
-// Note that the calculation does not take into account _handle_ values, which get applied after the canvas grid is setup for the stamp operation
-//
-// DOM artefacts will also take handle values into consideration after the fact
-//
-// The X and Y coordinates are handled separately, and are dependant on the the lock set for each in the 'lockTo' array. Lock values can be: 'start' (the default for each coordinate), 'mouse' (to lock the coordinate to the mouse cursor), and 'pivot', 'path' or 'mimic' to use other artefacts for positioning.
-//
-// Artefacts that are currently in 'drag' mode (whose lock values are temporarily overridden) also need to take into account the drag offset values.
-//
-// Rotation and flip attributes are handled separately, alongside handle values, as part of the actual stamp operation.
-//
-// If either currentStampPosition coordinate changes as a result of this function, the dirtyPositionSubscribers flag will be set so that the change can be cascaded to any artefacts using this one as a pivot or mimic for their start or offset values.
+// `cleanStampPositions` 
+// + the __currentStampPosition__ Coordinate represents the combination of __start__ and __offset__ Coordinates to determine the current value of the artefact's _Rotation-Reflection point_.
+// + The calculation does not take into account the __handle__ Coordinate which, for entity artefacts, gets applied after the canvas engine transformation is performend for its stamp operation.
+// + DOM-based artefacts will also take handle values into consideration after the fact.
+// + The `x` and `y` coordinates are handled separately, and are dependant on the the lock set for each in the __lockTo__ Array.
+// + Artefacts that are currently in __drag mode__ (whose lock values are temporarily overridden) also need to take into account drag offset values.
+// + Rotation and flip attributes are handled separately, alongside handle values, as part of the actual stamp operation.
+// + If either __currentStampPosition__ coordinate changes as a result of this function, the `dirtyPositionSubscribers` flag will be set so that the change can be cascaded to any artefacts using this one as a `pivot` or `mimic` for their start or offset values.
     P.cleanStampPositions = function () {
 
         this.dirtyStampPositions = false;
@@ -1585,7 +1567,7 @@ export default function (P = {}) {
             }
             else {
                 
-                // x and y coordinates can have different lockTo values
+                // `x` and `y` coordinates can have different lockTo values
                 for (i = 0; i < 2; i++) {
 
                     lock = lockArray[i];
@@ -1602,7 +1584,7 @@ export default function (P = {}) {
 
             if (hereFlag) here = this.getHere();
 
-            // We loop twice - once for each coordinate: x is calculated on the first loop (i === 0); y on the second (i === 1)
+            // We loop twice - once for each coordinate: `x` is calculated on the first loop (`i === 0`); `y` on the second (`i === 1`)
             for (i = 0; i < 2; i++) {
 
                 lock = localLockArray[i];
@@ -1676,20 +1658,16 @@ export default function (P = {}) {
     };
 
 
-// Some artefact types need to perform additional calculations to finalize the values in the currentStampPosition array. Those factory functions will overwrite this function as required.
+// `cleanStampPositionsAdditionalActions` - some artefact types need to perform additional calculations to finalize the values in the __currentStampPosition__ array. Those factory functions will overwrite this function as required.
     P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;
 
 
-// An artefact's currentHandle values get applied after the canvas grid has been set up for the stamp operation (by translating the grid to the currentStampPosition coordinates). 
-//
-// + DOM elements (stack, element, canvas) include handle values as part of their CSS transform string
-// + Entities include handle values as part of their 'path' calculation
-//
-// Handle values DO scale, but not here; that happens when the transform/path is recalculated
-//
-// This function takes into account whether the artefact is pivoting on, or mimicking, another artefact.
-//
-// If either currentStampHandlePosition coordinate changes as a result of this function, the dirtyPositionSubscribers flag will be set so that the change can be cascaded to any artefacts using this one as a pivot or mimic for their start, handle or offset values.
+// `cleanStampHandlePositions` 
+// + an entity's __currentStampHandlePosition__ values get applied after the canvas grid has been set up for the stamp operation. 
+// + Entities include handle values as part of their 'path' calculation.
+// + DOM-based artefacts include handle values as part of their CSS transform string.
+// + Handle values DO scale, but not here; that happens when the transform/path is recalculated.
+// + If either currentStampHandlePosition coordinate changes as a result of this function, the `dirtyPositionSubscribers` flag will be set so that the change can be cascaded to any artefacts using this one as a pivot or mimic for their start, handle or offset values.
     P.cleanStampHandlePositions = function () {
 
         this.dirtyStampHandlePositions = false;
@@ -1712,7 +1690,7 @@ export default function (P = {}) {
                 path = this.path,
                 mimic = this.mimic;
 
-            // We loop twice - once for each coordinate: x is calculated on the first loop (i === 0); y on the second (i === 1)
+            // We loop twice - once for each coordinate: `x` is calculated on the first loop (`i === 0`); `y` on the second (`i === 1`)
             for (i = 0; i < 2; i++) {
 
                 lock = lockArray[i];
@@ -1746,7 +1724,8 @@ export default function (P = {}) {
             }
         }
         
-        // At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality. If this changes, then we should amend code so that we pass code flow to a cleanStampHandlePositionsAdditionalActions function, then move this 'if' statement into an override of that function in the mixin/shape.js module file
+        // At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality. 
+        // + If this changes, then we should amend code so that we pass code flow to a `cleanStampHandlePositionsAdditionalActions` function, then move this `if` statement into an override of that function in the mixin/shape.js module file.
         if (this.type === 'Shape') {
 
             let box = this.localBox;
@@ -1759,7 +1738,10 @@ export default function (P = {}) {
         if (this.domElement && this.collides) this.dirtyPathObject = true;
     };
 
-// TODO - documentation
+// #### Collision functionality
+
+// `cleanCollisionData`
+// + We only need to recalculate collisions data when the artefact has been asked to perform some collision detection functionality - it does not happen as part of the Display cycle
     P.cleanCollisionData = function () {
 
         if (!this.currentCollisionRadius) this.currentCollisionRadius = 0;
@@ -1780,7 +1762,8 @@ export default function (P = {}) {
         return [this.currentCollisionRadius, this.currentSensors];
     };
 
-// TODO - documentation
+// `calculateCollisionRadius`
+// We can use the __currentCollisionRadius__ attribute to quickly calculate whether two given artefacts are capable of intersecting, before proceeding to check if they do intersect (assuming they can)
     P.calculateCollisionRadius = function () {
 
         if (!this.noUserInteraction) {
@@ -1798,18 +1781,17 @@ export default function (P = {}) {
                 rx = lx + (dims[0] * scale),
                 by = ty + (dims[1] * scale);
 
-            // BUG: fails for DOM artefact types (stack, canvas, element) whose computed height is 0 - because: 'auto'?
+            // BUG: fails for DOM-based artefacts (Stack, Canvas, Element) whose computed height is `0` - because: `auto`?
             radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - ty) * (sy - ty))));
             radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - by) * (sy - by))));
             radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - by) * (sy - by))));
             radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - ty) * (sy - ty))));
 
-            // We can use the currentCollisionRadius attribute to quickly calculate whether two given artefacts are capable of intersecting, before proceeding to check if they do intersect (assuming they can)
             this.currentCollisionRadius = Math.ceil(Math.max(...radii));
         }
     };
 
-// TODO - documentation
+// `calculateSensors` - internal function - overwritten by various artefact factories to meet their specific requirements
     P.calculateSensors = function () {
 
         if (!this.noUserInteraction) {
@@ -1886,14 +1868,35 @@ export default function (P = {}) {
     };
 
 
-// TODO - documentation
+// `getSensors`
     P.getSensors = function () {
 
         let [entityRadius, entitySensors] = this.cleanCollisionData();
         return entitySensors;
     }
 
-// TODO - documentation
+// `getPathData`
+    P.getPathData = function () {
+
+        let pathPos = this.pathPosition,
+            path = this.path,
+            currentPathData;
+
+        if (path) {
+
+            currentPathData = path.getPathPositionData(pathPos);
+
+            if (this.addPathRotation) this.dirtyRotation = true;
+
+            return currentPathData;
+        }
+        return false;
+    };
+
+
+// `checkHit`
+// + We use pool Cells (see [Cell code](../factory/cell.html)) to help calculate whether (any of) the Coordinate(s) supplied in the first argument are colliding with the artefact. 
+// + This works both for entitys and for DOM-based artefacts.
     P.checkHit = function (items = [], mycell) {
 
         if (this.noUserInteraction) return false;
@@ -1954,7 +1957,56 @@ export default function (P = {}) {
         return false;
     };
 
-// TODO - documentation
+// `pickupArtefact`
+    P.pickupArtefact = function (items = {}) {
+
+        let {x, y} = items;
+
+        if (xta(x, y)) {
+
+            this.isBeingDragged = true;
+            this.currentDragCache.set(this.currentDragOffset);
+            this.currentDragOffset.set(this.currentStart).subtract([x, y]);
+
+            this.order += 9999;
+
+            this.group.batchResort = true;
+
+            if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
+
+        }
+
+        return this;
+    };
+
+// `dropArtefact`
+    P.dropArtefact = function () {
+
+        this.start.set(this.currentStartCache).add(this.currentDragOffset);
+        this.dirtyStart = true;
+
+        this.currentDragOffset.set(this.currentDragCache);
+
+        this.order = (this.order >= 9999) ? this.order - 9999 : 0;
+
+        this.group.batchResort = true;
+
+        if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
+
+        this.isBeingDragged = false;
+
+        return this;
+    };
+
+// #### Subscription management
+// Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes. 
+// + This notification happens when an artefact completes cleaning its attributes and detects that there have been changes which other artefacts need to be aware.
+// + The artefact doesbn't change any values in artefacts which have subscribed to them - unlike asset objects, which do directly update attribute values in their subscribing artefacts. 
+// + Instead, the artefact sets the appropriate `dirty` flags which the subscribing artefacts can process as they progress through the Display cycle.
+// + Because the update functionality cascades from one controlling function - `updatePositionSubscribers` - we also define a range of subsidiary functions here 
+// + TODO: some of the subsidiary functions should be moved to more appropriate factory code?
+
+// `updatePositionSubscribers`
     P.updatePositionSubscribers = function () {
 
         this.dirtyPositionSubscribers = false;
@@ -1969,6 +2021,7 @@ export default function (P = {}) {
 
     };
 
+// `updateControlSubscribers`
     P.updateControlSubscribers = function () {
 
         this.controlSubscriber.forEach(name => {
@@ -1979,6 +2032,7 @@ export default function (P = {}) {
         });
     };
 
+// `updateStartControlSubscribers`
     P.updateStartControlSubscribers = function () {
 
         this.startControlSubscriber.forEach(name => {
@@ -1989,6 +2043,7 @@ export default function (P = {}) {
         });
     };
 
+// `updateEndControlSubscribers`
     P.updateEndControlSubscribers = function () {
 
         this.endControlSubscriber.forEach(name => {
@@ -1999,6 +2054,7 @@ export default function (P = {}) {
         });
     };
 
+// `updateEndSubscribers`
     P.updateEndSubscribers = function () {
 
         this.endSubscriber.forEach(name => {
@@ -2009,6 +2065,7 @@ export default function (P = {}) {
         });
     };
 
+// `updatePivotSubscribers`
     P.updatePivotSubscribers = function () {
 
         this.pivoted.forEach(name => {
@@ -2025,6 +2082,7 @@ export default function (P = {}) {
         });
     };
 
+// `updateMimicSubscribers`
     P.updateMimicSubscribers = function () {
 
         let DMH = this.dirtyMimicHandle;
@@ -2056,72 +2114,12 @@ export default function (P = {}) {
     };
 
 
-// This is a holding function. The real function is in factory/shape.js as only shapes have to worry about updating their path subscribers
+// `updatePathSubscribers`
     P.updatePathSubscribers = defaultNonReturnFunction;
 
 
-// This is a holding function. The real function is in factory/picture.js as only pictures need to deal with telling subscribers about image update issues
+// `updateImageSubscribers`
     P.updateImageSubscribers = defaultNonReturnFunction;
-
-// TODO - documentation
-    P.getPathData = function () {
-
-        let pathPos = this.pathPosition,
-            path = this.path,
-            currentPathData;
-
-        if (path) {
-
-            currentPathData = path.getPathPositionData(pathPos);
-
-            if (this.addPathRotation) this.dirtyRotation = true;
-
-            return currentPathData;
-        }
-        return false;
-    };
-
-
-// TODO - documentation
-    P.pickupArtefact = function (items = {}) {
-
-        let {x, y} = items;
-
-        if (xta(x, y)) {
-
-            this.isBeingDragged = true;
-            this.currentDragCache.set(this.currentDragOffset);
-            this.currentDragOffset.set(this.currentStart).subtract([x, y]);
-
-            this.order += 9999;
-
-            this.group.batchResort = true;
-
-            if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
-
-        }
-
-        return this;
-    };
-
-// TODO - documentation
-    P.dropArtefact = function () {
-
-        this.start.set(this.currentStartCache).add(this.currentDragOffset);
-        this.dirtyStart = true;
-
-        this.currentDragOffset.set(this.currentDragCache);
-
-        this.order = (this.order >= 9999) ? this.order - 9999 : 0;
-
-        this.group.batchResort = true;
-
-        if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
-
-        this.isBeingDragged = false;
-
-        return this;
-    };
 
 // Return the prototype
     return P;

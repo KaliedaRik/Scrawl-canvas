@@ -1,16 +1,16 @@
-
 // # Entity mixin
+// This mixin builds on the base and position mixins to give Canvas entity objects (Scrawl-canvas Block, Grid, Loom, Phrase, Picture, Shape, Wheel) the ability to act as __artefacts__.
 //
-// This mixin builds on the _base_ mixin to set up much of the basic functionality of a Scrawl-canvas __entity__ Object:
+// Entitys differ from non-entity artefacts in that they are restricted to Cell wrappers (though no harm should come if they are included in Stack-related Groups).
+// + The entity object represents a set of instructions for rendering graphical lines and shapes onto a &lt;canvas> CanvasRenderingContext2D engine, using the Canvas API to do this
+// + The engine requirements for the render - `fillStyle`, `font`, `globalAlpha`, `globalCompositeOperation`, `lineCap`, `lineDash`, `lineDashOffset`, `lineJoin`, `lineWidth`, `miterLimit`, `shadowBlur`, `shadowColor`, `shadowOffsetX`, `shadowOffsetY`, `strokeStyle`, `textAlign`, `textBaseline` - are kept in a separate [State object](../factory.state.html). Note that these attributes are initialized/updated directly on the entity object
+// + Entitys can act as hotspots within a &lt;canvas> display; we can create hover and click effects for them
 //
-// + __defaults__ -
-//
-// + __getters__ -
-// + __setters__ -
-// + __deltaSetters__ - 
+// Entitys are, nevertheless, full artefact objects which can interact with other artefacts and the mouse/touch cursor in all the normal ways: positioning (`pivot` and `path`) and dimensioning (`mimic`) functionality; collision detection (including __drag-and-drop__); etc
 
 
-// ## Imports
+
+// #### Imports
 import * as library from '../core/library.js';
 import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
     generateUuid, isa_fn, mergeOver, pushUnique, xt, xta, addStrings } from '../core/utilities.js';
@@ -22,48 +22,138 @@ import { requestCell, releaseCell } from '../factory/cell.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from '../factory/filter.js';
 import { importDomImage } from '../factory/imageAsset.js';
 
+
+// #### Export function
 export default function (P = {}) {
 
 
-// ## Define attributes
-
-// All factories using the position mixin will add these to their prototype objects
+// #### Shared attributes
     let defaultAttributes = {
 
-// TODO - documentation
+// __method__ - String value which tells the entity _how_ it will display itself on the canvas. Available options are:
+// + `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
+// + `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
+// + `drawAndFill` - stroke the entity's outline, remove shadow, then fill it
+// + `fillAndDraw` - fill the entity's outline, remove shadow, then stroke it
+// + `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
+// + `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
+// + `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
+// + `none` - perform all the calculations required, but don't perform the final stamping
         method: 'fill',
 
-// TODO - documentation
+// __pathObject__ - Scrawl-canvas holds details of every type of entity's outline in a `Path2D` object - used both for draw/fill operations, and for collision detection work
         pathObject: null,
 
-// TODO - documentation
+// __winding__ - String with value `evenodd` or `nonzero` (default)
+// + Canvas fill (flood) drawing operations can take into account an entity's winding choice. Two are available: the [non-zero rule](https://en.wikipedia.org/wiki/Nonzero-rule); and the [even-odd rule](https://en.wikipedia.org/wiki/Even%E2%80%93odd_rule)
         winding: 'nonzero',
 
-// TODO - documentation
+// __flipReverse__, __flipUpend__ - Boolean flags which determine the orientation of the entity when it stamps itself on the display. 
+// + a `reversed` entity is effectively flipped 180&deg; around a vertical line passing through that entity's rotation-reflection (start) point - a face looking to the right will now look to the left
+// + an `upended` entity is effectively flipped 180&deg; around a horizontal line passing through that entity's rotation-reflection (start) point - a normal face will now appear upside-down
         flipReverse: false,
         flipUpend: false,
 
-// TODO - documentation
+// __scaleOutline__ - Boolean flag. When set, the entity will increase its `lineWidth` proportionat to the entity's `scale` value - an entity of scale = 2 will display lines twice the thickness of the same entity at scale = 1
         scaleOutline: true,
 
-// TODO - documentation
+// __lockFillStyleToEntity__, __lockStrokeStyleToEntity__ - Boolean flags. 
+// + When set, these flags instruct any gradient-type style (Scrawl-canvas Gradient, RadialGradient) to map their `start` and `end` coordinates to the entity's dimensions
+// + Default action is for gradient-type styles to map their coordinates to the host Cell's dimensions
         lockFillStyleToEntity: false,
         lockStrokeStyleToEntity: false,
 
-// TODO - documentation
+// ##### Event listener functions
+// Entity objects have the ability to act as 'hotspots' within a canvas display, reacting to mouse/pointer movements over the canvas. Four mouse-like events are supported:
+// + `enter` - triggers when the cursor passes over the entity's outline into its fillable area
+// + `down` - triggers when a user presses their (left) mouse key while inside the entity's fillable area
+// + `up` - triggers when a user releases their (left) mouse key while inside the entity's fillable area - this can also be used for capturing mouse click and touch tap actions
+// + `leave` - triggers when the cursor passes over the entity's outline away from its fillable area
+//
+// The events are regular functions. 
+// + `this` refers to the entity object, giving the functions access to any attribute and method set on it. 
+// + They can also use variables defined elsewhere in the script code (though these will need to be rehydrated if the entity is packet stored and resurrected - see Demo [Canvas-009](../../demo/canvas-009.html) tests for an example of doing this)
+// 
+// Scrawl-canvas will not automatically trigger these functions: 
+// + They can be triggered as part of an Animation object's function checking for hits on a Group of entitys
+// + Similar checks can be included in a RenderAnimation hook function
+// + Alternatively we can set up an event listener on the DOM &lt;canvas> element, which invokes a call to cascade a mouse/touch `move` event down to its associated entitys - in this case the entitys will check the event themselves and trigger the appropriate function
+//
+// The functions defined in these attributes will be included in entity `packet` functionality, and can be safely cloned
+
+// __onEnter__ - define tasks to be performed for `enter` events
         onEnter: null,
+
+// __onLeave__ - define tasks to be performed for `leave` events
         onLeave: null,
+
+// __onDown__ - define tasks to be performed for `down` events
         onDown: null,
+
+// __onUp__ - define tasks to be performed for `up` events
         onUp: null,
+
+// ##### State object attributes
+// We can treat the following attributes as if they are entity object attributes, though in fact they are stored and managed by __State objects__
+//
+// __fillStyle__ and __strokeStyle__ - color, gradient or pattern used to outline or fill a entity. Can be:
+// + CSS format color String - `#fff`, `#ffffff`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
+// + COLORNAME String
+// + GRADIENTNAME String
+// + RADIALGRADIENTNAME String
+// + PATTERNNAME String
+//
+// __globalAlpha__ - entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque
+//
+// __globalCompositeOperation__ - compositing method for applying the entity to an existing Cell (&lt;canvas&gt;) display. Permitted values include
+// + 'source-over'
+// + 'source-atop'
+// + 'source-in'
+// + 'source-out'
+// + 'destination-over'
+// + 'destination-atop'
+// + 'destination-in'
+// + 'destination-out'
+// + 'lighter'
+// + 'darker'
+// + 'copy'
+// + 'xor'
+// + any other permitted value - be aware that different browsers may render these operations in different ways, and some options are not supported by all browsers.
+//
+// __lineWidth__ - Number (in pixels)
+//
+// __lineCap__ - how the ends of lines will display. Permitted values include:
+// + 'butt'
+// + 'round'
+// + 'square'
+//
+// __lineJoin__ - how line joints will display. Permitted values include:
+// + 'miter'
+// + 'round'
+// + 'bevel'
+//
+// __lineDash__ - an array of integer Numbers representing line and gap values (in pixels), for example [5,2,2,2] for a long-short dash pattern
+//
+// __lineDashOffset__ - distance along the entity's outline at which to start the line dash. Changing this value can be used to create a 'marching ants effect
+//
+// __miterLimit__ - affecting the 'pointiness' of the line join where two lines join at an acute angle
+//
+// __shadowOffsetX__, __shadowOffsetY__ - horizontal and vertical offsets for a entity's shadow, in Number pixels
+//
+// __shadowBlur__ - the blur width for a entity's shadow, in Number pixels
+//
+// __shadowColor__ - the color used for an entity's shadow effect. Can be:
+// + CSS format color String - `#fff`, `#ffffff`, `rgb(255,255,255)`, `rgba(255,255,255,1)`, `white`, etc
+// + COLORNAME String
+//
+// __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.
+
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
+// #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['state']);
-    P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-    P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-    P.packetObjects = pushUnique(P.packetObjects, []);
     P.packetFunctions = pushUnique(P.packetFunctions, ['onEnter', 'onLeave', 'onDown', 'onUp']);
 
     P.processEntityPacketOut = function (key, value, includes) {
@@ -91,7 +181,7 @@ export default function (P = {}) {
     };
 
 
-// Overwrites postCloneAction function in mixin/base.js
+// #### Clone management
     P.postCloneAction = function(clone, items) {
 
         if (this.onEnter) clone.onEnter = this.onEnter;
@@ -119,45 +209,43 @@ export default function (P = {}) {
     };
 
 
+// #### Kill management
+// No additional kill functionality defined here
 
-// ## Define getter, setter and deltaSetter functions
+
+// #### Get, Set, deltaSet
     let G = P.getters,
         S = P.setters,
         D = P.deltaSetters;
 
-// TODO - documentation
+// __group__ - returns the entity's latest Group's String name, not the Group object itself
     G.group = function () {
 
         return (this.group) ? this.group.name : '';
     };
 
-// TODO - documentation
+// __lockStylesToEntity__ - a pseudo-attribute which will set the `lockFillStyleToEntity` and `lockStrokeStyleToEntity` flags to the same Boolean value
     S.lockStylesToEntity = function (item) {
 
         this.lockFillStyleToEntity = item;
         this.lockStrokeStyleToEntity = item;
     };
 
-// TODO - documentation
+// __flipUpend__
     S.flipUpend = function (item) {
 
         if (item !== this.flipUpend) this.dirtyCollision = true;
         this.flipUpend = item;
     };
 
+// __flipReverse__
     S.flipReverse = function (item) {
 
         if (item !== this.flipReverse) this.dirtyCollision = true;
         this.flipReverse = item;
     };
 
-
-
-// ## Define functions to be added to the factory prototype
-
-
-
-// Overwrites function defined in mixin/base.js - takes into account State object attributes
+// Entity `get`, `set` and `deltaSet` functions need to take into account the entity State object, whose attributes can be retrieved/amended directly on the entity object
     P.get = function (item) {
 
         let getter = this.getters[item];
@@ -187,8 +275,6 @@ export default function (P = {}) {
         }
     };
 
-
-// Overwrites function defined in mixin/base.js - takes into account State object attributes
     P.set = function (items = {}) {
 
         if (items) {
@@ -221,8 +307,6 @@ export default function (P = {}) {
         return this;
     };
 
-
-// Overwrites function defined in mixin/base.js - takes into account State object attributes
     P.setDelta = function (items = {}) {
 
         if (items) {
@@ -255,7 +339,9 @@ export default function (P = {}) {
         return this;
     };
 
-// TODO - documentation
+// #### Prototype functions
+
+// `entityInit` - internal function, called by all entity factory constructors
     P.entityInit = function (items = {}) {
 
         this.makeName(items.name);
@@ -281,63 +367,90 @@ export default function (P = {}) {
     P.midInitActions = defaultNonReturnFunction;
 
 
-// TODO - documentation
+// #### Display cycle functionality
+// Entitys - as artefacts - take part in the Display cycle at the `compile` stage, when Cell wrappers trigger a compile action cascade through their associated Group objects to entity objects included in those groups.
+//
+// The main entity compile-related functions are:
+// + __prepareStamp__ - a synchronous function called at the start of the compile step where an entity will check its dirty flags and update position, dimensions and other attributes accordingly.
+// + __stamp__ - a function that returns a Promise - this is where the main drawing activity happens. This function calls one of two other functions: __filteredStamp__; or __regularStamp__ (both returning Promises) which in turn rely on the __regularStampSynchronousActions__ function where all the drawing magic happens.
+// 
+// The stamp functionality can be triggered outside of the Display cycle, if required - for instance when compiling a Cell display setup as a static background layer, which excludes itself from the Display cycle cascade's `clear` and `compile` steps.
+// + Invoking `entity.stamp` is an asynchronous call returning a Promise which needs to be handled accordingly - in particular for error management.
+// + Alternatively, the __simpleStamp__ function will make the entity perform a synchronous action (no Promise returned); the function ignores any filter requirements set on the entity.
 
-// CURRENTLY does not support filters on entitys
-    P.simpleStamp = function (host, changes = {}) {
-
-        if (host && host.type === 'Cell') {
-
-            this.currentHost = host;
-            
-            this.set(changes);
-            this.prepareStamp();
-
-            this.regularStampSynchronousActions();
-        }
-    };
-
-// TODO - documentation
+// ##### Step 1: prepare the entity for stamping
+// `prepareStamp` - all entity objects need to check the following dirty flags and take corrective action when a flag is set. 
+// + The order in which flags get checked is important! 
+// + As part of the checking process, additional dirty flags may be set early in the function, for processing later on in the function.
+//
+// If an entity relies on another artefact as a `pivot`, `mimic` or `path` reference, those artefacts should be processed earlier in the compile cascade. This can be achieved by:
+// + Placing the reference artefacts in a different Group, whose __order__ attribute has been set to a lower value than this entity's Group's order value
+// + If both entity and reference artefact are in the same Group, give this entity an order value higher than its reference.
+// + If both entity and the reference artefact are in the same Group, and have the same order value, then make sure that the reference artefact is defined in code before the entity.
+// 
+// Note that some entity factories need to overwrite this function to meet their particular requirements. Many of the _clean functions_ mentioned below are defined in the [position mixin](./position.html).
     P.prepareStamp = function() {
 
+// `dirtyHost` - set by a Cell wrapper on the entitys associated with it (via the Cell's associated Group objects) whenever the Cell's dimensions change. The entity sets its own `dirtyDimensions` flag as a result.
         if (this.dirtyHost) {
 
             this.dirtyHost = false;
             this.dirtyDimensions = true;
         }
 
+// A number of updates (__scale__, __dimensions__, __start__, __offset__, __handle__) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own `dirtyPathObject` flag as a result.
         if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
+// Any change in an entity's __roll__ attribute means the entity will need to recalculate its collision sensors, as indicated by the entity setting its own `dirtyCollision` flag.
         if (this.dirtyRotation) this.dirtyCollision = true;
 
-
+// `dirtyScale` - triggers __cleanScale__ function - which in turn sets the `dirtyDimensions`, `dirtyHandle` and (if required) `dirtyPositionSubscribers`, `dirtyMimicScale` flags on the entity.
         if (this.dirtyScale) this.cleanScale();
+
+// `dirtyDimensions` - triggers __cleanDimensions__ function - which in turn sets the `dirtyStart`, `dirtyHandle`, `dirtyOffset` and (if required) `dirtyPositionSubscribers`, `dirtyMimicDimensions` flags on the entity.
         if (this.dirtyDimensions) this.cleanDimensions();
+
+// `dirtyLock` - triggers __cleanLock__ function - which in turn sets the `dirtyStart` and `dirtyHandle` flags on the entity.
         if (this.dirtyLock) this.cleanLock();
+
+// `dirtyStart` - triggers __cleanStart__ function - which in turn sets the `dirtyStampPositions` flag on the entity.
         if (this.dirtyStart) this.cleanStart();
+
+// `dirtyOffset` - triggers __cleanOffset__ function - which in turn sets the `dirtyStampPositions` and (if required) `dirtyMimicOffset` flags on the entity.
         if (this.dirtyOffset) this.cleanOffset();
+
+// `dirtyHandle` - triggers __cleanHandle__ function - which in turn sets the `dirtyStampHandlePositions` and (if required) `dirtyMimicHandle` flags on the entity.
         if (this.dirtyHandle) this.cleanHandle();
+
+// `dirtyRotation` - triggers __cleanRotation__ function - which in turn sets (if required) `dirtyMimicRotation`, `dirtyPivotRotation`, `dirtyPositionSubscribers` flags on the entity.
         if (this.dirtyRotation) this.cleanRotation();
 
+// To handle situations where the entity position is currently under the influence of the mouse/touch cursor - where true, entity will set its own `dirtyStampPositions`, `dirtyStampHandlePositions` flags
         if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
         }
 
+// Invoke the __cleanStampPositions__ and __cleanStampHandlePositions__ functions, if needed, to update current positional data prior to the stamping operation. Both functions will set the `dirtyPositionSubscribers` flag if changes to positional values result from the calculations.
         if (this.dirtyStampPositions) this.cleanStampPositions();
         if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
+// If the entity's Path2D object has been marked as dirty by the `dirtyPathObject` flag, rebuild it by invoking the __cleanPathObject__ function - results in the entity setting its `dirtyCollision` flag.
         if (this.dirtyPathObject) {
 
             this.cleanPathObject();
             this.dirtyCollision = true;
         }
 
-        // update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
+// `dirtyPositionSubscribers` - update any artefacts subscribed to this entity as their `pivot` or `mimic` source, if required, by invoking the __updatePositionSubscribers__ function.
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
-        // Anchor housekeeping
+// The `dirtyCollision` flag is not checked or actioned here - it only needs to be dealt with when an entity is asked to perform a __checkHit__ calculation.
+
+// The `dirtyFilters` flag is checked and handled by the __filteredStamp__ function.
+
+// `dirtyAnchorHold` - if the entity has an Anchor object, and any updates have been made to its data, it needs to be rebuilt by invoking the __buildAnchor__ function.
         if (this.anchor && this.dirtyAnchorHold) {
 
             this.dirtyAnchorHold = false;
@@ -346,70 +459,12 @@ export default function (P = {}) {
     };
 
 
-// TODO - documentation
-
-// EVERY ENTITY FILE will need to define its own .cleanPathObject function
+// `cleanPathObject` - ___this function will be overwritten by every entity Factory___, to meet their individual requirements.
+// + The function needs to build a Canvas API [Path2D](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) object and store it in the __pathObject__ attribute. The Path2D object is used for both entity stamping (see below) and entity collision detection work.
     P.cleanPathObject = defaultNonReturnFunction;
 
-// TODO - documentation
-    P.draw = function (engine) {
-
-        engine.stroke(this.pathObject);
-    };
-
-    P.fill = function (engine) {
-
-        engine.fill(this.pathObject, this.winding);
-    };
-
-    P.drawAndFill = function (engine) {
-
-        let p = this.pathObject;
-
-        engine.stroke(p);
-        this.currentHost.clearShadow();
-        engine.fill(p, this.winding);
-    };
-
-    P.fillAndDraw = function (engine) {
-
-        let p = this.pathObject;
-
-        engine.stroke(p);
-        this.currentHost.clearShadow();
-        engine.fill(p, this.winding);
-        engine.stroke(p);
-    };
-
-    P.drawThenFill = function (engine) {
-
-        let p = this.pathObject;
-
-        engine.stroke(p);
-        engine.fill(p, this.winding);
-    };
-
-    P.fillThenDraw = function (engine) {
-
-        let p = this.pathObject;
-
-        engine.fill(p, this.winding);
-        engine.stroke(p);
-    };
-
-    P.clear = function (engine) {
-
-        let gco = engine.globalCompositeOperation;
-
-        engine.globalCompositeOperation = 'destination-out';
-        engine.fill(this.pathObject, this.winding);
-        
-        engine.globalCompositeOperation = gco;
-    };
-
-    P.none = function (engine) {}
-
-// TODO - documentation
+// ##### Step 2: invoke the entity's stamp action
+// `stamp` - returns a Promise. This is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
     P.stamp = function (force = false, host, changes) {
 
         let filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
@@ -436,7 +491,24 @@ export default function (P = {}) {
         return Promise.resolve(false);
     };
 
-// TODO - documentation
+// `regularStamp` - handles stamping functionality for all entitys that do not have any filter functions associated with them - returns a Promise.
+    P.regularStamp = function () {
+
+        let self = this;
+
+        return new Promise((resolve, reject) => {
+
+            if (self.currentHost) {
+
+                self.regularStampSynchronousActions();
+                resolve(true);
+            }
+            reject(false);
+        });
+    };
+
+// `filteredStamp` - handles stamping functionality for all __entitys that have filter functions__ associated with them - returns a Promise.
+// + Filters require the use of the [Filter web worker](../worker/filter.html) which returns its results asynchronously.
     P.filteredStamp = function(){
 
         // Clean and sort the Entity-level filters before sending them to the filter worker for application
@@ -470,7 +542,7 @@ export default function (P = {}) {
 
                     if (self.stashOutputAsAsset) {
 
-                        // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo canvas-020 for a setTimeout-based workaround.
+                        // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
                         self.stashOutputAsAsset = false;
 
                         filterElement.width = stashWidth;
@@ -503,13 +575,13 @@ export default function (P = {}) {
                 self.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
             };
 
-            // save current host data into a set of vars, ready for restoration after web worker completes or fails
+            // Save current host data into a set of vars, ready for restoration after web worker completes or fails
             let currentHost = self.currentHost,
                 currentElement = currentHost.element,
                 currentEngine = currentHost.engine,
                 currentDimensions = currentHost.currentDimensions;
 
-            // get and prepare a blank canvas for the filter operations
+            // Get and prepare a pool Cell for the filter operations
             let filterHost = requestCell(),
                 filterElement = filterHost.element,
                 filterEngine = filterHost.engine;
@@ -523,15 +595,14 @@ export default function (P = {}) {
             let oldNoCanvasEngineUpdates = self.noCanvasEngineUpdates;
             self.noCanvasEngineUpdates = false;
 
-             // stamp the entity onto the blank canvas
+             // Stamp the entity onto the pool Cell
             self.regularStampSynchronousActions();
 
-            // At this point we will send the contents of the host canvas over to the web worker, alongside details of the filters we wish to apply to it
             let worker, myimage;
 
             if (!self.noFilters && self.filters && self.filters.length) {
 
-                // if we're using the entity as a stencil, copy the entity cell's current display over the entity in the blank canvas
+                // If we're using the entity as a stencil, copy the entity cell's current display over the entity in the pool Cell
                 if (self.isStencil) {
 
                     filterEngine.save();
@@ -547,13 +618,14 @@ export default function (P = {}) {
                 myimage = filterEngine.getImageData(0, 0, w, h);
                 worker = requestFilterWorker();
 
+                // Pass control over to the web worker
                 actionFilterWorker(worker, {
                     image: myimage,
                     filters: self.currentFilters
                 })
                 .then(img => {
 
-                    // handle the web worker response
+                    // Handle the web worker response
                     if (img) {
 
                         filterEngine.globalCompositeOperation = 'source-over';
@@ -582,7 +654,7 @@ export default function (P = {}) {
         });
     };
 
-// TODO - documentation
+// `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the `scrawl.createImageFromEntity` function is invoked.
     P.getCellCoverage = function (img) {
 
         let width = img.width,
@@ -614,24 +686,34 @@ export default function (P = {}) {
         else return [0, 0, width, height];
     };
 
-// TODO - documentation
-    P.regularStamp = function () {
+// `simpleStamp` - an alternative to the `stamp` function, to get an entity to stamp its output onto a Cell.
+// + Note that this is a synchronous action, thus cannot be included in a Display cycle cascade.
+// + Will ignore any filters assigned to the entity (because they require asynchronous Promises for the Filter web worker)
+    P.simpleStamp = function (host, changes = {}) {
 
-        let self = this;
+        if (host && host.type === 'Cell') {
 
-        return new Promise((resolve, reject) => {
+            this.currentHost = host;
+            
+            this.set(changes);
+            this.prepareStamp();
 
-            if (self.currentHost) {
-
-                self.regularStampSynchronousActions();
-                resolve(true);
-            }
-            reject(false);
-        });
+            this.regularStampSynchronousActions();
+        }
     };
 
+// ##### Stamping the entity onto a Cell wrapper &lt;canvas> element
+// `regularStampSynchronousActions` - this function ___coordinates the actions required___ for an entity to display its output on a Cell wrapper's &lt;canvas> element.
+//
+// Scrawl-canvas stamps an entity onto a Cell by moving and rotating the Cell engine's `transformation` (its coordinate grid) to match the entity's __start__ and __offset__ coordinates, alongside any requirements to rotate (__roll__) and flip (__flipReverse__, __flipUpend__) the transformation as set out by the entity object.
+// + We use the Web API CanvasRenderingContext2D engine's `setTransform` method to perform these actions when we invoke the Cell wrapper's __rotateDestination__ function.
+// + ___We never invoke the engine's `translate`, `rotate` or `scale` methods___ on the transformation. All positional, rotational and scaling data is kept in the entity object, and calculated as part of its __prepareStamp__ step. This means we don't need to keep track of the transformation's current state, and makes the entity stamping operation more efficient.
+// + Scrawl-canvas __does not support skew operations__ on the transformation - use a more appropriately shaped entity instead.
+// + Scrawl-canvas __does not support non-isometric scaling__ (applying different scaling factors along the x and y axes) - most entitys include width and height attributes: use those instead.
+// + We only use the transformation's `save` and `restore` methods where it makes sense to do so - for instance in very limited actions where the save and restore invocations are close enough in the code base that we don't lose sight of them (and remember to restore after the action completes). They are ___not___ used when updating the engine's attributes to match an entity's stamping requirements!
     P.regularStampSynchronousActions = function () {
 
+        // Get a handle to the Cell wrapper - which needs to be assigned and checked prior to calling this function
         let dest = this.currentHost;
 
         if (dest) {
@@ -641,13 +723,84 @@ export default function (P = {}) {
                 x = stamp[0],
                 y = stamp[1];
 
+            // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
             dest.rotateDestination(engine, x, y, this);
 
+            // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
+            // Invoke the appropriate __stamping method__ (below)
             this[this.method](engine);
         }
     };
+
+// ##### Stamp methods
+// All actual drawing is achieved using the entity's pre-calculated [Path2D object](https://developer.mozilla.org/en-US/docs/Web/API/Path2D).
+
+// `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
+    P.draw = function (engine) {
+
+        engine.stroke(this.pathObject);
+    };
+
+// `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
+    P.fill = function (engine) {
+
+        engine.fill(this.pathObject, this.winding);
+    };
+
+// `drawAndFill` - stroke the entity's outline, remove shadow, then fill it
+    P.drawAndFill = function (engine) {
+
+        let p = this.pathObject;
+
+        engine.stroke(p);
+        this.currentHost.clearShadow();
+        engine.fill(p, this.winding);
+    };
+
+// `fillAndDraw` - fill the entity's outline, remove shadow, then stroke it
+    P.fillAndDraw = function (engine) {
+
+        let p = this.pathObject;
+
+        engine.stroke(p);
+        this.currentHost.clearShadow();
+        engine.fill(p, this.winding);
+        engine.stroke(p);
+    };
+
+// `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
+    P.drawThenFill = function (engine) {
+
+        let p = this.pathObject;
+
+        engine.stroke(p);
+        engine.fill(p, this.winding);
+    };
+
+// `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
+    P.fillThenDraw = function (engine) {
+
+        let p = this.pathObject;
+
+        engine.fill(p, this.winding);
+        engine.stroke(p);
+    };
+
+// `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
+    P.clear = function (engine) {
+
+        let gco = engine.globalCompositeOperation;
+
+        engine.globalCompositeOperation = 'destination-out';
+        engine.fill(this.pathObject, this.winding);
+        
+        engine.globalCompositeOperation = gco;
+    };
+
+// `none` - perform all the calculations required, but don't perform the final stamping
+    P.none = function (engine) {}
 
 // Return the prototype
     return P;

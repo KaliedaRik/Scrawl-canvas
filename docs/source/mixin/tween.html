@@ -299,7 +299,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="tween-mixin">Tween mixin</h1>
+<p>This mixin defines attributes and functions shared by <a href="../factory/tween.html">Tween</a> objects and <a href="../factory/action.html">Action</a> objects</p>
+<ul>
+<li><a href="../factory/ticker.html">Ticker</a> objects do not use this mixin</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,9 +316,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="tween-mixin">Tween mixin</h1>
+              <h4 id="imports">Imports</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, animationtickers } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
             
         </li>
         
@@ -324,9 +332,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="export-function">Export function</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -337,14 +347,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="shared-attributes">Shared attributes</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, animationtickers } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -355,9 +362,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="define-attributes">Define attributes</h2>
+              <p><strong>order</strong> - integer Number (defaults to <code>1</code>) - the order in which Tween/Actions run is determined by their order value: Tween/Actions with a lower order value run before those with a higher value</p>
+<ul>
+<li>Run order for Tween/Actions with the same order value is determined by the order in which they are defined in code </li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        order: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -368,11 +380,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>All factories using the filter mixin will add these to their prototype objects</p>
+              <p><strong>ticker</strong> - String - the name-String of the Ticker the Tween/Action uses for its timeline</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        ticker: <span class="hljs-string">''</span>,</pre></div></div>
             
         </li>
         
@@ -383,11 +395,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>targets</strong> - Array containing the Scrawl-canvas objects on which the Tween/Action will act; one Tween/Action can modify attributes in multiple objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        ticker: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        targets: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -398,11 +410,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>time</strong> - the timeline time when the Tween/Action activates and runs.</p>
+<ul>
+<li>Tween/Actions given a time value of <code>0</code> will run as soon as their associated Ticker timeline runs; values greater than 0 will delay their run until that time is reached on the timeline.</li>
+<li>Time can be set as a Number value representing microseconds</li>
+<li>It can also be set as a time string - <code>3s</code> is 3000 microseconds; <code>200ms</code> is 200 milliseconds</li>
+<li>Or it can be set as a percentage String - <code>30%</code> - measured against the duration of the Ticker timeline.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        targets: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        time: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -413,11 +431,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>action</strong> - a user-defined function which will run every time the Tween/Action completes an update - generally once each Display cycle while the Tween/Action is running</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        time: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        action: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -428,11 +446,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>reverseOnCycleEnd</strong> - Boolean flag; when set, the Tween/Action will reverse its direction and continue running, rather than halt.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        action: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        reverseOnCycleEnd: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -443,11 +461,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>reversed</strong> - internal Boolean flag indicating whether the Tween/Action is running in <code>forwards</code> or <code>backwards</code> mode</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        reverseOnCycleEnd: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        reversed: <span class="hljs-literal">false</span>,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -458,11 +478,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>TODO - documentation - does this need to be in the defs object?</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality defined here</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>        reversed: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -473,13 +492,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>        order: <span class="hljs-number">1</span>
-    };
-    P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -490,9 +506,27 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">let</span> t,
+            ticker = <span class="hljs-keyword">this</span>.ticker;
+
+        <span class="hljs-keyword">if</span> (ticker === <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>_ticker`</span>) {
+
+            t = animationtickers[ticker];
+            
+            <span class="hljs-keyword">if</span> (t) t.kill();
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ticker) <span class="hljs-keyword">this</span>.removeFromTicker(ticker);
+
+        <span class="hljs-keyword">this</span>.deregister();
+
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    };</pre></div></div>
             
         </li>
         
@@ -503,9 +537,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Packet management functionality found in factory/tween.js and factory/action.js</p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.getters,
+        S = P.setters;</pre></div></div>
             
         </li>
         
@@ -516,36 +553,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>… factory/ticker.js does not use this mixin</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.getters,
-        S = P.setters;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p><strong>targets</strong></p>
+<ul>
+<li>the getter returns a fresh copy of the current targets Array</li>
+</ul>
 
             </div>
             
@@ -562,13 +573,13 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>action</strong></p>
 
             </div>
             
@@ -582,26 +593,27 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h2 id="define-functions-to-be-added-to-the-factory-prototype">Define functions to be added to the factory prototype</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>calculateEffectiveTime</code>
+The <strong><em>effective time</em></strong> is the time, relative to the Tween/Action’s associated Ticker timeline, when the Tween/Action will start running</p>
 
             </div>
             
@@ -637,13 +649,13 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>addToTicker</code></p>
 
             </div>
             
@@ -665,9 +677,22 @@
             }
         }
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    };
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p><code>removeFromTicker</code></p>
 
-    P.removeFromTicker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.removeFromTicker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
         <span class="hljs-keyword">let</span> tick;
 
@@ -689,13 +714,13 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>setTargets</code></p>
 
             </div>
             
@@ -728,13 +753,13 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>addToTargets</code></p>
 
             </div>
             
@@ -757,9 +782,22 @@
         }, <span class="hljs-keyword">this</span>);
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    };
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p><code>removeFromTargets</code></p>
 
-    P.removeFromTargets = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.removeFromTargets = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
         items = [].concat(items);
 
@@ -804,13 +842,6 @@
         }, <span class="hljs-keyword">this</span>);
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    };
-
-    P.checkForTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!item.substring) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.targets.some(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.name === item);
     };</pre></div></div>
             
         </li>
@@ -822,25 +853,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>checkForTarget</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.checkForTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">let</span> t;
+        <span class="hljs-keyword">if</span> (!item.substring) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.ticker === <span class="hljs-keyword">this</span>.name + <span class="hljs-string">'_ticker'</span>) {
-
-            t = animationtickers[<span class="hljs-keyword">this</span>.ticker];
-            
-            <span class="hljs-keyword">if</span> (t) t.kill();
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.ticker) <span class="hljs-keyword">this</span>.removeFromTicker(<span class="hljs-keyword">this</span>.ticker);
-
-        <span class="hljs-keyword">this</span>.deregister();
-
-        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.targets.some(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.name === item);
     };</pre></div></div>
             
         </li>

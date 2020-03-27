@@ -449,9 +449,9 @@
 
     <span class="hljs-keyword">if</span> (resortBatchAnimations) sortAnimations();
 
-    animate_sorted.forEach(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> {
+    animate_sorted.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (item.fn) promises.push(item.fn());
+        <span class="hljs-keyword">if</span> (item &amp;&amp; item.fn) promises.push(item.fn());
     });
 
     <span class="hljs-built_in">Promise</span>.all(promises)
@@ -459,7 +459,7 @@
 
         <span class="hljs-keyword">if</span> (doAnimation) <span class="hljs-built_in">window</span>.requestAnimationFrame(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> animationLoop());
     })
-    .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'animationLoop error: '</span>, err.message));
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'animationLoop error: '</span>, err));
 };</pre></div></div>
             
         </li>
