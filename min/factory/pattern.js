@@ -20,11 +20,7 @@ let defaultAttributes = {
 repeat: 'repeat',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
-P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, ['asset']);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
 P.kill = function () {
 let myname = this.name;
 if (isa_obj(this.asset)) this.asset.unsubscribe(this);

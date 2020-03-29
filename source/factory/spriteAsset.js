@@ -1,18 +1,18 @@
-
 // # SpriteAsset factory
-
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// The factory generates wrapper Objects around spritesheet &lt;img> elements fetched from the server using an URL address.
+// + Scrawl-canvas expects every spritesheet to be accompanied by a __manifest__, defined in either a `.json` encoded file, or a Javascript object. There is no single source of truth for the requirements or format of manifests, so Scrawl-canvas uses its own manifest format.
+//
+// SpriteAssets are used by [Picture](./picture.html) and [Grid](./grid.html) entitys, and [Pattern](./pattern.html) styles.
+//
+// TODO: SpriteAssets don't support animated `.gif` images (or if they do, then its entirely a lucky accident). Tested image formats are `.jpg` and `.png`.
 
 
-// ## Imports
+// #### Demos:
+// + [Canvas-021](../../demo/canvas-021.html) - Import and use spritesheets
+// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
+
+
+// #### Imports
 import { constructors } from '../core/library.js';
 import { mergeOver, generateUuid, xt, isa_obj, 
     defaultNonReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
@@ -21,7 +21,7 @@ import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
 
-// ## SpriteAsset constructor
+// #### SpriteAsset constructor
 const SpriteAsset = function (items = {}) {
 
     this.assetConstructor(items);
@@ -30,7 +30,7 @@ const SpriteAsset = function (items = {}) {
 };
 
 
-// ## SpriteAsset object prototype setup
+// #### SpriteAsset prototype
 let P = SpriteAsset.prototype = Object.create(Object.prototype);
 P.type = 'Sprite';
 P.lib = 'asset';
@@ -38,25 +38,24 @@ P.isArtefact = false;
 P.isAsset = true;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [asset](../mixin/asset.html)
 P = baseMix(P);
 P = assetMix(P);
 
 
-// ## Define default attributes
+// #### SpriteAsset attributes
 let defaultAttributes = {
 
-// TODO - documentation
+// __manifest__ - TODO - documentation
     manifest: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
-
+// #### Packet management
 // Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions
-
-// Overwrites mixin/base.js functionality
 P.saveAsPacket = function () {
 
     return [this.name, this.type, this.lib, {}];
@@ -65,16 +64,21 @@ P.stringifyFunction = defaultNonReturnFunction;
 P.processPacketOut = defaultNonReturnFunction;
 P.finalizePacketOut = defaultNonReturnFunction;
 
-// Clone functionality disabled
+
+// #### Clone management
 P.clone = defaultThisReturnFunction;
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Kill management
+// No additional kill functionality required
+
+
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// TODO - documentation
+// __source__
 S.source = function (items = []) {
 
     if (items && items[0]) {
@@ -99,53 +103,54 @@ S.source = function (items = []) {
 
 
 
-// ## Define prototype functions
+// #### Prototype functions
 
-
-// Sprite assets do not use the checkSource function. Instead, picture entitys will interrogate the checkSpriteFrame function (defined in mixin/assetConsumer.js)
+// Sprite assets do not use the `checkSource` function. Instead, Picture entitys will interrogate the checkSpriteFrame function (defined in mixin/assetConsumer.js)
 P.checkSource = defaultNonReturnFunction;
 
+// `gettableSpriteAssetAtributes`, `settableSpriteAssetAtributes` - exported Arrays.
+const gettableSpriteAssetAtributes = [];
+const settableSpriteAssetAtributes = [];
 
 
-// Import sprite sheet
+// #### Importing spritesheets into Scrawl-canvas
 
-// Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.jpg' - in which case Scrawl-canvas:
+// `importSprite` - load sprite images and manifest files from a remote server and create assets from them
+//
+// Arguments can be a comma-separated list of String urls. For example, for a spritesheet at server url `http://www.example.com/path/to/image/flower.jpg`:
+// + Will attempt to give the new spriteAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
+// + Will attempt to load the associated manifest JSON file, which it expects to find at '/path/to/image/flower.json'
+// + Will not add the new img element to the DOM
+//
+// Note: if using an url string path to import the spritesheet image, a manifest JSON file with the same filename (ending in `.json`) in the same folder __must__ also be supplied!
 
-// + will attempt to give the new spriteAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
-// + will attempt to load the associated manifest JSON file, which it expects to find at 'http://www.example.com/path/to/image/flower.json'
-// + will not add the new img element to the DOM
-
-// Note: if using an url string path to import the spritesheet image, a manifest JSON file with the same filename (ending in .json) in the same folder __must__ also be supplied!
-
-// ... or the arguments can be one or more (comma-separated) objects with the following attributes:
-
-// + __name__ string
-// + __imageSrc__ (required) image url string, or an Array of such strings (for sprites using frames from multiple spritesheets)
-// + __manifestSrc__ (required) JSON manifest file url string, or an object detailing the manifest
-// + __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
-// + __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
-// + __className__ string - list of classes to be added to the new img element
-
+// Alternatively, the arguments can include an object with the following attributes:
+// + __name__ string.
+// + __imageSrc__ (required) image url string, or an Array of such strings (for sprites using frames from multiple spritesheets).
+// + __manifestSrc__ (required) JSON manifest file url string, or an object detailing the manifest.
+// + __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element.
+// + __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false.
+// + __className__ string - list of classes to be added to the new img element.
+//
 // Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.
-
-// The __manifest__ must resolve to an object containing a set of attributes which represent 'tracks' - sequences of frames which, when run, will result in a particular animation (eg 'walk', 'turn', 'fire-arrow', 'die', etc). Each track attribute is an Array of arrays, with each sub-array supplying details of the source file, copy start coordinates, and copy dimensions for each frame
-
-//     manifestSrc: {
-    
-//         "default" : [
-//             ['picturename', copyStartX, copyStartY, width, height]
-//         ],
-
-//         "walk": [
-//             ['picturename', copyStartX, copyStartY, width, height]
-//             ['picturename', copyStartX, copyStartY, width, height]
-//             ['picturename', copyStartX, copyStartY, width, height]
-//         ]
-//     }
-
-// Note that the frames for any track can be spread across more than one spritesheet image file
-
-// Note also that the "default" track is mandatory, and should consist of at least one frame
+//
+// The __manifest__ must resolve to an object containing a set of attributes which represent 'tracks' - sequences of frames which, when run, will result in a particular animation (eg 'walk', 'turn', 'fire-arrow', 'die', etc). Each track attribute is an Array of arrays, with each sub-array supplying details of the source file, copy start coordinates, and copy dimensions for each frame:
+// ```
+// manifestSrc: {
+//
+//     "default" : [
+//         ['picturename', copyStartX, copyStartY, width, height]
+//     ],
+//
+//     "walk": [
+//         ['picturename', copyStartX, copyStartY, width, height]
+//         ['picturename', copyStartX, copyStartY, width, height]
+//         ['picturename', copyStartX, copyStartY, width, height]
+//     ],
+// }
+// ```
+// + Note that the frames for any track can be spread across more than one spritesheet image file.
+// Note also that the __default__ track is mandatory, and should consist of at least one frame.
 const importSprite = function (...args) {
 
     let reg = /.*\/(.*?)\./,
@@ -246,13 +251,10 @@ const importSprite = function (...args) {
     return results;
 };
 
-// TODO - documentation
-const gettableSpriteAssetAtributes = [];
-const settableSpriteAssetAtributes = [];
+// TODO: Scrawl-canvas does not yet support importing spritesheets defined in the web page HTML code
 
 
-
-// ## Exported factory function
+// #### Factory
 const makeSpriteAsset = function (items) {
 
     return new SpriteAsset(items);
@@ -260,6 +262,8 @@ const makeSpriteAsset = function (items) {
 
 constructors.SpriteAsset = SpriteAsset;
 
+
+// #### Exports
 export {
     makeSpriteAsset,
 
@@ -271,13 +275,8 @@ export {
 
 
 // Examples used in Demos
-
-// Dino - https://www.gameart2d.com/free-dino-sprites.html
-
-// Wolf - https://opengameart.org/content/lpc-wolf-animation
-
-// Wall tiles - https://opengameart.org/content/2d-wall-tilesets
-
-// Bunny sprite - https://opengameart.org/content/bunny-sprite
-
-// Cat - https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/
+// + Dino - https://www.gameart2d.com/free-dino-sprites.html
+// + Wolf - https://opengameart.org/content/lpc-wolf-animation
+// + Wall tiles - https://opengameart.org/content/2d-wall-tilesets
+// + Bunny sprite - https://opengameart.org/content/bunny-sprite
+// + Cat - https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/

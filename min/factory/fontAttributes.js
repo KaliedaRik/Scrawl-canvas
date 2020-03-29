@@ -2,9 +2,6 @@ import { constructors } from '../core/library.js';
 import { mergeOver, xt } from '../core/utilities.js';
 import { requestCell, releaseCell } from './cell.js';
 import baseMix from '../mixin/base.js';
-/*
-## FontAttributes constructor
-*/
 const FontAttributes = function (items = {}) {
 this.makeName(items.name);
 this.set(this.defs);
@@ -30,6 +27,38 @@ S = P.setters,
 D = P.deltaSetters;
 G.size = function () {
 return (this.sizeValue) ? `${this.sizeValue}${this.sizeMetric}` : this.sizeMetric;
+};
+S.size = function (item) {
+if (xt(item)) {
+let res,
+size = 0,
+metric = 'medium';
+if (item.indexOf('xx-small') >= 0) metric = 'xx-small';
+else if (item.indexOf('x-small') >= 0) metric = 'x-small';
+else if (item.indexOf('smaller') >= 0) metric = 'smaller';
+else if (item.indexOf('small') >= 0) metric = 'small';
+else if (item.indexOf('xx-large') >= 0) metric = 'xx-large';
+else if (item.indexOf('x-large') >= 0) metric = 'x-large';
+else if (item.indexOf('larger') >= 0) metric = 'larger';
+else if (item.indexOf('large') >= 0) metric = 'large';
+else if (item.indexOf('medium') >= 0) metric = 'medium';
+else {
+size = 12;
+metric = 'px'
+}
+if (/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i.test(item)) {
+res = item.match(/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i);
+size = (res[1] !== '.') ? parseFloat(res[1]) : 12;
+metric = res[2];
+}
+else if (/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i.test(item)) {
+res = item.match(/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i);
+size = (res[1] !== '.') ? parseFloat(res[1]) : 12;
+metric = res[2];
+}
+this.sizeValue = size;
+this.sizeMetric = metric;
+}
 };
 S.font = function (item) {
 if (xt(item)) {
@@ -89,38 +118,6 @@ v = (item.indexOf('extra-condensed') >= 0) ? 'extra-condensed' : v;
 v = (item.indexOf('ultra-condensed') >= 0) ? 'ultra-condensed' : v;
 }
 this.stretch = v;
-};
-S.size = function (item) {
-if (xt(item)) {
-let res,
-size = 0,
-metric = 'medium';
-if (item.indexOf('xx-small') >= 0) metric = 'xx-small';
-else if (item.indexOf('x-small') >= 0) metric = 'x-small';
-else if (item.indexOf('smaller') >= 0) metric = 'smaller';
-else if (item.indexOf('small') >= 0) metric = 'small';
-else if (item.indexOf('xx-large') >= 0) metric = 'xx-large';
-else if (item.indexOf('x-large') >= 0) metric = 'x-large';
-else if (item.indexOf('larger') >= 0) metric = 'larger';
-else if (item.indexOf('large') >= 0) metric = 'large';
-else if (item.indexOf('medium') >= 0) metric = 'medium';
-else {
-size = 12;
-metric = 'px'
-}
-if (/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i.test(item)) {
-res = item.match(/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i);
-size = (res[1] !== '.') ? parseFloat(res[1]) : 12;
-metric = res[2];
-}
-else if (/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i.test(item)) {
-res = item.match(/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i);
-size = (res[1] !== '.') ? parseFloat(res[1]) : 12;
-metric = res[2];
-}
-this.sizeValue = size;
-this.sizeMetric = metric;
-}
 };
 S.family = function (item) {
 if (xt(item)) {

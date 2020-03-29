@@ -299,7 +299,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="spriteasset-factory">SpriteAsset factory</h1>
+<p>The factory generates wrapper Objects around spritesheet &lt;img&gt; elements fetched from the server using an URL address.</p>
+<ul>
+<li>Scrawl-canvas expects every spritesheet to be accompanied by a <strong>manifest</strong>, defined in either a <code>.json</code> encoded file, or a Javascript object. There is no single source of truth for the requirements or format of manifests, so Scrawl-canvas uses its own manifest format.</li>
+</ul>
+<p>SpriteAssets are used by <a href="./picture.html">Picture</a> and <a href="./grid.html">Grid</a> entitys, and <a href="./pattern.html">Pattern</a> styles.</p>
+<p>TODO: SpriteAssets don’t support animated <code>.gif</code> images (or if they do, then its entirely a lucky accident). Tested image formats are <code>.jpg</code> and <code>.png</code>.</p>
+
             </div>
             
         </li>
@@ -311,7 +318,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="spriteasset-factory">SpriteAsset factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-021.html">Canvas-021</a> - Import and use spritesheets</li>
+<li><a href="../../demo/canvas-023.html">Canvas-023</a> - Grid entity - using picture-based assets (image, video, sprite)</li>
+</ul>
 
             </div>
             
@@ -324,72 +335,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -403,13 +349,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="spriteasset-constructor">SpriteAsset constructor</h2>
+              <h4 id="spriteasset-constructor">SpriteAsset constructor</h4>
 
             </div>
             
@@ -423,13 +369,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="spriteasset-object-prototype-setup">SpriteAsset object prototype setup</h2>
+              <h4 id="spriteasset-prototype">SpriteAsset prototype</h4>
 
             </div>
             
@@ -442,13 +388,17 @@ P.isAsset = <span class="hljs-literal">true</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/asset.html">asset</a></li>
+</ul>
 
             </div>
             
@@ -458,13 +408,13 @@ P = assetMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="spriteasset-attributes">SpriteAsset attributes</h4>
 
             </div>
             
@@ -473,13 +423,13 @@ P = assetMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>manifest</strong> - TODO - documentation</p>
 
             </div>
             
@@ -490,39 +440,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Overwrites mixin/base.js functionality</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions</p>
 
             </div>
             
@@ -537,13 +462,13 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Clone functionality disabled</p>
+              <h4 id="clone-management">Clone management</h4>
 
             </div>
             
@@ -552,13 +477,27 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -569,13 +508,13 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>source</strong></p>
 
             </div>
             
@@ -604,26 +543,26 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Sprite assets do not use the checkSource function. Instead, picture entitys will interrogate the checkSpriteFrame function (defined in mixin/assetConsumer.js)</p>
+              <p>Sprite assets do not use the <code>checkSource</code> function. Instead, Picture entitys will interrogate the checkSpriteFrame function (defined in mixin/assetConsumer.js)</p>
 
             </div>
             
@@ -632,184 +571,87 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Import sprite sheet</p>
+              <p><code>gettableSpriteAssetAtributes</code>, <code>settableSpriteAssetAtributes</code> - exported Arrays.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> gettableSpriteAssetAtributes = [];
+<span class="hljs-keyword">const</span> settableSpriteAssetAtributes = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <h4 id="importing-spritesheets-into-scrawl-canvas">Importing spritesheets into Scrawl-canvas</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-23">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Arguments can be either string urls - ‘<a href="http://www.example.com/path/to/image/flower.jpg&#39;">http://www.example.com/path/to/image/flower.jpg&#39;</a> - in which case Scrawl-canvas:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <ul>
-<li>will attempt to give the new spriteAsset object, and img element, a name/id value of eg ‘flower’ (but not guaranteed)</li>
-<li>will attempt to load the associated manifest JSON file, which it expects to find at ‘<a href="http://www.example.com/path/to/image/flower.json&#39;">http://www.example.com/path/to/image/flower.json&#39;</a></li>
-<li>will not add the new img element to the DOM</li>
+              <p><code>importSprite</code> - load sprite images and manifest files from a remote server and create assets from them</p>
+<p>Arguments can be a comma-separated list of String urls. For example, for a spritesheet at server url <code>http://www.example.com/path/to/image/flower.jpg</code>:</p>
+<ul>
+<li>Will attempt to give the new spriteAsset object, and img element, a name/id value of eg ‘flower’ (but not guaranteed)</li>
+<li>Will attempt to load the associated manifest JSON file, which it expects to find at ‘/path/to/image/flower.json’</li>
+<li>Will not add the new img element to the DOM</li>
 </ul>
+<p>Note: if using an url string path to import the spritesheet image, a manifest JSON file with the same filename (ending in <code>.json</code>) in the same folder <strong>must</strong> also be supplied!</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-25">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Note: if using an url string path to import the spritesheet image, a manifest JSON file with the same filename (ending in .json) in the same folder <strong>must</strong> also be supplied!</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>… or the arguments can be one or more (comma-separated) objects with the following attributes:</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <ul>
-<li><strong>name</strong> string</li>
-<li><strong>imageSrc</strong> (required) image url string, or an Array of such strings (for sprites using frames from multiple spritesheets)</li>
-<li><strong>manifestSrc</strong> (required) JSON manifest file url string, or an object detailing the manifest</li>
-<li><strong>parent</strong> CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element</li>
-<li><strong>isVisible</strong> boolean - if true, and new img element has been added to DOM, make that image visible; default is false</li>
-<li><strong>className</strong> string - list of classes to be added to the new img element</li>
+              <p>Alternatively, the arguments can include an object with the following attributes:</p>
+<ul>
+<li><strong>name</strong> string.</li>
+<li><strong>imageSrc</strong> (required) image url string, or an Array of such strings (for sprites using frames from multiple spritesheets).</li>
+<li><strong>manifestSrc</strong> (required) JSON manifest file url string, or an object detailing the manifest.</li>
+<li><strong>parent</strong> CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element.</li>
+<li><strong>isVisible</strong> boolean - if true, and new img element has been added to DOM, make that image visible; default is false.</li>
+<li><strong>className</strong> string - list of classes to be added to the new img element.</li>
 </ul>
+<p>Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.</p>
+<p>The <strong>manifest</strong> must resolve to an object containing a set of attributes which represent ‘tracks’ - sequences of frames which, when run, will result in a particular animation (eg ‘walk’, ‘turn’, ‘fire-arrow’, ‘die’, etc). Each track attribute is an Array of arrays, with each sub-array supplying details of the source file, copy start coordinates, and copy dimensions for each frame:</p>
+<pre><code>manifestSrc: {
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>The <strong>manifest</strong> must resolve to an object containing a set of attributes which represent ‘tracks’ - sequences of frames which, when run, will result in a particular animation (eg ‘walk’, ‘turn’, ‘fire-arrow’, ‘die’, etc). Each track attribute is an Array of arrays, with each sub-array supplying details of the source file, copy start coordinates, and copy dimensions for each frame</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
-              </div>
-              <pre><code>manifestSrc: {</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <pre><code>    <span class="hljs-string">"default"</span> : [
+    <span class="hljs-string">"default"</span> : [
         [<span class="hljs-string">'picturename'</span>, copyStartX, copyStartY, width, height]
-    ],</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <pre><code>    <span class="hljs-string">"walk"</span>: [
+    ],
+
+    <span class="hljs-string">"walk"</span>: [
         [<span class="hljs-string">'picturename'</span>, copyStartX, copyStartY, width, height]
         [<span class="hljs-string">'picturename'</span>, copyStartX, copyStartY, width, height]
         [<span class="hljs-string">'picturename'</span>, copyStartX, copyStartY, width, height]
-    ]
-}</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <p>Note that the frames for any track can be spread across more than one spritesheet image file</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p>Note also that the “default” track is mandatory, and should consist of at least one frame</p>
+    ],
+}</code></pre><ul>
+<li>Note that the frames for any track can be spread across more than one spritesheet image file.
+Note also that the <strong>default</strong> track is mandatory, and should consist of at least one frame.</li>
+</ul>
 
             </div>
             
@@ -824,11 +666,11 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Load the sprite image in the normal way</p>
 
@@ -877,11 +719,11 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Get manifest</p>
 
@@ -940,29 +782,26 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>TODO: Scrawl-canvas does not yet support importing spritesheets defined in the web page HTML code</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> gettableSpriteAssetAtributes = [];
-<span class="hljs-keyword">const</span> settableSpriteAssetAtributes = [];</pre></div></div>
             
         </li>
         
         
-        <li id="section-38">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
 
             </div>
             
@@ -971,9 +810,22 @@ P.finalizePacketOut = defaultNonReturnFunction;</pre></div></div>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SpriteAsset(items);
 };
 
-constructors.SpriteAsset = SpriteAsset;
+constructors.SpriteAsset = SpriteAsset;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeSpriteAsset,
 
     gettableSpriteAssetAtributes,
@@ -985,78 +837,20 @@ constructors.SpriteAsset = SpriteAsset;
         </li>
         
         
-        <li id="section-39">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Examples used in Demos</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>Dino - <a href="https://www.gameart2d.com/free-dino-sprites.html">https://www.gameart2d.com/free-dino-sprites.html</a></p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p>Wolf - <a href="https://opengameart.org/content/lpc-wolf-animation">https://opengameart.org/content/lpc-wolf-animation</a></p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p>Wall tiles - <a href="https://opengameart.org/content/2d-wall-tilesets">https://opengameart.org/content/2d-wall-tilesets</a></p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
-              <p>Bunny sprite - <a href="https://opengameart.org/content/bunny-sprite">https://opengameart.org/content/bunny-sprite</a></p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <p>Cat - <a href="https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/">https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/</a></p>
+<ul>
+<li>Dino - <a href="https://www.gameart2d.com/free-dino-sprites.html">https://www.gameart2d.com/free-dino-sprites.html</a></li>
+<li>Wolf - <a href="https://opengameart.org/content/lpc-wolf-animation">https://opengameart.org/content/lpc-wolf-animation</a></li>
+<li>Wall tiles - <a href="https://opengameart.org/content/2d-wall-tilesets">https://opengameart.org/content/2d-wall-tilesets</a></li>
+<li>Bunny sprite - <a href="https://opengameart.org/content/bunny-sprite">https://opengameart.org/content/bunny-sprite</a></li>
+<li>Cat - <a href="https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/">https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/</a></li>
+</ul>
 
             </div>
             

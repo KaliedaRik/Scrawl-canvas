@@ -1,5 +1,5 @@
 // # Action factory
-// Actions are (reversible) functions added to a Scrawl-canvas 'ticker' timeline. They trigger as the ticker passes through the point (along the ticker's timeline):
+// Actions are (reversible) functions added to a Scrawl-canvas [Ticker](./ticker.html) timeline. They trigger as the ticker passes through the point (along the ticker's timeline):
 // + if the timeline is moving forwards the __action__ function will be invoked
 // + if the timeline is moving backwards the __revert__ function will be invoked
 

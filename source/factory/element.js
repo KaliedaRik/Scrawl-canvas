@@ -1,12 +1,12 @@
 // # Element factory
-// The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity positioning and dimensioning functionality.
-// + Entitys exist in a Cell environment
+// The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity [positioning and dimensioning](../mixin/position.html) functionality.
+// + [Entitys](../mixin/entity.html) exist in a [Cell](./cell.html) environment
 // + They can position themselves within that Cell either __absolutely__ (px coordinates), or __relatively__ (% coordinates, with values relative to the Cell's dimensions), or __by reference__ (using other entity's coordinates to calculate their own coordinates - `pivot`, `mimic`, `path`)
 // + They can also base their dimensions on absolute (px) or relative (%) values
 // + They can be __animated__ directly (`set`, `deltaSet`), or through automation (`delta` object), or through the Scrawl-canvas `tween` functionality
 // + They can be stored and retrieved ('packet' functionality), cloned ('clone', based on packets) and killed ('kill' functions)
 // 
-// __A Stack is a wrapper object around a DOM element__, whose direct children are given Scrawl-canvas Element wrappers:
+// __A [Stack](./stack.html) is a wrapper object around a DOM element__, whose direct children are given Scrawl-canvas Element wrappers:
 // ```
 // Stack    ~~> Canvas/Cell  
 // Element  ~~> Entity (eg Block)  

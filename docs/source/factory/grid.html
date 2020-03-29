@@ -299,7 +299,21 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="grid-factory">Grid factory</h1>
+<p>The Grid entity is a graphical representation of <strong>a grid with equal width columns and equal height rows</strong>, separated by gutters. Each tile within the grid can be filled with a different color, or a different gradient, or a different Picture entity output.</p>
+<ul>
+<li>Each grid requires a mimimum of one column and one row; columns will divide into the Grid width evenly, rows divide evenly into the Grid height.</li>
+<li>The <strong>tiles</strong> can display as many different colors, or gradients, or Pictures, as are required for the display.</li>
+<li>The <strong>gutters</strong> between columns, and between rows, can be different values; gutter fills can also be colors, gradients or Picture entity output.</li>
+<li>The display for each tile, and the gutters, can be easily updated.</li>
+<li>Grid entity <strong>hit reports</strong> include an extra attribute - an array of tiles that report being hit.</li>
+<li>Grids will accept <strong>Filter</strong> objects - filters are applied to the entire Grid, not to individual tiles.</li>
+<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
+<li>Grids can be cloned, and killed.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +325,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="grid-factory">Grid factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-022.html">Canvas-022</a> - Grid entity - basic functionality (color, gradients)</li>
+<li><a href="../../demo/canvas-023.html">Canvas-023</a> - Grid entity - using picture-based assets (image, video, sprite)</li>
+<li><a href="../../demo/canvas-019.html">Canvas-019</a> - Artefact collision detection</li>
+<li><a href="../../demo/dom-013.html">DOM-013</a> - Artefact collision detection - DOM artefacts</li>
+<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
+</ul>
 
             </div>
             
@@ -324,72 +345,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -408,13 +364,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="grid-constructor">Grid constructor</h2>
+              <h4 id="grid-constructor">Grid constructor</h4>
 
             </div>
             
@@ -465,13 +421,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="grid-object-prototype-setup">Grid object prototype setup</h2>
+              <h4 id="block-prototype">Block prototype</h4>
 
             </div>
             
@@ -484,13 +440,20 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/position.html">position</a></li>
+<li><a href="../mixin/anchor.html">anchor</a></li>
+<li><a href="../mixin/entity.html">entity</a></li>
+<li><a href="../mixin/filter.html">filter</a></li>
+</ul>
 
             </div>
             
@@ -503,17 +466,110 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h4 id="grid-attributes">Grid attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p><strong>columns</strong>, <strong>rows</strong> - integer Numbers representing the number of columns and rows in the Grid</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    columns: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">rows</span>: <span class="hljs-number">2</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p><strong>columnGutterWidth</strong>, <strong>rowGutterWidth</strong> - float Number distances (measured in px) between tiles in the grid.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    columnGutterWidth: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">rowGutterWidth</span>: <span class="hljs-number">1</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><strong>tileSources</strong> - Array of Javascript Objects</p>
+<ul>
+<li>Each Object describes a source which can be used to fill tiles</li>
+<li>Available fills include: <code>color</code>, <code>cellGradient</code>, <code>gridGradient</code>, <code>gridPicture</code>, <code>tilePicture</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    tileSources: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p><strong>tileFill</strong> - Array of integer Numbers</p>
+<ul>
+<li>Length of the Array will be <code>rows * columns</code></li>
+<li>Tiles are arranged left-to-right, top-to-bottom with tileFill[0] being the top left tile in the grid</li>
+<li>Each Number represents the index of the tileSource object to be used to fill this tile</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    tileFill: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <p><strong>gutterColor</strong> - can accept the following sources:</p>
+<ul>
+<li>A valid CSS color String</li>
+<li>The name-String of a Scrawl-canvas Gradient or RadialGradient object, or the object itself</li>
+<li>An integer Number representing the index of a tileSource object</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    gutterColor: <span class="hljs-string">'#808080'</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -524,72 +580,7 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    columns: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">rows</span>: <span class="hljs-number">2</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    columnGutterWidth: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">rowGutterWidth</span>: <span class="hljs-number">1</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    gutterColor: <span class="hljs-string">'#808080'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    tileFill: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">tileSources</span>: <span class="hljs-literal">null</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
@@ -621,13 +612,41 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-18">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -638,13 +657,13 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>columns</strong></p>
 
             </div>
             
@@ -675,18 +694,19 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         }
     }
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};</pre></div></div>
+};
+D.columns = defaultNonReturnFunction;</pre></div></div>
             
         </li>
         
         
-        <li id="section-20">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>rows</strong></p>
 
             </div>
             
@@ -708,28 +728,39 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         }
     }
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};</pre></div></div>
+};
+D.rows = defaultNonReturnFunction;</pre></div></div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="tile-management">Tile management</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>D.columns = defaultNonReturnFunction;
-D.rows = defaultNonReturnFunction;
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p><code>setAllTilesTo</code> - change the fill for all tiles in a Grid </p>
+<ul>
+<li>Argument is an integer Number representing the index of a tileSource object</li>
+</ul>
 
-<span class="hljs-comment">/*
-TODO - documentation
-*/</span>
-P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
 
     <span class="hljs-keyword">if</span> (isa_number(val)) {
 
@@ -742,13 +773,17 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>setTilesTo</code> - change the fill for a (set of) tile(s) in a Grid - requires two arguments:</p>
+<ul>
+<li>First argument is an integer Number representing the position of a tile in the tileFill Array, or an Array of such Numbers</li>
+<li>Second argument is an integer Number representing the index of a tileSource object</li>
+</ul>
 
             </div>
             
@@ -774,13 +809,17 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>setTileSourceTo</code> - update or replace a tileSource object - requires two arguments:</p>
+<ul>
+<li>First argument is the integer Number index of the tileSource object to be replaced</li>
+<li>Second argument is the new or updated object</li>
+</ul>
 
             </div>
             
@@ -795,13 +834,17 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>removeTileSource</code> - remove a tileSource object</p>
+<ul>
+<li>Argument is an integer Number representing the index of a tileSource object</li>
+<li>Object will be replaced with <code>null</code></li>
+</ul>
 
             </div>
             
@@ -818,13 +861,17 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getTileSource</code> - returns the tileSource index Number for the given tile. Function is overloaded:</p>
+<ul>
+<li>One argument: Number representing the position of a tile in the tileFill Array.</li>
+<li>Two arguments: The <code>(row, column)</code> position of the tile in the Grid - both values start from <code>0</code></li>
+</ul>
 
             </div>
             
@@ -840,13 +887,13 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getTilesUsingSource</code> - returns an Array of tileFill index Numbers representing tiles that are currently using the tileSource Object at the given tileSource index.</p>
 
             </div>
             
@@ -858,13 +905,13 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>Internal - used for entity stamping (Display cycle), and collision detection (eg: drag-and-drop)</p>
+              <p><code>cleanPathObject</code> - internal - used for entity stamping (Display cycle), and collision detection</p>
 
             </div>
             
@@ -951,13 +998,29 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h5 id="stamp-methods">Stamp methods</h5>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>Override entity draw/fill methods</p>
+              <p><code>performFill</code> - internal stamp method helper function</p>
+<ul>
+<li>If you are not a fan of long, complex functions … look away now!</li>
+</ul>
 
             </div>
             
@@ -972,7 +1035,7 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>grab the current engine values for various things</p>
+              <p>Grab the current engine values for various things</p>
 
             </div>
             
@@ -1005,7 +1068,7 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>iterate through the grid’s tileSources</p>
+              <p>Iterate through the grid’s tileSources</p>
 
             </div>
             
@@ -1020,9 +1083,7 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <ul>
-<li>set up the engine fillStyle value (where required)</li>
-</ul>
+              <p>Set up the engine fillStyle value (where required)</p>
 
             </div>
             
@@ -1058,7 +1119,7 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>get an map of tiles using this source</p>
+              <p>Get an map of tiles using this source</p>
 
             </div>
             
@@ -1156,7 +1217,7 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>assign (or construct) the appropriate object to gObject</p>
+              <p>Assign (or construct) the appropriate object to gObject</p>
 
             </div>
             
@@ -1179,7 +1240,7 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>set the engine’s strokeStyle to the appropriate value (if needed)</p>
+              <p>Set the engine’s strokeStyle to the appropriate value (if needed)</p>
 
             </div>
             
@@ -1278,7 +1339,7 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>we have a color/gradient all set up - stroke the lines directly onto grid</p>
+              <p>We have a color/gradient all set up - stroke the lines directly onto grid</p>
 
             </div>
             
@@ -1312,48 +1373,13 @@ P.setAllTilesTo = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>Override entity draw/fill methods</p>
+              <p><code>fill</code></p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     <span class="hljs-keyword">this</span>.performFill(engine);
-};
-
-P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
-
-    engine.stroke(p);
-    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
-    <span class="hljs-keyword">this</span>.performFill(engine);
-};
-
-P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
-
-    engine.stroke(p);
-    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
-    <span class="hljs-keyword">this</span>.performFill(engine);
-    engine.stroke(p);
-};
-
-P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
-
-    engine.stroke(p);
-    <span class="hljs-keyword">this</span>.performFill(engine);
-};
-
-P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
-
-    <span class="hljs-keyword">this</span>.performFill(engine);
-    engine.stroke(p);
 };</pre></div></div>
             
         </li>
@@ -1365,9 +1391,18 @@ P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <p>Overrides position mixin function</p>
+              <p><code>drawAndFill</code></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+
+    engine.stroke(p);
+    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
+    <span class="hljs-keyword">this</span>.performFill(engine);
+};</pre></div></div>
             
         </li>
         
@@ -1378,14 +1413,87 @@ P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <ul>
-<li>Grid entitys need to return ALL of the successful hit coordinates, not just the first</li>
-<li>They also need to include the cell index of where the hit took place within them</li>
-</ul>
+              <p><code>fillAndDraw</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+
+    engine.stroke(p);
+    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
+    <span class="hljs-keyword">this</span>.performFill(engine);
+    engine.stroke(p);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p><code>drawThenFill</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+
+    engine.stroke(p);
+    <span class="hljs-keyword">this</span>.performFill(engine);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p><code>fillThenDraw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+
+    <span class="hljs-keyword">this</span>.performFill(engine);
+    engine.stroke(p);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p><code>checkHit</code> - overrides position mixin function</p>
+<ul>
+<li>Grid entitys need to return ALL of the successful hit coordinates, not just the first</li>
+<li>They also need to include the tile index(es) of where the hit(s) took place within them</li>
+</ul>
+<p>Returns an object with the following attributes</p>
+<pre><code>{
+    <span class="hljs-attr">x</span>: x-coordinate <span class="hljs-keyword">of</span> the _last_ successful hit,
+    <span class="hljs-attr">y</span>: y-coordinate <span class="hljs-keyword">of</span> the _last_ successful hit,
+    <span class="hljs-attr">tiles</span>: <span class="hljs-built_in">Array</span> <span class="hljs-keyword">of</span> tile index Numbers representing each tile reporting a hit,
+    <span class="hljs-attr">artefact</span>: the Grid entity object
+}</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.noUserInteraction) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
@@ -1479,23 +1587,61 @@ P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-41">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code><span class="hljs-keyword">let</span> blueSource = {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'color'</span>,
+    <span class="hljs-attr">source</span>: <span class="hljs-string">'aliceblue'</span>,
+};
 
+<span class="hljs-keyword">let</span> myGrid = scrawl.makeGrid({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'test-grid'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>,
+
+    <span class="hljs-attr">columns</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">rows</span>: <span class="hljs-number">6</span>,
+
+    <span class="hljs-attr">tileSources</span>: [blueSource, {
+        <span class="hljs-attr">type</span>: <span class="hljs-string">'color'</span>,
+        <span class="hljs-attr">source</span>: <span class="hljs-string">'red'</span>,
+    }],
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeGrid = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Grid(items);
 };
 
-constructors.Grid = Grid;
+constructors.Grid = Grid;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeGrid,
 };</pre></div></div>
             

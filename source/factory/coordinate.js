@@ -1,5 +1,5 @@
 // # Coordinate factory
-// Scrawl-canvas uses Coordinate Arrays extensively throughout the code base - in particular to hold artefact coordinate [x, y] and dimensional [w, h] data. The Coordinate factory does not care whether these values are presented as Numbers or Strings (or a mixture of both) - it leaves such functionality to other mixins (in particular the __position__, __dom__ and __entity__ mixins) and factories.
+// Scrawl-canvas uses Coordinate Arrays extensively throughout the code base - in particular to hold artefact coordinate [x, y] and dimensional [w, h] data. The Coordinate factory does not care whether these values are presented as Numbers or Strings (or a mixture of both) - it leaves such functionality to other mixins (in particular the [position](../mixin/position.html), [dom](../mixin/dom.html) and [entity](../mixin/entity.html) mixins) and factories.
 
 
 // #### Imports

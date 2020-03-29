@@ -1,70 +1,29 @@
-// NEEDS UPDATING TO NEW FORMAT
-//
 // # RenderAnimation factory
-// RenderAnimation objects are animations that aim to simplify coding up Display cycles. They remove the need to worry about promises, while at the same time exposing a suite of Display cycle hooks - attributes which can accept a function to be run at various points during a Display cycle 
-// + __afterCreated__ - a run-only-once function which will trigger after the first display/animation cycle completes
-// + __commence__ - runs at the start of the display cycle, before the 'clear' action
-// + __afterClear__ - runs between the display cycle 'clear' and 'compile' actions
-// + __afterCompile__ - runs between the display cycle 'compile' and 'show' actions
-// + __afterShow__ - runs at the end of each display cycle, after the 'show' action
-// + __error__ - an error function can be used to report issues should the internalized promise chain break down for any particular reason
+// RenderAnimation objects are animations that aim to simplify coding up Display cycles. They remove the need to worry about Promises, while at the same time exposing a suite of Display cycle hooks - attributes which can accept a function to be run at various points during a Display cycle 
+// + `commence` - triggers at the start of the Display cycle, before the `clear` cascade begins.
+// + `afterClear` - triggers when the `clear` cascade completes, before the `compile` cascade begins.
+// + `afterCompile` - triggers when the `compile` cascade completes, before the `show` cascade begins.
+// + `afterShow` - triggers at the end of the Display cycle, after the `show` cascade completes.
+// + `afterCreated` - triggers once, after the first Display cycle completes.
+// + `error` - triggers when the Display cycle throws an error.
 //
 // Note that all the above functions should be normal, synchronous functions. The Animation object will run them within its main, asynchronous (Promise-based) function.
 //
 // The RenderAnimation object also supports the Animation object's __animation hook functions__:
-// + __onRun__ - triggers each time the RenderAnimation object's .run function is invoked
-// + __onHalt__ - triggers each time the RenderAnimation object's .halt function is invoked
-// + __onKill__ - triggers each time the RenderAnimation object's .kill function is invoked
-
-// #### Instantiate objects from the factory
-
-//    // Function to display frames-per-second data, and other information relevant to the demo
-//    let report = function () {
+// + `onRun` - triggers each time the RenderAnimation object's `run` function is invoked
+// + `onHalt` - triggers each time the RenderAnimation object's `halt` function is invoked
+// + `onKill` - triggers each time the RenderAnimation object's `kill` function is invoked
 //
-//        let testTicker = Date.now(),
-//            testTime, testNow,
-//            testMessage = document.querySelector('#reportmessage');
-//
-//        return function () {
-//
-//            testNow = Date.now();
-//            testTime = testNow - testTicker;
-//            testTicker = testNow;
-//
-//            testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms;
-//        };
-//    }();
-//
-//
-//    // Create the Animation loop which will run the Display cycle
-//    scrawl.makeRender({
-//
-//        name: 'demo-animation',
-//        target: scrawl.library.canvas['my-canvas-id'],
-//        afterShow: report,
-//    });
-
-// In addition to RenderAnimation attributes, the argument object can include two additional flags, which influence the make functionality:
-
+// In addition to RenderAnimation attributes, the factory's argument object can include two additional flags, which influence the make functionality:
 // + __delay__ - when set to true, will prevent the animation running immediately; to start the animation, invoke its __run__ function
-// + __observe__ - when set to true, will add an IntersectionObserver to the target's DOM element using the core/document.js __makeAnimationObserver__ function, which in turn assigns a disconnect function to the RenderAnimation.observe attribute
-
-// #### Library storage: YES
-
-// + scrawl.library.animation
-
-// #### Clone functionality: NO
-
-// Clone functionality is disabled for all animation objects, and packet functionality is severely curtailed.
-
-// The same render animation can be applied to multiple targets as part of the factory's makeRender function, by setting the target attribute to an array containing either the name-String of each target, or the target object itself (Canvas, Stack), or a mix of both.
-
-// #### Kill functionality: 
-
-// TODO: review and update kill functionality through the entire Scrawl-canvas system
+// + __observe__ - when set to true, will add an IntersectionObserver to the target's DOM element, which in turn assigns a disconnect function to the `RenderAnimation.observe` attribute
 
 
-// ## Imports
+// #### Demos:
+// + Most Demos use RenderAnimation for managing their Display cycle
+
+
+// #### Imports
 import { animation, artefact, constructors } from '../core/library.js';
 import { clear, compile, show, makeAnimationObserver } from '../core/document.js';
 import { mergeOver, pushUnique, removeItem, xt, isa_obj, isa_fn, 
@@ -74,7 +33,7 @@ import { animate, resortAnimations } from '../core/animationloop.js';
 import baseMix from '../mixin/base.js';
 
 
-// ## RenderAnimation constructor
+// #### RenderAnimation constructor
 const RenderAnimation = function (items = {}) {
 
     let target;
@@ -132,7 +91,7 @@ const RenderAnimation = function (items = {}) {
 
     let self = this;
 
-    // The all-important fn function
+    // ##### The Display cycle Promise chain
     this.fn = function () {
 
         return new Promise((resolve, reject) => {
@@ -166,15 +125,17 @@ const RenderAnimation = function (items = {}) {
     // Register in Scrawl-canvas library
     this.register();
 
+    // The `observer` attribute
     if (items.observer) this.observer = makeAnimationObserver(this, this.target);
 
+    // Start the animation immediately, unless flagged otherwise
     if(!items.delay) this.run();
 
     return this;
 };
 
 
-// ## RenderAnimation object prototype setup
+// #### RenderAnimation prototype
 let P = RenderAnimation.prototype = Object.create(Object.prototype);
 
 P.type = 'RenderAnimation';
@@ -183,26 +144,36 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
-// ## Define default attributes
+// #### RenderAnimation attributes
 let defaultAttributes = {
 
-// Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations
+// __order__ - positive integer Number. Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations.
     order: 1,
 
-// The animation object supports some __animation hook functions__:
-
-// + onRun - triggers each time the animation object's .run function is invoked
-// + onHalt - triggers each time the animation object's .halt function is invoked
-// + onKill - triggers each time the animation object's .kill function is invoked
+// __onRun__, __onHalt__, __onKill__
+//
+// The [Animation object](./animation.html) supports the following ___animation hook functions___:
+// + `onRun` - triggers each time the animation object's `run` function is invoked.
+// + `onHalt` - triggers each time the animation object's `halt` function is invoked.
+// + `onKill` - triggers each time the animation object's `kill` function is invoked.
     onRun: null,
     onHalt: null,
     onKill: null,
 
-// Display cycle hooks
+// __commence__, __afterClear__, __afterCompile__, __afterShow__, __afterCreated__, __error__
+//
+// RenderAnimation objects support the following ___Display cycle hook functions___:
+// + `commence` - triggers at the start of the Display cycle, before the `clear` cascade begins.
+// + `afterClear` - triggers when the `clear` cascade completes, before the `compile` cascade begins.
+// + `afterCompile` - triggers when the `compile` cascade completes, before the `show` cascade begins.
+// + `afterShow` - triggers at the end of the Display cycle, after the `show` cascade completes.
+// + `afterCreated` - triggers once, after the first Display cycle completes.
+// + `error` - triggers when the Display cycle throws an error.
     commence: null,
     afterClear: null,
     afterCompile: null,
@@ -210,51 +181,28 @@ let defaultAttributes = {
     afterCreated: null,
     error: null,
 
-// Target
+// __target__ - handle to the [Stack](./stack.html) or [Cell](./cell.html) wrapper object; each can have its own Display cycle animation.
+// + Can be supplied in the argument object as either a name-String for the target object, or the target object itself
+// + Will also accept an Array of Strings and/or obvjects
     target: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet/Clone management
-// This functionality is disabled for RenderAnimation objects
+// #### Packet management
+// Animations do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions
 P.stringifyFunction = defaultNonReturnFunction;
 P.processPacketOut = defaultNonReturnFunction;
 P.finalizePacketOut = defaultNonReturnFunction;
 P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
+
+
+// #### Clone management
 P.clone = defaultThisReturnFunction;
 
 
-// ## Define prototype functions
-
-// Start the animation, if it is not already running
-P.run = function () {
-
-    this.onRun();
-    pushUnique(animate, this.name);
-    resortAnimations();
-    return this;
-};
-
-
-// Returns true if animation is running; false otherwise
-P.isRunning = function () {
-
-    return (animate.indexOf(this.name) >= 0) ? true : false;
-};
-
-
-// Stop the animation, if it is already running
-P.halt = function () {
-
-    this.onHalt();
-    removeItem(animate, this.name);
-    resortAnimations();
-    return this;
-};
-
-
-// Stop the animation if it is already running, and remove it from the Scrawl-canvas library
+// #### Kill management
+// Stops the animation if it is already running, and removes it from the Scrawl-canvas library
 P.kill = function () {
 
     this.onKill();
@@ -267,7 +215,66 @@ P.kill = function () {
 };
 
 
-// ## Exported factory function
+
+// #### Get, Set, deltaSet
+// No additional get/set functionality required
+
+
+// #### Prototype functions
+
+// `run` - start the animation, if it is not already running
+P.run = function () {
+
+    this.onRun();
+    pushUnique(animate, this.name);
+    resortAnimations();
+    return this;
+};
+
+
+// `isRunning` - returns Boolean true if animation is running; false otherwise
+P.isRunning = function () {
+
+    return (animate.indexOf(this.name) >= 0) ? true : false;
+};
+
+
+// `halt` - stop the animation, if it is already running
+P.halt = function () {
+
+    this.onHalt();
+    removeItem(animate, this.name);
+    resortAnimations();
+    return this;
+};
+
+
+
+// #### Factory
+// ```
+// let report = function () {
+//
+//     let testTicker = Date.now(),
+//         testTime, testNow,
+//         testMessage = document.querySelector('#reportmessage');
+//
+//     return function () {
+//
+//         testNow = Date.now();
+//         testTime = testNow - testTicker;
+//         testTicker = testNow;
+//
+//         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms`;
+//     };
+// }();
+//
+// scrawl.makeRender({
+//
+//     name: 'demo-animation',
+//     target: scrawl.library.canvas['my-canvas-id'],
+//     afterShow: report,
+// });
+// ```
 const makeRender = function (items) {
     
     return new RenderAnimation(items);
@@ -275,6 +282,8 @@ const makeRender = function (items) {
 
 constructors.RenderAnimation = RenderAnimation;
 
+
+// #### Exports
 export {
     makeRender,
 };

@@ -301,7 +301,7 @@
               </div>
               <h1 id="canvas-factory">Canvas factory</h1>
 <p>Scrawl-canvas mediates between its system and &lt;canvas&gt; elements in the DOM using Canvas wrapper objects. The wrapper includes a handle to the visible element, but most work is done on a second &lt;canvas&gt; element - the <strong>base Cell</strong> - which is not part of the DOM, thus excluded from a browser’s Document interface (including events).</p>
-<p>The Canvas factory is not used directly; the factory is not exported as part of the <strong>scrawl object</strong> during Scrawl-canvas initialization. Instead, wrappers can be created for DOM-based &lt;canvas&gt; elements using the following scrawl functions:</p>
+<p>The Canvas factory is not used directly; the factory is not exported as part of the <a href="../scrawl.html">scrawl object</a> during Scrawl-canvas initialization. Instead, wrappers can be created for DOM-based &lt;canvas&gt; elements using the following scrawl functions:</p>
 <ul>
 <li><code>scrawl.getCanvas</code> - locates a &lt;canvas&gt; element in the DOM and creates a wrapper for it.</li>
 <li><code>scrawl.addCanvas</code> - generates a new &lt;canvas&gt; element, creates a wrapper for it, then adds it to the DOM.</li>

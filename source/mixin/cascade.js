@@ -1,7 +1,7 @@
 // # Cascade mixin
 // This mixin sets up the Scrawl-canvas functionality required to perform its __Display cycle__.
-// + The Display cycle is initiated by Stack and DOM-related Cell wrappers (generally Canvas wrappers) - __controller objects__
-// + The cycle cascades from the wrappers to all artefact objects associated with them, as mediated by Group objects.
+// + The Display cycle is initiated by [Stack](../factory/stack.html) and DOM-related [Cell](../factory/cell.html) wrappers (generally [Canvas](../factory/canvas.html) wrappers) - __controller objects__
+// + The cycle cascades from the wrappers to all artefact objects associated with them, as mediated by [Group](../factory/group.html) objects.
 //
 // The mixin also includes code to assist __drag-and-drop__ functionality.
 

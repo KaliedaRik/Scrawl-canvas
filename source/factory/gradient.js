@@ -1,6 +1,6 @@
 // # Gradient factory
 // Scrawl-canvas Gradient objects implement the Canvas API's [createLinearGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient) method. The resulting [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) object can be used by any Scrawl-canvas entity as its `fillStyle` or `strokeStyle`.
-// + Most gradient-related functionality has been coded up in the __styles mixin__, and is documented there.
+// + Most gradient-related functionality has been coded up in the [styles mixin](../mixin/styles.html), and is documented there.
 // + Gradients fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.
 // + Gradients can be animated in a variety of ways; the can act as target objects for Scrawl-canvas Tweens.
 //

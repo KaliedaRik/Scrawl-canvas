@@ -1,18 +1,20 @@
-
 // # ImageAsset factory
-
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// The factory generates wrapper Objects around &lt;img> elements which can either be pulled from the current document (DOM-based assets), or fetched from the server using an URL address.
+//
+// Image-based assets can also be created from entity artefacts, groups of entity artefacts, and Cell wrappers
+//
+// ImageAssets are used by [Picture](./picture.html) and [Grid](./grid.html) entitys, and [Pattern](./pattern.html) styles.
+//
+// TODO: ImageAssets don't support animated `.gif` images (or if they do, then its entirely a lucky accident). Tested image formats are `.jpg` and `.png`.
 
 
-// ## Imports
+// #### Demos:
+// + [Canvas-008](../../demo/canvas-008.html) - Picture entity position; manipulate copy attributes
+// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
+// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
+
+
+// #### Imports
 import { constructors, canvas, cell, group, artefact } from '../core/library.js';
 import { mergeOver, isa_obj, 
     defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
@@ -21,14 +23,14 @@ import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
 
-// ## ImageAsset constructor
+// #### ImageAsset constructor
 const ImageAsset = function (items = {}) {
 
     return this.assetConstructor(items);
 };
 
 
-// ## ImageAsset object prototype setup
+// #### ImageAsset prototype
 let P = ImageAsset.prototype = Object.create(Object.prototype);
 P.type = 'Image';
 P.lib = 'asset';
@@ -36,22 +38,19 @@ P.isArtefact = false;
 P.isAsset = true;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [asset](../mixin/asset.html)
 P = baseMix(P);
 P = assetMix(P);
 
 
-// ## Define default attributes
-let defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);
+// #### ImageAsset attributes
+// No additional attributes required beyond those supplied by the mixins
 
 
-
-// ## Packet management
-
+// #### Packet management
 // Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions
-
-// Overwrites mixin/base.js functionality
 P.saveAsPacket = function () {
 
     return [this.name, this.type, this.lib, {}];
@@ -61,18 +60,20 @@ P.processPacketOut = defaultNonReturnFunction;
 P.finalizePacketOut = defaultNonReturnFunction;
 
 
-// Clone functionality disabled
+// #### Clone management
 P.clone = defaultThisReturnFunction;
 
 
+// #### Kill management
+// No additional kill functionality required
 
-// ## Define attribute getters and setters
+
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-
-// TODO - documentation
+// __source__
 S.source = function (item = {}) {
 
     if (item) {
@@ -92,9 +93,9 @@ S.source = function (item = {}) {
 
 
 
-// ## Define prototype functions
+// #### Prototype functions
 
-// TODO - documentation
+// `checkSource`
 P.checkSource = function (width, height) {
 
     let el = this.source;
@@ -114,25 +115,27 @@ P.checkSource = function (width, height) {
     }
 };
 
-// TODO - documentation
+// `gettableImageAssetAtributes`, `settableImageAssetAtributes` - exported Arrays.
 const gettableImageAssetAtributes = [];
 const settableImageAssetAtributes = [];
 
 
-// Import images from wherever
+// #### Importing images into Scrawl-canvas
 
-// Arguments can be either string urls - 'http://www.example.com/path/to/image/flower.jpg' - in which case Scrawl-canvas:
-
-// + will attempt to give the new imageAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
-// + will not add the new img element to the DOM
-
-// ... or the argument can be an object with the following attributes:
-
-// + __name__ string
-// + __src__ url string
-// + __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element
-// + __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false
-// + __className__ string - list of classes to be added to the new img element
+// `importImage` - load images from a remote server and create assets from them
+//
+// Arguments can be a comma-separated list of String urls. For example, for aimage file at server url `http://www.example.com/path/to/image/flower.jpg`:
+// + Will attempt to give the new imageAsset object, and img element, a name/id value of eg 'flower' (but not guaranteed)
+// + Will not add the new img element to the DOM
+//
+// Alternatively, the arguments can include an object with the following attributes:
+// + __name__ string.
+// + __src__ url string.
+// + __parent__ CSS search string - if set, Scrawl-canvas will attempt to append the new img element to the corresponding DOM element.
+// + __isVisible__ boolean - if true, and new img element has been added to DOM, make that image visible; default is false.
+// + __className__ string - list of classes to be added to the new img element.
+//
+// Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.
 const importImage = function (...args) {
 
     let reg = /.*\/(.*?)\./,
@@ -211,11 +214,10 @@ const importImage = function (...args) {
 };
 
 
-// Import images from the DOM
-
-// Required argument is a query string used to search the dom for matching elements
-
-// Note: unlike in Scrawl-canvas v7, img elements imported from the DOM will always remain in the DOM. If those img elements should not appear on the web page or scene, then coders will need to hide them in some way - either by: positioning them (or their parent element) absolutely to the top or left of the display; or giving their parent element zero width/height; or by setting the img or parent element's style.display attribute to 'none', or their style.opacity attribute's value to 0 ... or some other clever way to hide them.
+// `importDomImage` - import images defined in the web page HTML code
+// + Required argument is a query string used to search the dom for matching elements
+// + Scrawl-canvas does not remove &lt;img> elements from the DOM (this is a breaking change from Scrawl-canvas v7.0). 
+// + If &lt;img> elements should not appear, developers need to hide them in some way - for instance by positioning them (or their parent element) absolutely to the top or left of the display; or by giving their parent element zero width/height; or by setting their CSS: `display: none;`, `opacity: 0;`, etc.
 const importDomImage = function (query) {
 
     let reg = /.*\/(.*?)\./;
@@ -250,8 +252,9 @@ const importDomImage = function (query) {
     });
 };
 
-
 // We can get cells, groups and entitys to save their output as imagedata, which we can then use to build an asset which in turn can be used by Picture entitys and pattern styles
+
+// `createImageFromCell`
 const createImageFromCell = function (item, stashAsAsset = false) {
 
     let mycell = (item.substring) ? cell[item] || canvas[item] : item;
@@ -266,6 +269,7 @@ const createImageFromCell = function (item, stashAsAsset = false) {
     }
 };
 
+// `createImageFromGroup`
 const createImageFromGroup = function (item, stashAsAsset = false) {
 
     let mygroup;
@@ -286,6 +290,7 @@ const createImageFromGroup = function (item, stashAsAsset = false) {
     }
 };
 
+// `createImageFromEntity`
 const createImageFromEntity = function (item, stashAsAsset = false) {
 
     let myentity = (item.substring) ? artefact[item] : item;
@@ -299,8 +304,7 @@ const createImageFromEntity = function (item, stashAsAsset = false) {
 };
 
 
-
-// ## Exported factory function
+// #### Factory
 const makeImageAsset = function (items) {
 
     return new ImageAsset(items);
@@ -308,6 +312,8 @@ const makeImageAsset = function (items) {
 
 constructors.ImageAsset = ImageAsset;
 
+
+// #### Exports
 export {
     makeImageAsset,
 

@@ -1,5 +1,5 @@
 // # Styles mixin
-// The styles mixin contains most of the code required for the [Gradient](../factory/gradient.html) and [RadialGradient](../factory/radialGradient.html) styles factories. It is not used by the other styles objects (Color, Pattern).
+// The styles mixin contains most of the code required for the [Gradient](../factory/gradient.html) and [RadialGradient](../factory/radialGradient.html) styles factories. It is not used by the other styles objects ([Color](../factory/color.html), [Pattern](../factory/pattern.html)).
 // + the __start__ and __end__ positioning attributes are defined here rather than in the factories
 // + gradient-type styles manage their color stops in [Palette factory](../factory/palette.html) objects; that functionality is entirely defined here
 //

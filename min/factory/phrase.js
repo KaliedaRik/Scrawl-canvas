@@ -48,37 +48,27 @@ P = entityMix(P);
 P = filterMix(P);
 let defaultAttributes = {
 text: '',
-textPositions: null,
-textLines: null,
-textLineWidths: null,
-textLineWords: null,
-treatWordAsGlyph: false,
-textGlyphs: null,
-textGlyphWidths: null,
-exposeText: false,
-glyphStyles: [],
-justify: 'left',
+exposeText: true,
 lineHeight: 1.5,
+letterSpacing: 0,
+justify: 'left',
+glyphStyles: [],
 overlinePosition: 0.1,
 overlineStyle: 'rgb(250,0,0)',
 underlinePosition: 0.6,
 underlineStyle: 'rgb(250,0,0)',
 highlightStyle: 'rgba(250,218,94,0.4)',
-letterSpacing: 0,
-textPath: '',
-textPathPosition: 0,
-textPathDirection: 'ltr',
-textPathLoop: true,
-addTextPathRoll: true,
 boundingBoxColor: 'rgba(0,0,0,0.5)',
 showBoundingBox: false,
+textPath: '',
+textPathPosition: 0,
+textPathLoop: true,
+addTextPathRoll: true,
+textPathDirection: 'ltr',
+treatWordAsGlyph: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['textPositions', 'textLines', 'textLineWidths', 'textLineWords', 'textGlyphs', 'textGlyphWidths', 'fontAttributes']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
 P.finalizePacketOut = function (copy, items) {
 let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
 copy = mergeOver(copy, stateCopy);
@@ -132,89 +122,6 @@ this.dirtyPathObject = true;
 };
 D.handle = function (x, y) {
 this.setDeltaCoordinateHelper('handle', x, y);
-this.dirtyHandle = true;
-this.dirtyText = true;
-this.dirtyPathObject = true;
-};
-G.style = function () {
-return this.fontAttributes.get('style');
-};
-G.variant = function () {
-return this.fontAttributes.get('variant');
-};
-G.weight = function () {
-return this.fontAttributes.get('weight');
-};
-G.stretch = function () {
-return this.fontAttributes.get('stretch');
-};
-G.size = function () {
-return this.fontAttributes.get('size');
-};
-G.sizeValue = function () {
-return this.fontAttributes.get('sizeValue');
-};
-G.sizeMetric = function () {
-return this.fontAttributes.get('sizeMetric');
-};
-G.family = function () {
-return this.fontAttributes.get('family');
-};
-G.font = function () {
-return this.fontAttributes.get('font');
-};
-S.font = function (item) {
-this.fontAttributes.set({font: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-S.style = function (item) {
-this.fontAttributes.set({style: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-S.variant = function (item) {
-this.fontAttributes.set({variant: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-S.weight = function (item) {
-this.fontAttributes.set({weight: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-S.stretch = function (item) {
-this.fontAttributes.set({stretch: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-S.size = function (item) {
-this.fontAttributes.set({size: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-S.sizeValue = function (item) {
-this.fontAttributes.set({sizeValue: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-D.sizeValue = function (item) {
-this.fontAttributes.deltaSet({sizeValue: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-S.sizeMetric = function (item) {
-this.fontAttributes.set({sizeMetric: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-S.family = function (item) {
-this.fontAttributes.set({family: item});
-this.dirtyFont = true;
-this.dirtyPathObject = true;
-};
-S.textPath = function (item) {
-this.textPath = item;
 this.dirtyHandle = true;
 this.dirtyText = true;
 this.dirtyPathObject = true;
@@ -303,6 +210,12 @@ this.underlinePosition += ensureFloat(item, 3);
 this.dirtyPathObject = true;
 this.dirtyText = true;
 };
+S.textPath = function (item) {
+this.textPath = item;
+this.dirtyHandle = true;
+this.dirtyText = true;
+this.dirtyPathObject = true;
+};
 S.textPathPosition = function (item) {
 if (this.textPathLoop) {
 item = Math.abs(item);
@@ -317,6 +230,83 @@ newVal = Math.abs(newVal);
 this.textPathPosition = newVal - Math.floor(newVal);
 }
 else this.textPathPosition = newVal;
+};
+G.font = function () {
+return this.fontAttributes.get('font');
+};
+S.font = function (item) {
+this.fontAttributes.set({font: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
+};
+G.style = function () {
+return this.fontAttributes.get('style');
+};
+S.style = function (item) {
+this.fontAttributes.set({style: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
+};
+G.variant = function () {
+return this.fontAttributes.get('variant');
+};
+S.variant = function (item) {
+this.fontAttributes.set({variant: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
+};
+G.weight = function () {
+return this.fontAttributes.get('weight');
+};
+S.weight = function (item) {
+this.fontAttributes.set({weight: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
+};
+G.stretch = function () {
+return this.fontAttributes.get('stretch');
+};
+S.stretch = function (item) {
+this.fontAttributes.set({stretch: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
+};
+G.size = function () {
+return this.fontAttributes.get('size');
+};
+S.size = function (item) {
+this.fontAttributes.set({size: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
+};
+G.sizeValue = function () {
+return this.fontAttributes.get('sizeValue');
+};
+S.sizeValue = function (item) {
+this.fontAttributes.set({sizeValue: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
+};
+D.sizeValue = function (item) {
+this.fontAttributes.deltaSet({sizeValue: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
+};
+G.sizeMetric = function () {
+return this.fontAttributes.get('sizeMetric');
+};
+S.sizeMetric = function (item) {
+this.fontAttributes.set({sizeMetric: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
+};
+G.family = function () {
+return this.fontAttributes.get('family');
+};
+S.family = function (item) {
+this.fontAttributes.set({family: item});
+this.dirtyFont = true;
+this.dirtyPathObject = true;
 };
 P.setGlyphStyles = function (args, ...pos) {
 if (args && Array.isArray(pos)) {
@@ -343,6 +333,27 @@ path = this.path = false;
 }
 }
 return path;
+};
+P.cleanPathObject = function () {
+this.dirtyPathObject = false;
+if (!this.noPathUpdates || !this.pathObject) {
+if (this.dirtyFont && this.fontAttributes) {
+this.dirtyFont = false;
+this.fontAttributes.buildFont(this.scale);
+this.dirtyText = true;
+}
+if (this.dirtyText) this.buildText();
+if (this.dirtyHandle) this.cleanHandle();
+let p = this.pathObject = new Path2D();
+let handle = this.currentHandle,
+dims = this.currentDimensions,
+scale = this.currentScale,
+x = -handle[0] * scale,
+y = -handle[1] * scale,
+w = dims[0] * scale,
+h = dims[1] * scale;
+p.rect(x, y, w, h);
+}
 };
 P.buildText = function () {
 this.dirtyText = false;
@@ -636,51 +647,6 @@ this.textLength = totalLen;
 this.fontLibrary = fontLibrary;
 releaseCell(myCell);
 };
-P.calculateGlyphPathPositions = function () {
-let path = this.getTextPath(),
-len = path.length,
-textPos = this.textPositions,
-widths = this.textGlyphWidths,
-direction = (this.textPathDirection === 'ltr') ? true : false,
-pathPos = this.textPathPosition,
-distance, posArray, i, iz, width,
-justify = this.justify,
-loop = this.textPathLoop;
-for (i = 0, iz = textPos.length; i < iz; i++) {
-posArray = textPos[i];
-width = widths[i];
-if (justify === 'right') posArray[7] = -width;
-else if (justify === 'center') posArray[7] = -width / 2;
-posArray[10] = (pathPos <= 1 && pathPos >= 0) ? path.getPathPositionData(pathPos) : false;
-posArray[9] = width;
-if (direction) pathPos += (width / len);
-else pathPos -= (width / len);
-if (loop && (pathPos > 1 || pathPos < 0)) {
-pathPos = (pathPos > 0.5) ? pathPos - 1 : pathPos + 1;
-}
-}
-};
-P.cleanPathObject = function () {
-this.dirtyPathObject = false;
-if (!this.noPathUpdates || !this.pathObject) {
-if (this.dirtyFont && this.fontAttributes) {
-this.dirtyFont = false;
-this.fontAttributes.buildFont(this.scale);
-this.dirtyText = true;
-}
-if (this.dirtyText) this.buildText();
-if (this.dirtyHandle) this.cleanHandle();
-let p = this.pathObject = new Path2D();
-let handle = this.currentHandle,
-dims = this.currentDimensions,
-scale = this.currentScale,
-x = -handle[0] * scale,
-y = -handle[1] * scale,
-w = dims[0] * scale,
-h = dims[1] * scale;
-p.rect(x, y, w, h);
-}
-};
 P.regularStampSynchronousActions = function () {
 let dest = this.currentHost,
 method = this.method,
@@ -724,6 +690,30 @@ data = preStamper(engine, this, pos[i]);
 stamper[method](engine, this, data);
 }
 if (this.showBoundingBox) this.drawBoundingBox(engine);
+}
+}
+};
+P.calculateGlyphPathPositions = function () {
+let path = this.getTextPath(),
+len = path.length,
+textPos = this.textPositions,
+widths = this.textGlyphWidths,
+direction = (this.textPathDirection === 'ltr') ? true : false,
+pathPos = this.textPathPosition,
+distance, posArray, i, iz, width,
+justify = this.justify,
+loop = this.textPathLoop;
+for (i = 0, iz = textPos.length; i < iz; i++) {
+posArray = textPos[i];
+width = widths[i];
+if (justify === 'right') posArray[7] = -width;
+else if (justify === 'center') posArray[7] = -width / 2;
+posArray[10] = (pathPos <= 1 && pathPos >= 0) ? path.getPathPositionData(pathPos) : false;
+posArray[9] = width;
+if (direction) pathPos += (width / len);
+else pathPos -= (width / len);
+if (loop && (pathPos > 1 || pathPos < 0)) {
+pathPos = (pathPos > 0.5) ? pathPos - 1 : pathPos + 1;
 }
 }
 };

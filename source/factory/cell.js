@@ -1,6 +1,6 @@
 // # Cell factory
 // Scrawl-canvas uses 'hidden' canvases - &lt;canvas> elements that are not part of the DOM - for much of its functionality:
-// + When we wrap a DOM-based &lt;canvas> element in a Scrawl-canvas Canvas wrapper, we create a second 'hidden' &lt;canvas> element and assign it as that Canvas wrapper's __base cell__. 
+// + When we wrap a DOM-based &lt;canvas> element in a Scrawl-canvas [Canvas](./canvas.html) wrapper, we create a second 'hidden' &lt;canvas> element and assign it as that Canvas wrapper's __base cell__. 
 // + This Cell is used for building the display during the Display cycle (`clear` and `compile` steps). 
 // + It gets copied over to the Dom-based &lt;canvas> element at the end of the cycle (the `show` step).
 // + When copied over, the base cell will determine how much of its display to copy into the controller Canvas, to meet the needs of that Canvas wrapper's `fit` attribute.

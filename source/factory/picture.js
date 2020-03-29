@@ -1,18 +1,43 @@
-
 // # Picture factory
+// Picture entitys are image, video or canvas-based rectangles rendered onto a DOM &lt;canvas> element using the Canvas API's [CanvasRenderingContext2D interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) - in particular the [drawImage](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage) method.
+// + Positioning and dimensions functionality for the Picture is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
+// + Pictures can use [ImageAsset](./imageAsset.html), [SpriteAsset](./spriteAsset.html), [VideoAsset](./videoAsset.html), or [Cells](./cell.html) for the source of the image they display.
+// + Additionally, we can restrict the display to a portion of the source by defining and updating `copy` attributes.
+//
+// We define the source copy area in a similar way to how we position and dimension the Picture entity on its Cell host, using two additional [Coordinate](./coordinate.html) Arrays to hold our data.
+// + for both positioning and dimensions, we can define the coordinate in absolute, or relative, terms
+// + __absolute__ positioning and dimensions - where we give the artefact a Number coordinate measured in pixels. 
+// + __relative__ positioning and dimensions - where we use String percentage coordinates, with `['0%', '0%']` representing the top left corner of the source, and `['100%', '100%']` its bottom right corner.
+//
+// Source dimensions are the ___natural width and height___ of the image or video
+// + The code will check automatically to make sure that any combination of start and dimensions values does not lead to an attempt to copy image data that does not exist (which otherwise throws an error).
+// + Where `copyStartX + width` values are greater than the source width, the start value will be reduced until the copy frame fits within the bounds of the source dimensions.
+// + Where `copyStartY + height` values are greater than the source height, the start value will be reduced until the copy frame fits within the bounds of the source dimensions.
+//
+// Loading sources is an asynchronous action. If we attempt to stamp a Picture entity whose source has not yet been fetched or loaded, the Picture will skip its stamp functionality for that Display cycle.
+// + Stamping a Picture entity directly, immediately after defining it, will (almost certainly) lead to the image not displaying on the canvas.
+// + For this reason, its best to use Picture entitys inside a Display cycle animation. As soon as the source finishes loading, the Picture entity will display as expected.
+//
+// Also:
+// + Pictures can use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + They will also accept __Filter__ objects.
+// + They can use __Anchor__ objects for user navigation. 
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
+// + Pictures (but not their source assets) can be cloned, and killed.
 
-// TODO - documentation
 
-// #### To instantiate objects from the factory
+// #### Demos:
+// + [Canvas-008](../../demo/canvas-008.html) - Picture entity position; manipulate copy attributes
+// + [Canvas-010](../../demo/canvas-010.html) - Use video sources and media streams for Picture entitys
+// + [Canvas-019](../../demo/canvas-019.html) - Artefact collision detection
+// + [Canvas-021](../../demo/canvas-021.html) - Import and use spritesheets
+// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
+// + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
+// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
 
-// #### Library storage
 
-// #### Clone functionality
-
-// #### Kill functionality
-
-
-// ## Imports
+// #### Imports
 import { constructors, asset, artefact } from '../core/library.js';
 
 import { mergeOver, xt, xta, addStrings, pushUnique, removeItem } from '../core/utilities.js';
@@ -30,7 +55,7 @@ import assetConsumerMix from '../mixin/assetConsumer.js';
 import filterMix from '../mixin/filter.js';
 
 
-// ## Picture constructor
+// #### Picture constructor
 const Picture = function (items = {}) {
 
     this.copyStart = makeCoordinate();
@@ -66,7 +91,7 @@ const Picture = function (items = {}) {
 };
 
 
-// ## Picture object prototype setup
+// #### Picture prototype
 let P = Picture.prototype = Object.create(Object.prototype);
 P.type = 'Picture';
 P.lib = 'entity';
@@ -74,7 +99,13 @@ P.isArtefact = true;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [position](../mixin/position.html)
+// + [anchor](../mixin/anchor.html)
+// + [entity](../mixin/entity.html)
+// + [assetConsumer](../mixin/assetConsumer.html)
+// + [filter](../mixin/filter.html)
 P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
@@ -84,41 +115,57 @@ P = filterMix(P);
 
 
 
-// ## Define default attributes
+// #### Picture attributes
 let defaultAttributes = {
 
-// TODO - documentation
+// __copyStart__ - Coordinate array
+// + We can use the pseudo-attributes __copyStartX__ and __copyStartY__ to make working with the Coordinate easier.
     copyStart: null,
+
+// __copyDimensions__ - Coordinate array
+// + We can use the pseudo-attributes __copyWidth__ and __copyHeight__ to make working with the Coordinate easier.
     copyDimensions: null,
+
+// ___Additional attributes and pseudo-attributes___ are defined in the [assetConsumer mixin](../mixin/assetConsumer.html)
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
-P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+// #### Packet management
 P.packetCoordinates = pushUnique(P.packetCoordinates, ['copyStart', 'copyDimensions']);
 P.packetObjects = pushUnique(P.packetObjects, ['asset']);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 
+// #### Clone management
+// No additional clone functionality required
 
-// ## Define getter, setter and deltaSetter functions
+
+// #### Kill management
+P.kill = function () {
+
+    this.asset.unsubscribe(this);
+    if (this.group && this.group.name) this.group.removeArtefacts(this.name);
+    this.demolishAnchor();
+    this.deregister();
+    return this;
+};
+
+
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// TODO - documentation
+// __copyStart__
+// + Including __copyStartX__, __copyStartY__
 G.copyStartX = function () {
 
     return this.currentCopyStart[0];
 };
-
 G.copyStartY = function () {
 
     return this.currentCopyStart[1];
 };
-
 S.copyStartX = function (coord) {
 
     if (coord != null) {
@@ -128,7 +175,6 @@ S.copyStartX = function (coord) {
         this.dirtyImageSubscribers = true;
     }
 };
-
 S.copyStartY = function (coord) {
 
     if (coord != null) {
@@ -138,14 +184,12 @@ S.copyStartY = function (coord) {
         this.dirtyImageSubscribers = true;
     }
 };
-
 S.copyStart = function (x, y) {
 
     this.setCoordinateHelper('copyStart', x, y);
     this.dirtyCopyStart = true;
     this.dirtyImageSubscribers = true;
 };
-
 D.copyStartX = function (coord) {
 
     let c = this.copyStart;
@@ -153,14 +197,12 @@ D.copyStartX = function (coord) {
     this.dirtyCopyStart = true;
     this.dirtyImageSubscribers = true;
 };
-
 D.copyStartY = function (coord) {
 
     let c = this.copyStart;
     c[1] = addStrings(c[1], coord);
     this.dirtyCopyStart = true;
 };
-
 D.copyStart = function (x, y) {
 
     this.setDeltaCoordinateHelper('copyStart', x, y);
@@ -168,17 +210,16 @@ D.copyStart = function (x, y) {
     this.dirtyImageSubscribers = true;
 };
 
-// TODO - documentation
+// __copyDimensions__
+// + Including __copyWidth__, __copyHeight__
 G.copyWidth = function () {
 
     return this.currentCopyDimensions[0];
 };
-
 G.copyHeight = function () {
 
     return this.currentCopyDimensions[1];
 };
-
 S.copyWidth = function (val) {
 
     if (val != null) {
@@ -188,7 +229,6 @@ S.copyWidth = function (val) {
         this.dirtyImageSubscribers = true;
     }
 };
-
 S.copyHeight = function (val) {
 
     if (val != null) {
@@ -198,14 +238,12 @@ S.copyHeight = function (val) {
         this.dirtyImageSubscribers = true;
     }
 };
-
 S.copyDimensions = function (w, h) {
 
     this.setCoordinateHelper('copyDimensions', w, h);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
 };
-
 D.copyWidth = function (val) {
 
     let c = this.copyDimensions;
@@ -213,7 +251,6 @@ D.copyWidth = function (val) {
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
 };
-
 D.copyHeight = function (val) {
 
     let c = this.copyDimensions;
@@ -221,7 +258,6 @@ D.copyHeight = function (val) {
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
 };
-
 D.copyDimensions = function (w, h) {
 
     this.setDeltaCoordinateHelper('copyDimensions', w, h);
@@ -229,13 +265,9 @@ D.copyDimensions = function (w, h) {
     this.dirtyImageSubscribers = true;
 };
 
+// Picture `get` and `set` (but not `deltaSet`) functions need to take into account their current source, whose attributes can be retrieved/amended directly on the Picture object
 
-
-// ## Define prototype functions
-
-
-
-// Overwrites function defined in mixin/entity.js - takes into account image/videoAsset source attributes
+// `get`
 P.get = function (item) {
 
     let source = this.source;
@@ -276,8 +308,7 @@ P.get = function (item) {
     }
 };
 
-
-// Overwrites function defined in mixin/entity.js - takes into account State object attributes
+// `set`
 P.set = function (items = {}) {
 
     if (items) {
@@ -318,22 +349,9 @@ P.set = function (items = {}) {
 };
 
 
-// TODO - documentation
+// #### Subscriber management
 
-// Overwrites mixin/position.js function
-P.kill = function () {
-
-    this.asset.unsubscribe(this);
-    if (this.group && this.group.name) this.group.removeArtefacts(this.name);
-    this.demolishAnchor();
-    this.deregister();
-    return this;
-};
-
-
-// TODO - documentation
-
-// Overwrites mixin/position.js function
+// `updateImageSubscribers`
 P.updateImageSubscribers = function () {
 
     this.dirtyImageSubscribers = false;
@@ -349,17 +367,22 @@ P.updateImageSubscribers = function () {
     }
 };
 
+// `imageSubscribe`
 P.imageSubscribe = function (name) {
 
     if (name && name.substring) pushUnique(this.imageSubscribers, name);
 };
 
+// `imageUnsubscribe`
 P.imageUnsubscribe = function (name) {
 
     if (name && name.substring) removeItem(this.imageSubscribers, name);
 };
 
-// TODO - documentation
+
+// #### Display cycle functionality
+
+// `cleanImage`
 P.cleanImage = function () {
 
     let natWidth = this.sourceNaturalWidth,
@@ -387,7 +410,7 @@ P.cleanImage = function () {
     }
 };
 
-// TODO - documentation
+// `cleanCopyStart`
 P.cleanCopyStart = function () {
 
     let width = this.sourceNaturalWidth,
@@ -418,7 +441,7 @@ P.cleanCopyStart = function () {
     }
 };
 
-// TODO - documentation
+// `cleanCopyDimensions`
 P.cleanCopyDimensions = function () {
 
     let natWidth = this.sourceNaturalWidth,
@@ -458,20 +481,20 @@ P.cleanCopyDimensions = function () {
 };
 
 
-
-// TODO - documentation
-
-// Overrides mixin/entity.js
+// `prepareStamp`
 P.prepareStamp = function() {
 
+    // The asset itself will update the Picture entity object when changes occur, by setting the entity's `dirtyAsset` flag
     if (this.dirtyAsset) this.cleanAsset();
 
+    // Not content with the dirty flag, the entity now interrogates its asset via its `checkSource` to trigger it to directly rewrite key information if it has changed - particularly dimensional data
     if (this.asset) {
 
         if (this.asset.type === 'Sprite') this.checkSpriteFrame(this);
         else this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
     }
 
+    //  See the [entity mixin function](http://localhost:8080/docs/source/mixin/entity.html#section-31) for details on the following checks and actions
     if (this.dirtyDimensions || this.dirtyHandle || this.dirtyScale) this.dirtyPaste = true;
 
     if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
@@ -506,14 +529,15 @@ P.prepareStamp = function() {
         this.dirtyCollision = true;
     }
 
-    // update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
+    // Update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
     if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
-    // specifically for Loom entitys
+    // Specifically for Loom entitys
     if (this.dirtyImageSubscribers) this.updateImageSubscribers();
 };
 
-// TODO - documentation
+// `preparePasteObject` - internal function
+// + the __pasteArray__ is a convenience Array containing start coordinate and dimensions data, which we can quickly add to the render engine's drawImage function (which gets called many times)
 P.preparePasteObject = function () {
 
     this.dirtyPaste = false;
@@ -535,7 +559,8 @@ P.preparePasteObject = function () {
     this.dirtyPathObject = true;
 };
 
-// TODO - documentation
+// `cleanPathObject` - internal function
+// + For Picture entitys, the pathObject is a rectangle
 P.cleanPathObject = function () {
 
     this.dirtyPathObject = false;
@@ -550,17 +575,21 @@ P.cleanPathObject = function () {
     }
 };
 
-// TODO - documentation
+// ##### Stamp methods
+
+// `draw`
 P.draw = function (engine) {
 
     engine.stroke(this.pathObject);
 };
 
+// `fill`
 P.fill = function (engine) {
 
     engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
+// `drawAndFill`
 P.drawAndFill = function (engine) {
 
     engine.stroke(this.pathObject);
@@ -568,6 +597,7 @@ P.drawAndFill = function (engine) {
     engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
+// `fillAndDraw`
 P.fillAndDraw = function (engine) {
 
     engine.stroke(this.pathObject);
@@ -576,12 +606,14 @@ P.fillAndDraw = function (engine) {
     engine.stroke(this.pathObject);
 };
 
+// `drawThenFill`
 P.drawThenFill = function (engine) {
 
     engine.stroke(this.pathObject);
     engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
+// `fillThenDraw`
 P.fillThenDraw = function (engine) {
 
     engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
@@ -589,14 +621,64 @@ P.fillThenDraw = function (engine) {
 };
 
 
-
-// ## Exported factory function
+// #### Factory
+// ```
+// scrawl.importDomImage('.flowers');
+//
+// scrawl.makePicture({
+//
+//     name: 'myFlower',
+//     asset: 'iris',
+//
+//     width: 200,
+//     height: 200,
+//
+//     startX: 300,
+//     startY: 200,
+//     handleX: 100,
+//     handleY: 100,
+//
+//     copyWidth: 200,
+//     copyHeight: 200,
+//     copyStartX: 100,
+//     copyStartY: 100,
+//
+//     lineWidth: 10,
+//     strokeStyle: 'gold',
+//
+//     order: 1,
+//     method: 'drawAndFill',
+//
+// }).clone({
+//
+//     name: 'myFactory',
+//     imageSource: 'img/canalFactory-800.png',
+//
+//     width: 600,
+//     height: 400,
+//
+//     startX: 0,
+//     startY: 0,
+//     handleX: 0,
+//     handleY: 0,
+//
+//     copyWidth: 600,
+//     copyHeight: 400,
+//     copyStartX: 150,
+//     copyStartY: 0,
+//
+//     order: 0,
+//     method: 'fill',
+// });
+// ```
 const makePicture = function (items) {
     return new Picture(items);
 };
 
 constructors.Picture = Picture;
 
+
+// #### Exports
 export {
     makePicture,
 };

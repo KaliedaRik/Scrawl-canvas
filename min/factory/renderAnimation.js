@@ -89,6 +89,13 @@ P.processPacketOut = defaultNonReturnFunction;
 P.finalizePacketOut = defaultNonReturnFunction;
 P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
 P.clone = defaultThisReturnFunction;
+P.kill = function () {
+this.onKill();
+removeItem(animate, this.name);
+resortAnimations();
+this.deregister();
+return true;
+};
 P.run = function () {
 this.onRun();
 pushUnique(animate, this.name);
@@ -103,13 +110,6 @@ this.onHalt();
 removeItem(animate, this.name);
 resortAnimations();
 return this;
-};
-P.kill = function () {
-this.onKill();
-removeItem(animate, this.name);
-resortAnimations();
-this.deregister();
-return true;
 };
 const makeRender = function (items) {
 return new RenderAnimation(items);

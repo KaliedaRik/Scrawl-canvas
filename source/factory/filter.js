@@ -1,5 +1,5 @@
 // # Filter factory
-// Filters take in an image representation of an entity, Group of entitys or a Cell display and, by manipulating the image's data, return an updated image which replaces those entitys or cell in the final output display.
+// Filters take in an image representation of an [entity](../mixin/entity.html), [Group](./group.html) of entitys or a [Cell](./cell.html) display and, by manipulating the image's data, return an updated image which replaces those entitys or cell in the final output display.
 //
 // Scrawl-canvas defines its filters in __Filter objects__, detailed in this module. The functionality to make use of these objects is coded up in the [filter mixin](../mixin/filter.html), which is used by the Cell, Group and all entity factories.
 //

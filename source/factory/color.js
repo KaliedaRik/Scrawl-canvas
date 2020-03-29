@@ -1,5 +1,5 @@
 // # Color factory
-// Color objects generate CSS rgb() or rgba() color strings, which can then be used to set an entity's State object's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
+// Color objects generate CSS rgb() or rgba() color strings, which can then be used to set an entity's [State](./state.html) object's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
 // + Factory can accept any legal CSS color keyword as an attribute, alongside '#nnn' and '#nnnnnn' hexadecimal Strings. It will accept 'rgb()' and 'rgba()' strings under certain conditions.
 // + It can also accept __r__, __g__, __b__ and __a__ channel Number attributes (0-255 integers for r, g, b; 0-1 float Number for a), from which a color can be constructed.
 // + It can be used to generate random colors, using channel __max__ and __min__ integer Number attributes to limit the range of the random colors.

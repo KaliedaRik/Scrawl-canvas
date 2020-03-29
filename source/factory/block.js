@@ -1,12 +1,13 @@
 // # Block factory
-// Block entitys are rectangles rendered onto a DOM &lt;canvas> element using the Canvas 2D API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) - specifically the rect() method.
+// Block entitys are rectangles rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) - specifically the `rect` method.
 // + Positioning and dimensions functionality for the Block is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
 // + Blocks can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
 // + They will also accept __Filter__ objects.
 // + They can use __Anchor__ objects for user navigation. 
 // + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
-// + They can be animated directly, or using delta animation, or act as the target for __Tween__ animations.
+// + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
 // + Blocks can be cloned, and killed.
+
 
 // #### Demos:
 // + [Canvas-001](../../demo/canvas-001.html) - Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys
@@ -85,7 +86,7 @@ P = filterMix(P);
 
 // #### Prototype functions
 
-// Calculate the Block entity's __Path2D object__
+// `cleanPathObject` - Calculate the Block entity's __Path2D object__
 P.cleanPathObject = function () {
 
     this.dirtyPathObject = false;

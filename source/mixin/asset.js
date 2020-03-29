@@ -1,8 +1,8 @@
 // # Asset mixin
-// The asset factories - __imageAsset__, __spriteAsset__, and __videoAsset__ - are wrappers around images and videos which can either be pulled from the current document (DOM-based assets) or fetched from the server using an URL address.
+// The asset factories - [ImageAsset](../factory/imageAsset.html), [SpriteAsset](../factory/spriteAsset.html), and [VideoAsset](../factory/videoAsset.html) - are wrappers around images and videos which can either be pulled from the current document (DOM-based assets) or fetched from the server using an URL address.
 // + Assets are used (consumed) by Picture entitys and Pattern styles.
 // + This mixin adds functionality common to all three factories to them as part of their initialization.
-// + The mixin is also used by the __cell__ factory, as &lt;canvas> elements can be used by Picture entitys and Pattern styles as their image sources.
+// + The mixin is also used by the [Cell](../factory/cell.html) factory, as &lt;canvas> elements can be used by Picture entitys and Pattern styles as their image sources.
 
 // Assets can be loaded into scrawl using dedicated import and create functions:
 // + `scrawl.importImage`

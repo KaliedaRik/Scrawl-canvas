@@ -43,6 +43,8 @@ this.sourceLoaded = items[0].complete;
 }
 };
 P.checkSource = defaultNonReturnFunction;
+const gettableSpriteAssetAtributes = [];
+const settableSpriteAssetAtributes = [];
 const importSprite = function (...args) {
 let reg = /.*\/(.*?)\./,
 fileTlas = /\.(jpeg|jpg|png|gif|webp|svg|JPEG|JPG|PNG|GIF|WEBP|SVG)/,
@@ -111,8 +113,6 @@ else results.push(false);
 });
 return results;
 };
-const gettableSpriteAssetAtributes = [];
-const settableSpriteAssetAtributes = [];
 const makeSpriteAsset = function (items) {
 return new SpriteAsset(items);
 };

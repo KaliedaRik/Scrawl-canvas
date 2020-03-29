@@ -47,11 +47,15 @@ copyStart: null,
 copyDimensions: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
-P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
 P.packetCoordinates = pushUnique(P.packetCoordinates, ['copyStart', 'copyDimensions']);
 P.packetObjects = pushUnique(P.packetObjects, ['asset']);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
+P.kill = function () {
+this.asset.unsubscribe(this);
+if (this.group && this.group.name) this.group.removeArtefacts(this.name);
+this.demolishAnchor();
+this.deregister();
+return this;
+};
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -190,13 +194,6 @@ else if (typeof stateDefs[key] !== 'undefined') state[key] = value;
 }
 }, this);
 }
-return this;
-};
-P.kill = function () {
-this.asset.unsubscribe(this);
-if (this.group && this.group.name) this.group.removeArtefacts(this.name);
-this.demolishAnchor();
-this.deregister();
 return this;
 };
 P.updateImageSubscribers = function () {

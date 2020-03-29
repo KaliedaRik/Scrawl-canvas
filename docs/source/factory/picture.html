@@ -299,7 +299,40 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="picture-factory">Picture factory</h1>
+<p>Picture entitys are image, video or canvas-based rectangles rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D interface</a> - in particular the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage">drawImage</a> method.</p>
+<ul>
+<li>Positioning and dimensions functionality for the Picture is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Pictures can use <a href="./imageAsset.html">ImageAsset</a>, <a href="./spriteAsset.html">SpriteAsset</a>, <a href="./videoAsset.html">VideoAsset</a>, or <a href="./cell.html">Cells</a> for the source of the image they display.</li>
+<li>Additionally, we can restrict the display to a portion of the source by defining and updating <code>copy</code> attributes.</li>
+</ul>
+<p>We define the source copy area in a similar way to how we position and dimension the Picture entity on its Cell host, using two additional <a href="./coordinate.html">Coordinate</a> Arrays to hold our data.</p>
+<ul>
+<li>for both positioning and dimensions, we can define the coordinate in absolute, or relative, terms</li>
+<li><strong>absolute</strong> positioning and dimensions - where we give the artefact a Number coordinate measured in pixels. </li>
+<li><strong>relative</strong> positioning and dimensions - where we use String percentage coordinates, with <code>[&#39;0%&#39;, &#39;0%&#39;]</code> representing the top left corner of the source, and <code>[&#39;100%&#39;, &#39;100%&#39;]</code> its bottom right corner.</li>
+</ul>
+<p>Source dimensions are the <strong><em>natural width and height</em></strong> of the image or video</p>
+<ul>
+<li>The code will check automatically to make sure that any combination of start and dimensions values does not lead to an attempt to copy image data that does not exist (which otherwise throws an error).</li>
+<li>Where <code>copyStartX + width</code> values are greater than the source width, the start value will be reduced until the copy frame fits within the bounds of the source dimensions.</li>
+<li>Where <code>copyStartY + height</code> values are greater than the source height, the start value will be reduced until the copy frame fits within the bounds of the source dimensions.</li>
+</ul>
+<p>Loading sources is an asynchronous action. If we attempt to stamp a Picture entity whose source has not yet been fetched or loaded, the Picture will skip its stamp functionality for that Display cycle.</p>
+<ul>
+<li>Stamping a Picture entity directly, immediately after defining it, will (almost certainly) lead to the image not displaying on the canvas.</li>
+<li>For this reason, its best to use Picture entitys inside a Display cycle animation. As soon as the source finishes loading, the Picture entity will display as expected.</li>
+</ul>
+<p>Also:</p>
+<ul>
+<li>Pictures can use CSS color Strings for their strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>They will also accept <strong>Filter</strong> objects.</li>
+<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
+<li>Pictures (but not their source assets) can be cloned, and killed.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +344,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="picture-factory">Picture factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-008.html">Canvas-008</a> - Picture entity position; manipulate copy attributes</li>
+<li><a href="../../demo/canvas-010.html">Canvas-010</a> - Use video sources and media streams for Picture entitys</li>
+<li><a href="../../demo/canvas-019.html">Canvas-019</a> - Artefact collision detection</li>
+<li><a href="../../demo/canvas-021.html">Canvas-021</a> - Import and use spritesheets</li>
+<li><a href="../../demo/canvas-023.html">Canvas-023</a> - Grid entity - using picture-based assets (image, video, sprite)</li>
+<li><a href="../../demo/canvas-024.html">Canvas-024</a> - Loom entity functionality</li>
+<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
+</ul>
 
             </div>
             
@@ -324,72 +366,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -412,13 +389,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="picture-constructor">Picture constructor</h2>
+              <h4 id="picture-constructor">Picture constructor</h4>
 
             </div>
             
@@ -459,13 +436,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="picture-object-prototype-setup">Picture object prototype setup</h2>
+              <h4 id="picture-prototype">Picture prototype</h4>
 
             </div>
             
@@ -478,13 +455,21 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/position.html">position</a></li>
+<li><a href="../mixin/anchor.html">anchor</a></li>
+<li><a href="../mixin/entity.html">entity</a></li>
+<li><a href="../mixin/assetConsumer.html">assetConsumer</a></li>
+<li><a href="../mixin/filter.html">filter</a></li>
+</ul>
 
             </div>
             
@@ -498,17 +483,99 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h4 id="picture-attributes">Picture attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p><strong>copyStart</strong> - Coordinate array</p>
+<ul>
+<li>We can use the pseudo-attributes <strong>copyStartX</strong> and <strong>copyStartY</strong> to make working with the Coordinate easier.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    copyStart: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p><strong>copyDimensions</strong> - Coordinate array</p>
+<ul>
+<li>We can use the pseudo-attributes <strong>copyWidth</strong> and <strong>copyHeight</strong> to make working with the Coordinate easier.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    copyDimensions: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><strong><em>Additional attributes and pseudo-attributes</em></strong> are defined in the <a href="../mixin/assetConsumer.html">assetConsumer mixin</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="packet-management">Packet management</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.packetCoordinates = pushUnique(P.packetCoordinates, [<span class="hljs-string">'copyStart'</span>, <span class="hljs-string">'copyDimensions'</span>]);
+P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'asset'</span>]);</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -519,14 +586,18 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    copyStart: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">copyDimensions</span>: <span class="hljs-literal">null</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">this</span>.asset.unsubscribe(<span class="hljs-keyword">this</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.group &amp;&amp; <span class="hljs-keyword">this</span>.group.name) <span class="hljs-keyword">this</span>.group.removeArtefacts(<span class="hljs-keyword">this</span>.name);
+    <span class="hljs-keyword">this</span>.demolishAnchor();
+    <span class="hljs-keyword">this</span>.deregister();
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
             
         </li>
         
@@ -537,26 +608,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, [<span class="hljs-string">'copyStart'</span>, <span class="hljs-string">'copyDimensions'</span>]);
-P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'asset'</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -567,13 +619,16 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>copyStart</strong></p>
+<ul>
+<li>Including <strong>copyStartX</strong>, <strong>copyStartY</strong></li>
+</ul>
 
             </div>
             
@@ -581,12 +636,10 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentCopyStart[<span class="hljs-number">0</span>];
 };
-
 G.copyStartY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentCopyStart[<span class="hljs-number">1</span>];
 };
-
 S.copyStartX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
@@ -596,7 +649,6 @@ S.copyStartX = <span class="hljs-function"><span class="hljs-keyword">function</
         <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
     }
 };
-
 S.copyStartY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
@@ -606,14 +658,12 @@ S.copyStartY = <span class="hljs-function"><span class="hljs-keyword">function</
         <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
     }
 };
-
 S.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'copyStart'</span>, x, y);
     <span class="hljs-keyword">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
 };
-
 D.copyStartX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
     <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.copyStart;
@@ -621,18 +671,85 @@ D.copyStartX = <span class="hljs-function"><span class="hljs-keyword">function</
     <span class="hljs-keyword">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
 };
-
 D.copyStartY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
     <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.copyStart;
     c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
     <span class="hljs-keyword">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
 };
-
 D.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'copyStart'</span>, x, y);
     <span class="hljs-keyword">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p><strong>copyDimensions</strong></p>
+<ul>
+<li>Including <strong>copyWidth</strong>, <strong>copyHeight</strong></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentCopyDimensions[<span class="hljs-number">0</span>];
+};
+G.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentCopyDimensions[<span class="hljs-number">1</span>];
+};
+S.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
+
+        <span class="hljs-keyword">this</span>.copyDimensions[<span class="hljs-number">0</span>] = val;
+        <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+    }
+};
+S.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
+
+        <span class="hljs-keyword">this</span>.copyDimensions[<span class="hljs-number">1</span>] = val;
+        <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+    }
+};
+S.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'copyDimensions'</span>, w, h);
+    <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+};
+D.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.copyDimensions;
+    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], val);
+    <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+};
+D.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.copyDimensions;
+    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], val);
+    <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+};
+D.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'copyDimensions'</span>, w, h);
+    <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
@@ -645,69 +762,9 @@ D.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>Picture <code>get</code> and <code>set</code> (but not <code>deltaSet</code>) functions need to take into account their current source, whose attributes can be retrieved/amended directly on the Picture object</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>G.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentCopyDimensions[<span class="hljs-number">0</span>];
-};
-
-G.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentCopyDimensions[<span class="hljs-number">1</span>];
-};
-
-S.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
-
-        <span class="hljs-keyword">this</span>.copyDimensions[<span class="hljs-number">0</span>] = val;
-        <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
-    }
-};
-
-S.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
-
-        <span class="hljs-keyword">this</span>.copyDimensions[<span class="hljs-number">1</span>] = val;
-        <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
-    }
-};
-
-S.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'copyDimensions'</span>, w, h);
-    <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
-};
-
-D.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
-
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.copyDimensions;
-    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], val);
-    <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
-};
-
-D.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
-
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.copyDimensions;
-    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], val);
-    <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
-};
-
-D.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'copyDimensions'</span>, w, h);
-    <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
-};</pre></div></div>
             
         </li>
         
@@ -718,20 +775,7 @@ D.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">functi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <p>Overwrites function defined in mixin/entity.js - takes into account image/videoAsset source attributes</p>
+              <p><code>get</code></p>
 
             </div>
             
@@ -778,13 +822,13 @@ D.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Overwrites function defined in mixin/entity.js - takes into account State object attributes</p>
+              <p><code>set</code></p>
 
             </div>
             
@@ -830,61 +874,26 @@ D.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h4 id="subscriber-management">Subscriber management</h4>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>Overwrites mixin/position.js function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>.asset.unsubscribe(<span class="hljs-keyword">this</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.group &amp;&amp; <span class="hljs-keyword">this</span>.group.name) <span class="hljs-keyword">this</span>.group.removeArtefacts(<span class="hljs-keyword">this</span>.name);
-    <span class="hljs-keyword">this</span>.demolishAnchor();
-    <span class="hljs-keyword">this</span>.deregister();
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>Overwrites mixin/position.js function</p>
+              <p><code>updateImageSubscribers</code></p>
 
             </div>
             
@@ -901,17 +910,56 @@ D.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">functi
             <span class="hljs-keyword">if</span> (instance) instance.dirtyInput = <span class="hljs-literal">true</span>;
         });
     }
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p><code>imageSubscribe</code></p>
 
-P.imageSubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.imageSubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
 
     <span class="hljs-keyword">if</span> (name &amp;&amp; name.substring) pushUnique(<span class="hljs-keyword">this</span>.imageSubscribers, name);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p><code>imageUnsubscribe</code></p>
 
-P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
 
     <span class="hljs-keyword">if</span> (name &amp;&amp; name.substring) removeItem(<span class="hljs-keyword">this</span>.imageSubscribers, name);
 };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h4 id="display-cycle-functionality">Display cycle functionality</h4>
+
+            </div>
             
         </li>
         
@@ -922,7 +970,7 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanImage</code></p>
 
             </div>
             
@@ -962,7 +1010,7 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanCopyStart</code></p>
 
             </div>
             
@@ -1005,7 +1053,7 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanCopyDimensions</code></p>
 
             </div>
             
@@ -1056,9 +1104,11 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>prepareStamp</code></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -1069,21 +1119,45 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Overrides mixin/entity.js</p>
+              <p>The asset itself will update the Picture entity object when changes occur, by setting the entity’s <code>dirtyAsset</code> flag</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyAsset) <span class="hljs-keyword">this</span>.cleanAsset();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Not content with the dirty flag, the entity now interrogates its asset via its <code>checkSource</code> to trigger it to directly rewrite key information if it has changed - particularly dimensional data</p>
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyAsset) <span class="hljs-keyword">this</span>.cleanAsset();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.asset) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.asset) {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.asset.type === <span class="hljs-string">'Sprite'</span>) <span class="hljs-keyword">this</span>.checkSpriteFrame(<span class="hljs-keyword">this</span>);
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.asset.checkSource(<span class="hljs-keyword">this</span>.sourceNaturalWidth, <span class="hljs-keyword">this</span>.sourceNaturalHeight);
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p> See the <a href="http://localhost:8080/docs/source/mixin/entity.html#section-31">entity mixin function</a> for details on the following checks and actions</p>
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDimensions || <span class="hljs-keyword">this</span>.dirtyHandle || <span class="hljs-keyword">this</span>.dirtyScale) <span class="hljs-keyword">this</span>.dirtyPaste = <span class="hljs-literal">true</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDimensions || <span class="hljs-keyword">this</span>.dirtyHandle || <span class="hljs-keyword">this</span>.dirtyScale) <span class="hljs-keyword">this</span>.dirtyPaste = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtyDimensions || <span class="hljs-keyword">this</span>.dirtyStart || <span class="hljs-keyword">this</span>.dirtyOffset || <span class="hljs-keyword">this</span>.dirtyHandle) <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 
@@ -1120,13 +1194,13 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
+              <p>Update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
 
             </div>
             
@@ -1135,13 +1209,13 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>specifically for Loom entitys</p>
+              <p>Specifically for Loom entitys</p>
 
             </div>
             
@@ -1151,13 +1225,16 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>preparePasteObject</code> - internal function</p>
+<ul>
+<li>the <strong>pasteArray</strong> is a convenience Array containing start coordinate and dimensions data, which we can quickly add to the render engine’s drawImage function (which gets called many times)</li>
+</ul>
 
             </div>
             
@@ -1185,13 +1262,16 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanPathObject</code> - internal function</p>
+<ul>
+<li>For Picture entitys, the pathObject is a rectangle</li>
+</ul>
 
             </div>
             
@@ -1212,48 +1292,126 @@ P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h5 id="stamp-methods">Stamp methods</h5>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p><code>draw</code></p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.draw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p><code>fill</code></p>
 
-P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p><code>drawAndFill</code></p>
 
-P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
     <span class="hljs-keyword">this</span>.currentHost.clearShadow();
     engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p><code>fillAndDraw</code></p>
 
-P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
     <span class="hljs-keyword">this</span>.currentHost.clearShadow();
     engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p><code>drawThenFill</code></p>
 
-P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
     engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p><code>fillThenDraw</code></p>
 
-P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
@@ -1262,23 +1420,82 @@ P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-35">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code>scrawl.importDomImage(<span class="hljs-string">'.flowers'</span>);
 
+scrawl.makePicture({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myFlower'</span>,
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">'iris'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-number">100</span>,
+
+    <span class="hljs-attr">copyWidth</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">copyHeight</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">copyStartX</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">copyStartY</span>: <span class="hljs-number">100</span>,
+
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'gold'</span>,
+
+    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'drawAndFill'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myFactory'</span>,
+    <span class="hljs-attr">imageSource</span>: <span class="hljs-string">'img/canalFactory-800.png'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-number">0</span>,
+
+    <span class="hljs-attr">copyWidth</span>: <span class="hljs-number">600</span>,
+    <span class="hljs-attr">copyHeight</span>: <span class="hljs-number">400</span>,
+    <span class="hljs-attr">copyStartX</span>: <span class="hljs-number">150</span>,
+    <span class="hljs-attr">copyStartY</span>: <span class="hljs-number">0</span>,
+
+    <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePicture = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Picture(items);
 };
 
-constructors.Picture = Picture;
+constructors.Picture = Picture;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makePicture,
 };</pre></div></div>
             

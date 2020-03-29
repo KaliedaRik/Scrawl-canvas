@@ -1,18 +1,26 @@
-
 // # Grid factory
+// The Grid entity is a graphical representation of __a grid with equal width columns and equal height rows__, separated by gutters. Each tile within the grid can be filled with a different color, or a different gradient, or a different Picture entity output.
+// + Each grid requires a mimimum of one column and one row; columns will divide into the Grid width evenly, rows divide evenly into the Grid height.
+// + The __tiles__ can display as many different colors, or gradients, or Pictures, as are required for the display.
+// + The __gutters__ between columns, and between rows, can be different values; gutter fills can also be colors, gradients or Picture entity output.
+// + The display for each tile, and the gutters, can be easily updated.
+// + Grid entity __hit reports__ include an extra attribute - an array of tiles that report being hit.
+// + Grids will accept __Filter__ objects - filters are applied to the entire Grid, not to individual tiles.
+// + They can use __Anchor__ objects for user navigation. 
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
+// + Grids can be cloned, and killed.
 
-// TODO - documentation
 
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// #### Demos:
+// + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
+// + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
+// + [Canvas-019](../../demo/canvas-019.html) - Artefact collision detection
+// + [DOM-013](../../demo/dom-013.html) - Artefact collision detection - DOM artefacts
+// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
 
 
-// ## Imports
+// #### Imports
 import { constructors, entity } from '../core/library.js';
 import { mergeOver, pushUnique, isa_number, isa_obj, 
     defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
@@ -26,8 +34,7 @@ import entityMix from '../mixin/entity.js';
 import filterMix from '../mixin/filter.js';
 
 
-
-// ## Grid constructor
+// #### Grid constructor
 const Grid = function (items = {}) {
 
     this.tileFill = [];
@@ -72,14 +79,21 @@ const Grid = function (items = {}) {
     return this;
 };
 
-// ## Grid object prototype setup
+
+// #### Block prototype
 let P = Grid.prototype = Object.create(Object.prototype);
 P.type = 'Grid';
 P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 
-// Apply mixins to prototype object
+
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [position](../mixin/position.html)
+// + [anchor](../mixin/anchor.html)
+// + [entity](../mixin/entity.html)
+// + [filter](../mixin/filter.html)
 P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
@@ -88,28 +102,38 @@ P = filterMix(P);
 
 
 
-// ## Define default attributes
+// #### Grid attributes
 let defaultAttributes = {
 
-// TODO - documentation
+// __columns__, __rows__ - integer Numbers representing the number of columns and rows in the Grid
     columns: 2,
     rows: 2,
 
-// TODO - documentation
+// __columnGutterWidth__, __rowGutterWidth__ - float Number distances (measured in px) between tiles in the grid.
     columnGutterWidth: 1,
     rowGutterWidth: 1,
 
-// TODO - documentation
-    gutterColor: '#808080',
-
-// TODO - documentation
-    tileFill: null,
+// __tileSources__ - Array of Javascript Objects
+// + Each Object describes a source which can be used to fill tiles
+// + Available fills include: `color`, `cellGradient`, `gridGradient`, `gridPicture`, `tilePicture`
     tileSources: null,
+
+// __tileFill__ - Array of integer Numbers
+// + Length of the Array will be `rows * columns`
+// + Tiles are arranged left-to-right, top-to-bottom with tileFill[0] being the top left tile in the grid
+// + Each Number represents the index of the tileSource object to be used to fill this tile
+    tileFill: null,
+
+// __gutterColor__ - can accept the following sources:
+// + A valid CSS color String
+// + The name-String of a Scrawl-canvas Gradient or RadialGradient object, or the object itself
+// + An integer Number representing the index of a tileSource object
+    gutterColor: '#808080',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
+// #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['tileSources']);
 
 P.finalizePacketOut = function (copy, items) {
@@ -136,13 +160,20 @@ P.finalizePacketOut = function (copy, items) {
 };
 
 
+// #### Clone management
+// No additional clone functionality required
 
-// ## Define getter, setter and deltaSetter functions
+
+// #### Kill management
+// No additional kill functionality required
+
+
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// TODO - documentation
+// __columns__
 S.columns = function (item) {
 
     if (isa_number(item)) {
@@ -171,8 +202,9 @@ S.columns = function (item) {
     }
     this.dirtyPathObject = true;
 };
+D.columns = defaultNonReturnFunction;
 
-// TODO - documentation
+// __rows__
 S.rows = function (item) {
 
     if (isa_number(item)) {
@@ -192,14 +224,13 @@ S.rows = function (item) {
     }
     this.dirtyPathObject = true;
 };
-
-// TODO - documentation
-D.columns = defaultNonReturnFunction;
 D.rows = defaultNonReturnFunction;
 
-/*
-TODO - documentation
-*/
+
+// #### Tile management
+
+// `setAllTilesTo` - change the fill for all tiles in a Grid 
+// + Argument is an integer Number representing the index of a tileSource object
 P.setAllTilesTo = function (val) {
 
     if (isa_number(val)) {
@@ -210,7 +241,9 @@ P.setAllTilesTo = function (val) {
     }
 };
 
-// TODO - documentation
+// `setTilesTo` - change the fill for a (set of) tile(s) in a Grid - requires two arguments:
+// + First argument is an integer Number representing the position of a tile in the tileFill Array, or an Array of such Numbers
+// + Second argument is an integer Number representing the index of a tileSource object
 P.setTilesTo = function (tiles, val) {
 
     let tileFill = this.tileFill;
@@ -230,7 +263,9 @@ P.setTilesTo = function (tiles, val) {
     }
 };
 
-// TODO - documentation
+// `setTileSourceTo` - update or replace a tileSource object - requires two arguments:
+// + First argument is the integer Number index of the tileSource object to be replaced
+// + Second argument is the new or updated object
 P.setTileSourceTo = function (index, obj) {
 
     if (isa_number(index) && isa_obj(obj)) {
@@ -239,7 +274,9 @@ P.setTileSourceTo = function (index, obj) {
     }
 };
 
-// TODO - documentation
+// `removeTileSource` - remove a tileSource object
+// + Argument is an integer Number representing the index of a tileSource object
+// + Object will be replaced with `null`
 P.removeTileSource = function (index) {
 
     if (isa_number(index) && index) {
@@ -250,7 +287,9 @@ P.removeTileSource = function (index) {
     }
 };
 
-// TODO - documentation
+// `getTileSource` - returns the tileSource index Number for the given tile. Function is overloaded:
+// + One argument: Number representing the position of a tile in the tileFill Array.
+// + Two arguments: The `(row, column)` position of the tile in the Grid - both values start from `0`
 P.getTileSource = function (row, col) {
 
     if (isa_number(row)) {
@@ -260,15 +299,14 @@ P.getTileSource = function (row, col) {
     }
 };
 
-// TODO - documentation
+// `getTilesUsingSource` - returns an Array of tileFill index Numbers representing tiles that are currently using the tileSource Object at the given tileSource index.
 P.getTilesUsingSource = function (index) {
 
     if (isa_number(index)) this.tileFill.map(item => item === index ? 1 : 0);
 };
 
 
-
-// Internal - used for entity stamping (Display cycle), and collision detection (eg: drag-and-drop)
+// `cleanPathObject` - internal - used for entity stamping (Display cycle), and collision detection
 P.cleanPathObject = function () {
 
     this.dirtyPathObject = false;
@@ -350,10 +388,13 @@ P.cleanPathObject = function () {
 };
 
 
-// Override entity draw/fill methods
+// ##### Stamp methods
+
+// `performFill` - internal stamp method helper function
+// + If you are not a fan of long, complex functions ... look away now!
 P.performFill = function (engine) {
 
-    // grab the current engine values for various things
+    // Grab the current engine values for various things
     engine.save();
 
     let composer = requestCell(),
@@ -374,10 +415,10 @@ P.performFill = function (engine) {
 
     let currentPicture;
 
-    // iterate through the grid's tileSources
+    // Iterate through the grid's tileSources
     tileSources.forEach((obj, index) => {
 
-        // - set up the engine fillStyle value (where required)
+        // Set up the engine fillStyle value (where required)
         if (obj && obj.type) {
 
             switch (obj.type) {
@@ -401,7 +442,7 @@ P.performFill = function (engine) {
             }
         }
 
-        // get an map of tiles using this source
+        // Get an map of tiles using this source
         let validTiles = tileFill.map(item => item === index ? true : false);
 
         if (validTiles.length) {
@@ -475,7 +516,7 @@ P.performFill = function (engine) {
 
     if(xt(gColor)) {
 
-        // assign (or construct) the appropriate object to gObject
+        // Assign (or construct) the appropriate object to gObject
         if (gColor.substring) {
 
             gObject = {
@@ -486,7 +527,7 @@ P.performFill = function (engine) {
         else if (isa_obj(gColor)) gObject = gColor;
         else if (isa_number(gColor) && isa_obj(tileSources[gColor])) gObject = tileSources[gColor];
 
-        // set the engine's strokeStyle to the appropriate value (if needed)
+        // Set the engine's strokeStyle to the appropriate value (if needed)
         switch (gObject.type) {
 
             case 'cellGradient' :
@@ -510,7 +551,7 @@ P.performFill = function (engine) {
         switch (gObject.type) {
 
             // Use pool canvas to compose the output
-            // - gridPicture and tilePicture both treated the same
+            // + gridPicture and tilePicture both treated the same
             case 'gridPicture' :
             case 'tilePicture' :
 
@@ -559,7 +600,7 @@ P.performFill = function (engine) {
                 }
                 break;
 
-            // we have a color/gradient all set up - stroke the lines directly onto grid
+            // We have a color/gradient all set up - stroke the lines directly onto grid
             default :
 
                 if (gRow) {
@@ -581,13 +622,13 @@ P.performFill = function (engine) {
     engine.restore();
 };
 
-
-// Override entity draw/fill methods
+// `fill`
 P.fill = function (engine) {
 
     this.performFill(engine);
 };
 
+// `drawAndFill`
 P.drawAndFill = function (engine) {
 
     let p = this.pathObject;
@@ -597,6 +638,7 @@ P.drawAndFill = function (engine) {
     this.performFill(engine);
 };
 
+// `fillAndDraw`
 P.fillAndDraw = function (engine) {
 
     let p = this.pathObject;
@@ -607,6 +649,7 @@ P.fillAndDraw = function (engine) {
     engine.stroke(p);
 };
 
+// `drawThenFill`
 P.drawThenFill = function (engine) {
 
     let p = this.pathObject;
@@ -615,6 +658,7 @@ P.drawThenFill = function (engine) {
     this.performFill(engine);
 };
 
+// `fillThenDraw`
 P.fillThenDraw = function (engine) {
 
     let p = this.pathObject;
@@ -625,10 +669,20 @@ P.fillThenDraw = function (engine) {
 
 
 
-// Overrides position mixin function
+// `checkHit` - overrides position mixin function
+// + Grid entitys need to return ALL of the successful hit coordinates, not just the first
+// + They also need to include the tile index(es) of where the hit(s) took place within them
+//
+// Returns an object with the following attributes
+// ```
+// {
+//     x: x-coordinate of the _last_ successful hit,
+//     y: y-coordinate of the _last_ successful hit,
+//     tiles: Array of tile index Numbers representing each tile reporting a hit,
+//     artefact: the Grid entity object
+// }
+// ```
 
-// - Grid entitys need to return ALL of the successful hit coordinates, not just the first
-// - They also need to include the cell index of where the hit took place within them
 P.checkHit = function (items = [], mycell) {
 
     if (this.noUserInteraction) return false;
@@ -721,14 +775,43 @@ P.checkHit = function (items = [], mycell) {
 };
 
 
-
-// ## Exported factory function
+// #### Factory
+// ```
+// let blueSource = {
+//     type: 'color',
+//     source: 'aliceblue',
+// };
+//
+// let myGrid = scrawl.makeGrid({
+//
+//     name: 'test-grid',
+//
+//     startX: 'center',
+//     startY: 'center',
+//
+//     handleX: 'center',
+//     handleY: 'center',
+//
+//     width: 300,
+//     height: 200,
+//
+//     columns: 6,
+//     rows: 6,
+//
+//     tileSources: [blueSource, {
+//         type: 'color',
+//         source: 'red',
+//     }],
+// });
+// ```
 const makeGrid = function (items) {
     return new Grid(items);
 };
 
 constructors.Grid = Grid;
 
+
+// #### Exports
 export {
     makeGrid,
 };

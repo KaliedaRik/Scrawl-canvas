@@ -1,5 +1,5 @@
 // # Animation factory
-// Animations lie at the heart of Scrawl-canvas functionality. While static Canvas and Stack displays can be rendered once and then forgotten, any Canvas or Stack that implements any form of user interaction, or movement in the display, needs to implement an Animation object to make that functionality happen.
+// Animations lie at the heart of Scrawl-canvas functionality. While static [Canvas](./canvas.html) and [Stack](./stack.html) displays can be rendered once and then forgotten, any Canvas or Stack that implements any form of user interaction, or movement in the display, needs to implement an Animation object to make that functionality happen.
 //
 // There are a number of ways to create an Animation object:
 // + `scrawl.makeAnimation` - as coded by this factory - will supply a very basic Animation object. The factory requires that we supply it with a Promise-based `fn` function which will be added to the core Scrawl-canvas animation loop.

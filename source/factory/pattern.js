@@ -1,7 +1,17 @@
 // # Pattern factory
+// Scrawl-canvas Pattern objects implement the Canvas API's [createPattern](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createPattern) method. The resulting [CanvasPattern](https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern) object can be used by any Scrawl-canvas entity as its `fillStyle` or `strokeStyle`.
+// + Most pattern-related functionality has been coded up in the [styles mixin](../mixin/styles.html), and is documented there.
+// + Functionality associated with __assets__, which Patterns use as their source, has been coded up in the [assetConsumer mixin](../mixin/assetConsumer.html).
+// + Patterns fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.
+// + Patterns cannot be animated as such, but a Cell wrapper that is used as the Pattern's source can be animated in any of the normal ways.
+// + Scrawl-canvas does not support the Canvas API `CanvasPattern.setTransform()` method - it appears to be based on the SVGMatrix interface, which was deprecated in the SVG2 standard.
 
 
-// ## Imports
+// #### Demos:
+// + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
+
+
+// #### Imports
 import { constructors, cell, entity } from '../core/library.js';
 import { mergeOver, pushUnique, isa_fn, isa_obj } from '../core/utilities.js';
 
@@ -9,7 +19,7 @@ import baseMix from '../mixin/base.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
 
 
-// ## Pattern constructor
+// #### Pattern constructor
 const Pattern = function (items = {}) {
 
     this.makeName(items.name);
@@ -21,7 +31,7 @@ const Pattern = function (items = {}) {
 };
 
 
-// ## Pattern object prototype setup
+// #### Pattern prototype
 let P = Pattern.prototype = Object.create(Object.prototype);
 
 P.type = 'Pattern';
@@ -30,29 +40,33 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [assetConsumer](../mixin/assetConsumer.html)
 P = baseMix(P);
 P = assetConsumerMix(P);
 
 
-// ## Define default attributes
+// #### Pattern attributes
 let defaultAttributes = {
 
-// TODO - documentation
+// __repeat__ - String indicating how to repeat the pattern's image. Possible values are: `repeat` (default), `repeat-x`, `repeat-y`, `no-repeat`
     repeat: 'repeat',
+
+// ___Additional attributes and pseudo-attributes___ are defined in the [assetConsumer mixin](../mixin/assetConsumer.html)
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
-P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+// #### Packet management
 P.packetObjects = pushUnique(P.packetObjects, ['asset']);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 
-// ## Kill functionality - overwrites ./mixin/base.js
+// #### Clone management
+// No additional clone functionality required
+
+
+// #### Kill management
 P.kill = function () {
 
     let myname = this.name;
@@ -81,15 +95,13 @@ P.kill = function () {
 };
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-
-// TODO - documentation
+// __repeat__
 P.repeatValues = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat']
-
 S.repeat = function (item) {
 
     if (this.repeatValues.indexOf(item) >= 0) this.repeat = item;
@@ -97,10 +109,9 @@ S.repeat = function (item) {
 };
 
 
-// ## Define prototype functions
+// #### Prototype functions
 
-
-// TODO - documentation
+// `buildStyle` - internal function: creates the pattern on the Cell's CanvasRenderingContext2D engine.
 P.buildStyle = function (mycell = {}) {
     
     if (this.sourceLoaded && mycell) {
@@ -120,7 +131,8 @@ P.buildStyle = function (mycell = {}) {
     return 'rgba(0,0,0,0)';
 };
 
-// TODO - documentation
+// `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
+// + This is the point when we clean Scrawl-canvas assets which have told their subscribers that asset data/attributes have updated
 P.getData = function (entity, cell, isFill) {
 
     if (this.dirtyAsset) this.cleanAsset();
@@ -130,13 +142,51 @@ P.getData = function (entity, cell, isFill) {
 };
 
 
-// ## Exported factory function
+// #### Factory
+// ```
+// scrawl.importDomImage('.mypatterns');
+//
+// scrawl.makePattern({
+//
+//     name: 'brick-pattern',
+//     asset: 'brick',
+//
+// }).clone({
+//
+//     name: 'marble-pattern',
+//     imageSource: 'img/marble.png',
+// });
+//
+// scrawl.makeBlock({
+//
+//     name: 'marble-block',
+//
+//     width: '40%',
+//     height: '40%',
+//
+//     startX: '25%',
+//     startY: '25%',
+//
+//     handleX: 'center',
+//     handleY: 'center',
+//
+//     lineWidth: 20,
+//     lineJoin: 'round',
+//
+//     method: 'fillThenDraw',
+//
+//     fillStyle: 'marble-pattern',
+//     strokeStyle: 'brick-pattern',
+// });
+// ```
 const makePattern = function (items) {
     return new Pattern(items);
 };
 
 constructors.Pattern = Pattern;
 
+
+// #### Exports
 export {
     makePattern,
 };

@@ -300,14 +300,14 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="block-factory">Block factory</h1>
-<p>Block entitys are rectangles rendered onto a DOM &lt;canvas&gt; element using the Canvas 2D API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a> - specifically the rect() method.</p>
+<p>Block entitys are rectangles rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a> - specifically the <code>rect</code> method.</p>
 <ul>
 <li>Positioning and dimensions functionality for the Block is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
 <li>Blocks can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
 <li>They will also accept <strong>Filter</strong> objects.</li>
 <li>They can use <strong>Anchor</strong> objects for user navigation. </li>
 <li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
-<li>They can be animated directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
+<li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Blocks can be cloned, and killed.</li>
 </ul>
 
@@ -518,7 +518,7 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Calculate the Block entity’s <strong>Path2D object</strong></p>
+              <p><code>cleanPathObject</code> - Calculate the Block entity’s <strong>Path2D object</strong></p>
 
             </div>
             

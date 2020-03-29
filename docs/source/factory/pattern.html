@@ -300,6 +300,14 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="pattern-factory">Pattern factory</h1>
+<p>Scrawl-canvas Pattern objects implement the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createPattern">createPattern</a> method. The resulting <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern">CanvasPattern</a> object can be used by any Scrawl-canvas entity as its <code>fillStyle</code> or <code>strokeStyle</code>.</p>
+<ul>
+<li>Most pattern-related functionality has been coded up in the <a href="../mixin/styles.html">styles mixin</a>, and is documented there.</li>
+<li>Functionality associated with <strong>assets</strong>, which Patterns use as their source, has been coded up in the <a href="../mixin/assetConsumer.html">assetConsumer mixin</a>.</li>
+<li>Patterns fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.</li>
+<li>Patterns cannot be animated as such, but a Cell wrapper that is used as the Pattern’s source can be animated in any of the normal ways.</li>
+<li>Scrawl-canvas does not support the Canvas API <code>CanvasPattern.setTransform()</code> method - it appears to be based on the SVGMatrix interface, which was deprecated in the SVG2 standard.</li>
+</ul>
 
             </div>
             
@@ -312,7 +320,23 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-009.html">Canvas-009</a> - Pattern styles; Entity web link anchors; Dynamic accessibility</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -325,13 +349,13 @@
         </li>
         
         
-        <li id="section-3">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2 id="pattern-constructor">Pattern constructor</h2>
+              <h4 id="pattern-constructor">Pattern constructor</h4>
 
             </div>
             
@@ -348,13 +372,13 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="pattern-object-prototype-setup">Pattern object prototype setup</h2>
+              <h4 id="pattern-prototype">Pattern prototype</h4>
 
             </div>
             
@@ -368,33 +392,22 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Apply mixins to prototype object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = assetConsumerMix(P);</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/assetConsumer.html">assetConsumer</a></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = baseMix(P);
+P = assetConsumerMix(P);</pre></div></div>
             
         </li>
         
@@ -405,13 +418,11 @@ P = assetConsumerMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="pattern-attributes">Pattern attributes</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    repeat: <span class="hljs-string">'repeat'</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -422,15 +433,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <p><strong>repeat</strong> - String indicating how to repeat the pattern’s image. Possible values are: <code>repeat</code> (default), <code>repeat-x</code>, <code>repeat-y</code>, <code>no-repeat</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'asset'</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    repeat: <span class="hljs-string">'repeat'</span>,</pre></div></div>
             
         </li>
         
@@ -441,7 +448,52 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h2 id="kill-functionality---overwrites-mixinbasejs">Kill functionality - overwrites ./mixin/base.js</h2>
+              <p><strong><em>Additional attributes and pseudo-attributes</em></strong> are defined in the <a href="../mixin/assetConsumer.html">assetConsumer mixin</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h4 id="packet-management">Packet management</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'asset'</span>]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
             
@@ -454,11 +506,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Remove style from all entity state objects</p>
 
@@ -481,11 +533,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Remove style from the Scrawl-canvas library</p>
 
@@ -499,13 +551,13 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -516,18 +568,17 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>repeat</strong></p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.repeatValues = [<span class="hljs-string">'repeat'</span>, <span class="hljs-string">'repeat-x'</span>, <span class="hljs-string">'repeat-y'</span>, <span class="hljs-string">'no-repeat'</span>]
-
 S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.repeatValues.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.repeat = item;
@@ -537,26 +588,26 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>buildStyle</code> - internal function: creates the pattern on the Cell’s CanvasRenderingContext2D engine.</p>
 
             </div>
             
@@ -582,13 +633,16 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
+<ul>
+<li>This is the point when we clean Scrawl-canvas assets which have told their subscribers that asset data/attributes have updated</li>
+</ul>
 
             </div>
             
@@ -603,23 +657,69 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-17">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code>scrawl.importDomImage(<span class="hljs-string">'.mypatterns'</span>);
 
+scrawl.makePattern({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'brick-pattern'</span>,
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">'brick'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'marble-pattern'</span>,
+    <span class="hljs-attr">imageSource</span>: <span class="hljs-string">'img/marble.png'</span>,
+});
+
+scrawl.makeBlock({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'marble-block'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-string">'40%'</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">'40%'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'25%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'25%'</span>,
+
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">'round'</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillThenDraw'</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'marble-pattern'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'brick-pattern'</span>,
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePattern = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Pattern(items);
 };
 
-constructors.Pattern = Pattern;
+constructors.Pattern = Pattern;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makePattern,
 };</pre></div></div>
             

@@ -13,8 +13,6 @@ P.isArtefact = false;
 P.isAsset = true;
 P = baseMix(P);
 P = assetMix(P);
-let defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);
 P.saveAsPacket = function () {
 return [this.name, this.type, this.lib, {}];
 };
@@ -98,6 +96,56 @@ else return Promise.reject('setSinkId not supported');
 }
 else return Promise.reject('Source not defined');
 };
+const gettableVideoAssetAtributes = [
+'video_audioTracks',
+'video_autoPlay',
+'video_buffered',
+'video_controller',
+'video_controls',
+'video_controlsList',
+'video_crossOrigin',
+'video_currentSrc',
+'video_currentTime',
+'video_defaultMuted',
+'video_defaultPlaybackRate',
+'video_disableRemotePlayback',
+'video_duration',
+'video_ended',
+'video_error',
+'video_loop',
+'video_mediaGroup',
+'video_mediaKeys',
+'video_muted',
+'video_networkState',
+'video_paused',
+'video_playbackRate',
+'video_readyState',
+'video_seekable',
+'video_seeking',
+'video_sinkId',
+'video_src',
+'video_srcObject',
+'video_textTracks',
+'video_videoTracks',
+'video_volume',
+];
+const settableVideoAssetAtributes = [
+'video_autoPlay',
+'video_controller',
+'video_controls',
+'video_crossOrigin',
+'video_currentTime',
+'video_defaultMuted',
+'video_defaultPlaybackRate',
+'video_disableRemotePlayback',
+'video_loop',
+'video_mediaGroup',
+'video_muted',
+'video_playbackRate',
+'video_src',
+'video_srcObject',
+'video_volume',
+];
 const importDomVideo = function (query) {
 let reg = /.*\/(.*?)\./;
 let items = document.querySelectorAll(query);
@@ -223,56 +271,6 @@ result = name;
 }
 return result;
 };
-const gettableVideoAssetAtributes = [
-'video_audioTracks',
-'video_autoPlay',
-'video_buffered',
-'video_controller',
-'video_controls',
-'video_controlsList',
-'video_crossOrigin',
-'video_currentSrc',
-'video_currentTime',
-'video_defaultMuted',
-'video_defaultPlaybackRate',
-'video_disableRemotePlayback',
-'video_duration',
-'video_ended',
-'video_error',
-'video_loop',
-'video_mediaGroup',
-'video_mediaKeys',
-'video_muted',
-'video_networkState',
-'video_paused',
-'video_playbackRate',
-'video_readyState',
-'video_seekable',
-'video_seeking',
-'video_sinkId',
-'video_src',
-'video_srcObject',
-'video_textTracks',
-'video_videoTracks',
-'video_volume',
-];
-const settableVideoAssetAtributes = [
-'video_autoPlay',
-'video_controller',
-'video_controls',
-'video_crossOrigin',
-'video_currentTime',
-'video_defaultMuted',
-'video_defaultPlaybackRate',
-'video_disableRemotePlayback',
-'video_loop',
-'video_mediaGroup',
-'video_muted',
-'video_playbackRate',
-'video_src',
-'video_srcObject',
-'video_volume',
-];
 const makeVideoAsset = function (items) {
 return new VideoAsset(items);
 };

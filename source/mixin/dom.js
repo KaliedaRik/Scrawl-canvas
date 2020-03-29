@@ -1,5 +1,5 @@
 // # dom mixin
-// This mixin builds on the base and position mixins to give DOM elements (Scrawl-canvas Stack, Canvas and Element wrapper objects) the ability to act as __artefacts__ in a Scrawl-canvas stack environment.
+// This mixin builds on the base and position mixins to give DOM elements (Scrawl-canvas [Stack](../factory/stack.html), [Canvas](../factory/canvas.html) and [Element](../factory/element.html) wrapper objects) the ability to act as __artefacts__ in a Scrawl-canvas stack environment.
 // + Absolute and relative positioning and dimensioning
 // + Positioning in the 3rd (z) dimension (absolute values only)
 // + Use other artefacts as `pivot`, `mimic` and `path` objects

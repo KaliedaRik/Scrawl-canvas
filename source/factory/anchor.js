@@ -1,7 +1,7 @@
 // # Anchor factory
-// In Scrawl-canvas, an anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in this file. 
+// In Scrawl-canvas, an Anchor object holds all the data and functionality required to turn an artefact into a link. That functionality gets defined in this file. 
 //
-// Scrawl-canvas uses a mixin - code kept in [mixin/anchor.js](../mixin/anchor.html) - to add anchor functionality to artefacts - in particular canvas entitys.
+// Scrawl-canvas uses the [Anchor mixin](../mixin/anchor.html) to add anchor functionality to artefacts - in particular canvas entitys.
 //
 // This gives us a interactive canvas containing dynamic, clickable regions.
 //

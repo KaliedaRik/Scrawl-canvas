@@ -1,18 +1,40 @@
-
 // # Phrase factory
+// Phrase entitys are graphical text rectangles rendered onto a DOM &lt;canvas> element using the Canvas API's [CanvasRenderingContext2D interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) - in particular the `fillRect`, `strokeRect`, `fillText` and `strokeText` methods.
+// + Positioning functionality for the Phrase is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin. 
+// + Phrases can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + They will also accept __Filter__ objects.
+// + They can use __Anchor__ objects for user navigation. 
+// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
+// + Phrases can be cloned, and killed.
+//
+// Phrase entity __dimensions__ work differently to that of other entitys:
+// + The `width` attribute is required. Phrase entitys will automatically render text longer than its width in multiple lines on the canvas.
+// + The `height` attribute is normally disregarded. Instead height is calculated as a combination of the font `size`, `lineheight`, and the number of lines of text that need to be rendered on the canvas - which itself depends on the text's length and the entity's `width` attribute
+//
+// Phrase entitys use [FontAttribute objects](./fontAttribute.html) to help manage their text font:
+// + More than one font family can be used in a single Phrase.
+// + Font styles are also supported: a single Phrase can include multiple episodes of __bold__, _italic_, etc.
+// + More than one font size can be displayed within a Phrase.
+// + Letter spacing is supported, both across the entire text and within the text.
+// + Beyond fonts, ranges of letters within the Phrase text can be background highlighted, or given overlines and/or underlines.
+//
+// Phrase entitys fully support __text along a path__ at the Phrase, word and letter levels.
+//
+// Phrase entity text content is __accessible to assistive technologies__ such as screen readers, by default.
 
-// TODO - documentation
 
-// #### To instantiate objects from the factory
+// #### Demos:
+// + [Canvas-015](../../demo/canvas-015.html) - Phrase entity (make, clone, method, multiline)
+// + [Canvas-016](../../demo/canvas-016.html) - Phrase entity position and font attributes; Block mimic functionality
+// + [Canvas-017](../../demo/canvas-017.html) - Phrase entity - test lineHeight, letterSpacing and justify attributes; setGlyphStyles() functionality
+// + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
+// + [Canvas-019](../../demo/canvas-019.html) - Artefact collision detection
+// + [Component-001](../../demo/component-001.html) - Scrawl-canvas DOM element components
+// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
 
-// #### Library storage
 
-// #### Clone functionality
-
-// #### Kill functionality
-
-
-// ## Imports
+// #### Imports
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
 import { mergeOver, pushUnique, xt, ensurePositiveFloat, ensureFloat, ensureString } from '../core/utilities.js';
@@ -42,7 +64,7 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
 const textEntityConverter = document.createElement('textarea');
 
 
-// ## Phrase constructor
+// #### Phrase constructor
 const Phrase = function (items = {}) {
 
     this.fontAttributes = makeFontAttributes(items);
@@ -69,7 +91,7 @@ const Phrase = function (items = {}) {
 };
 
 
-// ## Phrase object prototype setup
+// #### Phrase prototype
 let P = Phrase.prototype = Object.create(Object.prototype);
 P.type = 'Phrase';
 P.lib = 'entity';
@@ -77,7 +99,12 @@ P.isArtefact = true;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [position](../mixin/position.html)
+// + [anchor](../mixin/anchor.html)
+// + [entity](../mixin/entity.html)
+// + [filter](../mixin/filter.html)
 P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
@@ -85,107 +112,111 @@ P = entityMix(P);
 P = filterMix(P);
 
 
-// ## Define default attributes
+// #### Phrase attributes
 let defaultAttributes = {
 
-
-// TODO - documentation
-
-// How many of these attributes need to be in the defs section? If they're internal, they should not be here!
+// __text__ - the text String to be displayed by the Phrase
     text: '',
-    textPositions: null,
 
+// __exposeText__ - Boolean accessibility feature
+// + When __exposeText__ is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. 
+// + The element - a &lt;div> - is attached to the canvas element's textHold element, which immediately follows that element and has zero dimensions, so its contents don't interfere with the flow of the rest of the DOM content.
+    exposeText: true,
 
-// TODO - documentation
-    textLines: null,
-    textLineWidths: null,
-    textLineWords: null,
-
-    treatWordAsGlyph: false,
-
-    textGlyphs: null,
-    textGlyphWidths: null,
-
-
-// Accessibility feature - when __exposeText__ is set to true, Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. The element - a div - is attached to the canvas element's textHold element, which immediately follows that element and has zero dimensions, so its contents don't interfere with the flow of the rest of the DOM content.
-    exposeText: false,
-
-
-// Glyphs (individual letters) can be individually styled by adding a styling object to the __glyphStyles__ array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.
-
-// Subsequent styling objects will alter specified attributes, leaving other attributes in their current (not default) state. To reset all attributes to their defaults and at the same time change selected attributes, include _defaults: true_ in the object.
-
-// The styling object can take one or more of the following attributes:
-
-// + style - eg 'italic'
-// + variant - eg 'small-caps'
-// + weight - eg 'bold'
-// + stretch
-// + size - any permitted font size value
-// + family 
-
-// + space - alter the letterSpacing values to spread or condense glyphs
-
-// + fill - fillStyle to be applied to the glyph
-// + stroke - strokeStyle to be applied to the glyph
-
-// + highlight - boolean - whether highlight should be applied to the glyph
-
-// + underline - boolean - whether underline should be applied to the glyph
-// + overline - boolean - whether overline should be applied to the glyph
-
-// + defaults - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity's current font and fill/stroke style values
-
-// Example: "make the word __glyphs__ bold"
-
-//    myPhrase.setGlyphStyles(14, {weight: 'bold'});
-//    myPhrase.setGlyphStyles(20, {defaults: true});
-//    myPhrase.setGlyphStyles(22, {fill: 'red'});
-    glyphStyles: [],
-
-
-// Permitted values are: 'left' (default), 'center', 'right', 'full'
-    justify: 'left',
-
-
-// A multiplier applied to the font height to add space between lines of text
+// __lineHeight__ - a positive float Number multiplier applied to the font height to add space between lines of text
     lineHeight: 1.5,
 
+// __letterSpacing__ - a positive float Number representing a set number of pixels to place between each glyph (letter). Can be overridden for letter ranges using styling objects
+    letterSpacing: 0,
 
-// The position and stroke style to be applied to a glyph when it is set to show underline or overline
+// __justify__ - String value to indicate how the text should justify itself within its dimensions box.
+// + Permitted values are: `left` (default), `center`, `right`, `full` (for 'justified' text).
+    justify: 'left',
+
+// ##### In-text styling
+
+// __glyphStyles__ - Array of styling objects
+//
+// Glyphs (letters) can be individually styled by adding a ___styling object___ to the `glyphStyles` Array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.
+//
+// Subsequent styling objects will alter specified attributes, leaving other attributes in their current (not default) state. To reset all attributes to their defaults and at the same time change selected attributes, include `defaults: true` in the object.
+//
+// The styling object can take one or more of the following attributes:
+// + `style` - eg 'italic'
+// + `variant` - eg 'small-caps'
+// + `weight` - eg 'bold'
+// + `stretch`
+// + `size` - any permitted font size value
+// + `family` 
+// + `space` - alter the letterSpacing values to spread or condense glyphs
+// + `fill` - fillStyle to be applied to the glyph
+// + `stroke` - strokeStyle to be applied to the glyph
+// + `highlight` - boolean - whether highlight should be applied to the glyph
+// + `underline` - boolean - whether underline should be applied to the glyph
+// + `overline` - boolean - whether overline should be applied to the glyph
+// + `defaults` - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity's current font and fill/stroke style values
+//
+// ```
+// // Example: "make the word glyphs bold"
+// myPhrase.setGlyphStyles({weight: 'bold'}, 14);
+// myPhrase.setGlyphStyles({defaults: true}, 20);
+// ```
+    glyphStyles: [],
+
+// ##### Overlines, underlines, highlighting
+// We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyph ranges using `glyphStyles` styling objects.
+// + over/underline decoration positions are float Numbers (generally) in the range `0 - 1` which represent where on the Phrase text line the decoration should appear. The values are relative to line heights, which in turn depend on font size and Phrase lineHeight attributes.
+// + over/underline decoration style values, and the highlight style value, can be any valid CSS color String.
+
+// __overlinePosition__, __overlineStyle__
     overlinePosition: 0.1,
     overlineStyle: 'rgb(250,0,0)',
+
+// __underlinePosition__, __underlineStyle__
     underlinePosition: 0.6,
     underlineStyle: 'rgb(250,0,0)',
 
-
-// The fill style to be applied to a glyph when it is set to show background highlighting
+// __highlightStyle__
     highlightStyle: 'rgba(250,218,94,0.4)',
 
+// ##### Bounding box
+// The bounding box represents the Phrase entity's collision detection ___hit area___. It contains all of the entity's text, including line spacing.
 
-// A set number of pixels to place between each glyph. Positive numbers only
-    letterSpacing: 0,
+// __boundingBoxColor__
+    boundingBoxColor: 'rgba(0,0,0,0.5)',
 
-// TODO - documentation
+// __showBoundingBox__ - Boolean flag indicating whether the Phrase entity's bounding box should be displayed
+    showBoundingBox: false,
+
+// ##### Text along a path
+// Phrase entitys, alongside other artefacts, can use a [Shape entity](./shape.html) as a ___reference path___ to determine its location in the canvas display - achieved by setting the `path`, `pathPosition`, etc attributes as required.
+// + In this case, the Phrase's text will appear as boxed text, with straight lines of text.
+//
+// We have an additional use case for Phrase text: to ___map each letter along the length of a Shape entity's path___. For this, we have specific `textPath`, `textPathPosition`, etc attributes.
+
+// __textPath__ - Shape entity to be used as the text path; can be supplied either as the entity object itself, or as the entity's name-String.
     textPath: '',
+
+// __textPathPosition__ - float Number value between `0.0 - 1.0` representing the text's first character's position on the path.
     textPathPosition: 0,
-    textPathDirection: 'ltr',
+
+// __textPathLoop__ - Boolean flag - when true (default) the first character's position will loop back to `0` when it passes `1` (and vice versa).
     textPathLoop: true,
+
+// __addTextPathRoll__ - Boolean flag - when true (default) each glyph in the text will rotate to match its position's tangent on the path.
     addTextPathRoll: true,
 
-// TODO - documentation
-    boundingBoxColor: 'rgba(0,0,0,0.5)',
-    showBoundingBox: false,
+// __textPathDirection__ - String with values `ltr` or `rtl` - affects how the text glyphs will arrange themselves along the path.
+    textPathDirection: 'ltr',
+
+// __treatWordAsGlyph__ - Boolean flag - when true, Scrawl-canvas will treat each word in the text as if it was a glyph/letter; default: false.
+    treatWordAsGlyph: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
+// #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['textPositions', 'textLines', 'textLineWidths', 'textLineWords', 'textGlyphs', 'textGlyphWidths', 'fontAttributes']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 P.finalizePacketOut = function (copy, items) {
 
@@ -202,20 +233,24 @@ P.finalizePacketOut = function (copy, items) {
 };
 
 
-// ## Kill functionality
+// #### Clone management
+// No additional clone functionality required
+
+
+// #### Kill management
 P.factoryKill = function () {
 
     if (this.exposedTextHold) this.exposedTextHold.remove();
 };
 
 
-// ## Define getter, setter and deltaSetter functions
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
 
-// Overwrites mixin/position.js function
+// __handle__
 S.handleX = function (coord) {
 
     if (coord != null) {
@@ -267,133 +302,7 @@ D.handle = function (x, y) {
     this.dirtyPathObject = true;
 };
 
-
-// TODO - documentation
-
-// Retrieving aspects of the font string
-G.style = function () {
-
-    return this.fontAttributes.get('style');
-};
-G.variant = function () {
-
-    return this.fontAttributes.get('variant');
-};
-G.weight = function () {
-
-    return this.fontAttributes.get('weight');
-};
-G.stretch = function () {
-
-    return this.fontAttributes.get('stretch');
-};
-G.size = function () {
-
-    return this.fontAttributes.get('size');
-};
-G.sizeValue = function () {
-
-    return this.fontAttributes.get('sizeValue');
-};
-G.sizeMetric = function () {
-
-    return this.fontAttributes.get('sizeMetric');
-};
-G.family = function () {
-
-    return this.fontAttributes.get('family');
-};
-G.font = function () {
-
-    return this.fontAttributes.get('font');
-};
-
-// TODO - documentation
-S.font = function (item) {
-
-    this.fontAttributes.set({font: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-S.style = function (item) {
-
-    this.fontAttributes.set({style: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-S.variant = function (item) {
-
-    this.fontAttributes.set({variant: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-S.weight = function (item) {
-
-    this.fontAttributes.set({weight: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-S.stretch = function (item) {
-
-    this.fontAttributes.set({stretch: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-S.size = function (item) {
-
-    this.fontAttributes.set({size: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-S.sizeValue = function (item) {
-
-    this.fontAttributes.set({sizeValue: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-D.sizeValue = function (item) {
-
-    this.fontAttributes.deltaSet({sizeValue: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-S.sizeMetric = function (item) {
-
-    this.fontAttributes.set({sizeMetric: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-S.family = function (item) {
-    
-    this.fontAttributes.set({family: item});
-
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-};
-
-
-// TODO - documentation
-
-// Handling text updates
-S.textPath = function (item) {
-
-    this.textPath = item;
-
-    this.dirtyHandle = true;
-    this.dirtyText = true;
-    this.dirtyPathObject = true;
-};
-
-// TODO - documentation
+// __text__
 S.text = function (item) {
 
     this.text = ensureString(item);
@@ -402,7 +311,7 @@ S.text = function (item) {
     this.dirtyPathObject = true;
 };
 
-// TODO - documentation
+// __justify__
 P.permittedJustifications = ['left', 'right', 'center', 'full'];
 S.justify = function (item) {
 
@@ -412,10 +321,7 @@ S.justify = function (item) {
     this.dirtyPathObject = true;
 };
 
-
-// TODO - documentation
-
-// Handling text width - overwrites functions defined in mixin/entity.js
+// __width__
 S.width = function (item) {
 
     this.dimensions[0] = item;
@@ -435,6 +341,8 @@ D.width = function (item) {
     this.dirtyPathObject = true;
     this.dirtyText = true;
 };
+
+// __scale__
 S.scale = function (item) {
 
     this.scale = item;
@@ -456,10 +364,7 @@ D.scale = function (item) {
     this.dirtyScale = true;
 };
 
-
-// TODO - documentation
-
-// Manipulating lineHeight and letterSpacing attributes
+// __lineHeight__
 S.lineHeight = function (item) {
 
     this.lineHeight = ensurePositiveFloat(item, 3);
@@ -476,6 +381,7 @@ D.lineHeight = function (item) {
     this.dirtyText = true;
 };
 
+// __letterSpacing__
 S.letterSpacing = function (item) {
 
     this.letterSpacing = ensurePositiveFloat(item, 3);
@@ -492,6 +398,7 @@ D.letterSpacing = function (item) {
     this.dirtyText = true;
 };
 
+// __overlinePosition__
 S.overlinePosition = function (item) {
 
     this.overlinePosition = ensureFloat(item, 3);
@@ -507,6 +414,7 @@ D.overlinePosition = function (item) {
     this.dirtyText = true;
 };
 
+// __underlinePosition__
 S.underlinePosition = function (item) {
 
     this.underlinePosition = ensureFloat(item, 3);
@@ -522,10 +430,17 @@ D.underlinePosition = function (item) {
     this.dirtyText = true;
 };
 
+// __textPath__
+S.textPath = function (item) {
 
-// TODO - documentation
+    this.textPath = item;
 
-// textPathPosition needs to take into account whether the text is looping along the path, or not
+    this.dirtyHandle = true;
+    this.dirtyText = true;
+    this.dirtyPathObject = true;
+};
+
+// __textPathPosition__
 S.textPathPosition = function (item) {
 
     if (this.textPathLoop) {
@@ -535,7 +450,6 @@ S.textPathPosition = function (item) {
     }
     else this.textPathPosition = item;
 };
-
 D.textPathPosition = function (item) {
 
     let newVal = this.textPathPosition + item;
@@ -549,9 +463,149 @@ D.textPathPosition = function (item) {
 };
 
 
-// ## Define prototype functions
+// ##### FontAttribute attributes
+// Phrase entitys break down fonts into their constituent parts using [FontAttribute](./fontAttribute.html) objects.
+// + The Canvas API standards for using fonts on a canvas (`font`, `textAlign`, `textBaseline`) are near-useless, and often lead to a sub-par display of text. 
+// + Thus Phrase entitys hide these from the developer, instead giving them functions to get/set/update fonts which align more closely with CSS standards.
+// + Note that the Canvas API only supports a subset of possible CSS font-related values, and that the level of support for even these will vary between browsers/devices. The Phrase entity will do work to ensure the font strings passed to the Canvas API CanvasRenderingContext2D engine will be valid (thus avoiding unnecessary runtime errors), but this may not be the same as a developer specifies in their code.
 
-// TODO - documentation
+// __font__ - the desired CSS font (`get` returns the actual font String being used)
+// + The font String is not retained. Rather we break it down into its constituent parts, and rebuild the font String when needed.
+G.font = function () {
+
+    return this.fontAttributes.get('font');
+};
+S.font = function (item) {
+
+    this.fontAttributes.set({font: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+
+// __style__ - CSS `font-style` String - `normal`, `italic`
+G.style = function () {
+
+    return this.fontAttributes.get('style');
+};
+S.style = function (item) {
+
+    this.fontAttributes.set({style: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+
+// __variant__ - CSS `font-variant` String - `normal`, `small-caps`
+G.variant = function () {
+
+    return this.fontAttributes.get('variant');
+};
+S.variant = function (item) {
+
+    this.fontAttributes.set({variant: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+
+// __weight__ - CSS `font-weight` String - `normal`, `bold`, `lighter`, `bolder`, or an integer Number (between `1` and `1000`)
+G.weight = function () {
+
+    return this.fontAttributes.get('weight');
+};
+S.weight = function (item) {
+
+    this.fontAttributes.set({weight: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+
+// __stretch__ - CSS `font-stretch` String - `normal`
+G.stretch = function () {
+
+    return this.fontAttributes.get('stretch');
+};
+S.stretch = function (item) {
+
+    this.fontAttributes.set({stretch: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+
+// __size__ - CSS `font-size` String:
+// + `xx-small`, `x-small`, `small`, `medium`, `large`, `x-large`, `xx-large` 
+// + `smaller`, `larger`
+// + `120%`
+// + `1.2rem`, `12px`, etc - Scrawl-canvas will work with the following metrics: `em`, `ch`, `ex`, `rem`, `vh`, `vw`, `vmin`, `vmax`, `px`, `cm`, `mm`, `in`, `pc`, `pt`
+G.size = function () {
+
+    return this.fontAttributes.get('size');
+};
+S.size = function (item) {
+
+    this.fontAttributes.set({size: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+
+// __sizeValue__ - the Number part of the font's size value
+G.sizeValue = function () {
+
+    return this.fontAttributes.get('sizeValue');
+};
+S.sizeValue = function (item) {
+
+    this.fontAttributes.set({sizeValue: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+D.sizeValue = function (item) {
+
+    this.fontAttributes.deltaSet({sizeValue: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+
+// __sizeMetric__ - the String metric part of the font's size value
+G.sizeMetric = function () {
+
+    return this.fontAttributes.get('sizeMetric');
+};
+S.sizeMetric = function (item) {
+
+    this.fontAttributes.set({sizeMetric: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+
+// __family__ - CSS `font-family` String
+G.family = function () {
+
+    return this.fontAttributes.get('family');
+};
+S.family = function (item) {
+    
+    this.fontAttributes.set({family: item});
+
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+};
+
+
+// #### Prototype functions
+
+// `setGlyphStyles`
+// We have more control over the `glyphStyles` array if we use this dedicated function to manage them. Requires two (or more) arguments:
+// + First argument - object containing one or more `key: value` attributes - permitted keys are: `style`, `variant`, `weight`, `stretch`, `size`, `family`, `space`, `fill`, `stroke`, `highlight`, `underline`, `overline`, `defaults`
+// + Second argument - Array of positive integer Numbers representing the index at which point the style will be applied to the text String
+// + Alternatively the second and subsequent arguments can be positive integer Numbers, serving the same purpose
 P.setGlyphStyles = function (args, ...pos) {
 
     if (args && Array.isArray(pos)) {
@@ -575,7 +629,7 @@ P.setGlyphStyles = function (args, ...pos) {
     return this;
 };
 
-// TODO - documentation
+// `getTextPath` - internal function
 P.getTextPath = function () {
 
     let path = this.textPath;
@@ -594,7 +648,42 @@ P.getTextPath = function () {
     return path;
 };
 
-// TODO - documentation
+// #### Display cycle functionality
+// Phrase entitys, because they handle graphical text which has its own special requirements and methods in the Canvas API, has to overwrite a substantial portion of the Display cycle functionality defined in the entity mixin.
+
+// `cleanPathObject` - overwrites mixin/entity.js functionality so that it can deal with the `dirtyFont`, `dirtyText` and `dirtyHandle` flags 
+// + Fonts don't have accessible paths; Phrase entity pathObjects represent the bounding box around the entity's text.
+P.cleanPathObject = function () {
+
+    this.dirtyPathObject = false;
+
+    if (!this.noPathUpdates || !this.pathObject) {
+        
+        if (this.dirtyFont && this.fontAttributes) {
+
+            this.dirtyFont = false;
+            this.fontAttributes.buildFont(this.scale);
+            this.dirtyText = true;
+        }
+        if (this.dirtyText) this.buildText();
+
+        if (this.dirtyHandle) this.cleanHandle();
+
+        let p = this.pathObject = new Path2D();
+        
+        let handle = this.currentHandle,
+            dims = this.currentDimensions,
+            scale = this.currentScale,
+            x = -handle[0] * scale,
+            y = -handle[1] * scale,
+            w = dims[0] * scale,
+            h = dims[1] * scale;
+
+        p.rect(x, y, w, h);
+    }
+};
+
+// `buildText` - internal function called by `cleanPathObject`
 P.buildText = function () {
 
     this.dirtyText = false;
@@ -625,11 +714,9 @@ P.buildText = function () {
 };
 
 
-// TODO - documentation
-
-// To get convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs
-
-// Also removes excessive white space
+// `convertTextEntityCharacters` - internal function called by `buildText`
+// + To convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs
+// + Also removes excessive white space
 P.convertTextEntityCharacters = function (item) {
 
     let mytext = item.trim();
@@ -640,13 +727,11 @@ P.convertTextEntityCharacters = function (item) {
     return textEntityConverter.value;
 };
 
-// TODO - documentation
-
-// (If you are not a fan of big, complex functions ... look away now!)
+// `calculateTextPositions` - internal function called by `buildText`
+// + If you are not a fan of big, complex functions ... look away now!
 P.calculateTextPositions = function (mytext) {
 
-    // 0. strokeStyle/fillStyle helper function
-    // TODO: need to check (with a demo-test) that we can use gradients and patterns as styles
+    // 0. `strokeStyle` and `fillStyle` helper function
     let makeStyle = function (item) {
 
         if (item.substring) {
@@ -662,8 +747,7 @@ P.calculateTextPositions = function (mytext) {
         else return item.getData(self, host, true);
     };
 
-    // 1. setup - get values for text? arrays, current?, highlight?, ?Attributes, etc
-    // TODO - check code uses all of these local variables; remove those that are not used
+    // 1. Setup - get values for text? arrays, current?, highlight?, ?Attributes, etc
     let myCell = requestCell(),
         engine = myCell.engine;
 
@@ -727,15 +811,14 @@ P.calculateTextPositions = function (mytext) {
 
     let maxHeight = 0;
 
-    // 2. create textGlyphs array
-    // - also shove the default font into the fontLibrary array
+    // 2. Create `textGlyphs` array
+    // + also shove the default font into the `fontLibrary` array
     textGlyphs = (treatWordAsGlyph) ? this.text.split(' ') : this.text.split('');
     fontArray.push(currentFont);
 
-    // 3. textPositions array will include an array of data for each glyph
-    // - [font, strokeStyle, fillStyle, highlight, underline, overline, text, startX, startY, (pathData)]
-    // - and populate spacesArray with space position data (for full justify calculations later)
-    // TODO - does current code use SpacesArray? If not, refactor code to delete it
+    // 3. `textPositions` array will include an array of data for each glyph
+    // + `[font, strokeStyle, fillStyle, highlight, underline, overline, text, startX, startY, (pathData)]`
+    // + and populate `spacesArray` with space position data (for full justify calculations later)
     for (i = 0, iz = textGlyphs.length; i < iz; i++) {
 
         item = textGlyphs[i];
@@ -745,7 +828,7 @@ P.calculateTextPositions = function (mytext) {
         if (item === ' ') spacesArray.push(i);
     }
 
-    // 4. process the glyphStyles array to start populating the textPositions arrays
+    // 4. Process the `glyphStyles` array to start populating the `textPositions` arrays
     if (!glyphStyles[0]) glyphStyles[0] = {
         family: glyphAttributes.family,
         size: (glyphAttributes.sizeValue) ? `${glyphAttributes.sizeValue}${glyphAttributes.sizeMetric}` : glyphAttributes.sizeMetric,
@@ -836,11 +919,11 @@ P.calculateTextPositions = function (mytext) {
             }
         }
 
-        // setup textGlyphWidths array, populating it with current letterSpacing values
+        // Setup `textGlyphWidths` array, populating it with current letterSpacing values
         textGlyphWidths[i] = currentSpace;
     }
 
-    // finish populating textGlyphWidths
+    // Finish populating `textGlyphWidths`
     for (i = 0, iz = textGlyphs.length; i < iz; i++) {
 
         if (xt(textGlyphWidths[i])) currentSpace = textGlyphWidths[i];
@@ -848,8 +931,8 @@ P.calculateTextPositions = function (mytext) {
         textGlyphWidths[i] = currentSpace;
     }
 
-    // 5. calculate the text height value
-    // - all lines in a multiline Phrase will use the maximum text height value, even if they don't include the biggest value
+    // 5. Calculate the text `height` value
+    // + All lines in a multiline Phrase will use the maximum text height value, even if they don't include the biggest value
     fontArray.forEach(font => {
 
         fontHeightCalculator.style.font = font;
@@ -859,14 +942,11 @@ P.calculateTextPositions = function (mytext) {
 
     maxHeight = Math.max(...Object.values(fontLibrary));
 
-    // 6. calculate glyph width values
-    // - this is the tricky bit as, ideally, we need to take into account font kerning values
-    // - however kerning values go out of the window when font attributes (especially size) change in mid-text
-    // - and we need to remember that letterSpacing can also be different in different parts of the text
-    // - this is also the best place to populate the textLine arrays
-
-    // TODO - none of this takes into consideration the needs of RTL scripts eg Arabic, Hebrew, etc - needs testing, review and necessary refactor to fix (if required)
-
+    // 6. Calculate glyph `width` values
+    // + This is the tricky bit as, ideally, we need to take into account font kerning values
+    // + However kerning values go out of the window when font attributes (especially size) change in mid-text
+    // + And we need to remember that `letterSpacing` can also be different in different parts of the text
+    // + This is also the best place to populate the `textLine` arrays
     totalLen = lineLen = starts = ends = 0;
 
     for (i = 0, iz = textPositions.length; i < iz; i++) {
@@ -898,8 +978,7 @@ P.calculateTextPositions = function (mytext) {
         }
     }
 
-    // calculate text line arrays
-    // TODO: create a demo-test for treatWordAsGlyph
+    // Calculate text line arrays
     for (i = 0, iz = textPositions.length; i < iz; i++) {
 
         glyphArr = textPositions[i];
@@ -913,8 +992,8 @@ P.calculateTextPositions = function (mytext) {
         lineLen += glyphWidth;
         totalLen += glyphWidth;
 
-        // need starts to be less than ends
-        // - this should make sure we pick up individual words that are longer than the Phrase entity's width
+        // Need `starts` to be less than `ends`
+        // + This should make sure we pick up individual words that are longer than the Phrase entity's width
         if (lineLen >= width && starts < ends) {
 
             fragment = textGlyphs.slice(starts, ends).join('');
@@ -929,10 +1008,10 @@ P.calculateTextPositions = function (mytext) {
             starts = ends + 1;
         }
 
-        // need to pick up the last (or only) line
+        // Need to pick up the last (or only) line
         if (i + 1 === iz) {
 
-            // pick up single line
+            // Pick up single line
             if (lineLen === totalLen) {
 
                 fragment = this.text;
@@ -942,7 +1021,7 @@ P.calculateTextPositions = function (mytext) {
                 textLineWidths.push(totalLen);
             }
 
-            // final line of multiline text
+            // Final line of multiline text
             else {
 
                 fragment = textGlyphs.slice(starts).join('');
@@ -955,7 +1034,7 @@ P.calculateTextPositions = function (mytext) {
             }
         }
 
-        // and complete the population of data for highlight, overline, underline
+        // ... And complete the population of data for `highlight`, `overline`, `underline`
         if (xt(glyphArr[3])) highlightFlag = glyphArr[3];
         if (xt(glyphArr[4])) underlineFlag = glyphArr[4];
         if (xt(glyphArr[5])) overlineFlag = glyphArr[5];
@@ -965,10 +1044,10 @@ P.calculateTextPositions = function (mytext) {
         glyphArr[5] = overlineFlag;
     }
 
-    // handle path positioning (which we'll assume will need to be done for every display cycle) separately during stamping
+    // Handle path positioning (which we'll assume will need to be done for every display cycle) separately during stamping
     if (!path) {
 
-        // 7. calculate localHeight
+        // 7. Calculate `localHeight`
         if (scale <= 0) scale = 1;
         dims[1] = ((((textLines.length - 1) * maxHeight) * lineHeight) + maxHeight) / scale;
 
@@ -979,11 +1058,10 @@ P.calculateTextPositions = function (mytext) {
         handleX = -handle[0] * scale;
         handleY = -handle[1] * scale;
 
-        // 8. we should now be in a position where we can calculate each glyph's startXY values
+        // 8. We should now be in a position where we can calculate each glyph's `startXY` values
+        // + We have 2 non-path scenarios: full-justified text; and regular text
 
-        // - we have 2 non-path scenarios: full-justified text; and regular text
-
-        // Scenario 1: justify === 'full'
+        // Scenario 1: `justify === 'full'`
         if (justify === 'full') {
 
             cursor = 0;
@@ -1016,7 +1094,7 @@ P.calculateTextPositions = function (mytext) {
             }
         }
 
-        // Scenario 2: regular text - justify === 'left', or 'centre', or 'right'
+        // Scenario 2: regular text - `justify === 'left'`, or `'centre'`, or `'right'`
         else {
 
             cursor = 0;
@@ -1047,7 +1125,7 @@ P.calculateTextPositions = function (mytext) {
         }
     }
 
-    // 9. clean up and exit
+    // 9. Clean up and exit
     this.textGlyphs = textGlyphs;
     this.textGlyphWidths = textGlyphWidths;
     this.textLines = textLines;
@@ -1061,77 +1139,10 @@ P.calculateTextPositions = function (mytext) {
     releaseCell(myCell);
 };
 
-// TODO - documentation
-P.calculateGlyphPathPositions = function () {
 
-    let path = this.getTextPath(),
-        len = path.length,
-        textPos = this.textPositions,
-        widths = this.textGlyphWidths,
-        direction = (this.textPathDirection === 'ltr') ? true : false,
-        pathPos = this.textPathPosition,
-        distance, posArray, i, iz, width,
-        justify = this.justify,
-        loop = this.textPathLoop;
+// ##### Stamping the entity onto a Cell wrapper &lt;canvas> element
 
-    for (i = 0, iz = textPos.length; i < iz; i++) {
-
-        posArray = textPos[i];
-        width = widths[i];
-
-        // TODO - using non-left justified text buggers up letter kerning along the line
-        // - but left-justified makes the letters lean a little to the left
-        if (justify === 'right') posArray[7] = -width;
-        else if (justify === 'center') posArray[7] = -width / 2;
-
-        posArray[10] = (pathPos <= 1 && pathPos >= 0) ? path.getPathPositionData(pathPos) : false;
-        posArray[9] = width;
-
-        if (direction) pathPos += (width / len);
-        else pathPos -= (width / len);
-
-        if (loop && (pathPos > 1 || pathPos < 0)) {
-
-            pathPos = (pathPos > 0.5) ? pathPos - 1 : pathPos + 1;
-        }
-    }
-};
-
-
-// TODO - documentation
-
-// Fonts don't have accessible paths
-P.cleanPathObject = function () {
-
-    this.dirtyPathObject = false;
-
-    if (!this.noPathUpdates || !this.pathObject) {
-        
-        if (this.dirtyFont && this.fontAttributes) {
-
-            this.dirtyFont = false;
-            this.fontAttributes.buildFont(this.scale);
-            this.dirtyText = true;
-        }
-        if (this.dirtyText) this.buildText();
-
-        if (this.dirtyHandle) this.cleanHandle();
-
-        let p = this.pathObject = new Path2D();
-        
-        let handle = this.currentHandle,
-            dims = this.currentDimensions,
-            scale = this.currentScale,
-            x = -handle[0] * scale,
-            y = -handle[1] * scale,
-            w = dims[0] * scale,
-            h = dims[1] * scale;
-
-        p.rect(x, y, w, h);
-    }
-};
-
-// TODO - documentation
+// `regularStampSynchronousActions` - overwrites the mixin/entity.js function
 P.regularStampSynchronousActions = function () {
 
     let dest = this.currentHost, 
@@ -1204,7 +1215,43 @@ P.regularStampSynchronousActions = function () {
     }
 };
 
-// TODO - documentation
+// `calculateGlyphPathPositions` - internal helper function called by `regularStampSynchronousActions`
+P.calculateGlyphPathPositions = function () {
+
+    let path = this.getTextPath(),
+        len = path.length,
+        textPos = this.textPositions,
+        widths = this.textGlyphWidths,
+        direction = (this.textPathDirection === 'ltr') ? true : false,
+        pathPos = this.textPathPosition,
+        distance, posArray, i, iz, width,
+        justify = this.justify,
+        loop = this.textPathLoop;
+
+    for (i = 0, iz = textPos.length; i < iz; i++) {
+
+        posArray = textPos[i];
+        width = widths[i];
+
+        // TODO - using non-left justified text buggers up letter kerning along the line
+        // + But left-justified makes the letters lean a little to the left
+        if (justify === 'right') posArray[7] = -width;
+        else if (justify === 'center') posArray[7] = -width / 2;
+
+        posArray[10] = (pathPos <= 1 && pathPos >= 0) ? path.getPathPositionData(pathPos) : false;
+        posArray[9] = width;
+
+        if (direction) pathPos += (width / len);
+        else pathPos -= (width / len);
+
+        if (loop && (pathPos > 1 || pathPos < 0)) {
+
+            pathPos = (pathPos > 0.5) ? pathPos - 1 : pathPos + 1;
+        }
+    }
+};
+
+// `preStamper` - internal helper function called by `regularStampSynchronousActions`
 P.preStamper = function (engine, entity, args) {
 
     let [font, strokeStyle, fillStyle, highlight, underline, overline, ...data] = args;
@@ -1250,17 +1297,22 @@ P.preStamper = function (engine, entity, args) {
     return data;
 };
 
-// TODO - documentation
+// `stamper` - object holding stamp method functions - functions called by `regularStampSynchronousActions`
 P.stamper = {
 
+    // `stamper.draw`
     draw: function (engine, entity, data) { 
 
         engine.strokeText(...data);
     },
+
+    // `stamper.fill`
     fill: function (engine, entity, data) { 
 
         engine.fillText(...data);
     },
+
+    // `stamper.drawAndFill`
     drawAndFill: function (engine, entity, data) { 
 
         engine.strokeText(...data);
@@ -1268,6 +1320,8 @@ P.stamper = {
         engine.fillText(...data);
         entity.currentHost.restoreShadow(entity);
     },
+
+    // `stamper.fillAndDraw`
     fillAndDraw: function (engine, entity, data) { 
 
         engine.strokeText(...data);
@@ -1276,16 +1330,22 @@ P.stamper = {
         engine.strokeText(...data);
         entity.currentHost.restoreShadow(entity);
     },
+
+    // `stamper.drawThenFill`
     drawThenFill: function (engine, entity, data) { 
 
         engine.strokeText(...data);
         engine.fillText(...data);
     },
+
+    // `stamper.fillThenDraw`
     fillThenDraw: function (engine, entity, data) { 
 
         engine.fillText(...data);
         engine.strokeText(...data);
     },
+
+    // `stamper.clear`
     clear: function (engine, entity, data) { 
 
         let gco = engine.globalCompositeOperation;
@@ -1295,7 +1355,7 @@ P.stamper = {
     },    
 };
 
-// TODO - documentation
+// `drawBoundingBox` - internal helper function called by `regularStampSynchronousActions`
 P.drawBoundingBox = function (engine) {
 
     let handle = this.currentHandle,
@@ -1316,7 +1376,9 @@ P.drawBoundingBox = function (engine) {
     engine.restore();
 };
 
-// TODO - documentation
+// `performRotation` - internal helper function called by `regularStampSynchronousActions`
+// + When doing text along a path, we have to perform a rendering context transformation for every glyph
+// + In other cases, we perform the action on a per-line basis
 P.performRotation = function (engine) {
 
     let dest = this.currentHost;
@@ -1330,14 +1392,51 @@ P.performRotation = function (engine) {
 };
 
 
-
-// ## Exported factory function
+// #### Factory
+// ```
+// scrawl.makePhrase({
+//
+//     name: 'myphrase_fill',
+//
+//     text: 'H&epsilon;lj&ouml;!',
+//     font: 'bold 40px Garamond, serif',
+//
+//     width: 120,
+//
+//     startX: '14%',
+//     startY: '28%',
+//     handleX: 'center',
+//     handleY: 'center',
+//
+//     justify: 'center',
+//     lineHeight: 1,
+//
+//     fillStyle: 'green',
+//     strokeStyle: 'gold',
+//
+//     lineWidth: 2,
+//     lineJoin: 'round',
+//
+//     shadowOffsetX: 2,
+//     shadowOffsetY: 2,
+//     shadowBlur: 2,
+//     shadowColor: 'black',
+//
+// }).clone({
+//
+//     name: 'myphrase_draw',
+//     startX: '38%',
+//     method: 'draw',
+// });
+// ```
 const makePhrase = function (items) {
     return new Phrase(items);
 };
 
 constructors.Phrase = Phrase;
 
+
+// #### Exports
 export {
     makePhrase,
 };

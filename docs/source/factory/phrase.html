@@ -299,7 +299,33 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="phrase-factory">Phrase factory</h1>
+<p>Phrase entitys are graphical text rectangles rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D interface</a> - in particular the <code>fillRect</code>, <code>strokeRect</code>, <code>fillText</code> and <code>strokeText</code> methods.</p>
+<ul>
+<li>Positioning functionality for the Phrase is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Phrases can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>They will also accept <strong>Filter</strong> objects.</li>
+<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
+<li>Phrases can be cloned, and killed.</li>
+</ul>
+<p>Phrase entity <strong>dimensions</strong> work differently to that of other entitys:</p>
+<ul>
+<li>The <code>width</code> attribute is required. Phrase entitys will automatically render text longer than its width in multiple lines on the canvas.</li>
+<li>The <code>height</code> attribute is normally disregarded. Instead height is calculated as a combination of the font <code>size</code>, <code>lineheight</code>, and the number of lines of text that need to be rendered on the canvas - which itself depends on the text’s length and the entity’s <code>width</code> attribute</li>
+</ul>
+<p>Phrase entitys use <a href="./fontAttribute.html">FontAttribute objects</a> to help manage their text font:</p>
+<ul>
+<li>More than one font family can be used in a single Phrase.</li>
+<li>Font styles are also supported: a single Phrase can include multiple episodes of <strong>bold</strong>, <em>italic</em>, etc.</li>
+<li>More than one font size can be displayed within a Phrase.</li>
+<li>Letter spacing is supported, both across the entire text and within the text.</li>
+<li>Beyond fonts, ranges of letters within the Phrase text can be background highlighted, or given overlines and/or underlines.</li>
+</ul>
+<p>Phrase entitys fully support <strong>text along a path</strong> at the Phrase, word and letter levels.</p>
+<p>Phrase entity text content is <strong>accessible to assistive technologies</strong> such as screen readers, by default.</p>
+
             </div>
             
         </li>
@@ -311,7 +337,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="phrase-factory">Phrase factory</h1>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-015.html">Canvas-015</a> - Phrase entity (make, clone, method, multiline)</li>
+<li><a href="../../demo/canvas-016.html">Canvas-016</a> - Phrase entity position and font attributes; Block mimic functionality</li>
+<li><a href="../../demo/canvas-017.html">Canvas-017</a> - Phrase entity - test lineHeight, letterSpacing and justify attributes; setGlyphStyles() functionality</li>
+<li><a href="../../demo/canvas-018.html">Canvas-018</a> - Phrase entity - text along a path</li>
+<li><a href="../../demo/canvas-019.html">Canvas-019</a> - Artefact collision detection</li>
+<li><a href="../../demo/component-001.html">Component-001</a> - Scrawl-canvas DOM element components</li>
+<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
+</ul>
 
             </div>
             
@@ -324,72 +359,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -410,11 +380,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Constants used by Phrase entitys</p>
 
@@ -435,13 +405,13 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2 id="phrase-constructor">Phrase constructor</h2>
+              <h4 id="phrase-constructor">Phrase constructor</h4>
 
             </div>
             
@@ -473,13 +443,13 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
         </li>
         
         
-        <li id="section-11">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="phrase-object-prototype-setup">Phrase object prototype setup</h2>
+              <h4 id="phrase-prototype">Phrase prototype</h4>
 
             </div>
             
@@ -492,13 +462,20 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/position.html">position</a></li>
+<li><a href="../mixin/anchor.html">anchor</a></li>
+<li><a href="../mixin/entity.html">entity</a></li>
+<li><a href="../mixin/filter.html">filter</a></li>
+</ul>
 
             </div>
             
@@ -511,17 +488,99 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h4 id="phrase-attributes">Phrase attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p><strong>text</strong> - the text String to be displayed by the Phrase</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    text: <span class="hljs-string">''</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><strong>exposeText</strong> - Boolean accessibility feature</p>
+<ul>
+<li>When <strong>exposeText</strong> is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. </li>
+<li>The element - a &lt;div&gt; - is attached to the canvas element’s textHold element, which immediately follows that element and has zero dimensions, so its contents don’t interfere with the flow of the rest of the DOM content.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    exposeText: <span class="hljs-literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p><strong>lineHeight</strong> - a positive float Number multiplier applied to the font height to add space between lines of text</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    lineHeight: <span class="hljs-number">1.5</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><strong>letterSpacing</strong> - a positive float Number representing a set number of pixels to place between each glyph (letter). Can be overridden for letter ranges using styling objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    letterSpacing: <span class="hljs-number">0</span>,</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <p><strong>justify</strong> - String value to indicate how the text should justify itself within its dimensions box.</p>
+<ul>
+<li>Permitted values are: <code>left</code> (default), <code>center</code>, <code>right</code>, <code>full</code> (for ‘justified’ text).</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    justify: <span class="hljs-string">'left'</span>,</pre></div></div>
             
         </li>
         
@@ -532,7 +591,7 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h5 id="in-text-styling">In-text styling</h5>
 
             </div>
             
@@ -545,12 +604,31 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>How many of these attributes need to be in the defs section? If they’re internal, they should not be here!</p>
-
+              <p><strong>glyphStyles</strong> - Array of styling objects</p>
+<p>Glyphs (letters) can be individually styled by adding a <strong><em>styling object</em></strong> to the <code>glyphStyles</code> Array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.</p>
+<p>Subsequent styling objects will alter specified attributes, leaving other attributes in their current (not default) state. To reset all attributes to their defaults and at the same time change selected attributes, include <code>defaults: true</code> in the object.</p>
+<p>The styling object can take one or more of the following attributes:</p>
+<ul>
+<li><code>style</code> - eg ‘italic’</li>
+<li><code>variant</code> - eg ‘small-caps’</li>
+<li><code>weight</code> - eg ‘bold’</li>
+<li><code>stretch</code></li>
+<li><code>size</code> - any permitted font size value</li>
+<li><code>family</code> </li>
+<li><code>space</code> - alter the letterSpacing values to spread or condense glyphs</li>
+<li><code>fill</code> - fillStyle to be applied to the glyph</li>
+<li><code>stroke</code> - strokeStyle to be applied to the glyph</li>
+<li><code>highlight</code> - boolean - whether highlight should be applied to the glyph</li>
+<li><code>underline</code> - boolean - whether underline should be applied to the glyph</li>
+<li><code>overline</code> - boolean - whether overline should be applied to the glyph</li>
+<li><code>defaults</code> - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity’s current font and fill/stroke style values</li>
+</ul>
+<pre><code><span class="hljs-comment">// Example: "make the word glyphs bold"</span>
+myPhrase.setGlyphStyles({<span class="hljs-attr">weight</span>: <span class="hljs-string">'bold'</span>}, <span class="hljs-number">14</span>);
+myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span>}, <span class="hljs-number">20</span>);</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>    text: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">textPositions</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    glyphStyles: [],</pre></div></div>
             
         </li>
         
@@ -561,18 +639,14 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h5 id="overlines-underlines-highlighting">Overlines, underlines, highlighting</h5>
+<p>We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyph ranges using <code>glyphStyles</code> styling objects.</p>
+<ul>
+<li>over/underline decoration positions are float Numbers (generally) in the range <code>0 - 1</code> which represent where on the Phrase text line the decoration should appear. The values are relative to line heights, which in turn depend on font size and Phrase lineHeight attributes.</li>
+<li>over/underline decoration style values, and the highlight style value, can be any valid CSS color String.</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    textLines: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">textLineWidths</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">textLineWords</span>: <span class="hljs-literal">null</span>,
-
-    <span class="hljs-attr">treatWordAsGlyph</span>: <span class="hljs-literal">false</span>,
-
-    <span class="hljs-attr">textGlyphs</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">textGlyphWidths</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -583,11 +657,12 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Accessibility feature - when <strong>exposeText</strong> is set to true, Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. The element - a div - is attached to the canvas element’s textHold element, which immediately follows that element and has zero dimensions, so its contents don’t interfere with the flow of the rest of the DOM content.</p>
+              <p><strong>overlinePosition</strong>, <strong>overlineStyle</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    exposeText: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    overlinePosition: <span class="hljs-number">0.1</span>,
+    <span class="hljs-attr">overlineStyle</span>: <span class="hljs-string">'rgb(250,0,0)'</span>,</pre></div></div>
             
         </li>
         
@@ -598,9 +673,12 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Glyphs (individual letters) can be individually styled by adding a styling object to the <strong>glyphStyles</strong> array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.</p>
+              <p><strong>underlinePosition</strong>, <strong>underlineStyle</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    underlinePosition: <span class="hljs-number">0.6</span>,
+    <span class="hljs-attr">underlineStyle</span>: <span class="hljs-string">'rgb(250,0,0)'</span>,</pre></div></div>
             
         </li>
         
@@ -611,9 +689,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Subsequent styling objects will alter specified attributes, leaving other attributes in their current (not default) state. To reset all attributes to their defaults and at the same time change selected attributes, include <em>defaults: true</em> in the object.</p>
+              <p><strong>highlightStyle</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    highlightStyle: <span class="hljs-string">'rgba(250,218,94,0.4)'</span>,</pre></div></div>
             
         </li>
         
@@ -624,7 +704,8 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>The styling object can take one or more of the following attributes:</p>
+              <h5 id="bounding-box">Bounding box</h5>
+<p>The bounding box represents the Phrase entity’s collision detection <strong><em>hit area</em></strong>. It contains all of the entity’s text, including line spacing.</p>
 
             </div>
             
@@ -637,16 +718,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <ul>
-<li>style - eg ‘italic’</li>
-<li>variant - eg ‘small-caps’</li>
-<li>weight - eg ‘bold’</li>
-<li>stretch</li>
-<li>size - any permitted font size value</li>
-<li>family </li>
-</ul>
+              <p><strong>boundingBoxColor</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    boundingBoxColor: <span class="hljs-string">'rgba(0,0,0,0.5)'</span>,</pre></div></div>
             
         </li>
         
@@ -657,11 +733,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <ul>
-<li>space - alter the letterSpacing values to spread or condense glyphs</li>
-</ul>
+              <p><strong>showBoundingBox</strong> - Boolean flag indicating whether the Phrase entity’s bounding box should be displayed</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -672,10 +748,12 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <ul>
-<li>fill - fillStyle to be applied to the glyph</li>
-<li>stroke - strokeStyle to be applied to the glyph</li>
+              <h5 id="text-along-a-path">Text along a path</h5>
+<p>Phrase entitys, alongside other artefacts, can use a <a href="./shape.html">Shape entity</a> as a <strong><em>reference path</em></strong> to determine its location in the canvas display - achieved by setting the <code>path</code>, <code>pathPosition</code>, etc attributes as required.</p>
+<ul>
+<li>In this case, the Phrase’s text will appear as boxed text, with straight lines of text.</li>
 </ul>
+<p>We have an additional use case for Phrase text: to <strong><em>map each letter along the length of a Shape entity’s path</em></strong>. For this, we have specific <code>textPath</code>, <code>textPathPosition</code>, etc attributes.</p>
 
             </div>
             
@@ -688,11 +766,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <ul>
-<li>highlight - boolean - whether highlight should be applied to the glyph</li>
-</ul>
+              <p><strong>textPath</strong> - Shape entity to be used as the text path; can be supplied either as the entity object itself, or as the entity’s name-String.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    textPath: <span class="hljs-string">''</span>,</pre></div></div>
             
         </li>
         
@@ -703,12 +781,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <ul>
-<li>underline - boolean - whether underline should be applied to the glyph</li>
-<li>overline - boolean - whether overline should be applied to the glyph</li>
-</ul>
+              <p><strong>textPathPosition</strong> - float Number value between <code>0.0 - 1.0</code> representing the text’s first character’s position on the path.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    textPathPosition: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -719,11 +796,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <ul>
-<li>defaults - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity’s current font and fill/stroke style values</li>
-</ul>
+              <p><strong>textPathLoop</strong> - Boolean flag - when true (default) the first character’s position will loop back to <code>0</code> when it passes <code>1</code> (and vice versa).</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    textPathLoop: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -734,9 +811,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>Example: “make the word <strong>glyphs</strong> bold”</p>
+              <p><strong>addTextPathRoll</strong> - Boolean flag - when true (default) each glyph in the text will rotate to match its position’s tangent on the path.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    addTextPathRoll: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -747,13 +826,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>   myPhrase.setGlyphStyles(14, {weight: ‘bold’});
-   myPhrase.setGlyphStyles(20, {defaults: true});
-   myPhrase.setGlyphStyles(22, {fill: ‘red’});</p>
+              <p><strong>textPathDirection</strong> - String with values <code>ltr</code> or <code>rtl</code> - affects how the text glyphs will arrange themselves along the path.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    glyphStyles: [],</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    textPathDirection: <span class="hljs-string">'ltr'</span>,</pre></div></div>
             
         </li>
         
@@ -764,11 +841,13 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Permitted values are: ‘left’ (default), ‘center’, ‘right’, ‘full’</p>
+              <p><strong>treatWordAsGlyph</strong> - Boolean flag - when true, Scrawl-canvas will treat each word in the text as if it was a glyph/letter; default: false.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    justify: <span class="hljs-string">'left'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    treatWordAsGlyph: <span class="hljs-literal">false</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -779,115 +858,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>A multiplier applied to the font height to add space between lines of text</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    lineHeight: <span class="hljs-number">1.5</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p>The position and stroke style to be applied to a glyph when it is set to show underline or overline</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    overlinePosition: <span class="hljs-number">0.1</span>,
-    <span class="hljs-attr">overlineStyle</span>: <span class="hljs-string">'rgb(250,0,0)'</span>,
-    <span class="hljs-attr">underlinePosition</span>: <span class="hljs-number">0.6</span>,
-    <span class="hljs-attr">underlineStyle</span>: <span class="hljs-string">'rgb(250,0,0)'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <p>The fill style to be applied to a glyph when it is set to show background highlighting</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    highlightStyle: <span class="hljs-string">'rgba(250,218,94,0.4)'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <p>A set number of pixels to place between each glyph. Positive numbers only</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    letterSpacing: <span class="hljs-number">0</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    textPath: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">textPathDirection</span>: <span class="hljs-string">'ltr'</span>,
-    <span class="hljs-attr">textPathLoop</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">addTextPathRoll</span>: <span class="hljs-literal">true</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    boundingBoxColor: <span class="hljs-string">'rgba(0,0,0,0.5)'</span>,
-    <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">false</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'textPositions'</span>, <span class="hljs-string">'textLines'</span>, <span class="hljs-string">'textLineWidths'</span>, <span class="hljs-string">'textLineWords'</span>, <span class="hljs-string">'textGlyphs'</span>, <span class="hljs-string">'textGlyphWidths'</span>, <span class="hljs-string">'fontAttributes'</span>]);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
-P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
 
@@ -906,13 +881,27 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-37">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <h2 id="kill-functionality">Kill functionality</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
             
@@ -924,13 +913,13 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-38">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -941,13 +930,13 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-39">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>Overwrites mixin/position.js function</p>
+              <p><strong>handle</strong></p>
 
             </div>
             
@@ -1005,195 +994,13 @@ D.handle = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-40">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p>Retrieving aspects of the font string</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>G.style = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'style'</span>);
-};
-G.variant = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'variant'</span>);
-};
-G.weight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'weight'</span>);
-};
-G.stretch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'stretch'</span>);
-};
-G.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'size'</span>);
-};
-G.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'sizeValue'</span>);
-};
-G.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'sizeMetric'</span>);
-};
-G.family = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'family'</span>);
-};
-G.font = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'font'</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.font = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">font</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-S.style = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">style</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-S.variant = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">variant</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">weight</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">stretch</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-S.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">size</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-S.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">sizeValue</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-D.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fontAttributes.deltaSet({<span class="hljs-attr">sizeValue</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">sizeMetric</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};
-S.family = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-    
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">family</span>: item});
-
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <p>Handling text updates</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.textPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.textPath = item;
-
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p><strong>text</strong></p>
 
             </div>
             
@@ -1208,13 +1015,13 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-46">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>justify</strong></p>
 
             </div>
             
@@ -1230,26 +1037,13 @@ S.justify = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-47">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
-              </div>
-              <p>Handling text width - overwrites functions defined in mixin/entity.js</p>
+              <p><strong>width</strong></p>
 
             </div>
             
@@ -1271,8 +1065,22 @@ D.width = <span class="hljs-function"><span class="hljs-keyword">function</span>
     <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-};
-S.scale = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p><strong>scale</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.scale = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.scale = item;
 
@@ -1296,26 +1104,13 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
-              </div>
-              <p>Manipulating lineHeight and letterSpacing attributes</p>
+              <p><strong>lineHeight</strong></p>
 
             </div>
             
@@ -1333,9 +1128,22 @@ D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</
 
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p><strong>letterSpacing</strong></p>
 
-S.letterSpacing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.letterSpacing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.letterSpacing = ensurePositiveFloat(item, <span class="hljs-number">3</span>);
 
@@ -1349,9 +1157,22 @@ D.letterSpacing = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p><strong>overlinePosition</strong></p>
 
-S.overlinePosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.overlinePosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.overlinePosition = ensureFloat(item, <span class="hljs-number">3</span>);
 
@@ -1364,9 +1185,22 @@ D.overlinePosition = <span class="hljs-function"><span class="hljs-keyword">func
 
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p><strong>underlinePosition</strong></p>
 
-S.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.underlinePosition = ensureFloat(item, <span class="hljs-number">3</span>);
 
@@ -1384,26 +1218,35 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-51">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>textPath</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>S.textPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.textPath = item;
+
+    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
             
         </li>
         
         
-        <li id="section-52">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>textPathPosition needs to take into account whether the text is looping along the path, or not</p>
+              <p><strong>textPathPosition</strong></p>
 
             </div>
             
@@ -1416,7 +1259,6 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.textPathPosition = item;
 };
-
 D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> newVal = <span class="hljs-keyword">this</span>.textPathPosition + item;
@@ -1432,15 +1274,237 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <h5 id="fontattribute-attributes">FontAttribute attributes</h5>
+<p>Phrase entitys break down fonts into their constituent parts using <a href="./fontAttribute.html">FontAttribute</a> objects.</p>
+<ul>
+<li>The Canvas API standards for using fonts on a canvas (<code>font</code>, <code>textAlign</code>, <code>textBaseline</code>) are near-useless, and often lead to a sub-par display of text. </li>
+<li>Thus Phrase entitys hide these from the developer, instead giving them functions to get/set/update fonts which align more closely with CSS standards.</li>
+<li>Note that the Canvas API only supports a subset of possible CSS font-related values, and that the level of support for even these will vary between browsers/devices. The Phrase entity will do work to ensure the font strings passed to the Canvas API CanvasRenderingContext2D engine will be valid (thus avoiding unnecessary runtime errors), but this may not be the same as a developer specifies in their code.</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p><strong>font</strong> - the desired CSS font (<code>get</code> returns the actual font String being used)</p>
+<ul>
+<li>The font String is not retained. Rather we break it down into its constituent parts, and rebuild the font String when needed.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.font = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'font'</span>);
+};
+S.font = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">font</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p><strong>style</strong> - CSS <code>font-style</code> String - <code>normal</code>, <code>italic</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.style = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'style'</span>);
+};
+S.style = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">style</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p><strong>variant</strong> - CSS <code>font-variant</code> String - <code>normal</code>, <code>small-caps</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.variant = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'variant'</span>);
+};
+S.variant = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">variant</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p><strong>weight</strong> - CSS <code>font-weight</code> String - <code>normal</code>, <code>bold</code>, <code>lighter</code>, <code>bolder</code>, or an integer Number (between <code>1</code> and <code>1000</code>)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.weight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'weight'</span>);
+};
+S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">weight</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p><strong>stretch</strong> - CSS <code>font-stretch</code> String - <code>normal</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.stretch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'stretch'</span>);
+};
+S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">stretch</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p><strong>size</strong> - CSS <code>font-size</code> String:</p>
+<ul>
+<li><code>xx-small</code>, <code>x-small</code>, <code>small</code>, <code>medium</code>, <code>large</code>, <code>x-large</code>, <code>xx-large</code> </li>
+<li><code>smaller</code>, <code>larger</code></li>
+<li><code>120%</code></li>
+<li><code>1.2rem</code>, <code>12px</code>, etc - Scrawl-canvas will work with the following metrics: <code>em</code>, <code>ch</code>, <code>ex</code>, <code>rem</code>, <code>vh</code>, <code>vw</code>, <code>vmin</code>, <code>vmax</code>, <code>px</code>, <code>cm</code>, <code>mm</code>, <code>in</code>, <code>pc</code>, <code>pt</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'size'</span>);
+};
+S.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">size</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p><strong>sizeValue</strong> - the Number part of the font’s size value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'sizeValue'</span>);
+};
+S.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">sizeValue</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};
+D.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.fontAttributes.deltaSet({<span class="hljs-attr">sizeValue</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <p><strong>sizeMetric</strong> - the String metric part of the font’s size value</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>G.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'sizeMetric'</span>);
+};
+S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">sizeMetric</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
             
         </li>
         
@@ -1451,7 +1515,51 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>family</strong> - CSS <code>font-family</code> String</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.family = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'family'</span>);
+};
+S.family = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    
+    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">family</span>: item});
+
+    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p><code>setGlyphStyles</code>
+We have more control over the <code>glyphStyles</code> array if we use this dedicated function to manage them. Requires two (or more) arguments:</p>
+<ul>
+<li>First argument - object containing one or more <code>key: value</code> attributes - permitted keys are: <code>style</code>, <code>variant</code>, <code>weight</code>, <code>stretch</code>, <code>size</code>, <code>family</code>, <code>space</code>, <code>fill</code>, <code>stroke</code>, <code>highlight</code>, <code>underline</code>, <code>overline</code>, <code>defaults</code></li>
+<li>Second argument - Array of positive integer Numbers representing the index at which point the style will be applied to the text String</li>
+<li>Alternatively the second and subsequent arguments can be positive integer Numbers, serving the same purpose</li>
+</ul>
 
             </div>
             
@@ -1481,13 +1589,13 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getTextPath</code> - internal function</p>
 
             </div>
             
@@ -1512,13 +1620,73 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="display-cycle-functionality">Display cycle functionality</h4>
+<p>Phrase entitys, because they handle graphical text which has its own special requirements and methods in the Canvas API, has to overwrite a substantial portion of the Display cycle functionality defined in the entity mixin.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p><code>cleanPathObject</code> - overwrites mixin/entity.js functionality so that it can deal with the <code>dirtyFont</code>, <code>dirtyText</code> and <code>dirtyHandle</code> flags </p>
+<ul>
+<li>Fonts don’t have accessible paths; Phrase entity pathObjects represent the bounding box around the entity’s text.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.cleanPathObject = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noPathUpdates || !<span class="hljs-keyword">this</span>.pathObject) {
+        
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyFont &amp;&amp; <span class="hljs-keyword">this</span>.fontAttributes) {
+
+            <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">this</span>.fontAttributes.buildFont(<span class="hljs-keyword">this</span>.scale);
+            <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+        }
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyText) <span class="hljs-keyword">this</span>.buildText();
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyHandle) <span class="hljs-keyword">this</span>.cleanHandle();
+
+        <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject = <span class="hljs-keyword">new</span> Path2D();
+        
+        <span class="hljs-keyword">let</span> handle = <span class="hljs-keyword">this</span>.currentHandle,
+            dims = <span class="hljs-keyword">this</span>.currentDimensions,
+            scale = <span class="hljs-keyword">this</span>.currentScale,
+            x = -handle[<span class="hljs-number">0</span>] * scale,
+            y = -handle[<span class="hljs-number">1</span>] * scale,
+            w = dims[<span class="hljs-number">0</span>] * scale,
+            h = dims[<span class="hljs-number">1</span>] * scale;
+
+        p.rect(x, y, w, h);
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p><code>buildText</code> - internal function called by <code>cleanPathObject</code></p>
 
             </div>
             
@@ -1554,39 +1722,17 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-57">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-58">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
-              </div>
-              <p>To get convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-59">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
-              </div>
-              <p>Also removes excessive white space</p>
+              <p><code>convertTextEntityCharacters</code> - internal function called by <code>buildText</code></p>
+<ul>
+<li>To convert any HTML entity (eg: &lt; &epsilon;) in the text string into their required glyphs</li>
+<li>Also removes excessive white space</li>
+</ul>
 
             </div>
             
@@ -1603,26 +1749,16 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-61">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
-              </div>
-              <p>(If you are not a fan of big, complex functions … look away now!)</p>
+              <p><code>calculateTextPositions</code> - internal function called by <code>buildText</code></p>
+<ul>
+<li>If you are not a fan of big, complex functions … look away now!</li>
+</ul>
 
             </div>
             
@@ -1631,15 +1767,14 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <ol start="0">
-<li>strokeStyle/fillStyle helper function
-TODO: need to check (with a demo-test) that we can use gradients and patterns as styles</li>
+<li><code>strokeStyle</code> and <code>fillStyle</code> helper function</li>
 </ol>
 
             </div>
@@ -1662,15 +1797,14 @@ TODO: need to check (with a demo-test) that we can use gradients and patterns as
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <ol>
-<li>setup - get values for text? arrays, current?, highlight?, ?Attributes, etc
-TODO - check code uses all of these local variables; remove those that are not used</li>
+<li>Setup - get values for text? arrays, current?, highlight?, ?Attributes, etc</li>
 </ol>
 
             </div>
@@ -1741,17 +1875,17 @@ TODO - check code uses all of these local variables; remove those that are not u
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <ol start="2">
-<li>create textGlyphs array</li>
+<li>Create <code>textGlyphs</code> array</li>
 </ol>
 <ul>
-<li>also shove the default font into the fontLibrary array</li>
+<li>also shove the default font into the <code>fontLibrary</code> array</li>
 </ul>
 
             </div>
@@ -1762,19 +1896,18 @@ TODO - check code uses all of these local variables; remove those that are not u
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <ol start="3">
-<li>textPositions array will include an array of data for each glyph</li>
+<li><code>textPositions</code> array will include an array of data for each glyph</li>
 </ol>
 <ul>
-<li>[font, strokeStyle, fillStyle, highlight, underline, overline, text, startX, startY, (pathData)]</li>
-<li>and populate spacesArray with space position data (for full justify calculations later)
-TODO - does current code use SpacesArray? If not, refactor code to delete it</li>
+<li><code>[font, strokeStyle, fillStyle, highlight, underline, overline, text, startX, startY, (pathData)]</code></li>
+<li>and populate <code>spacesArray</code> with space position data (for full justify calculations later)</li>
 </ul>
 
             </div>
@@ -1791,14 +1924,14 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <ol start="4">
-<li>process the glyphStyles array to start populating the textPositions arrays</li>
+<li>Process the <code>glyphStyles</code> array to start populating the <code>textPositions</code> arrays</li>
 </ol>
 
             </div>
@@ -1896,13 +2029,13 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
-              <p>setup textGlyphWidths array, populating it with current letterSpacing values</p>
+              <p>Setup <code>textGlyphWidths</code> array, populating it with current letterSpacing values</p>
 
             </div>
             
@@ -1912,13 +2045,13 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
-              <p>finish populating textGlyphWidths</p>
+              <p>Finish populating <code>textGlyphWidths</code></p>
 
             </div>
             
@@ -1932,17 +2065,17 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <ol start="5">
-<li>calculate the text height value</li>
+<li>Calculate the text <code>height</code> value</li>
 </ol>
 <ul>
-<li>all lines in a multiline Phrase will use the maximum text height value, even if they don’t include the biggest value</li>
+<li>All lines in a multiline Phrase will use the maximum text height value, even if they don’t include the biggest value</li>
 </ul>
 
             </div>
@@ -1959,39 +2092,25 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
         </li>
         
         
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
-              </div>
-              <ol start="6">
-<li>calculate glyph width values</li>
-</ol>
-<ul>
-<li>this is the tricky bit as, ideally, we need to take into account font kerning values</li>
-<li>however kerning values go out of the window when font attributes (especially size) change in mid-text</li>
-<li>and we need to remember that letterSpacing can also be different in different parts of the text</li>
-<li>this is also the best place to populate the textLine arrays</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
-              <p>TODO - none of this takes into consideration the needs of RTL scripts eg Arabic, Hebrew, etc - needs testing, review and necessary refactor to fix (if required)</p>
+              <ol start="6">
+<li>Calculate glyph <code>width</code> values</li>
+</ol>
+<ul>
+<li>This is the tricky bit as, ideally, we need to take into account font kerning values</li>
+<li>However kerning values go out of the window when font attributes (especially size) change in mid-text</li>
+<li>And we need to remember that <code>letterSpacing</code> can also be different in different parts of the text</li>
+<li>This is also the best place to populate the <code>textLine</code> arrays</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-    totalLen = lineLen = starts = ends = <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre>    totalLen = lineLen = starts = ends = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textPositions.length; i &lt; iz; i++) {
 
@@ -2031,8 +2150,7 @@ TODO - does current code use SpacesArray? If not, refactor code to delete it</li
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
-              <p>calculate text line arrays
-TODO: create a demo-test for treatWordAsGlyph</p>
+              <p>Calculate text line arrays</p>
 
             </div>
             
@@ -2058,9 +2176,9 @@ TODO: create a demo-test for treatWordAsGlyph</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
-              <p>need starts to be less than ends</p>
+              <p>Need <code>starts</code> to be less than <code>ends</code></p>
 <ul>
-<li>this should make sure we pick up individual words that are longer than the Phrase entity’s width</li>
+<li>This should make sure we pick up individual words that are longer than the Phrase entity’s width</li>
 </ul>
 
             </div>
@@ -2088,7 +2206,7 @@ TODO: create a demo-test for treatWordAsGlyph</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
-              <p>need to pick up the last (or only) line</p>
+              <p>Need to pick up the last (or only) line</p>
 
             </div>
             
@@ -2103,7 +2221,7 @@ TODO: create a demo-test for treatWordAsGlyph</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
-              <p>pick up single line</p>
+              <p>Pick up single line</p>
 
             </div>
             
@@ -2125,7 +2243,7 @@ TODO: create a demo-test for treatWordAsGlyph</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
-              <p>final line of multiline text</p>
+              <p>Final line of multiline text</p>
 
             </div>
             
@@ -2150,7 +2268,7 @@ TODO: create a demo-test for treatWordAsGlyph</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
-              <p>and complete the population of data for highlight, overline, underline</p>
+              <p>… And complete the population of data for <code>highlight</code>, <code>overline</code>, <code>underline</code></p>
 
             </div>
             
@@ -2172,7 +2290,7 @@ TODO: create a demo-test for treatWordAsGlyph</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
-              <p>handle path positioning (which we’ll assume will need to be done for every display cycle) separately during stamping</p>
+              <p>Handle path positioning (which we’ll assume will need to be done for every display cycle) separately during stamping</p>
 
             </div>
             
@@ -2188,7 +2306,7 @@ TODO: create a demo-test for treatWordAsGlyph</p>
                 <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <ol start="7">
-<li>calculate localHeight</li>
+<li>Calculate <code>localHeight</code></li>
 </ol>
 
             </div>
@@ -2213,8 +2331,11 @@ TODO: create a demo-test for treatWordAsGlyph</p>
                 <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <ol start="8">
-<li>we should now be in a position where we can calculate each glyph’s startXY values</li>
+<li>We should now be in a position where we can calculate each glyph’s <code>startXY</code> values</li>
 </ol>
+<ul>
+<li>We have 2 non-path scenarios: full-justified text; and regular text</li>
+</ul>
 
             </div>
             
@@ -2227,22 +2348,7 @@ TODO: create a demo-test for treatWordAsGlyph</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
-              <ul>
-<li>we have 2 non-path scenarios: full-justified text; and regular text</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-82">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
-              </div>
-              <p>Scenario 1: justify === ‘full’</p>
+              <p>Scenario 1: <code>justify === &#39;full&#39;</code></p>
 
             </div>
             
@@ -2281,13 +2387,13 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
-              <p>Scenario 2: regular text - justify === ‘left’, or ‘centre’, or ‘right’</p>
+              <p>Scenario 2: regular text - <code>justify === &#39;left&#39;</code>, or <code>&#39;centre&#39;</code>, or <code>&#39;right&#39;</code></p>
 
             </div>
             
@@ -2324,14 +2430,14 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-84">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <ol start="9">
-<li>clean up and exit</li>
+<li>Clean up and exit</li>
 </ol>
 
             </div>
@@ -2352,131 +2458,26 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-84">&#182;</a>
+              </div>
+              <h5 id="stamping-the-entity-onto-a-cell-wrapper-canvas-element">Stamping the entity onto a Cell wrapper &lt;canvas&gt; element</h5>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.calculateGlyphPathPositions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> path = <span class="hljs-keyword">this</span>.getTextPath(),
-        len = path.length,
-        textPos = <span class="hljs-keyword">this</span>.textPositions,
-        widths = <span class="hljs-keyword">this</span>.textGlyphWidths,
-        direction = (<span class="hljs-keyword">this</span>.textPathDirection === <span class="hljs-string">'ltr'</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
-        pathPos = <span class="hljs-keyword">this</span>.textPathPosition,
-        distance, posArray, i, iz, width,
-        justify = <span class="hljs-keyword">this</span>.justify,
-        loop = <span class="hljs-keyword">this</span>.textPathLoop;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textPos.length; i &lt; iz; i++) {
-
-        posArray = textPos[i];
-        width = widths[i];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-86">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
-              </div>
-              <p>TODO - using non-left justified text buggers up letter kerning along the line</p>
-<ul>
-<li>but left-justified makes the letters lean a little to the left</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'right'</span>) posArray[<span class="hljs-number">7</span>] = -width;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'center'</span>) posArray[<span class="hljs-number">7</span>] = -width / <span class="hljs-number">2</span>;
-
-        posArray[<span class="hljs-number">10</span>] = (pathPos &lt;= <span class="hljs-number">1</span> &amp;&amp; pathPos &gt;= <span class="hljs-number">0</span>) ? path.getPathPositionData(pathPos) : <span class="hljs-literal">false</span>;
-        posArray[<span class="hljs-number">9</span>] = width;
-
-        <span class="hljs-keyword">if</span> (direction) pathPos += (width / len);
-        <span class="hljs-keyword">else</span> pathPos -= (width / len);
-
-        <span class="hljs-keyword">if</span> (loop &amp;&amp; (pathPos &gt; <span class="hljs-number">1</span> || pathPos &lt; <span class="hljs-number">0</span>)) {
-
-            pathPos = (pathPos &gt; <span class="hljs-number">0.5</span>) ? pathPos - <span class="hljs-number">1</span> : pathPos + <span class="hljs-number">1</span>;
-        }
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-87">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-88">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
-              </div>
-              <p>Fonts don’t have accessible paths</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.cleanPathObject = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noPathUpdates || !<span class="hljs-keyword">this</span>.pathObject) {
-        
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyFont &amp;&amp; <span class="hljs-keyword">this</span>.fontAttributes) {
-
-            <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">false</span>;
-            <span class="hljs-keyword">this</span>.fontAttributes.buildFont(<span class="hljs-keyword">this</span>.scale);
-            <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-        }
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyText) <span class="hljs-keyword">this</span>.buildText();
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyHandle) <span class="hljs-keyword">this</span>.cleanHandle();
-
-        <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject = <span class="hljs-keyword">new</span> Path2D();
-        
-        <span class="hljs-keyword">let</span> handle = <span class="hljs-keyword">this</span>.currentHandle,
-            dims = <span class="hljs-keyword">this</span>.currentDimensions,
-            scale = <span class="hljs-keyword">this</span>.currentScale,
-            x = -handle[<span class="hljs-number">0</span>] * scale,
-            y = -handle[<span class="hljs-number">1</span>] * scale,
-            w = dims[<span class="hljs-number">0</span>] * scale,
-            h = dims[<span class="hljs-number">1</span>] * scale;
-
-        p.rect(x, y, w, h);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-89">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p><code>regularStampSynchronousActions</code> - overwrites the mixin/entity.js function</p>
 
             </div>
             
@@ -2555,13 +2556,75 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-90">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>calculateGlyphPathPositions</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.calculateGlyphPathPositions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> path = <span class="hljs-keyword">this</span>.getTextPath(),
+        len = path.length,
+        textPos = <span class="hljs-keyword">this</span>.textPositions,
+        widths = <span class="hljs-keyword">this</span>.textGlyphWidths,
+        direction = (<span class="hljs-keyword">this</span>.textPathDirection === <span class="hljs-string">'ltr'</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
+        pathPos = <span class="hljs-keyword">this</span>.textPathPosition,
+        distance, posArray, i, iz, width,
+        justify = <span class="hljs-keyword">this</span>.justify,
+        loop = <span class="hljs-keyword">this</span>.textPathLoop;
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textPos.length; i &lt; iz; i++) {
+
+        posArray = textPos[i];
+        width = widths[i];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-87">&#182;</a>
+              </div>
+              <p>TODO - using non-left justified text buggers up letter kerning along the line</p>
+<ul>
+<li>But left-justified makes the letters lean a little to the left</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'right'</span>) posArray[<span class="hljs-number">7</span>] = -width;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'center'</span>) posArray[<span class="hljs-number">7</span>] = -width / <span class="hljs-number">2</span>;
+
+        posArray[<span class="hljs-number">10</span>] = (pathPos &lt;= <span class="hljs-number">1</span> &amp;&amp; pathPos &gt;= <span class="hljs-number">0</span>) ? path.getPathPositionData(pathPos) : <span class="hljs-literal">false</span>;
+        posArray[<span class="hljs-number">9</span>] = width;
+
+        <span class="hljs-keyword">if</span> (direction) pathPos += (width / len);
+        <span class="hljs-keyword">else</span> pathPos -= (width / len);
+
+        <span class="hljs-keyword">if</span> (loop &amp;&amp; (pathPos &gt; <span class="hljs-number">1</span> || pathPos &lt; <span class="hljs-number">0</span>)) {
+
+            pathPos = (pathPos &gt; <span class="hljs-number">0.5</span>) ? pathPos - <span class="hljs-number">1</span> : pathPos + <span class="hljs-number">1</span>;
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-88">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-88">&#182;</a>
+              </div>
+              <p><code>preStamper</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
 
             </div>
             
@@ -2613,52 +2676,149 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
+        <li id="section-89">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-89">&#182;</a>
+              </div>
+              <p><code>stamper</code> - object holding stamp method functions - functions called by <code>regularStampSynchronousActions</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.stamper = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-90">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-90">&#182;</a>
+              </div>
+              <p><code>stamper.draw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    draw: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
+
+        engine.strokeText(...data);
+    },</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>stamper.fill</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.stamper = {
-
-    <span class="hljs-attr">draw</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
-
-        engine.strokeText(...data);
-    },
-    <span class="hljs-attr">fill</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
+            <div class="content"><div class='highlight'><pre>    fill: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
 
         engine.fillText(...data);
-    },
-    <span class="hljs-attr">drawAndFill</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-92">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-92">&#182;</a>
+              </div>
+              <p><code>stamper.drawAndFill</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    drawAndFill: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
 
         engine.strokeText(...data);
         entity.currentHost.clearShadow();
         engine.fillText(...data);
         entity.currentHost.restoreShadow(entity);
-    },
-    <span class="hljs-attr">fillAndDraw</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-93">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-93">&#182;</a>
+              </div>
+              <p><code>stamper.fillAndDraw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fillAndDraw: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
 
         engine.strokeText(...data);
         entity.currentHost.clearShadow();
         engine.fillText(...data);
         engine.strokeText(...data);
         entity.currentHost.restoreShadow(entity);
-    },
-    <span class="hljs-attr">drawThenFill</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-94">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-94">&#182;</a>
+              </div>
+              <p><code>stamper.drawThenFill</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    drawThenFill: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
 
         engine.strokeText(...data);
         engine.fillText(...data);
-    },
-    <span class="hljs-attr">fillThenDraw</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-95">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-95">&#182;</a>
+              </div>
+              <p><code>stamper.fillThenDraw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fillThenDraw: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
 
         engine.fillText(...data);
         engine.strokeText(...data);
-    },
-    <span class="hljs-attr">clear</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-96">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-96">&#182;</a>
+              </div>
+              <p><code>stamper.clear</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    clear: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
 
         <span class="hljs-keyword">let</span> gco = engine.globalCompositeOperation;
         engine.globalCompositeOperation = <span class="hljs-string">'destination-out'</span>;
@@ -2670,13 +2830,13 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-92">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-97">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>drawBoundingBox</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
 
             </div>
             
@@ -2703,13 +2863,17 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-93">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+                <a class="pilcrow" href="#section-98">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>performRotation</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
+<ul>
+<li>When doing text along a path, we have to perform a rendering context transformation for every glyph</li>
+<li>In other cases, we perform the action on a per-line basis</li>
+</ul>
 
             </div>
             
@@ -2728,23 +2892,69 @@ TODO: create a demo-test for treatWordAsGlyph</p>
         </li>
         
         
-        <li id="section-94">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-94">&#182;</a>
+                <a class="pilcrow" href="#section-99">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code>scrawl.makePhrase({
 
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myphrase_fill'</span>,
+
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'H&amp;epsilon;lj&amp;ouml;!'</span>,
+    <span class="hljs-attr">font</span>: <span class="hljs-string">'bold 40px Garamond, serif'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'14%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'28%'</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">justify</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'green'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'gold'</span>,
+
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">'round'</span>,
+
+    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">'black'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myphrase_draw'</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'38%'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePhrase = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Phrase(items);
 };
 
-constructors.Phrase = Phrase;
+constructors.Phrase = Phrase;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-100">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-100">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makePhrase,
 };</pre></div></div>
             

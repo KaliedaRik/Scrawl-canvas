@@ -52,9 +52,9 @@ columns: 2,
 rows: 2,
 columnGutterWidth: 1,
 rowGutterWidth: 1,
-gutterColor: '#808080',
-tileFill: null,
 tileSources: null,
+tileFill: null,
+gutterColor: '#808080',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['tileSources']);
@@ -96,6 +96,7 @@ this.tileFill = newFill;
 }
 this.dirtyPathObject = true;
 };
+D.columns = defaultNonReturnFunction;
 S.rows = function (item) {
 if (isa_number(item)) {
 if (!Number.isInteger(item)) item = parseInt(item, 10);
@@ -108,11 +109,7 @@ if (currentRows < item) this.tileFill.fill(0, currentRows * this.columns);
 }
 this.dirtyPathObject = true;
 };
-D.columns = defaultNonReturnFunction;
 D.rows = defaultNonReturnFunction;
-/*
-TODO - documentation
-*/
 P.setAllTilesTo = function (val) {
 if (isa_number(val)) {
 if (!Number.isInteger(val)) val = parseInt(val, 10);

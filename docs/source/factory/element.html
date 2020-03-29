@@ -300,15 +300,15 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="element-factory">Element factory</h1>
-<p>The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity positioning and dimensioning functionality.</p>
+<p>The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity <a href="../mixin/position.html">positioning and dimensioning</a> functionality.</p>
 <ul>
-<li>Entitys exist in a Cell environment</li>
+<li><a href="../mixin/entity.html">Entitys</a> exist in a <a href="./cell.html">Cell</a> environment</li>
 <li>They can position themselves within that Cell either <strong>absolutely</strong> (px coordinates), or <strong>relatively</strong> (% coordinates, with values relative to the Cell’s dimensions), or <strong>by reference</strong> (using other entity’s coordinates to calculate their own coordinates - <code>pivot</code>, <code>mimic</code>, <code>path</code>)</li>
 <li>They can also base their dimensions on absolute (px) or relative (%) values</li>
 <li>They can be <strong>animated</strong> directly (<code>set</code>, <code>deltaSet</code>), or through automation (<code>delta</code> object), or through the Scrawl-canvas <code>tween</code> functionality</li>
 <li>They can be stored and retrieved (‘packet’ functionality), cloned (‘clone’, based on packets) and killed (‘kill’ functions)</li>
 </ul>
-<p><strong>A Stack is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
+<p><strong>A <a href="./stack.html">Stack</a> is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
 <pre><code>Stack    ~~&gt; Canvas/Cell  
 Element  ~~&gt; Entity (eg Block)  </code></pre><p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
 <ul>

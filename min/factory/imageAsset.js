@@ -13,8 +13,6 @@ P.isArtefact = false;
 P.isAsset = true;
 P = baseMix(P);
 P = assetMix(P);
-let defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);
 P.saveAsPacket = function () {
 return [this.name, this.type, this.lib, {}];
 };

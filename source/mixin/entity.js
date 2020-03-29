@@ -1,5 +1,5 @@
 // # Entity mixin
-// This mixin builds on the base and position mixins to give Canvas entity objects (Scrawl-canvas Block, Grid, Loom, Phrase, Picture, Shape, Wheel) the ability to act as __artefacts__.
+// This mixin builds on the base and position mixins to give Canvas entity objects (Scrawl-canvas [Block](../factory/block.html), [Grid](../factory/grid.html), [Loom](../factory/loom.html), [Phrase](../factory/phrase.html), [Picture](../factory/picture.html), [Shape](../factory/shape.html), [Wheel](../factory/wheel.html)) the ability to act as __artefacts__.
 //
 // Entitys differ from non-entity artefacts in that they are restricted to Cell wrappers (though no harm should come if they are included in Stack-related Groups).
 // + The entity object represents a set of instructions for rendering graphical lines and shapes onto a &lt;canvas> CanvasRenderingContext2D engine, using the Canvas API to do this
