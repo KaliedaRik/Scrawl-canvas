@@ -357,7 +357,6 @@ export default function (P = {}) {
     P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-
 // #### Packet management
     P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'mimicked', 'pivoted']);
     P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);

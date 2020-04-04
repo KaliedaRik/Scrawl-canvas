@@ -33,17 +33,34 @@ rocket.set({
 
 // Set a tween up as a template which can be cloned, but will never itself run
 let tween = scrawl.makeTween({
+
     name: 'template',
+
     duration: 5000,
     killOnComplete: true,
     useNewTicker: true,
+
     definitions: [
         {
             attribute: 'roll',
             start: 0,
             end: 65
         }
-    ]
+    ],
+
+    commenceAction: function () {
+
+        this.set({
+            targets: rocket.clone({
+                name: `${this.name}-element`,
+            })
+        });
+    },
+
+    completeAction: function () {
+
+        artefact[`${this.name}-element`].kill();
+    },
 }).removeFromTicker();
 
 
@@ -88,28 +105,52 @@ scrawl.makeRender({
 
 // #### User interaction
 // Create event listener to generate and start new element and tween
+let counter = 0;
 let flyRocket = function(e) {
 
     e.preventDefault();
     e.returnValue = false;
 
     tween.clone({
-
-        commenceAction: function () {
-
-            this.set({
-                targets: rocket.clone()
-            });
-        },
-
-        completeAction: function () {
-
-            this.targets[0].kill();
-        }
+        name: `rocket-${counter}`,
     }).run();
+
+    counter ++;
 };
 scrawl.addNativeListener('click', flyRocket, stack.domElement);
 
 
 // #### Development and testing
 console.log(scrawl.library);
+
+// To test kill functionality
+let killTicker = (name, time) => {
+
+    let packet;
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
+
+        packet = scrawl.library.animationtickers[name].saveAsPacket();
+
+        scrawl.library.animationtickers[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
+
+            stack.actionPacket(packet);
+
+            setTimeout(() => {
+
+                console.log(`${name} resurrected
+    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
+            }, 100);
+        }, 100);
+    }, time);
+};
+
+killTicker('template_ticker', 4000);

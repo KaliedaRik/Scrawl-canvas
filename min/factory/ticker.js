@@ -1,14 +1,14 @@
 import { constructors, animationtickers, tween } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt, xtGet, convertTime } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, xtGet, isa_obj, convertTime } from '../core/utilities.js';
 import { makeAnimation } from './animation.js';
 import baseMix from '../mixin/base.js';
-let testIsObject = Object.prototype.toString;
 const Ticker = function (items = {}) {
 this.makeName(items.name);
 this.register();
+this.subscribers = [];
+this.subscriberObjects = [];
 this.set(this.defs);
 this.set(items);
-this.subscribers = [];
 this.cycleCount = 0;
 this.active = false;
 this.effectiveDuration = 0;
@@ -35,8 +35,8 @@ cycles: 1,
 eventChoke: 0,
 onRun: null,
 onHalt: null,
-onResume: null,
 onReverse: null,
+onResume: null,
 onSeekTo: null,
 onSeekFor: null,
 onComplete: null,
@@ -44,15 +44,26 @@ onReset: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['subscribers']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
-P.packetFunctions = pushUnique(P.packetFunctions, ['onRun', 'onHalt', 'onResume', 'onReverse', 'onSeekTo', 'onSeekFor', 'onComplete', 'onReset']);
-P.finalizePacketOut = function (copy, items) {
-return copy;
+P.packetFunctions = pushUnique(P.packetFunctions, ['onRun', 'onHalt', 'onReverse', 'onResume', 'onSeekTo', 'onSeekFor', 'onComplete', 'onReset']);
+P.kill = function () {
+if (this.active) this.halt();
+removeItem(tickerAnimations, this.name);
+tickerAnimationsFlag = true;
+this.deregister();
+return true;
 };
-P.postCloneAction = function(clone, items) {
-return clone;
+P.killTweens = function(autokill = false) {
+let i, iz, sub;
+for (i = 0, iz = this.subscribers.length; i < iz; i++) {
+sub = tween[this.subscribers[i]];
+sub.completeAction();
+sub.kill();
+}
+if (autokill) {
+this.kill();
+return true;
+}
+return this;
 };
 let G = P.getters,
 S = P.setters;
@@ -86,18 +97,6 @@ if (target.type === 'Tween') target.calculateEffectiveDuration();
 }
 }
 };
-P.makeTickerUpdateEvent = function() {
-return new CustomEvent('tickerupdate', {
-detail: {
-name: this.name,
-type: 'Ticker',
-tick: this.tick,
-reverseTick: this.effectiveDuration - this.tick
-},
-bubbles: true,
-cancelable: true
-});
-};
 P.subscribe = function (items) {
 let myItems = [].concat(items),
 i, iz, item, name;
@@ -105,7 +104,7 @@ for (i = 0, iz = myItems.length; i < iz; i++) {
 item = myItems[i];
 if(item != null){
 if (item.substring) name = item;
-else name = (testIsObject.call(item) === '[object Object]' && item.name) ? item.name : false;
+else name = (isa_obj(item) && item.name) ? item.name : false;
 if (name) pushUnique(this.subscribers, name);
 }
 }
@@ -121,7 +120,7 @@ i, iz, item, name;
 for (i = 0, iz = myItems.length; i < iz; i++) {
 item = items[i];
 if (item.substring) name = item;
-else name = (testIsObject.call(item) === '[object Object]' && item.name) ? item.name : false;
+else name = (isa_obj(item) && item.name) ? item.name : false;
 if (name) removeItem(this.subscribers, name);
 }
 if (myItems.length) {
@@ -129,6 +128,20 @@ this.sortSubscribers();
 this.recalculateEffectiveDuration();
 }
 return this;
+};
+P.repopulateSubscriberObjects = function () {
+let arr = this.subscriberObjects,
+subs = this.subscribers,
+t;
+arr.length = 0;
+subs.forEach(sub => {
+t = tween[sub];
+if (t) arr.push(t);
+});
+};
+P.getSubscriberObjects = function () {
+if (this.subscribers.length && !this.subscriberObjects.length) this.repopulateSubscriberObjects();
+return this.subscriberObjects;
 };
 P.sortSubscribers = function () {
 let mysubscribers = this.subscribers;
@@ -143,42 +156,50 @@ buckets[effectiveTime].push(obj);
 });
 this.subscribers = buckets.reduce((a, v) => a.concat(v), []);
 }
+this.repopulateSubscriberObjects();
 };
 P.updateSubscribers = function(items, reversed) {
-let subs = this.subscribers,
-i, iz;
 reversed = (xt(reversed)) ? reversed : false;
+let subs = this.getSubscriberObjects(),
+i, iz;
 if (reversed) {
 for (i = subs.length - 1; i >= 0; i--) {
-tween[subs[i]].set(items);
+subs[i].set(items);
 }
 }
 else{
 for (i = 0, iz = subs.length; i < iz; i++) {
-tween[subs[i]].set(items);
+subs[i].set(items);
 }
 }
 return this;
 };
 P.changeSubscriberDirection = function () {
-var subs = this.subscribers,
-sub, i, iz;
-for (i = 0, iz = subs.length; i < iz; i++) {
-sub = tween[subs[i]];
-sub.reversed = !sub.reversed;
-}
+let subs = this.getSubscriberObjects();
+subs.forEach(sub => sub.reversed = !sub.reversed);
 return this;
 };
+P.makeTickerUpdateEvent = function() {
+return new CustomEvent('tickerupdate', {
+detail: {
+name: this.name,
+type: 'Ticker',
+tick: this.tick,
+reverseTick: this.effectiveDuration - this.tick
+},
+bubbles: true,
+cancelable: true
+});
+};
 P.recalculateEffectiveDuration = function() {
-let i, iz, obj, durationValue,
-subscribers = this.subscribers,
+let durationValue,
+subs = this.getSubscriberObjects(),
 duration = 0;
 if (!this.duration) {
-for (i = 0, iz = subscribers.length; i < iz; i++) {
-obj = tween[subscribers[i]];
-durationValue = obj.getEndTime();
+subs.forEach(sub => {
+durationValue = sub.getEndTime();
 if (durationValue > duration) duration = durationValue;
-}
+});
 this.effectiveDuration = duration;
 }
 else this.setEffectiveDuration();
@@ -197,14 +218,9 @@ else this.effectiveDuration = temp[1];
 return this;
 };
 P.fn = function (reverseOrder) {
-let result = {
-tick: 0,
-reverseTick: 0,
-willLoop: false,
-next: false
-};
+let result = requestResultObject();
 reverseOrder = xt(reverseOrder) ? reverseOrder : false;
-let i, iz, subs, sub, eTime, now, e,
+let i, iz, subs, eTime, now, e,
 active = this.active,
 startTime = this.startTime,
 currentTime, tick,
@@ -250,15 +266,15 @@ result.reverseTick = effectiveDuration - tick;
 result.next = true;
 }
 }
-subs = this.subscribers;
+subs = this.getSubscriberObjects();
 if (reverseOrder) {
 for (i = subs.length - 1; i >= 0; i--) {
-tween[subs[i]].update(result);
+subs[i].update(result);
 }
 }
 else{
 for (i = 0, iz = subs.length; i < iz; i++) {
-tween[subs[i]].update(result);
+subs[i].update(result);
 }
 }
 if (eventChoke) {
@@ -274,6 +290,7 @@ if (!active) this.halt();
 if (this.killOnComplete && cycleCount >= cycles) this.killTweens(true);
 }
 }
+releaseResultObject(result);
 };
 P.run = function () {
 if (!this.active) {
@@ -330,8 +347,8 @@ this.changeSubscriberDirection();
 this.active = true;
 this.fn();
 this.active = false;
+if (typeof this.onReverse === 'function') this.onReverse();
 if (resume) this.resume();
-if (typeof this.onResume === 'function') this.onResume();
 return this;
 };
 P.halt = function () {
@@ -385,26 +402,6 @@ if (typeof this.onSeekFor === 'function') this.onSeekFor();
 if (resume) this.resume();
 return this;
 };
-P.kill = function () {
-if (this.active) this.halt();
-removeItem(tickerAnimations, this.name);
-tickerAnimationsFlag = true;
-this.deregister();
-return true;
-};
-P.killTweens = function(autokill = false) {
-let i, iz, sub;
-for (i = 0, iz = this.subscribers.length; i < iz; i++) {
-sub = tween[this.subscribers[i]];
-sub.completeAction();
-sub.kill();
-}
-if (autokill) {
-this.kill();
-return true;
-}
-return this;
-};
 let tickerAnimations = [];
 let tickerAnimationsFlag = true;
 const coreTickersAnimation = makeAnimation({
@@ -436,6 +433,27 @@ resolve(true);
 });
 }
 });
+const resultObjectPool = [];
+const requestResultObject = function () {
+if (!resultObjectPool.length) {
+resultObjectPool.push({
+tick: 0,
+reverseTick: 0,
+willLoop: false,
+next: false
+});
+}
+return resultObjectPool.shift();
+};
+const releaseResultObject = function (r) {
+if (r) {
+r.tick = 0;
+r.reverseTick = 0;
+r.willLoop = false;
+r.next = false;
+resultObjectPool.push(r);
+}
+};
 const makeTicker = function (items) {
 return new Ticker(items);
 };

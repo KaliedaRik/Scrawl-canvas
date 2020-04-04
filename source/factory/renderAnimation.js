@@ -145,11 +145,11 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
 // #### RenderAnimation attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
 // __order__ - positive integer Number. Determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations.

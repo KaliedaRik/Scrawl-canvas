@@ -1,10 +1,11 @@
-// ## Demo DOM 005
+// # Demo DOM 005
+// DOM tween stress test
 
-// [DOM tween stress test](../../demo/dom-005.html)
+// [Run code](../../demo/dom-005.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let porthole = scrawl.library.artefact.porthole;
 
 porthole.set({
@@ -19,7 +20,8 @@ porthole.set({
 });
 
 
-// Create new elements and their associated tweens (each star element has its own tween)
+// Create new elements and their associated Tweens (each star element has its own Tween)
+// + See Demo [Canvas-006](./canvas-006.html) for a more detailed explanation of this approach to generating new stars.
 let starCount = 0,
     addNumber = 25;
 
@@ -94,6 +96,7 @@ let makeStars = function (buildNumber) {
 makeStars(50);
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -113,7 +116,7 @@ Stars: ${starCount}`;
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -122,6 +125,7 @@ scrawl.makeRender({
 });
 
 
+// #### User interaction
 // The event listener will add a given number of stars to the display when the user clicks on the scene
 let addStars = (e) => {
 
@@ -130,5 +134,4 @@ let addStars = (e) => {
 
     makeStars(addNumber);
 };
-
 scrawl.addNativeListener('click', addStars, porthole.domElement);

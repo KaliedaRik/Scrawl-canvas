@@ -1,37 +1,76 @@
-
 // # Ticker factory
+// Ticker objects represent a timeline against which [Tween](./tween.html) and [Action](./action.html) objects will run.
+// + ___A Ticker is an animation___ (but not a Scrawl-canvas [Animation](./animation.html)) object; it defines a `fn` function internally which will check through all Tween and Action objects subscribing to it and, where appropriate, trigger their `update` functions.
+// + This module defines and launches a `coreTickersAnimation` Animation object; all Ticker objects get added to this object when their `run` or `resume` functions are triggered.
+// + The `coreTickersAnimation` object runs in the Scrawl-canvas `animationLoop` which is tied to the browser/device's requestAnimationFrame (RAF) functionality. 
+// + `coreTickersAnimation` runs before other Animation objects, thus ___Tween/Action updates happen before any Display cycle functionality___.
+// + Unlike Animation objects, ___Ticker objects do not run automatically___ as soon as they have been created.
+// + To trigger a Ticker object, invoke its `run` or `resume` functions.
+// 
+// Ticker objects have an ___effective duration___ - a set number of milliseconds for which they will run.
+// + We can set this value directly, using the `duration` attribute.
+// + We can also ask the Ticker to calculate its own effective duration, taking into accout the start times and duration of its currently subscribed Tweens and Actions
+// + By default a Ticker will run once, then terminate (remove itself from the `coreTickersAnimation` function). This counts as 1 cycle.
+// + We can get the Ticker to run multiple times before terminating, by setting its `cycles` attribute to a positive integer Number value.
+// + Setting the `cycles` attribute to `0` causes the Ticker to run continuously once started, until told to stop.
+// + Note that Tickers always run forwards, never backwards. Tweens and Actions can be reversed by setting the appropriate flags on them.
+//
+// Tickers (unlike Animations) take part in Scrawl-canvas packet functionality; they can be saved, restored and cloned.
+//
+// Tickers can be controlled through a set of trigger functions: __run, halt, reverse, resume, seekTo, seekFor, complete, reset__.
+// + We can add ___Ticker hook functions___ to each of these trigger functions.
+//
+// A Ticker can be made to dispatch a [DOM Custom Event](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent) at regular intervals as it runs, by setting its `eventChoke` attribute to a Number value (representing milliseconds) greater than `0`.
+// + The Custom Event is named `tickerupdate`.
+// + Its `detail` object includes the following attributes: __name__ (Ticker name-String); __type__ (`Ticker`); __tick__ (milliseconds since Ticker started running); __reverseTick__ (milliseconds remaining until Ticker completes its current cycle).
+// + The Event bubbles, and is cancelable.
+//
+// Tickers are very closely associated with Tweens.
+// + Each Ticker can have more than one Tween (and 0 or more Actions) subscribed to it.
+// + Tweens and Actions can be told to subscribe to a Ticker when they are created; they can change their Ticker subscription at any time.
+// + ___A Tween can make its own Ticker when it is created.___
 
-// TODO - documentation
 
-// #### To instantiate objects from the factory
+// TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further:
+// + If we kill a Ticker but leave associated Tweens untouched, will running those Tweens crash the script?
+// + Can we successfully clone a Tween whose Ticker has been killed?
+// + A Ticker can have more than one subscribed Tween/Action; can (should?) Tweens/Actions be able to subscribe to more than one Ticker? _Initial thoughts: no - if such functionality required, clone the Tween/Action_
+// + Can Tickers be nested? How could we use nested Tickers? _Initial thoughts: yes to nesting, possibly use an Action on one ticker to run/halt a second Ticker; one use case may be to break up a complex animation into smaller, more discrete parts? But this all begs the question: if we halt a nested Ticker (via user interaction), how would we cascade that through to parent/sibling Tickers?_
+// + Possible additional demo - tie a more complex Ticker/Tween/Action sequence to a graphical timeline - see blog post [Adding some canvas love to Hexo](https://blog.rikworks.co.uk/2018/05/26/Adding-some-canvas-love-to-Hexo/).
+// + Would be a Big Win if we can tether Ticker/Tween/Actions to progress while a video plays - opens up the world of ___interactive video___.
 
-// #### Library storage
 
-// #### Clone functionality
+// #### Demos:
+// + All Tween and Action-related Demos necessarily include Tickers
+// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
+// + [Canvas-006](../../demo/canvas-006.html) - Canvas tween stress test
+// + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
+// + [DOM-005](../../demo/dom-005.html) - DOM tween stress test
+// + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
+// + [Component-001](../../demo/component-001.html) - Scrawl-canvas DOM element components
 
-// #### Kill functionality
 
-
-// ## Imports
+// #### Imports
 import { constructors, animationtickers, tween } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt, xtGet, convertTime } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, xtGet, isa_obj, convertTime } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
 
 import baseMix from '../mixin/base.js';
 
-let testIsObject = Object.prototype.toString;
 
-
-// ## Ticker constructor
+// #### Ticker constructor
 const Ticker = function (items = {}) {
 
     this.makeName(items.name);
     this.register();
+
+    this.subscribers = [];
+    this.subscriberObjects = [];
+
     this.set(this.defs);
     this.set(items);
 
-    this.subscribers = [];
     this.cycleCount = 0;
     this.active = false;
     this.effectiveDuration = 0;
@@ -47,7 +86,7 @@ const Ticker = function (items = {}) {
 };
 
 
-// ## Ticker object prototype setup
+// #### Ticker prototype
 let P = Ticker.prototype = Object.create(Object.prototype);
 P.type = 'Ticker';
 P.lib = 'animationtickers';
@@ -55,37 +94,52 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
 P = baseMix(P);
 
 
-// ## Define default attributes
+// #### Ticker attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-// TODO - documentation
+// __order__ - positive integer Number - determines the order in which each Ticker animation object will be actioned before the Display cycle starts. 
+// + Higher order Tickers will be processed after lower order Tickers. 
+// + Tickers with the same `order` value will be processed in the order in which they were defined in code.
     order: 1,
 
-// TODO - documentation
+// __duration__ - can accept a variety of values:
+// + Number, representing milliseconds.
+// + String time value, for example `'500ms', '0.5s'`.
+// + (% String values cannot be used with Ticker objects - they have nothing to measure such a relative value against).
     duration: 0,
 
-// TODO - documentation
+// __subscribers__ - Array of Tween and Action name-Strings. Use `subscribe` and `unsubscribe` functions rather than the `set` function to add/remove Tweens and/or Actions to/from the Ticker
     subscribers: null,
 
-// TODO - documentation
+// __killOnComplete__ - Boolean flag. When set, the Ticker will kill both itself and all Tweens and Actions associated with it at the end of its run
     killOnComplete: false,
 
-// TODO - documentation
+// __cycles__ - positive integer Number representing the number of cycles the Ticker will run before it completes. 
+// + A value of `0` indicates that the Ticker should repeat itself forever, until its `halt`, `seekTo`, `seekFor`, `complete` or `reset` functions are triggered.
+// + Note that Tween and Action animation direction is determined by those objects (via their `reverseOnCycleEnd` and `reversed` flags). Tickers always repeat in a forwards direction - they loop back to their start; they never reverse time.
     cycles: 1,
 
-// TODO - documentation
+// __eventChoke__ - positive Number representing the time to elapse before the Ticker creates and emits another event. A value of `0` stops the Ticker emitting events as it runs.
     eventChoke: 0,
 
-
-// Hook functions that can be invoked at the end of each relevant operation
+// The Ticker object supports some __hook functions__:
+// + __onRun__ - triggers each time the Ticker's `run` function is invoked
+// + __onHalt__ - triggers each time the Ticker's `halt` function is invoked
+// + __onReverse__ - triggers each time the Ticker's `reverse` function is invoked
+// + __onResume__ - triggers each time the Ticker's `resume` function is invoked
+// + __onSeekTo__ - triggers each time the Ticker's `seekTo` function is invoked
+// + __onSeekFor__ - triggers each time the Ticker's `seekFor` function is invoked
+// + __onComplete__ - triggers each time the Ticker's `complete` function is invoked
+// + __onReset__ - triggers each time the Ticker's `reset` function is invoked
     onRun: null,
     onHalt: null,
-    onResume: null,
     onReverse: null,
+    onResume: null,
     onSeekTo: null,
     onSeekFor: null,
     onComplete: null,
@@ -94,36 +148,59 @@ let defaultAttributes = {
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-// ## Packet management
+// #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['subscribers']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
-P.packetFunctions = pushUnique(P.packetFunctions, ['onRun', 'onHalt', 'onResume', 'onReverse', 'onSeekTo', 'onSeekFor', 'onComplete', 'onReset']);
+P.packetFunctions = pushUnique(P.packetFunctions, ['onRun', 'onHalt', 'onReverse', 'onResume', 'onSeekTo', 'onSeekFor', 'onComplete', 'onReset']);
 
 
-// Overwrites finalizePacketOut function in mixin/base.js
-P.finalizePacketOut = function (copy, items) {
+// #### Clone management
+// No additional clone functionality required.
 
-// TODO: work out what we need to do to produce packets (for cloning)
-    return copy;
+
+// #### Kill management
+// `kill` - remove Ticker from Scrawl-canvas system.
+P.kill = function () {
+
+    if (this.active) this.halt();
+
+    removeItem(tickerAnimations, this.name);
+    tickerAnimationsFlag = true;
+
+    this.deregister();
+
+    return true;
+};
+
+// `killTweens` - remove a Ticker's subscribed Tweens from Scrawl-canvas system.
+// + If the function is invoked with a truthy argument, the Ticker will also be removed from the system.
+P.killTweens = function(autokill = false) {
+
+    let i, iz, sub;
+
+    for (i = 0, iz = this.subscribers.length; i < iz; i++) {
+
+        sub = tween[this.subscribers[i]];
+        sub.completeAction();
+        sub.kill();
+    }
+
+    if (autokill) {
+
+        this.kill();
+        return true;
+    }
+
+    return this;
 };
 
 
-// Overwrites postCloneAction function in mixin/base.js
-P.postCloneAction = function(clone, items) {
-
-// TODO: clone function + write a demo to test it
-    return clone;
-};
-
-
-
-// ## Define getter, setter and deltaSetter functions
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters;
 
-// TODO - documentation
+// __subscribers__ - see also the `subscribe` and `unsubscribe` functions below
+// + getter returns a copy of the `subscribers` Array, containing Tween and Action object name-Strings.
+// + setter accepts a Tween or Action name-String, or an Array of such Strings. Will replace the existing `subscribers` Array with this new data.
 G.subscribers = function () {
 
     return [].concat(this.subscribers);
@@ -134,7 +211,7 @@ S.subscribers = function (item) {
     this.subscribe(item);
 };
 
-// TODO - documentation
+// __order__
 S.order = function (item) {
 
     this.order = item;
@@ -142,7 +219,7 @@ S.order = function (item) {
     if (this.active) tickerAnimationsFlag = true;
 };
 
-// TODO - documentation
+// __cycles__
 S.cycles = function (item) {
 
     this.cycles = item;
@@ -150,7 +227,7 @@ S.cycles = function (item) {
     if (!this.cycles) this.cycleCount = 0;
 };
 
-// TODO - documentation
+// __duration__ - changes to the `duration` (and as a consequence `effectiveDuration`) attributes will be cascaded down to subscribed Tweens and Actions immediately.
 S.duration = function (item) {
 
     let i, iz, target,
@@ -176,25 +253,9 @@ S.duration = function (item) {
 };
 
 
-// ## Define prototype functions
+// #### Subscription management
 
-
-// TODO - documentation
-P.makeTickerUpdateEvent = function() {
-
-    return new CustomEvent('tickerupdate', {
-        detail: {
-            name: this.name,
-            type: 'Ticker',
-            tick: this.tick,
-            reverseTick: this.effectiveDuration - this.tick
-        },
-        bubbles: true,
-        cancelable: true
-    });
-};
-
-// TODO - documentation
+// `subscribe` - accepts a Tween or Action name-String, or an Array of such Strings. 
 P.subscribe = function (items) {
 
     let myItems = [].concat(items),
@@ -207,7 +268,7 @@ P.subscribe = function (items) {
         if(item != null){
 
             if (item.substring) name = item;
-            else name = (testIsObject.call(item) === '[object Object]' && item.name) ? item.name : false;
+            else name = (isa_obj(item) && item.name) ? item.name : false;
 
             if (name) pushUnique(this.subscribers, name);
         }
@@ -218,10 +279,10 @@ P.subscribe = function (items) {
         this.sortSubscribers();
         this.recalculateEffectiveDuration();
     }
-
     return this;
 };
 
+// `unsubscribe` - accepts a Tween or Action name-String, or an Array of such Strings.
 P.unsubscribe = function (items) {
 
     var myItems = [].concat(items),
@@ -232,7 +293,7 @@ P.unsubscribe = function (items) {
         item = items[i];
 
         if (item.substring) name = item;
-        else name = (testIsObject.call(item) === '[object Object]' && item.name) ? item.name : false;
+        else name = (isa_obj(item) && item.name) ? item.name : false;
 
         if (name) removeItem(this.subscribers, name);
     }
@@ -242,10 +303,35 @@ P.unsubscribe = function (items) {
         this.sortSubscribers();
         this.recalculateEffectiveDuration();
     }
-
     return this;
 };
 
+// `repopulateSubscriberObjects`
+P.repopulateSubscriberObjects = function () {
+
+    let arr = this.subscriberObjects,
+        subs = this.subscribers,
+        t;
+
+    arr.length = 0;
+
+    subs.forEach(sub => {
+
+        t = tween[sub];
+
+        if (t) arr.push(t);
+    });
+};
+
+// `getSubscriberObjects`
+P.getSubscriberObjects = function () {
+
+    if (this.subscribers.length && !this.subscriberObjects.length) this.repopulateSubscriberObjects();
+
+    return this.subscriberObjects;
+};
+
+// `sortSubscribers` - internal Helper function called by `subscribe` and `unsubscribe`
 P.sortSubscribers = function () {
 
     let mysubscribers = this.subscribers;
@@ -267,61 +353,83 @@ P.sortSubscribers = function () {
 
         this.subscribers = buckets.reduce((a, v) => a.concat(v), []);
     }
+    this.repopulateSubscriberObjects();
 };
 
+// `updateSubscribers` - internal function called by the `run`, `reset` and `complete` functions below.
+// + First argument is an object that gets applied as the argument to each Tween/Action object's `set` function.
+// + Second argument is a Boolean; when set, subscribed Tween/Actions will be told to reverse their current direction.
 P.updateSubscribers = function(items, reversed) {
     
-    let subs = this.subscribers,
-        i, iz;
-
     reversed = (xt(reversed)) ? reversed : false;
+
+    let subs = this.getSubscriberObjects(),
+        i, iz;
 
     if (reversed) {
 
         for (i = subs.length - 1; i >= 0; i--) {
 
-            tween[subs[i]].set(items);
+            subs[i].set(items);
         }
     }
     else{
 
         for (i = 0, iz = subs.length; i < iz; i++) {
 
-            tween[subs[i]].set(items);
+            subs[i].set(items);
         }
     }
     return this;
 };
 
+// `changeSubscriberDirection` - internal function - when invoked, Tween/Actions will be told to reverse their current direction.
 P.changeSubscriberDirection = function () {
 
-    var subs = this.subscribers,
-        sub, i, iz;
+    let subs = this.getSubscriberObjects();
 
-    for (i = 0, iz = subs.length; i < iz; i++) {
-
-        sub = tween[subs[i]];
-        sub.reversed = !sub.reversed;
-    }
+    subs.forEach(sub => sub.reversed = !sub.reversed);
+    
     return this;
 };
 
-// TODO - documentation
+// #### Events
+
+// `makeTickerUpdateEvent` - internal function - generates a new CustomEvent object.
+P.makeTickerUpdateEvent = function() {
+
+    return new CustomEvent('tickerupdate', {
+        detail: {
+            name: this.name,
+            type: 'Ticker',
+            tick: this.tick,
+            reverseTick: this.effectiveDuration - this.tick
+        },
+        bubbles: true,
+        cancelable: true
+    });
+};
+
+
+// #### Animation
+
+// `recalculateEffectiveDuration` - where a Ticker has not been given a `duration` value, it needs to consult its subscribed Tween/Action objects to calculate an `effectiveDuration` value with sufficient time allocated for each Tween to run to completion, and each Action to trigger.
+// + Tween/Actions with a relative `time` attribute - eg: `30%` - will not be included in the calculation.
+// + Tweens can overlap - they do not all have to start and end at the same time, nor do they need to run sequentially.
 P.recalculateEffectiveDuration = function() {
 
-    let i, iz, obj, durationValue, 
-        subscribers = this.subscribers,
+    let durationValue, 
+        subs = this.getSubscriberObjects(),
         duration = 0;
 
     if (!this.duration) {
 
-        for (i = 0, iz = subscribers.length; i < iz; i++) {
+        subs.forEach(sub => {
 
-            obj = tween[subscribers[i]];
-            durationValue = obj.getEndTime();
+            durationValue = sub.getEndTime();
 
             if (durationValue > duration) duration = durationValue;
-        }
+        });
         this.effectiveDuration = duration;
     }
     // Shouldn't cause an infinite loop ...
@@ -330,6 +438,7 @@ P.recalculateEffectiveDuration = function() {
     return this;
 };
 
+// `setEffectiveDuration` - internal helper function - convert `duration` value into `effectiveDuration` value.
 P.setEffectiveDuration = function() {
 
     let temp;
@@ -338,9 +447,9 @@ P.setEffectiveDuration = function() {
     
         temp = convertTime(this.duration);
 
+        // Cannot use %-String values for Ticker `duration` attribute
         if (temp[0] === '%') {
 
-            // Cannot use percentage values for ticker durations
             this.duration = 0
             this.recalculateEffectiveDuration();
         }
@@ -349,19 +458,19 @@ P.setEffectiveDuration = function() {
     return this;
 };
 
-// TODO - documentation
+// `fn` - internal - the __animation function__ will trigger once per RequestAnimationFrame (RAF) tick - approximately 60 times a second, depending on other calculation work.
+// + Only triggers when the Ticker is running in a qualifying state.
+// + __reverseOrder__ argument is a Boolean value; when set, subscribed Tween/Action objects will be processed in reverse order.
+// + Note that ___this function is synchronous___ - it does not return a Promise. _This will need to change if we ever move some Ticker/Tween/Action functionality over to a web worker_.
 P.fn = function (reverseOrder) {
 
-    let result = {
-        tick: 0,
-        reverseTick: 0,
-        willLoop: false,
-        next: false
-    };
+    // Request a `result` object from the pool.
+    let result = requestResultObject();
 
+    // Determine the order in which subscribed objects will be processed
     reverseOrder = xt(reverseOrder) ? reverseOrder : false;
 
-    let i, iz, subs, sub, eTime, now, e,
+    let i, iz, subs, eTime, now, e,
         active = this.active,
         startTime = this.startTime,
         currentTime, tick,
@@ -370,13 +479,17 @@ P.fn = function (reverseOrder) {
         effectiveDuration = this.effectiveDuration,
         eventChoke = this.eventChoke;
     
+    // Process only if the Ticker is currently ___active___ and has a ___startTime___ value assigned to it.
     if (active && startTime) {
 
+        // Process only if the Ticker's `cycles` attribute has been set to `0`, or if the Ticker has not yet completed all its cycles.
         if (!cycles || cycleCount < cycles) {
 
             currentTime = this.currentTime = Date.now();
             tick = this.tick = currentTime - startTime;
 
+            // Update the results object
+            // + Functionality performed if the ___Tween is not on its final cycle___.
             if (!cycles || cycleCount + 1 < cycles) {
 
                 if (tick >= effectiveDuration) {
@@ -400,6 +513,7 @@ P.fn = function (reverseOrder) {
                 }
                 result.next = true;
             }
+            // + Functionality performed only when the ___Tween is on its final cycle___.
             else {
 
                 if (tick >= effectiveDuration) {
@@ -422,23 +536,25 @@ P.fn = function (reverseOrder) {
                 }
             }
 
-            subs = this.subscribers;
+            // Invoke the `update` function on each subscribed Tween/Action
+            subs = this.getSubscriberObjects();
 
             if (reverseOrder) {
 
                 for (i = subs.length - 1; i >= 0; i--) {
 
-                    tween[subs[i]].update(result);
+                    subs[i].update(result);
                 }
             }
             else{
 
                 for (i = 0, iz = subs.length; i < iz; i++) {
 
-                    tween[subs[i]].update(result);
+                    subs[i].update(result);
                 }
             }
 
+            // Dispatch the Ticker Event, if required.
             if (eventChoke) {
 
                 eTime = this.lastEvent + eventChoke;
@@ -452,14 +568,23 @@ P.fn = function (reverseOrder) {
                 }
             }
 
+            // If this invocation of the function has completed the Ticker's run, switch it off.
             if (!active) this.halt();
 
+            // If the Ticker's run is completed and the `killOnComplete` flag is set, kill everything.
             if (this.killOnComplete && cycleCount >= cycles) this.killTweens(true);
         }
     }
+    // Release the `result` object back to the pool.
+    releaseResultObject(result);
 };
 
-// TODO - documentation
+
+// #### Animation control
+
+// `run` 
+// + Start the Ticker from time 0.
+// + Trigger the object's `onRun` function.
 P.run = function () {
 
     if (!this.active) {
@@ -482,13 +607,17 @@ P.run = function () {
     return this;
 };
 
-// TODO - documentation
+// `isRunning` - check to see if Ticker is in a running state.
 P.isRunning = function () {
 
     return this.active;
 };
 
-// TODO - documentation
+// `reset`
+// + Halt the Ticker, if it is running.
+// + Set all attributes to their initial values.
+// + Update subscribed Tween/Actions.
+// + Trigger the object's `onReset` function.
 P.reset = function () {
 
     if (this.active) this.halt();
@@ -510,7 +639,11 @@ P.reset = function () {
     return this;
 };
 
-// TODO - documentation
+// `complete`
+// + Halt the Ticker, if it is running.
+// + Set all attributes to their initial values.
+// + Update subscribed Tween/Actions.
+// + Trigger the object's `onComplete` function.
 P.complete = function () {
 
     if (this.active) this.halt();
@@ -532,7 +665,12 @@ P.complete = function () {
     return this;
 };
 
-// TODO - documentation
+// `reverse` - simulates a reversal in the Ticker's animation.
+// + Halt the Ticker, if it is running.
+// + Trigger the object's `onReverse` function.
+// + after recalculation, resume the Ticker - if required.
+// + Function accepts a Boolean argument - if true, Ticker will start playing "in reverse".
+// + Directionality is determined by Tween/Action object attribute settings, not the Ticker.
 P.reverse = function (resume = false) {
 
     let timePlayed;
@@ -551,14 +689,16 @@ P.reverse = function (resume = false) {
     this.fn();
     this.active = false;
     
-    if (resume) this.resume();
+    if (typeof this.onReverse === 'function') this.onReverse();
 
-    if (typeof this.onResume === 'function') this.onResume();
+    if (resume) this.resume();
 
     return this;
 };
 
-// TODO - documentation
+// `halt`
+// + Stop the Ticker at its current point in time
+// + Trigger the object's `onHalt` function.
 P.halt = function () {
 
     this.active = false;
@@ -570,7 +710,9 @@ P.halt = function () {
     return this;
 };
 
-// TODO - documentation
+// `resume` - this function can also be triggered by the `reverse`, `seekTo` and `seekFor` functions
+// + Start the Ticker from its current point in time
+// + Trigger the object's `onResume` function.
 P.resume = function () {
 
     let now, current, start;
@@ -592,7 +734,13 @@ P.resume = function () {
     return this;
 };
 
-// TODO - documentation
+// `seekTo`
+// + First argument - Number representing the millisecond time to move to on the Ticker's timeline
+// + Second argument - Boolean - if true, Ticker will resume playing from new point
+// + Halt the Ticker, if it is running.
+// + Update the Ticker's `currentTime`, `startTime` attributes
+// + Trigger the object's `onSeekTo` function.
+// + Resume the Ticker - if required.
 P.seekTo = function (milliseconds, resume = false) {
 
     let backwards = false;
@@ -619,7 +767,13 @@ P.seekTo = function (milliseconds, resume = false) {
     return this;
 };
 
-// TODO - documentation
+// `seekFor`
+// + First argument - Number representing the number of milliseconds to move along the  Ticker's timeline (forwards or backwards)
+// + Second argument - Boolean - if true, Ticker will resume playing from new point
+// + Halt the Ticker, if it is running.
+// + Update the Ticker's `currentTime`, `startTime` attributes
+// + Trigger the object's `onSeekFor` function.
+// + Resume the Ticker - if required.
 P.seekFor = function (milliseconds, resume = false) {
 
     let backwards = false;
@@ -646,46 +800,12 @@ P.seekFor = function (milliseconds, resume = false) {
     return this;
 };
 
-// TODO - documentation
-P.kill = function () {
 
-    if (this.active) this.halt();
-
-    removeItem(tickerAnimations, this.name);
-    tickerAnimationsFlag = true;
-
-    this.deregister();
-
-    return true;
-};
-
-P.killTweens = function(autokill = false) {
-
-    let i, iz, sub;
-
-    for (i = 0, iz = this.subscribers.length; i < iz; i++) {
-
-        sub = tween[this.subscribers[i]];
-        sub.completeAction();
-        sub.kill();
-    }
-
-    if (autokill) {
-
-        this.kill();
-        return true;
-    }
-
-    return this;
-};
-
-
-
-// ## Ticker animation controller
+// #### Ticker animation controller
 let tickerAnimations = [];
-
 let tickerAnimationsFlag = true;
 
+// `coreTickersAnimation`
 const coreTickersAnimation = makeAnimation({
 
     name: 'coreTickersAnimation',
@@ -696,6 +816,8 @@ const coreTickersAnimation = makeAnimation({
             
             let i, iz, t;
 
+            // We only sort active Ticker objects when absolutely necessary.
+            // + Sorted using a bucket sort algorithm.
             if (tickerAnimationsFlag) {
 
                 tickerAnimationsFlag = false;
@@ -717,10 +839,12 @@ const coreTickersAnimation = makeAnimation({
                         buckets[order].push(obj.name);
                     }
                 });
-
                 tickerAnimations = buckets.reduce((a, v) => a.concat(v), []);
             }
 
+            // Invoke each Ticker's `fn` function.
+            // + It's up to the Ticker object to decide whether it's active
+            // + Ticker `fn` functions are (currently) synchronous functions; they do not return Promises.
             tickerAnimations.forEach(name => {
 
                 let obj = animationtickers[name];
@@ -728,20 +852,59 @@ const coreTickersAnimation = makeAnimation({
                 if (obj && obj.fn) obj.fn();
 
             });
+
+            // Will only resolve the Promise when all Tickers (and their subscribed Tween/Actions) have processed their `fn`/`update` functions.
             resolve(true);
         });
     }
 });
 
 
+// #### ResultObject pool
+// ... Because we generate so many of them.
+// + To use a pool result object, request it using `requestResultObject` function.
+// + It is imperative that requested result objects are released - `releaseResultObject` - once work with them completes.
+const resultObjectPool = [];
 
-// ## Exported factory function
+// `requestResultObject`
+const requestResultObject = function () {
+
+    if (!resultObjectPool.length) {
+
+        resultObjectPool.push({
+            tick: 0,
+            reverseTick: 0,
+            willLoop: false,
+            next: false
+        });
+    }
+
+    return resultObjectPool.shift();
+};
+
+// `releaseResultObject`
+const releaseResultObject = function (r) {
+
+    if (r) {
+
+        r.tick = 0;
+        r.reverseTick = 0;
+        r.willLoop = false;
+        r.next = false;
+        resultObjectPool.push(r);
+    }
+};
+
+
+// #### Factory
 const makeTicker = function (items) {
     return new Ticker(items);
 };
 
 constructors.Ticker = Ticker;
 
+
+// #### Exports
 export {
     makeTicker,
 };

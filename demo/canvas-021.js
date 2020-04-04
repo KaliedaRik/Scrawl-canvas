@@ -1,18 +1,17 @@
-// ## Demo Canvas 021 
+// # Demo Canvas 021 
+// Import and use spritesheets
 
-// [Import and use spritesheets](../../demo/canvas-021.html)
+// [Run code](../../demo/canvas-021.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 
-// Import the spritesheet asset (image file, and its associated JSON manifest file)
-
-// The manifest file should be a .json text file with the same name as the image file, in the same folder as the image file (in this case 'img/cat-sprite.png' and 'img/cat-sprite.json')
-
-// Cat spritesheet imnage file taken from https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/
+// ___Import a spritesheet asset___ (image file, and its associated JSON manifest file)
+// + The manifest file should be a `.json` text file with the same name as the image file, in the same folder as the image file (in this case `img/cat-sprite.png` and `img/cat-sprite.json`)
+// + Cat spritesheet image file taken from https://www.kisspng.com/png-walk-cycle-css-animations-drawing-sprite-sprite-1064760/
 scrawl.importSprite('img/cat-sprite.png');
 
 
@@ -41,7 +40,9 @@ let piccy = scrawl.makePicture({
 piccy.playSprite();
 
 
-// Create a second Picture entity (by cloning the first one) which uses a different animation track (as defined in the manifest), and start the animation - playing it at a faster speed (compared to the original)
+// Create a second Picture entity (by cloning the first one) 
+// + uses a different animation track (as defined in the manifest)
+// + start the animation - playing it at a faster speed (compared to the original)
 piccy.clone({
 
     name: 'running-cat',
@@ -57,7 +58,9 @@ piccy.clone({
 }).playSprite(60);
 
 
-// Import a 'spritesheet' asset which in fact comprises a number of different image files bound together by a manifest. In this case we don't have a separate manifest.json file, instead we define it as part of the import statement
+// ___Import a set of spritesheet assets___
+// + Comprises a number of different image files bound together by a manifest. 
+// + In this case we don't have a separate manifest `.json` file, instead we define it as part of the import statement
 scrawl.importSprite({
 
     name: 'dinosaur',
@@ -119,6 +122,7 @@ scrawl.makePicture({
 }).playSprite();
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -145,4 +149,6 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+
+// #### Development and testing
 console.log(scrawl.library);

@@ -23,9 +23,6 @@ revert: null
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['targets']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
 P.packetFunctions = pushUnique(P.packetFunctions, ['revert', 'action']);
 P.finalizePacketOut = function (copy, items) {
 if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);

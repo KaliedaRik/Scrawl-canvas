@@ -39,11 +39,11 @@ P.lib = 'fontattribute';
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
 // #### FontAttributes attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
 // __font-style__

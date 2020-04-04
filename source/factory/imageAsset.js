@@ -39,13 +39,14 @@ P.isAsset = true;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [asset](../mixin/asset.html)
 P = baseMix(P);
 P = assetMix(P);
 
 
 // #### ImageAsset attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
+//
 // No additional attributes required beyond those supplied by the mixins
 
 

@@ -413,9 +413,6 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
-<ul>
-<li><a href="../mixin/base.html">base</a></li>
-</ul>
 
             </div>
             
@@ -431,6 +428,9 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <h4 id="animation-attributes">Animation attributes</h4>
+<ul>
+<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+</ul>
 
             </div>
             
@@ -445,7 +445,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p><strong>order</strong> - determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations</p>
+              <p><strong>order</strong> - positive integer Number - determines the order in which each Animation object will be actioned before the Display cycle starts. </p>
+<ul>
+<li>Higher order Animations will be processed after lower order Animations. </li>
+<li>Animations with the same <code>order</code> value will be processed in the order in which they were defined in code.</li>
+</ul>
 
             </div>
             
@@ -460,7 +464,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p><strong>fn</strong> - the main function that the animation object will run on each RequestAnimationFrame tick. This function <strong>must return a Promise</strong>.</p>
+              <p><strong>fn</strong> - the main function that the Animation object will run on each RequestAnimationFrame tick. This function <strong>must return a Promise</strong>.</p>
 
             </div>
             
@@ -475,11 +479,11 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>The animation object supports some <strong>animation hook functions</strong>:</p>
+              <p>The Animation object supports some <strong>animation hook functions</strong>:</p>
 <ul>
-<li><strong>onRun</strong> - triggers each time the animation object’s <code>run</code> function is invoked</li>
-<li><strong>onHalt</strong> - triggers each time the animation object’s <code>halt</code> function is invoked</li>
-<li><strong>onKill</strong> - triggers each time the animation object’s <code>kill</code> function is invoked</li>
+<li><strong>onRun</strong> - triggers each time the Animation object’s <code>run</code> function is invoked</li>
+<li><strong>onHalt</strong> - triggers each time the Animation object’s <code>halt</code> function is invoked</li>
+<li><strong>onKill</strong> - triggers each time the Animation object’s <code>kill</code> function is invoked</li>
 </ul>
 
             </div>

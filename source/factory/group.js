@@ -59,13 +59,13 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [filter](../mixin/filter.html)
 P = baseMix(P);
 P = filterMix(P);
 
 
 // #### Group attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
 let defaultAttributes = {
 
 // __artefacts__ - an Array containing the names of all artefact objects included in this group.

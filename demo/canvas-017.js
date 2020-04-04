@@ -1,10 +1,11 @@
-// ## Demo Canvas 017 
+// # Demo Canvas 017 
+// Phrase entity - test lineHeight, letterSpacing and justify attributes; setGlyphStyles() functionality
 
-// [Phrase entity - test lineHeight, letterSpacing and justify attributes; setGlyphStyles() functionality](../../demo/canvas-017.html)
+// [Run code](../../demo/canvas-017.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 
@@ -103,6 +104,7 @@ scrawl.makeWheel({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -121,7 +123,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -130,7 +132,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### User interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -205,5 +208,6 @@ document.querySelector('#family').options.selectedIndex = 0;
 document.querySelector('#size_px').value = 16;
 document.querySelector('#size_string').options.selectedIndex = 4;
 
-console.log(scrawl.library);
 
+// #### Development and testing
+console.log(scrawl.library);

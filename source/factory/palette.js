@@ -92,11 +92,11 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
 // #### Palette attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
 // The __colors__ object is a raw Javascript object which uses stop values `('0 ' - '999 ')` as keys and an `[r(0-255), g(0-255), b(0-255), a(0-1)]` array as values. 

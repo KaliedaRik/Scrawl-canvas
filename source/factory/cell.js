@@ -115,12 +115,6 @@ P.isAsset = true;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [position](../mixin/position.html)
-// + [anchor](../mixin/anchor.html)
-// + [cascade](../mixin/cascade.html)
-// + [asset](../mixin/asset.html)
-// + [filter](../mixin/filter.html)
 P = baseMix(P);
 P = positionMix(P);
 P = anchorMix(P);
@@ -130,6 +124,12 @@ P = filterMix(P);
 
 
 // #### Cell attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, handle, offset, dimensions, delta, noDeltaUpdates, pivot, pivotCorner, pivoted, addPivotHandle, addPivotOffset, addPivotRotation, path, pathPosition, addPathHandle, addPathOffset, addPathRotation, mimic, mimicked, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic, lockTo, scale, roll, collides, sensorSpacing, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates__.
+// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
+// + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
+// + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
+// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
 let defaultAttributes = {
 
 // The following booleans determine whether a Cell canvas will, clear, compile and/or show itself as part of the Display cycle.

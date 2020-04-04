@@ -317,10 +317,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h4 id="demos">Demos:</h4>
-<ul>
-<li><a href="../../demo/dom-006.html">DOM-006</a>- Tween actions on a DOM element; tracking tween and ticker activity (analytics)</li>
-</ul>
+              <p>TODO: basic packet and kill functionality tested in Demo DOM-004, but there’s a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see <a href="./ticker.html#section-2">Ticker TODO section</a> for issues and suggested work).</p>
 
             </div>
             
@@ -332,6 +329,22 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/dom-006.html">DOM-006</a>- Tween actions on a DOM element; tracking tween and ticker activity (analytics)</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -346,11 +359,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <h4 id="action-constructor">Action constructor</h4>
 
@@ -373,11 +386,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h4 id="action-prototype">Action prototype</h4>
 
@@ -392,17 +405,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
-<ul>
-<li><a href="../mixin/base.html">base</a></li>
-<li><a href="../mixin/tween.html">tween</a></li>
-</ul>
 
             </div>
             
@@ -412,13 +421,17 @@ P = tweenMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h4 id="action-attributes">Action attributes</h4>
+<ul>
+<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/tween.html">tween mixin</a>: <strong>order</strong>, <strong>ticker</strong>, <strong>targets</strong>, <strong>time</strong>, <strong>action</strong>, <strong>reverseOnCycleEnd</strong>, <strong>reversed</strong>.</li>
+</ul>
 
             </div>
             
@@ -427,11 +440,11 @@ P = tweenMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p><strong>revert</strong> - a function that is triggered when a tween is running in reverse direction. Should be a counterpart to the <strong>action</strong> function (defined in mixin/tween.js) to reverse the actions performed by that function.</p>
 
@@ -444,20 +457,17 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'targets'</span>]);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
 P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'revert'</span>, <span class="hljs-string">'action'</span>]);
 
 P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
@@ -470,28 +480,14 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -504,11 +500,10 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters;</pre></div></div>
             
         </li>
         
@@ -518,6 +513,21 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Argument must be a function, or a variable holding a reference to a function</p>
 
@@ -533,11 +543,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Internal attribute. Set true after the ticker moves past the instance’s time value (and set false if the ticker is moving backwards)</p>
 
@@ -557,26 +567,17 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Overrides the set() functionality defined in mixin/base.js</p>
+              <p><code>set</code> - we perform some additional functionality in the Action <code>set</code> function</p>
+<ul>
+<li>updating the Action’s Ticker object happens here</li>
+<li>recalculating effectiveDuration happens here if the <strong>time</strong> value change</li>
+</ul>
 
             </div>
             
@@ -618,13 +619,9 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Ticker-related help function</p>
+              <h4 id="animation">Animation</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.getEndTime = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.effectiveTime;
-};</pre></div></div>
             
         </li>
         
@@ -635,7 +632,24 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>The <strong>update</strong> function checks to see if the action (or revert) functions need to be invoked, and invokes them as-and-when required.</p>
+              <p><code>getEndTime</code> - Ticker-related help function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.getEndTime = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.effectiveTime;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p><code>update</code> - check to see if the action (or revert) functions need to be invoked, and invokes them as-and-when required.</p>
 <p>TODO: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. All other %times appear to work as expected.</p>
 
             </div>
@@ -697,11 +711,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> myaction = scrawl.makeAction({
@@ -748,11 +762,11 @@ constructors.Action = Action;</pre></div></div>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

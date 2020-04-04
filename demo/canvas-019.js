@@ -1,10 +1,11 @@
-// ## Demo Canvas 019 
+// # Demo Canvas 019 
+// Artefact collision detection
 
-// [Artefact collision detection](../../demo/canvas-019.html)
+// [Run code](../../demo/canvas-019.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
@@ -200,6 +201,7 @@ let myslice = mypie.clone({
 });
 
 
+// #### User interaction
 // Create the drag-and-drop zone
 let current = scrawl.makeDragZone({
 
@@ -210,7 +212,7 @@ let current = scrawl.makeDragZone({
 });
 
 
-// Function to display grid blocks which are currently in collision with the selected test entity
+// Function to display Grid tiles which are currently in collision with the selected test entity sensors
 let currentEntity = myblock;
 
 let checkHits = function () {
@@ -223,6 +225,7 @@ let checkHits = function () {
 };
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -244,7 +247,7 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -254,7 +257,9 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### More user interaction
+
+// Observer functionality to manipulate entitys (as a group)
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -282,6 +287,7 @@ scrawl.observeAndUpdate({
     },
 });
 
+// Event listener to change the target entity
 let updateArtefact = (e) => {
 
     e.preventDefault();

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>canvas-024.js</title>
+  <title>Demo Canvas 024</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -256,12 +256,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>canvas-024.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -270,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-canvas-024">Demo Canvas 024</h2>
+              <h1 id="demo-canvas-024">Demo Canvas 024</h1>
+<p>Loom entity functionality</p>
 
             </div>
             
@@ -283,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-024.html">Loom entity functionality</a></p>
+              <p><a href="../../demo/canvas-024.html">Run code</a></p>
 
             </div>
             
@@ -298,7 +293,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Scene setup</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
@@ -364,7 +359,7 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Define the artefacts that will be used as pivots and paths before the artefacts that use them as such</p>
+              <p>Define the artefacts that will be used as <code>pivots</code> and <code>paths</code> before the artefacts that use them as such</p>
 
             </div>
             
@@ -421,7 +416,7 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Create a group to hold the draggable artefacts, for easier user action collision detection</p>
+              <p>Create a Group to hold the draggable artefacts, for easier user action collision detection</p>
 
             </div>
             
@@ -430,10 +425,22 @@ canvas.set({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'my-pins'</span>,
     <span class="hljs-attr">host</span>: canvas.base.name,
 
-}).addArtefacts(<span class="hljs-string">'pin-1'</span>, <span class="hljs-string">'pin-2'</span>, <span class="hljs-string">'pin-3'</span>, <span class="hljs-string">'pin-4'</span>, <span class="hljs-string">'pin-5'</span>, <span class="hljs-string">'pin-6'</span>, <span class="hljs-string">'pin-7'</span>);
+}).addArtefacts(<span class="hljs-string">'pin-1'</span>, <span class="hljs-string">'pin-2'</span>, <span class="hljs-string">'pin-3'</span>, <span class="hljs-string">'pin-4'</span>, <span class="hljs-string">'pin-5'</span>, <span class="hljs-string">'pin-6'</span>, <span class="hljs-string">'pin-7'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Create the Shape entitys the Loom will use as its tracks - <code>fromPath</code>, <code>toPath</code></p>
 
-
-scrawl.makeQuadratic({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeQuadratic({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'my-quad'</span>,
 
@@ -480,11 +487,11 @@ scrawl.makeQuadratic({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Every Loom needs a source image</p>
 
@@ -507,13 +514,13 @@ scrawl.makeQuadratic({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>The Loom entity definition</p>
+              <p><strong><em>The Loom entity definition</em></strong></p>
 
             </div>
             
@@ -524,11 +531,11 @@ scrawl.makeQuadratic({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Check to see that paths can be loaded either as picture name strings, or as the entity itself</p>
 
@@ -550,25 +557,7 @@ scrawl.makeQuadratic({
 
     <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span> }) },
     <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span> }) },
-});
-
-<span class="hljs-keyword">let</span> interactions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ canvas.cascadeEventAction(<span class="hljs-string">'move'</span>) };
-scrawl.addListener(<span class="hljs-string">'move'</span>, interactions, canvas.domElement);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <p>Test packet functionality</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(myLoom.saveAsPacket());</pre></div></div>
+});</pre></div></div>
             
         </li>
         
@@ -579,32 +568,13 @@ scrawl.addListener(<span class="hljs-string">'move'</span>, interactions, canvas
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>   RESULT:
-   [
-       “display-loom”,
-       “Loom”,
-       “entity”,
-       {
-           “name”:”display-loom”,
-           “showBoundingBox”:true,
-           “boundingBoxColor”:”red”,
-           “method”:”fillThenDraw”,
-           “onEnter”:”<del>~ this.set({ lineWidth: 6 }) “,
-           “onLeave”:”</del> this.set({ lineWidth: 2 }) “,
-           “onDown”:”<del>“,
-           “onUp”:”</del>“,
-           “delta”:{},
-           “fromPath”:”my-quad”,
-           “toPath”:”my-bezier”,
-           “source”:”myFlower”,
-           “group”:”mycanvas_base”,
-           “strokeStyle”:”orange”,
-           “lineWidth”:2,
-           “lineCap”:”round”
-       }
-   ]</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Mouse movement over and away from the Loom (emulates CSS element <code>hover</code> functionality)</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> interactions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ canvas.cascadeEventAction(<span class="hljs-string">'move'</span>) };
+scrawl.addListener(<span class="hljs-string">'move'</span>, interactions, canvas.domElement);</pre></div></div>
             
         </li>
         
@@ -636,7 +606,59 @@ scrawl.addListener(<span class="hljs-string">'move'</span>, interactions, canvas
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <h4 id="development-and-testing">Development and testing</h4>
+<p>Test packet functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(myLoom.saveAsPacket());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <pre><code>RESULT:
+[
+    <span class="hljs-string">"display-loom"</span>,
+    <span class="hljs-string">"Loom"</span>,
+    <span class="hljs-string">"entity"</span>,
+    {
+        <span class="hljs-string">"name"</span>:<span class="hljs-string">"display-loom"</span>,
+        <span class="hljs-string">"showBoundingBox"</span>:<span class="hljs-literal">true</span>,
+        <span class="hljs-string">"boundingBoxColor"</span>:<span class="hljs-string">"red"</span>,
+        <span class="hljs-string">"method"</span>:<span class="hljs-string">"fillThenDraw"</span>,
+        <span class="hljs-string">"onEnter"</span>:<span class="hljs-string">"~~~ this.set({ lineWidth: 6 }) "</span>,
+        <span class="hljs-string">"onLeave"</span>:<span class="hljs-string">"~~~ this.set({ lineWidth: 2 }) "</span>,
+        <span class="hljs-string">"onDown"</span>:<span class="hljs-string">"~~~"</span>,
+        <span class="hljs-string">"onUp"</span>:<span class="hljs-string">"~~~"</span>,
+        <span class="hljs-string">"delta"</span>:{},
+        <span class="hljs-string">"fromPath"</span>:<span class="hljs-string">"my-quad"</span>,
+        <span class="hljs-string">"toPath"</span>:<span class="hljs-string">"my-bezier"</span>,
+        <span class="hljs-string">"source"</span>:<span class="hljs-string">"myFlower"</span>,
+        <span class="hljs-string">"group"</span>:<span class="hljs-string">"mycanvas_base"</span>,
+        <span class="hljs-string">"strokeStyle"</span>:<span class="hljs-string">"orange"</span>,
+        <span class="hljs-string">"lineWidth"</span>:<span class="hljs-number">2</span>,
+        <span class="hljs-string">"lineCap"</span>:<span class="hljs-string">"round"</span>
+    }
+]</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
@@ -660,13 +682,13 @@ Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Create the Animation loop which will run the Display cycle</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
@@ -680,13 +702,14 @@ Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>User interaction - Loom functionality</p>
+              <h4 id="more-user-interaction">More user interaction</h4>
+<p>Loom functionality</p>
 
             </div>
             
@@ -716,13 +739,13 @@ Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>User interaction - delta animation controls handler</p>
+              <p>Delta animation controls handler</p>
 
             </div>
             
@@ -768,13 +791,13 @@ scrawl.addNativeListener([<span class="hljs-string">'input'</span>, <span class=
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>User interaction - Picture entity filters</p>
+              <p>Picture entity filters</p>
 
             </div>
             
@@ -794,13 +817,13 @@ scrawl.addNativeListener([<span class="hljs-string">'input'</span>, <span class=
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>User interaction - Picture entity copy start and copy dimensions</p>
+              <p>Picture entity copy start and copy dimensions</p>
 
             </div>
             
@@ -833,11 +856,11 @@ scrawl.addNativeListener([<span class="hljs-string">'input'</span>, <span class=
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Setup form</p>
 
@@ -860,9 +883,22 @@ scrawl.addNativeListener([<span class="hljs-string">'input'</span>, <span class=
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#copy_start_xAbsolute'</span>).value = <span class="hljs-number">0</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#copy_start_yAbsolute'</span>).value = <span class="hljs-number">0</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#copy_dims_heightPercent'</span>).value = <span class="hljs-number">100</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#copy_dims_heightAbsolute'</span>).value = <span class="hljs-number">400</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#copy_dims_heightAbsolute'</span>).value = <span class="hljs-number">400</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h4 id="more-development-and-testing">More development and testing</h4>
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

@@ -1,10 +1,11 @@
-// ## Demo Canvas 024 
+// # Demo Canvas 024 
+// Loom entity functionality
 
-// [Loom entity functionality](../../demo/canvas-024.html)
+// [Run code](../../demo/canvas-024.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.canvas.mycanvas;
 
 canvas.set({
@@ -13,6 +14,7 @@ canvas.set({
         border: '1px solid black'
     }
 });
+
 
 // Import image from DOM
 scrawl.importDomImage('.flowers');
@@ -36,7 +38,7 @@ scrawl.makeFilter({
 });
 
 
-// Define the artefacts that will be used as pivots and paths before the artefacts that use them as such
+// Define the artefacts that will be used as `pivots` and `paths` before the artefacts that use them as such
 scrawl.makeWheel({
 
     name: 'pin-1',
@@ -82,7 +84,7 @@ scrawl.makeWheel({
 });
 
 
-// Create a group to hold the draggable artefacts, for easier user action collision detection
+// Create a Group to hold the draggable artefacts, for easier user action collision detection
 let pins = scrawl.makeGroup({
 
     name: 'my-pins',
@@ -91,6 +93,7 @@ let pins = scrawl.makeGroup({
 }).addArtefacts('pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5', 'pin-6', 'pin-7');
 
 
+// Create the Shape entitys the Loom will use as its tracks - `fromPath`, `toPath`
 scrawl.makeQuadratic({
 
     name: 'my-quad',
@@ -152,7 +155,7 @@ let piccy = scrawl.makePicture({
 });
 
 
-// The Loom entity definition
+// ___The Loom entity definition___
 let myLoom = scrawl.makeLoom({
 
     name: 'display-loom',
@@ -176,35 +179,12 @@ let myLoom = scrawl.makeLoom({
     onLeave: function () { this.set({ lineWidth: 2 }) },
 });
 
+
+// #### User interaction
+// Mouse movement over and away from the Loom (emulates CSS element `hover` functionality)
 let interactions = function () { canvas.cascadeEventAction('move') };
 scrawl.addListener('move', interactions, canvas.domElement);
 
-// Test packet functionality
-console.log(myLoom.saveAsPacket());
-//    RESULT:
-//    [
-//        "display-loom",
-//        "Loom",
-//        "entity",
-//        {
-//            "name":"display-loom",
-//            "showBoundingBox":true,
-//            "boundingBoxColor":"red",
-//            "method":"fillThenDraw",
-//            "onEnter":"~~~ this.set({ lineWidth: 6 }) ",
-//            "onLeave":"~~~ this.set({ lineWidth: 2 }) ",
-//            "onDown":"~~~",
-//            "onUp":"~~~",
-//            "delta":{},
-//            "fromPath":"my-quad",
-//            "toPath":"my-bezier",
-//            "source":"myFlower",
-//            "group":"mycanvas_base",
-//            "strokeStyle":"orange",
-//            "lineWidth":2,
-//            "lineCap":"round"
-//        }
-//    ]
 
 // Create the drag-and-drop zone
 scrawl.makeDragZone({
@@ -216,6 +196,38 @@ scrawl.makeDragZone({
 });
 
 
+// #### Development and testing
+// Test packet functionality
+console.log(myLoom.saveAsPacket());
+// ```
+// RESULT:
+// [
+//     "display-loom",
+//     "Loom",
+//     "entity",
+//     {
+//         "name":"display-loom",
+//         "showBoundingBox":true,
+//         "boundingBoxColor":"red",
+//         "method":"fillThenDraw",
+//         "onEnter":"~~~ this.set({ lineWidth: 6 }) ",
+//         "onLeave":"~~~ this.set({ lineWidth: 2 }) ",
+//         "onDown":"~~~",
+//         "onUp":"~~~",
+//         "delta":{},
+//         "fromPath":"my-quad",
+//         "toPath":"my-bezier",
+//         "source":"myFlower",
+//         "group":"mycanvas_base",
+//         "strokeStyle":"orange",
+//         "lineWidth":2,
+//         "lineCap":"round"
+//     }
+// ]
+// ```
+
+
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -235,7 +247,7 @@ Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -244,7 +256,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - Loom functionality
+// #### More user interaction
+// Loom functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -268,7 +281,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-// User interaction - delta animation controls handler
+// Delta animation controls handler
 let updateAnimation = (e) => {
 
     e.preventDefault();
@@ -308,7 +321,7 @@ let updateAnimation = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateAnimation, '#animation');
 
-// User interaction - Picture entity filters
+// Picture entity filters
 let updateFilter = (e) => {
 
     e.preventDefault();
@@ -322,7 +335,7 @@ let updateFilter = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
 
-// User interaction - Picture entity copy start and copy dimensions
+// Picture entity copy start and copy dimensions
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -369,4 +382,6 @@ document.querySelector('#copy_start_yAbsolute').value = 0;
 document.querySelector('#copy_dims_heightPercent').value = 100;
 document.querySelector('#copy_dims_heightAbsolute').value = 400;
 
+
+// #### More development and testing
 console.log(scrawl.library);

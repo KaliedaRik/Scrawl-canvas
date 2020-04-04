@@ -404,9 +404,6 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
-<ul>
-<li><a href="../mixin/base.html">base</a></li>
-</ul>
 
             </div>
             
@@ -422,6 +419,9 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <h4 id="anchor-attributes">Anchor attributes</h4>
+<ul>
+<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+</ul>
 
             </div>
             
@@ -436,7 +436,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p><strong>host</strong> - Every anchor will belong to exactly one Artefact</p>
+              <p><strong>host</strong> - Every anchor will belong to exactly one Artefact.</p>
 
             </div>
             
@@ -451,7 +451,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p><strong>description</strong> - The text that Scrawl-canvas will include between the anchor tags, when building the anchor. <strong>Always include a description</strong> for accessibility</p>
+              <p><strong>description</strong> - The text that Scrawl-canvas will include between the anchor tags, when building the anchor. <strong>Always include a description</strong> for accessibility.</p>
 
             </div>
             
@@ -466,11 +466,12 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>The following attributes are detailed in <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a</a> - they are (most of) the <strong>DOM element’s attributes</strong></p>
+              <p>The following attributes are detailed in <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a">MDN’s &lt;a&gt; reference page</a></p>
 <ul>
-<li>the HTML Anchor element ‘type’ attribute is stored in the Scrawl-canvas Anchor object using the key ‘anchorType’</li>
+<li>They are (most of) the DOM element’s attributes: <strong>download</strong>, <strong>href</strong>, <strong>hreflang</strong>, <strong>ping</strong>, <strong>referrerpolicy</strong>, <strong>rel</strong>, <strong>target</strong>, <strong>anchorType</strong>.</li>
+<li>The HTML Anchor element <code>type</code> attribute is stored in the Scrawl-canvas Anchor object using the key <strong>anchorType</strong>.</li>
+<li>Scrawl-canvas will build a link element and add it to the DOM, then invoke a click event on it when required to do so.</li>
 </ul>
-<p>Scrawl-canvas will build a link element and add it to the DOM, then invoke a click event on it when required to do so.</p>
 
             </div>
             

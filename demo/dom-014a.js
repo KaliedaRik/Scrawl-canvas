@@ -1,6 +1,7 @@
 // ## Demo DOM 014 - first scene
+// Load and run multiple scripts on same page
 
-// [Load and run multiple scripts on same page](../../demo/dom-014.html)
+// [Run code](../../demo/dom-014.html)
 import scrawl from '../source/scrawl.js'
 
 let canvas = scrawl.library.artefact.mycanvas1;

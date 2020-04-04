@@ -1,10 +1,11 @@
-// ## Demo Canvas 016 
+// # Demo Canvas 016 
+// Phrase entity position and font attributes; Block mimic functionality
 
-// [Phrase entity position and font attributes; Block mimic functionality](../../demo/canvas-016.html)
+// [Run code](../../demo/canvas-016.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 
@@ -28,7 +29,8 @@ let lorem = scrawl.makePhrase({
     method: 'fill',
     showBoundingBox: true,
 
-    // Use the exposeText attribute to expose the entity's text to the DOM, to make it accessible to people not able to view the canvas (for whatever reason)
+    // Use the `exposeText` attribute to expose the entity's text to the DOM, to make it accessible to people not able to view the canvas (for whatever reason)
+    // + This flag is `true` by default
     exposeText: true,
 });
 
@@ -66,6 +68,7 @@ scrawl.makeBlock({
     addOwnRotationToMimic: false,
 });
 
+// Add a pivot wheel
 scrawl.makeWheel({
 
     fillStyle: 'red',
@@ -79,6 +82,7 @@ scrawl.makeWheel({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -97,7 +101,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -106,8 +110,9 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
-
+// #### User interaction
+// Setup form observer functionality
+//
 // KNOWN ISSUE: in the mix between updating scale, font size and font family, the height calculation occasionally glitches, giving an incorrect height value for the Phrase entity
 scrawl.observeAndUpdate({
 

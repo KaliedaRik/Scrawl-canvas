@@ -1,8 +1,11 @@
-// ## Demo Canvas 012 
+// # Demo Canvas 012 
+// Shape entity position; shape entity as a path for other artefacts to follow
 
-// [Shape entity position; shape entity as a path for other artefacts to follow](../../demo/canvas-012.html)
+// [Run code](../../demo/canvas-012.html)
 import scrawl from '../source/scrawl.js'
 
+
+// #### Scene setup
 
 // Create Shape entity
 let arrow = scrawl.makeShape({
@@ -26,26 +29,36 @@ let arrow = scrawl.makeShape({
 
     method: 'fill',
 
-    showBoundingBox: true,
+    // Turn the Shape into a `path` which other artefacts can use to position themselves
     useAsPath: true,
     precision: 2,
+
+    // Test to make sure the bounding box correctly calculates itself to fit the Shape as tightly as possible
+    showBoundingBox: true,
 });
 
 // Create Wheel entity to pivot to the arrow
 scrawl.makeWheel({
+
+    // We don't need to give artefacts a `name` attribute - it's just a lot more convenient if we do.
+
     fillStyle: 'blue',
     radius: 5,
     handleX: 'center',
     handleY: 'center',
+
     pivot: 'myArrow',
     lockTo: 'pivot',
 });
 
-// Create the wheel entitys that will use the arrow as their path
+// Create the Wheel entitys that will use the arrow as their path
+// + This Wheel is a template from which we clone the other Wheels
 let myWheel = scrawl.makeWheel({
+
     fillStyle: 'red',
     radius: 3,
 
+    // These are half-circles
     roll: -90,
 
     startAngle: 90,
@@ -59,11 +72,13 @@ let myWheel = scrawl.makeWheel({
     handleX: 'center',
     handleY: 'center',
 
+    // Automatically animate the Wheel along the Shape's path (___delta animation___)
     delta: {
         pathPosition: 0.0008,
     }
 });
 
+// Generate the rest of the Wheels
 for (let i = 0.01; i < 1; i += 0.01) {
 
     let col;
@@ -81,6 +96,7 @@ for (let i = 0.01; i < 1; i += 0.01) {
 }
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -100,7 +116,7 @@ Shape path length: ${arrow.length}`;
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -109,7 +125,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### User interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -173,5 +190,3 @@ document.querySelector('#roll').value = 0;
 document.querySelector('#scale').value = 0.2;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
-
-

@@ -1,16 +1,24 @@
-// ## Demo Component 002
+// # Demo Component 002
+// Scrawl-canvas stack element components
 
-// [Scrawl-canvas stack element components](../../demo/component-002.html)
+// [Run code](../../demo/component-002.html)
+//
+// [See component code](./components/test-002.html)
+
+
+// #### Imports
+// Initialize scrawl-canvas
 import scrawl from '../source/scrawl.js'
 
 
-// Component code
+// Import the component code we want to use
 import { greenBox } from './components/test-002.js';
 let boxElements = document.querySelectorAll('.green-box');
 boxElements.forEach(el => greenBox(el));
 
 
-// Scene setup - create some useful variables for use elsewhere in the script
+// #### Scene setup
+// Create some useful variables for use elsewhere in the script
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     element = artefact.myelement;
@@ -36,7 +44,7 @@ element.set({
 });
 
 
-// Display Cycle and Animation loop functionality
+// #### Scene animation
 
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
 let stackCheck = function () {
@@ -78,7 +86,7 @@ scale: ${element.get('scale')}; roll: ${element.get('roll')}°; pitch: ${element
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -88,7 +96,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### User interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -152,4 +161,6 @@ document.querySelector('#pitch').value = 20;
 document.querySelector('#yaw').value = 30;
 document.querySelector('#scale').value = 1;
 
-console.log(scrawl.library)
+
+// #### Development and testing
+console.log(scrawl.library);

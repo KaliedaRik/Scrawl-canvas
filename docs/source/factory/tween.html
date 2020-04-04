@@ -299,7 +299,26 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="tween-factory">Tween factory</h1>
+<p>A <strong><em>tween</em></strong> - <em>inbetween animation</em> - is a small, targeted, time-limited animation where we define the start and end points (<em>key frames</em>) of the animation, and a method for calculating the intermediate values between the two (<em>interpolation</em>, using an <em>easing</em> function).</p>
+<p>Scrawl-canvas includes a full range of functionality to implement tweening. Any Scrawl-canvas object that includes a <code>set</code> function, which accepts a <code>{key:value}</code> object as its single argument, can be tweened.</p>
+<ul>
+<li>Tween animations are defined by creating a Tween object using the <code>makeTween</code> factory function.</li>
+<li>Each Tween object includes a <code>targets</code> Array - one Tween may animate many objects.</li>
+<li>Each Tween also includes a <code>definitions</code> Array which sets out the details of the animation to be performed.</li>
+<li>The <code>definitions</code> Array can include multiple objects, each defining a change to a specific attribute that needs to be applied to the target objects.</li>
+<li><strong>Any number-type attribute can be animated using a Tween</strong> - this includes integer and float Numbers, percentage Strings (<code>12.5%</code>) and measurement Strings (<code>20px</code>).</li>
+<li>We can run multiple Tween animations at the same time; Tweens can overlap (start one tween while another is running). </li>
+<li>We can dynamically halt, resume, restart and terminate Tweens in response to user interactions.</li>
+<li>Tweens include <code>packet</code> functionality: they can be saved, and cloned.</li>
+</ul>
+<p>Scrawl-canvas separates the timing aspects of its Tweens from their definitions.</p>
+<ul>
+<li>Tweens run against a <strong><em>timeline</em></strong> object called a <a href="./ticker.html">Ticker</a>.</li>
+<li>When we define a Tween, we can either assign it to an existing Ticker, or get the Tween factory to create a new Ticker for it.</li>
+<li>Tickers can also have <a href="./action.html">Action</a> objects assigned to them, allowing us to trigger functions at specific points along the timeline.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +330,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="tween-factory">Tween factory</h1>
+              <h5 id="using-other-tween-factories">Using other tween factories</h5>
+<p>We don’t recommend using other tween factories - such as <a href="https://greensock.com/">Greensock</a> - with Scrawl-canvas objects at this time.</p>
+<ul>
+<li>The reason is simple. All updates to Scrawl-canvas objects should be made through their dedicated <code>set</code>, <code>setDelta</code> and related functions, which take a single Javascript object as their argument.</li>
+<li>When attributes are updated in this way, Scrawl-canvas makes sure various <code>dirty</code> flags get set (among other work), so the object can update itself appropriately at the most convenient time for itself.</li>
+<li>Libraries like GSAP works by directly updating object attributes, which misses out the necessary work of setting the appropriate <code>dirty</code> flags - thus the object will not know that it needs to do work.</li>
+<li><strong><em>This does not mean you can’t use other tween libraries in your web page</em></strong> - just be aware of the limitations of trying to use them with Scrawl-canvas objects!</li>
+</ul>
 
             </div>
             
@@ -324,7 +350,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>TODO: basic packet and kill functionality tested in Demo DOM-004, but there’s a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see <a href="./ticker.html#section-2">Ticker TODO section</a> for issues and suggested work).</p>
 
             </div>
             
@@ -337,7 +363,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-005.html">Canvas-005</a> - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween</li>
+<li><a href="../../demo/canvas-006.html">Canvas-006</a> - Canvas tween stress test</li>
+<li><a href="../../demo/dom-004.html">DOM-004</a> - Limitless rockets (clone and destroy elements, tweens, tickers)</li>
+<li><a href="../../demo/dom-005.html">DOM-005</a> - DOM tween stress test</li>
+<li><a href="../../demo/dom-006.html">DOM-006</a> - Tween actions on a DOM element; tracking tween and ticker activity (analytics)</li>
+<li><a href="../../demo/component-001.html">Component-001</a> - Scrawl-canvas DOM element components</li>
+</ul>
 
             </div>
             
@@ -350,46 +384,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -404,13 +399,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="tween-constructor">Tween constructor</h2>
+              <h4 id="tween-constructor">Tween constructor</h4>
 
             </div>
             
@@ -424,29 +419,45 @@
     <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
     <span class="hljs-keyword">this</span>.set(items);
 
-    <span class="hljs-keyword">this</span>.setDefinitionsValues();
-
-    <span class="hljs-keyword">this</span>.status = <span class="hljs-string">'before'</span>;
-    <span class="hljs-keyword">this</span>.calculateEffectiveTime();
-    <span class="hljs-keyword">this</span>.calculateEffectiveDuration();
-
-    <span class="hljs-keyword">if</span> (animationtickers[items.ticker]) <span class="hljs-keyword">this</span>.addToTicker(items.ticker);
-    <span class="hljs-keyword">else</span> {</pre></div></div>
+    <span class="hljs-keyword">this</span>.setDefinitionsValues();</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Here is where we create the ticker - will have same name as the tween</p>
+              <p><code>status</code> magic numbers: <code>-1</code> = “before”; <code>0</code> = “running”; <code>1</code> = “after”.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        tn = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>_ticker`</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.status = <span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">this</span>.calculateEffectiveTime();
+    <span class="hljs-keyword">this</span>.calculateEffectiveDuration();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>All Tweens require a Ticker to act as their timeline.</p>
+<ul>
+<li>If no Ticker attribute is included in the argument object, or the Ticker cannot be located, a new Ticker will be created for this Tween.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (animationtickers[items.ticker]) <span class="hljs-keyword">this</span>.addToTicker(items.ticker);
+    <span class="hljs-keyword">else</span> {
+
+        tn = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>_ticker`</span>;
 
         makeTicker({
             <span class="hljs-attr">name</span>: tn,
@@ -462,20 +473,19 @@
 
         animationtickers[tn].recalculateEffectiveDuration();
     }
-
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-11">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h2 id="tween-object-prototype-setup">Tween object prototype setup</h2>
+              <h4 id="tween-prototype">Tween prototype</h4>
 
             </div>
             
@@ -488,18 +498,64 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h4 id="mixins">Mixins</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P = baseMix(P);
+P = tweenMix(P);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="tween-attributes">Tween attributes</h4>
+<ul>
+<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/tween.html">tween mixin</a>: <strong>order</strong>, <strong>ticker</strong>, <strong>targets</strong>, <strong>time</strong>, <strong>action</strong>, <strong>reverseOnCycleEnd</strong>, <strong>reversed</strong>.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <p><strong>definitions</strong> - Array of objects defining the animations to be performed by the Tween. Object attributes include:</p>
+<ul>
+<li><strong>attribute</strong> (required) - String attribute key.</li>
+<li><strong>start</strong> - Number or String value for this attribute’s start point.</li>
+<li><strong>end</strong> - Number or String value for this attribute’s end point.</li>
+<li><strong>integer</strong> - Boolean flag indicating whether we should force results to be integers (default: false)</li>
+<li><strong>engine</strong> - String name for the easing function <strong><em>engine</em></strong> to be used to animate this change; or an easing function supplied by the developer.</li>
+</ul>
+<p>Scrawl-canvas includes functionality to allow <code>start</code> and <code>end</code> values to be defined as Strings, with a measurement suffix (<code>%</code>, <code>px</code>, etc) attached to the number. </p>
+<ul>
+<li>These values should be of a type that the target object (generally an artefact) expects to receive in its <code>set</code> function.</li>
+<li>Any object with a <code>set</code> function that takes an object as its argument can be tweened.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = tweenMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    definitions: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -510,11 +566,16 @@ P = tweenMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <p><strong>duration</strong> - can accept a variety of values:</p>
+<ul>
+<li>Number, representing milliseconds.</li>
+<li>String time value, for example <code>&#39;500ms&#39;, &#39;0.5s&#39;</code>.</li>
+<li>% String value - <code>20%</code> - a relative value measured against the Ticker’s <strong><em>effective duration</em></strong>. For example, if the Ticker has an effective duration of 5000 (5 seconds), and the Tween wants to run for 20% of that time, the Tween’s effective duration will be 1000 (1 second).</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    duration: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -525,11 +586,11 @@ P = tweenMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>killOnComplete</strong> - Boolean flag; if set, the Tween will kill itself when it completes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    definitions: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    killOnComplete: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -540,11 +601,28 @@ P = tweenMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>The Tween object supports some <strong>tween animation hook functions</strong>:</p>
+<ul>
+<li><strong>commenceAction</strong> - runs immediately before the Tween’s <code>run</code> function is invoked</li>
+<li><strong>onRun</strong> - triggers immediately after the Tween’s <code>run</code> function is invoked</li>
+<li><strong>onHalt</strong> - triggers immediately after the Tween’s <code>halt</code> function is invoked</li>
+<li><strong>onResume</strong> - triggers immediately after the Tween’s <code>resume</code> function is invoked</li>
+<li><strong>onReverse</strong> - triggers immediately after the Tween’s <code>reverse</code> function is invoked</li>
+<li><strong>onSeekTo</strong> - triggers immediately after the Tween’s <code>seekTo</code> function is invoked</li>
+<li><strong>onSeekFor</strong> - triggers immediately after the Tween’s <code>seekFor</code> function is invoked</li>
+<li><strong>completeAction</strong> - triggers after the Tween completes its run</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    duration: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    commenceAction: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">onRun</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">onHalt</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">onResume</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">onReverse</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">onSeekTo</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">onSeekFor</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">completeAction</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -555,12 +633,14 @@ P = tweenMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>ticker</strong> - String name of Ticker object which this Tween will associate itself with.</p>
+<ul>
+<li>If no Ticker is specified when building a new Tween, it will create a new Ticker object (sharing its <code>name</code> attribute) to associate with. </li>
+<li>If the attributes below are included in the argument object, they will be passed on to the new Ticker.</li>
+<li>This attribute is kept in the Tween object, but is excluded from the Tween prototype’s <code>defs</code> object.</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    commenceAction: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">completeAction</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -571,11 +651,17 @@ P = tweenMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>The following <a href="./ticker.html">Ticker</a>-related attributes are not stored in the Tween object:</p>
+<ul>
+<li><strong>cycles</strong> - positive integer Number representing the number of cycles the Ticker will undertake before it completes.</li>
+<li><strong>eventChoke</strong> Number representing minimum number of milliseconds between Ticker event emissions</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    killOnComplete: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -586,52 +672,14 @@ P = tweenMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Hook functions that can be invoked at the end of each relevant operation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    onRun: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">onHalt</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">onResume</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">onReverse</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">onSeekTo</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">onSeekFor</span>: <span class="hljs-literal">null</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'definitions'</span>, <span class="hljs-string">'targets'</span>]);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
-P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'commenceAction'</span>, <span class="hljs-string">'completeAction'</span>, <span class="hljs-string">'onRun'</span>, <span class="hljs-string">'onHalt'</span>, <span class="hljs-string">'onResume'</span>, <span class="hljs-string">'onReverse'</span>, <span class="hljs-string">'onSeekTo'</span>, <span class="hljs-string">'onSeekFor'</span>, <span class="hljs-string">'action'</span>]);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>Overwrites finalizePacketOut function in mixin/base.js</p>
+P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'commenceAction'</span>, <span class="hljs-string">'completeAction'</span>, <span class="hljs-string">'onRun'</span>, <span class="hljs-string">'onHalt'</span>, <span class="hljs-string">'onResume'</span>, <span class="hljs-string">'onReverse'</span>, <span class="hljs-string">'onSeekTo'</span>, <span class="hljs-string">'onSeekFor'</span>, <span class="hljs-string">'action'</span>]);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(<span class="hljs-keyword">this</span>.targets)) copy.targets = <span class="hljs-keyword">this</span>.targets.map(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> t.name);
 
@@ -667,13 +715,17 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'co
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Overwrites postCloneAction function in mixin/base.js</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>When cloning a ticker, we can use an additional attribute in the clone function’s argument object:</p>
+<ul>
+<li><strong>useNewTicker</strong> - Boolean flag - when set, the clone will also create its own Ticker object</li>
+</ul>
 
             </div>
             
@@ -713,13 +765,30 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'co
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+<ul>
+<li>Tweens have the ability to auto-destruct when they complete their run, if their <code>killOnComplete</code> flag has been set to <code>true</code>.</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -729,13 +798,13 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'co
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>definitions</strong></p>
 
             </div>
             
@@ -753,13 +822,13 @@ S.definitions = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>commenceAction</strong></p>
 
             </div>
             
@@ -768,9 +837,22 @@ S.definitions = <span class="hljs-function"><span class="hljs-keyword">function<
     <span class="hljs-keyword">this</span>.commenceAction = item;
     
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.commenceAction !== <span class="hljs-string">'function'</span>) <span class="hljs-keyword">this</span>.commenceAction = defaultNonReturnFunction;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p><strong>completeAction</strong></p>
 
-S.completeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.completeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.completeAction = item;
 
@@ -786,33 +868,11 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Overwrites function defined in mixin/base.js</p>
+              <p><code>set</code> - we perform some additional functionality in the Tween <code>set</code> function</p>
+<ul>
+<li>updating the Tween’s Ticker object happens here</li>
+<li>recalculating effectiveDuration happens here if the <strong>time</strong> or <strong>duration</strong> values change</li>
+</ul>
 
             </div>
             
@@ -854,13 +914,26 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-28">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="animation">Animation</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p><code>getEndTime</code> - Ticker-related help function</p>
 
             </div>
             
@@ -872,13 +945,13 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-29">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>calculateEffectiveDuration</code></p>
 
             </div>
             
@@ -915,13 +988,17 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>update</code> - <strong><em>main animation function</em></strong>, invoked by the Ticker that this Tween subscribes to; runs once per RequestAnimationFrame while the Ticker is running.</p>
+<ul>
+<li><code>items</code> argument is a Ticker ResultObject - Ticker handles all the request and release functionality for this pool object. Treat the <code>items</code> object as <strong><em>read-only</em></strong>.</li>
+<li><code>status</code> magic numbers: <code>-1</code> = “before”; <code>0</code> = “running”; <code>1</code> = “after”.</li>
+</ul>
 
             </div>
             
@@ -930,10 +1007,40 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
     <span class="hljs-keyword">let</span> starts, ends,
         tick = items.tick || <span class="hljs-number">0</span>,
         revTick = items.reverseTick || <span class="hljs-number">0</span>,
-        status = <span class="hljs-string">'running'</span>,
+        status = <span class="hljs-number">0</span>,
         effectiveTime = <span class="hljs-keyword">this</span>.effectiveTime,
         effectiveDuration = <span class="hljs-keyword">this</span>.effectiveDuration,
         reversed = <span class="hljs-keyword">this</span>.reversed;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Should we do work for this Tween?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!reversed) {
+
+        starts = effectiveTime;
+        ends = effectiveTime + effectiveDuration;
+
+        <span class="hljs-keyword">if</span> (tick &lt; starts) status = <span class="hljs-number">-1</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (tick &gt; ends) status = <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        starts = effectiveTime + effectiveDuration;
+        ends = effectiveTime;
+
+        <span class="hljs-keyword">if</span> (revTick &gt; starts) status = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (revTick &lt; ends) status = <span class="hljs-number">-1</span>;
+    }</pre></div></div>
             
         </li>
         
@@ -944,25 +1051,19 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>Should we do work for this tween?</p>
+              <p>For Tweens with a duration &gt; 0</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!reversed) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (effectiveDuration) {
 
-        starts = effectiveTime;
-        ends = effectiveTime + effectiveDuration;
+        <span class="hljs-keyword">if</span> (!status || status != <span class="hljs-keyword">this</span>.status) {
 
-        <span class="hljs-keyword">if</span> (tick &lt; starts) status = <span class="hljs-string">'before'</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (tick &gt; ends) status = <span class="hljs-string">'after'</span>;
-    }
-    <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">this</span>.status = status;
+            <span class="hljs-keyword">this</span>.doSimpleUpdate(items);
 
-        starts = effectiveTime + effectiveDuration;
-        ends = effectiveTime;
-
-        <span class="hljs-keyword">if</span> (revTick &gt; starts) status = <span class="hljs-string">'after'</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (revTick &lt; ends) status = <span class="hljs-string">'before'</span>;
+            <span class="hljs-keyword">if</span> (!items.next) <span class="hljs-keyword">this</span>.status = (reversed) ? <span class="hljs-number">-1</span> : <span class="hljs-number">1</span>;
+        }
     }</pre></div></div>
             
         </li>
@@ -974,19 +1075,27 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>For tweens with a duration &gt; 0</p>
+              <p>For Tweens with a duration == 0</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (effectiveDuration) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">if</span> (status === <span class="hljs-string">'running'</span> || status !== <span class="hljs-keyword">this</span>.status) {
+        <span class="hljs-keyword">if</span> (status != <span class="hljs-keyword">this</span>.status) {
 
             <span class="hljs-keyword">this</span>.status = status;
             <span class="hljs-keyword">this</span>.doSimpleUpdate(items);
-            <span class="hljs-keyword">if</span> (!items.next) <span class="hljs-keyword">this</span>.status = (reversed) ? <span class="hljs-string">'before'</span> : <span class="hljs-string">'after'</span>;
+
+            <span class="hljs-keyword">if</span> (!items.next) <span class="hljs-keyword">this</span>.status = (reversed) ? <span class="hljs-number">-1</span> : <span class="hljs-number">1</span>;
         }
-    }</pre></div></div>
+    }
+
+    <span class="hljs-keyword">if</span> (items.willLoop) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.reverseOnCycleEnd) <span class="hljs-keyword">this</span>.reversed = !reversed;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.status = <span class="hljs-number">-1</span>;
+    }
+};</pre></div></div>
             
         </li>
         
@@ -997,28 +1106,11 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>For tweens with a duration == 0</p>
+              <p><code>doSimpleUpdate</code> - internal function called by <code>update</code> function.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> {
-
-        <span class="hljs-keyword">if</span> (status !== <span class="hljs-keyword">this</span>.status) {
-
-            <span class="hljs-keyword">this</span>.status = status;
-            <span class="hljs-keyword">this</span>.doSimpleUpdate(items);
-            <span class="hljs-keyword">if</span> (!items.next) <span class="hljs-keyword">this</span>.status = (reversed) ? <span class="hljs-string">'before'</span> : <span class="hljs-string">'after'</span>;
-        }
-    }
-
-    <span class="hljs-keyword">if</span> (items.willLoop) {
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.reverseOnCycleEnd) <span class="hljs-keyword">this</span>.reversed = !reversed;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.status = <span class="hljs-string">'before'</span>;
-    }
-
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.doSimpleUpdate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -1029,13 +1121,11 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>We create handles to a bunch of attributes so that we only need to look them up once each time the function runs</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.doSimpleUpdate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-
-    <span class="hljs-keyword">let</span> starts = <span class="hljs-keyword">this</span>.effectiveTime,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> starts = <span class="hljs-keyword">this</span>.effectiveTime,
         effectiveTick,
         actions = <span class="hljs-keyword">this</span>.engineActions,
         effectiveDuration = <span class="hljs-keyword">this</span>.effectiveDuration,
@@ -1043,15 +1133,31 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         definitions = <span class="hljs-keyword">this</span>.definitions,
         targets = <span class="hljs-keyword">this</span>.targets,
         action = <span class="hljs-keyword">this</span>.action,
-        i, iz, j, jz, progress,
-        setObj = {};
+        i, iz, j, jz, progress,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>We store the <code>setObj</code> object as an attribute on the Tween object for convenience, and to cut down on the number of objects created during the lifetime of the Tween.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        setObj = <span class="hljs-keyword">this</span>.setObj || {};
+
+    <span class="hljs-keyword">let</span> def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute;
+
+    <span class="hljs-keyword">let</span> round = <span class="hljs-built_in">Math</span>.round;
 
     effectiveTick = (<span class="hljs-keyword">this</span>.reversed) ? items.reverseTick - starts : items.tick - starts;
 
-    <span class="hljs-keyword">if</span> (effectiveDuration &amp;&amp; status === <span class="hljs-string">'running'</span>) progress = effectiveTick / effectiveDuration;
-    <span class="hljs-keyword">else</span> progress = (status === <span class="hljs-string">'after'</span>) ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">let</span> def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute;
+    <span class="hljs-keyword">if</span> (effectiveDuration &amp;&amp; !status) progress = effectiveTick / effectiveDuration;
+    <span class="hljs-keyword">else</span> progress = (status &gt; <span class="hljs-number">0</span>) ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = definitions.length; i &lt; iz; i++) {
 
@@ -1061,12 +1167,25 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         effectiveChange = def.effectiveChange;
         int = def.integer;
         suffix = def.suffix;
-        attribute = def.attribute;
+        attribute = def.attribute;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Invoke the appropriate easing function for this particular definition object</p>
 
-        <span class="hljs-keyword">if</span> (engine.substring) val = actions[engine](effectiveStart, effectiveChange, progress);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (engine.substring) val = actions[engine](effectiveStart, effectiveChange, progress);
         <span class="hljs-keyword">else</span> val = engine(effectiveStart, effectiveChange, progress);
 
-        <span class="hljs-keyword">if</span> (int) val = <span class="hljs-built_in">Math</span>.round(val);
+        <span class="hljs-keyword">if</span> (int) val = round(val);
 
         <span class="hljs-keyword">if</span> (suffix) val += suffix;
 
@@ -1078,116 +1197,337 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         targets[j].set(setObj);
     }
 
-    <span class="hljs-keyword">if</span> (action) action();
+    <span class="hljs-keyword">this</span>.setObj = setObj;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>We call the <code>action</code> attribute function (if it is defined) at the completion of every update.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (action) action();
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-35">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>engineActions</code> - Javascript Object: keys are the easing function name; values are the functions. All Scrawl-canvas easing functions need to take the following arguments:</p>
+<ul>
+<li><strong>start</strong> - the <code>effectiveStart</code> value, in milliseconds.</li>
+<li><strong>change</strong> - the time in milliseconds that this animation will take (<code>effectiveEnd - effectiveStart</code>).</li>
+<li><strong>position</strong> - the time elapsed since this Tween started running</li>
+</ul>
+<p>In all the following easings: </p>
+<ul>
+<li><code>out</code> indicates an acceleration.</li>
+<li><code>in</code> indicates a deceleration.</li>
+<li>Higher numbers indicates a more intense change between starting, middle and ending speeds </li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.engineActions = {
+            <div class="content"><div class='highlight'><pre>P.engineActions = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p><strong>out</strong> - cosine-based easing - starts slow, speeds up</p>
 
-    <span class="hljs-attr">out</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    out: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
         
         <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
         <span class="hljs-keyword">return</span> (start + change) + (<span class="hljs-built_in">Math</span>.cos((position * <span class="hljs-number">90</span>) * radian) * -change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p><strong>in</strong> - sine-based easing - starts fast, slows down</p>
 
-    <span class="hljs-attr">in</span> : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">in</span> : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">return</span> start + (<span class="hljs-built_in">Math</span>.sin((position * <span class="hljs-number">90</span>) * radian) * change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p><strong>easeIn</strong></p>
 
-    <span class="hljs-attr">easeIn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeIn: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
         
         <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
         <span class="hljs-keyword">return</span> (start + change) + ((temp * temp) * -change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p><strong>easeIn3</strong></p>
 
-    <span class="hljs-attr">easeIn3</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeIn3: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
         <span class="hljs-keyword">return</span> (start + change) + ((temp * temp * temp) * -change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p><strong>easeIn4</strong></p>
 
-    <span class="hljs-attr">easeIn4</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeIn4: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
         <span class="hljs-keyword">return</span> (start + change) + ((temp * temp * temp * temp) * -change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p><strong>easeIn5</strong></p>
 
-    <span class="hljs-attr">easeIn5</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeIn5: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
         <span class="hljs-keyword">return</span> (start + change) + ((temp * temp * temp * temp * temp) * -change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p><strong>easeOutIn</strong></p>
 
-    <span class="hljs-attr">easeOutIn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeOutIn: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
 
         <span class="hljs-keyword">return</span> (position &lt; <span class="hljs-number">0.5</span>) ?
             start + ((position * position) * change * <span class="hljs-number">2</span>) :
             (start + change) + ((temp * temp) * -change * <span class="hljs-number">2</span>);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p><strong>easeOutIn3</strong></p>
 
-    <span class="hljs-attr">easeOutIn3</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeOutIn3: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
 
         <span class="hljs-keyword">return</span> (position &lt; <span class="hljs-number">0.5</span>) ?
             start + ((position * position * position) * change * <span class="hljs-number">4</span>) :
             (start + change) + ((temp * temp * temp) * -change * <span class="hljs-number">4</span>);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p><strong>easeOutIn4</strong></p>
 
-    <span class="hljs-attr">easeOutIn4</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeOutIn4: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
 
         <span class="hljs-keyword">return</span> (position &lt; <span class="hljs-number">0.5</span>) ?
             start + ((position * position * position * position) * change * <span class="hljs-number">8</span>) :
             (start + change) + ((temp * temp * temp * temp) * -change * <span class="hljs-number">8</span>);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p><strong>easeOutIn5</strong></p>
 
-    <span class="hljs-attr">easeOutIn5</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeOutIn5: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position;
 
         <span class="hljs-keyword">return</span> (position &lt; <span class="hljs-number">0.5</span>) ?
             start + ((position * position * position * position * position) * change * <span class="hljs-number">16</span>) :
             (start + change) + ((temp * temp * temp * temp * temp) * -change * <span class="hljs-number">16</span>);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p><strong>easeOut</strong></p>
 
-    <span class="hljs-attr">easeOut</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeOut: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">return</span> start + ((position * position) * change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p><strong>easeOut3</strong></p>
 
-    <span class="hljs-attr">easeOut3</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeOut3: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">return</span> start + ((position * position * position) * change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p><strong>easeOut4</strong></p>
 
-    <span class="hljs-attr">easeOut4</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeOut4: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">return</span> start + ((position * position * position * position) * change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p><strong>easeOut5</strong></p>
 
-    <span class="hljs-attr">easeOut5</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    easeOut5: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">return</span> start + ((position * position * position * position * position) * change);
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p><strong>linear</strong> - the <strong><em>default easing function</em></strong> - no change in velocity throughout the tween</p>
 
-    <span class="hljs-attr">linear</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    linear: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{
 
         <span class="hljs-keyword">return</span> start + (position * change);
     }
@@ -1196,13 +1536,16 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-36">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>setDefinitionsValues</code> - convert <code>start</code> and <code>end</code> values into float Numbers.</p>
+<ul>
+<li>Scrawl-canvas includes functionality to allow <code>start</code> and <code>end</code> values to be defined as Strings, with a measurement suffix (<code>%</code>, <code>px</code>, etc) attached to the number</li>
+</ul>
 
             </div>
             
@@ -1222,9 +1565,22 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
             def.effectiveStart = temp[<span class="hljs-number">1</span>];
             def.suffix = temp[<span class="hljs-number">0</span>];
             temp = parseDefinitionsValue(def.end);
-            def.effectiveEnd = temp[<span class="hljs-number">1</span>];
+            def.effectiveEnd = temp[<span class="hljs-number">1</span>];</pre></div></div>
             
-            <span class="hljs-keyword">if</span> (!xt(def.engine)) def.engine = <span class="hljs-string">'linear'</span>;
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>The default easing function is <code>linear</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!xt(def.engine)) def.engine = <span class="hljs-string">'linear'</span>;
 
             def.effectiveChange = def.effectiveEnd - def.effectiveStart;
         }
@@ -1235,13 +1591,13 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-37">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>parseDefinitionsValue</code> - internal function invoked by <code>setDefinitionsValues</code> function.</p>
 
             </div>
             
@@ -1261,20 +1617,36 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
             <span class="hljs-keyword">if</span> (xt(a[<span class="hljs-number">1</span>])) result[<span class="hljs-number">0</span>] = a[<span class="hljs-number">1</span>];
         }
     }
-
     <span class="hljs-keyword">return</span> result;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-38">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="animation-control">Animation control</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p><code>run</code></p>
+<ul>
+<li>Start the Tween from its starting values.</li>
+<li>Trigger the object’s <code>onRun</code> function.</li>
+</ul>
 
             </div>
             
@@ -1295,13 +1667,13 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-39">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>isRunning</code> - check to see if Tween is in a running state.</p>
 
             </div>
             
@@ -1316,13 +1688,17 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-40">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>halt</code></p>
+<ul>
+<li>Stop the Tween at its current point in time</li>
+<li>Trigger the object’s <code>onHalt</code> function.</li>
+</ul>
 
             </div>
             
@@ -1342,13 +1718,17 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-41">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>reverse</code></p>
+<ul>
+<li>Halt the Tween, if it is running.</li>
+<li>Trigger the object’s <code>onReverse</code> function.</li>
+</ul>
 
             </div>
             
@@ -1368,13 +1748,17 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-42">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>resume</code></p>
+<ul>
+<li>Start the Tween from its current point in time</li>
+<li>Trigger the object’s <code>onResume</code> function.</li>
+</ul>
 
             </div>
             
@@ -1394,13 +1778,17 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-43">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>seekTo</code></p>
+<ul>
+<li>Argument - Number representing the millisecond time to move to on the Tween’s Ticker’s timeline</li>
+<li>Trigger the object’s <code>onSeekTo</code> function.</li>
+</ul>
 
             </div>
             
@@ -1420,13 +1808,17 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-44">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>seekFor</code></p>
+<ul>
+<li>Argument - Number representing the number of milliseconds to move along the Tween’s Ticker’s timeline (forwards or backwards)</li>
+<li>Trigger the object’s <code>onSeekFor</code> function.</li>
+</ul>
 
             </div>
             
@@ -1446,23 +1838,64 @@ S.completeAction = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-45">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
-              <h2 id="exported-factory-function">Exported factory function</h2>
+              <h4 id="factory">Factory</h4>
+<pre><code>scrawl.makeTween({
 
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-tween'</span>,
+
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">2500</span>,
+
+    <span class="hljs-attr">targets</span>: scrawl.artefact[<span class="hljs-string">'my-phrase'</span>],
+
+    <span class="hljs-attr">definitions</span>: [
+        {
+            <span class="hljs-attr">attribute</span>: <span class="hljs-string">'textPathPosition'</span>,
+            <span class="hljs-attr">start</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">end</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">engine</span>: <span class="hljs-string">'easeIn'</span>
+        },
+        {
+            <span class="hljs-attr">attribute</span>: <span class="hljs-string">'globalAlpha'</span>,
+            <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">end</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">engine</span>: <span class="hljs-string">'easeIn'</span>
+        },
+        {
+            <span class="hljs-attr">attribute</span>: <span class="hljs-string">'scale'</span>,
+            <span class="hljs-attr">start</span>: <span class="hljs-number">0.4</span>,
+            <span class="hljs-attr">end</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">engine</span>: <span class="hljs-string">'easeIn'</span>
+        },
+    ]
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeTween = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Tween(items);
 };
 
-constructors.Tween = Tween;
+constructors.Tween = Tween;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeTween,
 };</pre></div></div>
             

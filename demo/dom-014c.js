@@ -1,6 +1,7 @@
-// ## Demo DOM 014 - third scene
+// # Demo DOM 014 - third scene
+// Load and run multiple scripts on same page
 
-// [Load and run multiple scripts on same page](../../demo/dom-014.html)
+// [Run code](../../demo/dom-014.html)
 import scrawl from '../source/scrawl.js'
 
 let artefact = scrawl.library.artefact,

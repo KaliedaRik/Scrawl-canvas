@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>canvas-012.js</title>
+  <title>Demo Canvas 012</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -256,12 +256,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>canvas-012.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -270,7 +264,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h2 id="demo-canvas-012">Demo Canvas 012</h2>
+              <h1 id="demo-canvas-012">Demo Canvas 012</h1>
+<p>Shape entity position; shape entity as a path for other artefacts to follow</p>
 
             </div>
             
@@ -283,7 +278,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-012.html">Shape entity position; shape entity as a path for other artefacts to follow</a></p>
+              <p><a href="../../demo/canvas-012.html">Run code</a></p>
 
             </div>
             
@@ -297,6 +292,19 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h4 id="scene-setup">Scene setup</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Create Shape entity</p>
 
@@ -321,34 +329,7 @@
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'lightgreen'</span>,
 
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
-
-    <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">precision</span>: <span class="hljs-number">2</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Create Wheel entity to pivot to the arrow</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.makeWheel({
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'blue'</span>,
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'myArrow'</span>,
-    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
-});</pre></div></div>
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,</pre></div></div>
             
         </li>
         
@@ -359,15 +340,102 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Create the wheel entitys that will use the arrow as their path</p>
+              <p>Turn the Shape into a <code>path</code> which other artefacts can use to position themselves</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    useAsPath: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">2</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Test to make sure the bounding box correctly calculates itself to fit the Shape as tightly as possible</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">true</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Create Wheel entity to pivot to the arrow</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeWheel({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>We don’t need to give artefacts a <code>name</code> attribute - it’s just a lot more convenient if we do.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'blue'</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'myArrow'</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Create the Wheel entitys that will use the arrow as their path</p>
+<ul>
+<li>This Wheel is a template from which we clone the other Wheels</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWheel = scrawl.makeWheel({
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">3</span>,
 
-    <span class="hljs-attr">roll</span>: <span class="hljs-number">-90</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">3</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>These are half-circles</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    roll: <span class="hljs-number">-90</span>,
 
     <span class="hljs-attr">startAngle</span>: <span class="hljs-number">90</span>,
     <span class="hljs-attr">endAngle</span>: <span class="hljs-number">-90</span>,
@@ -378,14 +446,40 @@
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'path'</span>,
 
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Automatically animate the Wheel along the Shape’s path (<strong><em>delta animation</em></strong>)</p>
 
-    <span class="hljs-attr">delta</span>: {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    delta: {
         <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.0008</span>,
     }
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Generate the rest of the Wheels</p>
 
-<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0.01</span>; i &lt; <span class="hljs-number">1</span>; i += <span class="hljs-number">0.01</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0.01</span>; i &lt; <span class="hljs-number">1</span>; i += <span class="hljs-number">0.01</span>) {
 
     <span class="hljs-keyword">let</span> col;
 
@@ -404,13 +498,14 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
@@ -434,13 +529,13 @@ Shape path length: ${arrow.length}`;
         </li>
         
         
-        <li id="section-7">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Create the Animation loop which will run the Display cycle</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
             
@@ -454,13 +549,14 @@ Shape path length: ${arrow.length}`;
         </li>
         
         
-        <li id="section-8">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>User interaction - setup form observer functionality</p>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Setup form observer functionality</p>
 
             </div>
             
@@ -509,11 +605,11 @@ Shape path length: ${arrow.length}`;
         </li>
         
         
-        <li id="section-9">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Setup form</p>
 

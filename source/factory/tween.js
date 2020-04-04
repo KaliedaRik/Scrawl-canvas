@@ -1,18 +1,42 @@
-
 // # Tween factory
+// A ___tween___ - _inbetween animation_ - is a small, targeted, time-limited animation where we define the start and end points (_key frames_) of the animation, and a method for calculating the intermediate values between the two (_interpolation_, using an _easing_ function).
+//
+// Scrawl-canvas includes a full range of functionality to implement tweening. Any Scrawl-canvas object that includes a `set` function, which accepts a `{key:value}` object as its single argument, can be tweened.
+// + Tween animations are defined by creating a Tween object using the `makeTween` factory function.
+// + Each Tween object includes a `targets` Array - one Tween may animate many objects.
+// + Each Tween also includes a `definitions` Array which sets out the details of the animation to be performed.
+// + The `definitions` Array can include multiple objects, each defining a change to a specific attribute that needs to be applied to the target objects.
+// + __Any number-type attribute can be animated using a Tween__ - this includes integer and float Numbers, percentage Strings (`12.5%`) and measurement Strings (`20px`).
+// + We can run multiple Tween animations at the same time; Tweens can overlap (start one tween while another is running). 
+// + We can dynamically halt, resume, restart and terminate Tweens in response to user interactions.
+// + Tweens include `packet` functionality: they can be saved, and cloned.
+//
+// Scrawl-canvas separates the timing aspects of its Tweens from their definitions.
+// + Tweens run against a ___timeline___ object called a [Ticker](./ticker.html).
+// + When we define a Tween, we can either assign it to an existing Ticker, or get the Tween factory to create a new Ticker for it.
+// + Tickers can also have [Action](./action.html) objects assigned to them, allowing us to trigger functions at specific points along the timeline.
 
-// TODO - documentation
-
-// #### To instantiate objects from the factory
-
-// #### Library storage
-
-// #### Clone functionality
-
-// #### Kill functionality
+// ##### Using other tween factories
+// We don't recommend using other tween factories - such as [Greensock](https://greensock.com/) - with Scrawl-canvas objects at this time.
+// + The reason is simple. All updates to Scrawl-canvas objects should be made through their dedicated `set`, `setDelta` and related functions, which take a single Javascript object as their argument.
+// + When attributes are updated in this way, Scrawl-canvas makes sure various `dirty` flags get set (among other work), so the object can update itself appropriately at the most convenient time for itself.
+// + Libraries like GSAP works by directly updating object attributes, which misses out the necessary work of setting the appropriate `dirty` flags - thus the object will not know that it needs to do work.
+// + ___This does not mean you can't use other tween libraries in your web page___ - just be aware of the limitations of trying to use them with Scrawl-canvas objects!
 
 
-// ## Imports
+// TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see [Ticker TODO section](./ticker.html#section-2) for issues and suggested work).
+
+
+// #### Demos:
+// + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
+// + [Canvas-006](../../demo/canvas-006.html) - Canvas tween stress test
+// + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
+// + [DOM-005](../../demo/dom-005.html) - DOM tween stress test
+// + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
+// + [Component-001](../../demo/component-001.html) - Scrawl-canvas DOM element components
+
+
+// #### Imports
 import { constructors, animationtickers, radian } from '../core/library.js';
 import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
 
@@ -22,7 +46,7 @@ import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
 
-// ## Tween constructor
+// #### Tween constructor
 const Tween = function (items = {}) {
 
     let tn;
@@ -35,14 +59,16 @@ const Tween = function (items = {}) {
 
     this.setDefinitionsValues();
 
-    this.status = 'before';
+    // `status` magic numbers: `-1` = "before"; `0` = "running"; `1` = "after".
+    this.status = -1;
     this.calculateEffectiveTime();
     this.calculateEffectiveDuration();
 
+// All Tweens require a Ticker to act as their timeline.
+// + If no Ticker attribute is included in the argument object, or the Ticker cannot be located, a new Ticker will be created for this Tween.
     if (animationtickers[items.ticker]) this.addToTicker(items.ticker);
     else {
 
-        // Here is where we create the ticker - will have same name as the tween
         tn = `${this.name}_ticker`;
 
         makeTicker({
@@ -59,12 +85,11 @@ const Tween = function (items = {}) {
 
         animationtickers[tn].recalculateEffectiveDuration();
     }
-
     return this;
 };
 
 
-// ## Tween object prototype setup
+// #### Tween prototype
 let P = Tween.prototype = Object.create(Object.prototype);
 P.type = 'Tween';
 P.lib = 'tween';
@@ -72,49 +97,72 @@ P.isArtefact = false;
 P.isAsset = false;
 
 
-// Apply mixins to prototype object
+// #### Mixins
 P = baseMix(P);
 P = tweenMix(P);
 
 
-// ## Define default attributes
+// #### Tween attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [tween mixin](../mixin/tween.html): __order__, __ticker__, __targets__, __time__, __action__, __reverseOnCycleEnd__, __reversed__.
 let defaultAttributes = {
 
-// TODO - documentation
+// __definitions__ - Array of objects defining the animations to be performed by the Tween. Object attributes include:
+// + __attribute__ (required) - String attribute key.
+// + __start__ - Number or String value for this attribute's start point.
+// + __end__ - Number or String value for this attribute's end point.
+// + __integer__ - Boolean flag indicating whether we should force results to be integers (default: false)
+// + __engine__ - String name for the easing function ___engine___ to be used to animate this change; or an easing function supplied by the developer.
+//
+// Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number. 
+// + These values should be of a type that the target object (generally an artefact) expects to receive in its `set` function.
+// + Any object with a `set` function that takes an object as its argument can be tweened.
     definitions: null,
 
-// TODO - documentation
+// __duration__ - can accept a variety of values:
+// + Number, representing milliseconds.
+// + String time value, for example `'500ms', '0.5s'`.
+// + % String value - `20%` - a relative value measured against the Ticker's ___effective duration___. For example, if the Ticker has an effective duration of 5000 (5 seconds), and the Tween wants to run for 20% of that time, the Tween's effective duration will be 1000 (1 second).
     duration: 0,
 
-// TODO - documentation
-    commenceAction: null,
-    completeAction: null,
-
-// TODO - documentation
+// __killOnComplete__ - Boolean flag; if set, the Tween will kill itself when it completes
     killOnComplete: false,
 
-
-// Hook functions that can be invoked at the end of each relevant operation
+// The Tween object supports some __tween animation hook functions__:
+// + __commenceAction__ - runs immediately before the Tween's `run` function is invoked
+// + __onRun__ - triggers immediately after the Tween's `run` function is invoked
+// + __onHalt__ - triggers immediately after the Tween's `halt` function is invoked
+// + __onResume__ - triggers immediately after the Tween's `resume` function is invoked
+// + __onReverse__ - triggers immediately after the Tween's `reverse` function is invoked
+// + __onSeekTo__ - triggers immediately after the Tween's `seekTo` function is invoked
+// + __onSeekFor__ - triggers immediately after the Tween's `seekFor` function is invoked
+// + __completeAction__ - triggers after the Tween completes its run
+    commenceAction: null,
     onRun: null,
     onHalt: null,
     onResume: null,
     onReverse: null,
     onSeekTo: null,
     onSeekFor: null,
+    completeAction: null,
+
+// __ticker__ - String name of Ticker object which this Tween will associate itself with.
+// + If no Ticker is specified when building a new Tween, it will create a new Ticker object (sharing its `name` attribute) to associate with. 
+// + If the attributes below are included in the argument object, they will be passed on to the new Ticker.
+// + This attribute is kept in the Tween object, but is excluded from the Tween prototype's `defs` object.
+
+// The following [Ticker](./ticker.html)-related attributes are not stored in the Tween object:
+// + __cycles__ - positive integer Number representing the number of cycles the Ticker will undertake before it completes.
+// + __eventChoke__ Number representing minimum number of milliseconds between Ticker event emissions
+
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
-
-// ## Packet management
+// #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['definitions', 'targets']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
 P.packetFunctions = pushUnique(P.packetFunctions, ['commenceAction', 'completeAction', 'onRun', 'onHalt', 'onResume', 'onReverse', 'onSeekTo', 'onSeekFor', 'action']);
 
-
-// Overwrites finalizePacketOut function in mixin/base.js
 P.finalizePacketOut = function (copy, items) {
 
     if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
@@ -149,7 +197,9 @@ P.finalizePacketOut = function (copy, items) {
 };
 
 
-// Overwrites postCloneAction function in mixin/base.js
+// #### Clone management
+// When cloning a ticker, we can use an additional attribute in the clone function's argument object:
+// + __useNewTicker__ - Boolean flag - when set, the clone will also create its own Ticker object
 P.postCloneAction = function(clone, items) {
 
     if (items.useNewTicker) {
@@ -184,12 +234,16 @@ P.postCloneAction = function(clone, items) {
 };
 
 
+// #### Kill management
+// No additional kill functionality required
+// + Tweens have the ability to auto-destruct when they complete their run, if their `killOnComplete` flag has been set to `true`.
 
-// ## Define getter, setter and deltaSetter functions
+
+// #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters;
 
-// TODO - documentation
+// __definitions__
 G.definitions = function() {
 
     return [].concat(this.definitions);
@@ -201,7 +255,7 @@ S.definitions = function (item) {
     this.setDefinitionsValues();
 };
 
-// TODO - documentation
+// __commenceAction__
 S.commenceAction = function (item) {
 
     this.commenceAction = item;
@@ -209,6 +263,7 @@ S.commenceAction = function (item) {
     if (typeof this.commenceAction !== 'function') this.commenceAction = defaultNonReturnFunction;
 };
 
+// __completeAction__
 S.completeAction = function (item) {
 
     this.completeAction = item;
@@ -216,15 +271,9 @@ S.completeAction = function (item) {
     if (typeof this.completeAction !== 'function') this.completeAction = defaultNonReturnFunction;
 };
 
-
-
-// ## Define prototype functions
-
-
-
-// TODO - documentation
-
-// Overwrites function defined in mixin/base.js
+// `set` - we perform some additional functionality in the Tween `set` function
+// + updating the Tween's Ticker object happens here
+// + recalculating effectiveDuration happens here if the __time__ or __duration__ values change
 P.set = function (items) {
 
     let key, i, iz, s,
@@ -260,13 +309,16 @@ P.set = function (items) {
     return this;
 };
 
-// TODO - documentation
+
+// #### Animation
+
+// `getEndTime` - Ticker-related help function
 P.getEndTime = function () {
 
     return this.effectiveTime + this.effectiveDuration;
 };
 
-// TODO - documentation
+// `calculateEffectiveDuration`
 P.calculateEffectiveDuration = function (item) {
 
     let tweenDuration = xtGet(item, this.duration),
@@ -297,68 +349,71 @@ P.calculateEffectiveDuration = function (item) {
     return this;
 };
 
-// TODO - documentation
+// `update` - ___main animation function___, invoked by the Ticker that this Tween subscribes to; runs once per RequestAnimationFrame while the Ticker is running.
+// + `items` argument is a Ticker ResultObject - Ticker handles all the request and release functionality for this pool object. Treat the `items` object as ___read-only___.
+// + `status` magic numbers: `-1` = "before"; `0` = "running"; `1` = "after".
 P.update = function (items = {}) {
 
     let starts, ends,
         tick = items.tick || 0,
         revTick = items.reverseTick || 0,
-        status = 'running',
+        status = 0,
         effectiveTime = this.effectiveTime,
         effectiveDuration = this.effectiveDuration,
         reversed = this.reversed;
 
-    // Should we do work for this tween?
+    // Should we do work for this Tween?
     if (!reversed) {
 
         starts = effectiveTime;
         ends = effectiveTime + effectiveDuration;
 
-        if (tick < starts) status = 'before';
-        else if (tick > ends) status = 'after';
+        if (tick < starts) status = -1;
+        else if (tick > ends) status = 1;
     }
     else {
 
         starts = effectiveTime + effectiveDuration;
         ends = effectiveTime;
 
-        if (revTick > starts) status = 'after';
-        else if (revTick < ends) status = 'before';
+        if (revTick > starts) status = 1;
+        else if (revTick < ends) status = -1;
     }
 
-    // For tweens with a duration > 0
+    // For Tweens with a duration > 0
     if (effectiveDuration) {
 
-        if (status === 'running' || status !== this.status) {
+        if (!status || status != this.status) {
 
             this.status = status;
             this.doSimpleUpdate(items);
-            if (!items.next) this.status = (reversed) ? 'before' : 'after';
+
+            if (!items.next) this.status = (reversed) ? -1 : 1;
         }
     }
-    // For tweens with a duration == 0
+    // For Tweens with a duration == 0
     else {
 
-        if (status !== this.status) {
+        if (status != this.status) {
 
             this.status = status;
             this.doSimpleUpdate(items);
-            if (!items.next) this.status = (reversed) ? 'before' : 'after';
+
+            if (!items.next) this.status = (reversed) ? -1 : 1;
         }
     }
 
     if (items.willLoop) {
 
         if (this.reverseOnCycleEnd) this.reversed = !reversed;
-        else this.status = 'before';
+        else this.status = -1;
     }
-
-    return true;
 };
 
-// TODO - documentation
+// `doSimpleUpdate` - internal function called by `update` function.
 P.doSimpleUpdate = function (items = {}) {
 
+    // We create handles to a bunch of attributes so that we only need to look them up once each time the function runs
     let starts = this.effectiveTime,
         effectiveTick,
         actions = this.engineActions,
@@ -368,14 +423,18 @@ P.doSimpleUpdate = function (items = {}) {
         targets = this.targets,
         action = this.action,
         i, iz, j, jz, progress,
-        setObj = {};
+
+        // We store the `setObj` object as an attribute on the Tween object for convenience, and to cut down on the number of objects created during the lifetime of the Tween.
+        setObj = this.setObj || {};
+
+    let def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute;
+
+    let round = Math.round;
 
     effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
 
-    if (effectiveDuration && status === 'running') progress = effectiveTick / effectiveDuration;
-    else progress = (status === 'after') ? 1 : 0;
-
-    let def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute;
+    if (effectiveDuration && !status) progress = effectiveTick / effectiveDuration;
+    else progress = (status > 0) ? 1 : 0;
 
     for (i = 0, iz = definitions.length; i < iz; i++) {
 
@@ -387,10 +446,11 @@ P.doSimpleUpdate = function (items = {}) {
         suffix = def.suffix;
         attribute = def.attribute;
 
+        // Invoke the appropriate easing function for this particular definition object
         if (engine.substring) val = actions[engine](effectiveStart, effectiveChange, progress);
         else val = engine(effectiveStart, effectiveChange, progress);
 
-        if (int) val = Math.round(val);
+        if (int) val = round(val);
 
         if (suffix) val += suffix;
 
@@ -402,47 +462,65 @@ P.doSimpleUpdate = function (items = {}) {
         targets[j].set(setObj);
     }
 
+    this.setObj = setObj;
+
+    // We call the `action` attribute function (if it is defined) at the completion of every update.
     if (action) action();
 };
 
-// TODO - documentation
+// `engineActions` - Javascript Object: keys are the easing function name; values are the functions. All Scrawl-canvas easing functions need to take the following arguments:
+// + __start__ - the `effectiveStart` value, in milliseconds.
+// + __change__ - the time in milliseconds that this animation will take (`effectiveEnd - effectiveStart`).
+// + __position__ - the time elapsed since this Tween started running
+//
+// In all the following easings: 
+// + `out` indicates an acceleration.
+// + `in` indicates a deceleration.
+// + Higher numbers indicates a more intense change between starting, middle and ending speeds 
 P.engineActions = {
 
+// __out__ - cosine-based easing - starts slow, speeds up
     out: function (start, change, position) {
         
         let temp = 1 - position;
         return (start + change) + (Math.cos((position * 90) * radian) * -change);
     },
 
+// __in__ - sine-based easing - starts fast, slows down
     in : function (start, change, position) {
 
         return start + (Math.sin((position * 90) * radian) * change);
     },
 
+// __easeIn__
     easeIn: function (start, change, position) {
         
         let temp = 1 - position;
         return (start + change) + ((temp * temp) * -change);
     },
 
+// __easeIn3__
     easeIn3: function (start, change, position) {
 
         let temp = 1 - position;
         return (start + change) + ((temp * temp * temp) * -change);
     },
 
+// __easeIn4__
     easeIn4: function (start, change, position) {
 
         let temp = 1 - position;
         return (start + change) + ((temp * temp * temp * temp) * -change);
     },
 
+// __easeIn5__
     easeIn5: function (start, change, position) {
 
         let temp = 1 - position;
         return (start + change) + ((temp * temp * temp * temp * temp) * -change);
     },
 
+// __easeOutIn__
     easeOutIn: function (start, change, position) {
 
         let temp = 1 - position;
@@ -452,6 +530,7 @@ P.engineActions = {
             (start + change) + ((temp * temp) * -change * 2);
     },
 
+// __easeOutIn3__
     easeOutIn3: function (start, change, position) {
 
         let temp = 1 - position;
@@ -461,6 +540,7 @@ P.engineActions = {
             (start + change) + ((temp * temp * temp) * -change * 4);
     },
 
+// __easeOutIn4__
     easeOutIn4: function (start, change, position) {
 
         let temp = 1 - position;
@@ -470,6 +550,7 @@ P.engineActions = {
             (start + change) + ((temp * temp * temp * temp) * -change * 8);
     },
 
+// __easeOutIn5__
     easeOutIn5: function (start, change, position) {
 
         let temp = 1 - position;
@@ -479,33 +560,39 @@ P.engineActions = {
             (start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
     },
 
+// __easeOut__
     easeOut: function (start, change, position) {
 
         return start + ((position * position) * change);
     },
 
+// __easeOut3__
     easeOut3: function (start, change, position) {
 
         return start + ((position * position * position) * change);
     },
 
+// __easeOut4__
     easeOut4: function (start, change, position) {
 
         return start + ((position * position * position * position) * change);
     },
 
+// __easeOut5__
     easeOut5: function (start, change, position) {
 
         return start + ((position * position * position * position * position) * change);
     },
 
+// __linear__ - the ___default easing function___ - no change in velocity throughout the tween
     linear: function (start, change, position) {
 
         return start + (position * change);
     }
 };
 
-// TODO - documentation
+// `setDefinitionsValues` - convert `start` and `end` values into float Numbers.
+// + Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number
 P.setDefinitionsValues = function () {
 
     let i, iz, temp, def,
@@ -524,6 +611,7 @@ P.setDefinitionsValues = function () {
             temp = parseDefinitionsValue(def.end);
             def.effectiveEnd = temp[1];
             
+            // The default easing function is `linear`
             if (!xt(def.engine)) def.engine = 'linear';
 
             def.effectiveChange = def.effectiveEnd - def.effectiveStart;
@@ -532,7 +620,7 @@ P.setDefinitionsValues = function () {
     return this;
 };
 
-// TODO - documentation
+// `parseDefinitionsValue` - internal function invoked by `setDefinitionsValues` function.
 P.parseDefinitionsValue = function (item) {
 
     let result = ['', 0],
@@ -549,11 +637,15 @@ P.parseDefinitionsValue = function (item) {
             if (xt(a[1])) result[0] = a[1];
         }
     }
-
     return result;
 };
 
-// TODO - documentation
+
+// #### Animation control
+
+// `run`
+// + Start the Tween from its starting values.
+// + Trigger the object's `onRun` function.
 P.run = function () {
 
     let t = animationtickers[this.ticker];
@@ -568,7 +660,7 @@ P.run = function () {
     return this;
 };
 
-// TODO - documentation
+// `isRunning` - check to see if Tween is in a running state.
 P.isRunning = function () {
 
     let tick = animationtickers[this.ticker];
@@ -577,7 +669,9 @@ P.isRunning = function () {
     return false;
 };
 
-// TODO - documentation
+// `halt`
+// + Stop the Tween at its current point in time
+// + Trigger the object's `onHalt` function.
 P.halt = function() {
 
     let t = animationtickers[this.ticker];
@@ -591,7 +685,9 @@ P.halt = function() {
     return this;
 };
 
-// TODO - documentation
+// `reverse`
+// + Halt the Tween, if it is running.
+// + Trigger the object's `onReverse` function.
 P.reverse = function() {
 
     let t = animationtickers[this.ticker];
@@ -605,7 +701,9 @@ P.reverse = function() {
     return this;
 };
 
-// TODO - documentation
+// `resume`
+// + Start the Tween from its current point in time
+// + Trigger the object's `onResume` function.
 P.resume = function() {
 
     let t = animationtickers[this.ticker];
@@ -619,7 +717,9 @@ P.resume = function() {
     return this;
 };
 
-// TODO - documentation
+// `seekTo`
+// + Argument - Number representing the millisecond time to move to on the Tween's Ticker's timeline
+// + Trigger the object's `onSeekTo` function.
 P.seekTo = function(milliseconds) {
 
     let t = animationtickers[this.ticker];
@@ -633,7 +733,9 @@ P.seekTo = function(milliseconds) {
     return this;
 };
 
-// TODO - documentation
+// `seekFor`
+// + Argument - Number representing the number of milliseconds to move along the Tween's Ticker's timeline (forwards or backwards)
+// + Trigger the object's `onSeekFor` function.
 P.seekFor = function(milliseconds) {
 
     let t = animationtickers[this.ticker];
@@ -648,13 +750,46 @@ P.seekFor = function(milliseconds) {
 };
 
 
-// ## Exported factory function
+// #### Factory
+// ```
+// scrawl.makeTween({
+//
+//     name: 'my-tween',
+//
+//     duration: 2500,
+//
+//     targets: scrawl.artefact['my-phrase'],
+//
+//     definitions: [
+//         {
+//             attribute: 'textPathPosition',
+//             start: 1,
+//             end: 0,
+//             engine: 'easeIn'
+//         },
+//         {
+//             attribute: 'globalAlpha',
+//             start: 0,
+//             end: 1,
+//             engine: 'easeIn'
+//         },
+//         {
+//             attribute: 'scale',
+//             start: 0.4,
+//             end: 1,
+//             engine: 'easeIn'
+//         },
+//     ]
+// });
+// ```
 const makeTween = function (items) {
     return new Tween(items);
 };
 
 constructors.Tween = Tween;
 
+
+// #### Exports
 export {
     makeTween,
 };

@@ -47,17 +47,10 @@ P = anchorMix(P);
 P = entityMix(P);
 P = filterMix(P);
 let defaultAttributes = {
-localBox: null,
 species: '',
-pathed: null,
-pathDefinition: '',
-showBoundingBox: false,
-boundingBoxColor: 'rgba(0,0,0,0.5)',
-minimumBoundingBoxDimensions: 20,
 useAsPath: false,
-length: 0,
-pathCalculatedOnce: false,
 precision: 10,
+pathDefinition: '',
 loops: 0,
 loopIncrement: 0.2,
 innerRadius: 0,
@@ -128,7 +121,9 @@ addEndPathHandle: false,
 addEndPathOffset: true,
 endLockTo: '',
 useStartAsControlPoint: false,
-controlledLineOffset: null,
+showBoundingBox: false,
+boundingBoxColor: 'rgba(0,0,0,0.5)',
+minimumBoundingBoxDimensions: 20,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['dimensions', 'pathed', 'controlledLineOffset']);
@@ -571,22 +566,6 @@ this.deltaRectHelper(item, ['radiusBLX']);
 D.radiusBLY = function (item) {
 this.deltaRectHelper(item, ['radiusBLY']);
 };
-S.sides = function (item) {
-this.sides = item;
-this.updateDirty();
-};
-D.sides = function (item) {
-this.sides += item;
-this.updateDirty();
-};
-S.sideLength = function (item) {
-this.sideLength = item;
-this.updateDirty();
-};
-D.sideLength = function (item) {
-this.sideLength += item;
-this.updateDirty();
-};
 S.radius1 = function (item) {
 this.radius1 = item;
 this.updateDirty();
@@ -601,6 +580,30 @@ this.updateDirty();
 };
 D.radius2 = function (item) {
 this.radius2 += item;
+this.updateDirty();
+};
+S.innerRadius = function (item) {
+this.innerRadius = item;
+this.updateDirty();
+};
+D.innerRadius = function (item) {
+this.innerRadius += item;
+this.updateDirty();
+};
+S.sides = function (item) {
+this.sides = item;
+this.updateDirty();
+};
+D.sides = function (item) {
+this.sides += item;
+this.updateDirty();
+};
+S.sideLength = function (item) {
+this.sideLength = item;
+this.updateDirty();
+};
+D.sideLength = function (item) {
+this.sideLength += item;
 this.updateDirty();
 };
 S.points = function (item) {
@@ -625,14 +628,6 @@ this.updateDirty();
 };
 D.loops = function (item) {
 this.loops += item;
-this.updateDirty();
-};
-S.innerRadius = function (item) {
-this.innerRadius = item;
-this.updateDirty();
-};
-D.innerRadius = function (item) {
-this.innerRadius += item;
 this.updateDirty();
 };
 P.updateDirty = function () {
@@ -789,6 +784,72 @@ return myPoint;
 }
 return false;
 }
+P.calculateSensors = function () {
+let sensorSpacing = this.sensorSpacing || 50,
+length = this.length,
+segments = parseInt(length / sensorSpacing, 10),
+pos = 0,
+data, i, iz;
+if (segments < 4) segments = 4;
+let segmentLength = 1 / segments;
+let sensors = this.currentSensors;
+sensors.length = 0;
+data = this.getPathPositionData(0);
+sensors.push([data.x, data.y]);
+for (i = 0; i < segments; i++) {
+pos += segmentLength;
+data = this.getPathPositionData(pos);
+sensors.push([data.x, data.y]);
+}
+};
+P.prepareStamp = function() {
+if (this.dirtyHost) this.dirtyHost = false;
+if (this.dirtyLock) this.cleanLock();
+if (this.dirtyStartControlLock) this.cleanControlLock('startControl');
+if (this.dirtyEndControlLock) this.cleanControlLock('endControl');
+if (this.dirtyControlLock) this.cleanControlLock('control');
+if (this.dirtyEndLock) this.cleanControlLock('end');
+if (this.startControlLockTo === 'path') this.dirtyStartControl = true;
+if (this.endControlLockTo === 'path') this.dirtyEndControl = true;
+if (this.controlLockTo === 'path') this.dirtyControl = true;
+if (this.endLockTo === 'path') this.dirtyEnd = true;
+if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
+this.dirtyPathObject = true;
+this.dirtyCollision = true;
+if (this.useStartAsControlPoint && this.dirtyStart) {
+this.dirtySpecies = true;
+this.pathCalculatedOnce = false;
+}
+if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd)  this.pathCalculatedOnce = false;
+}
+if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+this.dirtyStampPositions = true;
+this.dirtyCollision = true;
+if (this.useStartAsControlPoint) {
+this.dirtySpecies = true;
+this.dirtyPathObject = true;
+this.pathCalculatedOnce = false;
+}
+}
+if (this.dirtyRotation || this.dirtyOffset) this.dirtyCollision = true;
+if (this.dirtyCollision && !this.useAsPath) {
+this.useAsPath = true;
+this.dirtyPathObject = true;
+this.pathCalculatedOnce = false;
+}
+if (this.dirtyScale) this.cleanScale();
+if (this.dirtyStart) this.cleanStart();
+if (this.dirtyStartControl) this.cleanControl('startControl');
+if (this.dirtyEndControl) this.cleanControl('endControl');
+if (this.dirtyControl) this.cleanControl('control');
+if (this.dirtyEnd) this.cleanControl('end');
+if (this.dirtyOffset) this.cleanOffset();
+if (this.dirtyRotation) this.cleanRotation();
+if (this.dirtyStampPositions) this.cleanStampPositions();
+if (this.dirtySpecies) this.cleanSpecies();
+if (this.dirtyPathObject) this.cleanPathObject();
+if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+};
 P.cleanControlLock = function (label) {
 let capLabel = capitalize(label);
 this[`dirty${capLabel}Lock`] = false;
@@ -858,24 +919,6 @@ this.dirtySpecies = true;
 this.dirtyPathObject = true;
 this.updatePathSubscribers();
 };
-P.calculateSensors = function () {
-let sensorSpacing = this.sensorSpacing || 50,
-length = this.length,
-segments = parseInt(length / sensorSpacing, 10),
-pos = 0,
-data, i, iz;
-if (segments < 4) segments = 4;
-let segmentLength = 1 / segments;
-let sensors = this.currentSensors;
-sensors.length = 0;
-data = this.getPathPositionData(0);
-sensors.push([data.x, data.y]);
-for (i = 0; i < segments; i++) {
-pos += segmentLength;
-data = this.getPathPositionData(pos);
-sensors.push([data.x, data.y]);
-}
-};
 P.getControlPathData = function (path, label, capLabel) {
 let pathPos = this[`${label}PathPosition`],
 tempPos = pathPos,
@@ -903,64 +946,14 @@ y: 0
 };
 }
 };
-P.updatePathSubscribers = function () {
-this.pathed.forEach(name => {
-let instance = artefact[name];
-if (instance) {
-instance.dirtyStart = true;
-if (instance.addPathHandle) instance.dirtyHandle = true;
-if (instance.addPathOffset) instance.dirtyOffset = true;
-if (instance.addPathRotation) instance.dirtyRotation = true;
-}
-});
-};
-P.prepareStamp = function() {
-if (this.dirtyHost) this.dirtyHost = false;
-if (this.dirtyLock) this.cleanLock();
-if (this.dirtyStartControlLock) this.cleanControlLock('startControl');
-if (this.dirtyEndControlLock) this.cleanControlLock('endControl');
-if (this.dirtyControlLock) this.cleanControlLock('control');
-if (this.dirtyEndLock) this.cleanControlLock('end');
-if (this.startControlLockTo === 'path') this.dirtyStartControl = true;
-if (this.endControlLockTo === 'path') this.dirtyEndControl = true;
-if (this.controlLockTo === 'path') this.dirtyControl = true;
-if (this.endLockTo === 'path') this.dirtyEnd = true;
-if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
-this.dirtyPathObject = true;
-this.dirtyCollision = true;
-if (this.useStartAsControlPoint && this.dirtyStart) {
-this.dirtySpecies = true;
-this.pathCalculatedOnce = false;
-}
-if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd)  this.pathCalculatedOnce = false;
-}
-if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
-this.dirtyStampPositions = true;
-this.dirtyCollision = true;
-if (this.useStartAsControlPoint) {
-this.dirtySpecies = true;
-this.dirtyPathObject = true;
-this.pathCalculatedOnce = false;
-}
-}
-if (this.dirtyRotation || this.dirtyOffset) this.dirtyCollision = true;
-if (this.dirtyCollision && !this.useAsPath) {
-this.useAsPath = true;
-this.dirtyPathObject = true;
-this.pathCalculatedOnce = false;
-}
-if (this.dirtyScale) this.cleanScale();
-if (this.dirtyStart) this.cleanStart();
-if (this.dirtyStartControl) this.cleanControl('startControl');
-if (this.dirtyEndControl) this.cleanControl('endControl');
-if (this.dirtyControl) this.cleanControl('control');
-if (this.dirtyEnd) this.cleanControl('end');
-if (this.dirtyOffset) this.cleanOffset();
-if (this.dirtyRotation) this.cleanRotation();
-if (this.dirtyStampPositions) this.cleanStampPositions();
-if (this.dirtySpecies) this.cleanSpecies();
-if (this.dirtyPathObject) this.cleanPathObject();
-if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+P.cleanDimensions = function () {
+this.dirtyDimensions = false;
+this.dirtyHandle = true;
+this.dirtyStart = true;
+this.dirtyStartControl = true;
+this.dirtyEndControl = true;
+this.dirtyControl = true;
+this.dirtyEnd = true;
 };
 P.cleanPathObject = function () {
 this.dirtyPathObject = false;
@@ -974,15 +967,6 @@ let handle = this.currentStampHandlePosition,
 controlledLine = this.controlledLineOffset;
 this.pathObject = new Path2D(`m${-handle[0] + controlledLine[0]},${-handle[1] + controlledLine[1]}${this.localPath}`);
 }
-};
-P.cleanDimensions = function () {
-this.dirtyDimensions = false;
-this.dirtyHandle = true;
-this.dirtyStart = true;
-this.dirtyStartControl = true;
-this.dirtyEndControl = true;
-this.dirtyControl = true;
-this.dirtyEnd = true;
 };
 P.calculateLocalPath = function (d) {
 let res;
@@ -1063,72 +1047,6 @@ default :
 p = this.pathDefinition;
 }
 this.pathDefinition = p;
-};
-P.draw = function (engine) {
-engine.stroke(this.pathObject);
-if (this.showBoundingBox) this.drawBoundingBox(engine);
-},
-P.fill = function (engine) {
-engine.fill(this.pathObject, this.winding);
-if (this.showBoundingBox) this.drawBoundingBox(engine);
-},
-P.drawAndFill = function (engine) {
-let p = this.pathObject;
-engine.stroke(p);
-this.currentHost.clearShadow();
-engine.fill(p, this.winding);
-if (this.showBoundingBox) this.drawBoundingBox(engine);
-},
-P.fillAndDraw = function (engine) {
-let p = this.pathObject;
-engine.stroke(p);
-this.currentHost.clearShadow();
-engine.fill(p, this.winding);
-engine.stroke(p);
-if (this.showBoundingBox) this.drawBoundingBox(engine);
-},
-P.drawThenFill = function (engine) {
-let p = this.pathObject;
-engine.stroke(p);
-engine.fill(p, this.winding);
-if (this.showBoundingBox) this.drawBoundingBox(engine);
-},
-P.fillThenDraw = function (engine) {
-let p = this.pathObject;
-engine.fill(p, this.winding);
-engine.stroke(p);
-if (this.showBoundingBox) this.drawBoundingBox(engine);
-},
-P.clear = function (engine) {
-let gco = engine.globalCompositeOperation;
-engine.globalCompositeOperation = 'destination-out';
-engine.fill(this.pathObject, this.winding);
-engine.globalCompositeOperation = gco;
-if (this.showBoundingBox) this.drawBoundingBox(engine);
-},
-P.drawBoundingBox = function (engine) {
-engine.save();
-engine.strokeStyle = this.boundingBoxColor;
-engine.lineWidth = 1;
-engine.globalCompositeOperation = 'source-over';
-engine.globalAlpha = 1;
-engine.shadowOffsetX = 0;
-engine.shadowOffsetY = 0;
-engine.shadowBlur = 0;
-engine.strokeRect(...this.getBoundingBox());
-engine.restore();
-};
-P.getBoundingBox = function () {
-let floor = Math.floor,
-ceil = Math.ceil,
-minDims = this.minimumBoundingBoxDimensions;
-let [x, y, w, h] = this.localBox;
-let [lx, ly] = this.controlledLineOffset;
-let [hX, hY] = this.currentStampHandlePosition;
-let [sX, sY] = this.currentStampPosition;
-if (w < minDims) w = minDims;
-if (h < minDims) h = minDims;
-return [floor(x - hX + lx), floor(y - hY + ly), ceil(w), ceil(h), sX, sY];
 };
 P.makeOvalPath = function () {
 let A = this.offshootA,
@@ -1325,6 +1243,83 @@ minX = Math.abs(Math.min(...xPts));
 minY = Math.abs(Math.min(...yPts));
 myPath = `m${minX + this.innerRadius},${minY}${myPath}`;
 return myPath;
+};
+P.updatePathSubscribers = function () {
+this.pathed.forEach(name => {
+let instance = artefact[name];
+if (instance) {
+instance.dirtyStart = true;
+if (instance.addPathHandle) instance.dirtyHandle = true;
+if (instance.addPathOffset) instance.dirtyOffset = true;
+if (instance.addPathRotation) instance.dirtyRotation = true;
+}
+});
+};
+P.draw = function (engine) {
+engine.stroke(this.pathObject);
+if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+P.fill = function (engine) {
+engine.fill(this.pathObject, this.winding);
+if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+P.drawAndFill = function (engine) {
+let p = this.pathObject;
+engine.stroke(p);
+this.currentHost.clearShadow();
+engine.fill(p, this.winding);
+if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+P.fillAndDraw = function (engine) {
+let p = this.pathObject;
+engine.stroke(p);
+this.currentHost.clearShadow();
+engine.fill(p, this.winding);
+engine.stroke(p);
+if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+P.drawThenFill = function (engine) {
+let p = this.pathObject;
+engine.stroke(p);
+engine.fill(p, this.winding);
+if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+P.fillThenDraw = function (engine) {
+let p = this.pathObject;
+engine.fill(p, this.winding);
+engine.stroke(p);
+if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+P.clear = function (engine) {
+let gco = engine.globalCompositeOperation;
+engine.globalCompositeOperation = 'destination-out';
+engine.fill(this.pathObject, this.winding);
+engine.globalCompositeOperation = gco;
+if (this.showBoundingBox) this.drawBoundingBox(engine);
+},
+P.drawBoundingBox = function (engine) {
+engine.save();
+engine.strokeStyle = this.boundingBoxColor;
+engine.lineWidth = 1;
+engine.globalCompositeOperation = 'source-over';
+engine.globalAlpha = 1;
+engine.shadowOffsetX = 0;
+engine.shadowOffsetY = 0;
+engine.shadowBlur = 0;
+engine.strokeRect(...this.getBoundingBox());
+engine.restore();
+};
+P.getBoundingBox = function () {
+let floor = Math.floor,
+ceil = Math.ceil,
+minDims = this.minimumBoundingBoxDimensions;
+let [x, y, w, h] = this.localBox;
+let [lx, ly] = this.controlledLineOffset;
+let [hX, hY] = this.currentStampHandlePosition;
+let [sX, sY] = this.currentStampPosition;
+if (w < minDims) w = minDims;
+if (h < minDims) h = minDims;
+return [floor(x - hX + lx), floor(y - hY + ly), ceil(w), ceil(h), sX, sY];
 };
 const makeShape = function (items) {
 return new Shape(items);

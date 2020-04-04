@@ -51,24 +51,23 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
-
 // #### Anchor attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-// __host__ - Every anchor will belong to exactly one Artefact
+// __host__ - Every anchor will belong to exactly one Artefact.
     host: null,
 
-// __description__ - The text that Scrawl-canvas will include between the anchor tags, when building the anchor. __Always include a description__ for accessibility
+// __description__ - The text that Scrawl-canvas will include between the anchor tags, when building the anchor. __Always include a description__ for accessibility.
     description: '',
 
-// The following attributes are detailed in https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a - they are (most of) the __DOM element's attributes__
-// + the HTML Anchor element 'type' attribute is stored in the Scrawl-canvas Anchor object using the key 'anchorType'
-//
-// Scrawl-canvas will build a link element and add it to the DOM, then invoke a click event on it when required to do so.
+// The following attributes are detailed in [MDN's &lt;a> reference page](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a)
+// + They are (most of) the DOM element's attributes: __download__, __href__, __hreflang__, __ping__, __referrerpolicy__, __rel__, __target__, __anchorType__.
+// + The HTML Anchor element `type` attribute is stored in the Scrawl-canvas Anchor object using the key __anchorType__.
+// + Scrawl-canvas will build a link element and add it to the DOM, then invoke a click event on it when required to do so.
     download: '',
     href: '',
     hreflang: '',

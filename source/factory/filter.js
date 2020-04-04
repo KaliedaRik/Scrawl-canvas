@@ -67,11 +67,11 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
 // #### Filter attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
 

@@ -10,7 +10,7 @@ this.register();
 this.set(this.defs);
 this.set(items);
 this.setDefinitionsValues();
-this.status = 'before';
+this.status = -1;
 this.calculateEffectiveTime();
 this.calculateEffectiveDuration();
 if (animationtickers[items.ticker]) this.addToTicker(items.ticker);
@@ -40,21 +40,18 @@ P = tweenMix(P);
 let defaultAttributes = {
 definitions: null,
 duration: 0,
-commenceAction: null,
-completeAction: null,
 killOnComplete: false,
+commenceAction: null,
 onRun: null,
 onHalt: null,
 onResume: null,
 onReverse: null,
 onSeekTo: null,
 onSeekFor: null,
+completeAction: null,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['definitions', 'targets']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
 P.packetFunctions = pushUnique(P.packetFunctions, ['commenceAction', 'completeAction', 'onRun', 'onHalt', 'onResume', 'onReverse', 'onSeekTo', 'onSeekFor', 'action']);
 P.finalizePacketOut = function (copy, items) {
 if (Array.isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
@@ -169,41 +166,40 @@ P.update = function (items = {}) {
 let starts, ends,
 tick = items.tick || 0,
 revTick = items.reverseTick || 0,
-status = 'running',
+status = 0,
 effectiveTime = this.effectiveTime,
 effectiveDuration = this.effectiveDuration,
 reversed = this.reversed;
 if (!reversed) {
 starts = effectiveTime;
 ends = effectiveTime + effectiveDuration;
-if (tick < starts) status = 'before';
-else if (tick > ends) status = 'after';
+if (tick < starts) status = -1;
+else if (tick > ends) status = 1;
 }
 else {
 starts = effectiveTime + effectiveDuration;
 ends = effectiveTime;
-if (revTick > starts) status = 'after';
-else if (revTick < ends) status = 'before';
+if (revTick > starts) status = 1;
+else if (revTick < ends) status = -1;
 }
 if (effectiveDuration) {
-if (status === 'running' || status !== this.status) {
+if (!status || status != this.status) {
 this.status = status;
 this.doSimpleUpdate(items);
-if (!items.next) this.status = (reversed) ? 'before' : 'after';
+if (!items.next) this.status = (reversed) ? -1 : 1;
 }
 }
 else {
-if (status !== this.status) {
+if (status != this.status) {
 this.status = status;
 this.doSimpleUpdate(items);
-if (!items.next) this.status = (reversed) ? 'before' : 'after';
+if (!items.next) this.status = (reversed) ? -1 : 1;
 }
 }
 if (items.willLoop) {
 if (this.reverseOnCycleEnd) this.reversed = !reversed;
-else this.status = 'before';
+else this.status = -1;
 }
-return true;
 };
 P.doSimpleUpdate = function (items = {}) {
 let starts = this.effectiveTime,
@@ -215,11 +211,12 @@ definitions = this.definitions,
 targets = this.targets,
 action = this.action,
 i, iz, j, jz, progress,
-setObj = {};
-effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
-if (effectiveDuration && status === 'running') progress = effectiveTick / effectiveDuration;
-else progress = (status === 'after') ? 1 : 0;
+setObj = this.setObj || {};
 let def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute;
+let round = Math.round;
+effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
+if (effectiveDuration && !status) progress = effectiveTick / effectiveDuration;
+else progress = (status > 0) ? 1 : 0;
 for (i = 0, iz = definitions.length; i < iz; i++) {
 def = definitions[i];
 engine = def.engine;
@@ -230,13 +227,14 @@ suffix = def.suffix;
 attribute = def.attribute;
 if (engine.substring) val = actions[engine](effectiveStart, effectiveChange, progress);
 else val = engine(effectiveStart, effectiveChange, progress);
-if (int) val = Math.round(val);
+if (int) val = round(val);
 if (suffix) val += suffix;
 setObj[attribute] = val;
 }
 for (j = 0, jz = targets.length; j < jz; j++) {
 targets[j].set(setObj);
 }
+this.setObj = setObj;
 if (action) action();
 };
 P.engineActions = {

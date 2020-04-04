@@ -3,6 +3,10 @@
 // + if the timeline is moving forwards the __action__ function will be invoked
 // + if the timeline is moving backwards the __revert__ function will be invoked
 
+
+// TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see [Ticker TODO section](./ticker.html#section-2) for issues and suggested work).
+
+
 // #### Demos:
 // + [DOM-006](../../demo/dom-006.html)- Tween actions on a DOM element; tracking tween and ticker activity (analytics)
 
@@ -40,13 +44,13 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [tween](../mixin/tween.html)
 P = baseMix(P);
 P = tweenMix(P);
 
 
 // #### Action attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [tween mixin](../mixin/tween.html): __order__, __ticker__, __targets__, __time__, __action__, __reverseOnCycleEnd__, __reversed__.
 let defaultAttributes = {
 
 // __revert__ - a function that is triggered when a tween is running in reverse direction. Should be a counterpart to the __action__ function (defined in mixin/tween.js) to reverse the actions performed by that function.
@@ -57,9 +61,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['targets']);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, []);
 P.packetFunctions = pushUnique(P.packetFunctions, ['revert', 'action']);
 
 P.finalizePacketOut = function (copy, items) {
@@ -101,10 +102,9 @@ S.triggered = function (item) {
     }
 };
 
-
-// #### Prototype functions
-
-// Overrides the set() functionality defined in mixin/base.js
+// `set` - we perform some additional functionality in the Action `set` function
+// + updating the Action's Ticker object happens here
+// + recalculating effectiveDuration happens here if the __time__ value change
 P.set = function (items = {}) {
 
     if (items) {
@@ -134,12 +134,15 @@ P.set = function (items = {}) {
     return this;
 };
 
-// Ticker-related help function
+
+// #### Animation
+
+// `getEndTime` - Ticker-related help function
 P.getEndTime = function () {
     return this.effectiveTime;
 };
 
-// The __update__ function checks to see if the action (or revert) functions need to be invoked, and invokes them as-and-when required.
+// `update` - check to see if the action (or revert) functions need to be invoked, and invokes them as-and-when required.
 //
 // TODO: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. All other %times appear to work as expected.
 P.update = function (items) {

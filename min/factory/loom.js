@@ -5,7 +5,6 @@ import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import baseMix from '../mixin/base.js';
 import anchorMix from '../mixin/anchor.js';
-import filterMix from '../mixin/filter.js';
 const Loom = function (items = {}) {
 this.makeName(items.name);
 this.register();
@@ -33,7 +32,6 @@ P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
 P = anchorMix(P);
-P = filterMix(P);
 let defaultAttributes = {
 fromPath: null,
 toPath: null,
@@ -90,6 +88,7 @@ copy.anchor = a;
 }
 return copy;
 }
+P.clone = defaultThisReturnFunction;
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -166,18 +165,6 @@ else this.host = item;
 }
 else this.host = '';
 };
-P.getHost = function () {
-if (this.currentHost) return this.currentHost;
-else if (this.host) {
-let host = artefact[this.host];
-if (host) {
-this.currentHost = host;
-this.dirtyHost = true;
-return this.currentHost;
-}
-}
-return currentCorePosition;
-};
 G.group = function () {
 return (this.group) ? this.group.name : '';
 };
@@ -199,55 +186,6 @@ return currentCorePosition;
 };
 S.delta = function (items = {}) {
 if (items) this.delta = mergeDiscard(this.delta, items);
-};
-P.updateByDelta = function () {
-this.setDelta(this.delta);
-return this;
-};
-P.reverseByDelta = function () {
-let temp = {};
-Object.entries(this.delta).forEach(([key, val]) => {
-if (val.substring) val = -(parseFloat(val)) + '%';
-else val = -val;
-temp[key] = val;
-});
-this.setDelta(temp);
-return this;
-};
-P.setDeltaValues = function (items = {}) {
-let delta = this.delta,
-oldVal, action;
-Object.entries(items).forEach(([key, requirement]) => {
-if (xt(delta[key])) {
-action = requirement;
-oldVal = delta[key];
-switch (action) {
-case 'reverse' :
-if (oldVal.toFixed) delta[key] = -oldVal;
-break;
-case 'zero' :
-if (oldVal.toFixed) delta[key] = 0;
-break;
-case 'add' :
-break;
-case 'subtract' :
-break;
-case 'multiply' :
-break;
-case 'divide' :
-break;
-}
-}
-})
-return this;
-};
-P.midInitActions = defaultNonReturnFunction;
-P.clone = defaultThisReturnFunction;
-P.cleanCollisionData = function () {
-return [0, []];
-};
-P.getSensors = function () {
-return [];
 };
 S.fromPath = function (item) {
 if (item) {
@@ -319,29 +257,17 @@ this.fromPathStart = item;
 if (this.synchronizePathCursors) this.toPathStart = item;
 this.dirtyPathData = true;
 };
-S.fromPathEnd = function (item) {
-if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
-this.fromPathEnd = item;
-if (this.synchronizePathCursors) this.toPathEnd = item;
-this.dirtyPathData = true;
-};
-S.toPathStart = function (item) {
-if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
-this.toPathStart = item;
-if (this.synchronizePathCursors) this.fromPathStart = item;
-this.dirtyPathData = true;
-};
-S.toPathEnd = function (item) {
-if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
-this.toPathEnd = item;
-if (this.synchronizePathCursors) this.fromPathEnd = item;
-this.dirtyPathData = true;
-};
 D.fromPathStart = function (item) {
 let val = this.fromPathStart += item;
 if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
 this.fromPathStart = val;
 if (this.synchronizePathCursors) this.toPathStart = val;
+this.dirtyPathData = true;
+};
+S.fromPathEnd = function (item) {
+if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
+this.fromPathEnd = item;
+if (this.synchronizePathCursors) this.toPathEnd = item;
 this.dirtyPathData = true;
 };
 D.fromPathEnd = function (item) {
@@ -351,11 +277,23 @@ this.fromPathEnd = val;
 if (this.synchronizePathCursors) this.toPathEnd = val;
 this.dirtyPathData = true;
 };
+S.toPathStart = function (item) {
+if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
+this.toPathStart = item;
+if (this.synchronizePathCursors) this.fromPathStart = item;
+this.dirtyPathData = true;
+};
 D.toPathStart = function (item) {
 let val = this.toPathStart += item;
 if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
 this.toPathStart = val;
 if (this.synchronizePathCursors) this.fromPathStart = val;
+this.dirtyPathData = true;
+};
+S.toPathEnd = function (item) {
+if (this.loopPathCursors && (item < 0 || item > 1)) item = item - Math.floor(item);
+this.toPathEnd = item;
+if (this.synchronizePathCursors) this.fromPathEnd = item;
 this.dirtyPathData = true;
 };
 D.toPathEnd = function (item) {
@@ -364,6 +302,66 @@ if (this.loopPathCursors && (val < 0 || val > 1)) val = val - Math.floor(val);
 this.toPathEnd = val;
 if (this.synchronizePathCursors) this.fromPathEnd = val;
 this.dirtyPathData = true;
+};
+P.getHost = function () {
+if (this.currentHost) return this.currentHost;
+else if (this.host) {
+let host = artefact[this.host];
+if (host) {
+this.currentHost = host;
+this.dirtyHost = true;
+return this.currentHost;
+}
+}
+return currentCorePosition;
+};
+P.updateByDelta = function () {
+this.setDelta(this.delta);
+return this;
+};
+P.reverseByDelta = function () {
+let temp = {};
+Object.entries(this.delta).forEach(([key, val]) => {
+if (val.substring) val = -(parseFloat(val)) + '%';
+else val = -val;
+temp[key] = val;
+});
+this.setDelta(temp);
+return this;
+};
+P.setDeltaValues = function (items = {}) {
+let delta = this.delta,
+oldVal, action;
+Object.entries(items).forEach(([key, requirement]) => {
+if (xt(delta[key])) {
+action = requirement;
+oldVal = delta[key];
+switch (action) {
+case 'reverse' :
+if (oldVal.toFixed) delta[key] = -oldVal;
+break;
+case 'zero' :
+if (oldVal.toFixed) delta[key] = 0;
+break;
+case 'add' :
+break;
+case 'subtract' :
+break;
+case 'multiply' :
+break;
+case 'divide' :
+break;
+}
+}
+})
+return this;
+};
+P.midInitActions = defaultNonReturnFunction;
+P.cleanCollisionData = function () {
+return [0, []];
+};
+P.getSensors = function () {
+return [];
 };
 P.prepareStamp = function() {
 let fPath = this.fromPath,

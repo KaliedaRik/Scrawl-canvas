@@ -1,10 +1,11 @@
-// ## Demo Canvas 011 
+// # Demo Canvas 011 
+// Shape entity (make, clone, method); drag and drop shape entitys
 
-// [Shape entity (make, clone, method); drag and drop shape entitys](../../demo/canvas-011.html)
+// [Run code](../../demo/canvas-011.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 scrawl.library.canvas.mycanvas.set({
@@ -391,6 +392,7 @@ scrawl.library.artefact.japan_fillAndDraw.set({
 });
 
 
+// #### User interaction
 // Create the drag-and-drop zone
 let current = scrawl.makeDragZone({
 
@@ -400,6 +402,7 @@ let current = scrawl.makeDragZone({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -421,7 +424,7 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -429,6 +432,8 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+
+// #### Development and testing
 console.log(scrawl.library);
 
 // To test kill functionality

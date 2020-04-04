@@ -299,7 +299,41 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="shape-factory">Shape factory</h1>
+<p>Shape entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>.</p>
+<p>Scrawl-canvas includes a number of <strong><em>convenience factory functions</em></strong> for generating Shape objects:</p>
+<ul>
+<li><strong>makeShape</strong> - the most versatile factory - takes an <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths">SVG &lt;path&gt; String</a> and converts it (as best as it can) into a Shape entity (species: <code>default</code>).</li>
+<li><strong>makeLine</strong> - creates a straight line Shape entity (species: <code>line</code>).</li>
+<li><strong>makeQuadratic</strong> - creates a quadratic line Shape entity (species: <code>quadratic</code>).</li>
+<li><strong>makeBezier</strong> - creates a bezier line Shape entity (species: <code>bezier</code>).</li>
+<li><strong>makeRectangle</strong> - creates a rectangle Shape entity (species: <code>rectangle</code>).</li>
+<li><strong>makeOval</strong> - creates an oval Shape entity (species: <code>oval</code>).</li>
+<li><strong>makeTetragon</strong> - creates a four-sided Shape entity (species: <code>tetragon</code>).</li>
+<li><strong>makePolygon</strong> - creates a regular, multi-sided Shape entity with equal-length sides (species: <code>polygon</code>).</li>
+<li><strong>makeStar</strong> - creates a star Shape entity (species: <code>star</code>).</li>
+<li><strong>makeSpiral</strong> - creates a spiral Shape entity (species: <code>spiral</code>).</li>
+<li>(Under the hood, all Shapes are created using SVG Path Strings)</li>
+</ul>
+<p>The <code>line</code>, <code>quadratic</code> and <code>bezier</code> Shapes come with additional Coordinates which can be used to position them in the display. These Coordinates can be manipulated and animated in the same way as <code>start</code>, <code>handle</code> and <code>offset</code> Coordinates.</p>
+<ul>
+<li>the <strong>end</strong> Coordinate is used by all three species - the pseudo-attributes are <strong>endX</strong>, <strong>endY</strong></li>
+<li>the <strong>control</strong> Coordinate is specific to <code>quadratic</code> Shapes - pseudo-attributes: <strong>controlX</strong>, <strong>controlY</strong></li>
+<li>the <strong>startControl</strong> and <strong>endControl</strong> Coordinates are specific to <code>bezier</code> Shapes - pseudo-attributes: <strong>startControlX</strong> and <strong>startControlY</strong>, <strong>endControlX</strong> and <strong>endControlY</strong>.</li>
+<li>all of these Coordinates can be positioned absolutely (px Numbers), relatively (% Strings), or by reference to other Artefacts.</li>
+</ul>
+<p>By default, a Shape entity is just that - an entity. It can be positioned, cloned, filtered etc like any other entity:</p>
+<ul>
+<li>Positioning functionality for the Shape is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
+<li>Dimensions, however, have no meaning for Shape entitys - their width and height are determined by their SVG path data Strings; use <code>scale</code> instead.</li>
+<li>Shapes can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
+<li>They will also accept <strong>Filter</strong> objects.</li>
+<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
+<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
+<li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
+<li>Shapes can be cloned, and killed.</li>
+</ul>
+
             </div>
             
         </li>
@@ -311,7 +345,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1 id="shape-factory">Shape factory</h1>
+              <h4 id="using-shape-entitys-as-scrawl-canvas-paths">Using Shape entitys as Scrawl-canvas paths</h4>
+<p>A path is a track - straight, or curved, or as complex as required - placed across a container which artefacts can use as a source of their positioning data. We can animate an artifact to move along the path:</p>
+<ul>
+<li>To turn a Shape into a path, set its <code>useAsPath</code> flag to <code>true</code>.</li>
+<li>The artefact can then set its <code>path</code> attribute to the Shape’s name-String (or the Shape itself), and set its <code>lockTo</code> Array values to <code>&quot;path&quot;</code>.</li>
+<li>We position the artefact by setting its <code>pathPosition</code> attribute to a float Number value between <code>0.0 - 1.0</code>, with <code>0</code> being the start of the path, and <code>1</code> being its end.</li>
+<li>Shape entitys can use other Shapes as a path.</li>
+<li>Phrase entitys can use a path to position their text block; they can also use a path to position each letter individually along the path (use the path as their text’s baseline).</li>
+<li>Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - <strong><em>tangential rotation</em></strong> by setting their <code>addPathRotation</code> flag to <code>true</code>.</li>
+<li>Animate an artefact along the path by either using the artefact’s <code>delta</code> object, or triggering a Tween to perform the movement.</li>
+</ul>
 
             </div>
             
@@ -324,7 +368,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p>TODO: consider whether it would be worthwhile to break this file down into modules specific to each Shape species, alongside a mixin for common functionality between them. Also: consider adding the following Shape species:</p>
+<ul>
+<li><strong>radialshape</strong> (makeRadialShape) - use path and repeat arguments; functionality will be to: swivel the path around a central point ‘repeat’ number of times (angle = 360/repeat) and turn the resulting radial shape into a single path value</li>
+<li><strong>boxedshape</strong> (makeBoxedShape) - I’m a bit fuzzy about this one, but I want to somehow <em>box up</em> (relativize) other Shape paths with box width/height values which can then be manipulated - allowing us to stretch the Shape path to match its box dimensions</li>
+<li><strong>polyline</strong> (makePolyline) - a shape for freehand drawing. Should include a ‘points’ Array which could include [x,y] coordinates, or possibly any object containing x/y values (eg Vectors). The functionality would be to construct a long line (linear, possibly also quadratic for smoother lines) from the [points] data</li>
+</ul>
 
             </div>
             
@@ -337,7 +386,18 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h4 id="to-instantiate-objects-from-the-factory">To instantiate objects from the factory</h4>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-011.html">Canvas-011</a> - Shape entity (make, clone, method); drag and drop shape entitys</li>
+<li><a href="../../demo/canvas-012.html">Canvas-012</a> - Shape entity position; shape entity as a path for other artefacts to follow</li>
+<li><a href="../../demo/canvas-013.html">Canvas-013</a> - Defined Shape entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral</li>
+<li><a href="../../demo/canvas-014.html">Canvas-014</a> - Line, quadratic and bezier Shapes - control lock alternatives</li>
+<li><a href="../../demo/canvas-018.html">Canvas-018</a> - Phrase entity - text along a path</li>
+<li><a href="../../demo/canvas-019.html">Canvas-019</a> - Artefact collision detection</li>
+<li><a href="../../demo/canvas-024.html">Canvas-024</a> - Loom entity functionality</li>
+<li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
+<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
+</ul>
 
             </div>
             
@@ -350,46 +410,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h4 id="library-storage">Library storage</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-functionality">Clone functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="kill-functionality">Kill functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <h2 id="imports">Imports</h2>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
@@ -410,13 +431,13 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="shape-constructor">Shape constructor</h2>
+              <h4 id="shape-constructor">Shape constructor</h4>
 
             </div>
             
@@ -463,13 +484,13 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h2 id="shape-object-prototype-setup">Shape object prototype setup</h2>
+              <h4 id="shape-prototype">Shape prototype</h4>
 
             </div>
             
@@ -482,13 +503,13 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Apply mixins to prototype object</p>
+              <h4 id="mixins">Mixins</h4>
 
             </div>
             
@@ -501,17 +522,81 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h4 id="shape-attributes">Shape attributes</h4>
+<ul>
+<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, handle, offset, dimensions, delta, noDeltaUpdates, pivot, pivotCorner, pivoted, addPivotHandle, addPivotOffset, addPivotRotation, path, pathPosition, addPathHandle, addPathOffset, addPathRotation, mimic, mimicked, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic, lockTo, scale, roll, collides, sensorSpacing, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil, filterAlpha, filterComposite</strong>.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><strong>species</strong> - internal attribute: we cannot change a Shape’s species once it has been crearted! Current species supported:</p>
+<ul>
+<li>default ‘’ (makeShape)</li>
+<li><code>line</code> (makeLine) </li>
+<li><code>quadratic</code> (makeQuadratic)</li>
+<li><code>bezier</code> (makeBezier)</li>
+<li><code>rectangle</code> (makeRectangle)</li>
+<li><code>oval</code> (makeOval)</li>
+<li><code>tetragon</code> (makeTetragon)</li>
+<li><code>polygon</code> (makePolygon)</li>
+<li><code>star</code> (makeStar)</li>
+<li><code>spiral</code> (makeSpiral)</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    species: <span class="hljs-string">''</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p><strong>useAsPath</strong> - by default, a Shape entity is just lines on the screen. It needs to be explicitly defined as a ‘path’ if it is to be used as a path by other artefacts.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    useAsPath: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2 id="define-default-attributes">Define default attributes</h2>
+              <p><strong>precision</strong> - used when doing length calculations - the smaller this value, the greater the precision of the final length value</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    precision: <span class="hljs-number">10</span>,</pre></div></div>
             
         </li>
         
@@ -522,11 +607,11 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>The box represents the rectangle surrounding the shape</p>
+              <p>Attributes used by <code>default</code> species</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    localBox: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    pathDefinition: <span class="hljs-string">''</span>,</pre></div></div>
             
         </li>
         
@@ -537,136 +622,7 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Current species supported, note that the parameters required by each species’ ‘make?’ function differ:</p>
-<ul>
-<li>default ‘’ (makeShape)</li>
-<li><strong>line</strong> (makeLine) </li>
-<li><strong>quadratic</strong> (makeQuadratic)</li>
-<li><strong>bezier</strong> (makeBezier)</li>
-<li><strong>rectangle</strong> (makeRectangle)</li>
-<li><strong>oval</strong> (makeOval)</li>
-<li><strong>tetragon</strong> (makeTetragon)</li>
-<li><strong>polygon</strong> (makePolygon)</li>
-<li><strong>star</strong> (makeStar)</li>
-<li><strong>spiral</strong> (makeSpiral)</li>
-</ul>
-<p>TODO: The following species are under consideration - currently their ‘make?’ functions return a ‘m0,0’ Shape entity</p>
-<ul>
-<li><p><strong>radialshape</strong> (makeRadialShape) - use path and repeat arguments; functionality will be to: swivel the path around a central point ‘repeat’ number of times (angle = 360/repeat) and turn the resulting radial shape into a single path value</p>
-</li>
-<li><p><strong>boxedshape</strong> (makeBoxedShape) - I’m a bit fuzzy about this one, but I want to somehow <em>box up</em> (relativize) other Shape paths with box width/height values which can then be manipulated - allowing us to stretch the Shape path to match its box dimensions</p>
-</li>
-<li><p><strong>polyline</strong> (makePolyline) - a shape for freehand drawing. Should include a ‘points’ Array which could include [x,y] coordinates, or possibly any object containing x/y values (eg Vectors). The functionality would be to construct a long line (linear, possibly also quadratic for smoother lines) from the [points] data</p>
-</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    species: <span class="hljs-string">''</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    pathed: <span class="hljs-literal">null</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    pathDefinition: <span class="hljs-string">''</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>Useful for development</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">boundingBoxColor</span>: <span class="hljs-string">'rgba(0,0,0,0.5)'</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>Sets a minimum dimensions size (in px) for calculating the bounding box</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    minimumBoundingBoxDimensions: <span class="hljs-number">20</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <p>By default, a Shape entity is just lines on the screen. It needs to be explicitly defined as a ‘path’ if it is to be used as a path by other artefacts.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    useAsPath: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">length</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">pathCalculatedOnce</span>: <span class="hljs-literal">false</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>Used when doing length calculations - the smaller this value, the greater the precision of the final length value</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    precision: <span class="hljs-number">10</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>Used by ‘spiral’ species</p>
+              <p>Attributes used by <code>spiral</code> species</p>
 
             </div>
             
@@ -677,13 +633,13 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Used by ‘rectangle’ species</p>
+              <p>Attributes used by <code>rectangle</code> species</p>
 
             </div>
             
@@ -701,13 +657,13 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Used by ‘oval’ and ‘tetragon’ species</p>
+              <p>Attributes used by <code>oval</code> and <code>tetragon</code> species (offshoot attributes also used by the <code>rectangle</code> species)</p>
 
             </div>
             
@@ -721,13 +677,13 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Used by ‘polygon’ species</p>
+              <p>Attributes used by <code>polygon</code> species</p>
 
             </div>
             
@@ -737,13 +693,13 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Used by ‘star’ species</p>
+              <p>Attributes used by <code>star</code> species</p>
 
             </div>
             
@@ -755,26 +711,13 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Used by ‘line’, ‘quadratic’, ‘bezier’ species</p>
+              <p>Attributes used by <code>line</code>, <code>quadratic</code>, <code>bezier</code> species</p>
 
             </div>
             
@@ -828,21 +771,37 @@ P = filterMix(P);</pre></div></div>
     <span class="hljs-attr">addEndPathOffset</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">''</span>,
 
-    <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">controlledLineOffset</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p><strong>bounding box</strong> attributes - useful for development work</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">boundingBoxColor</span>: <span class="hljs-string">'rgba(0,0,0,0.5)'</span>,
+    <span class="hljs-attr">minimumBoundingBoxDimensions</span>: <span class="hljs-number">20</span>,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
         
-        <li id="section-28">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h2 id="packet-management">Packet management</h2>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
@@ -865,22 +824,9 @@ P.packetSpeciesInclusions = {
     <span class="hljs-attr">quadratic</span>: [<span class="hljs-string">'end'</span>, <span class="hljs-string">'endPivot'</span>, <span class="hljs-string">'endPivotCorner'</span>, <span class="hljs-string">'addEndPivotHandle'</span>, <span class="hljs-string">'addEndPivotOffset'</span>, <span class="hljs-string">'endPath'</span>, <span class="hljs-string">'endPathPosition'</span>, <span class="hljs-string">'addEndPathHandle'</span>, <span class="hljs-string">'addEndPathOffset'</span>, <span class="hljs-string">'endLockTo'</span>, <span class="hljs-string">'control'</span>, <span class="hljs-string">'controlPivot'</span>, <span class="hljs-string">'controlPivotCorner'</span>, <span class="hljs-string">'addControlPivotHandle'</span>, <span class="hljs-string">'addControlPivotOffset'</span>, <span class="hljs-string">'controlPath'</span>, <span class="hljs-string">'controlPathPosition'</span>, <span class="hljs-string">'addControlPathHandle'</span>, <span class="hljs-string">'addControlPathOffset'</span>, <span class="hljs-string">'controlLockTo'</span>],
     <span class="hljs-attr">bezier</span>: [<span class="hljs-string">'end'</span>, <span class="hljs-string">'endPivot'</span>, <span class="hljs-string">'endPivotCorner'</span>, <span class="hljs-string">'addEndPivotHandle'</span>, <span class="hljs-string">'addEndPivotOffset'</span>, <span class="hljs-string">'endPath'</span>, <span class="hljs-string">'endPathPosition'</span>, <span class="hljs-string">'addEndPathHandle'</span>, <span class="hljs-string">'addEndPathOffset'</span>, <span class="hljs-string">'endLockTo'</span>, <span class="hljs-string">'startControl'</span>, <span class="hljs-string">'startControlPivot'</span>, <span class="hljs-string">'startControlPivotCorner'</span>, <span class="hljs-string">'addStartControlPivotHandle'</span>, <span class="hljs-string">'addStartControlPivotOffset'</span>, <span class="hljs-string">'startControlPath'</span>, <span class="hljs-string">'startControlPathPosition'</span>, <span class="hljs-string">'addStartControlPathHandle'</span>, <span class="hljs-string">'addStartControlPathOffset'</span>, <span class="hljs-string">'startControlLockTo'</span>, <span class="hljs-string">'endControl'</span>, <span class="hljs-string">'endControlPivot'</span>, <span class="hljs-string">'endControlPivotCorner'</span>, <span class="hljs-string">'addEndControlPivotHandle'</span>, <span class="hljs-string">'addEndControlPivotOffset'</span>, <span class="hljs-string">'endControlPath'</span>, <span class="hljs-string">'endControlPathPosition'</span>, <span class="hljs-string">'addEndControlPathHandle'</span>, <span class="hljs-string">'addEndControlPathOffset'</span>, <span class="hljs-string">'endControlLockTo'</span>],
     <span class="hljs-attr">default</span>: [<span class="hljs-string">'pathDefinition'</span>],
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>Overwrites mixin/entity.js function</p>
+};
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
 
     <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-keyword">this</span>.state.saveAsPacket(items))[<span class="hljs-number">3</span>];
     copy = mergeOver(copy, stateCopy);
@@ -906,13 +852,27 @@ P.packetSpeciesInclusions = {
         </li>
         
         
-        <li id="section-30">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <h2 id="kill-functionality">Kill functionality</h2>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
             
@@ -938,13 +898,13 @@ P.packetSpeciesInclusions = {
         </li>
         
         
-        <li id="section-31">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <h2 id="define-getter-setter-and-deltasetter-functions">Define getter, setter and deltaSetter functions</h2>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
@@ -954,13 +914,13 @@ P.packetSpeciesInclusions = {
         </li>
         
         
-        <li id="section-32">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>pathDefinition</strong></p>
 
             </div>
             
@@ -973,13 +933,13 @@ P.packetSpeciesInclusions = {
         </li>
         
         
-        <li id="section-33">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>species</strong> - used internally</p>
 
             </div>
             
@@ -997,13 +957,13 @@ P.packetSpeciesInclusions = {
         </li>
         
         
-        <li id="section-34">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>useStartAsControlPoint</strong></p>
 
             </div>
             
@@ -1024,13 +984,13 @@ P.packetSpeciesInclusions = {
         </li>
         
         
-        <li id="section-35">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <p>Invalidate dimensions setters - dimensions are an emergent property of shapes, not a defining property</p>
+              <p>Invalidate <strong>dimensions</strong> setters - dimensions are an emergent property of shapes, not a defining property</p>
 
             </div>
             
@@ -1044,13 +1004,13 @@ D.dimensions = defaultNonReturnFunction;</pre></div></div>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>endPivot</strong></p>
 
             </div>
             
@@ -1059,51 +1019,142 @@ D.dimensions = defaultNonReturnFunction;</pre></div></div>
     <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'endPivot'</span>, <span class="hljs-string">'end'</span>);
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p><strong>endPath</strong></p>
 
-S.endPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.endPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'endPath'</span>, <span class="hljs-string">'end'</span>);
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p><strong>controlPivot</strong></p>
 
-S.controlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.controlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'controlPivot'</span>, <span class="hljs-string">'control'</span>);
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p><strong>controlPath</strong></p>
 
-S.controlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.controlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'controlPath'</span>, <span class="hljs-string">'control'</span>);
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p><strong>endControlPivot</strong></p>
 
-S.endControlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.endControlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'endControlPivot'</span>, <span class="hljs-string">'endControl'</span>);
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p><strong>endControlPath</strong></p>
 
-S.endControlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.endControlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'endControlPath'</span>, <span class="hljs-string">'endControl'</span>);
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p><strong>startControlPivot</strong></p>
 
-S.startControlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.startControlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'startControlPivot'</span>, <span class="hljs-string">'startControl'</span>);
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p><strong>startControlPath</strong></p>
 
-S.startControlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.startControlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'startControlPath'</span>, <span class="hljs-string">'startControl'</span>);
     <span class="hljs-keyword">this</span>.updateDirty();
@@ -1119,7 +1170,10 @@ S.startControlPath = <span class="hljs-function"><span class="hljs-keyword">func
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>startControl</strong></p>
+<ul>
+<li>pseudo-attributes <strong>startControlX</strong>, <strong>startControlY</strong></li>
+</ul>
 
             </div>
             
@@ -1132,7 +1186,6 @@ S.startControlPath = <span class="hljs-function"><span class="hljs-keyword">func
         <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
     }
 };
-
 S.startControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
@@ -1142,14 +1195,12 @@ S.startControlY = <span class="hljs-function"><span class="hljs-keyword">functio
         <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
     }
 };
-
 S.startControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'startControl'</span>, x, y);
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
 };
-
 D.startControlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
     <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.startControl;
@@ -1157,7 +1208,6 @@ D.startControlX = <span class="hljs-function"><span class="hljs-keyword">functio
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
 };
-
 D.startControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
     <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.startControl;
@@ -1165,162 +1215,11 @@ D.startControlY = <span class="hljs-function"><span class="hljs-keyword">functio
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
 };
-
 D.startControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
     <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'startControl'</span>, x, y);
     <span class="hljs-keyword">this</span>.updateDirty();
     <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-};
-
-S.endControlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
-
-        <span class="hljs-keyword">this</span>.endControl[<span class="hljs-number">0</span>] = coord;
-        <span class="hljs-keyword">this</span>.updateDirty();
-        <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    }
-};
-
-S.endControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
-
-        <span class="hljs-keyword">this</span>.endControl[<span class="hljs-number">1</span>] = coord;
-        <span class="hljs-keyword">this</span>.updateDirty();
-        <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    }
-};
-
-S.endControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'endControl'</span>, x, y);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-};
-
-D.endControlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.endControl;
-    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-};
-
-D.endControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.endControl;
-    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-};
-
-D.endControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'endControl'</span>, x, y);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-};
-
-S.controlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
-
-        <span class="hljs-keyword">this</span>.control[<span class="hljs-number">0</span>] = coord;
-        <span class="hljs-keyword">this</span>.updateDirty();
-        <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    }
-};
-
-S.controlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
-
-        <span class="hljs-keyword">this</span>.control[<span class="hljs-number">1</span>] = coord;
-        <span class="hljs-keyword">this</span>.updateDirty();
-        <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    }
-};
-
-S.control = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'control'</span>, x, y);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-};
-
-D.controlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.control;
-    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-};
-
-D.controlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.control;
-    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-};
-
-D.control = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'control'</span>, x, y);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-};
-
-S.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
-
-        <span class="hljs-keyword">this</span>.end[<span class="hljs-number">0</span>] = coord;
-        <span class="hljs-keyword">this</span>.updateDirty();
-        <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-    }
-};
-
-S.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
-
-        <span class="hljs-keyword">this</span>.end[<span class="hljs-number">1</span>] = coord;
-        <span class="hljs-keyword">this</span>.updateDirty();
-        <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-    }
-};
-
-S.end = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'end'</span>, x, y);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-};
-
-D.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.end;
-    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-};
-
-D.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.end;
-    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-};
-
-D.end = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'end'</span>, x, y);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1332,40 +1231,56 @@ D.end = <span class="hljs-function"><span class="hljs-keyword">function</span> (
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>TODO </p>
+              <p><strong>endControl</strong></p>
 <ul>
-<li>we also need the …LockXTo, …LockYTo versions</li>
-<li>make sure this functionality replicates the original!</li>
+<li>pseudo-attributes <strong>endControlX</strong>, <strong>endControlY</strong></li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.startControlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.endControlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.startControlLockTo = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyStartControlLock = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
+
+        <span class="hljs-keyword">this</span>.endControl[<span class="hljs-number">0</span>] = coord;
+        <span class="hljs-keyword">this</span>.updateDirty();
+        <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
+    }
 };
+S.endControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-S.endControlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-    <span class="hljs-keyword">this</span>.endControlLockTo = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEndControlLock = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">this</span>.endControl[<span class="hljs-number">1</span>] = coord;
+        <span class="hljs-keyword">this</span>.updateDirty();
+        <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
+    }
 };
+S.endControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-S.controlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.controlLockTo = item;
+    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'endControl'</span>, x, y);
     <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControlLock = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
 };
+D.endControlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-S.endLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.endLockTo = item;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.endControl;
+    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
     <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyEndLock = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
+};
+D.endControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.endControl;
+    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
+};
+D.endControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'endControl'</span>, x, y);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1377,7 +1292,212 @@ S.endLockTo = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>control</strong></p>
+<ul>
+<li>pseudo-attributes <strong>controlX</strong>, <strong>controlY</strong></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.controlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
+
+        <span class="hljs-keyword">this</span>.control[<span class="hljs-number">0</span>] = coord;
+        <span class="hljs-keyword">this</span>.updateDirty();
+        <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    }
+};
+S.controlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
+
+        <span class="hljs-keyword">this</span>.control[<span class="hljs-number">1</span>] = coord;
+        <span class="hljs-keyword">this</span>.updateDirty();
+        <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    }
+};
+S.control = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'control'</span>, x, y);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+};
+D.controlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.control;
+    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+};
+D.controlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.control;
+    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+};
+D.control = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'control'</span>, x, y);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p><strong>end</strong></p>
+<ul>
+<li>pseudo-attributes <strong>endX</strong>, <strong>endY</strong></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
+
+        <span class="hljs-keyword">this</span>.end[<span class="hljs-number">0</span>] = coord;
+        <span class="hljs-keyword">this</span>.updateDirty();
+        <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+    }
+};
+S.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
+
+        <span class="hljs-keyword">this</span>.end[<span class="hljs-number">1</span>] = coord;
+        <span class="hljs-keyword">this</span>.updateDirty();
+        <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+    }
+};
+S.end = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'end'</span>, x, y);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+};
+D.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.end;
+    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+};
+D.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+
+    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.end;
+    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+};
+D.end = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'end'</span>, x, y);
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p><strong>startControlLockTo</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.startControlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.startControlLockTo = item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyStartControlLock = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p><strong>endControlLockTo</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.endControlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.endControlLockTo = item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyEndControlLock = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p><strong>controlLockTo</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.controlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.controlLockTo = item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyControlLock = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p><strong>endLockTo</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.endLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.endLockTo = item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-keyword">this</span>.dirtyEndLock = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>A variety of attributes with the word <strong>radius</strong> in them</p>
+<ul>
+<li>Including: <strong>radius</strong>, <strong>radiusX</strong>, <strong>radiusY</strong>, <strong>radiusT</strong>, <strong>radiusB</strong>, <strong>radiusL</strong>, <strong>radiusR</strong>, <strong>radiusTX</strong>, <strong>radiusBX</strong>, <strong>radiusLX</strong>, <strong>radiusRX</strong>, <strong>radiusTY</strong>, <strong>radiusBY</strong>, <strong>radiusLY</strong>, <strong>radiusRY</strong>, <strong>radiusTL</strong>, <strong>radiusTR</strong>, <strong>radiusBL</strong>, <strong>radiusBR</strong>, <strong>radiusTLX</strong>, <strong>radiusTRX</strong>, <strong>radiusBRX</strong>, <strong>radiusBLX</strong>, <strong>radiusTLY</strong>, <strong>radiusTRY</strong>, <strong>radiusBRY</strong>, <strong>radiusBLY</strong>, <strong>radius1</strong>, <strong>radius2</strong>, <strong>innerRadius</strong></li>
+</ul>
 
             </div>
             
@@ -1489,7 +1609,6 @@ S.radiusBLY = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">this</span>.setRectHelper(item, [<span class="hljs-string">'radiusBLY'</span>]);
 };
-
 D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.deltaRectHelper(item, [<span class="hljs-string">'radiusTLX'</span>, <span class="hljs-string">'radiusTRX'</span>, <span class="hljs-string">'radiusBRX'</span>, <span class="hljs-string">'radiusBLX'</span>, <span class="hljs-string">'radiusX'</span>, <span class="hljs-string">'radiusTLY'</span>, <span class="hljs-string">'radiusTRY'</span>, <span class="hljs-string">'radiusBRY'</span>, <span class="hljs-string">'radiusBLY'</span>, <span class="hljs-string">'radiusY'</span>]);
@@ -1597,176 +1716,32 @@ D.radiusBLX = <span class="hljs-function"><span class="hljs-keyword">function</s
 D.radiusBLY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.deltaRectHelper(item, [<span class="hljs-string">'radiusBLY'</span>]);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.sides = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.sides = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
 };
-
-D.sides = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.sides += item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};
-
-S.sideLength = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.sideLength = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};
-
-D.sideLength = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.sideLength += item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.radius1 = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.radius1 = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.radius1 = item;
     <span class="hljs-keyword">this</span>.updateDirty();
 };
-
 D.radius1 = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.radius1 += item;
     <span class="hljs-keyword">this</span>.updateDirty();
 };
-
 S.radius2 = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.radius2 = item;
     <span class="hljs-keyword">this</span>.updateDirty();
 };
-
 D.radius2 = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.radius2 += item;
     <span class="hljs-keyword">this</span>.updateDirty();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.points = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.points = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
 };
-
-D.points = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.points += item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.twist = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.twist = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};
-
-D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.twist += item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.loops = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.loops = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};
-
-D.loops = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.loops += item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.innerRadius = item;
     <span class="hljs-keyword">this</span>.updateDirty();
 };
-
 D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">this</span>.innerRadius += item;
@@ -1782,9 +1757,20 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <h2 id="define-prototype-functions">Define prototype functions</h2>
+              <p><strong>sides</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>S.sides = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.sides = item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};
+D.sides = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.sides += item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -1795,7 +1781,116 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><strong>sideLength</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.sideLength = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.sideLength = item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};
+D.sideLength = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.sideLength += item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p><strong>points</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.points = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.points = item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};
+D.points = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.points += item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p><strong>twist</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.twist = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.twist = item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};
+D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.twist += item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p><strong>loops</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.loops = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.loops = item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};
+D.loops = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.loops += item;
+    <span class="hljs-keyword">this</span>.updateDirty();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p><code>updateDirty</code> - internal setter helper function</p>
 
             </div>
             
@@ -1808,13 +1903,13 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-48">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>setRectHelper</code> - internal setter helper function</p>
 
             </div>
             
@@ -1831,13 +1926,13 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-49">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>deltaRectHelper</code> - internal setter helper function</p>
 
             </div>
             
@@ -1854,13 +1949,13 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-50">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>setControlHelper</code> - internal setter helper function</p>
 
             </div>
             
@@ -1914,13 +2009,13 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-51">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>midInitActions</code> - internal constructor helper function</p>
 
             </div>
             
@@ -1932,13 +2027,26 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-52">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="path-related-functionality">Path-related functionality</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p><code>positionPointOnPath</code></p>
 
             </div>
             
@@ -1968,13 +2076,13 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-53">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getBezierXY</code></p>
 
             </div>
             
@@ -1986,9 +2094,22 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
         <span class="hljs-attr">x</span>: (<span class="hljs-built_in">Math</span>.pow(T, <span class="hljs-number">3</span>) * sx) + (<span class="hljs-number">3</span> * t * <span class="hljs-built_in">Math</span>.pow(T, <span class="hljs-number">2</span>) * cp1x) + (<span class="hljs-number">3</span> * t * t * T * cp2x) + (t * t * t * ex),
         <span class="hljs-attr">y</span>: (<span class="hljs-built_in">Math</span>.pow(T, <span class="hljs-number">3</span>) * sy) + (<span class="hljs-number">3</span> * t * <span class="hljs-built_in">Math</span>.pow(T, <span class="hljs-number">2</span>) * cp1y) + (<span class="hljs-number">3</span> * t * t * T * cp2y) + (t * t * t * ey)
     };
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p><code>getQuadraticXY</code></p>
 
-P.getQuadraticXY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, cp1x, cp1y, ex, ey</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.getQuadraticXY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, cp1x, cp1y, ex, ey</span>) </span>{
 
     <span class="hljs-keyword">let</span> T = <span class="hljs-number">1</span> - t;
 
@@ -1996,9 +2117,22 @@ P.getQuadraticXY = <span class="hljs-function"><span class="hljs-keyword">functi
         <span class="hljs-attr">x</span>: T * T * sx + <span class="hljs-number">2</span> * T * t * cp1x + t * t * ex,
         <span class="hljs-attr">y</span>: T * T * sy + <span class="hljs-number">2</span> * T * t * cp1y + t * t * ey
     };
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p><code>getLinearXY</code></p>
 
-P.getLinearXY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, ex, ey</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.getLinearXY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, ex, ey</span>) </span>{
 
     <span class="hljs-keyword">return</span> {
         <span class="hljs-attr">x</span>: sx + ((ex - sx) * t),
@@ -2009,13 +2143,13 @@ P.getLinearXY = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-54">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getBezierAngle</code></p>
 
             </div>
             
@@ -2026,18 +2160,44 @@ P.getLinearXY = <span class="hljs-function"><span class="hljs-keyword">function<
         dy = <span class="hljs-built_in">Math</span>.pow(T, <span class="hljs-number">2</span>) * (cp1y - sy) + <span class="hljs-number">2</span> * t * T * (cp2y - cp1y) + t * t * (ey - cp2y);
 
     <span class="hljs-keyword">return</span> (-<span class="hljs-built_in">Math</span>.atan2(dx, dy) + (<span class="hljs-number">0.5</span> * <span class="hljs-built_in">Math</span>.PI)) / radian;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p><code>getQuadraticAngle</code></p>
 
-P.getQuadraticAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, cp1x, cp1y, ex, ey</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.getQuadraticAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, cp1x, cp1y, ex, ey</span>) </span>{
 
     <span class="hljs-keyword">let</span> T = <span class="hljs-number">1</span> - t,
         dx = <span class="hljs-number">2</span> * T * (cp1x - sx) + <span class="hljs-number">2</span> * t * (ex - cp1x),
         dy = <span class="hljs-number">2</span> * T * (cp1y - sy) + <span class="hljs-number">2</span> * t * (ey - cp1y);
 
     <span class="hljs-keyword">return</span> (-<span class="hljs-built_in">Math</span>.atan2(dx, dy) + (<span class="hljs-number">0.5</span> * <span class="hljs-built_in">Math</span>.PI)) / radian;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p><code>getLinearAngle</code></p>
 
-P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, ex, ey</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t, sx, sy, ex, ey</span>) </span>{
 
     <span class="hljs-keyword">let</span> dx = ex - sx,
         dy = ey - sy;
@@ -2048,13 +2208,13 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-55">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>getPathPositionData</code></p>
 
             </div>
             
@@ -2070,11 +2230,11 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-56">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>… because sometimes everything doesn’t all add up to 1</p>
 
@@ -2086,14 +2246,14 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-57">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <ol>
-<li>determine the pertinent subpath to use for calculation</li>
+<li>Determine the pertinent subpath to use for calculation</li>
 </ol>
 
             </div>
@@ -2110,14 +2270,14 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-58">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <ol start="2">
-<li>calculate point along the subpath the pos value represents</li>
+<li>Calculate point along the subpath the pos value represents</li>
 </ol>
 
             </div>
@@ -2134,14 +2294,14 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-59">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <ol start="3">
-<li>get coordinates and angle at that point from subpath; return results</li>
+<li>Get coordinates and angle at that point from subpath; return results</li>
 </ol>
 
             </div>
@@ -2196,13 +2356,231 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-60">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <h4 id="collision-detection">Collision detection</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p><code>calculateSensors</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.calculateSensors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> sensorSpacing = <span class="hljs-keyword">this</span>.sensorSpacing || <span class="hljs-number">50</span>,
+        length = <span class="hljs-keyword">this</span>.length,
+        segments = <span class="hljs-built_in">parseInt</span>(length / sensorSpacing, <span class="hljs-number">10</span>),
+        pos = <span class="hljs-number">0</span>,
+        data, i, iz;
+
+    <span class="hljs-keyword">if</span> (segments &lt; <span class="hljs-number">4</span>) segments = <span class="hljs-number">4</span>;
+
+    <span class="hljs-keyword">let</span> segmentLength = <span class="hljs-number">1</span> / segments;
+
+    <span class="hljs-keyword">let</span> sensors = <span class="hljs-keyword">this</span>.currentSensors;
+    sensors.length = <span class="hljs-number">0</span>;
+
+    data = <span class="hljs-keyword">this</span>.getPathPositionData(<span class="hljs-number">0</span>);
+    sensors.push([data.x, data.y]);
+    
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; segments; i++) {
+
+        pos += segmentLength;
+        data = <span class="hljs-keyword">this</span>.getPathPositionData(pos);
+        sensors.push([data.x, data.y]);
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <h4 id="display-cycle-functionality">Display cycle functionality</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <p><code>prepareStamp</code> - the purpose of most of these actions is described in the <a href="http://localhost:8080/docs/source/mixin/entity.html#section-31">entity mixin function</a> that this function overwrites</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyHost) <span class="hljs-keyword">this</span>.dirtyHost = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <p><code>dirtyLock</code> flags (one for each control) - trigger <strong>cleanLock</strong> functions - which in turn set appropriate dirty flags on the entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyLock) <span class="hljs-keyword">this</span>.cleanLock();
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStartControlLock) <span class="hljs-keyword">this</span>.cleanControlLock(<span class="hljs-string">'startControl'</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyEndControlLock) <span class="hljs-keyword">this</span>.cleanControlLock(<span class="hljs-string">'endControl'</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyControlLock) <span class="hljs-keyword">this</span>.cleanControlLock(<span class="hljs-string">'control'</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyEndLock) <span class="hljs-keyword">this</span>.cleanControlLock(<span class="hljs-string">'end'</span>);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.startControlLockTo === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.endControlLockTo === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.controlLockTo === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.endLockTo === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtySpecies || <span class="hljs-keyword">this</span>.dirtyDimensions || <span class="hljs-keyword">this</span>.dirtyStart || <span class="hljs-keyword">this</span>.dirtyStartControl || <span class="hljs-keyword">this</span>.dirtyEndControl || <span class="hljs-keyword">this</span>.dirtyControl || <span class="hljs-keyword">this</span>.dirtyEnd || <span class="hljs-keyword">this</span>.dirtyHandle) {
+
+        <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p><code>dirtySpecies</code> flag is specific to Shape entitys</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.useStartAsControlPoint &amp;&amp; <span class="hljs-keyword">this</span>.dirtyStart) {
+
+            <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              <p><code>pathCalculatedOnce</code> - calculating path data is an expensive operation - use this flag to limit the calculation to run only when needed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtySpecies || <span class="hljs-keyword">this</span>.dirtyStartControl || <span class="hljs-keyword">this</span>.dirtyEndControl || <span class="hljs-keyword">this</span>.dirtyControl || <span class="hljs-keyword">this</span>.dirtyEnd)  <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
+
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isBeingDragged || <span class="hljs-keyword">this</span>.lockTo.indexOf(<span class="hljs-string">'mouse'</span>) &gt;= <span class="hljs-number">0</span>) {
+
+        <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <p><code>useStartAsControlPoint</code> </p>
+<ul>
+<li>When false, this flag indicates that line, quadratic and bezier shapes should treat <code>start</code> Coordinate updates as an instruction to move the entire Shape. </li>
+<li>When true, the Coordinate is used to define the shape of the Shape relative to its other control/end Coordinates</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.useStartAsControlPoint) {
+
+            <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
+        }
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyRotation || <span class="hljs-keyword">this</span>.dirtyOffset) <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyCollision &amp;&amp; !<span class="hljs-keyword">this</span>.useAsPath) {
+
+        <span class="hljs-keyword">this</span>.useAsPath = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale) <span class="hljs-keyword">this</span>.cleanScale();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStart) <span class="hljs-keyword">this</span>.cleanStart();
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStartControl) <span class="hljs-keyword">this</span>.cleanControl(<span class="hljs-string">'startControl'</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyEndControl) <span class="hljs-keyword">this</span>.cleanControl(<span class="hljs-string">'endControl'</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyControl) <span class="hljs-keyword">this</span>.cleanControl(<span class="hljs-string">'control'</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyEnd) <span class="hljs-keyword">this</span>.cleanControl(<span class="hljs-string">'end'</span>);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyOffset) <span class="hljs-keyword">this</span>.cleanOffset();
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyRotation) <span class="hljs-keyword">this</span>.cleanRotation();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStampPositions) <span class="hljs-keyword">this</span>.cleanStampPositions();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              <p><code>cleanSpecies</code> - creates the SVG path String which will be used by <code>cleanPathObject</code> - each species creates the local path in its own way</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtySpecies) <span class="hljs-keyword">this</span>.cleanSpecies();
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPathObject) <span class="hljs-keyword">this</span>.cleanPathObject();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPositionSubscribers) <span class="hljs-keyword">this</span>.updatePositionSubscribers();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
+              </div>
+              <p><code>cleanControlLock</code> - internal helper function - called by <code>prepareStamp</code></p>
 
             </div>
             
@@ -2217,13 +2595,13 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-61">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanControl</code> - internal helper function - called by <code>prepareStamp</code></p>
 
             </div>
             
@@ -2332,65 +2710,13 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-62">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-63">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
-              </div>
-              <p>Overwrites mixin/position.js function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.calculateSensors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> sensorSpacing = <span class="hljs-keyword">this</span>.sensorSpacing || <span class="hljs-number">50</span>,
-        length = <span class="hljs-keyword">this</span>.length,
-        segments = <span class="hljs-built_in">parseInt</span>(length / sensorSpacing, <span class="hljs-number">10</span>),
-        pos = <span class="hljs-number">0</span>,
-        data, i, iz;
-
-    <span class="hljs-keyword">if</span> (segments &lt; <span class="hljs-number">4</span>) segments = <span class="hljs-number">4</span>;
-
-    <span class="hljs-keyword">let</span> segmentLength = <span class="hljs-number">1</span> / segments;
-
-    <span class="hljs-keyword">let</span> sensors = <span class="hljs-keyword">this</span>.currentSensors;
-    sensors.length = <span class="hljs-number">0</span>;
-
-    data = <span class="hljs-keyword">this</span>.getPathPositionData(<span class="hljs-number">0</span>);
-    sensors.push([data.x, data.y]);
-    
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; segments; i++) {
-
-        pos += segmentLength;
-        data = <span class="hljs-keyword">this</span>.getPathPositionData(pos);
-        sensors.push([data.x, data.y]);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-64">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p><code>getControlPathData</code> - internal helper function - called by <code>cleanControl</code></p>
 
             </div>
             
@@ -2436,139 +2762,41 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-65">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code> </p>
+<ul>
+<li>Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.</li>
+</ul>
 
             </div>
             
-        </li>
-        
-        
-        <li id="section-66">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
-              </div>
-              <p>Overwrites mixin/position.js function</p>
+            <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.updatePathSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">this</span>.pathed.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
-
-        <span class="hljs-keyword">let</span> instance = artefact[name];
-
-        <span class="hljs-keyword">if</span> (instance) {
-
-            instance.dirtyStart = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (instance.addPathHandle) instance.dirtyHandle = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (instance.addPathOffset) instance.dirtyOffset = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (instance.addPathRotation) instance.dirtyRotation = <span class="hljs-literal">true</span>;
-        }
-    });
+    <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-67">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyHost) <span class="hljs-keyword">this</span>.dirtyHost = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyLock) <span class="hljs-keyword">this</span>.cleanLock();
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStartControlLock) <span class="hljs-keyword">this</span>.cleanControlLock(<span class="hljs-string">'startControl'</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyEndControlLock) <span class="hljs-keyword">this</span>.cleanControlLock(<span class="hljs-string">'endControl'</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyControlLock) <span class="hljs-keyword">this</span>.cleanControlLock(<span class="hljs-string">'control'</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyEndLock) <span class="hljs-keyword">this</span>.cleanControlLock(<span class="hljs-string">'end'</span>);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.startControlLockTo === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.endControlLockTo === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.controlLockTo === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.endLockTo === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtySpecies || <span class="hljs-keyword">this</span>.dirtyDimensions || <span class="hljs-keyword">this</span>.dirtyStart || <span class="hljs-keyword">this</span>.dirtyStartControl || <span class="hljs-keyword">this</span>.dirtyEndControl || <span class="hljs-keyword">this</span>.dirtyControl || <span class="hljs-keyword">this</span>.dirtyEnd || <span class="hljs-keyword">this</span>.dirtyHandle) {
-
-        <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.useStartAsControlPoint &amp;&amp; <span class="hljs-keyword">this</span>.dirtyStart) {
-
-            <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
-        }
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtySpecies || <span class="hljs-keyword">this</span>.dirtyStartControl || <span class="hljs-keyword">this</span>.dirtyEndControl || <span class="hljs-keyword">this</span>.dirtyControl || <span class="hljs-keyword">this</span>.dirtyEnd)  <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
-
-    }
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isBeingDragged || <span class="hljs-keyword">this</span>.lockTo.indexOf(<span class="hljs-string">'mouse'</span>) &gt;= <span class="hljs-number">0</span>) {
-
-        <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.useStartAsControlPoint) {
-
-            <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
-        }
-    }
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyRotation || <span class="hljs-keyword">this</span>.dirtyOffset) <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyCollision &amp;&amp; !<span class="hljs-keyword">this</span>.useAsPath) {
-
-        <span class="hljs-keyword">this</span>.useAsPath = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
-    }
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale) <span class="hljs-keyword">this</span>.cleanScale();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStart) <span class="hljs-keyword">this</span>.cleanStart();
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStartControl) <span class="hljs-keyword">this</span>.cleanControl(<span class="hljs-string">'startControl'</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyEndControl) <span class="hljs-keyword">this</span>.cleanControl(<span class="hljs-string">'endControl'</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyControl) <span class="hljs-keyword">this</span>.cleanControl(<span class="hljs-string">'control'</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyEnd) <span class="hljs-keyword">this</span>.cleanControl(<span class="hljs-string">'end'</span>);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyOffset) <span class="hljs-keyword">this</span>.cleanOffset();
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyRotation) <span class="hljs-keyword">this</span>.cleanRotation();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStampPositions) <span class="hljs-keyword">this</span>.cleanStampPositions();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtySpecies) <span class="hljs-keyword">this</span>.cleanSpecies();
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPathObject) <span class="hljs-keyword">this</span>.cleanPathObject();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPositionSubscribers) <span class="hljs-keyword">this</span>.updatePositionSubscribers();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-68">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanPathObject</code> - internal helper function - called by <code>prepareStamp</code></p>
 
             </div>
             
@@ -2595,38 +2823,13 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-69">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-
-    <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p><code>calculateLocalPath</code> - internal helper function - called by <code>cleanPathObject</code></p>
 
             </div>
             
@@ -2678,13 +2881,13 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-71">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanStampPositionsAdditionalActions</code> - internal helper function - called by <code>cleanPathObject</code></p>
 
             </div>
             
@@ -2711,13 +2914,13 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-72">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
             </div>
             
@@ -2774,162 +2977,13 @@ P.getLinearAngle = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-73">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.draw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
-},
-
-P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    engine.fill(<span class="hljs-keyword">this</span>.pathObject, <span class="hljs-keyword">this</span>.winding);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
-},
-
-P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
-
-    engine.stroke(p);
-    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
-    engine.fill(p, <span class="hljs-keyword">this</span>.winding);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
-},
-
-P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
-
-    engine.stroke(p);
-    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
-    engine.fill(p, <span class="hljs-keyword">this</span>.winding);
-    engine.stroke(p);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
-},
-
-P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
-
-    engine.stroke(p);
-    engine.fill(p, <span class="hljs-keyword">this</span>.winding);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
-},
-
-P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
-
-    engine.fill(p, <span class="hljs-keyword">this</span>.winding);
-    engine.stroke(p);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
-},
-
-P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    <span class="hljs-keyword">let</span> gco = engine.globalCompositeOperation;
-
-    engine.globalCompositeOperation = <span class="hljs-string">'destination-out'</span>;
-    engine.fill(<span class="hljs-keyword">this</span>.pathObject, <span class="hljs-keyword">this</span>.winding);
-    
-    engine.globalCompositeOperation = gco;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
-},</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-74">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.drawBoundingBox = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
-
-    engine.save();
-
-    engine.strokeStyle = <span class="hljs-keyword">this</span>.boundingBoxColor;
-    engine.lineWidth = <span class="hljs-number">1</span>;
-    engine.globalCompositeOperation = <span class="hljs-string">'source-over'</span>;
-    engine.globalAlpha = <span class="hljs-number">1</span>;
-    engine.shadowOffsetX = <span class="hljs-number">0</span>;
-    engine.shadowOffsetY = <span class="hljs-number">0</span>;
-    engine.shadowBlur = <span class="hljs-number">0</span>;
-
-    engine.strokeRect(...this.getBoundingBox());
-
-    engine.restore();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-75">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.getBoundingBox = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
-        ceil = <span class="hljs-built_in">Math</span>.ceil,
-        minDims = <span class="hljs-keyword">this</span>.minimumBoundingBoxDimensions;
-
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-keyword">this</span>.localBox;
-    <span class="hljs-keyword">let</span> [lx, ly] = <span class="hljs-keyword">this</span>.controlledLineOffset;
-    <span class="hljs-keyword">let</span> [hX, hY] = <span class="hljs-keyword">this</span>.currentStampHandlePosition;
-    <span class="hljs-keyword">let</span> [sX, sY] = <span class="hljs-keyword">this</span>.currentStampPosition;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-76">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
-              </div>
-              <p>Pad out excessively thin widths and heights</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (w &lt; minDims) w = minDims;
-    <span class="hljs-keyword">if</span> (h &lt; minDims) h = minDims;
-
-    <span class="hljs-keyword">return</span> [floor(x - hX + lx), floor(y - hY + ly), ceil(w), ceil(h), sX, sY];
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-77">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
-              </div>
-              <p>TODO - documentation</p>
+              <p><code>makeOvalPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
@@ -2975,13 +3029,13 @@ P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>makeTetragonPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
@@ -3021,13 +3075,13 @@ P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-79">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-89">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>makeRectanglePath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
@@ -3086,13 +3140,13 @@ P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-80">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>makeBezierPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
@@ -3109,13 +3163,13 @@ P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-81">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>makeQuadraticPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
@@ -3131,13 +3185,13 @@ P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-92">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>makeLinearPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
@@ -3152,13 +3206,13 @@ P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>makePolygonPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
@@ -3196,13 +3250,13 @@ P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-84">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-94">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
+              <p><code>makeStarPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
@@ -3269,30 +3323,16 @@ P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-85">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
-              <p>Taken from this page - <a href="https://rosettacode.org/wiki/Archimedean_spiral#JavaScript">https://rosettacode.org/wiki/Archimedean_spiral#JavaScript</a></p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-86">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
-              </div>
-              <p>TODO: find a solution that uses far fewer sub-units</p>
+              <p><code>makeSpiralPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 <ul>
-<li>current solution uses lots of short lines</li>
-<li>shoule be able to achieve the same effect using 4 bezier curves per turn</li>
-<li>beziers would also offer a way to make much more interesting ‘spiral’ shapes </li>
+<li>Taken from this page - <a href="https://rosettacode.org/wiki/Archimedean_spiral#JavaScript">https://rosettacode.org/wiki/Archimedean_spiral#JavaScript</a></li>
+<li>TODO: find a solution that uses far fewer sub-units: current solution uses lots of short lines; shoule be able to achieve the same effect using 4 bezier curves per turn; beziers would also offer a way to make much more interesting ‘spiral’ shapes </li>
 </ul>
 
             </div>
@@ -3344,78 +3384,763 @@ P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-87">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-96">&#182;</a>
               </div>
-              <h2 id="exported-factory-functions">Exported factory functions</h2>
+              <h4 id="subscriber-management">Subscriber management</h4>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-97">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-97">&#182;</a>
+              </div>
+              <p><code>updatePathSubscribers</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.updatePathSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">this</span>.pathed.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> instance = artefact[name];
+
+        <span class="hljs-keyword">if</span> (instance) {
+
+            instance.dirtyStart = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (instance.addPathHandle) instance.dirtyHandle = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (instance.addPathOffset) instance.dirtyOffset = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (instance.addPathRotation) instance.dirtyRotation = <span class="hljs-literal">true</span>;
+        }
+    });
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-98">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-98">&#182;</a>
+              </div>
+              <h4 id="stamp-methods">Stamp methods</h4>
+<p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-99">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-99">&#182;</a>
+              </div>
+              <p><code>draw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.draw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
+},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-100">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-100">&#182;</a>
+              </div>
+              <p><code>fill</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    engine.fill(<span class="hljs-keyword">this</span>.pathObject, <span class="hljs-keyword">this</span>.winding);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
+},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-101">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-101">&#182;</a>
+              </div>
+              <p><code>drawAndFill</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+
+    engine.stroke(p);
+    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
+    engine.fill(p, <span class="hljs-keyword">this</span>.winding);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
+},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-102">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-102">&#182;</a>
+              </div>
+              <p><code>fillAndDraw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+
+    engine.stroke(p);
+    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
+    engine.fill(p, <span class="hljs-keyword">this</span>.winding);
+    engine.stroke(p);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
+},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-103">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-103">&#182;</a>
+              </div>
+              <p><code>drawThenFill</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+
+    engine.stroke(p);
+    engine.fill(p, <span class="hljs-keyword">this</span>.winding);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
+},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-104">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-104">&#182;</a>
+              </div>
+              <p><code>fillThenDraw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+
+    engine.fill(p, <span class="hljs-keyword">this</span>.winding);
+    engine.stroke(p);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
+},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-105">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-105">&#182;</a>
+              </div>
+              <p><code>clear</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    <span class="hljs-keyword">let</span> gco = engine.globalCompositeOperation;
+
+    engine.globalCompositeOperation = <span class="hljs-string">'destination-out'</span>;
+    engine.fill(<span class="hljs-keyword">this</span>.pathObject, <span class="hljs-keyword">this</span>.winding);
+    
+    engine.globalCompositeOperation = gco;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
+},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-106">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-106">&#182;</a>
+              </div>
+              <p><code>drawBoundingBox</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.drawBoundingBox = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+
+    engine.save();
+
+    engine.strokeStyle = <span class="hljs-keyword">this</span>.boundingBoxColor;
+    engine.lineWidth = <span class="hljs-number">1</span>;
+    engine.globalCompositeOperation = <span class="hljs-string">'source-over'</span>;
+    engine.globalAlpha = <span class="hljs-number">1</span>;
+    engine.shadowOffsetX = <span class="hljs-number">0</span>;
+    engine.shadowOffsetY = <span class="hljs-number">0</span>;
+    engine.shadowBlur = <span class="hljs-number">0</span>;
+
+    engine.strokeRect(...this.getBoundingBox());
+
+    engine.restore();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-107">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-107">&#182;</a>
+              </div>
+              <p><code>getBoundingBox</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.getBoundingBox = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
+        ceil = <span class="hljs-built_in">Math</span>.ceil,
+        minDims = <span class="hljs-keyword">this</span>.minimumBoundingBoxDimensions;
+
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-keyword">this</span>.localBox;
+    <span class="hljs-keyword">let</span> [lx, ly] = <span class="hljs-keyword">this</span>.controlledLineOffset;
+    <span class="hljs-keyword">let</span> [hX, hY] = <span class="hljs-keyword">this</span>.currentStampHandlePosition;
+    <span class="hljs-keyword">let</span> [sX, sY] = <span class="hljs-keyword">this</span>.currentStampPosition;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-108">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-108">&#182;</a>
+              </div>
+              <p>Pad out excessively thin widths and heights</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (w &lt; minDims) w = minDims;
+    <span class="hljs-keyword">if</span> (h &lt; minDims) h = minDims;
+
+    <span class="hljs-keyword">return</span> [floor(x - hX + lx), floor(y - hY + ly), ceil(w), ceil(h), sX, sY];
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-109">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-109">&#182;</a>
+              </div>
+              <h4 id="factories">Factories</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-110">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-110">&#182;</a>
+              </div>
+              <h5 id="makeshape">makeShape</h5>
+<p>Accepts argument with attributes:</p>
+<ul>
+<li><code>pathDefinition</code> (required) - an <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d">SVG <code>d</code> attribute</a> String</li>
+</ul>
+<pre><code>scrawl.makeShape({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myArrow'</span>,
+
+    <span class="hljs-attr">pathDefinition</span>: <span class="hljs-string">'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'50%'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'50%'</span>,
+
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">0.2</span>,
+    <span class="hljs-attr">scaleOutline</span>: <span class="hljs-literal">false</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'lightgreen'</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
+});</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-111">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-111">&#182;</a>
+              </div>
+              <h5 id="makeline">makeLine</h5>
+<p>Accepts argument with attributes:</p>
+<ul>
+<li><strong>start</strong> (<strong><em>startX</em></strong>, <strong><em>startY</em></strong>) Coordinate, or <strong>pivot</strong>/<strong>mimic</strong>/<strong>path</strong> reference artefact (required)</li>
+<li><strong>end</strong> (<strong><em>endX</em></strong>, <strong><em>endY</em></strong>) Coordinate, or <strong>endPivot</strong>/<strong>endPath</strong> reference artefact (required) </li>
+<li>If using reference artefacts, may also need to set the <strong>lockTo</strong> (<strong><em>lockXTo</em></strong>, <strong><em>lockYTo</em></strong>) and <strong>endLockTo</strong> lock attributes</li>
+<li>additional reference-linked attributes for the <code>end</code> coordinate: <strong>endPivotCorner</strong>, <strong>addEndPivotHandle</strong>, <strong>addEndPivotOffset</strong>, <strong>endPathPosition</strong>, <strong>addEndPathHandle</strong>, <strong>addEndPathOffset</strong></li>
+</ul>
+<pre><code>scrawl.makeLine({
 
-<span class="hljs-keyword">const</span> makeLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-line'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">300</span>,
+
+    <span class="hljs-attr">endX</span>: <span class="hljs-number">580</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-number">275</span>,
+
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkgoldenrod'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     items.species = <span class="hljs-string">'line'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-112">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-112">&#182;</a>
+              </div>
+              <h5 id="makequadratic">makeQuadratic</h5>
+<p>Accepts argument with attributes:</p>
+<ul>
+<li><strong>start</strong> (<strong><em>startX</em></strong>, <strong><em>startY</em></strong>) Coordinate, or <strong>pivot</strong>/<strong>mimic</strong>/<strong>path</strong> reference artefact (required)</li>
+<li><strong>control</strong> (<strong><em>controlX</em></strong>, <strong><em>controlY</em></strong>) Coordinate, or <strong>controlPivot</strong>/<strong>controlPath</strong> reference artefact (required) </li>
+<li><strong>end</strong> (<strong><em>endX</em></strong>, <strong><em>endY</em></strong>) Coordinate, or <strong>endPivot</strong>/<strong>endPath</strong> reference artefact (required) </li>
+<li>If using reference artefacts, may also need to set the <strong>lockTo</strong> (<strong><em>lockXTo</em></strong>, <strong><em>lockYTo</em></strong>), <strong>controlLockTo</strong> and <strong>endLockTo</strong> lock attributes</li>
+<li>additional reference-linked attributes for the <code>control</code> coordinate: <strong>controlPivotCorner</strong>, <strong>addControlPivotHandle</strong>, <strong>addControlPivotOffset</strong>, <strong>controlPathPosition</strong>, <strong>addControlPathHandle</strong>, <strong>addControlPathOffset</strong></li>
+<li>additional reference-linked attributes for the <code>end</code> coordinate: <strong>endPivotCorner</strong>, <strong>addEndPivotHandle</strong>, <strong>addEndPivotOffset</strong>, <strong>endPathPosition</strong>, <strong>addEndPathHandle</strong>, <strong>addEndPathOffset</strong></li>
+</ul>
+<pre><code>scrawl.makeQuadratic({
 
-<span class="hljs-keyword">const</span> makeQuadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-quadratic'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'5%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'26.5%'</span>,
+
+    <span class="hljs-attr">controlX</span>: <span class="hljs-string">'50%'</span>,
+    <span class="hljs-attr">controlY</span>: <span class="hljs-string">'18%'</span>,
+
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">'95%'</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">'26.5%'</span>,
+
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkseagreen'</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeQuadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     items.species = <span class="hljs-string">'quadratic'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-113">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-113">&#182;</a>
+              </div>
+              <h5 id="makebezier">makeBezier</h5>
+<p>Accepts argument with attributes:</p>
+<ul>
+<li><strong>start</strong> (<strong><em>startX</em></strong>, <strong><em>startY</em></strong>) Coordinate, or <strong>pivot</strong>/<strong>mimic</strong>/<strong>path</strong> reference artefact (required)</li>
+<li><strong>startControl</strong> (<strong><em>startControlX</em></strong>, <strong><em>startControlY</em></strong>) Coordinate, or <strong>startControlPivot</strong>/<strong>startControlPath</strong> reference artefact (required) </li>
+<li><strong>endControl</strong> (<strong>endCcontrolX_</strong>, <strong>endCcontrolY_</strong>) Coordinate, or <strong>endControlPivot</strong>/<strong>endControlPath</strong> reference artefact (required) </li>
+<li><strong>end</strong> (<strong><em>endX</em></strong>, <strong><em>endY</em></strong>) Coordinate, or <strong>endPivot</strong>/<strong>endPath</strong> reference artefact (required) </li>
+<li>If using reference artefacts, may also need to set the <strong>lockTo</strong> (<strong><em>lockXTo</em></strong>, <strong><em>lockYTo</em></strong>), <strong>startControlLockTo</strong>, <strong>endControlLockTo</strong> and <strong>endLockTo</strong> lock attributes</li>
+<li>additional reference-linked attributes for the <code>startControl</code> coordinate: <strong>startControlPivotCorner</strong>, <strong>addStartControlPivotHandle</strong>, <strong>addStartControlPivotOffset</strong>, <strong>startControlPathPosition</strong>, <strong>addStartControlPathHandle</strong>, <strong>addStartControlPathOffset</strong></li>
+<li>additional reference-linked attributes for the <code>endControl</code> coordinate: <strong>endControlPivotCorner</strong>, <strong>addEndControlPivotHandle</strong>, <strong>addEndControlPivotOffset</strong>, <strong>endControlPathPosition</strong>, <strong>addEndControlPathHandle</strong>, <strong>addEndControlPathOffset</strong></li>
+<li>additional reference-linked attributes for the <code>end</code> coordinate: <strong>endPivotCorner</strong>, <strong>addEndPivotHandle</strong>, <strong>addEndPivotOffset</strong>, <strong>endPathPosition</strong>, <strong>addEndPathHandle</strong>, <strong>addEndPathOffset</strong></li>
+</ul>
+<pre><code>scrawl.makeBezier({
 
-<span class="hljs-keyword">const</span> makeBezier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'bezier-curve'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'5%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'36%'</span>,
+
+    <span class="hljs-attr">startControlX</span>: <span class="hljs-string">'40%'</span>,
+    <span class="hljs-attr">startControlY</span>: <span class="hljs-string">'31%'</span>,
+
+    <span class="hljs-attr">endControlX</span>: <span class="hljs-string">'60%'</span>,
+    <span class="hljs-attr">endControlY</span>: <span class="hljs-string">'41%'</span>,
+
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">'95%'</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">'36%'</span>,
+
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'linen'</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeBezier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     items.species = <span class="hljs-string">'bezier'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-114">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-114">&#182;</a>
+              </div>
+              <h5 id="makerectangle">makeRectangle</h5>
+<p>Essentially this Shape looks like a Block with rounded corners</p>
+<p>Rectangle Shapes are unique in that they require width and height dimensions, supplied in the <strong>rectangleWidth</strong> and <strong>rectangleHeight</strong> attributes.</p>
+<p>Internally, Scrawl-canvas uses quadratic curves to construct the corners. The <em>bend</em> of these corners is set by the quadratic’s control point which doesn’t have its own coordinate but is rather calculated using two float Number variables: <strong>offshootA</strong> (default: <code>0.55</code>) and <strong>offshootB</strong> (default: <code>0</code>) - change these values to make the corners more or less bendy.</p>
+<p>Each corner of the rectangle can be rounded using <strong>radius</strong> values. Like the <strong><em>oval Shape</em></strong>, the corner has both a horizontal <code>x</code> radius and a vertical <code>y</code> radius. Thus to draw a rectangle, we need to supply a total of 8 radius measurements:</p>
+<ul>
+<li><strong>radiusTLX</strong> - the <strong>T</strong>op <strong>L</strong>eft corner’s <code>x</code> radius</li>
+<li><strong>radiusTLY</strong> - the <strong>T</strong>op <strong>L</strong>eft corner’s <code>y</code> radius</li>
+<li><strong>radiusTRX</strong> - the <strong>T</strong>op <strong>R</strong>ight corner’s <code>x</code> radius</li>
+<li><strong>radiusTRY</strong> - the <strong>T</strong>op <strong>R</strong>ight corner’s <code>y</code> radius</li>
+<li><strong>radiusBRX</strong> - the <strong>B</strong>ottom <strong>R</strong>ight corner’s <code>x</code> radius</li>
+<li><strong>radiusBRY</strong> - the <strong>B</strong>ottom <strong>R</strong>ight corner’s <code>y</code> radius</li>
+<li><strong>radiusBLX</strong> - the <strong>B</strong>ottom <strong>L</strong>eft corner’s <code>x</code> radius</li>
+<li><strong>radiusBLY</strong> - the <strong>B</strong>ottom <strong>L</strong>eft corner’s <code>y</code> radius</li>
+</ul>
+<p>For convenience a lot of <strong><em>pseudo-attributes</em></strong> are supplied, which make defining the radius of each corner a bit easier. We achieve this by adding a letter or combination of letters to the word <code>&#39;radius&#39;</code>:</p>
+<ul>
+<li><strong><em>radius</em></strong> - all 8 radius values are set to the given distance (measured in px)</li>
+<li><strong><em>radiusX</em></strong> - the 4 <code>x</code> radius values</li>
+<li><strong><em>radiusY</em></strong> - the 4 <code>y</code> radius values</li>
+<li><strong><em>radiusT</em></strong> - the 4 <code>top</code> radius values</li>
+<li><strong><em>radiusTX</em></strong> - both <code>x</code> radius values for the <code>top</code> corners</li>
+<li><strong><em>radiusTY</em></strong> - both <code>y</code> radius values for the <code>top</code> corners</li>
+<li><strong><em>radiusB</em></strong> - the 4 <code>bottom</code> radius values</li>
+<li><strong><em>radiusBX</em></strong> - both <code>x</code> radius values for the <code>bottom</code> corners</li>
+<li><strong><em>radiusBY</em></strong> - both <code>y</code> radius values for the <code>bottom</code> corners</li>
+<li><strong><em>radiusL</em></strong> - the 4 <code>left</code> radius values</li>
+<li><strong><em>radiusLX</em></strong> - both <code>x</code> radius values for the <code>left</code> corners</li>
+<li><strong><em>radiusLY</em></strong> - both <code>y</code> radius values for the <code>left</code> corners</li>
+<li><strong><em>radiusR</em></strong> - the 4 <code>right</code> radius values</li>
+<li><strong><em>radiusRX</em></strong> - both <code>x</code> radius values for the <code>right</code> corners</li>
+<li><strong><em>radiusRY</em></strong> - both <code>y</code> radius values for the <code>right</code> corners</li>
+<li><strong><em>radiusTL</em></strong> - both radius values for the <code>top left</code> corner</li>
+<li><strong><em>radiusTR</em></strong> - both radius values for the <code>top right</code> corner</li>
+<li><strong><em>radiusBL</em></strong> - both radius values for the <code>bottom left</code> corner</li>
+<li><strong><em>radiusBR</em></strong> - both radius values for the <code>bottom right</code> corner</li>
+</ul>
+<pre><code>scrawl.makeRectangle({
 
-<span class="hljs-keyword">const</span> makeRectangle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'tab'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">200</span>,
+
+    <span class="hljs-attr">rectangleWidth</span>: <span class="hljs-number">120</span>,
+    <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-number">80</span>,
+
+    <span class="hljs-attr">radiusT</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">radiusB</span>: <span class="hljs-number">0</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'lightblue'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeRectangle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     items.species = <span class="hljs-string">'rectangle'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-115">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-115">&#182;</a>
+              </div>
+              <h5 id="makeoval">makeOval</h5>
+<p>Scrawl-canvas uses quadratic curves internally to create the curved path. </p>
+<ul>
+<li>The <em>bend</em> of these curves is set by the quadratic’s control point which doesn’t have its own coordinate but is rather calculated using two float Number variables: <strong>offshootA</strong> (default: <code>0.55</code>) and <strong>offshootB</strong> (default: <code>0</code>) - change these values to make the quarter-curves more or less bendy.</li>
+<li>The main shape of the oval is determined by differing radius lengths in the <code>x</code> and <code>y</code> directions, as set by the attributes <strong>radiusX</strong> and <strong>radiusY</strong>; to set both radiuses to the same value, use <strong><strong>radius</strong></strong> instead.</li>
+<li>The radius values can be: <em>absolute</em> (using Number values); or <em>relative</em> using %-String values - with the y radius representing a portion of the Cell container’s height and the x radius the Cell’s width.</li>
+<li>The radiuses (as diameter lines) cross in the middle of the oval shape. We can move the position of where the intersection happens by setting a float Number value between <code>0.0 - 1.0</code> (or beyond those limits) for the <strong>intersectX</strong> and <strong>intersectY</strong> attributes. </li>
+<li><code>intersectX</code> (default: <code>0.5</code>) represents the point at which the <code>y</code> diameter crosses the <code>x</code> diameter, with <code>0</code> being the left end and <code>1</code> being the right end.</li>
+<li><code>intersectY</code> (default: <code>0.5</code>) represents the point at which the <code>x</code> diameter crosses the <code>y</code> diameter, with <code>0</code> being the top end and <code>1</code> being the bottom end.</li>
+</ul>
+<pre><code>scrawl.makeOval({
 
-<span class="hljs-keyword">const</span> makeOval = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'egg'</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'lightGreen'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">20</span>,
+
+    <span class="hljs-attr">radiusX</span>: <span class="hljs-string">'7%'</span>,
+    <span class="hljs-attr">radiusY</span>: <span class="hljs-string">'3%'</span>,
+
+    <span class="hljs-attr">intersectY</span>: <span class="hljs-number">0.6</span>,
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeOval = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     items.species = <span class="hljs-string">'oval'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-116">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-116">&#182;</a>
+              </div>
+              <h5 id="maketetragon">makeTetragon</h5>
+<p>Scrawl-canvas uses lines internally to create the Shape path. </p>
+<ul>
+<li>The main shape of the tetragon is determined by differing radius lengths in the <code>x</code> and <code>y</code> directions, as set by the attributes <strong>radiusX</strong> and <strong>radiusY</strong>; to set both radiuses to the same value, use <strong><em>radius</em></strong> instead.</li>
+<li>The radius values can be: <em>absolute</em> (using Number values); or <em>relative</em> using %-String values - with the y radius representing a portion of the Cell container’s height and the x radius the Cell’s width.</li>
+<li>The radiuses (as diameter lines) cross in the middle of the tetragon shape. We can move the position of where the intersection happens by setting a float Number value between <code>0.0 - 1.0</code> (or beyond those limits) for the <strong>intersectX</strong> and <strong>intersectY</strong> attributes. </li>
+<li><code>intersectX</code> (default: <code>0.5</code>) represents the point at which the <code>y</code> diameter crosses the <code>x</code> diameter, with <code>0</code> being the left end and <code>1</code> being the right end.</li>
+<li><code>intersectY</code> (default: <code>0.5</code>) represents the point at which the <code>x</code> diameter crosses the <code>y</code> diameter, with <code>0</code> being the top end and <code>1</code> being the bottom end.</li>
+</ul>
+<pre><code>scrawl.makeTetragon({
 
-<span class="hljs-keyword">const</span> makeTetragon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'diamond'</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'lightGreen'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">750</span>,
+
+    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">40</span>,
+    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">60</span>,
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeTetragon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     items.species = <span class="hljs-string">'tetragon'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-117">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-117">&#182;</a>
+              </div>
+              <h5 id="makepolygon">makePolygon</h5>
+<p>Accepts argument with attributes:</p>
+<ul>
+<li><strong>sides</strong> (required) - integer positive Number (greater than 2) representing the number of sides the Shape will have</li>
+<li><strong>sideLength</strong> (required) - float Number representing the distance (in px) from the center of the Shape to the first angle on the Shape’s circumference.</li>
+<li>TODO: consider renaming <code>sideLength</code> because it is not the length of the side; it is the radius of the circle in which the Shape fits</li>
+</ul>
+<pre><code>scrawl.makePolygon({
 
-<span class="hljs-keyword">const</span> makePolygon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'triangle'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">935</span>,
+
+    <span class="hljs-attr">sideLength</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">sides</span>: <span class="hljs-number">3</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'lightblue'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePolygon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     items.species = <span class="hljs-string">'polygon'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-118">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-118">&#182;</a>
+              </div>
+              <h5 id="makestar">makeStar</h5>
+<p>Accepts argument with attributes:</p>
+<ul>
+<li><strong>radius1</strong> (required) - the <em>outer</em> radius representing the distance between the center of the Shape and the tips of its (acute angle) points.</li>
+<li><strong>radius2</strong> (required) - the <em>inner</em> radius representing the distance between the center of the Shape and the obtuse angle at the valley between the tips of its (acute angle) points.</li>
+<li><strong>points</strong> (required) - a positive integer Number representing the number of points the star will have.</li>
+<li><strong>twist</strong> - a float Number representing the degrees by which the star’s second radius will be rotated out of line from its first radius; the default value <code>0</code> will produce a star with all of its sides of equal length and the star’s valleys falling midway between its connecting points.</li>
+<li>Note that the use of <em>inner</em> and <em>outer</em> above is purely descriptive: <code>radius2</code> can be larger than <code>radius1</code></li>
+</ul>
+<pre><code>scrawl.makeStar({
 
-<span class="hljs-keyword">const</span> makeStar = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'5star'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">100</span>,
+
+    <span class="hljs-attr">radius1</span>: <span class="hljs-number">80</span>,
+    <span class="hljs-attr">radius2</span>: <span class="hljs-number">50</span>,
+
+    <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'linen'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeStar = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     items.species = <span class="hljs-string">'star'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-119">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-119">&#182;</a>
+              </div>
+              <h5 id="makespiral">makeSpiral</h5>
+<p>A spiral drawn from an inner-radius outwards by a given number of loops, with the distance between each loop determined by a given increment. Accepts argument with attributes:</p>
+<ul>
+<li><strong>loops</strong> (required) - positive float Number representing the number of times the Shape line will wind arount the Shape’s center point</li>
+<li><strong>loopIncrement</strong> - positive float Number representing the distance (in px) between successive loops, as measured on a radius starting at the Shape’s center point</li>
+<li><strong>innerRadius</strong> - positive float Number representing the distance (in px) from the Shape’s center point to the point where the spiral begins</li>
+</ul>
+<pre><code>scrawl.makeSpiral({
 
-<span class="hljs-keyword">const</span> makeSpiral = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'mySpiral'</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkgreen'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">100</span>,
+
+    <span class="hljs-attr">loops</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">0.1</span>,
+    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">0</span>,
+});</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSpiral = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     items.species = <span class="hljs-string">'spiral'</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
 };
 
-constructors.Shape = Shape;
+constructors.Shape = Shape;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-120">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-120">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
 
-<span class="hljs-keyword">export</span> {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeShape,
 
     makeLine,

@@ -335,17 +335,34 @@ rocket.set({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> tween = scrawl.makeTween({
+
     <span class="hljs-attr">name</span>: <span class="hljs-string">'template'</span>,
+
     <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
     <span class="hljs-attr">killOnComplete</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useNewTicker</span>: <span class="hljs-literal">true</span>,
+
     <span class="hljs-attr">definitions</span>: [
         {
             <span class="hljs-attr">attribute</span>: <span class="hljs-string">'roll'</span>,
             <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">end</span>: <span class="hljs-number">65</span>
         }
-    ]
+    ],
+
+    <span class="hljs-attr">commenceAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">this</span>.set({
+            <span class="hljs-attr">targets</span>: rocket.clone({
+                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-element`</span>,
+            })
+        });
+    },
+
+    <span class="hljs-attr">completeAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        artefact[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-element`</span>].kill();
+    },
 }).removeFromTicker();</pre></div></div>
             
         </li>
@@ -423,25 +440,17 @@ animation - ${n.length}, ${library.animationnames.length}: ${n.join(', ')}`;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> flyRocket = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> counter = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">let</span> flyRocket = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>{
 
     e.preventDefault();
     e.returnValue = <span class="hljs-literal">false</span>;
 
     tween.clone({
-
-        <span class="hljs-attr">commenceAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-            <span class="hljs-keyword">this</span>.set({
-                <span class="hljs-attr">targets</span>: rocket.clone()
-            });
-        },
-
-        <span class="hljs-attr">completeAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-            <span class="hljs-keyword">this</span>.targets[<span class="hljs-number">0</span>].kill();
-        }
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`rocket-<span class="hljs-subst">${counter}</span>`</span>,
     }).run();
+
+    counter ++;
 };
 scrawl.addNativeListener(<span class="hljs-string">'click'</span>, flyRocket, stack.domElement);</pre></div></div>
             
@@ -459,6 +468,50 @@ scrawl.addNativeListener(<span class="hljs-string">'click'</span>, flyRocket, st
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>To test kill functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> killTicker = <span class="hljs-function">(<span class="hljs-params">name, time</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">let</span> packet;
+
+    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+    removed from tickers: <span class="hljs-subst">${(scrawl.library.animationtickers[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>`</span>);
+
+        packet = scrawl.library.animationtickers[name].saveAsPacket();
+
+        scrawl.library.animationtickers[name].kill();
+
+        setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+    removed from tickers: <span class="hljs-subst">${(scrawl.library.animationtickers[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>`</span>);
+
+            stack.actionPacket(packet);
+
+            setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+    removed from tickers: <span class="hljs-subst">${(scrawl.library.animationtickers[name]) ? <span class="hljs-string">'no'</span> : <span class="hljs-string">'yes'</span>}</span>`</span>);
+            }, <span class="hljs-number">100</span>);
+        }, <span class="hljs-number">100</span>);
+    }, time);
+};
+
+killTicker(<span class="hljs-string">'template_ticker'</span>, <span class="hljs-number">4000</span>);</pre></div></div>
             
         </li>
         

@@ -1,24 +1,24 @@
-// ## Demo Canvas 010 
+// # Demo Canvas 010 
+// Use video sources and media streams for Picture entitys
 
-// [Use video sources and media streams for Picture entitys](../../demo/canvas-010.html)
+// [Run code](../../demo/canvas-010.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 
-// Get image from DOM
+// ##### Importing video sources
 
-// When loading video assets from the DOM, note that Scrawl-canvas has to deal with the &lt;video> element operating under normal DOM rules. This means that (in most modern browsers) the video will not fetch anything beyond its metadata until at least 1px height of the video is displayed in the viewport (videos hidden by any CSS rules will not fetch anything until they are made visible).
-
-// The practical implications of this is that any Picture entitys relying on the video as their asset will not display an image until the DOM video element appears in the user's viewport.
-    
-// To make sure the Picture entity displays the video's first frame, we need to explicitly set the DOM element's preload attribute to "auto" 
+// __Get video stream from DOM &lt;video> element__
+// + When loading video assets from the DOM, note that Scrawl-canvas has to deal with the &lt;video> element operating under normal DOM rules. This means that (in most modern browsers) the video will not fetch anything beyond its metadata until at least 1px height of the video is displayed in the viewport (videos hidden by any CSS rules will not fetch anything until they are made visible).
+// + The practical implications of this is that any Picture entitys relying on the video as their asset will not display an image until the DOM video element appears in the user's viewport.
+// + To make sure the Picture entity displays the video's first frame, we need to explicitly set the DOM element's preload attribute to __auto__ 
 scrawl.importDomVideo('.myvideo');
 
 
-// Create Picture entity from video entity included in the DOM
+// __Create Picture entity__ from video entity included in the DOM
 let viddyOne = scrawl.makePicture({
 
     name: 'first-video',
@@ -45,7 +45,7 @@ let viddyOne = scrawl.makePicture({
 
 });
 
-// Create picture entity, explicitly giving it a video source file to load
+// __Import a video from a remote server__
 let viddyTwo = scrawl.makePicture({
 
     name: 'second-video',
@@ -62,9 +62,9 @@ let viddyTwo = scrawl.makePicture({
 });
 
 
-// Display a device-based media stream in a Picture entity
+// __Display a device-based media stream__ in a Picture entity
 // + Note 1: Users will need to explicitly agree to let Scrawl-canvas use the media stream the first time the page loads (the browser should handle this agreement procedure itself)
-// + Note 2: importMediaStream is promise-based
+// + Note 2: importMediaStream returns a Promise!
 let viddyThree;
 
 scrawl.importMediaStream({
@@ -96,6 +96,7 @@ scrawl.importMediaStream({
     });
 
     // Adding some controls to manipulate the media stream's display
+    // + For this demo, we'll use the existing controls setup for manipulating the DOM video
     scrawl.observeAndUpdate({
 
         event: ['input', 'change'],
@@ -128,6 +129,7 @@ scrawl.importMediaStream({
 .catch(err => console.log(err.message));
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -146,7 +148,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -155,7 +157,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### User interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -210,8 +213,8 @@ scrawl.observeAndUpdate({
     },
 });
 
-
-// Because many browsers/devices will not allow video to be played until a user interacts with it in some way
+// Add an additional click event listener
+// + Because many browsers/devices will not allow video to be played until a user interacts with it in some way
 scrawl.addListener('up', function () {
 
     viddyOne.set({

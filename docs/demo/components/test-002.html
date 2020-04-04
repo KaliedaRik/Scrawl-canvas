@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>test-002.js</title>
+  <title>Component definitions</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -36,12 +36,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>test-002.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -50,10 +44,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="component-definitions">Component definitions</h1>
+<p>See <a href="./test-001.html">test-001.js</a> code for further details about component definitions</p>
+
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../../source/scrawl.js'</span></pre></div></div>
             
         </li>
         
@@ -64,9 +58,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h3 id="green-box-component">‘Green box’ component</h3>
+              <h4 id="imports">Imports</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../../source/scrawl.js'</span></pre></div></div>
             
         </li>
         
@@ -77,102 +73,21 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p><strong>Purpose:</strong> adds a translucent green box to an element.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p><strong>Function input:</strong> the DOM element, or a handle to it, as the only argument.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p><strong>Function output:</strong> a Javascript object will be returned, containing the following attributes</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <pre><code>{
+              <h4 id="green-box-component">‘Green box’ component</h4>
+<p><strong>Purpose:</strong> adds a translucent green box to an element.</p>
+<p><strong>Function input:</strong> the DOM element, or a handle to it, as the only argument.</p>
+<p><strong>Function output:</strong> a Javascript object will be returned, containing the following attributes</p>
+<pre><code>{
     element     <span class="hljs-comment">// the Scrawl-canvas wrapper for the DOM element supplied to the function</span>
     canvas      <span class="hljs-comment">// the Scrawl-canvas wrapper for the component's canvas</span>
     animation   <span class="hljs-comment">// the Scrawl-canvas animation object</span>
     demolish    <span class="hljs-comment">// remove the component from the Scrawl-canvas library</span>
-}</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p><strong>Usage example:</strong></p>
+}</code></pre><p><strong>Usage example:</strong></p>
+<pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
+<span class="hljs-keyword">import</span> { greenBox } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
-<span class="hljs-keyword">import</span> { greenBox } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> greenBox(el));</code></pre>
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p><strong>Effects on the element:</strong> no additional effects.</p>
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> greenBox(el));</code></pre><p><strong>Effects on the element:</strong> no additional effects.</p>
 
             </div>
             
@@ -206,13 +121,13 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-11">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Export the component definition functions</p>
+              <h4 id="exports">Exports</h4>
 
             </div>
             

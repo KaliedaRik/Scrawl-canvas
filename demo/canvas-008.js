@@ -1,10 +1,11 @@
-// ## Demo Canvas 008 
+// # Demo Canvas 008 
+// Picture entity position; manipulate copy attributes
 
-// [Picture entity position; manipulate copy attributes](../../demo/canvas-008.html)
+// [Run code](../../demo/canvas-008.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 
@@ -61,6 +62,7 @@ piccy.clone({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -79,7 +81,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -88,7 +90,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### User interaction
+// Setup form observer functionality
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -173,4 +176,5 @@ document.querySelector('#scale').value = 1;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
 
+// #### Development and testing
 console.log(scrawl.library);

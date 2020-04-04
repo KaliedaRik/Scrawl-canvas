@@ -1,10 +1,11 @@
-// ## Demo Canvas 018 
+// # Demo Canvas 018 
+// Phrase entity - text along a path
 
-// [Phrase entity - text along a path](../../demo/canvas-018.html)
+// [Run code](../../demo/canvas-018.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Setup
+// #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 
@@ -188,6 +189,7 @@ scrawl.makePicture({
 })
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -206,7 +208,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -214,7 +216,8 @@ scrawl.makeRender({
 });
 
 
-// User interaction - setup form observer functionality
+// #### User interaction
+// Observer functionality for the ___spiral___ Shape entity
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -239,6 +242,7 @@ scrawl.observeAndUpdate({
     },
 });
 
+// Observer functionality for the ___lorem___ Phrase entity
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],

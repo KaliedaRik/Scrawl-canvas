@@ -57,23 +57,25 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
 P = baseMix(P);
 
 
 // #### Animation attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-// __order__ - determines the order in which each animation object will be actioned during the Display cycle. Higher order animations will be processed after lower order animations
+// __order__ - positive integer Number - determines the order in which each Animation object will be actioned before the Display cycle starts. 
+// + Higher order Animations will be processed after lower order Animations. 
+// + Animations with the same `order` value will be processed in the order in which they were defined in code.
     order: 1,
 
-// __fn__ - the main function that the animation object will run on each RequestAnimationFrame tick. This function __must return a Promise__.
+// __fn__ - the main function that the Animation object will run on each RequestAnimationFrame tick. This function __must return a Promise__.
     fn: null,
 
-// The animation object supports some __animation hook functions__:
-// + __onRun__ - triggers each time the animation object's `run` function is invoked
-// + __onHalt__ - triggers each time the animation object's `halt` function is invoked
-// + __onKill__ - triggers each time the animation object's `kill` function is invoked
+// The Animation object supports some __animation hook functions__:
+// + __onRun__ - triggers each time the Animation object's `run` function is invoked
+// + __onHalt__ - triggers each time the Animation object's `halt` function is invoked
+// + __onKill__ - triggers each time the Animation object's `kill` function is invoked
     onRun: null,
     onHalt: null,
     onKill: null,

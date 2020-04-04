@@ -1,10 +1,11 @@
-// ## Demo Canvas 013 
+// # Demo Canvas 013 
+// Defined Shape entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral
 
-// [Defined Shape entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral](../../demo/canvas-013.html)
+// [Run code](../../demo/canvas-013.html)
 import scrawl from '../source/scrawl.js'
 
 
-// Scene setup
+// #### Scene setup
 let canvas = scrawl.library.canvas.mycanvas
 
 canvas.set({
@@ -15,9 +16,7 @@ canvas.set({
 });
 
 
-// Create various Shape entitys using various factory functions... 
-
-// makeOval factory function 
+// ##### makeOval factory function 
 scrawl.makeOval({
     name: 'circle',
     fillStyle: 'lightGreen',
@@ -56,7 +55,7 @@ scrawl.makeOval({
     intersectY: 0.32,
 });
 
-// makeRectangle factory function 
+// ##### makeRectangle factory function 
 scrawl.makeRectangle({
     name: 'ovalRectangle',
     startX: 20,
@@ -92,7 +91,7 @@ scrawl.makeRectangle({
     offshootB: 0.2,
 });
 
-// makeLine factory function 
+// ##### makeLine factory function 
 scrawl.makeLine({
     name: 'firstLine',
     startX: 20,
@@ -120,7 +119,7 @@ scrawl.makeLine({
     endY: '18.25%',
 });
 
-// makeQuadratic factory function 
+// ##### makeQuadratic factory function 
 scrawl.makeQuadratic({
     name: 'firstQuad',
     startX: '5%',
@@ -151,7 +150,7 @@ scrawl.makeQuadratic({
     endX: '91%',
 });
 
-// makeBezier factory function 
+// ##### makeBezier factory function 
 scrawl.makeBezier({
     name: 'firstBezier',
     startX: '5%',
@@ -186,7 +185,7 @@ scrawl.makeBezier({
     endX: '91%',
 });
 
-// makeTetragon factory function 
+// ##### makeTetragon factory function 
 scrawl.makeTetragon({
     name: 'square',
     fillStyle: 'lightGreen',
@@ -223,7 +222,7 @@ scrawl.makeTetragon({
     intersectX: 0.32,
 });
 
-// makePolygon factory function 
+// ##### makePolygon factory function 
 scrawl.makePolygon({
     name: 'equiTriangle',
     startX: 20,
@@ -253,7 +252,7 @@ scrawl.makePolygon({
     sides: 11,
 });
 
-// makeStar factory function 
+// ##### makeStar factory function 
 scrawl.makeStar({
     name: '5star',
     startX: 20,
@@ -279,7 +278,7 @@ scrawl.makeStar({
     twist: 115,
 });
 
-// makeSpiral factory function 
+// ##### makeSpiral factory function 
 scrawl.makeSpiral({
     name: 'spiral1',
     strokeStyle: 'darkgreen',
@@ -312,6 +311,7 @@ scrawl.makeSpiral({
 });
 
 
+// #### Development and testing
 // Create entitys to use the above Shape entitys as paths along which they can be animated
 scrawl.makePicture({
 
@@ -503,6 +503,7 @@ scrawl.makePicture({
 });
 
 
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
@@ -521,7 +522,7 @@ let report = function () {
 }();
 
 
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',

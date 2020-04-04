@@ -1,14 +1,17 @@
-// ## Demo Canvas 023 
+// # Demo Canvas 023 
+// Grid entity - using picture-based assets (image, video, sprite)
 
-// [Grid entity - using picture-based assets (image, video, sprite)](../../demo/canvas-023.html)
+// [Run code](../../demo/canvas-023.html)
 import scrawl from '../source/scrawl.js'
 
+// #### Scene setup
+let canvas = scrawl.library.artefact.mycanvas;
+
+
+// Import assets
 scrawl.importDomVideo('.myvideo');
 scrawl.importDomImage('.flowers');
 scrawl.importSprite('img/cat-sprite.png');
-
-// Scene setup
-let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
     backgroundColor: 'aliceblue',
@@ -67,7 +70,7 @@ scrawl.makePicture({
 
 }).playSprite();
 
-// Assign pictures to gridSource objects
+// Assign pictures to `gridSource` objects
 let imageGrid = {
     type: 'gridPicture',
     source: 'myFlower',
@@ -98,7 +101,7 @@ let spriteTile = {
     source: 'walking-cat',
 };
 
-// Create the grid entity
+// Create the Grid entity
 let myGrid = scrawl.makeGrid({
 
     name: 'test-grid',
@@ -117,6 +120,27 @@ let myGrid = scrawl.makeGrid({
 
     tileSources: [imageGrid, imageTile]
 });
+
+
+// #### Scene animation
+// Function to track mouse movement across the Grid
+// + if the pointer is over a Grid tile, it will show the Grid's highlight fill (tile source 1)
+// + other Grid tiles will show the Grid's base fill (tile source 0)
+let hitReport = '';
+let checkHitTiles = () => {
+
+    let hits = myGrid.checkHit(canvas.here);
+
+    myGrid.setAllTilesTo(0);
+
+    if (hits) {
+
+        myGrid.setTilesTo(hits.tiles, 1);
+        hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;
+    }
+    else hitReport = 'Hits - none reported';
+};
+
 
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
@@ -138,26 +162,8 @@ Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();
 
-// Function to track mouse movement across the grid
-// + if the pointer is over a grid tile, it will show the grid's highlight fill (tile source 1)
-// + other grid tiles will show the grid's base fill (tile source 0)
-let hitReport = '';
-let checkHitTiles = () => {
 
-    let hits = myGrid.checkHit(canvas.here);
-
-    myGrid.setAllTilesTo(0);
-
-    if (hits) {
-
-        myGrid.setTilesTo(hits.tiles, 1);
-        hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;
-    }
-    else hitReport = 'Hits - none reported';
-};
-
-
-// Create the Animation loop which will run the Display cycle
+// Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
@@ -166,7 +172,9 @@ scrawl.makeRender({
     afterShow: report,
 });
 
-// User interaction - setup form observer functionality
+
+// #### User interaction
+// Observer functionality for manipulating the Grid entity's attributes
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -221,6 +229,7 @@ scrawl.observeAndUpdate({
     },
 });
 
+// Event listeners for setting Grid tile fills
 let updateBaseFill = (e) => {
 
     e.preventDefault();
@@ -256,6 +265,7 @@ let updateBaseFill = (e) => {
     }
 };
 scrawl.addNativeListener(['input', 'change'], updateBaseFill, '#baseFill');
+
 
 let updateHighlightFill = (e) => {
 
@@ -293,6 +303,8 @@ let updateHighlightFill = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateHighlightFill, '#highlightFill');
 
+
+// Event listener for setting Grid gutter fills
 let updateGridStroke = (e) => {
 
     e.preventDefault();
@@ -358,8 +370,9 @@ let updateGridStroke = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateGridStroke, '#gridStroke');
 
-// Because many browsers/devices will not allow video to be played
-// - until a user interacts with it in some way
+
+// Event listener for clicks on the &lt;canvas> element
+// + Because many browsers/devices will not allow video to be played until a user interacts with it in some way
 scrawl.addListener(['move', 'up'], function () {
 
     viddyOne.set({

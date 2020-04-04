@@ -41,34 +41,15 @@ P.isAsset = false;
 
 
 // #### Mixins
-// + [base](../mixin/base.html)
-// + [styles](../mixin/styles.html)
 P = baseMix(P);
 P = stylesMix(P);
 
 
 // #### Gradient attributes
-// In addition to the attributes defined in the __base__ and __styles__ mixins, Gradients also pass through Palette attributes to their Palette object. 
-// 
-// Attributes from __base__ mixin:
-// + `name`
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [styles mixin](../mixin/styles.html): __start, end, palette, paletteStart, paletteEnd, cyclePalette__.
+// + Attributes defined in the [Palette factory](./palette.html): __colors, cyclic__.
 //
-// Attributes from __styles__ mixin:
-// + `start`
-// + `startX`
-// + `startY`
-// + `end`
-// + `endX`
-// + `endY`
-// + `palette`
-// + `paletteStart`
-// + `paletteEnd`
-// + `cyclePalette`
-//
-// Attributes from the __palette__ factory:
-// + `colors` 
-// + `cyclic`
-// 
 // No additional attributes are defined in this file.
 
 // #### Packet management
