@@ -1,12 +1,12 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.0.2",
-  "description": "Version 8.0.2 (alpha) - 10 March 2020",
+  "version": "8.0.0",
+  "description": "Version 8.0.0 - 4 April 2020",
   "main": "min/scrawl.js",
   "scripts": {
     "test": "echo \"Use demo folder examples for testing\" && exit 1",
     "minify": "./minifier.sh",
-    "makedocs": "docco ./demo/**/*.js && docco ./source/**/*.js && docco ./source/scrawl.js"
+    "makedocs": "docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js"
   },
   "repository": {
     "type": "git",
