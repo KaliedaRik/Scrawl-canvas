@@ -3,7 +3,7 @@ Version 8.0.0 - 5 April 2020
 
 Scrawl-canvas website: https://scrawl.rikweb.org.uk
 
-#### What?
+### What?
 Scrawl-canvas is a JavaScript library for working with the HTML5 &lt;canvas> element. The library:
 + Automatically discovers existing &lt;canvas> elements in a web page.
 + Can add new &lt;canvas> elements to the web page.
@@ -12,7 +12,7 @@ Scrawl-canvas is a JavaScript library for working with the HTML5 &lt;canvas> ele
 + Adds functionality to make &lt;canvas> elements responsive, adapting their size according to their surrounding environment.
 + Makes the canvas both accessible, and interactive - including the ability to easily track user interactions with artifacts.
 
-#### Why?
+### Why?
 There are a number of other Javascript libraries available, each with their streangths and weaknesses. Some have been designed to make the production of charts and other data visualisations easier. Some focus on game development. Libraries which attempt to emulate Flash/Actionscript animations have been developed, as have libraries whose aim is to combine 2D, 3D and even SVG graphics into a usable whole. Speed is a key goal for some of the best libraries, while ease-of-use is an objective for many others.
 
 Working with the native Canvas API is hard work - particularly when the desired result is more complex than a couple of coloured boxes in a static display. 
@@ -27,7 +27,7 @@ Yet these advantages are also significant barriers:
 + We cannot save and share artefacts; each canvas display is tightly coupled to the code that defines the display.
 + __Of most concern__, canvases are entirely graphical - visual - by nature; they come with __significant accessibility issues__. Given the ever-stricter requirements for websites to be accessible to all users, this makes using a canvas to present important information a dangerous proposition.
 
-#### Scrawl-canvas overcomes these barriers
+### Scrawl-canvas overcomes these barriers
 Yes, Scrawl-canvas aims to be fast, and developer-friendly. It also aims to be broadly focussed, suitable for building infographics, games, interactive videos - whatever we can imagine for a 2D graphical presentation.
 
 But __the main purpose of Scrawl-canvas__ is to make the &lt;canvas> element, and the parts that make up its displays and animations, __responsive, interactive, linkable, trackable. And accessible!__ 
@@ -36,7 +36,7 @@ But __the main purpose of Scrawl-canvas__ is to make the &lt;canvas> element, an
 
 There are two main ways to include Scrawl-canvas in your project:
 
-#### Download, unpack, use
+### Download, unpack, use
 
 1. Download the files from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip). 
 2. Unzip the files to a folder in your project. 
@@ -85,7 +85,7 @@ There are two main ways to include Scrawl-canvas in your project:
 </html>
 ```
 
-#### NPM/Yarn
+### NPM/Yarn
 This approach is still experimental. Add the library to a React/Vue/Svelte/etc project at your own risk - your mileage may vary!
 
 1. Add the library to your project using NPM or Yarn
@@ -118,20 +118,20 @@ Hit CTRL-C to stop the server
 
 Navigate to http://localhost:8080 to access the documentation and demo tests.
 
-#### Testing
+### Testing
 The code base does not include any ___unit testing___ frameworks. Instead, we rely on a set of Demo tests which allow us to perform ___integration testing___ and ___user interface testing___.
 
 Why this approach? Because most of the Scrawl-canvas functionality revolves around various forms of animation, which requires visual inspection of the Demo tests to check that the canvas display - and thus, by inference, the underlying code - performs as expected.
 
 Most Demos include some form of user interaction, which allows us to test specific aspects of the code base.
 
-#### Documentation
+### Documentation
 The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/) - which has not been included in the GitHub repository and thus needs to be installed separately if you want to regenerate the documentation after making local changes to the source base.
 
-#### Minification
+### Minification
 We minify the source code using a small shell script, nothing more. Code added to a project using NMP or Yarn will import the minified code by default.
 
-#### Development team
+### Development team
 Developed by Rik Roots: rik.roots@rikworks.co.uk
 
 __Do you want to contribute?__ I've been developing this project for too long by myself, and would really welcome contributions from - even collaboration with - people who can bring a different perspective and a fresh set of eyes to the work.
