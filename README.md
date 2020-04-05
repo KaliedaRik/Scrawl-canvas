@@ -62,10 +62,10 @@ Alternatively, a zip package of the v8.0.0 files can be downloaded from this lin
 
         import scrawl from './relative-or-absolute/path/to/scrawl-canvas/min/scrawl.js';
 
-        <!-- Get a handle to the canvas element -->
+        // Get a handle to the canvas element
         let canvas = scrawl.library.canvas.mycanvas;
 
-        <!-- Setup the scene to be displayed in the canvas -->
+        // Setup the scene to be displayed in the canvas
         scrawl.makePhrase({
 
             name: 'hello',
@@ -79,7 +79,7 @@ Alternatively, a zip package of the v8.0.0 files can be downloaded from this lin
             font: 'bold 40px Garamond, serif',
         });
 
-        <!-- Render the canvas scene once -->
+        // Render the canvas scene once
         canvas.render()
         .catch(err => {});
 
@@ -90,7 +90,7 @@ Alternatively, a zip package of the v8.0.0 files can be downloaded from this lin
 ```
 
 ### NPM/Yarn
-This approach is still experimental. ___Add the library to a React/Vue/Svelte/etc project at your own risk___ - your mileage may vary!
+This approach is still experimental: Scrawl-canvas has been designed for use in the browser, not server-side. ___Add the library to a React/Vue/Svelte/etc project at your own risk___ - your mileage may vary!
 
 1. Add the library to your project using NPM or Yarn
 2. Import the library into the script code where you will be using it.
@@ -133,7 +133,7 @@ Most Demos include some form of user interaction, which allows us to test specif
 The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/) - which has not been included in the GitHub repository and thus needs to be installed separately if you want to regenerate the documentation after making local changes to the source code.
 
 ### Minification
-We minify the source code using a small shell script, nothing more. Code added to a project using NPM or Yarn will import the minified code by default.
+We minify the source code using a small shell script, nothing more. When the library is added to a project using NPM or Yarn, the import statement will use the minified module files.
 
 ### Development team
 Developed by Rik Roots: rik.roots@rikworks.co.uk
