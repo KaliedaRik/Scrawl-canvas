@@ -13,13 +13,13 @@ Scrawl-canvas is a JavaScript library for working with the HTML5 &lt;canvas> ele
 + Makes the canvas both accessible, and interactive - including the ability to easily track user interactions with artifacts.
 
 ### Why?
-There are a number of other Javascript libraries available, each with their streangths and weaknesses. Some have been designed to make the production of charts and other data visualisations easier. Some focus on game development. Libraries which attempt to emulate Flash/Actionscript animations have been developed, as have libraries whose aim is to combine 2D, 3D and even SVG graphics into a usable whole. Speed is a key goal for some of the best libraries, while ease-of-use is an objective for many others.
+There are a number of other Javascript libraries available, each with their strengths and weaknesses. Some have been designed to make the production of charts and other data visualisations easier. Some focus on game development. Libraries which attempt to emulate Flash/Actionscript animations have been developed, as have libraries whose aim is to combine 2D, 3D and even SVG graphics into a usable whole. Speed is a key goal for some of the best libraries, while ease-of-use is an objective for many others.
 
-Working with the native Canvas API is hard work - particularly when the desired result is more complex than a couple of coloured boxes in a static display. 
+___Working with the native Canvas API is hard work___ - particularly when the desired result is more complex than a couple of coloured boxes in a static display. 
 
-But the benefits of using canvases for graphical displays and animations are also great: canvases are part of the DOM (unlike Flash); they are natively wired for events and user interactions; they use immediate mode redering (which makes them very quick); and the canvas-related APIs are designed to be used with Javascript.
+___But the benefits of using canvases for graphical displays and animations are also great:___ canvases are part of the DOM (unlike Flash); they are natively wired for events and user interactions; they use immediate mode redering (which makes them very quick); and the canvas-related APIs are designed to be used with Javascript.
 
-Yet these advantages are also significant barriers:
+___Yet these advantages are also significant barriers:___
 + Working directly with the canvas-related APIs leads to writing significant amounts of JS boilerplate code.
 + &lt;canvas> elements can be resized and styled using CSS, but changing the CSS size does not affect the element's drawing dimensions - leading to sub-optimal graphic displays.
 + Events work on the canvas, not on the artefacts within the canvas - we cannot use artefacts as links or hot-spots (click/tap events), we cannot give them the equivalent of a CSS hover state (focus/blur events), we cannot drag-and-drop them around the display (move events).
@@ -38,9 +38,11 @@ There are two main ways to include Scrawl-canvas in your project:
 
 ### Download, unpack, use
 
-1. Download the files from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip). 
+1. Download the zipped files from GitHub
 2. Unzip the files to a folder in your project. 
 3. Import the library into the script code where you will be using it.
+
+Alternatively, a zip package of the v8.0.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip).
 
 ```
 <!-- Hello world -->
@@ -86,7 +88,7 @@ There are two main ways to include Scrawl-canvas in your project:
 ```
 
 ### NPM/Yarn
-This approach is still experimental. Add the library to a React/Vue/Svelte/etc project at your own risk - your mileage may vary!
+This approach is still experimental. ___Add the library to a React/Vue/Svelte/etc project at your own risk___ - your mileage may vary!
 
 1. Add the library to your project using NPM or Yarn
 2. Import the library into the script code where you will be using it.
