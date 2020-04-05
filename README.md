@@ -1,7 +1,9 @@
-# SCRAWL-CANVAS Library 
-Version 8.0.0 - 5 April 2020
+# Scrawl-canvas Library 
+Version: `8.0.0 - 5 April 2020`.
 
-Scrawl-canvas website: https://scrawl.rikweb.org.uk
+Scrawl-canvas website: [scrawl.rikweb.org.uk](https://scrawl.rikweb.org.uk).
+
+__Do you want to contribute?__ I've been developing this project for too long by myself, and would really welcome contributions from - even collaboration with - people who can bring a different perspective and a fresh set of eyes to the work.
 
 ### What?
 Scrawl-canvas is a JavaScript library for working with the HTML5 &lt;canvas> element. The library:
@@ -128,13 +130,10 @@ Why this approach? Because most of the Scrawl-canvas functionality revolves arou
 Most Demos include some form of user interaction, which allows us to test specific aspects of the code base.
 
 ### Documentation
-The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/) - which has not been included in the GitHub repository and thus needs to be installed separately if you want to regenerate the documentation after making local changes to the source base.
+The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/) - which has not been included in the GitHub repository and thus needs to be installed separately if you want to regenerate the documentation after making local changes to the source code.
 
 ### Minification
 We minify the source code using a small shell script, nothing more. Code added to a project using NMP or Yarn will import the minified code by default.
 
 ### Development team
 Developed by Rik Roots: rik.roots@rikworks.co.uk
-
-__Do you want to contribute?__ I've been developing this project for too long by myself, and would really welcome contributions from - even collaboration with - people who can bring a different perspective and a fresh set of eyes to the work.
-
