@@ -12,10 +12,10 @@ Scrawl-canvas is a JavaScript library for working with the HTML5 &lt;canvas> ele
 + Defines a set of factory functions for creating a wide range of graphic artefacts and effects, which can be drawn on a canvas.
 + Includes an adaptable - yet easy to use - protocol for positioning, displaying and animating artefacts and effects across the canvas.
 + Adds functionality to make &lt;canvas> elements responsive, adapting their size according to their surrounding environment.
-+ Makes the canvas both accessible, and interactive - including the ability to easily track user interactions with artifacts.
++ Makes the canvas both accessible, and interactive - including the ability to easily track user interactions with different parts of the canvas.
 
 ### Why?
-There are a number of other Javascript libraries available, each with their strengths and weaknesses. Some have been designed to make the production of charts and other data visualisations easier. Some focus on game development. Libraries which attempt to emulate Flash/Actionscript animations have been developed, as have libraries whose aim is to combine 2D, 3D and even SVG graphics into a usable whole. Speed is a key goal for some of the best libraries, while ease-of-use is an objective for many others.
+There are a number of other Javascript libraries available, each with their strengths and weaknesses. Some have been designed to make the production of charts and other data visualisations easier. Some focus on game development, others on making videos interactive. Libraries which attempt to emulate Flash/Actionscript animations have been developed, as have libraries whose aim is to combine 2D, 3D and even SVG graphics into a usable whole. Speed is a key goal for some of the best libraries, while ease-of-use is an objective for many others.
 
 ___Working with the native Canvas API is hard work___ - particularly when the desired result is more complex than a couple of coloured boxes in a static display. 
 
@@ -26,7 +26,7 @@ ___Yet these advantages are also significant barriers:___
 + &lt;canvas> elements can be resized and styled using CSS, but changing the CSS size does not affect the element's drawing dimensions - leading to sub-optimal graphic displays.
 + Events work on the canvas, not on the artefacts within the canvas - we cannot use artefacts as links or hot-spots (click/tap events), we cannot give them the equivalent of a CSS hover state (focus/blur events), we cannot drag-and-drop them around the display (move events).
 + Tracking a user's interaction with the various parts of a canvas display is particularly difficult.
-+ We cannot save and share artefacts; each canvas display is tightly coupled to the code that defines the display.
++ We cannot save and share artefacts and effects; each canvas display is tightly coupled to the code that defines the display.
 + __Of most concern__, canvases are entirely graphical - visual - by nature; they come with __significant accessibility issues__. Given the ever-stricter requirements for websites to be accessible to all users, this makes using a canvas to present important information a dangerous proposition.
 
 ### Scrawl-canvas overcomes these barriers
@@ -44,7 +44,7 @@ There are two main ways to include Scrawl-canvas in your project:
 2. Unzip the files to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.0.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip).
+Alternatively, a zip package of the v8.0.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-0.zip) - this package only includes the minified files.
 
 ```
 <!-- Hello world -->
@@ -97,10 +97,10 @@ This approach is still experimental. ___Add the library to a React/Vue/Svelte/et
 
 ```
 // either
-npm install scrawl-canvas
+$> npm install scrawl-canvas
 
 // or
-yarn add scrawl-canvas
+$> yarn add scrawl-canvas
 
 // then in your script file
 import scrawl from 'scrawl-canvas';
@@ -133,7 +133,7 @@ Most Demos include some form of user interaction, which allows us to test specif
 The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/) - which has not been included in the GitHub repository and thus needs to be installed separately if you want to regenerate the documentation after making local changes to the source code.
 
 ### Minification
-We minify the source code using a small shell script, nothing more. Code added to a project using NMP or Yarn will import the minified code by default.
+We minify the source code using a small shell script, nothing more. Code added to a project using NPM or Yarn will import the minified code by default.
 
 ### Development team
 Developed by Rik Roots: rik.roots@rikworks.co.uk
