@@ -146,7 +146,10 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.stringifyFunction = defaultNonReturnFunction;
 P.processPacketOut = defaultNonReturnFunction;
 P.finalizePacketOut = defaultNonReturnFunction;
-P.saveAsPacket = () => `[${this.name}, ${this.type}, ${this.lib}, {}]`;
+P.saveAsPacket = function () {
+
+    return `[${this.name}, ${this.type}, ${this.lib}, {}]`
+};
 P.clone = defaultThisReturnFunction;
 
 
