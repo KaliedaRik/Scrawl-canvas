@@ -468,7 +468,7 @@ else if (css.has(key)) style[key] = value;
 }
 if (art.dirtyClasses) {
 art.dirtyClasses = false;
-el.className = art.classes;
+if (el.className.substring) el.className = art.classes;
 }
 }
 }

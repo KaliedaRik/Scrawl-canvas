@@ -54,13 +54,9 @@ export default function (P = {}) {
 // + other possible values - except `static` - will be respected if they are explicitly set on the DOM elements prior to Scrawl-canvas initialization.
         position: 'absolute',
 
-// __actionResize__ - Boolean - relates to dimensions somehow?
-//
-// TODO: check if we're actually using this attribute anywhere
-// + has been used in demos DOM-007 and DOM-011
-// + check to see if it actually having any effect
-// + or if other functionality could (already?) handle the issues it is supposed to be addressing 
-        actionResize: false,
+// __checkForResize__ - Boolean - automatically update stuff when the element changes its dimensions
+// + triggers as part of the [userInteraction](../core/userInteraction.html) `updateUiSubscribedElement` functionality
+        checkForResize: false,
 
 // __trackHere__ - Boolean flag - when set, Scrawl-canvas will track mouse/touch cursor's _local_ position (relative to top-left corner) over the wrapper's DOM element
 // + Stack and Canvas wrappers have this flag set to true, by default
@@ -142,19 +138,6 @@ export default function (P = {}) {
         
         if (item) pushUnique(uiSubscribedElements, this.name);
         else removeItem(uiSubscribedElements, this.name);
-    };
-
-// `actionResize`
-    S.actionResize = function (item) {
-
-        this.actionResize = item;
-
-        if (item) {
-
-            this.prepareStamp();
-            domShow(this.name);
-            this.triggerResizeCascade();
-        }
     };
 
 // `position`
@@ -297,7 +280,7 @@ export default function (P = {}) {
         let el = items.domElement,
             elStyle = el.style;
 
-        // elStyle.boxSizing = 'border-box';
+        elStyle.boxSizing = 'border-box';
 
         if (el && items.setInitialDimensions) {
 
@@ -374,57 +357,6 @@ export default function (P = {}) {
         }
     };
 
-// `checkForResize`
-    P.checkForResize = function () {
-
-        let el = this.domElement;
-
-        if (el) {
-
-            let dims = el.getBoundingClientRect(),
-                flag = false;
-
-            if (this.currentDimensions[0] !== dims.width) {
-
-                this.dimensions[0] = this.currentDimensions[0] = dims.width;
-                flag = true;
-            }
-
-            if (this.currentDimensions[1] !== dims.height) {
-
-                this.dimensions[1] = this.currentDimensions[1] = dims.height;
-                flag = true;
-            }
-
-            if (flag && (this.type === 'Stack')) this.triggerResizeCascade();
-        }
-    };
-
-// `triggerResizeCascade`
-    P.triggerResizeCascade = function () {
-
-        let gBucket = this.groupBuckets,
-            aBucket;
-
-        if (gBucket && gBucket.length) {
-
-            gBucket.forEach(grp => {
-
-                aBucket = grp.artefactBuckets;
-
-                if (aBucket && aBucket.length) {
-
-                    aBucket.forEach(art => {
-
-                        if (art) {
-
-                            art.dirtyDimensions = true;
-                        }
-                    })
-                }
-            })
-        }
-    };
 
 // ##### DOM element class attribute management
 
@@ -904,8 +836,6 @@ export default function (P = {}) {
 
 // `prepareStamp` - check all the dirty flags and call the appropriate `clean` functions if they are set
     P.prepareStamp = function () {
-
-        if (this.actionResize) this.checkForResize();
 
         if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
 

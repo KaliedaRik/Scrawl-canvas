@@ -321,6 +321,7 @@
     <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
     <span class="hljs-attr">height</span>:<span class="hljs-number">400</span>,
     <span class="hljs-attr">perspectiveZ</span>: <span class="hljs-number">1200</span>,
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
 });
 
 
@@ -509,10 +510,15 @@ cell.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>BUG: the final positioning, dimensions, scaling etc of DOM elements often don’t settle down until after the first Display cycle completes, by which time certain internal structures (such as, in this case, the sensor coordinates for our element) have been set to old values. Which for this demo means that the element sensor data doesn’t translate over to the canvas until after a user interaction of some sort brings everything back into synchronicity</p>
-<p>The simplest way to correct this BUG (for now) is to apply a .set() call on the element, changing one attribute a small amount. We only need to do this once, after the first Display cycle has completed; this can be achieved by adding the set tweak in the afterCreated attribute of the makeRender function.</p>
+              <p>Create the Display cycle animation</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
+    <span class="hljs-attr">commence</span>: checkHits,
+    <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
             
         </li>
         
@@ -523,16 +529,14 @@ cell.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Create the Display cycle animation</p>
+              <p>Fixes element misplacement issue on scene creation - see Demo <a href="./dom-007.html">DOM-007</a> for more details of the fix</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
-    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> element.set({ <span class="hljs-attr">roll</span>: <span class="hljs-number">10.001</span> }),
-    <span class="hljs-attr">commence</span>: checkHits,
-    <span class="hljs-attr">afterShow</span>: report,
+            <div class="content"><div class='highlight'><pre>    afterCreated: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        stack.set({<span class="hljs-attr">height</span>: <span class="hljs-number">400.1</span>});
+        scrawl.startCoreListeners();
+    },
 });</pre></div></div>
             
         </li>

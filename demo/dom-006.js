@@ -31,7 +31,7 @@ element.set({
     handleX: 'center',
     handleY: 200,
     width: 80,
-    height: 30,
+    height: 42,
     text: 'BOAT',
     css: {
         border: '1px solid blue',

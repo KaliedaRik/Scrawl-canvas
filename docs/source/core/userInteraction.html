@@ -577,8 +577,7 @@
 
     <span class="hljs-keyword">if</span> (here.normX &lt; <span class="hljs-number">0</span> || here.normX &gt; <span class="hljs-number">1</span> || here.normY &lt; <span class="hljs-number">0</span> || here.normY &gt; <span class="hljs-number">1</span>) here.active = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (dom.type === <span class="hljs-string">'Canvas'</span>) dom.updateBaseHere(here, dom.fit);
-};</pre></div></div>
+    <span class="hljs-keyword">if</span> (dom.type === <span class="hljs-string">'Canvas'</span>) dom.updateBaseHere(here, dom.fit);</pre></div></div>
             
         </li>
         
@@ -588,6 +587,91 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Automatically check for element resize</p>
+<ul>
+<li>The artefact’s <code>checkForResize</code> flag needs to be set</li>
+<li>We ignore resizing actions while dimensions-related dirty flags are set (to prevent getting ourselves into a continuous feedback loop)</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (dom.checkForResize &amp;&amp; !dom.dirtyDimensions &amp;&amp; !dom.dirtyDomDimensions) {
+
+        <span class="hljs-keyword">let</span> [w, h] = dom.currentDimensions;
+
+        <span class="hljs-keyword">if</span> (dom.type === <span class="hljs-string">'Canvas'</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Regardless of the setting of &lt;canvas&gt; element’s <code>boxSizing</code> style attribute:</p>
+<ul>
+<li>It will include borders in its <code>getBoundingClientRect</code> object (and its <code>getComputedStyle</code> width/height values), but these are specifically excluded from the element’s <code>width</code> and <code>height</code> attributes</li>
+<li>Which leads to the normal resize test - <code>if (w !== here.w || h !== here.h)</code> - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.</li>
+<li>Solved by subtracting border values from the <code>getBoundingClientRect</code> dimension values before performing the test.</li>
+<li>Tested in Demo <a href="../../demo/canvas-004.html">Canvas-004</a>.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!dom.computedStyles) dom.computedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(dom.domElement);
+
+            <span class="hljs-keyword">let</span> s = dom.computedStyles,
+                hw = here.w - <span class="hljs-built_in">parseFloat</span>(s.borderLeftWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderRightWidth),
+                hh = here.h - <span class="hljs-built_in">parseFloat</span>(s.borderTopWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderBottomWidth);
+
+            <span class="hljs-keyword">if</span> (w !== hw || h !== hh) {
+
+                dom.set({
+
+                    <span class="hljs-attr">dimensions</span>: [hw, hh],
+                });
+            }
+        }
+        <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Stack and Element artefacts resize test.</p>
+<ul>
+<li>Tested in Demo <a href="../../demo/dom-011.html">DOM-011</a>.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (w !== here.w || h !== here.h) {
+
+                dom.set({
+
+                    <span class="hljs-attr">dimensions</span>: [here.w, here.h],
+                });
+            }
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Animation object which checks whether any window event listeners have fired, and actions accordingly</p>
 
@@ -618,11 +702,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><code>Exported functions</code> (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas’s impact on those pages by switching off the core listeners (and also the core animation loop).</p>
 
@@ -650,11 +734,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Helper function</p>
 
@@ -691,11 +775,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><code>Exported functions</code> (to modules). Invoke the resize and/or scroll event listeners once, outside the regular requestAnimationFrame tick.</p>
 
@@ -716,11 +800,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h4 id="convenience-functions">Convenience functions</h4>
 <p>Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:</p>
@@ -742,11 +826,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and the scrawl object). Capture changes in a form and apply them to a target Scrawl-canvas artefact, asset, style, group, etc object</p>
 
@@ -875,11 +959,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h4 id="drag-and-drop-zones">Drag-and-drop zones.</h4>
 <p><strong>makeDragZone</strong> is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible</p>
@@ -904,11 +988,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.</p>
 
@@ -944,11 +1028,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Generally the system won’t have had time to establish target.base.here, if the dragzone is defined as part of setup before a Display cycle has completed - so the test gets repeated in the pickup function below, to capture those cases</p>
 
@@ -1021,11 +1105,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

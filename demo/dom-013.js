@@ -19,6 +19,7 @@ stack.set({
     width: 600,
     height:400,
     perspectiveZ: 1200,
+    checkForResize: true,
 });
 
 
@@ -132,17 +133,19 @@ let report = function () {
     };
 }();
 
-// BUG: the final positioning, dimensions, scaling etc of DOM elements often don't settle down until after the first Display cycle completes, by which time certain internal structures (such as, in this case, the sensor coordinates for our element) have been set to old values. Which for this demo means that the element sensor data doesn't translate over to the canvas until after a user interaction of some sort brings everything back into synchronicity
-//
-// The simplest way to correct this BUG (for now) is to apply a .set() call on the element, changing one attribute a small amount. We only need to do this once, after the first Display cycle has completed; this can be achieved by adding the set tweak in the afterCreated attribute of the makeRender function.
 
 // Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
-    afterCreated: () => element.set({ roll: 10.001 }),
     commence: checkHits,
     afterShow: report,
+
+    // Fixes element misplacement issue on scene creation - see Demo [DOM-007](./dom-007.html) for more details of the fix
+    afterCreated: () => {
+        stack.set({height: 400.1});
+        scrawl.startCoreListeners();
+    },
 });
 
 

@@ -474,17 +474,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p><strong>actionResize</strong> - Boolean - relates to dimensions somehow?</p>
-<p>TODO: check if we’re actually using this attribute anywhere</p>
+              <p><strong>checkForResize</strong> - Boolean - automatically update stuff when the element changes its dimensions</p>
 <ul>
-<li>has been used in demos DOM-007 and DOM-011</li>
-<li>check to see if it actually having any effect</li>
-<li>or if other functionality could (already?) handle the issues it is supposed to be addressing </li>
+<li>triggers as part of the <a href="../core/userInteraction.html">userInteraction</a> <code>updateUiSubscribedElement</code> functionality</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        actionResize: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        checkForResize: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -694,31 +691,6 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p><code>actionResize</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.actionResize = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.actionResize = item;
-
-        <span class="hljs-keyword">if</span> (item) {
-
-            <span class="hljs-keyword">this</span>.prepareStamp();
-            domShow(<span class="hljs-keyword">this</span>.name);
-            <span class="hljs-keyword">this</span>.triggerResizeCascade();
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
               <p><code>position</code></p>
 
             </div>
@@ -732,11 +704,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><code>visibility</code></p>
 
@@ -751,11 +723,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><code>offsetZ</code></p>
 
@@ -776,11 +748,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p><code>roll</code></p>
 
@@ -800,11 +772,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p><code>pitch</code></p>
 
@@ -824,11 +796,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p><code>yaw</code></p>
 
@@ -848,11 +820,11 @@
         </li>
         
         
-        <li id="section-29">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><code>css</code></p>
 
@@ -868,11 +840,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><code>classes</code></p>
 
@@ -888,11 +860,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><code>collides</code></p>
 
@@ -908,11 +880,11 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p><code>domAttributes</code> - see <code>updateDomAttributes</code> below</p>
 
@@ -926,11 +898,11 @@
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -939,11 +911,11 @@
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p><code>checkRotationAngle</code> - internal function - a quick check for rotational (<code>roll</code>, <code>pitch</code>, <code>yaw</code>) setter/deltaSetter functionality. Attempts to keep values of these attributes between -360 and + 360</p>
 
@@ -961,11 +933,11 @@
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p><code>updateDomAttributes</code> - DOM wrapper objects do not keep track of their DOM element attribute values; this function is a convenience function to make updating those attributes a bit easier. Function arguments can be one of:</p>
 <ul>
@@ -1001,11 +973,11 @@
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p><code>initializeDomLayout</code> - internal function </p>
 <ul>
@@ -1018,22 +990,10 @@
             <div class="content"><div class='highlight'><pre>    P.initializeDomLayout = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
         <span class="hljs-keyword">let</span> el = items.domElement,
-            elStyle = el.style;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <p>elStyle.boxSizing = ‘border-box’;</p>
+            elStyle = el.style;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
+        elStyle.boxSizing = <span class="hljs-string">'border-box'</span>;
+
         <span class="hljs-keyword">if</span> (el &amp;&amp; items.setInitialDimensions) {
 
             <span class="hljs-keyword">let</span> dims = el.getBoundingClientRect(),
@@ -1052,11 +1012,11 @@
         </li>
         
         
-        <li id="section-38">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>TODO - discover scale</p>
 
@@ -1065,11 +1025,11 @@
         </li>
         
         
-        <li id="section-39">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>discover dimensions (width, height)</p>
 
@@ -1083,11 +1043,11 @@
         </li>
         
         
-        <li id="section-40">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>recover classes already assigned to the element</p>
 
@@ -1098,11 +1058,11 @@
         </li>
         
         
-        <li id="section-41">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>go with lock defaults - no work required</p>
 
@@ -1111,11 +1071,11 @@
         </li>
         
         
-        <li id="section-42">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>discover start (boundingClientRect - will be the difference between this object and its host (parent) object ‘top’ and ‘left’ values)</p>
 
@@ -1135,13 +1095,39 @@
         </li>
         
         
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>TODO discover handle (transform, transformOrigin)</p>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <p>TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?</p>
+              <p>TODO go with rotation (pitch, yaw, roll) defaults - no further work required?</p>
 
             </div>
             
@@ -1154,9 +1140,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>TODO discover handle (transform, transformOrigin)</p>
+              <p>for Stack artefacts only, discover perspective and perspective-origin values</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.type === <span class="hljs-string">'Stack'</span>) {</pre></div></div>
             
         </li>
         
@@ -1167,34 +1155,6 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
-              <p>TODO go with rotation (pitch, yaw, roll) defaults - no further work required?</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
-              </div>
-              <p>for Stack artefacts only, discover perspective and perspective-origin values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.type === <span class="hljs-string">'Stack'</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
-              </div>
               <p>TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values</p>
 
             </div>
@@ -1204,11 +1164,11 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>TODO - this isn’t working! </p>
 
@@ -1238,87 +1198,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
-              </div>
-              <p><code>checkForResize</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.checkForResize = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement;
-
-        <span class="hljs-keyword">if</span> (el) {
-
-            <span class="hljs-keyword">let</span> dims = el.getBoundingClientRect(),
-                flag = <span class="hljs-literal">false</span>;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>] !== dims.width) {
-
-                <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>] = dims.width;
-                flag = <span class="hljs-literal">true</span>;
-            }
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">1</span>] !== dims.height) {
-
-                <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">1</span>] = dims.height;
-                flag = <span class="hljs-literal">true</span>;
-            }
-
-            <span class="hljs-keyword">if</span> (flag &amp;&amp; (<span class="hljs-keyword">this</span>.type === <span class="hljs-string">'Stack'</span>)) <span class="hljs-keyword">this</span>.triggerResizeCascade();
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
-              </div>
-              <p><code>triggerResizeCascade</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.triggerResizeCascade = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">let</span> gBucket = <span class="hljs-keyword">this</span>.groupBuckets,
-            aBucket;
-
-        <span class="hljs-keyword">if</span> (gBucket &amp;&amp; gBucket.length) {
-
-            gBucket.forEach(<span class="hljs-function"><span class="hljs-params">grp</span> =&gt;</span> {
-
-                aBucket = grp.artefactBuckets;
-
-                <span class="hljs-keyword">if</span> (aBucket &amp;&amp; aBucket.length) {
-
-                    aBucket.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
-
-                        <span class="hljs-keyword">if</span> (art) {
-
-                            art.dirtyDimensions = <span class="hljs-literal">true</span>;
-                        }
-                    })
-                }
-            })
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <h5 id="dom-element-class-attribute-management">DOM element class attribute management</h5>
 
@@ -1327,11 +1211,11 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><code>addClasses</code></p>
 
@@ -1359,11 +1243,11 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><code>removeClasses</code></p>
 
@@ -1397,11 +1281,11 @@
         </li>
         
         
-        <li id="section-54">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <h5 id="dom-element-corners-management">DOM element corners management</h5>
 <p>Scrawl-canvas keeps track of its DOM wrapper element’s positions by creating four zero-dimension &lt;div&gt; elements and adding them as absolutely positioned children to the element. We can then get these children to report on their real coordinates (even when the parent is 3D rotated) by calling <code>getClientRects</code> on them.</p>
@@ -1411,11 +1295,11 @@
         </li>
         
         
-        <li id="section-55">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p><code>addPathCorners</code></p>
 
@@ -1477,11 +1361,11 @@
         </li>
         
         
-        <li id="section-56">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p><code>checkCornerPositions</code></p>
 
@@ -1556,11 +1440,11 @@
         </li>
         
         
-        <li id="section-57">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p><code>getCornerCoordinate</code></p>
 
@@ -1603,11 +1487,11 @@
         </li>
         
         
-        <li id="section-58">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <h5 id="collision-detection">Collision detection</h5>
 
@@ -1616,11 +1500,11 @@
         </li>
         
         
-        <li id="section-59">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><code>cleanPathObject</code></p>
 <ul>
@@ -1655,11 +1539,11 @@
         </li>
         
         
-        <li id="section-60">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><code>calculateSensors</code></p>
 <ul>
@@ -1770,11 +1654,11 @@
         </li>
         
         
-        <li id="section-61">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><code>checkHit</code></p>
 
@@ -1842,11 +1726,11 @@
         </li>
         
         
-        <li id="section-62">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <h5 id="display-cycle-functionality">Display cycle functionality</h5>
 
@@ -1855,11 +1739,11 @@
         </li>
         
         
-        <li id="section-63">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p><code>cleanRotation</code></p>
 
@@ -1896,11 +1780,11 @@
         </li>
         
         
-        <li id="section-64">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>TODO check to see if path roll needs to be added</p>
 
@@ -1940,11 +1824,11 @@
         </li>
         
         
-        <li id="section-65">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p><code>cleanOffsetZ</code></p>
 
@@ -1955,11 +1839,11 @@
         </li>
         
         
-        <li id="section-66">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>nothing to do here - function only exists in case we need to do stuff in future Scrawl-canvas version</p>
 
@@ -1971,11 +1855,11 @@
         </li>
         
         
-        <li id="section-67">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p><code>cleanContent</code></p>
 
@@ -1993,19 +1877,17 @@
         </li>
         
         
-        <li id="section-68">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p><code>prepareStamp</code> - check all the dirty flags and call the appropriate <code>clean</code> functions if they are set</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.actionResize) <span class="hljs-keyword">this</span>.checkForResize();
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtyDimensions || <span class="hljs-keyword">this</span>.dirtyStart || <span class="hljs-keyword">this</span>.dirtyOffset || <span class="hljs-keyword">this</span>.dirtyHandle || <span class="hljs-keyword">this</span>.dirtyRotation) {
 
@@ -2045,11 +1927,11 @@
         </li>
         
         
-        <li id="section-69">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p><code>stamp</code> - builds a set of Strings which can then be applied to the DOM wrapper’s element’s <code>style</code> attribute.</p>
 <ul>
@@ -2077,11 +1959,11 @@
         </li>
         
         
-        <li id="section-70">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>do not process if the DOM element is missing</p>
 
@@ -2092,11 +1974,11 @@
         </li>
         
         
-        <li id="section-71">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>calculate transform strings on each iteration</p>
 
@@ -2142,11 +2024,11 @@
         </li>
         
         
-        <li id="section-72">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>determine whether there is a need to trigger a redraw of the DOM element</p>
 
@@ -2161,11 +2043,11 @@
         </li>
         
         
-        <li id="section-73">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
 
@@ -2176,11 +2058,11 @@
         </li>
         
         
-        <li id="section-74">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>if this artefact’s pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration</p>
 
@@ -2206,11 +2088,11 @@
         </li>
         
         
-        <li id="section-75">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p><code>apply</code></p>
 <ul>
@@ -2240,11 +2122,11 @@
         </li>
         
         
-        <li id="section-76">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

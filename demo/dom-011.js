@@ -21,7 +21,7 @@ stack.set({
         overflow: 'hidden',
         resize: 'both',
     },
-    actionResize: true,
+    checkForResize: true,
 });
 
 
@@ -32,12 +32,12 @@ canvas.set({
 
     // The `fit` attribute comes into play when the displayed canvas element and its hidden canvas companion (the base canvas) have different dimensions. The hidden canvas is copied over to the displayed canvas at the end of every display cycle.
     //
-    // We can influence how this copy happens by setting the `fit` attribute to an appropriate String value ('fill', 'contain', 'cover', or 'none'). These replicate the effect of the CSS object-fit property (see https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
+    // We can influence how this copy happens by setting the `fit` attribute to an appropriate String value (`fill`, `contain`, `cover`, or `none`). These replicate the effect of the [CSS object-fit property](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit).
     fit: 'fill',
 
-    // We've given the Stack element a 1px border. We need to compensate for this (and any top/left padding) when aligning the canvas element within the stack. if we don't do this, we get a 1px white line between the stack border and the canvas (on the top and left edges)
-    // 
-    // TODO - fix this. Annoying.
+    // The Stack artefact's coordinate `[0, 0]` lies at the top left corner of its DOM element's ___content box__, not its _border box_ (as per the HTML/CSS specifications).
+    // + We've given the Stack element a 1px border. We need to compensate for this (and any top/left padding) when aligning the canvas element within the stack. 
+    // + If we don't do this, we get a 1px white line between the stack border and the canvas (on the top and left edges)
     startX: -1,
     startY: -1,
 });
@@ -131,21 +131,18 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: stack,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-        width: ['width', 'round'],
-        height: ['height', 'round'],
-    },
-});
+// Test to make sure Stack is listening for external changes in its dimensions, and that these changes are perculating down to the canvas and its base cell
+// + Stack artefact's `checkForResize` flag set to true, enabling the checks
+// + Can resize Stack's DOM element by dragging the lower right corner
+// + Can also resize the element by using the width and height form controls - these controls then update the element's style width and height via the event listeners below.
+// + In both cases, the Stack artefact needs to check whether resizing has occurred and take action.
+document.querySelector('#width').addEventListener('input', (e) => {
+    stack.domElement.style.width = `${e.target.value}px`;
+}, false);
+document.querySelector('#height').addEventListener('input', (e) => {
+    stack.domElement.style.height = `${e.target.value}px`;
+}, false);
 
 
 // Set the DOM input values

@@ -144,6 +144,48 @@ const updateUiSubscribedElement = function (art) {
     if (here.normX < 0 || here.normX > 1 || here.normY < 0 || here.normY > 1) here.active = false;
 
     if (dom.type === 'Canvas') dom.updateBaseHere(here, dom.fit);
+
+    // Automatically check for element resize
+    // + The artefact's `checkForResize` flag needs to be set
+    // + We ignore resizing actions while dimensions-related dirty flags are set (to prevent getting ourselves into a continuous feedback loop)
+    if (dom.checkForResize && !dom.dirtyDimensions && !dom.dirtyDomDimensions) {
+
+        let [w, h] = dom.currentDimensions;
+
+        if (dom.type === 'Canvas') {
+
+            // Regardless of the setting of &lt;canvas> element's `boxSizing` style attribute:
+            // + It will include borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
+            // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
+            // + Solved by subtracting border values from the `getBoundingClientRect` dimension values before performing the test.
+            // + Tested in Demo [Canvas-004](../../demo/canvas-004.html).
+            if (!dom.computedStyles) dom.computedStyles = window.getComputedStyle(dom.domElement);
+
+            let s = dom.computedStyles,
+                hw = here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth),
+                hh = here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth);
+
+            if (w !== hw || h !== hh) {
+
+                dom.set({
+
+                    dimensions: [hw, hh],
+                });
+            }
+        }
+        else {
+        
+            // Stack and Element artefacts resize test.
+            // + Tested in Demo [DOM-011](../../demo/dom-011.html).
+            if (w !== here.w || h !== here.h) {
+
+                dom.set({
+
+                    dimensions: [here.w, here.h],
+                });
+            }
+        }
+    }
 };
 
 

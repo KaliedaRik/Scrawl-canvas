@@ -44,13 +44,6 @@ const sortRootElements = function () {
 
         rootElements.forEach((item) => {
 
-            // let art = artefact[item],
-            //     order = (art) ? floor(art.order) : 0;
-
-            // if (!buckets[order]) buckets[order] = [];
-            
-            // buckets[order].push(art.name);
-
             let art = artefact[item];
 
             if (art) {
@@ -842,7 +835,7 @@ const domShow = function (singleArtefact = '') {
             if (art.dirtyClasses) {
 
                 art.dirtyClasses = false;
-                el.className = art.classes;
+                if (el.className.substring) el.className = art.classes;
             }
         }
     }

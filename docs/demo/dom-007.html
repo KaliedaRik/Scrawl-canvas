@@ -342,12 +342,7 @@
             
             <div class="content"><div class='highlight'><pre>stack.set({
     <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
-    <span class="hljs-attr">css</span>: {
-        <span class="hljs-attr">overflow</span>: <span class="hljs-string">'hidden'</span>,
-        <span class="hljs-attr">resize</span>: <span class="hljs-string">'both'</span>
-    }
-});</pre></div></div>
+    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,</pre></div></div>
             
         </li>
         
@@ -357,6 +352,40 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>This gets the browser to add a drag icon to the stack element’s lower right corner, which in turn allows the user to drag-resize the element in real time.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    css: {
+        <span class="hljs-attr">overflow</span>: <span class="hljs-string">'hidden'</span>,
+        <span class="hljs-attr">resize</span>: <span class="hljs-string">'both'</span>
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Switch on automated element resize capture and processing</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    checkForResize: <span class="hljs-literal">true</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Update the boxes</p>
 
@@ -369,9 +398,7 @@
     <span class="hljs-attr">startY</span>: <span class="hljs-string">'15%'</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">10</span>,
 
-    <span class="hljs-attr">css</span>: {
-        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'rgba(255, 0, 0, 0.4)'</span>
-    }
+    <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'red'</span> },
 });
 
 leftbox.set({
@@ -380,39 +407,37 @@ leftbox.set({
     <span class="hljs-attr">startX</span>: <span class="hljs-string">'10%'</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">'35%'</span>,
 
-    <span class="hljs-attr">css</span>: {
-        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'rgba(0, 0, 255, 0.4)'</span>
-    }
+    <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'blue'</span> },
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-7">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Update the Group</p>
+              <p>Batch-update the box artefacts using their shared Group</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>hitgroup.setArtefacts({
-    <span class="hljs-attr">width</span>: <span class="hljs-string">'35%'</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">'25%'</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">'50%'</span>,
-    
-    <span class="hljs-attr">collides</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">css</span>: { <span class="hljs-attr">opacity</span>: <span class="hljs-string">'0.4'</span> },
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Update the flower wheel</p>
 
@@ -436,33 +461,11 @@ leftbox.set({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>To be aware:</p>
-<ul>
-<li>When changing a Stack’s attributes as part of setup, there’s no guarantee on the order in which the attributes will be updated. </li>
-<li>Because setting the actionResize attribute to <code>true</code> leads to an impromptu DOM update, it’s often best to leave setting this attribute to the end of the scene setup. </li>
-<li>The DOM update will make sure all the Stack’s constituent elements pick up the new Stack dimensions on the next regular render cycle</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>stack.set({
-    <span class="hljs-attr">actionResize</span>: <span class="hljs-literal">true</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Boundary checking can get very messy very quickly, particularly when using delta animation. The following boilerplate will work in many situations:</p>
@@ -480,11 +483,11 @@ leftbox.set({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p><strong>Step 0</strong> - determine the current boundary values (in this case they are dynamic, relative to the current dimensions of the Stack) and the current position of the flower element (again, a dynamic coordinate relative to Stack dimensions)</p>
 
@@ -502,11 +505,11 @@ leftbox.set({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p><strong>Step 1</strong> - check for boundary crossings</p>
 
@@ -517,11 +520,11 @@ leftbox.set({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><strong>Step 2</strong> - reverse out of danger</p>
 
@@ -532,11 +535,11 @@ leftbox.set({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p><strong>Step 3</strong> - update the appropriate delta values for the flower</p>
 
@@ -562,11 +565,11 @@ leftbox.set({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p><strong>Step 4</strong> - move forward away from the boundary</p>
 
@@ -579,11 +582,11 @@ leftbox.set({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Updating the flower’s DOM element’s class attribute</p>
 
@@ -608,11 +611,11 @@ leftbox.set({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Combining the two check functions above into a single function</p>
 
@@ -627,11 +630,11 @@ leftbox.set({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
@@ -657,11 +660,11 @@ Current classes: "${flower.get('classes')}"`;
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -672,7 +675,29 @@ Current classes: "${flower.get('classes')}"`;
     <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
     <span class="hljs-attr">commence</span>: commenceActions,
     <span class="hljs-attr">target</span>: stack,
-    <span class="hljs-attr">afterShow</span>: report,
+    <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>We need to finalize the stack’s display after the first Display cycle completes</p>
+<ul>
+<li>Tweaking thge stack’s <code>height</code> attribute should cascade through to its constituent elements, so that they can finalize their own dimensions and positioning (which in this case are both set relative to the stack’s dimensions).</li>
+<li>We also need to force the system to propagate the changes once; DOM element resize actions get processed only when mouse/touch cursor movements are detected, or a scroll or viewport resize event fires. To trigger this programmatically, we restart the Scrawl-canvas core listeners.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    afterCreated: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        stack.set({<span class="hljs-attr">height</span>: <span class="hljs-number">400.1</span>});
+        scrawl.startCoreListeners();
+    },
 });</pre></div></div>
             
         </li>

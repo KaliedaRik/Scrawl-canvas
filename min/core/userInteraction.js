@@ -84,6 +84,27 @@ here.type = currentCorePosition.type;
 here.active = true;
 if (here.normX < 0 || here.normX > 1 || here.normY < 0 || here.normY > 1) here.active = false;
 if (dom.type === 'Canvas') dom.updateBaseHere(here, dom.fit);
+if (dom.checkForResize && !dom.dirtyDimensions && !dom.dirtyDomDimensions) {
+let [w, h] = dom.currentDimensions;
+if (dom.type === 'Canvas') {
+if (!dom.computedStyles) dom.computedStyles = window.getComputedStyle(dom.domElement);
+let s = dom.computedStyles,
+hw = here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth),
+hh = here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth);
+if (w !== hw || h !== hh) {
+dom.set({
+dimensions: [hw, hh],
+});
+}
+}
+else {
+if (w !== here.w || h !== here.h) {
+dom.set({
+dimensions: [here.w, here.h],
+});
+}
+}
+}
 };
 const coreListenersTracker = makeAnimation({
 name: 'coreListenersTracker',

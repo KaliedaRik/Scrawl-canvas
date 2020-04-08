@@ -323,7 +323,7 @@
         <span class="hljs-attr">overflow</span>: <span class="hljs-string">'hidden'</span>,
         <span class="hljs-attr">resize</span>: <span class="hljs-string">'both'</span>,
     },
-    <span class="hljs-attr">actionResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -353,7 +353,7 @@
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>The <code>fit</code> attribute comes into play when the displayed canvas element and its hidden canvas companion (the base canvas) have different dimensions. The hidden canvas is copied over to the displayed canvas at the end of every display cycle.</p>
-<p>We can influence how this copy happens by setting the <code>fit</code> attribute to an appropriate String value (‘fill’, ‘contain’, ‘cover’, or ‘none’). These replicate the effect of the CSS object-fit property (see <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit</a>)</p>
+<p>We can influence how this copy happens by setting the <code>fit</code> attribute to an appropriate String value (<code>fill</code>, <code>contain</code>, <code>cover</code>, or <code>none</code>). These replicate the effect of the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">CSS object-fit property</a>.</p>
 
             </div>
             
@@ -368,8 +368,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>We’ve given the Stack element a 1px border. We need to compensate for this (and any top/left padding) when aligning the canvas element within the stack. if we don’t do this, we get a 1px white line between the stack border and the canvas (on the top and left edges)</p>
-<p>TODO - fix this. Annoying.</p>
+              <p>The Stack artefact’s coordinate <code>[0, 0]</code> lies at the top left corner of its DOM element’s <strong>_content box</strong>, not its <em>border box</em> (as per the HTML/CSS specifications).</p>
+<ul>
+<li>We’ve given the Stack element a 1px border. We need to compensate for this (and any top/left padding) when aligning the canvas element within the stack. </li>
+<li>If we don’t do this, we get a 1px white line between the stack border and the canvas (on the top and left edges)</li>
+</ul>
 
             </div>
             
@@ -519,22 +522,6 @@ let report = function () {
     <span class="hljs-attr">updates</span>: {
         <span class="hljs-attr">fitselect</span>: [<span class="hljs-string">'fit'</span>, <span class="hljs-string">'raw'</span>],
     },
-});
-
-scrawl.observeAndUpdate({
-
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">'.controlItem'</span>,
-
-    <span class="hljs-attr">target</span>: stack,
-
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">updates</span>: {
-        <span class="hljs-attr">width</span>: [<span class="hljs-string">'width'</span>, <span class="hljs-string">'round'</span>],
-        <span class="hljs-attr">height</span>: [<span class="hljs-string">'height'</span>, <span class="hljs-string">'round'</span>],
-    },
 });</pre></div></div>
             
         </li>
@@ -545,6 +532,32 @@ scrawl.observeAndUpdate({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Test to make sure Stack is listening for external changes in its dimensions, and that these changes are perculating down to the canvas and its base cell</p>
+<ul>
+<li>Stack artefact’s <code>checkForResize</code> flag set to true, enabling the checks</li>
+<li>Can resize Stack’s DOM element by dragging the lower right corner</li>
+<li>Can also resize the element by using the width and height form controls - these controls then update the element’s style width and height via the event listeners below.</li>
+<li>In both cases, the Stack artefact needs to check whether resizing has occurred and take action.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#width'</span>).addEventListener(<span class="hljs-string">'input'</span>, (e) =&gt; {
+    stack.domElement.style.width = <span class="hljs-string">`<span class="hljs-subst">${e.target.value}</span>px`</span>;
+}, <span class="hljs-literal">false</span>);
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#height'</span>).addEventListener(<span class="hljs-string">'input'</span>, (e) =&gt; {
+    stack.domElement.style.height = <span class="hljs-string">`<span class="hljs-subst">${e.target.value}</span>px`</span>;
+}, <span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Set the DOM input values</p>
 
@@ -557,11 +570,11 @@ scrawl.observeAndUpdate({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 <p><strong>Dev tip 1:</strong> Scrawl-canvas doesn’t add a namespace object to the Javascript global object. To see what’s going on in the Scrawl-canvas library - where all relevant SC objects are held - console log it (in the code file, not directly in the browser console):</p>

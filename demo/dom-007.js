@@ -28,10 +28,15 @@ let hitgroup = scrawl.makeGroup({
 stack.set({
     width: 600,
     height: 400,
+
+    // This gets the browser to add a drag icon to the stack element's lower right corner, which in turn allows the user to drag-resize the element in real time.
     css: {
         overflow: 'hidden',
         resize: 'both'
-    }
+    },
+
+    // Switch on automated element resize capture and processing
+    checkForResize: true,
 });
 
 
@@ -43,9 +48,7 @@ rightbox.set({
     startY: '15%',
     roll: 10,
 
-    css: {
-        backgroundColor: 'rgba(255, 0, 0, 0.4)'
-    }
+    css: { backgroundColor: 'red' },
 });
 
 leftbox.set({
@@ -54,18 +57,16 @@ leftbox.set({
     startX: '10%',
     startY: '35%',
 
-    css: {
-        backgroundColor: 'rgba(0, 0, 255, 0.4)'
-    }
+    css: { backgroundColor: 'blue' },
 });
 
 
-// Update the Group
+// Batch-update the box artefacts using their shared Group
 hitgroup.setArtefacts({
-    width: '35%',
+    width: '25%',
     height: '50%',
-    
-    collides: true,
+
+    css: { opacity: '0.4' },
 });
 
 
@@ -83,14 +84,6 @@ flower.set({
         startY: `${deltaY}%`,
         roll: 0.5,
     },
-});
-
-// To be aware:
-// + When changing a Stack's attributes as part of setup, there's no guarantee on the order in which the attributes will be updated. 
-// + Because setting the actionResize attribute to `true` leads to an impromptu DOM update, it's often best to leave setting this attribute to the end of the scene setup. 
-// + The DOM update will make sure all the Stack's constituent elements pick up the new Stack dimensions on the next regular render cycle
-stack.set({
-    actionResize: true,
 });
 
 
@@ -194,4 +187,12 @@ scrawl.makeRender({
     commence: commenceActions,
     target: stack,
     afterShow: report,
+
+    // We need to finalize the stack's display after the first Display cycle completes
+    // + Tweaking thge stack's `height` attribute should cascade through to its constituent elements, so that they can finalize their own dimensions and positioning (which in this case are both set relative to the stack's dimensions).
+    // + We also need to force the system to propagate the changes once; DOM element resize actions get processed only when mouse/touch cursor movements are detected, or a scroll or viewport resize event fires. To trigger this programmatically, we restart the Scrawl-canvas core listeners.
+    afterCreated: () => {
+        stack.set({height: 400.1});
+        scrawl.startCoreListeners();
+    },
 });

@@ -67,6 +67,18 @@
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
+  <div class="controls">
+
+    <div class="lavender label">Width</div>
+    <div class="lavender"><input class="controlItem" id="width" type="range" value="600" min="200" max="1000" step="10" />
+    </div>
+
+    <div class="lavender label">Height</div>
+    <div class="lavender"><input class="controlItem" id="height" type="range" value="400" min="200" max="1000" step="10" />
+    </div>
+
+  </div>
+
   <p id="reportmessage"></p>
 
   <div class="testinfo">
@@ -77,6 +89,7 @@
       <li>Check that we can successfully manipulate the palettes's start and end cursors</li>
       <li>Check that we can dynamically add and remove color stops</li>
     </ul>
+    <p>Additionally, test to make sure canvas responds correctly to external dimensions resizing - &lt;canvas> element is responsive - by changing its width and height values using the controls.</p>
     <p><a href="../docs/demo/canvas-004.html">Annotated code</a></p>
   </div>
 

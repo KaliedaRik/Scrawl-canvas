@@ -19,6 +19,7 @@ stack.set({
     width: 600,
     height:400,
     perspectiveZ: 1200,
+    checkForResize: true,
 });
 
 
@@ -182,19 +183,21 @@ let report = function () {
 }();
 
 
-// BUG: see Demo test 013 for details
-let bugTweak = () => element.set({ roll: 10.001 });
-
-
 // Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation-stack',
     target: stack,
-    afterCreated: bugTweak,
     afterShow: report,
+
+    // Fixes element misplacement issue on scene creation - see Demo [DOM-007](./dom-007.html) for more details of the fix
+    afterCreated: () => {
+        stack.set({height: 400.1});
+        scrawl.startCoreListeners();
+    },
 });
 
+// We can have more than one Display cycle animation on a web page
 scrawl.makeRender({
 
     name: 'demo-animation-canvas',

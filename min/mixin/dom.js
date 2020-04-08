@@ -12,7 +12,7 @@ offsetZ: 0,
 css: null,
 classes: '',
 position: 'absolute',
-actionResize: false,
+checkForResize: false,
 trackHere: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -51,14 +51,6 @@ S.trackHere = function (item) {
 this.trackHere = item;
 if (item) pushUnique(uiSubscribedElements, this.name);
 else removeItem(uiSubscribedElements, this.name);
-};
-S.actionResize = function (item) {
-this.actionResize = item;
-if (item) {
-this.prepareStamp();
-domShow(this.name);
-this.triggerResizeCascade();
-}
 };
 S.position = function (item) {
 this.position = item;
@@ -140,6 +132,7 @@ return this;
 P.initializeDomLayout = function (items) {
 let el = items.domElement,
 elStyle = el.style;
+elStyle.boxSizing = 'border-box';
 if (el && items.setInitialDimensions) {
 let dims = el.getBoundingClientRect(),
 trans = el.style.transform,
@@ -176,38 +169,6 @@ else items.perspectiveY = perspectiveOrigin[0];
 }
 }
 }
-}
-};
-P.checkForResize = function () {
-let el = this.domElement;
-if (el) {
-let dims = el.getBoundingClientRect(),
-flag = false;
-if (this.currentDimensions[0] !== dims.width) {
-this.dimensions[0] = this.currentDimensions[0] = dims.width;
-flag = true;
-}
-if (this.currentDimensions[1] !== dims.height) {
-this.dimensions[1] = this.currentDimensions[1] = dims.height;
-flag = true;
-}
-if (flag && (this.type === 'Stack')) this.triggerResizeCascade();
-}
-};
-P.triggerResizeCascade = function () {
-let gBucket = this.groupBuckets,
-aBucket;
-if (gBucket && gBucket.length) {
-gBucket.forEach(grp => {
-aBucket = grp.artefactBuckets;
-if (aBucket && aBucket.length) {
-aBucket.forEach(art => {
-if (art) {
-art.dirtyDimensions = true;
-}
-})
-}
-})
 }
 };
 P.addClasses = function (item) {
@@ -524,7 +485,6 @@ let el = this.domElement;
 if (el) this.dirtyDimensions = true;
 };
 P.prepareStamp = function () {
-if (this.actionResize) this.checkForResize();
 if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
 this.dirtyPathObject = true;
 this.dirtyCollision = true;

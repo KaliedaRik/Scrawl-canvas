@@ -161,6 +161,8 @@ const Canvas = function (items = {}) {
         el.setAttribute('aria-describedby', ariaDescription.id);
 
         this.cleanAria();
+
+        // el.style.boxSizing = 'content-box'
     }
 
     this.dirtyCells = true;
