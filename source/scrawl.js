@@ -41,6 +41,7 @@ import {
 
 import { 
     addStack,
+    getStack,
     addCanvas,
     getCanvas,
     setCurrentCanvas,
@@ -237,6 +238,7 @@ export default {
 
     // core/document.js
     addStack,
+    getStack,
     addCanvas,
     getCanvas,
     setCurrentCanvas,

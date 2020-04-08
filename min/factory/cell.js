@@ -106,6 +106,7 @@ if (stroke.name && stroke.name === myname) state.strokeStyle = state.defs.stroke
 Object.entries(tween).forEach(([name, t]) => {
 if (t.checkForTarget(myname)) t.removeFromTargets(this);
 });
+if (group[this.name]) group[this.name].kill();
 this.deregister();
 return this;
 };

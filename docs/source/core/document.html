@@ -919,9 +919,18 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Scrawl-canvas expects one canvas element (if any canvases are present) to act as the ‘current’ canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using <strong>scrawl.setCurrentCanvas</strong></p>
+              <p><code>Exported function</code> (to modules and scrawl object). Parse the DOM, looking for a specific element; then create a <strong>Stack</strong> artefact wrapper for it.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getStack = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">search</span>) </span>{
+
+    <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">document</span>.querySelector(search),
+        stack;
+
+    <span class="hljs-keyword">if</span> (el) stack = addInitialStackElement(el);
+    <span class="hljs-keyword">return</span> stack;
+};</pre></div></div>
             
         </li>
         
@@ -931,6 +940,19 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Scrawl-canvas expects one canvas element (if any canvases are present) to act as the ‘current’ canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using <strong>scrawl.setCurrentCanvas</strong></p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p><code>Exported variables</code> (to modules). </p>
 
@@ -942,11 +964,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). </p>
 
@@ -985,11 +1007,11 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addCanvas</strong> to add a Scrawl-canvas canvas element to a web page. The items argument should include </p>
 <ul>
@@ -1072,11 +1094,11 @@
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>TODO - documentation</p>
 <p><code>Exported function</code> (to modules and scrawl object). </p>
@@ -1105,11 +1127,11 @@
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <h4 id="event-listeners">Event listeners</h4>
 <p>Each scrawl-canvas stack and canvas can have <strong>bespoke Scrawl-canvas listeners</strong> attached to them, to track user mouse and touch interactions with that element. Scrawl-canvas defines five bespoke listeners:</p>
@@ -1132,11 +1154,11 @@
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
 
@@ -1158,11 +1180,11 @@
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addListener’ is <strong>removeListener</strong> which removes Scrawl-canvas event listeners from DOM elements in a similar way</p>
 
@@ -1178,11 +1200,11 @@
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Because devices and browsers differ in their approach to user interaction (mouse vs pointer vs touch), the actual functionality for adding and removing the event listeners associated with each approach is handled by dedicated actionXXXListener functions</p>
 
@@ -1191,11 +1213,11 @@
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>TODO: code up the functionality to manage touch events</p>
 
@@ -1291,11 +1313,11 @@
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p><strong>Any event listener</strong> can be added to a Scrawl-canvas stack or canvas DOM element. </p>
 <p>The <strong>addNativeListener</strong> function makes adding and removing these ‘native’ listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.</p>
@@ -1311,11 +1333,11 @@
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
 
@@ -1337,11 +1359,11 @@
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addNativeListener’ is <strong>removeNativeListener</strong> which removes event listeners from DOM elements in a similar way</p>
 
@@ -1377,11 +1399,11 @@
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <h4 id="the-display-cycle">The Display cycle</h4>
 <p>Scrawl-canvas breaks down the Display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
@@ -1394,11 +1416,11 @@
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <h5 id="clear">Clear</h5>
 <ul>
@@ -1411,11 +1433,11 @@
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). </p>
 
@@ -1430,11 +1452,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <h5 id="compile">Compile</h5>
 <ul>
@@ -1447,11 +1469,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). </p>
 
@@ -1466,11 +1488,11 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <h5 id="show">Show</h5>
 <ul>
@@ -1483,11 +1505,11 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). </p>
 
@@ -1502,11 +1524,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <h5 id="render">Render</h5>
 <ul>
@@ -1518,11 +1540,11 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). </p>
 
@@ -1537,11 +1559,11 @@
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>Helper functions coordinate the actions required to complete a display cycle</p>
 
@@ -1575,11 +1597,11 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <h4 id="dom-element-updates">DOM element updates</h4>
 <p>Scrawl-canvas will batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don’t maintain a full/comprehensive ‘shadow’ or ‘virtual’ DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.</p>
@@ -1592,11 +1614,11 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>Local variable</p>
 
@@ -1607,11 +1629,11 @@
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules). </p>
 
@@ -1630,11 +1652,11 @@
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules). </p>
 
@@ -1648,11 +1670,11 @@
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules). This is the <strong>main DOM manipulation function</strong> which will be triggered once during each Display cycle.</p>
 
@@ -1675,11 +1697,11 @@
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>given the critical nature of these loops, using ‘for’ instead of ‘forEach’</p>
 
@@ -1704,11 +1726,11 @@
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>update perspective</p>
 
@@ -1727,11 +1749,11 @@
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>update position</p>
 
@@ -1746,11 +1768,11 @@
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>update dimensions</p>
 
@@ -1779,11 +1801,11 @@
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>update handle/transformOrigin</p>
 
@@ -1798,11 +1820,11 @@
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>update transform</p>
 
@@ -1817,11 +1839,11 @@
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>update visibility</p>
 
@@ -1836,11 +1858,11 @@
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>update other CSS changes</p>
 
@@ -1875,11 +1897,11 @@
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>update element classes</p>
 
@@ -1897,11 +1919,11 @@
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <h4 id="dom-holding-areas">DOM Holding areas</h4>
 <p><code>Exported handles</code> (to modules). During its initialization phase, Scrawl-canvas will add two hidden ‘hold’ elements at the top and bottom of the document body where it can add additional elements as-and-when required. </p>
@@ -1911,11 +1933,11 @@
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas&gt; elements to inform non-visual website visitors about content in the canvas.</p>
 
@@ -1936,11 +1958,11 @@ scrawlCanvasHold.id = <span class="hljs-string">'Scrawl-ARIA-default-hold'</span
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>Navigation area - canvas anchor links. Canvases create their own (hidden) &lt;nav&gt; elements that directly follow them in the DOM. These are used to store &lt;a&gt; links for clickable entitys in the canvas display, making them accessible to non-visual users (for example: screen readers)</p>
 
@@ -1956,11 +1978,11 @@ scrawlNavigationHold.id = <span class="hljs-string">'Scrawl-navigation-default-h
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -1970,6 +1992,7 @@ scrawlNavigationHold.id = <span class="hljs-string">'Scrawl-navigation-default-h
     getCanvases,
     getCanvas,
     getStacks,
+    getStack,
 
     addCanvas,
     addStack,

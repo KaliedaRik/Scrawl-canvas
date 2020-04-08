@@ -247,6 +247,9 @@ P.kill = function () {
         if (t.checkForTarget(myname)) t.removeFromTargets(this);
     });
 
+    // Kill group
+    if (group[this.name]) group[this.name].kill();
+
     // Remove artefact from the Scrawl-canvas library
     this.deregister();
     
