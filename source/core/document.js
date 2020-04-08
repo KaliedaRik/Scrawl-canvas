@@ -290,6 +290,16 @@ const getCanvas = function (search) {
     return canvas;
 };
 
+// `Exported function` (to modules and scrawl object). Parse the DOM, looking for a specific element; then create a __Stack__ artefact wrapper for it.
+const getStack = function (search) {
+
+    let el = document.querySelector(search),
+        stack;
+
+    if (el) stack = addInitialStackElement(el);
+    return stack;
+};
+
 // Scrawl-canvas expects one canvas element (if any canvases are present) to act as the 'current' canvas on which other factory functions - such as adding new entitys - can act. The current canvas can be changed at any time using __scrawl.setCurrentCanvas__
 
 // `Exported variables` (to modules). 
@@ -870,6 +880,7 @@ export {
     getCanvases,
     getCanvas,
     getStacks,
+    getStack,
 
     addCanvas,
     addStack,

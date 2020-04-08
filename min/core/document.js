@@ -164,6 +164,12 @@ if (el) canvas = addInitialCanvasElement(el);
 setCurrentCanvas(canvas);
 return canvas;
 };
+const getStack = function (search) {
+let el = document.querySelector(search),
+stack;
+if (el) stack = addInitialStackElement(el);
+return stack;
+};
 let currentCanvas = null,
 currentGroup = null;
 const setCurrentCanvas = function (item) {
@@ -494,6 +500,7 @@ export {
 getCanvases,
 getCanvas,
 getStacks,
+getStack,
 addCanvas,
 addStack,
 setCurrentCanvas,
