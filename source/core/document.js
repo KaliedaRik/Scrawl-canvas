@@ -428,7 +428,10 @@ const makeAnimationObserver = function (anim, wrapper) {
         }, {});
         observer.observe(wrapper.domElement);
 
-        return observer.disconnect;
+        return function () {
+            
+            observer.disconnect;
+        }
     }
     else return false;
 }
