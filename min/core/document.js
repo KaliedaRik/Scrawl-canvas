@@ -253,7 +253,9 @@ else if (!entry.isIntersecting) anim.isRunning() && anim.halt();
 });
 }, {});
 observer.observe(wrapper.domElement);
-return observer.disconnect;
+return function () {
+observer.disconnect;
+}
 }
 else return false;
 }
