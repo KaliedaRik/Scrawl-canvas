@@ -445,8 +445,9 @@ S.textPathPosition = function (item) {
 
     if (this.textPathLoop) {
 
-        item = Math.abs(item);
-        this.textPathPosition = item - Math.floor(item);
+        if (item < 0) item = Math.abs(item);
+        if (item > 1) item = item % 1;
+        this.textPathPosition = parseFloat(item.toFixed(6));
     }
     else this.textPathPosition = item;
 };
@@ -456,8 +457,9 @@ D.textPathPosition = function (item) {
 
     if (this.textPathLoop) {
 
-        newVal = Math.abs(newVal);
-        this.textPathPosition = newVal - Math.floor(newVal);
+        if (newVal < 0) newVal += 1;
+        if (newVal > 1) newVal = newVal % 1;
+        this.textPathPosition = parseFloat(newVal.toFixed(6));
     }
     else this.textPathPosition = newVal;
 };

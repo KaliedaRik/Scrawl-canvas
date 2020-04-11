@@ -563,7 +563,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefacts = false</span>) </span>{
 
     <span class="hljs-keyword">let</span> myname = <span class="hljs-keyword">this</span>.name;</pre></div></div>
             
@@ -583,7 +583,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(artefact).forEach(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(art.groups) &amp;&amp; art.groups.indexOf(myname) &gt;= <span class="hljs-number">0</span>) removeItem(art.groups, myname);
-    });</pre></div></div>
+    });
+
+    <span class="hljs-keyword">if</span> (killArtefacts) <span class="hljs-keyword">this</span>.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.kill());</pre></div></div>
             
         </li>
         

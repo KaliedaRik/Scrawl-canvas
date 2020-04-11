@@ -155,15 +155,15 @@ const updateUiSubscribedElement = function (art) {
         if (dom.type === 'Canvas') {
 
             // Regardless of the setting of &lt;canvas> element's `boxSizing` style attribute:
-            // + It will include borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
+            // + It will include padding and borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
             // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
-            // + Solved by subtracting border values from the `getBoundingClientRect` dimension values before performing the test.
+            // + Solved by subtracting padding/border values from the `getBoundingClientRect` dimension values before performing the test.
             // + Tested in Demo [Canvas-004](../../demo/canvas-004.html).
             if (!dom.computedStyles) dom.computedStyles = window.getComputedStyle(dom.domElement);
 
             let s = dom.computedStyles,
-                hw = here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth),
-                hh = here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth);
+                hw = here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight),
+                hh = here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth) - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom);
 
             if (w !== hw || h !== hh) {
 

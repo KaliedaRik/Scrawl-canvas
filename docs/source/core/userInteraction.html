@@ -613,9 +613,9 @@
               </div>
               <p>Regardless of the setting of &lt;canvas&gt; element’s <code>boxSizing</code> style attribute:</p>
 <ul>
-<li>It will include borders in its <code>getBoundingClientRect</code> object (and its <code>getComputedStyle</code> width/height values), but these are specifically excluded from the element’s <code>width</code> and <code>height</code> attributes</li>
+<li>It will include padding and borders in its <code>getBoundingClientRect</code> object (and its <code>getComputedStyle</code> width/height values), but these are specifically excluded from the element’s <code>width</code> and <code>height</code> attributes</li>
 <li>Which leads to the normal resize test - <code>if (w !== here.w || h !== here.h)</code> - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.</li>
-<li>Solved by subtracting border values from the <code>getBoundingClientRect</code> dimension values before performing the test.</li>
+<li>Solved by subtracting padding/border values from the <code>getBoundingClientRect</code> dimension values before performing the test.</li>
 <li>Tested in Demo <a href="../../demo/canvas-004.html">Canvas-004</a>.</li>
 </ul>
 
@@ -624,8 +624,8 @@
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!dom.computedStyles) dom.computedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(dom.domElement);
 
             <span class="hljs-keyword">let</span> s = dom.computedStyles,
-                hw = here.w - <span class="hljs-built_in">parseFloat</span>(s.borderLeftWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderRightWidth),
-                hh = here.h - <span class="hljs-built_in">parseFloat</span>(s.borderTopWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderBottomWidth);
+                hw = here.w - <span class="hljs-built_in">parseFloat</span>(s.borderLeftWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderRightWidth) - <span class="hljs-built_in">parseFloat</span>(s.paddingLeft) - <span class="hljs-built_in">parseFloat</span>(s.paddingRight),
+                hh = here.h - <span class="hljs-built_in">parseFloat</span>(s.borderTopWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderBottomWidth) - <span class="hljs-built_in">parseFloat</span>(s.paddingTop) - <span class="hljs-built_in">parseFloat</span>(s.paddingBottom);
 
             <span class="hljs-keyword">if</span> (w !== hw || h !== hh) {
 

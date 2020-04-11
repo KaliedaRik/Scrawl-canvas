@@ -1254,8 +1254,9 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.textPathLoop) {
 
-        item = <span class="hljs-built_in">Math</span>.abs(item);
-        <span class="hljs-keyword">this</span>.textPathPosition = item - <span class="hljs-built_in">Math</span>.floor(item);
+        <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-built_in">Math</span>.abs(item);
+        <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">1</span>) item = item % <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">this</span>.textPathPosition = <span class="hljs-built_in">parseFloat</span>(item.toFixed(<span class="hljs-number">6</span>));
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.textPathPosition = item;
 };
@@ -1265,8 +1266,9 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.textPathLoop) {
 
-        newVal = <span class="hljs-built_in">Math</span>.abs(newVal);
-        <span class="hljs-keyword">this</span>.textPathPosition = newVal - <span class="hljs-built_in">Math</span>.floor(newVal);
+        <span class="hljs-keyword">if</span> (newVal &lt; <span class="hljs-number">0</span>) newVal += <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (newVal &gt; <span class="hljs-number">1</span>) newVal = newVal % <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">this</span>.textPathPosition = <span class="hljs-built_in">parseFloat</span>(newVal.toFixed(<span class="hljs-number">6</span>));
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.textPathPosition = newVal;
 };</pre></div></div>

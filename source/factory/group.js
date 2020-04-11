@@ -112,7 +112,7 @@ P.postCloneAction = function(clone, items) {
 
 
 // #### Kill management
-P.kill = function () {
+P.kill = function (killArtefacts = false) {
 
     let myname = this.name;
 
@@ -121,6 +121,8 @@ P.kill = function () {
 
         if (Array.isArray(art.groups) && art.groups.indexOf(myname) >= 0) removeItem(art.groups, myname);
     });
+
+    if (killArtefacts) this.artefactBuckets.forEach(item => item.kill());
 
     // Remove Group object from the Scrawl-canvas library
     return this.deregister();
