@@ -18,6 +18,9 @@ ga(function() {
     myTracker = ga.getByName('demoCanvasTracker');
     myTracker.set('transport', 'beacon');
     myTracker.set('campaignKeyword', 'Scrawl-canvas demo');
+
+    // Comment out the next line to send tracker packets (so they show up in the console)
+    myTracker.set('sendHitTask', null);
 });
 
 
