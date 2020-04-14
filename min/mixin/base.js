@@ -106,7 +106,7 @@ copy = this.finalizePacketOut(copy, items);
 return JSON.stringify([this.name, this.type, this.lib, copy]);
 };
 P.stringifyFunction = function (val) {
-let matches = val.toString().match(/\((.*?)\).*?\{(.*)\}/s);
+let matches = val.toString().match(/\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/);
 let vars = matches[1];
 let func = matches[2];
 return (xta(vars, func)) ? `${vars}~~~${func}` : false;

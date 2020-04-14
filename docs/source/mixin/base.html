@@ -803,14 +803,7 @@ box.kill()
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.stringifyFunction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
-
-        <span class="hljs-keyword">let</span> matches = val.toString().match(<span class="hljs-regexp">/\((.*?)\).*?\{(.*)\}/</span>s);
-        <span class="hljs-keyword">let</span> vars = matches[<span class="hljs-number">1</span>];
-        <span class="hljs-keyword">let</span> func = matches[<span class="hljs-number">2</span>];
-
-        <span class="hljs-keyword">return</span> (xta(vars, func)) ? <span class="hljs-string">`<span class="hljs-subst">${vars}</span>~~~<span class="hljs-subst">${func}</span>`</span> : <span class="hljs-literal">false</span>;
-    };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.stringifyFunction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -820,6 +813,27 @@ box.kill()
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>The dotAll /s regex flag currently not supported by Firefox
+let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> matches = val.toString().match(<span class="hljs-regexp">/\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/</span>);
+        <span class="hljs-keyword">let</span> vars = matches[<span class="hljs-number">1</span>];
+        <span class="hljs-keyword">let</span> func = matches[<span class="hljs-number">2</span>];
+
+        <span class="hljs-keyword">return</span> (xta(vars, func)) ? <span class="hljs-string">`<span class="hljs-subst">${vars}</span>~~~<span class="hljs-subst">${func}</span>`</span> : <span class="hljs-literal">false</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><code>processPacketOut</code></p>
 
@@ -837,11 +851,11 @@ box.kill()
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><code>finalizePacketOut</code></p>
 
@@ -855,11 +869,11 @@ box.kill()
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><code>importPacket</code> - Import and unpack a string representation of a factory object using the <strong>saveAsPacket</strong> function.</p>
 <ul>
@@ -886,11 +900,11 @@ box.kill()
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Looks like we already have a packet for processing</p>
 
@@ -904,11 +918,11 @@ box.kill()
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>This is not much of a test …</p>
 
@@ -919,11 +933,11 @@ box.kill()
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Looks like we have a packet for processing, but it’s malformed</p>
 
@@ -936,11 +950,11 @@ box.kill()
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Attempt to fetch the packet from a remote server</p>
 
@@ -983,11 +997,11 @@ box.kill()
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><code>actionPacket</code> - This function:</p>
 <ol>
@@ -1036,11 +1050,11 @@ box.kill()
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Stack-based artefacts need a DOM element that they can pass into the factory</p>
 
@@ -1077,11 +1091,11 @@ box.kill()
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>For the main object</p>
 
@@ -1092,11 +1106,11 @@ box.kill()
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>For artefact anchors - I know that anchors only have the one function to worry about, but doing it this way so I don’t forget how to approach it eg for SC sub-objects that have more than one user-settable function (eg timeline actions)</p>
 
@@ -1109,11 +1123,11 @@ box.kill()
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Anchor.setters.clickAction(arg) explicitly checks that the supplied arg is a function - if it isn’t (like in packet cases) then the attribute doesn’t get updated when we invoke <em>obj.set(update);</em> earlier in this function.</p>
 
@@ -1125,11 +1139,11 @@ box.kill()
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Anchors are a bit of an exception case because they add a user-interactive and yet otherwise untracked DOM element to the page, which has to be updated in its own sweet, special way…</p>
 
@@ -1142,11 +1156,11 @@ box.kill()
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Specific to Phrase entitys, which doesn’t include a simple way to set or update glyphStyle objects</p>
 
@@ -1175,11 +1189,11 @@ box.kill()
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p><code>actionPacketFunctions</code> - internal helper function - creates functions from Strings</p>
 
@@ -1204,11 +1218,11 @@ box.kill()
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>Native code raises non-terminal errors (because it is native code!) - so we dodge that bullet.</p>
 
@@ -1228,11 +1242,11 @@ box.kill()
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>Most Scrawl-canvas factory objects can be copied using the <strong>clone</strong> function. The result will be an exact copy of the original, additionally set with values supplied in the argument object.</p>
@@ -1245,11 +1259,11 @@ box.kill()
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p><code>clone</code></p>
 
@@ -1265,11 +1279,11 @@ box.kill()
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>Tickers are specific to Tween and Action objects</p>
 
@@ -1286,11 +1300,11 @@ box.kill()
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Everything else</p>
 
@@ -1317,11 +1331,11 @@ box.kill()
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p><code>postCloneAction</code> - overwritten by a variety of mixins and factories</p>
 
@@ -1335,11 +1349,11 @@ box.kill()
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1348,11 +1362,11 @@ box.kill()
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p><code>kill</code> - overwritten by various mixins and factories</p>
 
@@ -1366,11 +1380,11 @@ box.kill()
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>makeName</code> - If the developer doesn’t supply a name value for a factory function, then Scrawl-canvas will generate a random name for the object to use.</p>
@@ -1388,11 +1402,11 @@ box.kill()
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p><code>register</code> - Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function’s type value. </p>
 <ul>
@@ -1429,11 +1443,11 @@ box.kill()
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><code>deregister</code> - Reverse what register() does</p>
 
@@ -1467,11 +1481,11 @@ box.kill()
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

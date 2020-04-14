@@ -299,7 +299,9 @@ export default function (P = {}) {
 // `stringifyFunction`
     P.stringifyFunction = function (val) {
 
-        let matches = val.toString().match(/\((.*?)\).*?\{(.*)\}/s);
+        // The dotAll /s regex flag currently not supported by Firefox
+        // let matches = val.toString().match(/\((.*?)\).*?\{(.*)\}/s);
+        let matches = val.toString().match(/\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/);
         let vars = matches[1];
         let func = matches[2];
 
