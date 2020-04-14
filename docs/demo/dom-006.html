@@ -330,6 +330,9 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>ga(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> ga = <span class="hljs-built_in">window</span>[<span class="hljs-built_in">window</span>[<span class="hljs-string">'GoogleAnalyticsObject'</span>] || <span class="hljs-string">'ga'</span>];
+
     myTracker = ga.getByName(<span class="hljs-string">'demoCanvasTracker'</span>);
     myTracker.set(<span class="hljs-string">'transport'</span>, <span class="hljs-string">'beacon'</span>);
     myTracker.set(<span class="hljs-string">'campaignKeyword'</span>, <span class="hljs-string">'Scrawl-canvas demo'</span>);</pre></div></div>

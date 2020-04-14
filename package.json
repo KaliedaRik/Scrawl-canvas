@@ -1,7 +1,7 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.0.5",
-  "description": "Version 8.0.5 - 11 April 2020",
+  "version": "8.0.6",
+  "description": "Version 8.0.6 - 14 April 2020",
   "main": "min/scrawl.js",
   "scripts": {
     "test": "echo \"Use demo folder examples for testing\" && exit 1",
