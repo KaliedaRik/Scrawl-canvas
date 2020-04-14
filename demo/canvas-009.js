@@ -15,6 +15,9 @@ ga('create', 'UA-000000-0', 'auto', 'demoCanvasTracker');
 
 // We can then incorporate the tracker's functionality in our various hook functions defined further down in this script
 ga(function() {
+
+    let ga = window[window['GoogleAnalyticsObject'] || 'ga'];
+
     myTracker = ga.getByName('demoCanvasTracker');
     myTracker.set('transport', 'beacon');
     myTracker.set('campaignKeyword', 'Scrawl-canvas demo');
