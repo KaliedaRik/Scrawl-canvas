@@ -1,7 +1,7 @@
 # Scrawl-canvas Library 
 Version: `8.0.6 - 14 April 2020`.
 
-Scrawl-canvas website: [scrawl.rikweb.org.uk](https://scrawl.rikweb.org.uk).
+Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 
 __Do you want to contribute?__ I've been developing this project for too long by myself, and would really welcome contributions from - even collaboration with - people who can bring a different perspective and a fresh set of eyes to the work.
 
