@@ -89,6 +89,15 @@ Alternatively, a zip package of the v8.0.4 files can be downloaded from this lin
 </html>
 ```
 
+### CDN - unpkg.com
+This will pull the requested npm package directly into your web page:
+```
+<script type="module">
+    import scrawl from 'https://unpkg.com/scrawl-canvas@8.0.6';
+    [...]
+</script>
+```
+
 ### NPM/Yarn
 This approach is still experimental: Scrawl-canvas has been designed for use in the browser, not server-side. ___Add the library to a React/Vue/Svelte/etc project at your own risk___ - your mileage may vary!
 
