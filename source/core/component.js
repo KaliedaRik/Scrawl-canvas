@@ -5,8 +5,9 @@
 
 
 // ## Imports
-import { isa_dom, isa_boolean, isa_obj } from "./utilities.js";
+import { isa_dom, isa_boolean, isa_obj, defaultNonReturnFunction } from "./utilities.js";
 import { artefact, unstackedelement } from "./library.js";
+import { makeAnimationObserver } from './document.js';
 
 import { makeRender } from "../factory/renderAnimation.js";
 import { makeUnstackedElement } from "../factory/unstackedElement.js";
@@ -45,18 +46,10 @@ const makeStackComponent = function (domElement, canvasSpecs, animationHooks, ob
 
     let myAnimation = makeRender(animationHooks);
 
-    let observer = new IntersectionObserver((entries, observer) => {
-
-        entries.forEach(entry => {
-
-            if (entry.isIntersecting) !myAnimation.isRunning() && myAnimation.run();
-            else if (!entry.isIntersecting) myAnimation.isRunning() && myAnimation.halt();
-        });
-    }, observerSpecs);
-    observer.observe(myElement.domElement);
+    let myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
 
     let destroy = () => {
-        observer.disconnect();
+        myObserver();
         myAnimation.kill();
         myCanvas.demolish();
         myElement.demolish(true);
@@ -92,18 +85,10 @@ const makeUnstackedComponent = function (domElement, canvasSpecs, animationHooks
 
     let myAnimation = makeRender(animationHooks);
 
-    let observer = new IntersectionObserver((entries, observer) => {
-
-        entries.forEach(entry => {
-
-            if (entry.isIntersecting) !myAnimation.isRunning() && myAnimation.run();
-            else if (!entry.isIntersecting) myAnimation.isRunning() && myAnimation.halt();
-        });
-    }, observerSpecs);
-    observer.observe(myElement.domElement);
+    let myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
 
     let destroy = () => {
-        observer.disconnect();
+        myObserver();
         myAnimation.kill();
         if (myCanvas) myCanvas.demolish();
         myElement.demolish(true);

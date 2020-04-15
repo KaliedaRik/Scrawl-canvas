@@ -319,7 +319,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_canvas, generateUuid, isa_fn, isa_dom, pushUnique, removeItem, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_canvas, generateUuid, isa_fn, isa_dom, pushUnique, removeItem, xt, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
 <span class="hljs-keyword">import</span> { artefact, canvas, group, stack, css, xcss } <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;
 
 <span class="hljs-keyword">import</span> { makeStack } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/stack.js"</span>;
@@ -1105,9 +1105,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper, specs = {}</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (anim &amp;&amp; anim.run &amp;&amp; wrapper &amp;&amp; wrapper.domElement) {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'makeAnimationObserver'</span>, anim.name, (wrapper) ? wrapper.name : <span class="hljs-string">'no wrapper'</span>);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.IntersectionObserver === <span class="hljs-string">'function'</span> &amp;&amp; anim &amp;&amp; anim.run) {
 
         <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
 
@@ -1116,15 +1118,19 @@
                 <span class="hljs-keyword">if</span> (entry.isIntersecting) !anim.isRunning() &amp;&amp; anim.run();
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) anim.isRunning() &amp;&amp; anim.halt();
             });
-        }, {});
-        observer.observe(wrapper.domElement);
+        }, specs);
+
+        <span class="hljs-keyword">if</span> (wrapper &amp;&amp; wrapper.domElement) {
+
+            observer.observe(wrapper.domElement);
+        }
 
         <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
             
-            observer.disconnect;
+            observer.disconnect();
         }
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> defaultNonReturnFunction;
 }</pre></div></div>
             
         </li>

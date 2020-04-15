@@ -1,4 +1,4 @@
-import { isa_canvas, generateUuid, isa_fn, isa_dom, pushUnique, removeItem, xt } from "./utilities.js";
+import { isa_canvas, generateUuid, isa_fn, isa_dom, pushUnique, removeItem, xt, defaultNonReturnFunction } from "./utilities.js";
 import { artefact, canvas, group, stack, css, xcss } from "./library.js";
 import { makeStack } from "../factory/stack.js";
 import { makeElement } from "../factory/element.js";
@@ -244,20 +244,23 @@ delete items.trackHere;
 mycanvas.set(items);
 return mycanvas;
 };
-const makeAnimationObserver = function (anim, wrapper) {
-if (anim && anim.run && wrapper && wrapper.domElement) {
+const makeAnimationObserver = function (anim, wrapper, specs = {}) {
+console.log('makeAnimationObserver', anim.name, (wrapper) ? wrapper.name : 'no wrapper');
+if (typeof window.IntersectionObserver === 'function' && anim && anim.run) {
 let observer = new IntersectionObserver((entries, observer) => {
 entries.forEach(entry => {
 if (entry.isIntersecting) !anim.isRunning() && anim.run();
 else if (!entry.isIntersecting) anim.isRunning() && anim.halt();
 });
-}, {});
+}, specs);
+if (wrapper && wrapper.domElement) {
 observer.observe(wrapper.domElement);
+}
 return function () {
-observer.disconnect;
+observer.disconnect();
 }
 }
-else return false;
+else return defaultNonReturnFunction;
 }
 const addListener = function (evt, fn, targ) {
 if (!isa_fn(fn)) throw new Error(`core/document addListener() error - no function supplied: ${evt}, ${targ}`);

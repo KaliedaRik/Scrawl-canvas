@@ -329,8 +329,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_dom, isa_boolean, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_dom, isa_boolean, isa_obj, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
 <span class="hljs-keyword">import</span> { artefact, unstackedelement } <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;
+<span class="hljs-keyword">import</span> { makeAnimationObserver } <span class="hljs-keyword">from</span> <span class="hljs-string">'./document.js'</span>;
 
 <span class="hljs-keyword">import</span> { makeRender } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/renderAnimation.js"</span>;
 <span class="hljs-keyword">import</span> { makeUnstackedElement } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/unstackedElement.js"</span>;</pre></div></div>
@@ -391,18 +392,10 @@
 
     <span class="hljs-keyword">let</span> myAnimation = makeRender(animationHooks);
 
-    <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
-
-        entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (entry.isIntersecting) !myAnimation.isRunning() &amp;&amp; myAnimation.run();
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) myAnimation.isRunning() &amp;&amp; myAnimation.halt();
-        });
-    }, observerSpecs);
-    observer.observe(myElement.domElement);
+    <span class="hljs-keyword">let</span> myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
 
     <span class="hljs-keyword">let</span> destroy = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        observer.disconnect();
+        myObserver();
         myAnimation.kill();
         myCanvas.demolish();
         myElement.demolish(<span class="hljs-literal">true</span>);
@@ -450,18 +443,10 @@
 
     <span class="hljs-keyword">let</span> myAnimation = makeRender(animationHooks);
 
-    <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
-
-        entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (entry.isIntersecting) !myAnimation.isRunning() &amp;&amp; myAnimation.run();
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) myAnimation.isRunning() &amp;&amp; myAnimation.halt();
-        });
-    }, observerSpecs);
-    observer.observe(myElement.domElement);
+    <span class="hljs-keyword">let</span> myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
 
     <span class="hljs-keyword">let</span> destroy = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        observer.disconnect();
+        myObserver();
         myAnimation.kill();
         <span class="hljs-keyword">if</span> (myCanvas) myCanvas.demolish();
         myElement.demolish(<span class="hljs-literal">true</span>);
