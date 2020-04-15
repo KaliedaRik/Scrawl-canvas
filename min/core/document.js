@@ -245,7 +245,6 @@ mycanvas.set(items);
 return mycanvas;
 };
 const makeAnimationObserver = function (anim, wrapper, specs = {}) {
-console.log('makeAnimationObserver', anim.name, (wrapper) ? wrapper.name : 'no wrapper');
 if (typeof window.IntersectionObserver === 'function' && anim && anim.run) {
 let observer = new IntersectionObserver((entries, observer) => {
 entries.forEach(entry => {

@@ -1107,8 +1107,6 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper, specs = {}</span>) </span>{
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'makeAnimationObserver'</span>, anim.name, (wrapper) ? wrapper.name : <span class="hljs-string">'no wrapper'</span>);
-
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.IntersectionObserver === <span class="hljs-string">'function'</span> &amp;&amp; anim &amp;&amp; anim.run) {
 
         <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
