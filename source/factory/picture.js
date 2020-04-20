@@ -34,6 +34,7 @@
 // + [Canvas-021](../../demo/canvas-021.html) - Import and use spritesheets
 // + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
 // + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
+// + [Canvas-025](../../demo/canvas-025.html) - Responsive images
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
 
 

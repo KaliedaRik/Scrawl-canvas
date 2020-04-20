@@ -12,6 +12,7 @@
 // + [Canvas-008](../../demo/canvas-008.html) - Picture entity position; manipulate copy attributes
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
 // + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
+// + [Canvas-025](../../demo/canvas-025.html) - Responsive images
 
 
 // #### Imports
@@ -46,8 +47,20 @@ P = assetMix(P);
 // #### ImageAsset attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
-//
-// No additional attributes required beyond those supplied by the mixins
+let defaultAttributes = {
+
+// __intrinsicDimensions__ - Javascript object which defines the intrinsic dimensions of each image contributing to an &lt;img> element's `srcset` attribute. Can also be set in Javascript code:
+// ```
+// filename-String: [width-Number, height-Number]
+// {
+//     'river-300.jpg': [300, 225], 
+//     'river-600.jpg': [600, 450], 
+//     'river-900.jpg': [900, 675]
+// }
+// ```
+    intrinsicDimensions: null,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
@@ -92,6 +105,12 @@ S.source = function (item = {}) {
     }
 };
 
+// __currentSrc__ - this attribute is not part of the defs object
+S.currentSrc = function (item) {
+
+    this.currentSrc = item;
+    this.currentFile = this.currentSrc.split("/").pop();
+};
 
 
 // #### Prototype functions
@@ -99,20 +118,60 @@ S.source = function (item = {}) {
 // `checkSource`
 P.checkSource = function (width, height) {
 
-    let el = this.source;
+    let el = this.source,
+        action = 'element';
 
     if (this.sourceLoaded) {
 
-        if (this.sourceNaturalWidth !== el.naturalWidth || 
-                this.sourceNaturalHeight !== el.naturalHeight || 
-                this.sourceNaturalWidth !== width ||
-                this.sourceNaturalHeight !== height) {
+        let iDims = this.intrinsicDimensions[this.currentFile];
 
-            this.sourceNaturalWidth = el.naturalWidth;
-            this.sourceNaturalHeight = el.naturalHeight;
+        if (this.currentSrc !== el.currentSrc) {
 
-            this.notifySubscribers();
+            this.set({
+                currentSrc: el.currentSrc
+            });
+
+            iDims = this.intrinsicDimensions[this.currentFile];
+            
+            if (iDims) action = 'intrinsic';
+            else action = 'zero';
         }
+        else if (iDims) action = 'intrinsic';
+
+        switch (action) {
+
+            case 'zero' :
+
+                this.sourceNaturalWidth = 0;
+                this.sourceNaturalHeight = 0;
+                this.notifySubscribers();
+                break;
+
+            case 'intrinsic' :
+
+                if (this.sourceNaturalWidth !== iDims[0] || 
+                        this.sourceNaturalHeight !== iDims[1]) {
+
+                    this.sourceNaturalWidth = iDims[0];
+                    this.sourceNaturalHeight = iDims[1];
+
+                    this.notifySubscribers();
+                }
+                break;
+
+            default:
+
+                if (this.sourceNaturalWidth !== el.naturalWidth || 
+                        this.sourceNaturalHeight !== el.naturalHeight || 
+                        this.sourceNaturalWidth !== width ||
+                        this.sourceNaturalHeight !== height) {
+
+                    this.sourceNaturalWidth = el.naturalWidth;
+                    this.sourceNaturalHeight = el.naturalHeight;
+
+                    this.notifySubscribers();
+                }
+        };
     }
 };
 
@@ -157,7 +216,6 @@ const importImage = function (...args) {
             url = item;
             className = '';
             visibility = false;
-            // parent = null;
 
             flag = true;
         }
@@ -182,6 +240,7 @@ const importImage = function (...args) {
 
             let image = makeImageAsset({
                 name: name,
+                intrinsicDimensions: {},
             });
 
             let img = document.createElement('img');
@@ -238,9 +297,14 @@ const importDomImage = function (query) {
                 name = (match && match[1]) ? match[1] : '';
             }
 
+            let intrinsics = item.dataset.dimensions || {};
+            if (intrinsics.substring) intrinsics = JSON.parse(intrinsics);
+
             let image = makeImageAsset({
                 name: name,
                 source: item,
+                intrinsicDimensions: intrinsics,
+                currentSrc: item.currentSrc,
             });
 
             item.onload = () => {

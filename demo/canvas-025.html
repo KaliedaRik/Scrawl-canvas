@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 025</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    canvas {
+      background-color: lemonchiffon;
+      border: 1px dashed red;
+      width: 100%;
+      height: 100%;
+    }
+
+    .canvas-host {
+      overflow: hidden;
+      resize: both;
+
+      border: 1px solid black;
+
+      width: 400px;
+      height: 200px;
+
+      min-width: 200px;
+      min-height: 200px;
+
+      max-width: 1000px;
+      max-height: 750px;
+    }
+
+    .myimage {
+      height: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 025</h1>
+  <h2>Responsive images</h2>
+
+  <div class="canvas-host">
+    <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Setup the canvas element so it picks up its parent element's dimension updates</li>
+      <li>Import a responsive image (with a srcset attribute) from the DOM</li>
+      <li>Create a Picture entity and set it to cover the canvas</li>
+      <li>Change the browser's viewport size</li>
+      <li>Check that when the browser selects a different srcset image, the canvas displays that image</li>
+      <li>Check that the canvas always displays the entire image, not a part of it</li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-025.html">Annotated code</a></p>
+  </div>
+
+  <img id="river" class="myimage" alt="Image used in canvas element"
+    src="img/river.jpg"
+    srcset="img/river-300.jpg 300w,
+      img/river-600.jpg 600w,
+      img/river-900.jpg 900w,
+      img/river-1200.jpg 1200w,
+      img/river-1600.jpg 1600w,
+      img/river-2000.jpg 2000w,
+      img/river-2400.jpg 2400w,
+      img/river-2800.jpg 2800w,
+      img/river-3200.jpg 3200w,
+      img/river-3600.jpg 3600w,
+      img/river-4000.jpg 4000w" />
+
+  <script src="canvas-025.js" type="module"></script>
+
+</body>
+
+</html>

@@ -13,6 +13,10 @@ P.isArtefact = false;
 P.isAsset = true;
 P = baseMix(P);
 P = assetMix(P);
+let defaultAttributes = {
+intrinsicDimensions: null,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);
 P.saveAsPacket = function () {
 return [this.name, this.type, this.lib, {}];
 };
@@ -34,9 +38,39 @@ this.sourceLoaded = item.complete;
 if (this.sourceLoaded) this.notifySubscribers();
 }
 };
+S.currentSrc = function (item) {
+this.currentSrc = item;
+this.currentFile = this.currentSrc.split("/").pop();
+};
 P.checkSource = function (width, height) {
-let el = this.source;
+let el = this.source,
+action = 'element';
 if (this.sourceLoaded) {
+let iDims = this.intrinsicDimensions[this.currentFile];
+if (this.currentSrc !== el.currentSrc) {
+this.set({
+currentSrc: el.currentSrc
+});
+iDims = this.intrinsicDimensions[this.currentFile];
+if (iDims) action = 'intrinsic';
+else action = 'zero';
+}
+else if (iDims) action = 'intrinsic';
+switch (action) {
+case 'zero' :
+this.sourceNaturalWidth = 0;
+this.sourceNaturalHeight = 0;
+this.notifySubscribers();
+break;
+case 'intrinsic' :
+if (this.sourceNaturalWidth !== iDims[0] ||
+this.sourceNaturalHeight !== iDims[1]) {
+this.sourceNaturalWidth = iDims[0];
+this.sourceNaturalHeight = iDims[1];
+this.notifySubscribers();
+}
+break;
+default:
 if (this.sourceNaturalWidth !== el.naturalWidth ||
 this.sourceNaturalHeight !== el.naturalHeight ||
 this.sourceNaturalWidth !== width ||
@@ -45,6 +79,7 @@ this.sourceNaturalWidth = el.naturalWidth;
 this.sourceNaturalHeight = el.naturalHeight;
 this.notifySubscribers();
 }
+};
 }
 };
 const gettableImageAssetAtributes = [];
@@ -78,6 +113,7 @@ flag = true;
 if (flag) {
 let image = makeImageAsset({
 name: name,
+intrinsicDimensions: {},
 });
 let img = document.createElement('img');
 img.name = name;
@@ -111,9 +147,13 @@ else {
 let match = reg.exec(item.src);
 name = (match && match[1]) ? match[1] : '';
 }
+let intrinsics = item.dataset.dimensions || {};
+if (intrinsics.substring) intrinsics = JSON.parse(intrinsics);
 let image = makeImageAsset({
 name: name,
 source: item,
+intrinsicDimensions: intrinsics,
+currentSrc: item.currentSrc,
 });
 item.onload = () => {
 image.set({
