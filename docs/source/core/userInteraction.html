@@ -976,12 +976,15 @@
 <li><strong>.coodinateSource</strong> - the .here object of whatever artefact/asset (Stack, Canvas, Element or Cell) will be supplying the coordinates. Defaults to the .here object of either the Stack zone, or the .here object of the Canvas zone’s base Cell.</li>
 <li><strong>.collisionGroup</strong> - the group containg the draggable artefacts, or that Group object’s name String. Defaults to the Stack zone’s Group object, or the Canvas’s base Cell’s Group object.</li>
 <li><strong>.startOn</strong> - one of ‘move’, ‘up’, ‘down’, ‘enter’, ‘leave’, or an array of a selection of those strings. Defaults to ‘down’</li>
+<li><strong>.updateOnStart</strong> - an Object containing changes to be made (via set) to the artefact when it is picked up</li>
 <li><strong>.endOn</strong> - one of ‘move’, ‘up’, ‘down’, ‘enter’, ‘leave’, or an array of a selection of those strings. Defaults to ‘up’</li>
+<li><strong>.updateOnEnd</strong> - an Object containing changes to be made (via set) to the artefact when it is dropped</li>
 <li><strong>.exposeCurrentArtefact</strong> boolean. Defaults to false</li>
 </ul>
 <p>If the exposeCurrentArtefact attribute is true, the function returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). </p>
 <p>Invoking the returned function with a single argument that evaluates to true will trigger the kill function.</p>
 <p>If the exposeCurrentArtefact attribute is false, or omitted, the function returns a kill function that can be invoked to remove the event listeners from the Stack or Canvas zone’s DOM element.</p>
+<p>NOTE: drag-and-drop functionality using this factory function <strong>is not guaranteed</strong> for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.</p>
 
             </div>
             
@@ -1065,7 +1068,11 @@
 
         current = collisionGroup.getArtefactAt(coordinateSource);
 
-        <span class="hljs-keyword">if</span> (current) current.artefact.pickupArtefact(coordinateSource);
+        <span class="hljs-keyword">if</span> (current) {
+
+            current.artefact.pickupArtefact(coordinateSource);
+            <span class="hljs-keyword">if</span> (items.updateOnStart) current.artefact.set(items.updateOnStart);
+        }
     };
 
     <span class="hljs-keyword">let</span> drop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
@@ -1079,6 +1086,7 @@
         <span class="hljs-keyword">if</span> (current) {
 
             current.artefact.dropArtefact();
+            <span class="hljs-keyword">if</span> (items.updateOnEnd) current.artefact.set(items.updateOnEnd);
             current = <span class="hljs-literal">false</span>;
         }
     };

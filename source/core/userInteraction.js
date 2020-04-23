@@ -424,7 +424,9 @@ const observeAndUpdate = function (items = {}) {
 // + __.coodinateSource__ - the .here object of whatever artefact/asset (Stack, Canvas, Element or Cell) will be supplying the coordinates. Defaults to the .here object of either the Stack zone, or the .here object of the Canvas zone's base Cell.
 // + __.collisionGroup__ - the group containg the draggable artefacts, or that Group object's name String. Defaults to the Stack zone's Group object, or the Canvas's base Cell's Group object.
 // + __.startOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'down'
+// + __.updateOnStart__ - an Object containing changes to be made (via set) to the artefact when it is picked up
 // + __.endOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'up'
+// + __.updateOnEnd__ - an Object containing changes to be made (via set) to the artefact when it is dropped
 // + __.exposeCurrentArtefact__ boolean. Defaults to false
 //
 // If the exposeCurrentArtefact attribute is true, the function returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). 
@@ -432,6 +434,8 @@ const observeAndUpdate = function (items = {}) {
 // Invoking the returned function with a single argument that evaluates to true will trigger the kill function.
 //
 // If the exposeCurrentArtefact attribute is false, or omitted, the function returns a kill function that can be invoked to remove the event listeners from the Stack or Canvas zone's DOM element.
+// 
+// NOTE: drag-and-drop functionality using this factory function __is not guaranteed__ for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.
 
 // `Exported function` (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.
 const makeDragZone = function (items = {}) {
@@ -489,7 +493,11 @@ const makeDragZone = function (items = {}) {
 
         current = collisionGroup.getArtefactAt(coordinateSource);
 
-        if (current) current.artefact.pickupArtefact(coordinateSource);
+        if (current) {
+
+            current.artefact.pickupArtefact(coordinateSource);
+            if (items.updateOnStart) current.artefact.set(items.updateOnStart);
+        }
     };
 
     let drop = function (e) {
@@ -503,6 +511,7 @@ const makeDragZone = function (items = {}) {
         if (current) {
 
             current.artefact.dropArtefact();
+            if (items.updateOnEnd) current.artefact.set(items.updateOnEnd);
             current = false;
         }
     };

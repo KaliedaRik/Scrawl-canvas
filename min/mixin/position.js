@@ -1061,7 +1061,24 @@ let {x, y} = items;
 if (xta(x, y)) {
 this.isBeingDragged = true;
 this.currentDragCache.set(this.currentDragOffset);
-this.currentDragOffset.set(this.currentStart).subtract([x, y]);
+if (this.lockTo[0] === 'start') {
+this.currentDragOffset[0] = this.currentStart[0] - x;
+}
+else if (this.lockTo[0] === 'pivot' && this.pivot) {
+this.currentDragOffset[0] = this.pivot.get('startX') - x;
+}
+else if (this.lockTo[0] === 'mimic' && this.mimic) {
+this.currentDragOffset[0] = this.mimic.get('startX') - x;
+}
+if (this.lockTo[1] === 'start') {
+this.currentDragOffset[1] = this.currentStart[1] - y;
+}
+else if (this.lockTo[1] === 'pivot' && this.pivot) {
+this.currentDragOffset[1] = this.pivot.get('startY') - y;
+}
+else if (this.lockTo[1] === 'mimic' && this.mimic) {
+this.currentDragOffset[1] = this.mimic.get('startY') - y;
+}
 this.order += 9999;
 this.group.batchResort = true;
 if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;

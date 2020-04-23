@@ -282,7 +282,10 @@ let type = e.type;
 if (type === 'touchstart' || type === 'touchcancel') touchAction(e);
 if (!coordinateSource && target.type === 'Canvas') coordinateSource = target.base.here;
 current = collisionGroup.getArtefactAt(coordinateSource);
-if (current) current.artefact.pickupArtefact(coordinateSource);
+if (current) {
+current.artefact.pickupArtefact(coordinateSource);
+if (items.updateOnStart) current.artefact.set(items.updateOnStart);
+}
 };
 let drop = function (e) {
 if (e.cancelable) {
@@ -291,6 +294,7 @@ e.returnValue = false;
 }
 if (current) {
 current.artefact.dropArtefact();
+if (items.updateOnEnd) current.artefact.set(items.updateOnEnd);
 current = false;
 }
 };

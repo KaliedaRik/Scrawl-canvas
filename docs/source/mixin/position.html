@@ -3422,30 +3422,10 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-98">&#182;</a>
               </div>
-              <p><code>pickupArtefact</code></p>
+              <p><code>pickupArtefact</code>
+P.pickupArtefact = function (items = {}) {</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.pickupArtefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-
-        <span class="hljs-keyword">let</span> {x, y} = items;
-
-        <span class="hljs-keyword">if</span> (xta(x, y)) {
-
-            <span class="hljs-keyword">this</span>.isBeingDragged = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.currentDragCache.set(<span class="hljs-keyword">this</span>.currentDragOffset);
-            <span class="hljs-keyword">this</span>.currentDragOffset.set(<span class="hljs-keyword">this</span>.currentStart).subtract([x, y]);
-
-            <span class="hljs-keyword">this</span>.order += <span class="hljs-number">9999</span>;
-
-            <span class="hljs-keyword">this</span>.group.batchResort = <span class="hljs-literal">true</span>;
-
-            <span class="hljs-keyword">if</span> (xt(<span class="hljs-keyword">this</span>.dirtyPathObject)) <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-
-        }
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    };</pre></div></div>
             
         </li>
         
@@ -3455,6 +3435,143 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-99">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">let</span> {x, y} = items;</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-100">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-100">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">if</span> (xta(x, y)) {</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-101">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-101">&#182;</a>
+              </div>
+              <pre><code>    <span class="hljs-keyword">this</span>.isBeingDragged = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.currentDragCache.set(<span class="hljs-keyword">this</span>.currentDragOffset);
+    <span class="hljs-keyword">this</span>.currentDragOffset.set(<span class="hljs-keyword">this</span>.currentStart).subtract([x, y]);</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-102">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-102">&#182;</a>
+              </div>
+              <pre><code>    <span class="hljs-keyword">this</span>.order += <span class="hljs-number">9999</span>;</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-103">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-103">&#182;</a>
+              </div>
+              <pre><code>    <span class="hljs-keyword">this</span>.group.batchResort = <span class="hljs-literal">true</span>;</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-104">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-104">&#182;</a>
+              </div>
+              <pre><code>    <span class="hljs-keyword">if</span> (xt(<span class="hljs-keyword">this</span>.dirtyPathObject)) <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-105">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-105">&#182;</a>
+              </div>
+              <pre><code>}</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-106">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-106">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;</code></pre><p>};</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.pickupArtefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+
+    <span class="hljs-keyword">let</span> {x, y} = items;
+
+    <span class="hljs-keyword">if</span> (xta(x, y)) {
+
+        <span class="hljs-keyword">this</span>.isBeingDragged = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">this</span>.currentDragCache.set(<span class="hljs-keyword">this</span>.currentDragOffset);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'start'</span>) {
+            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">0</span>] - x;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'pivot'</span> &amp;&amp; <span class="hljs-keyword">this</span>.pivot) {
+            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.pivot.get(<span class="hljs-string">'startX'</span>) - x;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'mimic'</span> &amp;&amp; <span class="hljs-keyword">this</span>.mimic) {
+            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.mimic.get(<span class="hljs-string">'startX'</span>) - x;
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'start'</span>) {
+            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">1</span>] - y;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'pivot'</span> &amp;&amp; <span class="hljs-keyword">this</span>.pivot) {
+            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.pivot.get(<span class="hljs-string">'startY'</span>) - y;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'mimic'</span> &amp;&amp; <span class="hljs-keyword">this</span>.mimic) {
+            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.mimic.get(<span class="hljs-string">'startY'</span>) - y;
+        }
+
+        <span class="hljs-keyword">this</span>.order += <span class="hljs-number">9999</span>;
+
+        <span class="hljs-keyword">this</span>.group.batchResort = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">if</span> (xt(<span class="hljs-keyword">this</span>.dirtyPathObject)) <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-107">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-107">&#182;</a>
               </div>
               <p><code>dropArtefact</code></p>
 
@@ -3481,11 +3598,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-100">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-100">&#182;</a>
+                <a class="pilcrow" href="#section-108">&#182;</a>
               </div>
               <h4 id="subscription-management">Subscription management</h4>
 <p>Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes. </p>
@@ -3502,11 +3619,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-101">
+        <li id="section-109">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-101">&#182;</a>
+                <a class="pilcrow" href="#section-109">&#182;</a>
               </div>
               <p><code>updatePositionSubscribers</code></p>
 
@@ -3529,11 +3646,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-102">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-102">&#182;</a>
+                <a class="pilcrow" href="#section-110">&#182;</a>
               </div>
               <p><code>updateControlSubscribers</code></p>
 
@@ -3552,11 +3669,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-103">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-103">&#182;</a>
+                <a class="pilcrow" href="#section-111">&#182;</a>
               </div>
               <p><code>updateStartControlSubscribers</code></p>
 
@@ -3575,11 +3692,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-104">
+        <li id="section-112">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-104">&#182;</a>
+                <a class="pilcrow" href="#section-112">&#182;</a>
               </div>
               <p><code>updateEndControlSubscribers</code></p>
 
@@ -3598,11 +3715,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-105">
+        <li id="section-113">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-105">&#182;</a>
+                <a class="pilcrow" href="#section-113">&#182;</a>
               </div>
               <p><code>updateEndSubscribers</code></p>
 
@@ -3621,11 +3738,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-106">
+        <li id="section-114">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-106">&#182;</a>
+                <a class="pilcrow" href="#section-114">&#182;</a>
               </div>
               <p><code>updatePivotSubscribers</code></p>
 
@@ -3650,11 +3767,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-107">
+        <li id="section-115">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-107">&#182;</a>
+                <a class="pilcrow" href="#section-115">&#182;</a>
               </div>
               <p><code>updateMimicSubscribers</code></p>
 
@@ -3693,11 +3810,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-108">
+        <li id="section-116">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-108">&#182;</a>
+                <a class="pilcrow" href="#section-116">&#182;</a>
               </div>
               <p><code>updatePathSubscribers</code></p>
 
@@ -3708,11 +3825,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-109">
+        <li id="section-117">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-109">&#182;</a>
+                <a class="pilcrow" href="#section-117">&#182;</a>
               </div>
               <p><code>updateImageSubscribers</code></p>
 
@@ -3723,11 +3840,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-110">
+        <li id="section-118">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-110">&#182;</a>
+                <a class="pilcrow" href="#section-118">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

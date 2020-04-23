@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo DOM 012</title>
+  <title>Demo Canvas 026</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -274,8 +274,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="demo-dom-012">Demo DOM 012</h1>
-<p>Add and remove (kill) Scrawl-canvas canvas elements programmatically</p>
+              <h1 id="demo-canvas-026">Demo Canvas 026</h1>
+<p>Tower of Hanoi</p>
 
             </div>
             
@@ -288,7 +288,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/dom-012.html">Run code</a></p>
+              <p><a href="../../demo/canvas-026.html">Run code</a></p>
 
             </div>
             
@@ -307,10 +307,119 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> library = scrawl.library,
-    artefact = library.artefact,
-    canvasnames = library.canvasnames,
-    mystack = artefact.mystack;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;
+
+
+canvas.set({
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'honeydew'</span>,
+}).setAsCurrentCanvas();
+
+scrawl.makeBlock({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'peg-1'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-string">'30%'</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">'90%'</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'17%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'rgb(220, 220, 220)'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'drawThenFill'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'peg-2'</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'50%'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'blue'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'peg-3'</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'83%'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'orange'</span>,
+});
+
+scrawl.makeWheel({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'disc-1'</span>,
+
+    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+
+    <span class="hljs-attr">radius</span>: <span class="hljs-string">'12%'</span>,
+
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'peg-1'</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'pink'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'drawAndFill'</span>,
+
+    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">'black'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'disc-2'</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-string">'10%'</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'lightblue'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'blue'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'disc-3'</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-string">'8%'</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'yellow'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'orange'</span>,
+});
+
+<span class="hljs-keyword">let</span> discGroup = scrawl.makeGroup({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'discs'</span>,
+});
+
+<span class="hljs-keyword">let</span> dragActions = scrawl.makeDragZone({
+
+    <span class="hljs-attr">zone</span>: canvas,
+    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">'discs'</span>,
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">'up'</span>, <span class="hljs-string">'leave'</span>],
+    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updateOnStart</span>: {
+        <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">10</span>,
+        <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">3</span>,
+    },
+
+    <span class="hljs-attr">updateOnEnd</span>: {
+        <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">0</span>,
+    },
+});
+
+<span class="hljs-keyword">let</span> checkPeg = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> peg = <span class="hljs-literal">false</span>,
+        disc;
+
+    <span class="hljs-keyword">let</span> pegGroup = scrawl.makeGroup({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">'pegs'</span>,
+
+    }).addArtefacts(<span class="hljs-string">'peg-1'</span>, <span class="hljs-string">'peg-2'</span>, <span class="hljs-string">'peg-3'</span>);</pre></div></div>
             
         </li>
         
@@ -321,43 +430,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
+              <p>Setup the game’s initial state</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>let report = function () {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> pegState = {
 
-    let testTicker = Date.now(),
-        testTime, testNow, text,
-        testMessage = document.querySelector('#reportmessage');
-
-    let artefactnames = library.artefactnames,
-        stacknames = library.stacknames,
-        cellnames = library.cellnames,
-        stack = library.stack,
-        canvas = library.canvas,
-        cell = library.cell;
-
-    let a, s, el, c;
-
-    return function () {
-
-        a = Object.keys(artefact);
-        s = Object.keys(stack);
-        el = Object.keys(canvas);
-        c = Object.keys(cell);
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-artefact - ${a.length}, ${artefactnames.length}: [${(artefactnames).join(', ')}] 
-stack - ${s.length}, ${stacknames.length}: [${(stacknames).join(', ')}] 
-canvas - ${el.length}, ${canvasnames.length}: [${(canvasnames).join(', ')}]
-cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
-    };
-}();</pre></div></div>
+        <span class="hljs-string">'peg-1'</span>: [<span class="hljs-string">'disc-1'</span>, <span class="hljs-string">'disc-2'</span>, <span class="hljs-string">'disc-3'</span>],
+        <span class="hljs-string">'peg-2'</span>: [],
+        <span class="hljs-string">'peg-3'</span>: [],
+    };</pre></div></div>
             
         </li>
         
@@ -368,33 +450,22 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Animation loop </p>
-<p>We can’t use <code>.makeRender()</code> in this case because there’s no initial stack/canvas arterfact to render. Using <code>.makeAnimation()</code> and <code>.render()</code> - which use promises - instead</p>
+              <p>Function to update the game’s state</p>
+<ul>
+<li>mydisc will always be the last member of an array, </li>
+<li>so we can pop it when found, then push it onto mypeg</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeAnimation({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> updateState = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">mypeg, mydisc</span>) </span>{
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [pName, pState] <span class="hljs-keyword">of</span> <span class="hljs-built_in">Object</span>.entries(pegState)) {
 
-    <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-
-            scrawl.render()
-            .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-
-                report();
-                resolve(<span class="hljs-literal">true</span>);
-            })
-            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
-
-                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'demo-animation error'</span>, err);
-                reject(<span class="hljs-literal">false</span>);
-            });
-        });
-    }
-});</pre></div></div>
+            <span class="hljs-keyword">if</span> (pState.includes(mydisc.name)) pState.pop();
+        }
+        pegState[mypeg.name].push(mydisc.name);
+    }</pre></div></div>
             
         </li>
         
@@ -405,11 +476,21 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h4 id="user-interaction">User interaction</h4>
+              <p>Function to update the disc group’s membership</p>
+<ul>
+<li>a disc can only be moved if it is a member of this group</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> controls = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> updateDiscGroup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        discGroup.clearArtefacts();
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [pName, pState] <span class="hljs-keyword">of</span> <span class="hljs-built_in">Object</span>.entries(pegState)) {
+
+            <span class="hljs-keyword">if</span> (pState.length) discGroup.addArtefacts(pState[pState.length - <span class="hljs-number">1</span>]);
+        }</pre></div></div>
             
         </li>
         
@@ -420,21 +501,17 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>the control buttons are never part of a Scrawl-canvas stack</p>
+              <p>Because this Group is outside the Display cycle</p>
+<ul>
+<li>(we haven’t assigned it to a Cell object)</li>
+<li>we need to manually invoke its sort routine</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> b1 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#action_1'</span>),
-        b2 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#action_2'</span>),
-        b3 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#action_3'</span>),
-        b4 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#action_4'</span>);
-
-    b1.disabled = <span class="hljs-string">''</span>;
-    b2.disabled = <span class="hljs-string">'disabled'</span>;
-    b3.disabled = <span class="hljs-string">''</span>;
-    b4.disabled = <span class="hljs-string">''</span>;
-
-    <span class="hljs-keyword">let</span> stackCanvas, divCanvas;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        discGroup.sortArtefacts();
+    }
+    updateDiscGroup();</pre></div></div>
             
         </li>
         
@@ -445,16 +522,51 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Using a color factory object to generate random colors within a restricted palette</p>
+              <p>Enforce the game rules</p>
+<ul>
+<li>a disc can only move to a peg if no smaller discs are already on that peg</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.makeColor({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">'templateColor'</span>,
-        <span class="hljs-attr">rMax</span>: <span class="hljs-number">200</span>,
-        <span class="hljs-attr">gMax</span>: <span class="hljs-number">50</span>,
-        <span class="hljs-attr">bMax</span>: <span class="hljs-number">10</span>,
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> entity = scrawl.library.entity;
+
+    <span class="hljs-keyword">let</span> checkForLegalMove = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">mypeg, mydisc</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!pegState[mypeg.name].length) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">return</span> pegState[mypeg.name].every(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> entity[d].order &lt; mydisc.order);
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">let</span> hit = pegGroup.getArtefactAt(canvas.here);
+
+        <span class="hljs-keyword">if</span> (hit) peg = hit.artefact;
+        <span class="hljs-keyword">else</span> peg = <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">let</span> checkDrag = dragActions();
+
+        <span class="hljs-keyword">if</span> (checkDrag) disc = checkDrag.artefact;
+
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (disc) {
+
+            <span class="hljs-keyword">if</span> (peg) {
+
+                <span class="hljs-keyword">if</span> (checkForLegalMove(peg, disc)) {
+
+                    updateState(peg, disc);
+                    updateDiscGroup();
+
+                    disc.set({ 
+                        <span class="hljs-attr">pivot</span>: peg, 
+                    });
+                }
+            }
+            disc = <span class="hljs-literal">false</span>;
+        }
+    }
+}();</pre></div></div>
             
         </li>
         
@@ -465,15 +577,26 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Test color packet and clone functionality</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> colorFactory = scrawl.library.styles.templateColor.clone({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">'myColorObject'</span>,
-    });
+            <div class="content"><div class='highlight'><pre>let report = function () {
 
-    <span class="hljs-built_in">console</span>.log(colorFactory.saveAsPacket());</pre></div></div>
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
+
+    return function () {
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+    };
+}();</pre></div></div>
             
         </li>
         
@@ -484,33 +607,16 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <pre><code>RESULTS:
-[
-    <span class="hljs-string">"myColorObject"</span>,
-    <span class="hljs-string">"Color"</span>,
-    <span class="hljs-string">"styles"</span>,
-    {
-        <span class="hljs-string">"name"</span>:<span class="hljs-string">"myColorObject"</span>,
-        <span class="hljs-string">"rMax"</span>:<span class="hljs-number">200</span>,
-        <span class="hljs-string">"gMax"</span>:<span class="hljs-number">50</span>,
-        <span class="hljs-string">"bMax"</span>:<span class="hljs-number">10</span>
-    }
-]</code></pre>
+              <p>Create the Animation loop which will run the Display cycle</p>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
-
-        e.preventDefault();
-        e.returnValue = <span class="hljs-literal">false</span>;
-        
-        <span class="hljs-keyword">switch</span> (e.target.id) {
-
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'action_1'</span>:
-                b1.disabled = <span class="hljs-string">'disabled'</span>;
-                b2.disabled = <span class="hljs-string">''</span>;
-
-                stackCanvas = scrawl.addCanvas({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span>-render`</span>,
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">commence</span>: checkPeg,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
             
         </li>
         
@@ -520,65 +626,6 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <p>Test to make sure host attribute accepts both Stack object and CSS search String</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    host: (<span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span>) ? mystack : <span class="hljs-string">'#mystack'</span>,
-
-                    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-new-canvas'</span>,
-                    <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
-                    <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,
-                    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'lavender'</span>,
-                });
-
-                <span class="hljs-keyword">break</span>;
-
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'action_2'</span>:
-
-                b1.disabled = <span class="hljs-string">''</span>;
-                b2.disabled = <span class="hljs-string">'disabled'</span>;
-
-                <span class="hljs-keyword">if</span> (stackCanvas) stackCanvas.kill();
-
-                <span class="hljs-keyword">break</span>;
-
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'action_3'</span>:
-
-                b1.disabled = <span class="hljs-string">''</span>;
-                b2.disabled = <span class="hljs-string">'disabled'</span>;
-                b3.disabled = <span class="hljs-string">'disabled'</span>;
-
-                mystack.kill();
-                mystack = <span class="hljs-literal">false</span>;
-
-                <span class="hljs-keyword">break</span>;
-                
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'action_4'</span>:
-
-                scrawl.addCanvas({
-                    <span class="hljs-attr">name</span>: <span class="hljs-string">`extra-canvas-<span class="hljs-subst">${canvasnames.length}</span>`</span>,
-                    <span class="hljs-attr">host</span>: (<span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span>) ? <span class="hljs-string">'#not-a-stack'</span> : <span class="hljs-string">''</span>,
-                    <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
-                    <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,
-                    <span class="hljs-attr">backgroundColor</span>: colorFactory.get(<span class="hljs-string">'random'</span>),
-                });
-
-                <span class="hljs-keyword">break</span>;
-        }
-    };
-}();
-scrawl.addListener(<span class="hljs-string">'up'</span>, controls, <span class="hljs-string">'.controls'</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
