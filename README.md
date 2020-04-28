@@ -36,7 +36,7 @@ But __the main purpose of Scrawl-canvas__ is to make the &lt;canvas> element, an
 
 ## Installation and use
 
-There are two main ways to include Scrawl-canvas in your project:
+There are three main ways to include Scrawl-canvas in your project:
 
 ### Download, unpack, use
 
