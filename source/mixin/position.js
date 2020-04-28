@@ -1942,13 +1942,11 @@ export default function (P = {}) {
 
         }, this)) {
 
+            let r = this.checkHitReturn(tx, ty, mycell);
+
             if (poolCellFlag) releaseCell(mycell);
 
-            return {
-                x: tx,
-                y: ty,
-                artefact: this
-            };
+            return r;
         }
         
         if (poolCellFlag) releaseCell(mycell);
@@ -1956,27 +1954,17 @@ export default function (P = {}) {
         return false;
     };
 
+    // Function overwritten by entitys, if required
+    P.checkHitReturn = function (x, y, cell) {
+
+        return {
+            x: x,
+            y: y,
+            artefact: this
+        };
+    };
+
 // `pickupArtefact`
-    // P.pickupArtefact = function (items = {}) {
-
-    //     let {x, y} = items;
-
-    //     if (xta(x, y)) {
-
-    //         this.isBeingDragged = true;
-    //         this.currentDragCache.set(this.currentDragOffset);
-    //         this.currentDragOffset.set(this.currentStart).subtract([x, y]);
-
-    //         this.order += 9999;
-
-    //         this.group.batchResort = true;
-
-    //         if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
-
-    //     }
-
-    //     return this;
-    // };
 P.pickupArtefact = function (items = {}) {
 
     let {x, y} = items;

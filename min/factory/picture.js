@@ -45,6 +45,7 @@ P = filterMix(P);
 let defaultAttributes = {
 copyStart: null,
 copyDimensions: null,
+checkHitIgnoreTransparency: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetCoordinates = pushUnique(P.packetCoordinates, ['copyStart', 'copyDimensions']);
@@ -141,6 +142,10 @@ D.copyDimensions = function (w, h) {
 this.setDeltaCoordinateHelper('copyDimensions', w, h);
 this.dirtyCopyDimensions = true;
 this.dirtyImageSubscribers = true;
+};
+S.checkHitIgnoreTransparency = function (item) {
+this.checkHitIgnoreTransparency = item;
+if (item) this.stashOutput = true;
 };
 P.get = function (item) {
 let source = this.source;
@@ -354,6 +359,32 @@ engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 P.fillThenDraw = function (engine) {
 engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 engine.stroke(this.pathObject);
+};
+P.checkHitReturn = function (x, y, cell) {
+if (this.checkHitIgnoreTransparency && cell && cell.engine) {
+let [copyX, copyY, copyWidth, copyHeight] = this.copyArray;
+let [pasteX, pasteY, pasteWidth, pasteHeight] = this.pasteArray;
+let [stampX, stampY] = this.currentStampPosition;
+let img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);
+let myX = x - stampX,
+myY = y - stampY;
+let index = (((myY * pasteWidth) + myX) * 4) + 3;
+if (img.data[index]) {
+return {
+x: x,
+y: y,
+artefact: this
+};
+}
+return false;
+}
+else {
+return {
+x: x,
+y: y,
+artefact: this
+};
+}
 };
 const makePicture = function (items) {
 return new Picture(items);

@@ -1046,15 +1046,19 @@ if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
 mycell.rotateDestination(engine, x, y, this);
 return engine.isPointInPath(this.pathObject, tx, ty, this.winding);
 }, this)) {
+let r = this.checkHitReturn(tx, ty, mycell);
 if (poolCellFlag) releaseCell(mycell);
-return {
-x: tx,
-y: ty,
-artefact: this
-};
+return r;
 }
 if (poolCellFlag) releaseCell(mycell);
 return false;
+};
+P.checkHitReturn = function (x, y, cell) {
+return {
+x: x,
+y: y,
+artefact: this
+};
 };
 P.pickupArtefact = function (items = {}) {
 let {x, y} = items;

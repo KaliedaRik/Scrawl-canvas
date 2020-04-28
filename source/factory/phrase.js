@@ -369,13 +369,20 @@ S.lineHeight = function (item) {
 
     this.lineHeight = ensurePositiveFloat(item, 3);
 
+    // TODO: temporary fix that needs a longer-term solution
+    // + text display, entity height and pathObject fall out of sync at small/negative values
+    // + won't be resolved without a proper fix for the height issue!
+    if (this.lineHeight < 0.5) this.lineHeight = 0.5;
+    
     this.dirtyPathObject = true;
     this.dirtyText = true;
 };
 D.lineHeight = function (item) {
 
     this.lineHeight += ensureFloat(item, 3);
-    if (this.lineHeight < 0) this.lineHeight = 0;
+
+    // TODO: temporary fix that needs a longer-term solution (see setter above)
+    if (this.lineHeight < 0.5) this.lineHeight = 0.5;
 
     this.dirtyPathObject = true;
     this.dirtyText = true;
@@ -666,6 +673,7 @@ P.cleanPathObject = function () {
             this.dirtyFont = false;
             this.fontAttributes.buildFont(this.scale);
             this.dirtyText = true;
+            this.dirtyMimicDimensions = true;
         }
         if (this.dirtyText) this.buildText();
 
@@ -675,11 +683,27 @@ P.cleanPathObject = function () {
         
         let handle = this.currentHandle,
             dims = this.currentDimensions,
+
             scale = this.currentScale,
             x = -handle[0] * scale,
-            y = -handle[1] * scale,
-            w = dims[0] * scale,
-            h = dims[1] * scale;
+            y = (-handle[1] * scale) - (this.textHeight / 2),
+            w = dims[0] * scale;
+
+        // TODO: current height-related code is a temporary fix that needs a longer-term solution
+        let h;
+        if (this.textLines) {
+
+            h = (this.textHeight * this.textLines.length * this.lineHeight) + (this.textHeight / 2);
+        }
+        else {
+
+            h = 20;
+            this.dirtyPathObject = true;
+            this.dirtyFont = true;
+            this.dirtyText = true;
+            this.dirtyMimicDimensions = true;
+            this.dirtyHandle = true;
+        }
 
         p.rect(x, y, w, h);
     }
@@ -1051,7 +1075,10 @@ P.calculateTextPositions = function (mytext) {
 
         // 7. Calculate `localHeight`
         if (scale <= 0) scale = 1;
-        dims[1] = ((((textLines.length - 1) * maxHeight) * lineHeight) + maxHeight) / scale;
+
+        // TODO: current height-related code is a temporary fix that needs a longer-term solution
+        // + At the moment we reset the currentDimensions height value on each stamp
+        dims[1] = ((maxHeight * textLines.length * lineHeight) - (maxHeight / 2)) / scale;
 
         this.cleanHandle();
         this.dirtyHandle = false;
@@ -1360,12 +1387,6 @@ P.stamper = {
 // `drawBoundingBox` - internal helper function called by `regularStampSynchronousActions`
 P.drawBoundingBox = function (engine) {
 
-    let handle = this.currentHandle,
-        dims = this.currentDimensions,
-        scale = this.currentScale,
-        floor = Math.floor,
-        ceil = Math.ceil;
-
     engine.save();
     engine.strokeStyle = this.boundingBoxColor;
     engine.lineWidth = 1;
@@ -1374,7 +1395,7 @@ P.drawBoundingBox = function (engine) {
     engine.shadowOffsetX = 0;
     engine.shadowOffsetY = 0;
     engine.shadowBlur = 0;
-    engine.strokeRect(floor(-handle[0] * scale), floor(-handle[1] * scale), ceil(dims[0] * scale), ceil(dims[1] * scale));
+    engine.stroke(this.pathObject);
     engine.restore();
 };
 

@@ -60,7 +60,7 @@ scrawl.makePhrase({
 
     width: 120,
     handleX: 'center',
-    handleY: 'center',
+    handleY: '100%',
 
     method: 'fillAndDraw',
 

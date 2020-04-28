@@ -45,6 +45,8 @@ scrawl.makePhrase({
     showBoundingBox: true,
     boundingBoxColor: 'red',
 
+    textBaseline: 'bottom',
+
     exposeText: true,
 
 }).clone({

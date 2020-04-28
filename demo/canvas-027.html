@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 027</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style type="text/css">
+    canvas {
+      background-color: lemonchiffon;
+
+      width: 100%;
+      height: 100%;
+    }
+
+    .canvas-container {
+      overflow: hidden;
+      resize: both;
+
+      border: 1px solid red;
+
+      width: 600px;
+      height: 400px;
+
+      min-height: 200px;
+      min-width: 200px;
+
+      max-height: 400px;
+      max-width: 800px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 027</h1>
+  <h2>Video control and manipulation; chroma-based hit zone</h2>
+
+  <div class="canvas-container">
+    <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Import a video programmatically</li>
+      <li>Display the video in a responsive canvas</li>
+      <li>Add controls to play/pause and listen/mute the video</li>
+      <li>Add a progress bar to the canvas display</li>
+      <li>Filter the video output with a chroma effect in the Picture entity</li>
+      <li>Add a link to the Picture entity - opens the "swan" page on Wikipedia</li>
+      <li>Check that link works only when user clicks on visible (non-transparent) parts of the Picture entity</li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-027.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-027.js" type="module"></script>
+
+</body>
+
+</html>

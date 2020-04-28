@@ -28,7 +28,7 @@ export default function (P = {}) {
 // __time__ - the timeline time when the Tween/Action activates and runs.
 // + Tween/Actions given a time value of `0` will run as soon as their associated Ticker timeline runs; values greater than 0 will delay their run until that time is reached on the timeline.
 // + Time can be set as a Number value representing microseconds
-// + It can also be set as a time string - `3s` is 3000 microseconds; `200ms` is 200 milliseconds
+// + It can also be set as a time string - `3s` is 3000 milliseconds; `200ms` is 200 milliseconds
 // + Or it can be set as a percentage String - `30%` - measured against the duration of the Ticker timeline.
         time: 0,
 

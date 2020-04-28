@@ -127,6 +127,9 @@ let defaultAttributes = {
 // + We can use the pseudo-attributes __copyWidth__ and __copyHeight__ to make working with the Coordinate easier.
     copyDimensions: null,
 
+// __checkHitIgnoreTransparency__ - Boolean - when set, will check the stashedImage data to return whether a coordinate is hitting the image; otherwise checkHit will use the Picture entity's dimensions to calculate the hit
+    checkHitIgnoreTransparency: false,
+
 // ___Additional attributes and pseudo-attributes___ are defined in the [assetConsumer mixin](../mixin/assetConsumer.html)
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -264,6 +267,13 @@ D.copyDimensions = function (w, h) {
     this.setDeltaCoordinateHelper('copyDimensions', w, h);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
+};
+
+S.checkHitIgnoreTransparency = function (item) {
+
+    this.checkHitIgnoreTransparency = item;
+
+    if (item) this.stashOutput = true;
 };
 
 // Picture `get` and `set` (but not `deltaSet`) functions need to take into account their current source, whose attributes can be retrieved/amended directly on the Picture object
@@ -619,6 +629,42 @@ P.fillThenDraw = function (engine) {
 
     engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
     engine.stroke(this.pathObject);
+};
+
+// `checkHitReturn` - overwrites mixin/position.js function
+P.checkHitReturn = function (x, y, cell) {
+
+    if (this.checkHitIgnoreTransparency && cell && cell.engine) {
+
+        let [copyX, copyY, copyWidth, copyHeight] = this.copyArray;
+        let [pasteX, pasteY, pasteWidth, pasteHeight] = this.pasteArray;
+        let [stampX, stampY] = this.currentStampPosition;
+
+        let img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);
+
+        let myX = x - stampX,
+            myY = y - stampY;
+
+        let index = (((myY * pasteWidth) + myX) * 4) + 3;
+
+        if (img.data[index]) {
+
+            return {
+                x: x,
+                y: y,
+                artefact: this
+            };
+        }
+        return false;
+    }
+    else {
+
+        return {
+            x: x,
+            y: y,
+            artefact: this
+        };
+    }
 };
 
 
