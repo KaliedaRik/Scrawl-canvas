@@ -12,30 +12,28 @@
   <style type="text/css">
     canvas {
       background-color: lemonchiffon;
-
       width: 100%;
       height: 100%;
     }
-
     .canvas-container {
       overflow: hidden;
       resize: both;
-
       border: 1px solid red;
-
       width: 600px;
       height: 400px;
-
       min-height: 200px;
       min-width: 200px;
-
       max-height: 400px;
       max-width: 800px;
     }
-
     .image-hold {
       height: 0;
       display: none;
+    }
+    #display-controls {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      font-family: monospace;
     }
   </style>
 </head>
@@ -43,6 +41,39 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 028</h1>
   <h2>Image magnifier; test some composite operations</h2>
+
+  <div id="display-controls">
+    <p>Select composite for background: 
+      <select class="control-item" id="composite">
+        <option value="source-over">source-over</option>
+        <option value="source-in">source-in</option>
+        <option value="source-out">source-out</option>
+        <option value="source-atop">source-atop</option>
+        <option value="destination-over">destination-over</option>
+        <option value="destination-in">destination-in</option>
+        <option value="destination-out">destination-out</option>
+        <option value="destination-atop">destination-atop</option>
+        <option value="copy">copy</option>
+        <option value="xor">xor</option>
+        <option value="difference">difference</option>
+        <option value="exclusion">exclusion</option>
+        <option value="multiply">multiply</option>
+        <option value="screen">screen</option>
+        <option value="overlay">overlay</option>
+        <option value="lighter">lighter</option>
+        <option value="lighten">lighten</option>
+        <option value="darken">darken</option>
+        <option value="hard-light">hard-light</option>
+        <option value="soft-light">soft-light</option>
+        <option value="color-dodge">color-dodge</option>
+        <option value="color-burn">color-burn</option>
+        <option value="hue">hue</option>
+        <option value="saturation">saturation</option>
+        <option value="color">color</option>
+        <option value="luminosity">luminosity</option>
+      </select>
+    </p>
+  </div>
 
   <div class="canvas-container">
     <canvas id="mycanvas"></canvas>

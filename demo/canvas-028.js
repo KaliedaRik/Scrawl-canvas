@@ -162,4 +162,21 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+// #### User interaction
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.control-item',
+
+    target: mybackground,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        composite: ['globalCompositeOperation', 'raw'],
+    },
+});
+document.querySelector('#composite').value = 'destination-over';
+
 console.log(scrawl.library);
