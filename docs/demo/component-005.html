@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Canvas 025</title>
+  <title>Demo Component 005</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -289,8 +289,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="demo-canvas-025">Demo Canvas 025</h1>
-<p>Responsive images</p>
+              <h1 id="demo-component-005">Demo Component 005</h1>
+<p>Scrawl-canvas modularized code - London crime charts</p>
 
             </div>
             
@@ -303,11 +303,168 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-025.html">Run code</a></p>
+              <p><a href="../../demo/component-005.html">Run code</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../source/scrawl.js'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../source/scrawl.js'</span>;
+
+<span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas,
+    namespace = <span class="hljs-string">'London-crimes'</span>;
+
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">'./components/simple-chart-frame.js'</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> barGraph <span class="hljs-keyword">from</span> <span class="hljs-string">'./components/london-crime-stacked-bars.js'</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> lineGraph <span class="hljs-keyword">from</span> <span class="hljs-string">'./components/london-crime-lines.js'</span>;
+
+canvas.set({
+
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'lemonchiffon'</span>,
+
+    <span class="hljs-attr">label</span>: <span class="hljs-string">'Crime statistics for London areas - from 1999 to 2017'</span>,
+
+    <span class="hljs-attr">description</span>: <span class="hljs-string">'Interactive graphic showing crimes recorded in various London areas, broken down into crime types. Data taken from https://data.london.gov.uk/dataset/recorded_crime_rates'</span>,
+
+    <span class="hljs-attr">fit</span>: <span class="hljs-string">'contain'</span>,
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+
+}).setBase({
+
+    <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">600</span>,
+});
+
+<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> assets = scrawl.library.assetnames,
+        groups = scrawl.library.groupnames,
+        entitys = scrawl.library.entitynames,
+
+        reporter = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#library-reporter'</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        reporter.textContent = <span class="hljs-string">`Assets:
+<span class="hljs-subst">${assets.join(<span class="hljs-string">', '</span>)}</span>
+
+Groups:
+<span class="hljs-subst">${groups.join(<span class="hljs-string">', '</span>)}</span>
+
+Entitys:
+<span class="hljs-subst">${entitys.join(<span class="hljs-string">', '</span>)}</span>`</span>;
+    }
+}();
+
+scrawl.makeRender({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-animation`</span>,
+    <span class="hljs-attr">target</span>: canvas,
+
+    <span class="hljs-attr">afterShow</span>: report,
+});
+
+scrawl.addListener(
+    <span class="hljs-string">'move'</span>, 
+    () =&gt; canvas.cascadeEventAction(<span class="hljs-string">'move'</span>), 
+    canvas.domElement 
+);
+
+<span class="hljs-keyword">let</span> currentGraphType = <span class="hljs-string">'bars'</span>,
+    currentArea = <span class="hljs-string">'Hackney'</span>,
+    currentCategory = <span class="hljs-string">'Burglary'</span>;
+
+<span class="hljs-keyword">let</span> crimeCategoryInput = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#crime-categories'</span>);
+
+scrawl.addNativeListener([<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (e &amp;&amp; e.target) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        <span class="hljs-keyword">let</span> target = e.target.id,
+            value = e.target.value;
+
+        <span class="hljs-keyword">switch</span> (target) {
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">'areas'</span> :
+
+                <span class="hljs-keyword">if</span> (value !== currentArea) {
+
+                    currentArea = value;
+
+                    <span class="hljs-keyword">if</span> (currentGraphType === <span class="hljs-string">'bars'</span>) {
+
+                        barGraph.kill();
+
+                        barGraph.build(
+                            <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-bars`</span>, 
+                            canvas, 
+                            <span class="hljs-string">`packets/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>
+                        );
+                    }
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentGraphType === <span class="hljs-string">'lines'</span>) {
+
+                        lineGraph.kill();
+
+                        lineGraph.build(
+                            <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-lines`</span>, 
+                            canvas, 
+                            <span class="hljs-string">`packets/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>, 
+                            currentCategory
+                        );
+                    }
+                }
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">'graph-types'</span> :
+
+                <span class="hljs-keyword">if</span> (value !== currentGraphType) {
+
+                    currentGraphType = value;
+
+                    <span class="hljs-keyword">if</span> (currentGraphType === <span class="hljs-string">'bars'</span>) {
+
+                        lineGraph.kill();
+
+                        barGraph.build(
+                            <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-bars`</span>, 
+                            canvas, 
+                            <span class="hljs-string">`packets/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>
+                        );
+
+                        crimeCategoryInput.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                    }
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentGraphType === <span class="hljs-string">'lines'</span>) {
+
+                        barGraph.kill();
+
+                        lineGraph.build(
+                            <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-lines`</span>, 
+                            canvas, 
+                            <span class="hljs-string">`packets/crimes-in-<span class="hljs-subst">${currentArea.toLowerCase()}</span>.json`</span>, 
+                            currentCategory
+                        );
+
+                        crimeCategoryInput.removeAttribute(<span class="hljs-string">'disabled'</span>);
+                    }
+                }
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">'crime-categories'</span> :
+
+                <span class="hljs-keyword">if</span> (currentGraphType === <span class="hljs-string">'lines'</span> &amp;&amp; value !== currentCategory) {
+
+                    currentCategory = value;
+
+                    lineGraph.update(
+                        <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-lines`</span>, 
+                        canvas, 
+                        currentCategory
+                    );
+                }
+                <span class="hljs-keyword">break</span>;
+        }
+    }
+}, <span class="hljs-string">'.control-item'</span>);</pre></div></div>
             
         </li>
         
@@ -318,159 +475,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h4 id="scene-setup">Scene setup</h4>
+              <p>Initial display</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Import image from DOM, and add data to it</p>
+            <div class="content"><div class='highlight'><pre>frame.build(<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-frame`</span>, canvas, <span class="hljs-string">'Hackney'</span>);
+barGraph.build(<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-bars`</span>, canvas, <span class="hljs-string">'packets/crimes-in-hackney.json'</span>);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">'.myimage'</span>);
+crimeCategoryInput.value = <span class="hljs-string">'Burglary'</span>;
+crimeCategoryInput.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
 
-<span class="hljs-keyword">let</span> myRiver = scrawl.library.asset.river;
-
-myRiver.set({
-    <span class="hljs-attr">intrinsicDimensions</span>: {
-        <span class="hljs-string">"river-300.jpg"</span>: [<span class="hljs-number">300</span>, <span class="hljs-number">225</span>], 
-        <span class="hljs-string">"river-600.jpg"</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">450</span>], 
-        <span class="hljs-string">"river-900.jpg"</span>: [<span class="hljs-number">900</span>, <span class="hljs-number">675</span>], 
-        <span class="hljs-string">"river-1200.jpg"</span>: [<span class="hljs-number">1200</span>, <span class="hljs-number">900</span>], 
-        <span class="hljs-string">"river-1600.jpg"</span>: [<span class="hljs-number">1600</span>, <span class="hljs-number">1200</span>], 
-        <span class="hljs-string">"river-2000.jpg"</span>: [<span class="hljs-number">2000</span>, <span class="hljs-number">1500</span>], 
-        <span class="hljs-string">"river-2400.jpg"</span>: [<span class="hljs-number">2400</span>, <span class="hljs-number">1800</span>], 
-        <span class="hljs-string">"river-2800.jpg"</span>: [<span class="hljs-number">2800</span>, <span class="hljs-number">2100</span>], 
-        <span class="hljs-string">"river-3200.jpg"</span>: [<span class="hljs-number">3200</span>, <span class="hljs-number">2400</span>], 
-        <span class="hljs-string">"river-3600.jpg"</span>: [<span class="hljs-number">3600</span>, <span class="hljs-number">2700</span>], 
-        <span class="hljs-string">"river-4000.jpg"</span>: [<span class="hljs-number">4000</span>, <span class="hljs-number">3000</span>]
-    },
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Make canvas responsive</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>canvas.set({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'honeydew'</span>,
-    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">fit</span>: <span class="hljs-string">'contain'</span>,
-}).setBase({
-    <span class="hljs-attr">width</span>: <span class="hljs-number">4000</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">3000</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Build the Picture entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> piccy = scrawl.makePicture({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span>-image`</span>,
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">'river'</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-string">'100%'</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">'100%'</span>,
-
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">'100%'</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">'100%'</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    asset natural dims: ${myRiver.source.naturalWidth}, ${myRiver.source.naturalHeight}
-    asset current dims: ${myRiver.sourceNaturalWidth}, ${myRiver.sourceNaturalHeight}
-    entity copy dims: ${piccy.currentCopyDimensions[0]}, ${piccy.currentCopyDimensions[1]}`;
-    };
-}();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Create the Display cycle animation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span>-render`</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <h4 id="development-and-testing">Development and testing</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

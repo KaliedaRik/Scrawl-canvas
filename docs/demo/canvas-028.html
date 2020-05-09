@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Canvas 025</title>
+  <title>Demo Canvas 028</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -289,8 +289,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="demo-canvas-025">Demo Canvas 025</h1>
-<p>Responsive images</p>
+              <h1 id="demo-canvas-028">Demo Canvas 028</h1>
+<p>Image magnifier; test some composite operations</p>
 
             </div>
             
@@ -303,7 +303,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-025.html">Run code</a></p>
+              <p><a href="../../demo/canvas-028.html">Run code</a></p>
 
             </div>
             
@@ -322,7 +322,161 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.importDomImage('.angels');
+
+let canvas = scrawl.library.canvas.mycanvas;
+
+canvas.set({
+
+    fit: 'cover',
+    checkForResize: true,
+
+}).setBase({
+
+    width: 800,
+    height: 400,
+
+}).setAsCurrentCanvas();
+
+let magnifier = scrawl.makeGroup({
+
+    name: 'magnifier-group',
+    host: canvas.base.name,
+    order: 1,
+
+});
+
+scrawl.makeGroup({
+
+    name: 'background-group',
+    host: canvas.base.name,
+    order: 2
+});
+
+let myradius = 80;
+
+let mybackground = scrawl.makePicture({
+
+    name: 'background',
+    group: 'background-group',
+
+    asset: 'small-angels',
+
+    width: '100%',
+    height: '100%',
+
+    copyWidth: '100%',
+    copyHeight: '100%',
+
+    globalCompositeOperation: 'destination-over',
+});
+
+scrawl.makeWheel({
+
+    name: 'magnifier',
+    group: 'magnifier-group',
+
+    order: 1,
+
+    radius: 80,
+
+    handleX: 'center',
+    handleY: 'center',
+
+    lockTo: 'mouse',
+
+    method: 'fill',
+
+}).clone({
+
+    name: 'magnifier-rim',
+
+    order: 3,
+
+    lineWidth: 5,
+    strokeStyle: 'gold',
+
+    method: 'draw',
+});
+
+let myMagnifierImage = scrawl.makePicture({
+
+    name: 'enlarged',
+    group: 'magnifier-group',
+
+    order: 2,
+
+    asset: 'big-angels',
+
+    width: myradius * 2,
+    height: myradius * 2,
+
+    copyWidth: myradius * 2,
+    copyHeight: myradius * 2,
+
+    handleX: 'center',
+    handleY: 'center',
+
+    lockTo: 'mouse',
+
+    globalCompositeOperation: 'source-in',
+});
+
+let checkMagnifier = function () {
+
+    let display, base;
+
+    return function () {
+
+        if (!display) display = canvas.here;
+        if (!base) base = canvas.base.here;
+
+        let active = display.active;
+
+        magnifier.set({
+            visibility: (active) ? true : false,
+        });
+
+        if (active) {
+
+            myMagnifierImage.set({
+
+                copyStartX: (base.x * 3) - myradius,
+                copyStartY: (base.y * 3) - myradius,
+            });
+        }
+    };
+}();
+
+let report = function () {
+
+    let testTicker = Date.now(),
+        testTime, testNow,
+
+        displayed = canvas.here,
+        hidden = canvas.base.here,
+
+        testMessage = document.querySelector('#reportmessage');
+
+    return function () {
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+Display canvas mouse - x: ${displayed.x}, y: ${displayed.y}
+Base canvas mouse - x: ${hidden.x}, y: ${hidden.y}`;
+    };
+}();
+
+scrawl.makeRender({
+    name: 'demo-animation',
+    target: canvas,
+
+    commence: checkMagnifier,
+    afterShow: report,
+});</pre></div></div>
             
         </li>
         
@@ -333,144 +487,27 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Import image from DOM, and add data to it</p>
+              <h4 id="user-interaction">User interaction</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">'.myimage'</span>);
+            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
 
-<span class="hljs-keyword">let</span> myRiver = scrawl.library.asset.river;
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">'.control-item'</span>,
 
-myRiver.set({
-    <span class="hljs-attr">intrinsicDimensions</span>: {
-        <span class="hljs-string">"river-300.jpg"</span>: [<span class="hljs-number">300</span>, <span class="hljs-number">225</span>], 
-        <span class="hljs-string">"river-600.jpg"</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">450</span>], 
-        <span class="hljs-string">"river-900.jpg"</span>: [<span class="hljs-number">900</span>, <span class="hljs-number">675</span>], 
-        <span class="hljs-string">"river-1200.jpg"</span>: [<span class="hljs-number">1200</span>, <span class="hljs-number">900</span>], 
-        <span class="hljs-string">"river-1600.jpg"</span>: [<span class="hljs-number">1600</span>, <span class="hljs-number">1200</span>], 
-        <span class="hljs-string">"river-2000.jpg"</span>: [<span class="hljs-number">2000</span>, <span class="hljs-number">1500</span>], 
-        <span class="hljs-string">"river-2400.jpg"</span>: [<span class="hljs-number">2400</span>, <span class="hljs-number">1800</span>], 
-        <span class="hljs-string">"river-2800.jpg"</span>: [<span class="hljs-number">2800</span>, <span class="hljs-number">2100</span>], 
-        <span class="hljs-string">"river-3200.jpg"</span>: [<span class="hljs-number">3200</span>, <span class="hljs-number">2400</span>], 
-        <span class="hljs-string">"river-3600.jpg"</span>: [<span class="hljs-number">3600</span>, <span class="hljs-number">2700</span>], 
-        <span class="hljs-string">"river-4000.jpg"</span>: [<span class="hljs-number">4000</span>, <span class="hljs-number">3000</span>]
+    <span class="hljs-attr">target</span>: mybackground,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+        <span class="hljs-attr">composite</span>: [<span class="hljs-string">'globalCompositeOperation'</span>, <span class="hljs-string">'raw'</span>],
     },
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Make canvas responsive</p>
+});
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#composite'</span>).value = <span class="hljs-string">'destination-over'</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>canvas.set({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'honeydew'</span>,
-    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">fit</span>: <span class="hljs-string">'contain'</span>,
-}).setBase({
-    <span class="hljs-attr">width</span>: <span class="hljs-number">4000</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">3000</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Build the Picture entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> piccy = scrawl.makePicture({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span>-image`</span>,
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">'river'</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-string">'100%'</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">'100%'</span>,
-
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">'100%'</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">'100%'</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    asset natural dims: ${myRiver.source.naturalWidth}, ${myRiver.source.naturalHeight}
-    asset current dims: ${myRiver.sourceNaturalWidth}, ${myRiver.sourceNaturalHeight}
-    entity copy dims: ${piccy.currentCopyDimensions[0]}, ${piccy.currentCopyDimensions[1]}`;
-    };
-}();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Create the Display cycle animation</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span>-render`</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <h4 id="development-and-testing">Development and testing</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

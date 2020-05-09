@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>simple-chart-frame-tests.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="london-crime-graphic.html">
+                  ./demo/components/london-crime-graphic.js
+                </a>
+              
+                
+                <a class="source" href="london-crime-lines.html">
+                  ./demo/components/london-crime-lines.js
+                </a>
+              
+                
+                <a class="source" href="london-crime-stacked-bars.html">
+                  ./demo/components/london-crime-stacked-bars.js
+                </a>
+              
+                
+                <a class="source" href="simple-chart-frame-tests.html">
+                  ./demo/components/simple-chart-frame-tests.js
+                </a>
+              
+                
+                <a class="source" href="simple-chart-frame.html">
+                  ./demo/components/simple-chart-frame.js
+                </a>
+              
+                
+                <a class="source" href="simple-graph-lines.html">
+                  ./demo/components/simple-graph-lines.js
+                </a>
+              
+                
+                <a class="source" href="simple-graph-stacked-bars.html">
+                  ./demo/components/simple-graph-stacked-bars.js
+                </a>
+              
+                
+                <a class="source" href="test-001.html">
+                  ./demo/components/test-001.js
+                </a>
+              
+                
+                <a class="source" href="test-002.html">
+                  ./demo/components/test-002.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>simple-chart-frame-tests.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>import scrawl from ‘<a href="https://unpkg.com/scrawl-canvas@8.0.11&#39;">https://unpkg.com/scrawl-canvas@8.0.11&#39;</a>;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'./source/scrawl.js'</span>;
+
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">'./simple-chart-frame.js'</span>;
+
+<span class="hljs-keyword">let</span> testParent, testButton, testListeners, buttonListener, 
+    frameNamespace, frameBackground;
+
+<span class="hljs-keyword">const</span> activateButton = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">frameName, canvas, host, button, background</span>) </span>{
+
+    frameNamespace = frameName;
+    testButton = button;
+    testParent = host;
+    frameBackground = background;
+
+    buttonListener = scrawl.addListener(<span class="hljs-string">'up'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">parseInt</span>(testButton.value, <span class="hljs-number">10</span>);
+
+            <span class="hljs-keyword">if</span> (val) {
+
+                killTests();
+
+                testButton.value = <span class="hljs-string">'0'</span>;
+                testButton.textContent = <span class="hljs-string">'Show tests'</span>;
+            }
+            <span class="hljs-keyword">else</span> {
+
+                buildTests(canvas, host);
+
+                testButton.value = <span class="hljs-string">'1'</span>;
+                testButton.textContent = <span class="hljs-string">'Hide tests'</span>;
+            }
+        }
+
+    }, testButton);
+};
+
+<span class="hljs-keyword">const</span> removeButton = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    buttonListener();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">parseInt</span>(testButton.value, <span class="hljs-number">10</span>)) killTests();
+
+    testButton.remove();
+    testParent.remove();
+};
+
+<span class="hljs-keyword">const</span> buildTests = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">canvas, host</span>) </span>{
+
+    testParent.innerHTML = <span class="hljs-string">`
+    &lt;div&gt;
+        &lt;button id="build-button" class="controls"&gt;Build graph&lt;/button&gt;
+        &lt;button id="kill-button" class="controls"&gt;Kill graph&lt;/button&gt;
+        &lt;button id="show-button" class="controls"&gt;Show graph&lt;/button&gt;
+        &lt;button id="hide-button" class="controls"&gt;Hide graph&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;p&gt;
+        Title: &lt;input type="text" value="" id="title-input" class="controls"/&gt; 
+        Subtitle: &lt;input type="text" value="" id="subtitle-input" class="controls"/&gt;
+    &lt;/p&gt;
+
+    &lt;p&gt;
+        Y-axis - top: &lt;input type="number" value="" id="y-top-input" class="controls"/&gt;
+        bottom: &lt;input type="number" value="" id="y-bottom-input" class="controls"/&gt;
+    &lt;/p&gt;
+
+    &lt;p&gt;
+        X-axis - left: &lt;input type="text" value="" id="x-left-input" class="controls"/&gt;
+        right: &lt;input type="text" value="" id="x-right-input" class="controls"/&gt;
+    &lt;/p&gt;
+
+    &lt;p&gt;Background:
+        &lt;select class="controls" id="crime-types"&gt;
+            &lt;option value="Burglary"&gt;Burglary&lt;/option&gt;
+            &lt;option value="Criminal Damage"&gt;Criminal Damage&lt;/option&gt;
+            &lt;option value="Drugs"&gt;Drugs&lt;/option&gt;
+            &lt;option value="Fraud or Forgery"&gt;Fraud or Forgery&lt;/option&gt;
+            &lt;option value="Other Notifiable Offences"&gt;Other Notifiable Offences&lt;/option&gt;
+            &lt;option value="Robbery"&gt;Robbery&lt;/option&gt;
+            &lt;option value="Sexual Offences"&gt;Sexual Offences&lt;/option&gt;
+            &lt;option value="Theft and Handling"&gt;Theft and Handling&lt;/option&gt;
+            &lt;option value="Violence Against the Person"&gt;Violence Against the Person&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/p&gt;
+
+    &lt;p&gt;
+        &lt;button id="kill-tests" class="controls"&gt;Remove tests&lt;/button&gt;
+    &lt;/p&gt;`</span>;
+
+    <span class="hljs-keyword">let</span> buildButton = testParent.querySelector(<span class="hljs-string">'#build-button'</span>),
+        killButton = testParent.querySelector(<span class="hljs-string">'#kill-button'</span>),
+        showButton = testParent.querySelector(<span class="hljs-string">'#show-button'</span>),
+        hideButton = testParent.querySelector(<span class="hljs-string">'#hide-button'</span>),
+        titleInput = testParent.querySelector(<span class="hljs-string">'#title-input'</span>),
+        subtitleInput = testParent.querySelector(<span class="hljs-string">'#subtitle-input'</span>),
+        yTop = testParent.querySelector(<span class="hljs-string">'#y-top-input'</span>),
+        yBottom = testParent.querySelector(<span class="hljs-string">'#y-bottom-input'</span>),
+        xLeft = testParent.querySelector(<span class="hljs-string">'#x-left-input'</span>),
+        xRight = testParent.querySelector(<span class="hljs-string">'#x-right-input'</span>),
+        crimeTypes = testParent.querySelector(<span class="hljs-string">'#crime-types'</span>),
+        killTests = testParent.querySelector(<span class="hljs-string">'#kill-tests'</span>);
+
+    <span class="hljs-keyword">let</span> currentBackground, currentTitle, currentSubtitle, 
+        currentYTop, currentYBottom, currentXLeft, currentXRight;
+
+    <span class="hljs-keyword">let</span> setControlsToDefaults = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+        crimeTypes.value = currentBackground = frameBackground;
+        titleInput.value = currentTitle = <span class="hljs-string">'No title'</span>;
+        subtitleInput.value = currentSubtitle = <span class="hljs-string">'No data selected'</span>;
+        yTop.value = currentYTop = <span class="hljs-string">'0'</span>;
+        yBottom.value = currentYBottom = <span class="hljs-string">'0'</span>;
+        xLeft.value = currentXLeft = <span class="hljs-string">'0'</span>;
+        xRight.value = currentXRight = <span class="hljs-string">'0'</span>;
+
+        buildButton.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+        showButton.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+
+        hideButton.removeAttribute(<span class="hljs-string">'disabled'</span>);
+        titleInput.removeAttribute(<span class="hljs-string">'disabled'</span>);
+        subtitleInput.removeAttribute(<span class="hljs-string">'disabled'</span>);
+        crimeTypes.removeAttribute(<span class="hljs-string">'disabled'</span>);
+        killButton.removeAttribute(<span class="hljs-string">'disabled'</span>);
+        yTop.removeAttribute(<span class="hljs-string">'disabled'</span>);
+        yBottom.removeAttribute(<span class="hljs-string">'disabled'</span>);
+        xLeft.removeAttribute(<span class="hljs-string">'disabled'</span>);
+        xRight.removeAttribute(<span class="hljs-string">'disabled'</span>);
+    };
+    setControlsToDefaults();
+
+    <span class="hljs-keyword">let</span> setNumbersHelper = <span class="hljs-function">(<span class="hljs-params">val, current, fn</span>) =&gt;</span> {
+
+        val = (val) ? val : <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">if</span> (current !== val) {
+
+            current = val;
+            fn(<span class="hljs-built_in">parseFloat</span>(val).toLocaleString());
+        }
+    };
+
+    testListeners = scrawl.addNativeListener([<span class="hljs-string">'click'</span>, <span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (e) {
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            <span class="hljs-keyword">if</span> (e.target) {
+
+                <span class="hljs-keyword">let</span> target = e.target.id,
+                    val = e.target.value;
+
+                <span class="hljs-keyword">switch</span> (target) {
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'build-button'</span> :
+
+                        frame.build(frameNamespace, canvas, frameBackground);
+                        frame.show();
+
+                        setControlsToDefaults();
+
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'kill-button'</span> :
+
+                        frame.kill();
+
+                        killButton.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        showButton.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        hideButton.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        titleInput.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        subtitleInput.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        crimeTypes.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        yTop.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        yBottom.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        xLeft.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        xRight.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+
+                        buildButton.removeAttribute(<span class="hljs-string">'disabled'</span>);
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'show-button'</span> :
+
+                        frame.show();
+
+                        showButton.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        hideButton.removeAttribute(<span class="hljs-string">'disabled'</span>);
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'hide-button'</span> :
+
+                        frame.hide();
+
+                        hideButton.setAttribute(<span class="hljs-string">'disabled'</span>, <span class="hljs-string">''</span>);
+                        showButton.removeAttribute(<span class="hljs-string">'disabled'</span>);
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'title-input'</span> :
+
+                        <span class="hljs-keyword">if</span> (currentTitle !== val) {
+
+                            currentTitle = val;
+                            frame.updateTitle(val);
+                        }
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'subtitle-input'</span> :
+
+                        <span class="hljs-keyword">if</span> (currentSubtitle !== val) {
+
+                            currentSubtitle = val;
+                            frame.updateSubtitle(val);
+                        }
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'y-top-input'</span> :
+
+                        setNumbersHelper(val, currentYTop, frame.updateYTop);
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'y-bottom-input'</span> :
+
+                        setNumbersHelper(val, currentYBottom, frame.updateYBottom);
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'x-left-input'</span> :
+
+                        <span class="hljs-keyword">if</span> (currentXLeft !== val) {
+
+                            currentXLeft = val;
+                            frame.updateXLeft(val);
+                        }
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'x-right-input'</span> :
+
+                        <span class="hljs-keyword">if</span> (currentXRight !== val) {
+
+                            currentXRight = val;
+                            frame.updateXRight(val);
+                        }
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'crime-types'</span> :
+
+                        <span class="hljs-keyword">if</span> (currentBackground !== val) {
+
+                            currentBackground = val;
+                            frame.updateBackground(val);
+                        }
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'kill-tests'</span> :
+
+                        removeButton();
+                        <span class="hljs-keyword">break</span>;
+                }
+            }
+        }
+    }, <span class="hljs-string">'.controls'</span>);
+
+};
+
+<span class="hljs-keyword">const</span> killTests = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    testListeners();
+
+    [...testParent.childNodes].forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> el.remove());
+};
+
+
+<span class="hljs-keyword">export</span> {
+    activateButton,
+    removeButton,
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

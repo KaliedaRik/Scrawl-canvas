@@ -468,10 +468,7 @@
         <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-keyword">this</span>.asset,
             newAsset = (item &amp;&amp; item.name) ? item.name : item;
 
-        <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; !oldAsset.substring) {
-
-            <span class="hljs-keyword">if</span> (oldAsset.name !== newAsset) oldAsset.unsubscribe(<span class="hljs-keyword">this</span>);
-        }
+        <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; !oldAsset.substring) oldAsset.unsubscribe(<span class="hljs-keyword">this</span>);
 
         <span class="hljs-keyword">this</span>.asset = newAsset;
         <span class="hljs-keyword">this</span>.dirtyAsset = <span class="hljs-literal">true</span>;

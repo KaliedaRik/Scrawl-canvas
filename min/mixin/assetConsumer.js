@@ -19,9 +19,7 @@ let S = P.setters;
 S.asset = function (item) {
 let oldAsset = this.asset,
 newAsset = (item && item.name) ? item.name : item;
-if (oldAsset && !oldAsset.substring) {
-if (oldAsset.name !== newAsset) oldAsset.unsubscribe(this);
-}
+if (oldAsset && !oldAsset.substring) oldAsset.unsubscribe(this);
 this.asset = newAsset;
 this.dirtyAsset = true;
 };
