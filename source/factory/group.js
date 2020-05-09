@@ -119,7 +119,20 @@ P.kill = function (killArtefacts = false) {
     // Remove the Group object from affected Stack and Cell objects' `groups` attribute
     Object.entries(artefact).forEach(([name, art]) => {
 
-        if (Array.isArray(art.groups) && art.groups.indexOf(myname) >= 0) removeItem(art.groups, myname);
+        if (Array.isArray(art.groups) && art.groups.indexOf(myname) >= 0) {
+
+            removeItem(art.groups, myname);
+            art.batchResort = true;
+        };
+    });
+
+    Object.entries(cell).forEach(([name, obj]) => {
+
+        if (Array.isArray(obj.groups) && obj.groups.indexOf(myname) >= 0) {
+
+            removeItem(obj.groups, myname);
+            obj.batchResort = true;
+        };
     });
 
     if (killArtefacts) this.artefactBuckets.forEach(item => item.kill());

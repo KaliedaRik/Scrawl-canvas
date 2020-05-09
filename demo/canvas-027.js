@@ -11,12 +11,13 @@ let canvas = scrawl.library.canvas.mycanvas;
 
 canvas.set({
 
+    checkForResize: true,
+
     // The __base-matches-display__ approach
     // + TODO: the swan hit detection is flaky
     // + TODO: issues with Phrase positioning picking up on canvas dimensions changes
     // + On the positive side, text doesn't distort
 
-    // checkForResize: true,    
     // isComponent: true,
 
     // The __fit-base-into-display__ approach
