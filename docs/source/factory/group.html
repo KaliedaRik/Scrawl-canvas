@@ -582,7 +582,20 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(artefact).forEach(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(art.groups) &amp;&amp; art.groups.indexOf(myname) &gt;= <span class="hljs-number">0</span>) removeItem(art.groups, myname);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(art.groups) &amp;&amp; art.groups.indexOf(myname) &gt;= <span class="hljs-number">0</span>) {
+
+            removeItem(art.groups, myname);
+            art.batchResort = <span class="hljs-literal">true</span>;
+        };
+    });
+
+    <span class="hljs-built_in">Object</span>.entries(cell).forEach(<span class="hljs-function">(<span class="hljs-params">[name, obj]</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(obj.groups) &amp;&amp; obj.groups.indexOf(myname) &gt;= <span class="hljs-number">0</span>) {
+
+            removeItem(obj.groups, myname);
+            obj.batchResort = <span class="hljs-literal">true</span>;
+        };
     });
 
     <span class="hljs-keyword">if</span> (killArtefacts) <span class="hljs-keyword">this</span>.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.kill());</pre></div></div>
