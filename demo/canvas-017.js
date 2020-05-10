@@ -2,7 +2,7 @@
 // Phrase entity - test lineHeight, letterSpacing and justify attributes; setGlyphStyles() functionality
 
 // [Run code](../../demo/canvas-017.html)
-import scrawl from '../source/scrawl.js'
+import scrawl from '../source/scrawl.js';
 
 
 // #### Scene setup

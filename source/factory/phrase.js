@@ -706,6 +706,8 @@ P.cleanPathObject = function () {
         }
 
         p.rect(x, y, w, h);
+
+        dims[1] = h;
     }
 };
 
@@ -760,6 +762,13 @@ P.calculateTextPositions = function (mytext) {
     // 0. `strokeStyle` and `fillStyle` helper function
     let makeStyle = function (item) {
 
+        if (!host) {
+
+            self.dirtyPathObject = true;
+            self.dirtyText = true;
+            return 'black';
+        }
+
         if (item.substring) {
 
             let brokenStyle = false;
@@ -778,7 +787,7 @@ P.calculateTextPositions = function (mytext) {
         engine = myCell.engine;
 
     let self = this,
-        host = (this.group && this.group.getHost) ? this.group.getHost() : myCell;
+        host = (this.group && this.group.getHost) ? this.group.getHost() : false;
 
     let textGlyphs, 
         textGlyphWidths = [], 
@@ -1218,7 +1227,7 @@ P.regularStampSynchronousActions = function () {
 
                     dest.rotateDestination(engine, pathData.x, pathData.y, this);
 
-                    data = preStamper(engine, this, item);
+                    data = preStamper(dest, engine, this, item);
                     stamper[method](engine, this, data);
                 }
             }
@@ -1233,9 +1242,10 @@ P.regularStampSynchronousActions = function () {
 
             this.performRotation(engine);
 
+// console.log(this.name, dest.name, pos)
             for (i = 0, iz = pos.length; i < iz; i++) {
 
-                data = preStamper(engine, this, pos[i]);
+                data = preStamper(dest, engine, this, pos[i]);
                 stamper[method](engine, this, data);
             }
 
@@ -1281,8 +1291,9 @@ P.calculateGlyphPathPositions = function () {
 };
 
 // `preStamper` - internal helper function called by `regularStampSynchronousActions`
-P.preStamper = function (engine, entity, args) {
+P.preStamper = function (dest, engine, entity, args) {
 
+// console.log(entity.name);
     let [font, strokeStyle, fillStyle, highlight, underline, overline, ...data] = args;
 
     if (font) engine.font = font;

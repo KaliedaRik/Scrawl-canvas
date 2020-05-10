@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 029</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 029</h1>
+  <h2>Phrase entitys and gradients</h2>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create a linear gradient</li>
+      <li>Create several Phrase objects</li>
+      <li>Position some with relative coordinates</li>
+      <li>Create a Shape entity and position one of the phrases on it with 'path' (delta animated)</li>
+      <li>Check that the gradient appears as expected when it is vertical (top-bottom)</li>
+      <li>Check that the gradient appears as expected when it is horizontal (left-right)</li>
+      <li>Check that the gradient appears as expected for both cell-locked and entity-locked gradients</li>
+    </ul>
+
+    <h4>May 2020 results</h4> 
+    <p>Currently experiencing a number of issues and bugs in the mix between phrase and styles code:</p>
+
+    <ul>
+      <li>Cell-locked vertical gradients (seem to) appear as expected.</li>
+      <li>Cell-locked horizontal gradients - the initial letter's gradient appears to be mis-positioned, compared to the other letters in the Phrase.</li>
+      <li>... For multi-line Phrases this also applies to a few other letters in the text.</li>
+      <li>Entity-locked gradients do not display (they are either set to 0 or 999) - this almost certainly has something to do with Phrase height issues.</li>
+      <li>Phrases locked to a path - all letters appear to use the initial letter's take on the gradient it should be displaying.</li>
+      <li>... This is a very nice effect with horizontal gradients!</li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-029.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-029.js" type="module"></script>
+
+</body>
+
+</html>

@@ -2,7 +2,7 @@
 // Phrase entity - text along a path
 
 // [Run code](../../demo/canvas-018.html)
-import scrawl from '../source/scrawl.js'
+import scrawl from '../source/scrawl.js';
 
 
 // #### Scene setup
@@ -47,7 +47,6 @@ let spiral = scrawl.makeSpiral({
     scale: 40,
     scaleOutline: false,
 
-    // flipReverse: true,
     flipUpend: true,
     roll: 30,
 
