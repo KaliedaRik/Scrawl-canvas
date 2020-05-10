@@ -100,9 +100,6 @@ let lorem = scrawl.makePhrase({
 
     textPath: 'spiral-path',
     textPathPosition: 0.9,
-    // textPathDirection: 'rtl',
-
-    // justify: 'center',
 
     delta: {
         textPathPosition: -0.0006,
@@ -274,7 +271,7 @@ document.querySelector('#start_yAbsolute').value = 200;
 document.querySelector('#handle_xAbsolute').value = 100;
 document.querySelector('#handle_yAbsolute').value = 100;
 document.querySelector('#roll').value = 0;
-document.querySelector('#scale').value = 1;
+document.querySelector('#scale').value = 40;
 document.querySelector('#upend').options.selectedIndex = 1;
 document.querySelector('#reverse').options.selectedIndex = 0;
 document.querySelector('#direction').options.selectedIndex = 0;
