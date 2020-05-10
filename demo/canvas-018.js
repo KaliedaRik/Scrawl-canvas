@@ -40,11 +40,15 @@ let spiral = scrawl.makeSpiral({
     handleX: 'center',
     handleY: 'center',
 
-    loops: 4,
-    loopIncrement: 0.5,
-    innerRadius: 20,
+    loops: 5,
+    loopIncrement: 1,
+    drawFromLoop: 2,
 
-    flipReverse: true,
+    scale: 40,
+    scaleOutline: false,
+
+    // flipReverse: true,
+    flipUpend: true,
     roll: 30,
 
     useAsPath: true,
@@ -97,12 +101,12 @@ let lorem = scrawl.makePhrase({
 
     textPath: 'spiral-path',
     textPathPosition: 0.9,
-    textPathDirection: 'rtl',
+    // textPathDirection: 'rtl',
 
-    justify: 'center',
+    // justify: 'center',
 
     delta: {
-        textPathPosition: 0.0006,
+        textPathPosition: -0.0006,
     }
 });
 
@@ -272,10 +276,10 @@ document.querySelector('#handle_xAbsolute').value = 100;
 document.querySelector('#handle_yAbsolute').value = 100;
 document.querySelector('#roll').value = 0;
 document.querySelector('#scale').value = 1;
-document.querySelector('#upend').options.selectedIndex = 0;
-document.querySelector('#reverse').options.selectedIndex = 1;
-document.querySelector('#direction').options.selectedIndex = 1;
-document.querySelector('#justify').options.selectedIndex = 1;
+document.querySelector('#upend').options.selectedIndex = 1;
+document.querySelector('#reverse').options.selectedIndex = 0;
+document.querySelector('#direction').options.selectedIndex = 0;
+document.querySelector('#justify').options.selectedIndex = 0;
 document.querySelector('#overline').value = 0.1;
 document.querySelector('#letterSpacing').value = 0;
 document.querySelector('#family').options.selectedIndex = 0;

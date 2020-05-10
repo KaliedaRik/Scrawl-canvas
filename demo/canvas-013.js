@@ -287,7 +287,9 @@ scrawl.makeSpiral({
     startY: 1310,
     loops: 5,
     loopIncrement: 0.1,
-    innerRadius: 0,
+    drawFromLoop: 0,
+    scale: 50,
+    scaleOutline: false,
 
     showBoundingBox: true,
     useAsPath: true,
@@ -295,19 +297,19 @@ scrawl.makeSpiral({
 }).clone({
     name: 'spiral2',
     startX: 350,
-    innerRadius: 50,
+    drawFromLoop: 3,
 
 }).clone({
     name: 'spiral3',
     startY: 1550,
     loopIncrement: 0.3,
-    innerRadius: 0,
+    drawFromLoop: 0,
 
 }).clone({
     name: 'spiral4',
     startX: 50,
     loopIncrement: 0.3,
-    innerRadius: 20,
+    drawFromLoop: 3,
 });
 
 

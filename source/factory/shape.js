@@ -168,9 +168,9 @@ let defaultAttributes = {
 
 
 // Attributes used by `spiral` species
-    loops: 0,
-    loopIncrement: 0.2,
-    innerRadius: 0,
+    loops: 1,
+    loopIncrement: 1,
+    drawFromLoop: 0,
 
 
 // Attributes used by `rectangle` species
@@ -276,10 +276,10 @@ P.packetCoordinates = pushUnique(P.packetCoordinates, ['startControl', 'control'
 P.packetObjects = pushUnique(P.packetObjects, ['startControlPivot', 'startControlPath', 'controlPivot', 'controlPath', 'endControlPivot', 'endControlPath', 'endPivot', 'endPath']);
 P.packetFunctions = pushUnique(P.packetFunctions, []);
 
-P.packetSpeciesCheck = ['loops', 'loopIncrement', 'innerRadius', 'rectangleWidth', 'rectangleHeight', 'radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY', 'radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB', 'sides', 'sideLength', 'radius1', 'radius2', 'points', 'twist', 'startControl', 'control', 'endControl', 'end', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'pathDefinition'];
+P.packetSpeciesCheck = ['loops', 'loopIncrement', 'drawFromLoop', 'rectangleWidth', 'rectangleHeight', 'radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY', 'radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB', 'sides', 'sideLength', 'radius1', 'radius2', 'points', 'twist', 'startControl', 'control', 'endControl', 'end', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'pathDefinition'];
 
 P.packetSpeciesInclusions = {
-    spiral: ['loops', 'loopIncrement', 'innerRadius'],
+    spiral: ['loops', 'loopIncrement', 'drawFromLoop'],
     rectangle: ['rectangleWidth', 'rectangleHeight', 'radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY'],
     oval: ['radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB'],
     tetragon: ['radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB'],
@@ -672,7 +672,7 @@ S.endLockTo = function (item) {
 };
 
 // A variety of attributes with the word __radius__ in them
-// + Including: __radius__, __radiusX__, __radiusY__, __radiusT__, __radiusB__, __radiusL__, __radiusR__, __radiusTX__, __radiusBX__, __radiusLX__, __radiusRX__, __radiusTY__, __radiusBY__, __radiusLY__, __radiusRY__, __radiusTL__, __radiusTR__, __radiusBL__, __radiusBR__, __radiusTLX__, __radiusTRX__, __radiusBRX__, __radiusBLX__, __radiusTLY__, __radiusTRY__, __radiusBRY__, __radiusBLY__, __radius1__, __radius2__, __innerRadius__
+// + Including: __radius__, __radiusX__, __radiusY__, __radiusT__, __radiusB__, __radiusL__, __radiusR__, __radiusTX__, __radiusBX__, __radiusLX__, __radiusRX__, __radiusTY__, __radiusBY__, __radiusLY__, __radiusRY__, __radiusTL__, __radiusTR__, __radiusBL__, __radiusBR__, __radiusTLX__, __radiusTRX__, __radiusBRX__, __radiusBLX__, __radiusTLY__, __radiusTRY__, __radiusBRY__, __radiusBLY__, __radius1__, __radius2__drawFromLoop
 S.radius = function (item) {
 
     this.setRectHelper(item, ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusX', 'radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY', 'radiusY']);
@@ -909,14 +909,14 @@ D.radius2 = function (item) {
     this.radius2 += item;
     this.updateDirty();
 };
-S.innerRadius = function (item) {
+S.drawFromLoop = function (item) {
 
-    this.innerRadius = item;
+    this.drawFromLoop = item;
     this.updateDirty();
 };
-D.innerRadius = function (item) {
+D.drawFromLoop = function (item) {
 
-    this.innerRadius += item;
+    this.drawFromLoop += item;
     this.updateDirty();
 };
 
@@ -1905,50 +1905,104 @@ P.makeStarPath = function () {
 
 
 // `makeSpiralPath` - internal helper function - called by `cleanSpecies`
-// + Taken from this page - https://rosettacode.org/wiki/Archimedean_spiral#JavaScript
-// + TODO: find a solution that uses far fewer sub-units: current solution uses lots of short lines; shoule be able to achieve the same effect using 4 bezier curves per turn; beziers would also offer a way to make much more interesting 'spiral' shapes 
 P.makeSpiralPath = function () {
     
-    let loops = this.loops,
+    let loops = Math.floor(this.loops),
         loopIncrement = this.loopIncrement,
-        innerRadius = this.innerRadius;
+        drawFromLoop = Math.floor(this.drawFromLoop);
 
-    let myAngle = 0,
-        angleIncrement = 0.1,
-        angleSteps = loops * 2 * Math.PI,
-        steps = angleSteps / angleIncrement,
-        xPts = [],
-        yPts = [],
-        x, y, minX, minY, maxX, maxY, i;
+    let x1, y1, x2, y2, x3, y3,
+        sx1, sy1, sx2, sy2, sx3, sy3;
 
-    let currentX = innerRadius,
-        currentY = 0;
+    // Magic numbers!
+    // + These numbers produce an Archimedian spiral
+    // + The first loop has effective dimensions of 2px by 2px
+    // + Each additional loop increases the dimensions by 2px
+    let firstTurn = [
+        [0.043, 0, 0.082, -0.035, 0.088, -0.088],
+        [0.007, -0.057, -0.024, -0.121, -0.088, -0.162],
+        [-0.07, -0.045, -0.169, -0.054, -0.265, -0.015],
+        [-0.106, 0.043, -0.194, 0.138, -0.235, 0.265],
+        [-0.044, 0.139, -0.026, 0.3, 0.058, 0.442],
+        [0.091, 0.153, 0.25, 0.267, 0.442, 0.308],
+        [0.206, 0.044, 0.431, -0.001, 0.619, -0.131],
+        [0.2, -0.139, 0.34, -0.361, 0.381, -0.619]
+    ];
 
-    let myPath = `l`;
+    let subsequentTurns = [
+        [0, -0.27, -0.11, -0.52, -0.29, -0.71],
+        [-0.19, -0.19, -0.44, -0.29, -0.71, -0.29],
+        [-0.27, 0, -0.52, 0.11, -0.71, 0.29],
+        [-0.19, 0.19, -0.29, 0.44, -0.29, 0.71],
+        [0, 0.27, 0.11, 0.52, 0.29, 0.71],
+        [0.19, 0.19, 0.44, 0.29, 0.71, 0.29],
+        [0.27, 0, 0.52, -0.11, 0.71, -0.29],
+        [0.19, -0.19, 0.29, -0.44, 0.29, -0.71]
+    ];
 
-    for (i = 0; i < steps; i++) {
+    let currentTurn = [];
 
-        x = innerRadius * Math.cos(myAngle);
-        y = innerRadius * Math.sin(myAngle);
+    for (let i = 0; i < firstTurn.length; i++) {
 
-        myPath += `${x - currentX},${y - currentY} `;
-
-        currentX = x; 
-        currentY = y;
-
-        xPts.push(currentX);
-        yPts.push(currentY);
-
-        innerRadius += loopIncrement; 
-        myAngle += angleIncrement;
+        [x1, y1, x2, y2, x3, y3] = firstTurn[i];
+        currentTurn.push([x1 * loopIncrement, y1 * loopIncrement, x2 * loopIncrement, y2 * loopIncrement, x3 * loopIncrement, y3 * loopIncrement]);
     }
 
-    minX = Math.abs(Math.min(...xPts));
-    minY = Math.abs(Math.min(...yPts));
+    let path = 'M0,0';
 
-    myPath = `m${minX + this.innerRadius},${minY}${myPath}`;
+    for (let j = 0; j < loops; j++) {
 
-    return myPath;
+        for (let i = 0; i < currentTurn.length; i++) {
+
+            [x1, y1, x2, y2, x3, y3] = currentTurn[i];
+
+            if (j >= drawFromLoop) path += `c${x1},${y1} ${x2},${y2} ${x3},${y3}`;
+
+            [sx1, sy1, sx2, sy2, sx3, sy3] = subsequentTurns[i];
+            currentTurn[i] = [x1 + (sx1 * loopIncrement), y1 + (sy1 * loopIncrement), x2 + (sx2 * loopIncrement), y2 + (sy2 * loopIncrement), x3 + (sx3 * loopIncrement), y3 + (sy3 * loopIncrement)];
+        }
+    }
+    return path;
+    // let loops = this.loops,
+    //     loopIncrement = this.loopIncrement,
+    //     innerRadius = this.innerRadius;
+
+    // let myAngle = 0,
+    //     angleIncrement = 0.1,
+    //     angleSteps = loops * 2 * Math.PI,
+    //     steps = angleSteps / angleIncrement,
+    //     xPts = [],
+    //     yPts = [],
+    //     x, y, minX, minY, maxX, maxY, i;
+
+    // let currentX = innerRadius,
+    //     currentY = 0;
+
+    // let myPath = `l`;
+
+    // for (i = 0; i < steps; i++) {
+
+    //     x = innerRadius * Math.cos(myAngle);
+    //     y = innerRadius * Math.sin(myAngle);
+
+    //     myPath += `${x - currentX},${y - currentY} `;
+
+    //     currentX = x; 
+    //     currentY = y;
+
+    //     xPts.push(currentX);
+    //     yPts.push(currentY);
+
+    //     innerRadius += loopIncrement; 
+    //     myAngle += angleIncrement;
+    // }
+
+    // minX = Math.abs(Math.min(...xPts));
+    // minY = Math.abs(Math.min(...yPts));
+
+    // myPath = `m${minX + this.innerRadius},${minY}${myPath}`;
+
+    // return myPath;
 };
 
 
@@ -2408,8 +2462,8 @@ const makeStar = function (items = {}) {
 // ##### makeSpiral
 // A spiral drawn from an inner-radius outwards by a given number of loops, with the distance between each loop determined by a given increment. Accepts argument with attributes:
 // + __loops__ (required) - positive float Number representing the number of times the Shape line will wind arount the Shape's center point
-// + __loopIncrement__ - positive float Number representing the distance (in px) between successive loops, as measured on a radius starting at the Shape's center point
-// + __innerRadius__ - positive float Number representing the distance (in px) from the Shape's center point to the point where the spiral begins
+// + __loopIncrement__ - float Number representative of the distance between successive loops; negative values have the effect of rotating the spiral 180 degrees
+// + __drawFromLoop__ - positive integer Number representing the loop on which the spiral starts to be drawn
 //
 // ```
 // scrawl.makeSpiral({
@@ -2423,8 +2477,8 @@ const makeStar = function (items = {}) {
 //     startY: 100,
 //
 //     loops: 5,
-//     loopIncrement: 0.1,
-//     innerRadius: 0,
+//     loopIncrement: 0.8,
+//     drawFromLoop: 1,
 // });
 // ```
 const makeSpiral = function (items = {}) {
