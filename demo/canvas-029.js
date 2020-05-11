@@ -207,6 +207,13 @@ scrawl.makeBlock({
     width: 10,
 });
 
+let myGroup = scrawl.makeGroup({
+
+    name: 'text-group',
+
+}).addArtefacts('test-phrase-1', 'test-phrase-2', 'test-phrase-3', 'test-phrase-4',
+    'test-phrase-5', 'test-phrase-6', 'test-phrase-7', 'test-phrase-8');
+
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -277,7 +284,21 @@ scrawl.addNativeListener('change', (e) => {
     }
 }, '#gradient');
 
+scrawl.addNativeListener('change', (e) => {
+
+    if (e && e.target) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        myGroup.setArtefacts({
+            justify: e.target.value,
+        });
+    }
+}, '#justify');
+
 document.querySelector('#gradient').value = 'horizontal';
+document.querySelector('#justify').value = 'left';
 
 
 // #### Development and testing

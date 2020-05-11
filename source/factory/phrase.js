@@ -1319,7 +1319,7 @@ P.preStamper = function (dest, engine, entity, args) {
 
     const makeStyle = function (item) {
 
-        if (item.getData) return item.getData(entity, dest, true);
+        if (item.getData) return item.getData(entity, dest);
 
         return item;
     };

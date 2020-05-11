@@ -443,7 +443,7 @@ P.checkSource = function (width, height) {
 };
 
 // `getData`
-P.getData = function (entity, cell, isFill) {
+P.getData = function (entity, cell) {
 
     this.checkSource(this.sourceNaturalDimensions[0], this.sourceNaturalDimensions[1]);
 
@@ -659,11 +659,11 @@ P.setEngineActions = {
             if (brokenStyle) {
                 
                 entity.state.fillStyle = brokenStyle;
-                engine.fillStyle = brokenStyle.getData(entity, layer, true);
+                engine.fillStyle = brokenStyle.getData(entity, layer);
             }
             else engine.fillStyle = item;
         }
-        else engine.fillStyle = item.getData(entity, layer, true);
+        else engine.fillStyle = item.getData(entity, layer);
     },
 
     font: function (item, engine) {
@@ -741,11 +741,11 @@ P.setEngineActions = {
             if (brokenStyle) {
                 
                 entity.state.strokeStyle = brokenStyle;
-                engine.strokeStyle = brokenStyle.getData(entity, layer, true);
+                engine.strokeStyle = brokenStyle.getData(entity, layer);
             }
             else engine.strokeStyle = item;
         }
-        else engine.strokeStyle = item.getData(entity, layer, false);
+        else engine.strokeStyle = item.getData(entity, layer);
     },
 };
 

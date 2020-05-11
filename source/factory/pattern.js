@@ -133,7 +133,7 @@ P.buildStyle = function (mycell = {}) {
 
 // `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
 // + This is the point when we clean Scrawl-canvas assets which have told their subscribers that asset data/attributes have updated
-P.getData = function (entity, cell, isFill) {
+P.getData = function (entity, cell) {
 
     if (this.dirtyAsset) this.cleanAsset();
     this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);

@@ -431,13 +431,13 @@ P.performFill = function (engine) {
                 case 'cellGradient' :
 
                     this.lockFillStyleToEntity = false;
-                    engine.fillStyle = obj.source.getData(this, this.currentHost, true);
+                    engine.fillStyle = obj.source.getData(this, this.currentHost);
                     break;
 
                 case 'gridGradient' :
 
                     this.lockFillStyleToEntity = true;
-                    engine.fillStyle = obj.source.getData(this, this.currentHost, true);
+                    engine.fillStyle = obj.source.getData(this, this.currentHost);
                     break;
             }
         }
@@ -533,13 +533,13 @@ P.performFill = function (engine) {
             case 'cellGradient' :
 
                 this.lockFillStyleToEntity = false;
-                engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
+                engine.strokeStyle = gObject.source.getData(this, this.currentHost);
                 break;
 
             case 'gridGradient' :
 
                 this.lockFillStyleToEntity = true;
-                engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
+                engine.strokeStyle = gObject.source.getData(this, this.currentHost);
                 break;
 
             case 'color' :

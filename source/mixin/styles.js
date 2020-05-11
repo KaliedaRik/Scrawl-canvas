@@ -451,23 +451,26 @@ export default function (P = {}) {
 
 
 // `getData` - Every styles object (Gradient, RadialGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
-    P.getData = function (entity, cell, isFill) {
+    P.getData = function (entity, cell) {
 
         // Step 1: see if the palette is dirty, from having colors added/deleted/changed
         if(this.palette && this.palette.dirtyPalette) this.palette.recalculate();
 
         // Step 2: recalculate current start and end points
-        this.cleanStyle(entity, cell, isFill);
+        // this.cleanStyle(entity, cell, isFill);
+        this.cleanStyle(entity, cell);
 
         // Step 3: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
-        this.finalizeCoordinates(entity, isFill);
+        // this.finalizeCoordinates(entity, isFill);
+        this.finalizeCoordinates(entity);
 
         // Step 4: create, populate and return gradient/pattern object
         return this.buildStyle(cell);
     };
 
 // `cleanStyle` - internal function invoked as part of the gradient-type object's `getData` function. The style has to be cleaned every time it is applied to a Cell's engine because it can never know which Cell is invoking it, or for which entity it is to be used.
-    P.cleanStyle = function (entity = {}, cell = {}, isFill) {
+    // P.cleanStyle = function (entity = {}, cell = {}, isFill) {
+    P.cleanStyle = function (entity = {}, cell = {}) {
 
         let dims, w, h, scale;
 
@@ -510,7 +513,8 @@ export default function (P = {}) {
     };
 
 // `finalizeCoordinates` - internal function invoked as part of the gradient-type object's `getData` function.
-    P.finalizeCoordinates = function (entity = {}, isFill) {
+    // P.finalizeCoordinates = function (entity = {}, isFill) {
+    P.finalizeCoordinates = function (entity = {}) {
 
         let currentStart = this.currentStart,
             currentEnd = this.currentEnd,
@@ -529,9 +533,6 @@ export default function (P = {}) {
             correctX = -entityStampPosition[0] || 0; 
             correctY = -entityStampPosition[1] || 0; 
         }
-
-        if (entity.flipReverse) correctX = -correctX;
-        if (entity.flipUpend) correctY = -correctY;
 
         this.updateGradientArgs(correctX, correctY);
     };
