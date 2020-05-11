@@ -14,11 +14,22 @@ canvas.setBase({
 
 
 // Create Gradient
-scrawl.makeGradient({
-    name: 'linear',
+let mygradient = scrawl.makeGradient({
 
-    // endX: '100%',
-    endY: '100%',
+    name: 'gradient-1',
+
+    endX: '100%',
+    // endY: '100%',
+
+    paletteStart: 10,
+    paletteEnd: 990,
+
+    delta: {
+        paletteStart: -1,
+        paletteEnd: -1,
+    },
+
+    cyclePalette: true,
 })
 .updateColor(0, 'black')
 .updateColor(49, 'red')
@@ -33,13 +44,13 @@ scrawl.makeGradient({
 .updateColor(499, 'black')
 .updateColor(549, 'blue')
 .updateColor(599, 'black')
-.updateColor(649, 'indigo')
+.updateColor(649, 'plum')
 .updateColor(699, 'black')
 .updateColor(749, 'violet')
 .updateColor(799, 'black')
 .updateColor(849, 'aliceblue')
 .updateColor(899, 'black')
-.updateColor(949, 'aliceblue')
+.updateColor(949, 'gold')
 .updateColor(999, 'black');
 
 scrawl.makeQuadratic({
@@ -79,19 +90,26 @@ scrawl.makePhrase({
 
     method: 'fill',
 
-    fillStyle: 'linear',
+    fillStyle: 'gradient-1',
+
+    // showBoundingBox: true,
+    lineHeight: 1,
 
 }).clone({
 
     name: 'test-phrase-2',
     startX: '50%',
+    startY: '18%',
+
+    flipUpend: true,
 
 }).clone({
 
     name: 'test-phrase-3',
-    startY: '30%',
+    startY: '25%',
 
-    // lockFillStyleToEntity: true,
+    flipUpend: false,
+    lockFillStyleToEntity: true,
 
 }).clone({
 
@@ -99,13 +117,27 @@ scrawl.makePhrase({
 
     roll: 80,
     scale: 0.8,
-    startX: '10%',
+    startX: '50%',
     startY: '40%',
 
 }).clone({
 
     name: 'test-phrase-5',
 
+    startX: '48%',
+    startY: '90%',
+
+    flipReverse: true,
+    
+}).clone({
+
+    name: 'test-phrase-6',
+
+    startX: '0%',
+    startY: '10%',
+
+    flipReverse: false,
+    
     roll: 0,
     scale: 1,
 
@@ -118,35 +150,61 @@ scrawl.makePhrase({
     delta: {
         textPathPosition: -0.005,
     }
+}).clone({
+
+
 });
 
 scrawl.makePhrase({
 
-    name: 'test-phrase-6',
+    name: 'test-phrase-7',
 
-    text: 'This is a much longer Phrase entity whose text should cross multiple lines. We need to check to see that the gradients get properly applied to each line of text.',
+    text: 'ABCDE FGHIJ KLMNO PQRST UVWXY Z1234 56789 0abcd efghi jklmn opqrs tuvwx yz§±! @£$%^ &*()_ -=+"\\ |:;/? >.,<` ~€#\'œ ∑´®†¥ ¨^øπ“ ‘≠–ºª •¶§∞¢ #€¡å ß∂ƒ©˙ ∆˚¬…æ «÷≥≤µ ~∫√ç≈ Ω`⁄™ ‹›ﬁﬂ‡ ﬂ‡°·‚ —±’”∏ ØÈËÁÊ ÁÊÂ‰„ ŒÅÍÎÏ ÌÓÔÒ ÚÆ»¿˘ ¯˜ˆı◊ ÇÙÛŸ',
 
-    font: 'bold 20px Garamond, serif',
+    font: '18px Garamond, serif',
 
-    width: '40%',
-    justify: 'left',
+    width: '35%',
+    // justify: 'center',
     lineHeight: 1.15,
 
-    startX: '15%',
-    startY: '30%',
+    startX: '2%',
+    startY: '22%',
 
     method: 'fill',
 
-    fillStyle: 'linear',
+    fillStyle: 'gradient-1',
+
+    // showBoundingBox: true,
 
 }).clone({
 
-    name: 'test-phrase-7',
+    name: 'test-phrase-8',
 
-    startX: '60%',
-    startY: '50%',
+    startX: '58%',
+    startY: '40%',
+
+    width: '65%',
+    scale: 0.65,
+    letterSpacing: 3,
 
     lockFillStyleToEntity: true,
+});
+
+scrawl.makeBlock({
+
+    name: 'top-block',
+
+    width: '100%',
+    height: 10,
+    
+    fillStyle: 'gradient-1',
+
+}).clone({
+
+    name: 'left-block',
+
+    height: '100%',
+    width: 10,
 });
 
 
@@ -174,8 +232,52 @@ scrawl.makeRender({
 
     name: 'demo-animation',
     target: canvas,
+
+    commence: () => mygradient.updateByDelta(),
     afterShow: report,
 });
+
+
+// #### User interaction
+scrawl.addNativeListener('change', (e) => {
+
+    if (e && e.target) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        let value = e.target.value;
+
+        switch (value) {
+
+            case 'horizontal' :
+
+                mygradient.set({
+                    endX: '100%',
+                    endY: 0,
+                });
+                break;
+
+            case 'vertical' :
+
+                mygradient.set({
+                    endX: 0,
+                    endY: '100%',
+                });
+                break;
+
+            case 'diagonal' :
+
+                mygradient.set({
+                    endX: '100%',
+                    endY: '100%',
+                });
+                break;
+        }
+    }
+}, '#gradient');
+
+document.querySelector('#gradient').value = 'horizontal';
 
 
 // #### Development and testing

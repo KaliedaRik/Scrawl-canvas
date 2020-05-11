@@ -760,7 +760,7 @@ P.convertTextEntityCharacters = function (item) {
 P.calculateTextPositions = function (mytext) {
 
     // 0. `strokeStyle` and `fillStyle` helper function
-    let makeStyle = function (item) {
+    const makeStyle = function (item) {
 
         if (!host) {
 
@@ -776,10 +776,9 @@ P.calculateTextPositions = function (mytext) {
             if (stylesnames.indexOf(item) >= 0) brokenStyle = styles[item];
             else if (cellnames.indexOf(item) >= 0) brokenStyle = cell[item];
 
-            if (brokenStyle) return brokenStyle.getData(self, host, true);
-            else return item;
+            if (brokenStyle) return brokenStyle;
         }
-        else return item.getData(self, host, true);
+        return item;
     };
 
     // 1. Setup - get values for text? arrays, current?, highlight?, ?Attributes, etc
@@ -1195,10 +1194,7 @@ P.regularStampSynchronousActions = function () {
 
         if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
-        if (this.method === 'none') {
-
-            this.performRotation(engine);
-        }
+        if (this.method === 'none') this.performRotation(engine);
 
         else if (this.textPath) {
 
@@ -1231,11 +1227,9 @@ P.regularStampSynchronousActions = function () {
                     stamper[method](engine, this, data);
                 }
             }
-
             this.addPathRotation = aPR;
             this.currentRotation = cr;
         }
-
         else {
 
             pos = this.textPositions;
@@ -1247,7 +1241,6 @@ P.regularStampSynchronousActions = function () {
                 data = preStamper(dest, engine, this, pos[i]);
                 stamper[method](engine, this, data);
             }
-
             if (this.showBoundingBox) this.drawBoundingBox(engine);
         }
     }
@@ -1324,7 +1317,13 @@ P.calculateGlyphPathPositions = function () {
 // `preStamper` - internal helper function called by `regularStampSynchronousActions`
 P.preStamper = function (dest, engine, entity, args) {
 
-// console.log(entity.name);
+    const makeStyle = function (item) {
+
+        if (item.getData) return item.getData(entity, dest, true);
+
+        return item;
+    };
+
     let [font, strokeStyle, fillStyle, highlight, underline, overline, ...data] = args;
 
     if (font) engine.font = font;
@@ -1343,27 +1342,25 @@ P.preStamper = function (dest, engine, entity, args) {
 
         if (highlight) {
 
-            engine.fillStyle = highlightStyle;
+            engine.fillStyle = makeStyle(highlightStyle);
             engine.fillRect(data[1], data[2] - halfHeight, data[3], height);
         }
 
         if (underline) {
 
-            engine.strokeStyle = underlineStyle;
+            engine.strokeStyle = makeStyle(underlineStyle);
             engine.strokeRect(data[1], data[2] - halfHeight + (height * underlinePosition), data[3], 1);
         }
 
         if (overline) {
 
-            engine.strokeStyle = overlineStyle;
+            engine.strokeStyle = makeStyle(overlineStyle);
             engine.strokeRect(data[1], data[2] - halfHeight + (height * overlinePosition), data[3], 1);
         }
-
         engine.restore();
     }
-
-    if (strokeStyle) engine.strokeStyle = strokeStyle;
-    if (fillStyle) engine.fillStyle = fillStyle;
+    if (strokeStyle && engine.strokeStyle !== strokeStyle) engine.strokeStyle = makeStyle(strokeStyle);
+    if (fillStyle && engine.fillStyle !== fillStyle) engine.fillStyle = makeStyle(fillStyle);
 
     return data;
 };
