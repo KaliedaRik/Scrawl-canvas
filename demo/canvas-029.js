@@ -112,7 +112,6 @@ scrawl.makePhrase({
     order: 1,
 
     textPath: 'my-quad',
-    justify: 'left',
 
     lockFillStyleToEntity: false,
 

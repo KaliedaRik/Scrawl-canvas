@@ -1242,7 +1242,6 @@ P.regularStampSynchronousActions = function () {
 
             this.performRotation(engine);
 
-// console.log(this.name, dest.name, pos)
             for (i = 0, iz = pos.length; i < iz; i++) {
 
                 data = preStamper(dest, engine, this, pos[i]);
@@ -1265,19 +1264,51 @@ P.calculateGlyphPathPositions = function () {
         pathPos = this.textPathPosition,
         distance, posArray, i, iz, width,
         justify = this.justify,
-        loop = this.textPathLoop;
+        loop = this.textPathLoop,
+        localPathPos;
 
     for (i = 0, iz = textPos.length; i < iz; i++) {
 
+        // textPathPosition Array indexes [
+        // 0-font - font definition, or null
+        // 1-strokeStyle - Boolean
+        // 2-fillStyle - Boolean 
+        // 3-highlight - Boolean
+        // 4-underline - Boolean
+        // 5-overline - Boolean 
+        // 6-text - String
+        // 7-startX - Number - on paths, acts as a negative offset for justifying glyphs
+        // 8-startY - Number
+        // 9-pathData - Object {x: Number (px), y: Number (px), angle: Number (degrees)}
+        // ]
         posArray = textPos[i];
         width = widths[i];
 
-        // TODO - using non-left justified text buggers up letter kerning along the line
-        // + But left-justified makes the letters lean a little to the left
-        if (justify === 'right') posArray[7] = -width;
-        else if (justify === 'center') posArray[7] = -width / 2;
+        switch (justify) {
 
-        posArray[10] = (pathPos <= 1 && pathPos >= 0) ? path.getPathPositionData(pathPos) : false;
+            case 'center' :
+                localPathPos = pathPos + ((width / 2) / len);
+                posArray[7] = -width / 2;
+                break;
+
+            case 'right' :
+                localPathPos = pathPos + (width / len);
+                posArray[7] = -width;
+                break;
+
+            default :
+                localPathPos = pathPos;
+        }
+
+        if (loop && (localPathPos > 1 || localPathPos < 0)) {
+
+            localPathPos = (localPathPos > 0.5) ? localPathPos - 1 : localPathPos + 1;
+        }
+
+        posArray[10] = (localPathPos <= 1 && localPathPos >= 0) ? 
+            path.getPathPositionData(localPathPos) : 
+            false;
+
         posArray[9] = width;
 
         if (direction) pathPos += (width / len);

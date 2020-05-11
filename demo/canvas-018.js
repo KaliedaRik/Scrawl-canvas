@@ -94,6 +94,8 @@ let lorem = scrawl.makePhrase({
     text: 'Lorem ipsum har varit standard ända sedan 1500-talet, ___ när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
     font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
+    justify: 'center',
+
     fillStyle: '#003399',
 
     method: 'fill',
@@ -275,7 +277,7 @@ document.querySelector('#scale').value = 40;
 document.querySelector('#upend').options.selectedIndex = 1;
 document.querySelector('#reverse').options.selectedIndex = 0;
 document.querySelector('#direction').options.selectedIndex = 0;
-document.querySelector('#justify').options.selectedIndex = 0;
+document.querySelector('#justify').options.selectedIndex = 1;
 document.querySelector('#overline').value = 0.1;
 document.querySelector('#letterSpacing').value = 0;
 document.querySelector('#family').options.selectedIndex = 0;
