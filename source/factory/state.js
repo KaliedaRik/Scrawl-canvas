@@ -133,8 +133,10 @@ P.defs = {
 
 // __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.
     font: '12px sans-serif',
-    textAlign: 'start',
-    textBaseline: 'alphabetic',
+    // textAlign: 'start',
+    // textBaseline: 'alphabetic',
+    textAlign: 'left',
+    textBaseline: 'top',
 };
 
 
@@ -383,6 +385,8 @@ P.setStateFromEngine = function (engine) {
 
     this.lineDash = (xt(engine.lineDash)) ? engine.lineDash : [];
     this.lineDashOffset = xtGet(engine.lineDashOffset, 0);
+    engine.textAlign = this.textAlign = 'left';
+    engine.textBaseline = this.textBaseline = 'top';
 
     return this;
 };

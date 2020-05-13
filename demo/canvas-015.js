@@ -23,14 +23,10 @@ scrawl.makePhrase({
     text: 'H&epsilon;lj&ouml;!',
     font: 'bold 40px Garamond, serif',
 
-    width: 120,
     startX: '14%',
     startY: '28%',
     handleX: 'center',
     handleY: 'center',
-
-    justify: 'center',
-    lineHeight: 1,
 
     fillStyle: 'green',
     strokeStyle: 'gold',
@@ -44,10 +40,6 @@ scrawl.makePhrase({
 
     showBoundingBox: true,
     boundingBoxColor: 'red',
-
-    textBaseline: 'bottom',
-
-    exposeText: true,
 
 }).clone({
     name: 'myphrase_draw',
@@ -85,6 +77,9 @@ scrawl.makePhrase({
     name: 'myphrase_multiline',
 
     text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
+
+    width: 120,
+    justify: 'center',
 
     size: '12px',
     weight: 'normal',

@@ -63,7 +63,7 @@ scrawl.makePhrase({
 
     width: 120,
     handleX: 'center',
-    handleY: '100%',
+    handleY: '70%',
 
     method: 'fillAndDraw',
 
@@ -102,6 +102,8 @@ let lorem = scrawl.makePhrase({
 
     textPath: 'spiral-path',
     textPathPosition: 0.9,
+
+    handleY: '20%',
 
     delta: {
         textPathPosition: -0.0006,

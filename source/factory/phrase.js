@@ -30,6 +30,7 @@
 // + [Canvas-017](../../demo/canvas-017.html) - Phrase entity - test lineHeight, letterSpacing and justify attributes; setGlyphStyles() functionality
 // + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
 // + [Canvas-019](../../demo/canvas-019.html) - Artefact collision detection
+// + [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
 // + [Component-001](../../demo/component-001.html) - Scrawl-canvas DOM element components
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
 
@@ -83,6 +84,7 @@ const Phrase = function (items = {}) {
 
     this.glyphStyles = [];
 
+    this.dirtyDimensions = true;
     this.dirtyText = true;
     this.dirtyFont = true;
     this.dirtyPathObject = true;
@@ -118,13 +120,17 @@ let defaultAttributes = {
 // __text__ - the text String to be displayed by the Phrase
     text: '',
 
+// __width__ - Number or String
+// + In addition to normal dimensional values, Phrase entitys will accept the String label __'auto'__ (default). When set to 'auto' the Width will be calculated as the natural, single line text length.
+    width: 'auto',
+
 // __exposeText__ - Boolean accessibility feature
 // + When __exposeText__ is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. 
 // + The element - a &lt;div> - is attached to the canvas element's textHold element, which immediately follows that element and has zero dimensions, so its contents don't interfere with the flow of the rest of the DOM content.
     exposeText: true,
 
 // __lineHeight__ - a positive float Number multiplier applied to the font height to add space between lines of text
-    lineHeight: 1.5,
+    lineHeight: 1.15,
 
 // __letterSpacing__ - a positive float Number representing a set number of pixels to place between each glyph (letter). Can be overridden for letter ranges using styling objects
     letterSpacing: 0,
@@ -169,7 +175,7 @@ let defaultAttributes = {
 // + over/underline decoration style values, and the highlight style value, can be any valid CSS color String.
 
 // __overlinePosition__, __overlineStyle__
-    overlinePosition: 0.1,
+    overlinePosition: -0.1,
     overlineStyle: 'rgb(250,0,0)',
 
 // __underlinePosition__, __underlineStyle__
@@ -610,6 +616,23 @@ S.family = function (item) {
 
 // #### Prototype functions
 
+P.cleanDimensionsAdditionalActions = function () {
+
+    if (this.dimensions[0] === 'auto') {
+
+        let myCell = requestCell(),
+            engine = myCell.engine;
+
+        engine.font = this.fontAttributes.buildFont();
+
+        this.currentDimensions[0] = Math.ceil(engine.measureText(this.convertTextEntityCharacters(this.text)).width);
+
+        releaseCell(myCell);
+    }
+
+    this.currentDimensions[1] = Math.ceil((this.textHeight * this.textLines.length * this.lineHeight) / this.scale);
+};
+
 // `setGlyphStyles`
 // We have more control over the `glyphStyles` array if we use this dedicated function to manage them. Requires two (or more) arguments:
 // + First argument - object containing one or more `key: value` attributes - permitted keys are: `style`, `variant`, `weight`, `stretch`, `size`, `family`, `space`, `fill`, `stroke`, `highlight`, `underline`, `overline`, `defaults`
@@ -686,28 +709,13 @@ P.cleanPathObject = function () {
 
             scale = this.currentScale,
             x = -handle[0] * scale,
-            y = (-handle[1] * scale) - (this.textHeight / 2),
-            w = dims[0] * scale;
+            y = -handle[1] * scale,
+            w = dims[0] * scale,
+            h = dims[1] * scale;
 
-        // TODO: current height-related code is a temporary fix that needs a longer-term solution
-        let h;
-        if (this.textLines) {
-
-            h = (this.textHeight * this.textLines.length * this.lineHeight) + (this.textHeight / 2);
-        }
-        else {
-
-            h = 20;
-            this.dirtyPathObject = true;
-            this.dirtyFont = true;
-            this.dirtyText = true;
-            this.dirtyMimicDimensions = true;
-            this.dirtyHandle = true;
-        }
+        this.boxStartValues = [x, y];
 
         p.rect(x, y, w, h);
-
-        dims[1] = h;
     }
 };
 
@@ -882,8 +890,8 @@ P.calculateTextPositions = function (mytext) {
 
             if (i === 0) {
                 gPos[0] = currentFont;
-                gPos[1] = currentStrokeStyle;
-                gPos[2] = currentFillStyle;
+                // gPos[1] = currentStrokeStyle;
+                // gPos[2] = currentFillStyle;
                 gPos[3] = highlightFlag;
                 gPos[4] = underlineFlag;
                 gPos[5] = overlineFlag;
@@ -1078,22 +1086,20 @@ P.calculateTextPositions = function (mytext) {
         glyphArr[5] = overlineFlag;
     }
 
+    // 7. Calculate `localHeight`
+    if (scale <= 0) scale = 1;
+
+    dims[1] = Math.ceil((maxHeight * textLines.length * lineHeight) / scale);
+
+    this.cleanHandle();
+    this.dirtyHandle = false;
+    handle = this.currentHandle;
+    
+    handleX = -handle[0] * scale;
+    handleY = -handle[1] * scale;
+
     // Handle path positioning (which we'll assume will need to be done for every display cycle) separately during stamping
     if (!path) {
-
-        // 7. Calculate `localHeight`
-        if (scale <= 0) scale = 1;
-
-        // TODO: current height-related code is a temporary fix that needs a longer-term solution
-        // + At the moment we reset the currentDimensions height value on each stamp
-        dims[1] = ((maxHeight * textLines.length * lineHeight) - (maxHeight / 2)) / scale;
-
-        this.cleanHandle();
-        this.dirtyHandle = false;
-        handle = this.currentHandle;
-        
-        handleX = -handle[0] * scale;
-        handleY = -handle[1] * scale;
 
         // 8. We should now be in a position where we can calculate each glyph's `startXY` values
         // + We have 2 non-path scenarios: full-justified text; and regular text
@@ -1102,7 +1108,7 @@ P.calculateTextPositions = function (mytext) {
         if (justify === 'full') {
 
             cursor = 0;
-            height = handleY + (maxHeight / 2);
+            height = handleY;
 
             for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 
@@ -1117,8 +1123,8 @@ P.calculateTextPositions = function (mytext) {
 
                     if (item[6] === ' ') textGlyphWidths[cursor] += space;
 
-                    item[7] = len;
-                    item[8] = height;
+                    item[7] = Math.floor(len);
+                    item[8] = Math.floor(height);
                     item[9] = textGlyphWidths[cursor];
 
                     len += textGlyphWidths[cursor];
@@ -1135,7 +1141,7 @@ P.calculateTextPositions = function (mytext) {
         else {
 
             cursor = 0;
-            height = handleY + (maxHeight / 2);
+            height = handleY;
 
             for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 
@@ -1147,8 +1153,8 @@ P.calculateTextPositions = function (mytext) {
 
                     item = textPositions[cursor];
 
-                    item[7] = len;
-                    item[8] = height;
+                    item[7] = Math.floor(len);
+                    item[8] = Math.floor(height);
                     item[9] = textGlyphWidths[cursor];
 
                     len += textGlyphWidths[cursor];
@@ -1192,11 +1198,11 @@ P.regularStampSynchronousActions = function () {
 
         engine = dest.engine;
 
-        if (!this.noCanvasEngineUpdates) dest.setEngine(this);
-
         if (this.method === 'none') this.performRotation(engine);
 
         else if (this.textPath) {
+
+            if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
             this.getTextPath();
             this.calculateGlyphPathPositions();
@@ -1206,7 +1212,8 @@ P.regularStampSynchronousActions = function () {
             let item, pathData,
                 addTextPathRoll = this.addTextPathRoll,
                 aPR = this.addPathRotation,
-                cr = this.currentRotation;
+                cr = this.currentRotation,
+                handle = this.currentHandle;
 
             this.addPathRotation = addTextPathRoll;
 
@@ -1223,6 +1230,8 @@ P.regularStampSynchronousActions = function () {
 
                     dest.rotateDestination(engine, pathData.x, pathData.y, this);
 
+                    engine.translate(-handle[0], -handle[1]);
+
                     data = preStamper(dest, engine, this, item);
                     stamper[method](engine, this, data);
                 }
@@ -1232,9 +1241,11 @@ P.regularStampSynchronousActions = function () {
         }
         else {
 
-            pos = this.textPositions;
-
             this.performRotation(engine);
+
+            if (!this.noCanvasEngineUpdates) dest.setEngine(this);
+
+            pos = this.textPositions;
 
             for (i = 0, iz = pos.length; i < iz; i++) {
 
@@ -1332,7 +1343,6 @@ P.preStamper = function (dest, engine, entity, args) {
 
         let highlightStyle = entity.highlightStyle,
             height = entity.textHeight,
-            halfHeight = height / 2,
             underlineStyle = entity.underlineStyle,
             underlinePosition = entity.underlinePosition,
             overlineStyle = entity.overlineStyle,
@@ -1340,27 +1350,33 @@ P.preStamper = function (dest, engine, entity, args) {
 
         engine.save();
 
+        // data[0] - glyph
+        // data[1] - xpos
+        // data[2] - ypos
+        // data[3] - width
         if (highlight) {
 
             engine.fillStyle = makeStyle(highlightStyle);
-            engine.fillRect(data[1], data[2] - halfHeight, data[3], height);
+            // engine.fillRect(data[1], data[2] - halfHeight, data[3], height);
+            engine.fillRect(data[1], data[2], data[3], height);
         }
 
         if (underline) {
 
             engine.strokeStyle = makeStyle(underlineStyle);
-            engine.strokeRect(data[1], data[2] - halfHeight + (height * underlinePosition), data[3], 1);
+            engine.strokeRect(data[1], data[2] + (height * underlinePosition), data[3], 1);
         }
 
         if (overline) {
 
             engine.strokeStyle = makeStyle(overlineStyle);
-            engine.strokeRect(data[1], data[2] - halfHeight + (height * overlinePosition), data[3], 1);
+            engine.strokeRect(data[1], data[2] + (height * overlinePosition), data[3], 1);
         }
         engine.restore();
     }
-    if (strokeStyle && engine.strokeStyle !== strokeStyle) engine.strokeStyle = makeStyle(strokeStyle);
-    if (fillStyle && engine.fillStyle !== fillStyle) engine.fillStyle = makeStyle(fillStyle);
+
+    if (strokeStyle) engine.strokeStyle = makeStyle(strokeStyle);
+    if (fillStyle) engine.fillStyle = makeStyle(fillStyle);
 
     return data;
 };
@@ -1376,6 +1392,8 @@ P.stamper = {
 
     // `stamper.fill`
     fill: function (engine, entity, data) { 
+
+        // console.log(...data);
 
         engine.fillText(...data);
     },
@@ -1447,9 +1465,9 @@ P.performRotation = function (engine) {
 
     if (dest) {
 
-        let stamp = this.currentStampPosition;
+        let [x, y] = this.currentStampPosition;
 
-        dest.rotateDestination(engine, stamp[0], stamp[1], this);
+        dest.rotateDestination(engine, x, y, this);
     }
 };
 

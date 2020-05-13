@@ -9,7 +9,7 @@ import scrawl from '../source/scrawl.js'
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.setBase({
-    backgroundColor: 'aliceblue'
+    backgroundColor: 'lightgray'
 });
 
 
@@ -32,25 +32,11 @@ let mygradient = scrawl.makeGradient({
     cyclePalette: true,
 })
 .updateColor(0, 'black')
-.updateColor(49, 'red')
-.updateColor(99, 'black')
-.updateColor(149, 'orange')
-.updateColor(199, 'black')
-.updateColor(249, 'yellow')
-.updateColor(299, 'black')
-.updateColor(349, 'lightgreen')
-.updateColor(399, 'black')
-.updateColor(449, 'green')
+.updateColor(19, 'red')
 .updateColor(499, 'black')
-.updateColor(549, 'blue')
+.updateColor(549, 'yellow')
 .updateColor(599, 'black')
-.updateColor(649, 'plum')
-.updateColor(699, 'black')
-.updateColor(749, 'violet')
-.updateColor(799, 'black')
-.updateColor(849, 'aliceblue')
-.updateColor(899, 'black')
-.updateColor(949, 'gold')
+.updateColor(979, 'aqua')
 .updateColor(999, 'black');
 
 scrawl.makeQuadratic({
@@ -60,13 +46,13 @@ scrawl.makeQuadratic({
     handleY: 'bottom',
 
     startX: '30%',
-    startY: '90%',
+    startY: '98%',
 
     controlX: '60%',
-    controlY: '70%',
+    controlY: '78%',
 
     endX: '90%',
-    endY: '90%',
+    endY: '98%',
 
     method: 'draw',
 
@@ -78,107 +64,110 @@ scrawl.makeQuadratic({
 scrawl.makePhrase({
 
     name: 'test-phrase-1',
+    order: 1,
 
-    text: 'Test |ƒ∫ phrase',
+    text: 'Test phrase',
     font: 'bold 46px Garamond, serif',
 
-    width: '50%',
-    justify: 'center',
-
-    startX: '0%',
-    startY: '10%',
-
-    method: 'fill',
+    startX: '5%',
+    startY: '5%',
 
     fillStyle: 'gradient-1',
-
-    // showBoundingBox: true,
-    lineHeight: 1,
 
 }).clone({
 
     name: 'test-phrase-2',
-    startX: '50%',
-    startY: '18%',
 
-    flipUpend: true,
+    width: '40%',
+
+    startX: '50%',
+
+    justify: 'left',
 
 }).clone({
 
     name: 'test-phrase-3',
-    startY: '25%',
 
-    flipUpend: false,
-    lockFillStyleToEntity: true,
+    startY: '30%',
+
+    flipUpend: true,
+
 
 }).clone({
 
     name: 'test-phrase-4',
 
-    roll: 80,
-    scale: 0.8,
-    startX: '50%',
-    startY: '40%',
+    startX: '5%',
+
+    lockFillStyleToEntity: true,
 
 }).clone({
 
     name: 'test-phrase-5',
 
-    startX: '48%',
-    startY: '90%',
+    font: '46px cursive',
+
+    roll: 90,
+    scale: 0.8,
+
+    startX: '50%',
+    startY: '33%',
+
+    width: 'auto',
+
+}).clone({
+
+    name: 'test-phrase-6',
+
+    startX: '43%',
+    startY: '75%',
+
+    lockFillStyleToEntity: false,
 
     flipReverse: true,
     
 }).clone({
 
-    name: 'test-phrase-6',
+    name: 'test-phrase-7',
 
     startX: '0%',
     startY: '10%',
 
     flipReverse: false,
+    flipUpend: false,
     
     roll: 0,
     scale: 1,
 
-    order: 1,
-
     textPath: 'my-quad',
 
-    lockFillStyleToEntity: false,
+    handleY: '50%',
+
+    lockFillStyleToEntity: true,
 
     delta: {
         textPathPosition: -0.005,
     }
-}).clone({
-
-
 });
 
 scrawl.makePhrase({
 
-    name: 'test-phrase-7',
+    name: 'test-phrase-8',
 
-    text: 'ABCDE FGHIJ KLMNO PQRST UVWXY Z1234 56789 0abcd efghi jklmn opqrs tuvwx yz§±! @£$%^ &*()_ -=+"\\ |:;/? >.,<` ~€#\'œ ∑´®†¥ ¨^øπ“ ‘≠–ºª •¶§∞¢ #€¡å ß∂ƒ©˙ ∆˚¬…æ «÷≥≤µ ~∫√ç≈ Ω`⁄™ ‹›ﬁﬂ‡ ﬂ‡°·‚ —±’”∏ ØÈËÁÊ ÁÊÂ‰„ ŒÅÍÎÏ ÌÓÔÒ ÚÆ»¿˘ ¯˜ˆı◊ ÇÙÛŸ',
+    text: 'Lorem ipsum har varit standard ända sedan 1500-talet, när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
 
     font: '18px Garamond, serif',
 
     width: '35%',
-    // justify: 'center',
-    lineHeight: 1.15,
 
-    startX: '2%',
-    startY: '22%',
-
-    method: 'fill',
+    startX: '5%',
+    startY: '35%',
 
     fillStyle: 'gradient-1',
 
-    // showBoundingBox: true,
-
 }).clone({
 
-    name: 'test-phrase-8',
+    name: 'test-phrase-9',
 
     startX: '58%',
     startY: '40%',
@@ -199,6 +188,8 @@ scrawl.makeBlock({
     
     fillStyle: 'gradient-1',
 
+    order: 0,
+
 }).clone({
 
     name: 'left-block',
@@ -212,7 +203,7 @@ let myGroup = scrawl.makeGroup({
     name: 'text-group',
 
 }).addArtefacts('test-phrase-1', 'test-phrase-2', 'test-phrase-3', 'test-phrase-4',
-    'test-phrase-5', 'test-phrase-6', 'test-phrase-7', 'test-phrase-8');
+    'test-phrase-5', 'test-phrase-6', 'test-phrase-7', 'test-phrase-8', 'test-phrase-9');
 
 
 // #### Scene animation

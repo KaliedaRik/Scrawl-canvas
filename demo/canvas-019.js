@@ -95,11 +95,9 @@ let myphrase = scrawl.makePhrase({
     text: 'H&epsilon;lj&ouml;!',
     font: 'bold 40px Garamond, serif',
 
-    width: 120,
     startX: 250,
     startY: 150,
 
-    justify: 'center',
     lineHeight: 1,
 
     fillStyle: 'rgb(50,0,0)',

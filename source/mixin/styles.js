@@ -457,19 +457,25 @@ export default function (P = {}) {
         if(this.palette && this.palette.dirtyPalette) this.palette.recalculate();
 
         // Step 2: recalculate current start and end points
-        // this.cleanStyle(entity, cell, isFill);
         this.cleanStyle(entity, cell);
 
         // Step 3: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
-        // this.finalizeCoordinates(entity, isFill);
         this.finalizeCoordinates(entity);
+
+        // let e = cell.engine;
+        // e.save();
+        // e.lineWidth = 10;
+        // e.strokeStyle = 'green';
+        // e.globalAlpha = 0.4;
+        // e.strokeRect(...this.gradientArgs);
+        // e.restore();
+        // console.log(entity.name, ...this.gradientArgs);
 
         // Step 4: create, populate and return gradient/pattern object
         return this.buildStyle(cell);
     };
 
 // `cleanStyle` - internal function invoked as part of the gradient-type object's `getData` function. The style has to be cleaned every time it is applied to a Cell's engine because it can never know which Cell is invoking it, or for which entity it is to be used.
-    // P.cleanStyle = function (entity = {}, cell = {}, isFill) {
     P.cleanStyle = function (entity = {}, cell = {}) {
 
         let dims, w, h, scale;
@@ -513,7 +519,6 @@ export default function (P = {}) {
     };
 
 // `finalizeCoordinates` - internal function invoked as part of the gradient-type object's `getData` function.
-    // P.finalizeCoordinates = function (entity = {}, isFill) {
     P.finalizeCoordinates = function (entity = {}) {
 
         let currentStart = this.currentStart,
@@ -533,7 +538,6 @@ export default function (P = {}) {
             correctX = -entityStampPosition[0] || 0; 
             correctY = -entityStampPosition[1] || 0; 
         }
-
         this.updateGradientArgs(correctX, correctY);
     };
 

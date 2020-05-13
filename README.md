@@ -1,5 +1,7 @@
 # Scrawl-canvas Library 
-Version: `8.0.11 - 9 May 2020`.
+Version: `8.0.11 - 9 May 2020` 
+
+![npm package](https://img.shields.io/npm/v/scrawl-canvas?color=brightgreen) ![dependencies](https://img.shields.io/librariesio/github/KaliedaRik/scrawl-canvas)
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 

@@ -20,16 +20,15 @@
             name: 'hello',
             text: 'Hello, World!',
 
-            width: '100%',
-
             startX: 20,
             startY: 20,
 
             font: 'bold 40px Garamond, serif',
         });
 
-        canvas.render()
-        .catch(err => {});
+        scrawl.makeRender({
+            target: canvas,
+        });
 
     </script>
 

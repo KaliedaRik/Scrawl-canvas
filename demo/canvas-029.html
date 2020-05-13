@@ -29,7 +29,7 @@
         <option value="vertical">Vertical</option>
       </select>
     </p>
-    <p>Select gradient justification: 
+    <p>Select text justification: 
       <select class="control-item" id="justify">
         <option value="left">Left</option>
         <option value="center">Center</option>
@@ -54,15 +54,10 @@
       <li>Check that the gradient appears as expected for both cell-locked and entity-locked gradients</li>
     </ul>
 
-    <h4>May 2020 results</h4> 
-    <p>Currently experiencing a number of issues and bugs in the mix between phrase and styles code:</p>
+    <h4>Google V8 Javascript engine bug (last checked: May 2020)</h4> 
+    <p>This demo works as expected in browsers running the SpiderMonkey (for Firefox, etc) and WebKit (for Safari, etc) Javascript engines. Browsers based on the V8 engine (Chrome, Edge, etc) however display a visual error: while all text glyphs will stamp with the gradient, some glyphs (often the first glyph of a single line text; more rarely glyphs in the middle of a text) will display the wrong part of the gradient - as if they had been stamped at the top left corner of the gradient's "box". Cannot fix this in code.</p>
 
-    <ul>
-      <li>For single-line text, the initial letter's gradient appears to be mis-positioned, compared to the other letters in the Phrase. Can also occur randomly (and occasionally) for individual characters in multi-line text</li>
-      <li>Phrases locked to a path - all letters appear to use the initial letter's take on the gradient it should be displaying.</li>
-      <li>Flipped Phrases have issues.</li>
-      <li>Issues with multi-line text that has been scaled.</li>
-    </ul>
+    <p>To workaround: if applying a gradient to a Phrase entity, check visual output in browsers across as devices as possible - the output (assuming the Phrase text doesn't change dynamically) may suffice.</p>
 
     <p><a href="../docs/demo/canvas-029.html">Annotated code</a></p>
   </div>

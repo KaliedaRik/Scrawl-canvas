@@ -590,6 +590,9 @@ P.setEngineFromState = function (engine) {
 
     }, state);
 
+    engine.textAlign = state.textAlign;
+    engine.textBaseline = state.textBaseline;
+
     return this;
 };
 
@@ -617,6 +620,10 @@ P.setToDefaults = function () {
             state[key] = value;
         }
     });
+
+    engine.textAlign = state.textAlign = 'left';
+    engine.textBaseline = state.textBaseline = 'top';
+
     return this;
 };
 
@@ -705,13 +712,13 @@ P.setEngineActions = {
         engine.miterLimit = item;
     },
 
-    textAlign: function (item, engine) {
-        engine.textAlign = item;
-    },
+    // textAlign: function (item, engine) {
+    //     engine.textAlign = item;
+    // },
 
-    textBaseline: function (item, engine) {
-        engine.textBaseline = item;
-    },
+    // textBaseline: function (item, engine) {
+    //     engine.textBaseline = item;
+    // },
 
     shadowBlur: function (item, engine) {
         engine.shadowBlur = item;

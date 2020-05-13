@@ -77,12 +77,12 @@ scrawl.makePhrase({
     size: '3em',
     weight: '700',
 
-    startX: '55%',
-    startY: '92%',
+    startX: '75%',
+    handleX: '100%',
+    startY: '90%',
 
-    width: '40%',
-    justify: 'center',
     letterSpacing: 2,
+    underlinePosition: 0.75,
 
     fillStyle: 'yellow',
 
@@ -136,7 +136,8 @@ scrawl.makePhrase({
 
     text: 'LISTEN',
 
-    startX: '5%',
+    startX: '25%',
+    handleX: 0,
 
     onUp: function () {
 
@@ -433,8 +434,8 @@ let vtPhrase = scrawl.makePhrase({
     size: '2em',
     weight: '700',
 
-    startX: '2%',
-    startY: '5%',
+    startX: '1%',
+    startY: '4%',
     width: '40%',
 
     fillStyle: 'yellow',

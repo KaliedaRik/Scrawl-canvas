@@ -271,6 +271,7 @@ const jazzyButton = (el) => {
 
             text: `Hello - ${setClickText()}`,
             font: `20px sans-serif`,
+            handleY: '60%',
 
             fillStyle: '#000080',
 
