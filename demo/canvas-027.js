@@ -74,11 +74,11 @@ scrawl.makePhrase({
     text: 'PLAY',
 
     family: 'sans-serif',
-    size: '3em',
-    weight: '700',
+    size: '2rem',
+    // weight: '700',
 
     startX: '75%',
-    handleX: '100%',
+    handleX: 'center',
     startY: '90%',
 
     letterSpacing: 2,
@@ -96,7 +96,10 @@ scrawl.makePhrase({
             }
         });
 
-        this.setGlyphStyles({underline: true}, 0);
+        // '§UNDERLINE§' is a section class marker which makes subsequent letters underlined
+        this.set({
+            text: `§UNDERLINE§${this.text}`,
+        });
     },
 
     onLeave: function () {
@@ -107,7 +110,9 @@ scrawl.makePhrase({
             }
         });
 
-        this.setGlyphStyles({underline: false}, 0);
+        this.set({
+            text: this.text.replace('§UNDERLINE§', ''),
+        });
     },
 
     onUp: function () {
@@ -137,7 +142,6 @@ scrawl.makePhrase({
     text: 'LISTEN',
 
     startX: '25%',
-    handleX: 0,
 
     onUp: function () {
 

@@ -82,7 +82,8 @@ faces.setArtefacts({
     // Styling common to all the 'faces' Elements
     css: {
         border: '1px solid blue',
-        textAlign: 'center'
+        textAlign: 'center',
+        backfaceVisibility: 'hidden',
     }
 });
 

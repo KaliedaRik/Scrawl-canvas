@@ -297,12 +297,6 @@ const jazzyButton = (el) => {
                     start: 0,
                     end: 1,
                     engine: 'easeIn'
-                },
-                {
-                    attribute: 'scale',
-                    start: 0.4,
-                    end: 1,
-                    engine: 'easeIn'
                 }
             ]
         });

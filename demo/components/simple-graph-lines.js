@@ -202,9 +202,7 @@ const update = (namespace, dataSet) => {
                         fillStyle: 'aliceblue',
                     });
 
-                    frame.updateSubtitle(
-                        `${label}: ${data[index].toLocaleString()}`, 
-                        {fill: 'darkred'}, 9);
+                    frame.updateSubtitle(`${label}: §RED§${data[index].toLocaleString()}`);
 
                     this.set({
                         scale: 1.5,

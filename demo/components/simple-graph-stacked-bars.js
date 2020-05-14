@@ -118,7 +118,7 @@ const build = function (namespace, canvas, data) {
                     // - So we directly invoke a resort on our Group object here
                     group.batchResort = true;
 
-                    frame.updateSubtitle(`${category} in ${year}: ${categoryItem.toLocaleString()}`);
+                    frame.updateSubtitle(`${category} in ${year}: §RED§${categoryItem.toLocaleString()}`);
                 },
             });
         });

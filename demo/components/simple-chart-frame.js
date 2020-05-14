@@ -71,6 +71,7 @@ const build = function (namespace, canvas, backgroundImage) {
         startY: '9%',
         size: '1.2rem',
     });
+    subtitle.addSectionClass('RED', { fill: 'darkred' });
 
     yLabelTop = scrawl.makePhrase({
 
@@ -79,9 +80,6 @@ const build = function (namespace, canvas, backgroundImage) {
         order: 1,
 
         text: '0',
-
-        width: '50%',
-        justify: 'left',
 
         startX: '1%',
         startY: '12%',
@@ -104,15 +102,13 @@ const build = function (namespace, canvas, backgroundImage) {
 
         name: `${namespace}-x-left`,
         startX: '10%',
-        startY: '97%',
+        startY: '96%',
     });
 
     xLabelRight = xLabelLeft.clone({
 
         name: `${namespace}-x-right`,
-        startX: '99%',
-        handleX: 'right',
-        justify: 'right',
+        startX: '89%',
     });
 
     scrawl.makeLine({
@@ -166,20 +162,11 @@ const updateTextHelper = function (item, text) {
 };
 
 const updateTitle = (text) => updateTextHelper(title, text);
+const updateSubtitle = (text) => updateTextHelper(subtitle, text);
 const updateYTop = (text) => updateTextHelper(yLabelTop, text);
 const updateYBottom = (text) => updateTextHelper(yLabelBottom, text);
 const updateXLeft = (text) => updateTextHelper(xLabelLeft, text);
 const updateXRight = (text) => updateTextHelper(xLabelRight, text);
-
-const updateSubtitle = function (text, styles, stylesPos) {
-
-    subtitle.set({
-        text: text,
-        glyphStyles: [],
-    });
-
-    if (styles) subtitle.setGlyphStyles(styles, stylesPos);
-};
 
 const updateBackground = function (asset) {
 

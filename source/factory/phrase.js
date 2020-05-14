@@ -9,8 +9,12 @@
 // + Phrases can be cloned, and killed.
 //
 // Phrase entity __dimensions__ work differently to that of other entitys:
-// + The `width` attribute is required. Phrase entitys will automatically render text longer than its width in multiple lines on the canvas.
-// + The `height` attribute is normally disregarded. Instead height is calculated as a combination of the font `size`, `lineheight`, and the number of lines of text that need to be rendered on the canvas - which itself depends on the text's length and the entity's `width` attribute
+// + The `width` attribute is required for multi-line text. When set, Phrase entitys will automatically render text longer than its width in multiple lines on the canvas.
+// + The `height` attribute is normally disregarded. Instead height is calculated as a combination of the font `size`, `lineheight`, and the number of lines of text that need to be rendered on the canvas - which itself depends on the text's length and the entity's `width` attribute.
+//
+// __Be aware that text is _always_ rendered as a graphic, not a block.__ 
+// + Scrawl-canvas ignores all attempts to set the canvas context engine's `textAlign` and `textBaseline` attributes, which are permanently set to the defaults `left` and `top` respectively. 
+// + Each glyph (letter) is stamped separately onto the canvas - this allows us to include letterspacing and justification functionality, and to allow text to be styled on a per-glyph basis (overline/underline, highlight, color, bold/italics, etc).
 //
 // Phrase entitys use [FontAttribute objects](./fontAttribute.html) to help manage their text font:
 // + More than one font family can be used in a single Phrase.
@@ -27,7 +31,7 @@
 // #### Demos:
 // + [Canvas-015](../../demo/canvas-015.html) - Phrase entity (make, clone, method, multiline)
 // + [Canvas-016](../../demo/canvas-016.html) - Phrase entity position and font attributes; Block mimic functionality
-// + [Canvas-017](../../demo/canvas-017.html) - Phrase entity - test lineHeight, letterSpacing and justify attributes; setGlyphStyles() functionality
+// + [Canvas-017](../../demo/canvas-017.html) - Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality
 // + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
 // + [Canvas-019](../../demo/canvas-019.html) - Artefact collision detection
 // + [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
@@ -38,7 +42,7 @@
 // #### Imports
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
-import { mergeOver, pushUnique, xt, ensurePositiveFloat, ensureFloat, ensureString } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xta, isa_obj, ensurePositiveFloat, ensureFloat, ensureString } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -82,8 +86,61 @@ const Phrase = function (items = {}) {
 
     this.entityInit(items);
 
-    this.glyphStyles = [];
-
+    this.sectionStyles = [];
+    this.sectionClasses = {
+        'DEFAULTS': {
+            defaults: true,
+        },
+        'BOLD': {
+            weight: 'bold',
+        },
+        'ITALIC': {
+            style: 'italic',
+        },
+        'SMALL-CAPS': {
+            variant: 'small-caps',
+        },
+        'HIGHLIGHT': {
+            highlight: true,
+        },
+        'UNDERLINE': {
+            underline: true,
+        },
+        'OVERLINE': {
+            overline: true,
+        },
+        '/BOLD': {
+            weight: 'normal',
+        },
+        '/ITALIC': {
+            style: 'normal',
+        },
+        '/SMALL-CAPS': {
+            variant: 'normal',
+        },
+        '/HIGHLIGHT': {
+            highlight: false,
+        },
+        '/UNDERLINE': {
+            underline: false,
+        },
+        '/OVERLINE': {
+            overline: false,
+        },
+    };
+// + `style` - eg 'italic'
+// + `variant` - eg 'small-caps'
+// + `weight` - eg 'bold'
+// + `stretch`
+// + `size` - any permitted font size value
+// + `family` 
+// + `space` - alter the letterSpacing values to spread or condense glyphs
+// + `fill` - fillStyle to be applied to the glyph
+// + `stroke` - strokeStyle to be applied to the glyph
+// + `highlight` - boolean - whether highlight should be applied to the glyph
+// + `underline` - boolean - whether underline should be applied to the glyph
+// + `overline` - boolean - whether overline should be applied to the glyph
+// + `defaults` - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase 
     this.dirtyDimensions = true;
     this.dirtyText = true;
     this.dirtyFont = true;
@@ -141,9 +198,9 @@ let defaultAttributes = {
 
 // ##### In-text styling
 
-// __glyphStyles__ - Array of styling objects
+// __sectionStyles__ - Array of styling objects
 //
-// Glyphs (letters) can be individually styled by adding a ___styling object___ to the `glyphStyles` Array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.
+// Glyphs (letters) can be individually styled by adding a ___styling object___ to the `sectionStyles` Array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.
 //
 // Subsequent styling objects will alter specified attributes, leaving other attributes in their current (not default) state. To reset all attributes to their defaults and at the same time change selected attributes, include `defaults: true` in the object.
 //
@@ -164,13 +221,17 @@ let defaultAttributes = {
 //
 // ```
 // // Example: "make the word glyphs bold"
-// myPhrase.setGlyphStyles({weight: 'bold'}, 14);
-// myPhrase.setGlyphStyles({defaults: true}, 20);
+// myPhrase.setSectionStyles({weight: 'bold'}, 14);
+// myPhrase.setSectionStyles({defaults: true}, 20);
 // ```
-    glyphStyles: [],
+    sectionStyles: null,
+
+    sectionClassMarker: '§',
+
+    sectionClasses: null,
 
 // ##### Overlines, underlines, highlighting
-// We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyph ranges using `glyphStyles` styling objects.
+// We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyph ranges using `sectionStyles` styling objects.
 // + over/underline decoration positions are float Numbers (generally) in the range `0 - 1` which represent where on the Phrase text line the decoration should appear. The values are relative to line heights, which in turn depend on font size and Phrase lineHeight attributes.
 // + over/underline decoration style values, and the highlight style value, can be any valid CSS color String.
 
@@ -309,12 +370,17 @@ D.handle = function (x, y) {
 };
 
 // __text__
+G.text = function () {
+
+    return this.currentText || '';
+};
 S.text = function (item) {
 
     this.text = ensureString(item);
     
     this.dirtyText = true;
     this.dirtyPathObject = true;
+    this.dirtyDimensions = true;
 };
 
 // __justify__
@@ -620,12 +686,14 @@ P.cleanDimensionsAdditionalActions = function () {
 
     if (this.dimensions[0] === 'auto') {
 
+        if (!this.currentText) this.buildText();
+
         let myCell = requestCell(),
             engine = myCell.engine;
 
         engine.font = this.fontAttributes.buildFont();
 
-        this.currentDimensions[0] = Math.ceil(engine.measureText(this.convertTextEntityCharacters(this.text)).width);
+        this.currentDimensions[0] = Math.ceil(engine.measureText(this.currentText).width);
 
         releaseCell(myCell);
     }
@@ -633,30 +701,58 @@ P.cleanDimensionsAdditionalActions = function () {
     this.currentDimensions[1] = Math.ceil((this.textHeight * this.textLines.length * this.lineHeight) / this.scale);
 };
 
-// `setGlyphStyles`
-// We have more control over the `glyphStyles` array if we use this dedicated function to manage them. Requires two (or more) arguments:
+// `setSectionStyles`
+// We have more control over the `sectionStyles` array if we use this dedicated function to manage them. Requires two (or more) arguments:
 // + First argument - object containing one or more `key: value` attributes - permitted keys are: `style`, `variant`, `weight`, `stretch`, `size`, `family`, `space`, `fill`, `stroke`, `highlight`, `underline`, `overline`, `defaults`
 // + Second argument - Array of positive integer Numbers representing the index at which point the style will be applied to the text String
 // + Alternatively the second and subsequent arguments can be positive integer Numbers, serving the same purpose
-P.setGlyphStyles = function (args, ...pos) {
+P.setSectionStyles = function (text) {
 
-    if (args && Array.isArray(pos)) {
+    let search = new RegExp(this.sectionClassMarker),
+        parseArray = text.split(search),
+        styles = this.sectionStyles,
+        classes = this.sectionClasses,
+        parsedText = '',
+        classObj, index, styleObj;
 
-        let styles = this.glyphStyles,
-            slot, style, i, iz;
+    styles.length = 0;
 
-        for (i = 0, iz = pos.length; i < iz; i++) {
+    parseArray.forEach(item => {
 
-            slot = pos[i];
-            style = styles[slot];
+        classObj = classes[item];
 
-            if (!style) styles[slot] = args;
-            else mergeOver(style, args);
+        if (classObj) {
+
+            index = parsedText.length;
+            styleObj = styles[index];
+
+            if (!styleObj) styles[index] = Object.assign({}, classObj);
+            else Object.assign(styleObj, classObj);
         }
+        else if (xt(item)) parsedText += item;
+    });
+    return parsedText;
+};
 
-        this.dirtyPathObject = true;
-        this.dirtyText = true;
+// `addSectionClass`, `removeSectionClass` - add and remove section class definitions to the entity's `sectionClasses` object.
+P.addSectionClass = function (label, obj) {
+
+    if (xta(label, obj) && label.substring && isa_obj(obj)) {
+
+        this.sectionClasses[label] = obj;
     }
+    this.dirtyText = true;
+    this.dirtyPathObject = true;
+
+    return this;
+};
+
+P.removeSectionClass = function (label) {
+
+    delete this.sectionClasses[label];
+
+    this.dirtyText = true;
+    this.dirtyPathObject = true;
 
     return this;
 };
@@ -723,8 +819,14 @@ P.cleanPathObject = function () {
 P.buildText = function () {
 
     this.dirtyText = false;
-    this.text = this.convertTextEntityCharacters(this.text);
-    this.calculateTextPositions(this.text);
+
+    let t = this.convertTextEntityCharacters(this.text);
+
+    t = this.setSectionStyles(t);
+
+    this.currentText = t;
+
+    this.calculateTextPositions(t);
 
     if (this.exposeText) {
 
@@ -736,7 +838,7 @@ P.buildText = function () {
             this.exposedTextHoldAttached = false;
         }
 
-        this.exposedTextHold.textContent = this.text;
+        this.exposedTextHold.textContent = t;
 
         if (!this.exposedTextHoldAttached) {
 
@@ -816,7 +918,7 @@ P.calculateTextPositions = function (mytext) {
     let fontAttributes = this.fontAttributes,
         glyphAttributes = fontAttributes.clone({});
 
-    let glyphStyles = this.glyphStyles;
+    let sectionStyles = this.sectionStyles;
 
     let state = this.state,
         fontLibrary = {},
@@ -855,7 +957,7 @@ P.calculateTextPositions = function (mytext) {
 
     // 2. Create `textGlyphs` array
     // + also shove the default font into the `fontLibrary` array
-    textGlyphs = (treatWordAsGlyph) ? this.text.split(' ') : this.text.split('');
+    textGlyphs = (treatWordAsGlyph) ? mytext.split(' ') : mytext.split('');
     fontArray.push(currentFont);
 
     // 3. `textPositions` array will include an array of data for each glyph
@@ -870,8 +972,8 @@ P.calculateTextPositions = function (mytext) {
         if (item === ' ') spacesArray.push(i);
     }
 
-    // 4. Process the `glyphStyles` array to start populating the `textPositions` arrays
-    if (!glyphStyles[0]) glyphStyles[0] = {
+    // 4. Process the `sectionStyles` array to start populating the `textPositions` arrays
+    if (!sectionStyles[0]) sectionStyles[0] = {
         family: glyphAttributes.family,
         size: (glyphAttributes.sizeValue) ? `${glyphAttributes.sizeValue}${glyphAttributes.sizeMetric}` : glyphAttributes.sizeMetric,
         stretch: glyphAttributes.stretch,
@@ -880,83 +982,84 @@ P.calculateTextPositions = function (mytext) {
         weight: glyphAttributes.weight,
     };
 
-    for (i = 0, iz = glyphStyles.length; i < iz; i++) {
+    for (i = 0, iz = sectionStyles.length; i < iz; i++) {
 
-        gStyle = glyphStyles[i];
+        gStyle = sectionStyles[i];
 
         if (gStyle) {
 
             gPos = textPositions[i];
 
-            if (i === 0) {
-                gPos[0] = currentFont;
-                // gPos[1] = currentStrokeStyle;
-                // gPos[2] = currentFillStyle;
-                gPos[3] = highlightFlag;
-                gPos[4] = underlineFlag;
-                gPos[5] = overlineFlag;
-            }
+            if (gPos) {
 
-            if (gStyle.defaults) {
-                currentFont = glyphAttributes.update(scale, fontAttributes);
-                currentStrokeStyle = defaultStrokeStyle;
-                currentFillStyle = defaultFillStyle;
-                currentSpace = defaultSpace;
-                gPos[0] = currentFont;
-                gPos[1] = currentStrokeStyle;
-                gPos[2] = currentFillStyle;
-                gPos[3] = highlightFlag;
-                gPos[4] = underlineFlag;
-                gPos[5] = overlineFlag;
-            }
-
-            item = gStyle.stroke;
-            if (item && item !== currentStrokeStyle) {
-
-                currentStrokeStyle = makeStyle(gStyle.stroke);
-                gPos[1] = currentStrokeStyle;
-            };
-
-            item = gStyle.fill;
-            if (item && item !== currentFillStyle) {
-
-                currentFillStyle = makeStyle(gStyle.fill);
-                gPos[2] = currentFillStyle;
-            };
-
-            item = gStyle.space;
-            if (xt(item) && item !== currentSpace) currentSpace = item * scale
-
-            item = gStyle.highlight;
-            if (xt(item) && item !== highlightFlag) {
-
-                highlightFlag = item;
-                gPos[3] = highlightFlag;
-            };
-
-            item = gStyle.underline;
-            if (xt(item) && item !== underlineFlag) {
-
-                underlineFlag = item;
-                gPos[4] = underlineFlag;
-            };
-
-            item = gStyle.overline;
-            if (xt(item) && item !== overlineFlag) {
-
-                overlineFlag = item;
-                gPos[5] = overlineFlag;
-            };
-
-            if (i !== 0 && (gStyle.variant || gStyle.weight || gStyle.style || gStyle.stretch || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font)) {
-
-                item = glyphAttributes.update(scale, gStyle);
-                if (item !== currentFont) {
-
-                    currentFont = item;
+                if (i === 0) {
                     gPos[0] = currentFont;
+                    gPos[3] = highlightFlag;
+                    gPos[4] = underlineFlag;
+                    gPos[5] = overlineFlag;
+                }
 
-                    if (fontArray.indexOf(currentFont) < 0) fontArray.push(currentFont);
+                if (gStyle.defaults) {
+                    currentFont = glyphAttributes.update(scale, fontAttributes);
+                    currentStrokeStyle = defaultStrokeStyle;
+                    currentFillStyle = defaultFillStyle;
+                    currentSpace = defaultSpace;
+                    gPos[0] = currentFont;
+                    gPos[1] = currentStrokeStyle;
+                    gPos[2] = currentFillStyle;
+                    gPos[3] = highlightFlag;
+                    gPos[4] = underlineFlag;
+                    gPos[5] = overlineFlag;
+                }
+
+                item = gStyle.stroke;
+                if (item && item !== currentStrokeStyle) {
+
+                    currentStrokeStyle = makeStyle(gStyle.stroke);
+                    gPos[1] = currentStrokeStyle;
+                };
+
+                item = gStyle.fill;
+                if (item && item !== currentFillStyle) {
+
+                    currentFillStyle = makeStyle(gStyle.fill);
+                    gPos[2] = currentFillStyle;
+                };
+
+                item = gStyle.space;
+                if (xt(item) && item !== currentSpace) currentSpace = item * scale
+
+                item = gStyle.highlight;
+                if (xt(item) && item !== highlightFlag) {
+
+                    highlightFlag = item;
+                    gPos[3] = highlightFlag;
+                };
+
+                item = gStyle.underline;
+                if (xt(item) && item !== underlineFlag) {
+
+                    underlineFlag = item;
+                    gPos[4] = underlineFlag;
+                };
+
+                item = gStyle.overline;
+                if (xt(item) && item !== overlineFlag) {
+
+                    overlineFlag = item;
+                    gPos[5] = overlineFlag;
+                };
+
+                if (i !== 0 && (gStyle.variant || gStyle.weight || gStyle.style || gStyle.stretch || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font)) {
+
+                    item = glyphAttributes.update(scale, gStyle);
+                    if (item !== currentFont) {
+
+                        currentFont = item;
+                        gPos[0] = currentFont;
+
+                        if (fontArray.indexOf(currentFont) < 0) fontArray.push(currentFont);
+                    }
                 }
             }
         }
@@ -1056,7 +1159,7 @@ P.calculateTextPositions = function (mytext) {
             // Pick up single line
             if (lineLen === totalLen) {
 
-                fragment = this.text;
+                fragment = mytext;
 
                 textLines.push(fragment);
                 textLineWords.push((treatWordAsGlyph) ? fragment.split(' ').length - 1 : fragment.split(' ').length);
@@ -1357,7 +1460,6 @@ P.preStamper = function (dest, engine, entity, args) {
         if (highlight) {
 
             engine.fillStyle = makeStyle(highlightStyle);
-            // engine.fillRect(data[1], data[2] - halfHeight, data[3], height);
             engine.fillRect(data[1], data[2], data[3], height);
         }
 
@@ -1392,8 +1494,6 @@ P.stamper = {
 
     // `stamper.fill`
     fill: function (engine, entity, data) { 
-
-        // console.log(...data);
 
         engine.fillText(...data);
     },

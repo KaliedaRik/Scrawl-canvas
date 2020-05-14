@@ -91,7 +91,9 @@ let lorem = scrawl.makePhrase({
 
     name: 'myPhrase',
 
-    text: 'Lorem ipsum har varit standard ända sedan 1500-talet, ___ när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.',
+    sectionClassMarker: '[§<>]',
+
+    text: '&shy;§ITALIC§Lorem§/ITALIC§ ipsum §Red-Text§har varit <ITALIC>standard</ITALIC> &auml;nda sedan §SMALL-CAPS§1500-talet§/SMALL-CAPS§, när-en-ok&aring;nd-§BOLD§bok§DEFAULTS§sättare-tog att antal §BOLD§bok§/BOLD§stäver §OVERLINE§och <HIGHLIGHT>blandade§/OVERLINE§ dem</HIGHLIGHT> för §size-24§Red-Text§att§DEFAULTS§ g&ouml;ra, §Letter-spacing-10§ett prov§UNDERLINE§exemplar</UNDERLINE>§/Letter-spacing-10§ §MONO§av en §BOLD§b&oacute;k.',
     font: "16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif",
 
     justify: 'center',
@@ -103,68 +105,18 @@ let lorem = scrawl.makePhrase({
     textPath: 'spiral-path',
     textPathPosition: 0.9,
 
-    handleY: '20%',
+    handleY: 12,
 
     delta: {
         textPathPosition: -0.0006,
     }
 });
 
-lorem.setGlyphStyles({
-
-    defaults: true
-}, 70, 126, 158).setGlyphStyles({
-
-    fill: 'black'
-}, 12).setGlyphStyles({
-
-    style: 'italic'
-}, 22).setGlyphStyles({
-
-    style: 'normal'
-}, 30).setGlyphStyles({
-
-    variant: 'small-caps'
-}, 42).setGlyphStyles({
-
-    variant: 'normal'
-}, 52).setGlyphStyles({
-
-    weight: 'bold'
-}, 67, 92, 155).setGlyphStyles({
-
-    weight: 'normal'
-}, 95).setGlyphStyles({
-
-    highlight: true
-}, 106).setGlyphStyles({
-
-    highlight: false
-}, 118).setGlyphStyles({
-
-    underline: true
-}, 140).setGlyphStyles({
-
-    underline: false
-}, 148).setGlyphStyles({
-
-    overline: true
-}, 102).setGlyphStyles({
-
-    overline: false
-}, 114).setGlyphStyles({
-
-    size: '24px'
-}, 123).setGlyphStyles({
-
-    space: 10
-}, 132).setGlyphStyles({
-
-    space: 0
-}, 135).setGlyphStyles({
-
-    family: 'monospace'
-}, 149);
+lorem.addSectionClass('Red-Text', { fill: 'red' })
+.addSectionClass('size-24', { size: '24px' })
+.addSectionClass('Letter-spacing-10', { space: 10 })
+.addSectionClass('/Letter-spacing-10', { space: 0 })
+.addSectionClass('MONO', { family: 'monospace' });
 
 
 // Create other entitys
