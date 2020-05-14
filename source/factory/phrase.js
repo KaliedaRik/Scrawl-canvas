@@ -37,6 +37,7 @@
 // + [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
 // + [Component-001](../../demo/component-001.html) - Scrawl-canvas DOM element components
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
+// + [Component-005](../../demo/component-005.html) - Scrawl-canvas modularized code - London crime charts
 
 
 // #### Imports
@@ -198,19 +199,17 @@ let defaultAttributes = {
 
 // ##### In-text styling
 
-// __sectionStyles__ - Array of styling objects
+// __sectionClasses__ - Array of styling objects
 //
-// Glyphs (letters) can be individually styled by adding a ___styling object___ to the `sectionStyles` Array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.
+// Glyphs (letters) can be individually styled by adding a ___styling object___ to the `sectionClasses` Array, and then adding __section style markup__ to the Phrase's text String attribute. Subsequent glyphs will inherit those styles until a second style marker updating or terminating that particular style is encountered.
 //
-// Subsequent styling objects will alter specified attributes, leaving other attributes in their current (not default) state. To reset all attributes to their defaults and at the same time change selected attributes, include `defaults: true` in the object.
-//
-// The styling object can take one or more of the following attributes:
+// The following font attributes can be modified on a per-glyph basis using section classes:
 // + `style` - eg 'italic'
 // + `variant` - eg 'small-caps'
 // + `weight` - eg 'bold'
 // + `stretch`
 // + `size` - any permitted font size value
-// + `family` 
+// + `family` - font family
 // + `space` - alter the letterSpacing values to spread or condense glyphs
 // + `fill` - fillStyle to be applied to the glyph
 // + `stroke` - strokeStyle to be applied to the glyph
@@ -219,20 +218,35 @@ let defaultAttributes = {
 // + `overline` - boolean - whether overline should be applied to the glyph
 // + `defaults` - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity's current font and fill/stroke style values
 //
+// Usage: 
+// 1. Add styling objects to the `sectionClasses` Array - a number of styling objects are pre-defined for every Phrase entity; these can be added to, modified or deleted at any time using the `addSectionClass` and `removeSectionClass` functions.
+// 2. If necessary, update the entity's `sectionClassMarker` delimiter attrbute. The attribute has to be a String, but that string can define a Regular Expression - for example setting the attribute to `[§<>]` will identify style markup delimeted by both `§marker-label§` and `<marker-label>`.
+// 3. Add section style markup to the Phrase entity's text attribute value.
+//
 // ```
-// // Example: "make the word glyphs bold"
-// myPhrase.setSectionStyles({weight: 'bold'}, 14);
-// myPhrase.setSectionStyles({defaults: true}, 20);
+// let myPhrase = scrawl.makePhrase({
+//     name: 'my-phrase',
+//     text: 'This is §RED§some red text§DEFAULTS§ for demonstration.'
+// });
+//
+// myPhrase.addSectionClass('RED', { fill: 'red' });
 // ```
-    sectionStyles: null,
-
+//
+// The following classes are pre-defined for every Phrase entity:
+// + `DEFAULTS` - remove all inline glyph styling from this point on
+// + `BOLD`, `/BOLD` - add/remove bold styling
+// + `ITALIC`, `/ITALIC` - add/remove italic styling
+// + `SMALL-CAPS`, `/SMALL-CAPS` - add/remove small-caps styling
+// + `HIGHLIGHT`, `/HIGHLIGHT` - add/remove glyph background highlight
+// + `UNDERLINE`, `/UNDERLINE` - add/remove glyph underline
+// + `OVERLINE`, `/OVERLINE` - add/remove glyph overline
     sectionClassMarker: '§',
-
     sectionClasses: null,
 
 // ##### Overlines, underlines, highlighting
-// We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyph ranges using `sectionStyles` styling objects.
+// We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyphs using __sectionClasses__ styling objects.
 // + over/underline decoration positions are float Numbers (generally) in the range `0 - 1` which represent where on the Phrase text line the decoration should appear. The values are relative to line heights, which in turn depend on font size and Phrase lineHeight attributes.
+// + for __strikethrough__ text, use appropriately positioned overlines.
 // + over/underline decoration style values, and the highlight style value, can be any valid CSS color String.
 
 // __overlinePosition__, __overlineStyle__
@@ -701,11 +715,7 @@ P.cleanDimensionsAdditionalActions = function () {
     this.currentDimensions[1] = Math.ceil((this.textHeight * this.textLines.length * this.lineHeight) / this.scale);
 };
 
-// `setSectionStyles`
-// We have more control over the `sectionStyles` array if we use this dedicated function to manage them. Requires two (or more) arguments:
-// + First argument - object containing one or more `key: value` attributes - permitted keys are: `style`, `variant`, `weight`, `stretch`, `size`, `family`, `space`, `fill`, `stroke`, `highlight`, `underline`, `overline`, `defaults`
-// + Second argument - Array of positive integer Numbers representing the index at which point the style will be applied to the text String
-// + Alternatively the second and subsequent arguments can be positive integer Numbers, serving the same purpose
+// `setSectionStyles` - internal function
 P.setSectionStyles = function (text) {
 
     let search = new RegExp(this.sectionClassMarker),
@@ -735,6 +745,8 @@ P.setSectionStyles = function (text) {
 };
 
 // `addSectionClass`, `removeSectionClass` - add and remove section class definitions to the entity's `sectionClasses` object.
+//
+// The following section classes are pre-defined for every Phrase entity:
 P.addSectionClass = function (label, obj) {
 
     if (xta(label, obj) && label.substring && isa_obj(obj)) {
