@@ -234,14 +234,14 @@ export default function (P = {}) {
 // __flipUpend__
     S.flipUpend = function (item) {
 
-        if (item !== this.flipUpend) this.dirtyCollision = true;
+        if (item !== this.flipUpend && this.collides) this.dirtyCollision = true;
         this.flipUpend = item;
     };
 
 // __flipReverse__
     S.flipReverse = function (item) {
 
-        if (item !== this.flipReverse) this.dirtyCollision = true;
+        if (item !== this.flipReverse && this.collides) this.dirtyCollision = true;
         this.flipReverse = item;
     };
 
@@ -402,7 +402,7 @@ export default function (P = {}) {
         if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
 // Any change in an entity's __roll__ attribute means the entity will need to recalculate its collision sensors, as indicated by the entity setting its own `dirtyCollision` flag.
-        if (this.dirtyRotation) this.dirtyCollision = true;
+        if (this.dirtyRotation && this.collides) this.dirtyCollision = true;
 
 // `dirtyScale` - triggers __cleanScale__ function - which in turn sets the `dirtyDimensions`, `dirtyHandle` and (if required) `dirtyPositionSubscribers`, `dirtyMimicScale` flags on the entity.
         if (this.dirtyScale) this.cleanScale();
@@ -440,7 +440,7 @@ export default function (P = {}) {
         if (this.dirtyPathObject) {
 
             this.cleanPathObject();
-            this.dirtyCollision = true;
+            if (this.collides) this.dirtyCollision = true;
         }
 
 // `dirtyPositionSubscribers` - update any artefacts subscribed to this entity as their `pivot` or `mimic` source, if required, by invoking the __updatePositionSubscribers__ function.

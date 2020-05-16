@@ -117,7 +117,7 @@ let myphrase = scrawl.makePhrase({
 
     name: 'phrase-tester',
 
-    text: 'H&epsilon;lj&ouml;!',
+    text: 'H&epsilon;§BOLD§lj§/BOLD§&ouml;!',
     font: '40px Garamond, serif',
 
     width: 120,
@@ -130,13 +130,7 @@ let myphrase = scrawl.makePhrase({
     fillStyle: 'rgb(50,0,0)',
     method: 'fill',
     globalAlpha: 0.6,
-}).setGlyphStyles({
-
-    weight: 'bold'
-}, 1).setGlyphStyles({
-
-    weight: 'normal'
-}, 3);
+});
 
 // Test Wheel entity
 let mypie = scrawl.makeWheel({

@@ -75,7 +75,6 @@ scrawl.makePhrase({
 
     family: 'sans-serif',
     size: '2rem',
-    // weight: '700',
 
     startX: '75%',
     handleX: 'center',

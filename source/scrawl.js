@@ -1,7 +1,7 @@
 
 // # Scrawl-canvas
 //
-// #### Version 8.0.11 - 9 May 2020
+// #### Version 8.1.0 - 17 May 2020
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -169,6 +169,7 @@ import {
     makePolygon,
     makeStar,
     makeSpiral,
+    makePolyline,
 } from './factory/shape.js';
 
 
@@ -338,6 +339,7 @@ export default {
     makePolygon,
     makeStar,
     makeSpiral,
+    makePolyline,
 
 
     // factory/spriteAsset.js

@@ -89,59 +89,21 @@ const Phrase = function (items = {}) {
 
     this.sectionStyles = [];
     this.sectionClasses = {
-        'DEFAULTS': {
-            defaults: true,
-        },
-        'BOLD': {
-            weight: 'bold',
-        },
-        'ITALIC': {
-            style: 'italic',
-        },
-        'SMALL-CAPS': {
-            variant: 'small-caps',
-        },
-        'HIGHLIGHT': {
-            highlight: true,
-        },
-        'UNDERLINE': {
-            underline: true,
-        },
-        'OVERLINE': {
-            overline: true,
-        },
-        '/BOLD': {
-            weight: 'normal',
-        },
-        '/ITALIC': {
-            style: 'normal',
-        },
-        '/SMALL-CAPS': {
-            variant: 'normal',
-        },
-        '/HIGHLIGHT': {
-            highlight: false,
-        },
-        '/UNDERLINE': {
-            underline: false,
-        },
-        '/OVERLINE': {
-            overline: false,
-        },
+        'DEFAULTS': { defaults: true },
+        'BOLD': { weight: 'bold' },
+        'ITALIC': { style: 'italic' },
+        'SMALL-CAPS': { variant: 'small-caps' },
+        'HIGHLIGHT': { highlight: true },
+        'UNDERLINE': { underline: true },
+        'OVERLINE': { overline: true },
+        '/BOLD': { weight: 'normal' },
+        '/ITALIC': { style: 'normal' },
+        '/SMALL-CAPS': { variant: 'normal' },
+        '/HIGHLIGHT': { highlight: false },
+        '/UNDERLINE': { underline: false },
+        '/OVERLINE': { overline: false }
     };
-// + `style` - eg 'italic'
-// + `variant` - eg 'small-caps'
-// + `weight` - eg 'bold'
-// + `stretch`
-// + `size` - any permitted font size value
-// + `family` 
-// + `space` - alter the letterSpacing values to spread or condense glyphs
-// + `fill` - fillStyle to be applied to the glyph
-// + `stroke` - strokeStyle to be applied to the glyph
-// + `highlight` - boolean - whether highlight should be applied to the glyph
-// + `underline` - boolean - whether underline should be applied to the glyph
-// + `overline` - boolean - whether overline should be applied to the glyph
-// + `defaults` - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase 
+
     this.dirtyDimensions = true;
     this.dirtyText = true;
     this.dirtyFont = true;
@@ -179,7 +141,7 @@ let defaultAttributes = {
     text: '',
 
 // __width__ - Number or String
-// + In addition to normal dimensional values, Phrase entitys will accept the String label __'auto'__ (default). When set to 'auto' the Width will be calculated as the natural, single line text length.
+// + In addition to normal dimensional values, Phrase entitys will accept the String label __'auto'__ (default). When set to 'auto' the width will be calculated as the natural, single line text length.
     width: 'auto',
 
 // __exposeText__ - Boolean accessibility feature
@@ -386,7 +348,7 @@ D.handle = function (x, y) {
 // __text__
 G.text = function () {
 
-    return this.currentText || '';
+    return this.currentText || this.text || '';
 };
 S.text = function (item) {
 
@@ -745,8 +707,6 @@ P.setSectionStyles = function (text) {
 };
 
 // `addSectionClass`, `removeSectionClass` - add and remove section class definitions to the entity's `sectionClasses` object.
-//
-// The following section classes are pre-defined for every Phrase entity:
 P.addSectionClass = function (label, obj) {
 
     if (xta(label, obj) && label.substring && isa_obj(obj)) {

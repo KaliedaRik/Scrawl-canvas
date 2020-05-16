@@ -665,12 +665,12 @@ export default function (P = {}) {
     S.sensorSpacing = function (val) {
 
         this.sensorSpacing = val;
-        this.dirtyCollision = true;
+        if (this.collides) this.dirtyCollision = true;
     };
     D.sensorSpacing = function (val) {
 
         this.sensorSpacing += val;
-        this.dirtyCollision = true;
+        if (this.collides) this.dirtyCollision = true;
     };
 
 
@@ -1639,7 +1639,7 @@ export default function (P = {}) {
 
                             cache[i] = coord;
                             coord += drag[i];
-                            this.dirtyCollision = true;
+                            if (this.collides) this.dirtyCollision = true;
                         }
                         coord += offset[i];
 

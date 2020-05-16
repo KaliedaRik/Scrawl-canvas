@@ -12,6 +12,7 @@
 // + __makePolygon__ - creates a regular, multi-sided Shape entity with equal-length sides (species: `polygon`).
 // + __makeStar__ - creates a star Shape entity (species: `star`).
 // + __makeSpiral__ - creates a spiral Shape entity (species: `spiral`).
+// + __makePolyline__ - creates an irregular, multi-sided Shape line or curve entity (either open or closed) using a set of coordinates (species: `polyline`).
 // + (Under the hood, all Shapes are created using SVG Path Strings)
 //
 // The `line`, `quadratic` and `bezier` Shapes come with additional Coordinates which can be used to position them in the display. These Coordinates can be manipulated and animated in the same way as `start`, `handle` and `offset` Coordinates.
@@ -44,7 +45,6 @@
 // TODO: consider whether it would be worthwhile to break this file down into modules specific to each Shape species, alongside a mixin for common functionality between them. Also: consider adding the following Shape species:
 // + __radialshape__ (makeRadialShape) - use path and repeat arguments; functionality will be to: swivel the path around a central point 'repeat' number of times (angle = 360/repeat) and turn the resulting radial shape into a single path value
 // + __boxedshape__ (makeBoxedShape) - I'm a bit fuzzy about this one, but I want to somehow _box up_ (relativize) other Shape paths with box width/height values which can then be manipulated - allowing us to stretch the Shape path to match its box dimensions
-// + __polyline__ (makePolyline) - a shape for freehand drawing. Should include a 'points' Array which could include [x,y] coordinates, or possibly any object containing x/y values (eg Vectors). The functionality would be to construct a long line (linear, possibly also quadratic for smoother lines) from the [points] data
 
 
 // #### Demos:
@@ -61,7 +61,7 @@
 
 // #### Imports
 import { constructors, radian, artefact } from '../core/library.js';
-import { mergeOver, isa_boolean, xt, xta, addStrings, xtGet, defaultNonReturnFunction, capitalize, removeItem, pushUnique } from '../core/utilities.js';
+import { mergeOver, isa_boolean, isa_obj, xt, xta, addStrings, xtGet, defaultNonReturnFunction, capitalize, removeItem, pushUnique } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from './vector.js';
 import { makeCoordinate } from './coordinate.js';
@@ -94,6 +94,9 @@ const Shape = function (items = {}) {
     this.controlLockTo = 'coord';
     this.endControlLockTo = 'coord';
     this.endLockTo = 'coord';
+
+    // Required by `polyline` species
+    this.pins = [];
 
     this.entityInit(items);
 
@@ -152,6 +155,7 @@ let defaultAttributes = {
 // + `polygon` (makePolygon)
 // + `star` (makeStar)
 // + `spiral` (makeSpiral)
+// + `polyline` (makePolyline)
     species: '',
 
 
@@ -171,6 +175,12 @@ let defaultAttributes = {
     loops: 1,
     loopIncrement: 1,
     drawFromLoop: 0,
+
+
+// Attributes used by `polyline` species
+    tension: 0,
+    pins: null,
+    closed: false,
 
 
 // Attributes used by `rectangle` species
@@ -276,7 +286,7 @@ P.packetCoordinates = pushUnique(P.packetCoordinates, ['startControl', 'control'
 P.packetObjects = pushUnique(P.packetObjects, ['startControlPivot', 'startControlPath', 'controlPivot', 'controlPath', 'endControlPivot', 'endControlPath', 'endPivot', 'endPath']);
 P.packetFunctions = pushUnique(P.packetFunctions, []);
 
-P.packetSpeciesCheck = ['loops', 'loopIncrement', 'drawFromLoop', 'rectangleWidth', 'rectangleHeight', 'radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY', 'radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB', 'sides', 'sideLength', 'radius1', 'radius2', 'points', 'twist', 'startControl', 'control', 'endControl', 'end', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'pathDefinition'];
+P.packetSpeciesCheck = ['loops', 'loopIncrement', 'drawFromLoop', 'rectangleWidth', 'rectangleHeight', 'radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY', 'radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB', 'sides', 'sideLength', 'radius1', 'radius2', 'points', 'twist', 'startControl', 'control', 'endControl', 'end', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'pathDefinition', 'tension', 'pins', 'closed'];
 
 P.packetSpeciesInclusions = {
     spiral: ['loops', 'loopIncrement', 'drawFromLoop'],
@@ -289,6 +299,7 @@ P.packetSpeciesInclusions = {
     quadratic: ['end', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'control', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo'],
     bezier: ['end', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'startControl', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'endControl', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo'],
     default: ['pathDefinition'],
+    polyline: ['tension', 'pins', 'closed'],
 };
 
 P.finalizePacketOut = function (copy, items) {
@@ -308,6 +319,12 @@ P.finalizePacketOut = function (copy, items) {
         if (keyCheck.indexOf(key) >= 0) {
 
             if (inclusions.indexOf(key) < 0) delete copy[key];
+        }
+
+        // Additional work required for `polyline` species
+        else if (key === 'pins') {
+
+            // Iterate through the array - if artefacts are included, only want their names
         }
     });
 
@@ -334,13 +351,16 @@ P.factoryKill = function () {
             if (art.controlPath && art.controlPath.name === this.name) art.set({ controlPath: false});
             if (art.endControlPath && art.endControlPath.name === this.name) art.set({ endControlPath: false});
             if (art.endPath && art.endPath.name === this.name) art.set({ endPath: false});
+
+            // Need to figure out how we are going to get artefacts to use the polyline pinbs as their reference point - will need changes in the position mixin as well as this file.
         }
     });
 };
 
 
 // #### Get, Set, deltaSet
-let S = P.setters,
+let G = P.getters,
+    S = P.setters,
     D = P.deltaSetters;
 
 // __pathDefinition__
@@ -980,6 +1000,77 @@ D.loops = function (item) {
     this.updateDirty();
 };
 
+// __pins__ - specific to `polyline` species
+G.pins = function (item) {
+
+    if (xt(item)) return this.getPinAt(item);
+    return this.currentPins.concat();
+};
+P.getPinAt = function (index) {
+
+    let pins = this.currentPins;
+
+    if (!index || !index.toFixed || index >= pin.length) return [].concat(pins[0]);
+    else return [].concat(pins[Math.floor(index)]);
+};
+S.pins = function (item) {
+
+    if (xt(item) && this.species === 'polyline') {
+
+        let pins = this.pins;
+
+        if (Array.isArray(item)) {
+
+            pins.length = 0;
+            pins.push(...item);
+            this.updateDirty();
+        }
+        else if (isa_obj(item) && xt(item.index)) {
+
+            let element = pins[item.index];
+
+            if (Array.isArray(element)) {
+
+                if (xt(item.x)) element[0] = item.x;
+                if (xt(item.y)) element[1] = item.y;
+                this.updateDirty();
+            }
+        }
+    }
+};
+D.pins = function (item) {
+
+    if (xt(item) && this.species === 'polyline') {
+
+        let pins = this.pins;
+
+        if (isa_obj(item) && xt(item.index)) {
+
+            let element = pins[item.index];
+
+            if (Array.isArray(element)) {
+
+                if (xt(item.x)) element[0] = addStrings(element[0], item.x);
+                if (xt(item.y)) element[1] = addStrings(element[1], item.y);
+                this.updateDirty();
+            }
+        }
+    }
+};
+P.updatePinAt = function (item, index) {
+
+    if (xta(item, index)) {
+
+        let pins = this.pins;
+
+        if (index < pins.length && index >= 0) {
+
+            pins[Math.floor(index)] = item;
+            this.updateDirty();
+        }
+    }
+};
+
 
 // #### Prototype functions
 
@@ -1289,7 +1380,7 @@ P.prepareStamp = function() {
     if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
 
         this.dirtyPathObject = true;
-        this.dirtyCollision = true;
+        if (this.collides) this.dirtyCollision = true;
 
 // `dirtySpecies` flag is specific to Shape entitys
         if (this.useStartAsControlPoint && this.dirtyStart) {
@@ -1306,7 +1397,7 @@ P.prepareStamp = function() {
     if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
 
         this.dirtyStampPositions = true;
-        this.dirtyCollision = true;
+        if (this.collides) this.dirtyCollision = true;
 
 // `useStartAsControlPoint` 
 // + When false, this flag indicates that line, quadratic and bezier shapes should treat `start` Coordinate updates as an instruction to move the entire Shape. 
@@ -1319,11 +1410,10 @@ P.prepareStamp = function() {
         }
     }
 
-    if (this.dirtyRotation || this.dirtyOffset) this.dirtyCollision = true;
+    if ((this.dirtyRotation || this.dirtyOffset) && this.collides) this.dirtyCollision = true;
 
     if (this.dirtyCollision && !this.useAsPath) {
 
-        this.useAsPath = true;
         this.dirtyPathObject = true;
         this.pathCalculatedOnce = false;
     }
@@ -1647,6 +1737,10 @@ P.cleanSpecies = function () {
             p = this.makeSpiralPath();
             break;
 
+        case 'polyline' :
+            p = this.makePolylinePath();
+            break;
+
         default :
             p = this.pathDefinition;
     }
@@ -1948,7 +2042,7 @@ P.makeSpiralPath = function () {
         currentTurn.push([x1 * loopIncrement, y1 * loopIncrement, x2 * loopIncrement, y2 * loopIncrement, x3 * loopIncrement, y3 * loopIncrement]);
     }
 
-    let path = 'M0,0';
+    let path = 'm0,0';
 
     for (let j = 0; j < loops; j++) {
 
@@ -1963,46 +2057,146 @@ P.makeSpiralPath = function () {
         }
     }
     return path;
-    // let loops = this.loops,
-    //     loopIncrement = this.loopIncrement,
-    //     innerRadius = this.innerRadius;
+};
 
-    // let myAngle = 0,
-    //     angleIncrement = 0.1,
-    //     angleSteps = loops * 2 * Math.PI,
-    //     steps = angleSteps / angleIncrement,
-    //     xPts = [],
-    //     yPts = [],
-    //     x, y, minX, minY, maxX, maxY, i;
+// `makePolylinePath` - internal helper function - called by `cleanSpecies`
+P.makePolylinePath = function () {
 
-    // let currentX = innerRadius,
-    //     currentY = 0;
+    // 0. local functions to help construct the path string
+    const getPathParts = function (x0, y0, x1, y1, x2, y2, t, coords) {
 
-    // let myPath = `l`;
+        let squareroot = Math.sqrt,
+            power = Math.pow;
 
-    // for (i = 0; i < steps; i++) {
+        let d01 = squareroot(power(x1 - x0,2) + power(y1 - y0, 2)),
+            d12 = squareroot(power(x2 - x1,2) + power(y2 - y1, 2)),
+            fa = t * d01 / (d01 + d12),
+            fb = t * d12 / (d01 + d12),
+            p1x = x1 - fa * (x2 - x0),
+            p1y = y1 - fa * (y2 - y0),
+            p2x = x1 + fb * (x2 - x0),
+            p2y = y1 + fb * (y2 - y0);
 
-    //     x = innerRadius * Math.cos(myAngle);
-    //     y = innerRadius * Math.sin(myAngle);
+        coords.push(p1x, p1y, x1, y1, p2x, p2y);
+    };
 
-    //     myPath += `${x - currentX},${y - currentY} `;
+    const buildLine = function (x, y, dx, dy, coords) {
 
-    //     currentX = x; 
-    //     currentY = y;
+        let p = `m${dx},${dy}l`;
 
-    //     xPts.push(currentX);
-    //     yPts.push(currentY);
+        for (let i = 2; i < coords.length; i += 6) {
 
-    //     innerRadius += loopIncrement; 
-    //     myAngle += angleIncrement;
-    // }
+            p += `${coords[i] - x},${coords[i + 1] - y} `;
 
-    // minX = Math.abs(Math.min(...xPts));
-    // minY = Math.abs(Math.min(...yPts));
+            x = coords[i];
+            y = coords[i + 1];
+        }
+        return p;
+    };
 
-    // myPath = `m${minX + this.innerRadius},${minY}${myPath}`;
+    const buildCurve = function (x, y, dx, dy, coords) {
 
-    // return myPath;
+        let p = `m${dx},${dy}c`,
+            counter = 0;
+
+        for (let i = 0; i < coords.length; i += 2) {
+
+            p += `${coords[i] - x},${coords[i + 1] - y} `;
+
+            counter++;
+
+            if (counter > 2) {
+
+                x = coords[i];
+                y = coords[i + 1];
+                counter = 0;
+            }
+        }
+        return p;
+    };
+
+
+    // 1. go through the pins array and get current values for each, pushed into currentPins array
+    let pins = this.pins,
+        current, temp,
+        tension = this.tension,
+        closed = this.closed;
+
+    if (!this.currentPins) this.currentPins = [];
+
+    current = this.currentPins
+    current.length = 0;
+
+    // An item in the pins array can be one of: a two-member array; or an artefact object; or an artefact's name-string:
+    pins.forEach((item, index) => {
+
+        if (item.substring) {
+
+            temp = artefact[item];
+            pins[index] = temp;
+        }
+        else temp = item;
+
+        if (xt(temp)) {
+
+            if (Array.isArray(temp)) {
+
+                // need to deal with %relative values here
+
+                current.push([...temp]);
+            }
+            else if (isa_obj(temp) && temp.currentStart) {
+
+                current.push([...temp.currentStart]);
+            }
+        }
+    });
+    
+    // 2. build the line
+    let cLen = current.length,
+        first = current[0],
+        last = current[cLen - 1],
+        calc = [],
+        box = this.localBox,
+        bx = (box) ? box[0] : 0,
+        by = (box) ? box[1] : 0,
+        result = 'm0,0';
+
+    if (closed) {
+
+        getPathParts(...last, ...first, ...current[1], tension, calc);
+
+        let startPoint = [].concat(calc);
+        calc.length = 0;
+
+        for (let i = 0; i < cLen - 2; i++) {
+
+            getPathParts(...current[i], ...current[i + 1], ...current[i + 2], tension, calc);
+        }
+
+        getPathParts(...current[cLen - 2], ...last, ...first, tension, calc);
+
+        calc.unshift(startPoint[4], startPoint[5]);
+        calc.push(startPoint[0], startPoint[1], startPoint[2], startPoint[3]);
+
+        if (tension) result = buildCurve(first[0], first[1], bx, by, calc) + 'z';
+        else result = buildLine(first[0], first[1], bx, by, calc) + 'z';
+
+    }
+    else {
+
+        calc.push(first[0], first[1]);
+
+        for (let i = 0; i < cLen - 2; i++) {
+
+            getPathParts(...current[i], ...current[i + 1], ...current[i + 2], tension, calc);
+        }
+        calc.push(last[0], last[1], last[0], last[1]);
+
+        if (tension) result = buildCurve(calc[0], calc[1], bx, by, calc);
+        else result = buildLine(calc[0], calc[1], bx, by, calc);
+    }
+    return result;
 };
 
 
@@ -2487,6 +2681,29 @@ const makeSpiral = function (items = {}) {
     return new Shape(items);
 };
 
+// ##### makePolyline
+// [add text], with attributes:
+// + [list of attributes]
+//
+// ```
+// scrawl.makePolyline({
+//
+//     name: 'myPolyline',
+//
+//     strokeStyle: 'darkgreen',
+//     method: 'draw',
+//
+//     startX: 50,
+//     startY: 100,
+//
+// });
+// ```
+const makePolyline = function (items = {}) {
+
+    items.species = 'polyline';
+    return new Shape(items);
+};
+
 constructors.Shape = Shape;
 
 
@@ -2504,4 +2721,5 @@ export {
     makePolygon,
     makeStar,
     makeSpiral,
+    makePolyline,
 };

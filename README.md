@@ -1,5 +1,5 @@
 # Scrawl-canvas Library 
-Version: `8.0.11 - 9 May 2020` 
+Version: `8.1.0 - 17 May 2020` 
 
 ![npm package](https://img.shields.io/npm/v/scrawl-canvas?color=brightgreen) ![dependencies](https://img.shields.io/librariesio/github/KaliedaRik/scrawl-canvas)
 
@@ -46,7 +46,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the files to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.0.11 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-11.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-11.zip) - this package only includes the minified files.
+Alternatively, a zip package of the v8.1.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-11.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-1-0.zip) - this package only includes the minified files.
 
 ```
 <!-- Hello world -->
@@ -95,7 +95,7 @@ Alternatively, a zip package of the v8.0.11 files can be downloaded from this li
 This will pull the requested npm package directly into your web page:
 ```
 <script type="module">
-    import scrawl from 'https://unpkg.com/scrawl-canvas@8.0.11';
+    import scrawl from 'https://unpkg.com/scrawl-canvas@8.1.0';
     [...]
 </script>
 ```
