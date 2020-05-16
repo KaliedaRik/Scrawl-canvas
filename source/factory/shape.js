@@ -181,6 +181,7 @@ let defaultAttributes = {
     tension: 0,
     pins: null,
     closed: false,
+    mapToPins: false,
 
 
 // Attributes used by `rectangle` species
@@ -286,7 +287,7 @@ P.packetCoordinates = pushUnique(P.packetCoordinates, ['startControl', 'control'
 P.packetObjects = pushUnique(P.packetObjects, ['startControlPivot', 'startControlPath', 'controlPivot', 'controlPath', 'endControlPivot', 'endControlPath', 'endPivot', 'endPath']);
 P.packetFunctions = pushUnique(P.packetFunctions, []);
 
-P.packetSpeciesCheck = ['loops', 'loopIncrement', 'drawFromLoop', 'rectangleWidth', 'rectangleHeight', 'radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY', 'radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB', 'sides', 'sideLength', 'radius1', 'radius2', 'points', 'twist', 'startControl', 'control', 'endControl', 'end', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'pathDefinition', 'tension', 'pins', 'closed'];
+P.packetSpeciesCheck = ['loops', 'loopIncrement', 'drawFromLoop', 'rectangleWidth', 'rectangleHeight', 'radiusTLX', 'radiusTLY', 'radiusTRX', 'radiusTRY', 'radiusBRX', 'radiusBRY', 'radiusBLX', 'radiusBLY', 'radiusX', 'radiusY', 'intersectX', 'intersectY', 'offshootA', 'offshootB', 'sides', 'sideLength', 'radius1', 'radius2', 'points', 'twist', 'startControl', 'control', 'endControl', 'end', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'pathDefinition', 'tension', 'pins', 'closed', 'mapToPins'];
 
 P.packetSpeciesInclusions = {
     spiral: ['loops', 'loopIncrement', 'drawFromLoop'],
@@ -299,7 +300,7 @@ P.packetSpeciesInclusions = {
     quadratic: ['end', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'control', 'controlPivot', 'controlPivotCorner', 'addControlPivotHandle', 'addControlPivotOffset', 'controlPath', 'controlPathPosition', 'addControlPathHandle', 'addControlPathOffset', 'controlLockTo'],
     bezier: ['end', 'endPivot', 'endPivotCorner', 'addEndPivotHandle', 'addEndPivotOffset', 'endPath', 'endPathPosition', 'addEndPathHandle', 'addEndPathOffset', 'endLockTo', 'startControl', 'startControlPivot', 'startControlPivotCorner', 'addStartControlPivotHandle', 'addStartControlPivotOffset', 'startControlPath', 'startControlPathPosition', 'addStartControlPathHandle', 'addStartControlPathOffset', 'startControlLockTo', 'endControl', 'endControlPivot', 'endControlPivotCorner', 'addEndControlPivotHandle', 'addEndControlPivotOffset', 'endControlPath', 'endControlPathPosition', 'addEndControlPathHandle', 'addEndControlPathOffset', 'endControlLockTo'],
     default: ['pathDefinition'],
-    polyline: ['tension', 'pins', 'closed'],
+    polyline: ['tension', 'pins', 'closed', 'mapToPins'],
 };
 
 P.finalizePacketOut = function (copy, items) {
@@ -352,7 +353,7 @@ P.factoryKill = function () {
             if (art.endControlPath && art.endControlPath.name === this.name) art.set({ endControlPath: false});
             if (art.endPath && art.endPath.name === this.name) art.set({ endPath: false});
 
-            // Need to figure out how we are going to get artefacts to use the polyline pinbs as their reference point - will need changes in the position mixin as well as this file.
+            // Need to figure out how we are going to get artefacts to use the polyline pins as their reference point - will need changes in the position mixin as well as this file.
         }
     });
 };
@@ -1024,6 +1025,7 @@ S.pins = function (item) {
             pins.length = 0;
             pins.push(...item);
             this.updateDirty();
+            this.dirtyPins = true;
         }
         else if (isa_obj(item) && xt(item.index)) {
 
@@ -1034,6 +1036,7 @@ S.pins = function (item) {
                 if (xt(item.x)) element[0] = item.x;
                 if (xt(item.y)) element[1] = item.y;
                 this.updateDirty();
+                this.dirtyPins = true;
             }
         }
     }
@@ -1053,6 +1056,7 @@ D.pins = function (item) {
                 if (xt(item.x)) element[0] = addStrings(element[0], item.x);
                 if (xt(item.y)) element[1] = addStrings(element[1], item.y);
                 this.updateDirty();
+                this.dirtyPins = true;
             }
         }
     }
@@ -1067,7 +1071,19 @@ P.updatePinAt = function (item, index) {
 
             pins[Math.floor(index)] = item;
             this.updateDirty();
+            this.dirtyPins = true;
         }
+    }
+};
+P.removePinAt = function (index) {
+
+    let pins = this.pins;
+
+    if (index < pins.length && index >= 0) {
+
+        pins[Math.floor(index)] = null;
+        this.updateDirty();
+        this.dirtyPins = true;
     }
 };
 
@@ -1377,7 +1393,7 @@ P.prepareStamp = function() {
     if (this.controlLockTo === 'path') this.dirtyControl = true;
     if (this.endLockTo === 'path') this.dirtyEnd = true;
 
-    if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
+    if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle || this.dirtyPins) {
 
         this.dirtyPathObject = true;
         if (this.collides) this.dirtyCollision = true;
@@ -1390,7 +1406,7 @@ P.prepareStamp = function() {
         }
 
 // `pathCalculatedOnce` - calculating path data is an expensive operation - use this flag to limit the calculation to run only when needed
-        if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd)  this.pathCalculatedOnce = false;
+        if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyPins)  this.pathCalculatedOnce = false;
 
     }
 
@@ -1610,6 +1626,8 @@ P.cleanPathObject = function () {
     this.dirtyPathObject = false;
 
     if (!this.noPathUpdates || !this.pathObject) {
+
+        if (this.species === 'polyline' && this.dirtyPins) this.makePolylinePath();
 
         this.calculateLocalPath(this.pathDefinition);
         this.cleanStampPositionsAdditionalActions();
@@ -2062,6 +2080,8 @@ P.makeSpiralPath = function () {
 // `makePolylinePath` - internal helper function - called by `cleanSpecies`
 P.makePolylinePath = function () {
 
+    this.dirtyPins = false;
+
     // 0. local functions to help construct the path string
     const getPathParts = function (x0, y0, x1, y1, x2, y2, t, coords) {
 
@@ -2080,9 +2100,9 @@ P.makePolylinePath = function () {
         coords.push(p1x, p1y, x1, y1, p2x, p2y);
     };
 
-    const buildLine = function (x, y, dx, dy, coords) {
+    const buildLine = function (x, y, coords) {
 
-        let p = `m${dx},${dy}l`;
+        let p = `m0,0l`;
 
         for (let i = 2; i < coords.length; i += 6) {
 
@@ -2094,9 +2114,9 @@ P.makePolylinePath = function () {
         return p;
     };
 
-    const buildCurve = function (x, y, dx, dy, coords) {
+    const buildCurve = function (x, y, coords) {
 
-        let p = `m${dx},${dy}c`,
+        let p = `m0,0c`,
             counter = 0;
 
         for (let i = 0; i < coords.length; i += 2) {
@@ -2130,14 +2150,14 @@ P.makePolylinePath = function () {
     // An item in the pins array can be one of: a two-member array; or an artefact object; or an artefact's name-string:
     pins.forEach((item, index) => {
 
-        if (item.substring) {
+        if (item && item.substring) {
 
             temp = artefact[item];
             pins[index] = temp;
         }
         else temp = item;
 
-        if (xt(temp)) {
+        if (temp) {
 
             if (Array.isArray(temp)) {
 
@@ -2151,15 +2171,12 @@ P.makePolylinePath = function () {
             }
         }
     });
-    
+
     // 2. build the line
     let cLen = current.length,
         first = current[0],
         last = current[cLen - 1],
         calc = [],
-        box = this.localBox,
-        bx = (box) ? box[0] : 0,
-        by = (box) ? box[1] : 0,
         result = 'm0,0';
 
     if (closed) {
@@ -2179,8 +2196,8 @@ P.makePolylinePath = function () {
         calc.unshift(startPoint[4], startPoint[5]);
         calc.push(startPoint[0], startPoint[1], startPoint[2], startPoint[3]);
 
-        if (tension) result = buildCurve(first[0], first[1], bx, by, calc) + 'z';
-        else result = buildLine(first[0], first[1], bx, by, calc) + 'z';
+        if (tension) result = buildCurve(first[0], first[1], calc) + 'z';
+        else result = buildLine(first[0], first[1], calc) + 'z';
 
     }
     else {
@@ -2193,8 +2210,29 @@ P.makePolylinePath = function () {
         }
         calc.push(last[0], last[1], last[0], last[1]);
 
-        if (tension) result = buildCurve(calc[0], calc[1], bx, by, calc);
-        else result = buildLine(calc[0], calc[1], bx, by, calc);
+        if (tension) result = buildCurve(first[0], first[1], calc);
+        else result = buildLine(first[0], first[1], calc);
+    }
+
+    if (this.mapToPins) {
+
+        let init = (closed) ? 4 : 2,
+            minX = first[0], 
+            minY = first[1], 
+            startX = first[0], 
+            startY = first[1],
+            skip = 6;
+
+        for (let i = init, iz = calc.length; i < iz; i += skip) {
+
+            if (calc[i] < minX) minX = calc[i];
+            if (calc[i + 1] < minY) minY = calc[i + 1];
+        }
+
+        this.set({
+            offsetX: startX + (minX - startX), 
+            offsetY: startY + (minY - startY), 
+        });
     }
     return result;
 };

@@ -61,7 +61,7 @@ export default function (d, scale, start, useAsPath, precision) {
     };
 
     // The purpose of this loop is to 
-    // 1. convert all point values fromn strings to floats
+    // 1. convert all point values from strings to floats
     // 2. scale every value
     // 3. relativize every value to the last stated cursor position
     // 4. populate the temporary myData array with data which can be used for all subsequent calculations

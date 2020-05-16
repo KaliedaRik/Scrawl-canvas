@@ -424,6 +424,14 @@ export default function (P = {}) {
                 if (art.pivot && art.pivot.name === myname) art.set({ pivot: false});
                 if (art.mimic && art.mimic.name === myname) art.set({ mimic: false});
                 if (art.path && art.path.name === myname) art.set({ path: false});
+
+                if (Array.isArray(art.pins)) {
+
+                	art.pins.forEach((item, index) => {
+
+                		if (isa_obj(item) && item.name === myname) art.removePinAt(index);
+                	});
+                }
             }
         });
 
