@@ -1,4 +1,4 @@
-// # Shape factory
+// # Line factory
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
 // 
 // All path-defined entitys can be positioned, cloned, filtered etc:
@@ -36,28 +36,30 @@
 
 
 // #### Imports
-import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { constructors, artefact } from '../core/library.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
 import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
 import shapeMix from '../mixin/shapeBasic.js';
+import curveMix from '../mixin/shapeCurve.js';
 import filterMix from '../mixin/filter.js';
 
 
-// #### Shape constructor
-const Shape = function (items = {}) {
+// #### Line constructor
+const Line = function (items = {}) {
 
+    this.curveInit(items);
     this.shapeInit(items);
+
     return this;
 };
 
 
-// #### Shape prototype
-let P = Shape.prototype = Object.create(Object.prototype);
-P.type = 'Shape';
+// #### Line prototype
+let P = Line.prototype = Object.create(Object.prototype);
+P.type = 'Line';
 P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
@@ -69,13 +71,12 @@ P = positionMix(P);
 P = anchorMix(P);
 P = entityMix(P);
 P = shapeMix(P);
+P = curveMix(P);
 P = filterMix(P);
 
 
-// #### Shape attributes
-// [copy relevant parts from shape-original js]
-let defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);
+// #### Line attributes
+// No additional attributes required
 
 
 // #### Packet management
@@ -91,7 +92,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-// let S = P.setters;
+// No additional getter/setter functionality required
 
 
 // #### Prototype functions
@@ -100,44 +101,61 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
+
+    let p = 'M0,0';
+
+    p = this.makeLinePath();
+    
+    this.pathDefinition = p;
+};
+
+// `makeLinePath` - internal helper function - called by `cleanSpecies`
+P.makeLinePath = function () {
+    
+    let [startX, startY] = this.currentStampPosition;
+    let [endX, endY] = this.currentEnd;
+
+    return `m0,0l${(endX - startX)},${(endY - startY)}`;
 };
 
 
 // #### Factories
 
-// ##### makeShape 
+// ##### makeLine
 // Accepts argument with attributes:
-// + `pathDefinition` (required) - an [SVG `d` attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d) String
+// + __start__ (___startX___, ___startY___) Coordinate, or __pivot__/__mimic__/__path__ reference artefact (required)
+// + __end__ (___endX___, ___endY___) Coordinate, or __endPivot__/__endPath__ reference artefact (required) 
+// + If using reference artefacts, may also need to set the __lockTo__ (___lockXTo___, ___lockYTo___) and __endLockTo__ lock attributes
+// + additional reference-linked attributes for the `end` coordinate: __endPivotCorner__, __addEndPivotHandle__, __addEndPivotOffset__, __endPathPosition__, __addEndPathHandle__, __addEndPathOffset__
 //
 // ```
-// scrawl.makeShape({
+// scrawl.makeLine({
 //
-//     name: 'myArrow',
+//     name: 'my-line',
 //
-//     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
+//     startX: 20,
+//     startY: 300,
 //
-//     startX: 300,
-//     startY: 200,
-//     handleX: '50%',
-//     handleY: '50%',
+//     endX: 580,
+//     endY: 275,
 //
-//     scale: 0.2,
-//     scaleOutline: false,
+//     lineWidth: 3,
+//     lineCap: 'round',
 //
-//     fillStyle: 'lightgreen',
-//
-//     method: 'fill',
+//     strokeStyle: 'darkgoldenrod',
+//     method: 'draw',
 // });
 // ```
-const makeShape = function (items) {
+const makeLine = function (items = {}) {
 
-    return new Shape(items);
+    items.species = 'line';
+    return new Line(items);
 };
 
-constructors.Shape = Shape;
+constructors.Line = Line;
 
 
 // #### Exports
 export {
-    makeShape,
+    makeLine,
 };

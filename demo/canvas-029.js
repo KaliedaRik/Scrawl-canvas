@@ -43,8 +43,6 @@ scrawl.makeQuadratic({
 
     name: 'my-quad',
 
-    handleY: 'bottom',
-
     startX: '30%',
     startY: '98%',
 

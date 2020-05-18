@@ -21,17 +21,13 @@ scrawl.makeShape({
     name: 'japan_fill',
 
     startX: 50,
-    startY: 20,
+    startY: 50,
 
     fillStyle: 'green',
     strokeStyle: 'gold',
 
     lineWidth: 2,
     lineJoin: 'round',
-    shadowOffsetX: 2,
-    shadowOffsetY: 2,
-    shadowBlur: 2,
-    shadowColor: 'black',
 
     scale: 0.2,
     scaleOutline: false,
@@ -355,7 +351,7 @@ scrawl.makeShape({
     name: 'japan_draw',
     startX: 200,
     method: 'draw',
-    showBoundingBox: false,
+    // showBoundingBox: false,
 
 }).clone({
     name: 'japan_drawAndFill',
@@ -371,7 +367,7 @@ scrawl.makeShape({
 }).clone({
     name: 'japan_drawThenFill',
     startX: 50,
-    startY: 170,
+    startY: 200,
     method: 'drawThenFill',
 
 }).clone({
@@ -391,6 +387,15 @@ scrawl.library.artefact.japan_fillAndDraw.set({
     strokeStyle: 'coral',
 });
 
+scrawl.makeWheel({
+    name: 'pin',
+    pivot: 'japan_draw',
+    lockTo: 'pivot',
+    handleX: 'center',
+    handleY: 'center',
+    fillStyle: 'red',
+    radius: 3,
+});
 
 // #### User interaction
 // Create the drag-and-drop zone

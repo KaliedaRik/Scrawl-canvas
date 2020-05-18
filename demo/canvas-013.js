@@ -1,5 +1,5 @@
 // # Demo Canvas 013 
-// Defined Shape entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral
+// Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral
 
 // [Run code](../../demo/canvas-013.html)
 import scrawl from '../source/scrawl.js'
@@ -95,9 +95,9 @@ scrawl.makeRectangle({
 scrawl.makeLine({
     name: 'firstLine',
     startX: 20,
-    startY: 300,
+    startY: 320,
     endX: 580,
-    endY: 275,
+    endY: 295,
     lineWidth: 3,
     lineCap: 'round',
     strokeStyle: 'darkgoldenrod',
@@ -108,27 +108,26 @@ scrawl.makeLine({
 
 }).clone({
     name: 'secondLine',
-    startY: '19%',
-    endY: '17.2%',
+    startY: '22%',
+    endY: '19.2%',
 
 }).clone({
     name: 'thirdLine',
     startX: '20%',
-    startY: '18.25%',
+    startY: '18.5%',
     endX: '85%',
-    endY: '18.25%',
+    endY: '18.5%',
 });
 
 // ##### makeQuadratic factory function 
 scrawl.makeQuadratic({
     name: 'firstQuad',
     startX: '5%',
-    startY: '26.5%',
+    startY: '30.5%',
     controlX: '50%',
-    controlY: '18%',
+    controlY: '22%',
     endX: '95%',
-    endY: '26.5%',
-    handleY: 'center',
+    endY: '30.5%',
     lineWidth: 3,
     lineCap: 'round',
     strokeStyle: 'darkseagreen',
@@ -140,13 +139,13 @@ scrawl.makeQuadratic({
 }).clone({
     name: 'secondQuad',
     startX: '7%',
-    controlY: '15.5%',
+    controlY: '18.5%',
     endX: '93%',
 
 }).clone({
     name: 'thirdQuad',
     startX: '9%',
-    controlY: '12%',
+    controlY: '15%',
     endX: '91%',
 });
 
@@ -161,7 +160,6 @@ scrawl.makeBezier({
     endControlY: '41%',
     endX: '95%',
     endY: '36%',
-    handleY: 'center',
     lineWidth: 3,
     lineCap: 'round',
     strokeStyle: 'linen',
@@ -227,7 +225,7 @@ scrawl.makePolygon({
     name: 'equiTriangle',
     startX: 20,
     startY: 935,
-    sideLength: 60,
+    radius: 60,
     sides: 3,
     fillStyle: 'lightblue',
     method: 'fillAndDraw',
@@ -248,7 +246,7 @@ scrawl.makePolygon({
 }).clone({
     name: '11sides',
     startX: 420,
-    sideLength: 30,
+    radius: 30,
     sides: 11,
 });
 
@@ -288,7 +286,7 @@ scrawl.makeSpiral({
     loops: 5,
     loopIncrement: 0.1,
     drawFromLoop: 0,
-    scale: 50,
+    scale: 70,
     scaleOutline: false,
 
     showBoundingBox: true,
@@ -336,7 +334,7 @@ scrawl.makePicture({
 
     delta: {
         pathPosition: 0.0015,
-    }
+    },
 
 }).clone({
     name: '_blockRectangle',
@@ -531,3 +529,5 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+console.log(scrawl.library.entity);

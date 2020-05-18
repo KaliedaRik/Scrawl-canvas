@@ -1,5 +1,5 @@
 // # Demo Canvas 014 
-// Line, quadratic and bezier Shapes - control lock alternatives
+// Line, Quadratic and Bezier entitys - control lock alternatives
 
 // [Run code](../../demo/canvas-014.html)
 import scrawl from '../source/scrawl.js'

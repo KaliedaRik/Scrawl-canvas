@@ -190,3 +190,5 @@ document.querySelector('#roll').value = 0;
 document.querySelector('#scale').value = 0.2;
 document.querySelector('#upend').options.selectedIndex = 0;
 document.querySelector('#reverse').options.selectedIndex = 0;
+
+console.log(scrawl.library.entity.myArrow);

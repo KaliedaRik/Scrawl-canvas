@@ -1,4 +1,4 @@
-// # Shape factory
+// # Polygon factory
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
 // 
 // All path-defined entitys can be positioned, cloned, filtered etc:
@@ -39,6 +39,8 @@
 import { constructors } from '../core/library.js';
 import { mergeOver } from '../core/utilities.js';
 
+import { requestVector, releaseVector } from './vector.js';
+
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
 import anchorMix from '../mixin/anchor.js';
@@ -47,17 +49,17 @@ import shapeMix from '../mixin/shapeBasic.js';
 import filterMix from '../mixin/filter.js';
 
 
-// #### Shape constructor
-const Shape = function (items = {}) {
+// #### Polygon constructor
+const Polygon = function (items = {}) {
 
     this.shapeInit(items);
     return this;
 };
 
 
-// #### Shape prototype
-let P = Shape.prototype = Object.create(Object.prototype);
-P.type = 'Shape';
+// #### Polygon prototype
+let P = Polygon.prototype = Object.create(Object.prototype);
+P.type = 'Polygon';
 P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
@@ -72,9 +74,13 @@ P = shapeMix(P);
 P = filterMix(P);
 
 
-// #### Shape attributes
+// #### Polygon attributes
 // [copy relevant parts from shape-original js]
-let defaultAttributes = {};
+let defaultAttributes = {
+
+    sides: 0,
+    radius: 0,
+};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
@@ -91,7 +97,32 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-// let S = P.setters;
+let S = P.setters,
+    D = P.deltaSetters;
+
+// __sides__
+S.sides = function (item) {
+
+    this.sides = item;
+    this.updateDirty();
+};
+D.sides = function (item) {
+
+    this.sides += item;
+    this.updateDirty();
+};
+
+// __sideLength__
+S.radius = function (item) {
+
+    this.radius = item;
+    this.updateDirty();
+};
+D.radius = function (item) {
+
+    this.radius += item;
+    this.updateDirty();
+};
 
 
 // #### Prototype functions
@@ -100,44 +131,79 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
+
+    let p = 'M0,0';
+    p = this.makePolygonPath();
+
+    this.pathDefinition = p;
+};
+
+
+// `makePolygonPath` - internal helper function - called by `cleanSpecies`
+P.makePolygonPath = function () {
+
+    let radius = this.radius,
+        sides = this.sides,
+        turn = 360 / sides,
+        myPath = ``,
+        yPts = [],
+        currentY = 0,
+        myMax, myMin, myYoffset;
+
+    let v = requestVector({x: 0, y: -radius});
+
+    for (let i = 0; i < sides; i++) {
+
+        v.rotate(turn);
+        currentY += v.y;
+        yPts.push(currentY);
+        myPath += `${v.x.toFixed(1)},${v.y.toFixed(1)} `;
+    }
+
+    releaseVector(v);
+
+    myMin = Math.min(...yPts);
+    myMax = Math.max(...yPts);
+    myYoffset = (((Math.abs(myMin) + Math.abs(myMax)) - radius) / 2).toFixed(1);
+
+    myPath = `m0,${myYoffset}l${myPath}z`;
+
+    return myPath;
 };
 
 
 // #### Factories
 
-// ##### makeShape 
+// ##### makePolygon
 // Accepts argument with attributes:
-// + `pathDefinition` (required) - an [SVG `d` attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d) String
+// + __sides__ (required) - integer positive Number (greater than 2) representing the number of sides the Shape will have
+// + __radius__ (required) - float Number representing the distance (in px) from the center of the Shape to the first angle on the Shape's circumference.
 //
 // ```
-// scrawl.makeShape({
+// scrawl.makePolygon({
 //
-//     name: 'myArrow',
+//     name: 'triangle',
 //
-//     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
+//     startX: 20,
+//     startY: 935,
 //
-//     startX: 300,
-//     startY: 200,
-//     handleX: '50%',
-//     handleY: '50%',
+//     radius: 60,
+//     sides: 3,
 //
-//     scale: 0.2,
-//     scaleOutline: false,
-//
-//     fillStyle: 'lightgreen',
-//
-//     method: 'fill',
+//     fillStyle: 'lightblue',
+//     method: 'fillAndDraw',
 // });
 // ```
-const makeShape = function (items) {
+const makePolygon = function (items = {}) {
 
-    return new Shape(items);
+    items.species = 'polygon';
+    return new Polygon(items);
 };
 
-constructors.Shape = Shape;
+constructors.Polygon = Polygon;
 
 
 // #### Exports
 export {
-    makeShape,
+    makePolygon,
 };

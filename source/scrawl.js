@@ -83,6 +83,11 @@ import {
 
 
 import { 
+    makeBezier,
+} from './factory/bezier.js';
+
+
+import { 
     makeColor,
 } from './factory/color.js';
 
@@ -123,8 +128,18 @@ import {
 
 
 import { 
+    makeLine,
+} from './factory/line.js';
+
+
+import { 
     makeLoom,
 } from './factory/loom.js';
+
+
+import { 
+    makeOval,
+} from './factory/oval.js';
 
 
 import { 
@@ -143,6 +158,16 @@ import {
 
 
 import { 
+    makePolygon,
+} from './factory/polygon.js';
+
+
+import { 
+    makeQuadratic,
+} from './factory/quadratic.js';
+
+
+import { 
     requestQuaternion, 
     releaseQuaternion,
 } from './factory/quaternion.js';
@@ -154,28 +179,38 @@ import {
 
 
 import { 
+    makeRectangle,
+} from './factory/rectangle.js';
+
+
+import { 
     makeRender,
 } from './factory/renderAnimation.js';
 
 
 import { 
     makeShape,
-    makeLine,
-    makeQuadratic,
-    makeBezier,
-    makeRectangle,
-    makeOval,
-    makeTetragon,
-    makePolygon,
-    makeStar,
-    makeSpiral,
-    makePolyline,
 } from './factory/shape.js';
+
+
+import { 
+    makeSpiral,
+} from './factory/spiral.js';
 
 
 import { 
     importSprite,
 } from './factory/spriteAsset.js';
+
+
+import { 
+    makeStar,
+} from './factory/star.js';
+
+
+import { 
+    makeTetragon,
+} from './factory/tetragon.js';
 
 
 import { 
@@ -262,6 +297,10 @@ export default {
     makeAnimation,
 
 
+    // factory/bezier.js
+    makeBezier,
+
+
     // factory/block.js
     makeBlock,
 
@@ -299,9 +338,16 @@ export default {
     createImageFromEntity,
 
 
+    // factory/line.js
+    makeLine,
+
+
     // factory/loom.js
     makeLoom,
 
+
+    // factory/oval.js
+    makeOval,
 
     // factory/pattern.js
     makePattern,
@@ -315,6 +361,14 @@ export default {
     makePicture,
 
 
+    // factory/polygon.js
+    makePolygon,
+
+
+    // factory/quadratic.js
+    makeQuadratic,
+
+
     // factory/quaternion.js
     requestQuaternion, 
     releaseQuaternion,
@@ -324,26 +378,32 @@ export default {
     makeRadialGradient,
 
 
+    // factory/rectangle.js
+    makeRectangle,
+
+
     // factory/renderAnimation.js
     makeRender,
 
 
     // factory/shape.js
     makeShape,
-    makeLine,
-    makeQuadratic,
-    makeBezier,
-    makeRectangle,
-    makeOval,
-    makeTetragon,
-    makePolygon,
-    makeStar,
+
+
+    // factory/spiral.js
     makeSpiral,
-    makePolyline,
 
 
     // factory/spriteAsset.js
     importSprite,
+
+
+    // factory/star.js
+    makeStar,
+
+
+    // factory/tetragon.js
+    makeTetragon,
 
 
     // factory/ticker.js

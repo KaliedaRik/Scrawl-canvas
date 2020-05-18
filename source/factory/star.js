@@ -1,4 +1,4 @@
-// # Shape factory
+// # Star factory
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
 // 
 // All path-defined entitys can be positioned, cloned, filtered etc:
@@ -39,6 +39,8 @@
 import { constructors } from '../core/library.js';
 import { mergeOver } from '../core/utilities.js';
 
+import { requestVector, releaseVector } from './vector.js';
+
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
 import anchorMix from '../mixin/anchor.js';
@@ -47,17 +49,17 @@ import shapeMix from '../mixin/shapeBasic.js';
 import filterMix from '../mixin/filter.js';
 
 
-// #### Shape constructor
-const Shape = function (items = {}) {
+// #### Star constructor
+const Star = function (items = {}) {
 
     this.shapeInit(items);
     return this;
 };
 
 
-// #### Shape prototype
-let P = Shape.prototype = Object.create(Object.prototype);
-P.type = 'Shape';
+// #### Star prototype
+let P = Star.prototype = Object.create(Object.prototype);
+P.type = 'Star';
 P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
@@ -72,9 +74,15 @@ P = shapeMix(P);
 P = filterMix(P);
 
 
-// #### Shape attributes
+// #### Star attributes
 // [copy relevant parts from shape-original js]
-let defaultAttributes = {};
+let defaultAttributes = {
+
+    radius1: 0,
+    radius2: 0,
+    points: 0,
+    twist: 0,
+};
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 
@@ -91,7 +99,54 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Get, Set, deltaSet
-// let S = P.setters;
+let S = P.setters,
+    D = P.deltaSetters;
+
+// __radius1__, __radius2__
+S.radius1 = function (item) {
+
+    this.radius1 = item;
+    this.updateDirty();
+};
+D.radius1 = function (item) {
+
+    this.radius1 += item;
+    this.updateDirty();
+};
+S.radius2 = function (item) {
+
+    this.radius2 = item;
+    this.updateDirty();
+};
+D.radius2 = function (item) {
+
+    this.radius2 += item;
+    this.updateDirty();
+};
+
+// __points__
+S.points = function (item) {
+
+    this.points = item;
+    this.updateDirty();
+};
+D.points = function (item) {
+
+    this.points += item;
+    this.updateDirty();
+};
+
+// __twist__
+S.twist = function (item) {
+
+    this.twist = item;
+    this.updateDirty();
+};
+D.twist = function (item) {
+
+    this.twist += item;
+    this.updateDirty();
+};
 
 
 // #### Prototype functions
@@ -100,44 +155,113 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
+
+    let p = 'M0,0';
+    p = this.makeStarPath();
+
+    this.pathDefinition = p;
+};
+
+
+// `makeStarPath` - internal helper function - called by `cleanSpecies`
+P.makeStarPath = function () {
+
+    let points = this.points,
+        twist = this.twist,
+        radius1 = this.radius1,
+        radius2 = this.radius2,
+        turn = 360 / points,
+        xPts = [],
+        currentX, currentY, x, y,
+        myMin, myXoffset, myYoffset, i,
+        myPath = '';
+
+    let v1 = requestVector({x: 0, y: -radius1}),
+        v2 = requestVector({x: 0, y: -radius2});
+
+    currentX = v1.x;
+    currentY = v1.y;
+
+    xPts.push(currentX);
+
+    v2.rotate(-turn/2);
+    v2.rotate(twist);
+
+    for (i = 0; i < points; i++) {
+
+        v2.rotate(turn);
+
+        x = parseFloat((v2.x - currentX).toFixed(1));
+        currentX += x;
+        xPts.push(currentX);
+
+        y = parseFloat((v2.y - currentY).toFixed(1));
+        currentY += y;
+
+        myPath += `${x},${y} `;
+
+        v1.rotate(turn);
+
+        x = parseFloat((v1.x - currentX).toFixed(1));
+        currentX += x;
+        xPts.push(currentX);
+
+        y = parseFloat((v1.y - currentY).toFixed(1));
+        currentY += y;
+
+        myPath += `${x},${y} `;
+
+    }
+
+    releaseVector(v1);
+    releaseVector(v2);
+
+    myMin = Math.min(...xPts);
+    myXoffset = Math.abs(myMin).toFixed(1);
+
+    myPath = `m${myXoffset},0l${myPath}z`;
+
+    return myPath;
 };
 
 
 // #### Factories
 
-// ##### makeShape 
+// ##### makeStar
 // Accepts argument with attributes:
-// + `pathDefinition` (required) - an [SVG `d` attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d) String
+// + __radius1__ (required) - the _outer_ radius representing the distance between the center of the Shape and the tips of its (acute angle) points.
+// + __radius2__ (required) - the _inner_ radius representing the distance between the center of the Shape and the obtuse angle at the valley between the tips of its (acute angle) points.
+// + __points__ (required) - a positive integer Number representing the number of points the star will have.
+// + __twist__ - a float Number representing the degrees by which the star's second radius will be rotated out of line from its first radius; the default value `0` will produce a star with all of its sides of equal length and the star's valleys falling midway between its connecting points.
+// + Note that the use of _inner_ and _outer_ above is purely descriptive: `radius2` can be larger than `radius1`
 //
 // ```
-// scrawl.makeShape({
+// scrawl.makeStar({
 //
-//     name: 'myArrow',
+//     name: '5star',
 //
-//     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
+//     startX: 20,
+//     startY: 100,
 //
-//     startX: 300,
-//     startY: 200,
-//     handleX: '50%',
-//     handleY: '50%',
+//     radius1: 80,
+//     radius2: 50,
 //
-//     scale: 0.2,
-//     scaleOutline: false,
+//     points: 5,
 //
-//     fillStyle: 'lightgreen',
-//
-//     method: 'fill',
+//     fillStyle: 'linen',
+//     method: 'fillAndDraw',
 // });
 // ```
-const makeShape = function (items) {
+const makeStar = function (items = {}) {
 
-    return new Shape(items);
+    items.species = 'star';
+    return new Star(items);
 };
 
-constructors.Shape = Shape;
+constructors.Star = Star;
 
 
 // #### Exports
 export {
-    makeShape,
+    makeStar,
 };
