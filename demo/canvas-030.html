@@ -8,15 +8,89 @@
   <title>Demo Canvas 030</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 3fr 1fr 3fr;
+    }
+  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 030</h1>
-  <h2>Shape polylines</h2>
+  <h2>Polyline entity functionality</h2>
+  <p>Note: the interplay between using absolute/relative coordinates and artefacts as pins, mapping to pins, pivoting the entire line to an artefact, and other artefacts using line pins as their pivot values (plus handles, offsets, dragging, etc) ... can be a bit confusing. This demo represents expected behaviour.</p>
+
+  <p>The Polyline is draggable in this demo, as are the green and red pins:</p>
 
   <canvas id="mycanvas" width="600" height="500"></canvas>
 
   <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="blue label">Tension</div>
+    <div class="blue">-0.5 - 1.5 <input class="controlItem" id="tension" type="range" value="0" min="-0.5" max="1.5" step="0.1" /></div>
+
+    <div class="green label">Coordinates</div>
+    <div class="green">
+      <select class="specialItem" id="pins">
+        <option value="absolute">Absolute values</option>
+        <option value="relative">Relative values</option>
+        <option value="artefacts">Green pins</option>
+      </select>
+    </div>
+
+    <div class="blue label">Closed</div>
+    <div class="blue">
+      <select class="controlItem" id="closed">
+        <option value="0">False</option>
+        <option value="1">True</option>
+      </select>
+    </div>
+
+    <div class="green label">Pivot to</div>
+    <div class="green">
+      <select class="controlItem" id="pivot">
+        <option value="start">Start</option>
+        <option value="pivot">Red pin</option>
+        <option value="mouse">Mouse</option>
+      </select>
+    </div>
+
+    <div class="blue label">Map to pins</div>
+    <div class="blue">
+      <select class="controlItem" id="map">
+        <option value="0">False</option>
+        <option value="1">True</option>
+      </select>
+    </div>
+
+    <div></div><div></div>
+
+    <div class="yellow label">Flip reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">False</option>
+        <option value="1">True</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Flip upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">False</option>
+        <option value="1">True</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="0.1" /></div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.2" max="2" step="0.05" /></div>
+
+
+  </div>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

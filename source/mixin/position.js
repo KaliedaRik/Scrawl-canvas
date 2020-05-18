@@ -267,6 +267,9 @@ export default function (P = {}) {
 // __pivotCorner__ - Element artefacts allow other artefacts to use their corner positions as pivots, by setting this attribute to `topLeft`, `topRight`, `bottomRight` or `bottomLeft`; default is `''` to use the Element's start coordinate.
         pivotCorner: '',  
 
+// __pivotPin__ - Polyline entitys are composed of a set of pin coordinates with the start being pin[0]; can reference other pins by setting this attribute to the appropriate index value (for example, the second pin will be pin[1]).
+        pivotPin: 0,
+
 // __pivoted__ - internal Array holding details of the artefacts using this artefact as their pivot reference.
         pivoted: null,
 
@@ -1600,10 +1603,19 @@ export default function (P = {}) {
 
                     case 'pivot' :
 
+                    	// When the pivot is an Element artefact, can use its corner values as pivots
                         if (this.pivotCorner && pivot.getCornerCoordinate) {
 
                             coord = pivot.getCornerCoordinate(this.pivotCorner, (i) ? 'y' : 'x');
                         }
+
+                        // When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)
+                        else if (pivot.type === 'Polyline') {
+
+                        	coord = pivot.getPinAt(this.pivotPin, (i) ? 'y' : 'x');
+                        }
+
+                        // Everything else
                         else coord = pivot.currentStampPosition[i];
 
                         if (!this.addPivotOffset) coord -= pivot.currentOffset[i];
@@ -2110,6 +2122,8 @@ P.pickupArtefact = function (items = {}) {
                 if (instance.addPivotHandle) instance.dirtyHandle = true;
                 if (instance.addPivotOffset) instance.dirtyOffset = true;
                 if (instance.addPivotRotation) instance.dirtyRotation = true;
+
+                if (instance.type === 'Polyline') instance.dirtyPins = true;
             }
         });
     };

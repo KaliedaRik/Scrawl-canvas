@@ -163,6 +163,11 @@ import {
 
 
 import { 
+    makePolyline,
+} from './factory/polyline.js';
+
+
+import { 
     makeQuadratic,
 } from './factory/quadratic.js';
 
@@ -363,6 +368,10 @@ export default {
 
     // factory/polygon.js
     makePolygon,
+
+
+    // factory/polyline.js
+    makePolyline,
 
 
     // factory/quadratic.js

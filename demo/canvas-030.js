@@ -12,9 +12,11 @@ canvas.setBase({
     backgroundColor: 'aliceblue'
 });
 
-let coordinates = [[100, 200], [200, 400], [300, 300], [400, 400], [500, 200], [240, 100]];
+let absoluteCoords = [[100, 200], [200, 400], [300, 300], [400, 400], [500, 200], [240, 100]];
 
-coordinates.forEach((item, index) => {
+let relativeCoords = [['50%', '50%'], ['40%', '10%'], ['20%', '40%'], ['25%', '80%'], ['70%', '75%'], ['85%', '60%']];
+
+absoluteCoords.forEach((item, index) => {
 
     scrawl.makeWheel({
 
@@ -33,30 +35,54 @@ coordinates.forEach((item, index) => {
     });
 });
 
+scrawl.makeWheel({
+
+    name: 'pivot-wheel',
+
+    start: [50, 50],
+
+    radius: 20,
+
+    handleX: 'center',
+    handleY: 'center',
+
+    shadowColor: 'black',
+    fillStyle: 'darkred',
+    method: 'fill',
+});
+
+let pivotCoords = ['pin-0', 'pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5'];
 
 let myline = scrawl.makePolyline({
 
     name: 'my-polyline',
 
     // The `pins` attribute takes an array with elements which are:
-    // - [x, y] coordinate arrays, where values can be absolute (Numbers) and/or relative (String%) values
-    // - Artefact objects, or their name-String values
-    // - (`set` function will also accept an object with attributes: `index, x, y` - to be used by tweens)
-    pins: ['pin-0', 'pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5'],
+    // + [x, y] coordinate arrays, where values can be absolute (Numbers) and/or relative (String%) values
+    // + Artefact objects, or their name-String values
+    // + (`set` function will also accept an object with attributes: `index, x, y` - to be used by tweens)
+    // pins: absoluteCoords,
+    pins: absoluteCoords,
 
     // Tension gives us the curviness of the line:
-    // 0 - straight lines connecting the pins
-    // 0.4ish - reasonable looking curves
-    // 1 - exaggerated curves
-    // negative values - add loops at the pins
-    tension: 0.3,
+    // + 0 - straight lines connecting the pins
+    // + 0.4ish - reasonable looking curves
+    // + 1 - exaggerated curves
+    // + negative values - add loops at the pins
+    tension: 0,
 
     // Whether to connect all the pins (true), or run from first to last pin only (false)
     closed: false,
 
-    // The starting position is the top left corner of the box which tightly encloses the Shape - regardless of the positions of any artefacts which may be used as pins. Handles and offsets should work as expected (except: don't use offsets if/when the `setToPins` flag is set - they will be overwritten in this use case)
-    // startX: 100,
-    // startY: 100,
+    // The starting position is the top left corner of the box which tightly encloses the Shape - regardless of the positions of any artefacts which may be used as pins. Handles and offsets should work as expected
+    // + This functionality changes when the `mapToPins` flag is set; now the start coordinate maps directly to the first coordinate supplied in the `pins` array. Handle and offset values can no longer be relied on.
+    startX: 0,
+    startY: 0,
+
+    pivot: 'pivot-wheel',
+    lockTo: 'start',
+
+    mapToPins: false,
 
     strokeStyle: 'orange',
     lineWidth: 6,
@@ -71,10 +97,33 @@ let myline = scrawl.makePolyline({
     // Note: the bounding box dimensions reflect the minimum/maximum coordinates of all the pins used to construct the shape. It will only reflect the actual shape of the Shape when `useAsPath` attribute is set to `true`
     showBoundingBox: true,
     // useAsPath: true,
-
-    // MapToPins will map the line to the pins - which is useful when the line uses entitys for its pins. When used in this way, the start coordinate has to be unset, or set to coordinates (0, 0). Dragging the Shape will work as normal: the line no longer directly maps to the pins, but it retains its shape.
-    mapToPins: true,
 });
+
+absoluteCoords.forEach((item, index) => {
+
+    scrawl.makeBlock({
+
+        name: `block-${index}`,
+
+        width: 20,
+        height: 20,
+
+        pivot: 'my-polyline',
+        pivotPin: index,
+        lockTo: 'pivot',
+
+        handleX: 'center',
+        handleY: 'center',
+
+        roll: 45,
+
+        fillStyle: 'lightblue',
+        strokeStyle: 'yellow',
+        lineWidth: 3,
+        method: 'fillThenDraw',
+    });
+});
+
 
 scrawl.makeDragZone({
     zone: canvas,
@@ -123,7 +172,57 @@ scrawl.makeRender({
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log(scrawl.library.entity);
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: myline,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        tension: ['tension', 'float'],
+        pivot: ['lockTo', 'raw'],
+        closed: ['closed', 'boolean'],
+        map: ['mapToPins', 'boolean'],
+        reverse: ['flipReverse', 'boolean'],
+        upend: ['flipUpend', 'boolean'],
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
+    },
+});
+
+// Picture entity filters
+let updatePins = (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+    let val = e.target.value;
+
+    if (val === 'absolute') myline.set({ pins: absoluteCoords });
+    else if (val === 'relative') myline.set({ pins: relativeCoords });
+    else if (val === 'artefacts') myline.set({ pins: pivotCoords });
+};
+scrawl.addNativeListener(['input', 'change'], updatePins, '#pins');
+
+
+// Setup form
+document.querySelector('#tension').value = 0;
+document.querySelector('#pivot').value = 'start';
+document.querySelector('#closed').value = 0;
+document.querySelector('#map').value = 0;
+document.querySelector('#pins').value = 'absolute';
+document.querySelector('#reverse').value = 0;
+document.querySelector('#upend').value = 0;
+document.querySelector('#roll').value = 0;
+document.querySelector('#scale').value = 1;
+
 
 // To test kill functionality
 let killArtefact = (name, time, restore) => {
@@ -185,6 +284,8 @@ let killArtefact = (name, time, restore) => {
     removed from polyline pins array: ${checkPinsArray(name)}
     removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
     removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+                console.log(myline.saveAsPacket());
 
             }, 500);
         }, 500);

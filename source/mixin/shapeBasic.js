@@ -356,7 +356,6 @@ export default function (P = {}) {
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
     };
 
-
     // `cleanDimensions` - internal helper function called by `prepareStamp` 
     // + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
     P.cleanDimensions = function () {
