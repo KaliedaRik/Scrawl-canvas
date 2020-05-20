@@ -239,7 +239,12 @@ P.makeQuadraticPath = function () {
     let [controlX, controlY] = this.currentControl;
     let [endX, endY] = this.currentEnd;
 
-    return `m0,0q${(controlX - startX)},${(controlY - startY)} ${(endX - startX)},${(endY - startY)}`;
+    let cx = (controlX - startX).toFixed(2),
+        cy = (controlY - startY).toFixed(2),
+        ex = (endX - startX).toFixed(2),
+        ey = (endY - startY).toFixed(2);
+
+    return `m0,0q${cx},${cy} ${ex},${ey}`;
 };
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 

@@ -212,10 +212,10 @@ P.makeTetragonPath = function () {
         height = radiusY * 2;
     }
 
-    let port = width * this.intersectX,
-        starboard = width - port,
-        fore = height * this.intersectY,
-        aft = height - fore;
+    let port = parseFloat((width * this.intersectX).toFixed(2)),
+        starboard = parseFloat((width - port).toFixed(2)),
+        fore = parseFloat((height * this.intersectY).toFixed(2)),
+        aft = parseFloat((height - fore).toFixed(2));
 
     let myData = 'm0,0';
 

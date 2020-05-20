@@ -351,7 +351,14 @@ P.makeBezierPath = function () {
     let [endControlX, endControlY] = this.currentEndControl;
     let [endX, endY] = this.currentEnd;
 
-    return `m0,0c${(startControlX - startX)},${(startControlY - startY)} ${(endControlX - startX)},${(endControlY - startY)} ${(endX - startX)},${(endY - startY)}`;
+    let scx = (startControlX - startX).toFixed(2),
+        scy = (startControlY - startY).toFixed(2),
+        ecx = (endControlX - startX).toFixed(2),
+        ecy = (endControlY - startY).toFixed(2),
+        ex = (endX - startX).toFixed(2),
+        ey = (endY - startY).toFixed(2);
+
+    return `m0,0c${scx},${scy} ${ecx},${ecy} ${ex},${ey}`;
 };
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 

@@ -447,7 +447,6 @@ export default function (d, scale, start, useAsPath, precision) {
     returnObject.unitPositions = positions;
     returnObject.unitProgression = progression;
 
-
     // calculate bounding box dimensions
     let maxX = Math.max(...xPoints),
         maxY = Math.max(...yPoints),

@@ -115,7 +115,10 @@ P.makeLinePath = function () {
     let [startX, startY] = this.currentStampPosition;
     let [endX, endY] = this.currentEnd;
 
-    return `m0,0l${(endX - startX)},${(endY - startY)}`;
+    let x = (endX - startX).toFixed(2),
+        y = (endY - startY).toFixed(2);
+
+    return `m0,0l${x},${y}`;
 };
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 

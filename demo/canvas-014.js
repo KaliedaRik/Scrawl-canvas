@@ -11,7 +11,7 @@ let canvas = scrawl.library.canvas.mycanvas;
 canvas.set({
     backgroundColor: 'aliceblue',
     css: {
-        border: '1px solid black'
+        border: '1px solid black',
     }
 });
 
@@ -157,9 +157,6 @@ scrawl.makeLine({
     startY: 'center',
     useStartAsControlPoint: true,
 
-    // ISSUE: Setting 'endPathPosition' to value 0.5 causes the arrow line to momentarily disappear at a few (regular!) intervals when the line is shorter. Setting the value to 0.499 fixes the issue.
-    //
-    // TODO: investigate further, when time allows.
     endPath: 'path-line',
     endPathPosition: 0.5,
     endLockTo: 'path',
@@ -294,16 +291,13 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let ml = scrawl.library.entity['mouse-line'];
-
     return function () {
 
         testNow = Date.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Mouse line path: ${ml.localPath}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();
 
