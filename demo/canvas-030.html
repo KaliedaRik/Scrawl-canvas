@@ -65,7 +65,13 @@
       </select>
     </div>
 
-    <div></div><div></div>
+    <div class="blue label">Use as path</div>
+    <div class="blue">
+      <select class="controlItem" id="path">
+        <option value="0">False</option>
+        <option value="1">True</option>
+      </select>
+    </div>
 
     <div class="yellow label">Flip reverse</div>
     <div class="yellow">
@@ -87,16 +93,34 @@
     <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="0.1" /></div>
 
     <div class="yellow label">Scale</div>
-    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.2" max="2" step="0.05" /></div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.2" max="1.5" step="0.05" /></div>
 
 
   </div>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
+
+    <p>Polyline-specific tests:</p>
     <ul>
-      <li>Create polyline Shape entitys</li>
+      <li>Create some sets of coordinate Arrays (absolute values, relative values, artefacts)</li>
+      <li>Create a Polyline entity from the first set of coordinates</li>
+      <li>Check that the tension attribute updates correctly (Polyline bendiness will change)</li>
+      <li>Check that the Polyline can be dragged, whatever the setting of the closed flag</li>
+      <li>Check that the Polyline can be pivoted, including to the mouse cursor</li>
+      <li>Check that the Block entitys remain attached to the Polyline in all situations</li>
+      <li>Check that the Polyline responds as expected when we change its pins Array</li>
+      <li>Check that when the Polyline is set to the Wheel coordinates Array, it responds when those Wheels are dragged into new positions</li>
+      <li>Check that the Polyline can be scaled, flipped and rolled.</li>
     </ul>
+
+    <p>Natural and constant speed animation along a path:</p>
+    <ul>
+      <li>Check that the green and yellow 'ball' Wheels correctly follow the Polyline path at all times when 'useAsPath' flag is set, and does not break the demo when the flag is not set.</li>
+      <li>Confirm that the yellow 'balls' correctly move at a constant speed when animating along the Polyline path.</li>
+    </ul>
+
+    <p><b>Known issue:</b> when the 'useAsPath' flag is set to false, the Block pins do not position themselves as expected when the Polyline entity is rolled, flipped or scaled. If this functionality is required on a Polyline, always set its 'useAsPath' flag to true.</p>
 
     <p><a href="../docs/demo/canvas-030.html">Annotated code</a></p>
   </div>

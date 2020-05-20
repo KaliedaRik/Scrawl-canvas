@@ -288,6 +288,7 @@ export default function (P = {}) {
         addPathHandle: false,
         addPathOffset: true,
         addPathRotation: false,
+        constantPathSpeed: false,
 
 // __mimic__ - reference artefact object. Can also be set using the artefact's name-String.
         mimic: '',
@@ -786,6 +787,7 @@ export default function (P = {}) {
         this.pathPosition = parseFloat(item.toFixed(6));
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
+        this.currentPathData = false;
     };
     D.pathPosition = function (item) {
 
@@ -797,6 +799,7 @@ export default function (P = {}) {
         this.pathPosition = parseFloat(pos.toFixed(6));
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
+        this.currentPathData = false;
     };
 
 
@@ -1897,15 +1900,19 @@ export default function (P = {}) {
 // `getPathData`
     P.getPathData = function () {
 
+    	if (this.currentPathData) return this.currentPathData;
+
         let pathPos = this.pathPosition,
             path = this.path,
             currentPathData;
 
         if (path) {
 
-            currentPathData = path.getPathPositionData(pathPos);
+            currentPathData = path.getPathPositionData(pathPos, this.constantPathSpeed);
 
             if (this.addPathRotation) this.dirtyRotation = true;
+
+            this.currentPathData = currentPathData;
 
             return currentPathData;
         }

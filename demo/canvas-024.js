@@ -100,8 +100,9 @@ scrawl.makeQuadratic({
 
     pivot: 'pin-1',
     lockTo: 'pivot',
-
     useStartAsControlPoint: true,
+
+    precision: 0.05,
 
     controlPivot: 'pin-2',
     controlLockTo: 'pivot',
@@ -122,6 +123,8 @@ let myBez = scrawl.makeBezier({
     pivot: 'pin-4',
     lockTo: 'pivot',
     useStartAsControlPoint: true,
+
+    precision: 0.05,
 
     startControlPivot: 'pin-5',
     startControlLockTo: 'pivot',
@@ -241,8 +244,7 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Loom frame struts - from strut: ${myLoom.fromPathStart.toFixed(3)}, ${myLoom.fromPathEnd.toFixed(3)}; to strut: ${myLoom.toPathStart.toFixed(3)}, ${myLoom.toPathEnd.toFixed(3)}
-Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();
 

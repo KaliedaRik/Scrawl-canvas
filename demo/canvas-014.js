@@ -161,7 +161,7 @@ scrawl.makeLine({
     //
     // TODO: investigate further, when time allows.
     endPath: 'path-line',
-    endPathPosition: 0.499,
+    endPathPosition: 0.5,
     endLockTo: 'path',
 
     lineWidth: 5,
@@ -294,13 +294,16 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let ml = scrawl.library.entity['mouse-line'];
+
     return function () {
 
         testNow = Date.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+Mouse line path: ${ml.localPath}`;
     };
 }();
 

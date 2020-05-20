@@ -138,6 +138,21 @@ S.controlPath = function (item) {
     this.setControlHelper(item, 'controlPath', 'control');
     this.updateDirty();
     this.dirtyControl = true;
+    this.currentControlPathData = false;
+};
+
+// __controlPathPosition__
+S.controlPathPosition = function (item) {
+
+    this.controlPathPosition = item;
+    this.dirtyControl = true;
+    this.currentControlPathData = false;
+};
+D.controlPathPosition = function (item) {
+
+    this.controlPathPosition += item;
+    this.dirtyControl = true;
+    this.currentControlPathData = false;
 };
 
 // __control__
@@ -149,6 +164,7 @@ S.controlX = function (coord) {
         this.control[0] = coord;
         this.updateDirty();
         this.dirtyControl = true;
+        this.currentControlPathData = false;
     }
 };
 S.controlY = function (coord) {
@@ -158,6 +174,7 @@ S.controlY = function (coord) {
         this.control[1] = coord;
         this.updateDirty();
         this.dirtyControl = true;
+        this.currentControlPathData = false;
     }
 };
 S.control = function (x, y) {
@@ -165,6 +182,7 @@ S.control = function (x, y) {
     this.setCoordinateHelper('control', x, y);
     this.updateDirty();
     this.dirtyControl = true;
+    this.currentControlPathData = false;
 };
 D.controlX = function (coord) {
 
@@ -172,6 +190,7 @@ D.controlX = function (coord) {
     c[0] = addStrings(c[0], coord);
     this.updateDirty();
     this.dirtyControl = true;
+    this.currentControlPathData = false;
 };
 D.controlY = function (coord) {
 
@@ -179,12 +198,14 @@ D.controlY = function (coord) {
     c[1] = addStrings(c[1], coord);
     this.updateDirty();
     this.dirtyControl = true;
+    this.currentControlPathData = false;
 };
 D.control = function (x, y) {
 
     this.setDeltaCoordinateHelper('control', x, y);
     this.updateDirty();
     this.dirtyControl = true;
+    this.currentControlPathData = false;
 };
 
 // __controlLockTo__
@@ -193,6 +214,7 @@ S.controlLockTo = function (item) {
     this.controlLockTo = item;
     this.updateDirty();
     this.dirtyControlLock = true;
+    this.currentControlPathData = false;
 };
 
 
@@ -219,6 +241,19 @@ P.makeQuadraticPath = function () {
 
     return `m0,0q${(controlX - startX)},${(controlY - startY)} ${(endX - startX)},${(endY - startY)}`;
 };
+
+// `cleanDimensions` - internal helper function called by `prepareStamp` 
+// + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
+    P.cleanDimensions = function () {
+
+        this.dirtyDimensions = false;
+        this.dirtyHandle = true;
+        this.dirtyOffset = true;
+
+        this.dirtyStart = true;
+        this.dirtyControl = true;
+        this.dirtyEnd = true;
+    };
 
 
 // #### Factories

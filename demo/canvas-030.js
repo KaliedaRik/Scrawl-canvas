@@ -1,5 +1,5 @@
 // # Demo Canvas 030 
-// Shape polylines
+// Polyline entity functionality
 
 // [Run code](../../demo/canvas-030.html)
 import scrawl from '../source/scrawl.js'
@@ -12,10 +12,14 @@ canvas.setBase({
     backgroundColor: 'aliceblue'
 });
 
+
+// Build some coordinate arrays ...
 let absoluteCoords = [[100, 200], [200, 400], [300, 300], [400, 400], [500, 200], [240, 100]];
 
-let relativeCoords = [['50%', '50%'], ['40%', '10%'], ['20%', '40%'], ['25%', '80%'], ['70%', '75%'], ['85%', '60%']];
+let relativeCoords = [['50%', 'center'], ['40%', '10%'], ['20%', '40%'], ['25%', '80%'], ['70%', '75%'], ['85%', '60%']];
 
+
+// ... And a third coordinate array using Wheel entitys 
 absoluteCoords.forEach((item, index) => {
 
     scrawl.makeWheel({
@@ -35,6 +39,10 @@ absoluteCoords.forEach((item, index) => {
     });
 });
 
+let pivotCoords = ['pin-0', 'pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5'];
+
+
+// Add another Wheel entity to act as a (potential) pivot for the Polyline
 scrawl.makeWheel({
 
     name: 'pivot-wheel',
@@ -51,8 +59,8 @@ scrawl.makeWheel({
     method: 'fill',
 });
 
-let pivotCoords = ['pin-0', 'pin-1', 'pin-2', 'pin-3', 'pin-4', 'pin-5'];
 
+// Define the Polyline entity
 let myline = scrawl.makePolyline({
 
     name: 'my-polyline',
@@ -79,6 +87,11 @@ let myline = scrawl.makePolyline({
     startX: 0,
     startY: 0,
 
+    // The `precision` attribute determines the accuracy for positioning artefacts on the path when they have set their `constantPathSpeed` flag to `true`
+    // + Natural path speed leads to slower progression around tight corners; constant path speed attempts to even out these variations across the length of the path.
+    // + The default precision value is `10`; decreasing the value increases the positioning accuracy. The more accurate the positioning, the greater the computational (and memory) burden.
+    precision: 0.05,
+
     pivot: 'pivot-wheel',
     lockTo: 'start',
 
@@ -96,9 +109,14 @@ let myline = scrawl.makePolyline({
 
     // Note: the bounding box dimensions reflect the minimum/maximum coordinates of all the pins used to construct the shape. It will only reflect the actual shape of the Shape when `useAsPath` attribute is set to `true`
     showBoundingBox: true,
-    // useAsPath: true,
+
+    // Note: when using a Polyline entity as a pivot for other artefacts, set the `useAsPath` flag to true
+    // + It generates more accurate results - particularly when the Polyline is flipped, rolled and/or scaled, and when underlying pins (particularly when those pins are artefacts) update their coordinates.
+    useAsPath: true,
 });
 
+
+// Add some Block entitys which will pivot to our Polyline entity
 absoluteCoords.forEach((item, index) => {
 
     scrawl.makeBlock({
@@ -124,7 +142,43 @@ absoluteCoords.forEach((item, index) => {
     });
 });
 
+// Testing natural vs constant speeds along the path
+for (let i = 0; i < 10; i++) {
 
+    scrawl.makeWheel({
+
+        name: `normal-ball-${i}`,
+        order: 2,
+
+        radius: 10,
+        fillStyle: 'lightgreen',
+        strokeStyle: 'red',
+        method: 'fillThenDraw',
+
+        handle: ['center', 'center'],
+
+        path: 'my-polyline',
+        pathPosition: i / 100,
+        lockTo: 'path',
+        
+        delta: {
+            pathPosition: 0.001,
+        },
+
+    }).clone({
+
+        name: `constant-ball-${i}`,
+        fillStyle: 'yellow',
+        strokeStyle :'blue',
+
+        pathPosition: (i / 100) + 0.5,
+
+        constantPathSpeed: true,
+    });
+}
+
+// #### User interaction
+// Create the drag-and-drop zone
 scrawl.makeDragZone({
     zone: canvas,
     collisionGroup: canvas.base.name,
@@ -143,12 +197,13 @@ scrawl.makeDragZone({
     },
 });
 
+
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
     let testTicker = Date.now(),
-        testTime, testNow, dragging,
+        testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
     return function () {
@@ -157,7 +212,8 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+Bounding box: ${myline.getBoundingBox().join(', ')}`;
     };
 }();
 
@@ -171,9 +227,7 @@ scrawl.makeRender({
 });
 
 
-// #### Development and testing
-console.log(scrawl.library.entity);
-
+// #### More user interaction
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -189,6 +243,7 @@ scrawl.observeAndUpdate({
         tension: ['tension', 'float'],
         pivot: ['lockTo', 'raw'],
         closed: ['closed', 'boolean'],
+        path: ['useAsPath', 'boolean'],
         map: ['mapToPins', 'boolean'],
         reverse: ['flipReverse', 'boolean'],
         upend: ['flipUpend', 'boolean'],
@@ -197,7 +252,8 @@ scrawl.observeAndUpdate({
     },
 });
 
-// Picture entity filters
+
+// Change the coordinate array used by the Polyline
 let updatePins = (e) => {
 
     e.preventDefault();
@@ -216,12 +272,17 @@ scrawl.addNativeListener(['input', 'change'], updatePins, '#pins');
 document.querySelector('#tension').value = 0;
 document.querySelector('#pivot').value = 'start';
 document.querySelector('#closed').value = 0;
+document.querySelector('#path').value = 1;
 document.querySelector('#map').value = 0;
 document.querySelector('#pins').value = 'absolute';
 document.querySelector('#reverse').value = 0;
 document.querySelector('#upend').value = 0;
 document.querySelector('#roll').value = 0;
 document.querySelector('#scale').value = 1;
+
+
+// #### Development and testing
+console.log(scrawl.library.entity);
 
 
 // To test kill functionality

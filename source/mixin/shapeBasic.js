@@ -19,7 +19,9 @@ export default function (P = {}) {
 
         species: '',
         useAsPath: false,
+
         precision: 10,
+        constantPathSpeed: false,
 
         pathDefinition: '',
 
@@ -65,12 +67,24 @@ export default function (P = {}) {
 
         if (xt(item)) {
 
-            if (item) this.dirtyPathObject = true;
-
             this.species = item;
-            this.dirtySpecies = true;
-            this.dirtyPathObject = true;
+            this.updateDirty();
         }
+    };
+
+    S.precision = function (item) {
+
+        if (xt(item) && item.toFixed) {
+
+            this.precision = item;
+            this.updateDirty();
+        }
+    };
+
+    S.constantPathSpeed = function (item) {
+
+        this.constantPathSpeed = item;
+        this.updateDirty();
     };
 
     // Invalidate __dimensions__ setters - dimensions are an emergent property of shapes, not a defining property
@@ -205,10 +219,106 @@ export default function (P = {}) {
         return (-Math.atan2(dx, dy) + (0.5 * Math.PI)) / radian;
     };
 
-    // `getPathPositionData`
-    P.getPathPositionData = function (pos) {
+    // `getConstantPosition` - internal function called by `getPathPositionData`
+    P.getConstantPosition = function (pos) {
 
-        if (xt(pos) && pos.toFixed) {
+        if (!pos || !pos.toFixed || isNaN(pos)) return 0;
+        if (pos >= 1) return 0.9999;
+
+        let positions = this.unitPositions;
+
+        if (positions && positions.length) {
+
+            let len = this.length,
+                progress = this.unitProgression,
+                positions = this.unitPositions,
+                requiredProgress = pos * len,
+                index = -1,
+                currentProgress, indexProgress, lastProgress, diffProgress,
+                currentPosition, indexPosition, nextPosition, diffPosition;
+
+            for (let i = 0, iz = progress.length; i < iz; i++) {
+
+                if (requiredProgress <= progress[i]) {
+
+                    index = i - 1;
+                    break;
+                }
+            }
+
+            if (index < 0) {
+
+                // first segment
+                indexProgress = progress[0];
+                currentPosition = (requiredProgress / indexProgress) * positions[0];
+            }
+            else {
+
+                // subsequent segments
+
+                // progress is pixel lengths
+                indexProgress = progress[index];
+                lastProgress = (index) ? progress[index - 1] : 0;
+                diffProgress = indexProgress - lastProgress;
+
+                // position is in the range 0-1
+                indexPosition = positions[index];
+                nextPosition = positions[index + 1];
+                diffPosition = nextPosition - indexPosition;
+
+                currentPosition = indexPosition + (((requiredProgress - indexProgress) / diffProgress) * diffPosition);
+            }
+            return currentPosition;
+        }
+        else return pos;
+    };
+
+    // `buildPathPositionObject` - internal function called by `getPathPositionData`
+    P.buildPathPositionObject = function (unit, myLen) {
+
+        if (unit) {
+
+            let [unitSpecies, ...vars] = unit;
+
+            let myPoint, angle;
+
+            switch (unitSpecies) {
+
+                case 'linear' :
+                    myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
+                    angle = this.getLinearAngle(myLen, ...vars);
+                    break;
+
+                case 'quadratic' :
+                    myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
+                    angle = this.getQuadraticAngle(myLen, ...vars);
+                    break;
+                    
+                case 'bezier' :
+                    myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
+                    angle = this.getBezierAngle(myLen, ...vars);
+                    break;
+            }
+
+            let flipAngle = 0
+            if (this.flipReverse) flipAngle++;
+            if (this.flipUpend) flipAngle++;
+
+            if (flipAngle === 1) angle = -angle;
+
+            angle += this.roll;
+
+            myPoint.angle = angle;
+
+            return myPoint;
+        }
+        return false;
+    }
+
+    // `getPathPositionData`
+    P.getPathPositionData = function (pos, constantSpeed = false) {
+
+        if (this.useAsPath && xt(pos) && pos.toFixed) {
 
             let remainder = pos % 1,
                 unitPartials = this.unitPartials,
@@ -218,6 +328,8 @@ export default function (P = {}) {
             // ... because sometimes everything doesn't all add up to 1
             if (pos === 0) remainder = 0;
             else if (pos === 1) remainder = 0.9999;
+
+            if (constantSpeed) remainder = this.getConstantPosition(remainder);
 
             // 1. Determine the pertinent subpath to use for calculation
             for (i = 0, iz = unitPartials.length; i < iz; i++) {
@@ -238,44 +350,7 @@ export default function (P = {}) {
 
                 previousLen = stoppingLen;
             }
-
-            // 3. Get coordinates and angle at that point from subpath; return results
-            if (unit) {
-
-                let [unitSpecies, ...vars] = unit;
-
-                let myPoint, angle;
-
-                switch (unitSpecies) {
-
-                    case 'linear' :
-                        myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
-                        angle = this.getLinearAngle(myLen, ...vars);
-                        break;
-
-                    case 'quadratic' :
-                        myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
-                        angle = this.getQuadraticAngle(myLen, ...vars);
-                        break;
-                        
-                    case 'bezier' :
-                        myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
-                        angle = this.getBezierAngle(myLen, ...vars);
-                        break;
-                }
-
-                let flipAngle = 0
-                if (this.flipReverse) flipAngle++;
-                if (this.flipUpend) flipAngle++;
-
-                if (flipAngle === 1) angle = -angle;
-
-                angle += this.roll;
-
-                myPoint.angle = angle;
-
-                return myPoint;
-            }
+            return this.buildPathPositionObject(unit, myLen);
         }
         return false;
     }
@@ -388,7 +463,7 @@ export default function (P = {}) {
     };
 
     // `calculateLocalPath` - internal helper function - called by `cleanPathObject`
-    P.calculateLocalPath = function (d, isCalledFromAdditionalAcctions) {
+    P.calculateLocalPath = function (d, isCalledFromAdditionalActions) {
 
         let res;
 
@@ -403,9 +478,6 @@ export default function (P = {}) {
         if (res) {
 
             this.localPath = res.localPath;
-            this.units = res.units;
-            this.unitLengths = res.unitLengths;
-            this.unitPartials = res.unitPartials;
             this.length = res.length;
 
             let maxX = res.maxX,
@@ -427,11 +499,54 @@ export default function (P = {}) {
                 this.dirtyHandle = true;
             }
 
-
             box.length = 0;
             box.push(parseFloat(minX.toFixed(1)), parseFloat(minY.toFixed(1)), dims[0], dims[1]);
 
-            if (!isCalledFromAdditionalAcctions) this.calculateLocalPathAdditionalActions();
+            if (this.useAsPath) {
+
+                // we can do work here to flatten some of these arrays
+                const {units, unitLengths, unitPartials, unitProgression, unitPositions} = res;
+
+                let lastLength = 0, 
+                    currentPartial,
+                    lastPartial,
+                    progression, 
+                    flatProgression = [],
+                    flatPositions = [],
+                    positions,
+                    i, iz, j, jz, l, p;
+
+                for (i = 0, iz = unitLengths.length; i < iz; i++) {
+
+                    lastLength += unitLengths[i];
+                    progression = unitProgression[i];
+
+                    if (progression) {
+
+                        lastPartial = unitPartials[i];
+                        currentPartial = unitPartials[i + 1] - lastPartial;
+                        positions = unitPositions[i];
+
+                        for (j = 0, jz = progression.length; j < jz; j++) {
+
+                            l = lastLength + progression[j];
+                            flatProgression.push(parseFloat(l.toFixed(1)));
+
+                            p = lastPartial + (positions[j] * currentPartial);
+                            flatPositions.push(parseFloat(p.toFixed(6)));
+                        }
+                    }
+
+
+                }
+                this.units = units;
+                this.unitLengths = unitLengths;
+                this.unitPartials = unitPartials;
+
+                this.unitProgression = flatProgression;
+                this.unitPositions = flatPositions;
+            }
+            if (!isCalledFromAdditionalActions) this.calculateLocalPathAdditionalActions();
         }
     };
     P.calculateLocalPathAdditionalActions = defaultNonReturnFunction;
@@ -444,6 +559,24 @@ export default function (P = {}) {
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;
         }
+    };
+
+// `updatePathSubscribers`
+    P.updatePathSubscribers = function () {
+
+        this.pathed.forEach(name => {
+
+            let instance = artefact[name];
+
+            if (instance) {
+
+                instance.currentPathData = false;
+                instance.dirtyStart = true;
+                if (instance.addPathHandle) instance.dirtyHandle = true;
+                if (instance.addPathOffset) instance.dirtyOffset = true;
+                if (instance.addPathRotation) instance.dirtyRotation = true;
+            }
+        });
     };
 
 // #### Stamp methods

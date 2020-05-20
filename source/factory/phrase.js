@@ -1344,7 +1344,8 @@ P.calculateGlyphPathPositions = function () {
         distance, posArray, i, iz, width,
         justify = this.justify,
         loop = this.textPathLoop,
-        localPathPos;
+        localPathPos,
+        pathSpeed = this.constantPathSpeed;
 
     for (i = 0, iz = textPos.length; i < iz; i++) {
 
@@ -1385,7 +1386,7 @@ P.calculateGlyphPathPositions = function () {
         }
 
         posArray[10] = (localPathPos <= 1 && localPathPos >= 0) ? 
-            path.getPathPositionData(localPathPos) : 
+            path.getPathPositionData(localPathPos, pathSpeed) : 
             false;
 
         posArray[9] = width;

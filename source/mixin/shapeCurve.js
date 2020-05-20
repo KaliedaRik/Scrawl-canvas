@@ -106,6 +106,20 @@ P.factoryKill = function () {
         this.dirtyEnd = true;
     };
 
+    // __endPathPosition__
+    S.endPathPosition = function (item) {
+
+        this.endPathPosition = item;
+        this.dirtyEnd = true;
+        this.currentEndPathData = false;
+    };
+    D.endPathPosition = function (item) {
+
+        this.endPathPosition += item;
+        this.dirtyEnd = true;
+        this.currentEndPathData = false;
+    };
+
     // __end__
     // + pseudo-attributes __endX__, __endY__
     S.endX = function (coord) {
@@ -115,6 +129,7 @@ P.factoryKill = function () {
             this.end[0] = coord;
             this.updateDirty();
             this.dirtyEnd = true;
+            this.currentEndPathData = false;
         }
     };
     S.endY = function (coord) {
@@ -124,6 +139,7 @@ P.factoryKill = function () {
             this.end[1] = coord;
             this.updateDirty();
             this.dirtyEnd = true;
+            this.currentEndPathData = false;
         }
     };
     S.end = function (x, y) {
@@ -131,6 +147,7 @@ P.factoryKill = function () {
         this.setCoordinateHelper('end', x, y);
         this.updateDirty();
         this.dirtyEnd = true;
+        this.currentEndPathData = false;
     };
     D.endX = function (coord) {
 
@@ -138,6 +155,7 @@ P.factoryKill = function () {
         c[0] = addStrings(c[0], coord);
         this.updateDirty();
         this.dirtyEnd = true;
+        this.currentEndPathData = false;
     };
     D.endY = function (coord) {
 
@@ -145,12 +163,14 @@ P.factoryKill = function () {
         c[1] = addStrings(c[1], coord);
         this.updateDirty();
         this.dirtyEnd = true;
+        this.currentEndPathData = false;
     };
     D.end = function (x, y) {
 
         this.setDeltaCoordinateHelper('end', x, y);
         this.updateDirty();
         this.dirtyEnd = true;
+        this.currentEndPathData = false;
     };
 
     // __endLockTo__
@@ -159,6 +179,7 @@ P.factoryKill = function () {
         this.endLockTo = item;
         this.updateDirty();
         this.dirtyEndLock = true;
+        this.currentEndPathData = false;
     };
 
 // #### Prototype functions
@@ -223,84 +244,51 @@ P.factoryKill = function () {
         }
     };
 
-    // `getPathPositionData`
-    P.getPathPositionData = function (pos) {
+    // `buildPathPositionObject` - internal function called by `getPathPositionData`
+    P.buildPathPositionObject = function (unit, myLen) {
 
-        if (xt(pos) && pos.toFixed) {
+        if (unit) {
 
-            let remainder = pos % 1,
-                unitPartials = this.unitPartials,
-                previousLen = 0, 
-                stoppingLen, myLen, i, iz, unit, species;
+            let [unitSpecies, ...vars] = unit;
 
-            // ... because sometimes everything doesn't all add up to 1
-            if (pos === 0) remainder = 0;
-            else if (pos === 1) remainder = 0.9999;
+            let myPoint, angle;
 
-            // 1. Determine the pertinent subpath to use for calculation
-            for (i = 0, iz = unitPartials.length; i < iz; i++) {
+            switch (unitSpecies) {
 
-                species = this.units[i][0];
-                if (species === 'move' || species === 'close' || species === 'unknown') continue;
-
-                stoppingLen = unitPartials[i];
-
-                if (remainder <= stoppingLen) {
-
-                    // 2. Calculate point along the subpath the pos value represents
-                    unit = this.units[i];
-                    myLen = (remainder - previousLen) / (stoppingLen - previousLen);
-
+                case 'linear' :
+                    myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
+                    angle = this.getLinearAngle(myLen, ...vars);
                     break;
-                }
 
-                previousLen = stoppingLen;
+                case 'quadratic' :
+                    myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
+                    angle = this.getQuadraticAngle(myLen, ...vars);
+                    break;
+                    
+                case 'bezier' :
+                    myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
+                    angle = this.getBezierAngle(myLen, ...vars);
+                    break;
             }
 
-            // 3. Get coordinates and angle at that point from subpath; return results
-            if (unit) {
+            let flipAngle = 0
+            if (this.flipReverse) flipAngle++;
+            if (this.flipUpend) flipAngle++;
 
-                let [unitSpecies, ...vars] = unit;
+            if (flipAngle === 1) angle = -angle;
 
-                let myPoint, angle;
+            angle += this.roll;
 
-                switch (unitSpecies) {
+            let stamp = this.currentStampPosition,
+                lineOffset = this.controlledLineOffset,
+                localBox = this.localBox;
 
-                    case 'linear' :
-                        myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
-                        angle = this.getLinearAngle(myLen, ...vars);
-                        break;
+            myPoint.x += lineOffset[0];
+            myPoint.y += lineOffset[1];
 
-                    case 'quadratic' :
-                        myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
-                        angle = this.getQuadraticAngle(myLen, ...vars);
-                        break;
-                        
-                    case 'bezier' :
-                        myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
-                        angle = this.getBezierAngle(myLen, ...vars);
-                        break;
-                }
+            myPoint.angle = angle;
 
-                let flipAngle = 0
-                if (this.flipReverse) flipAngle++;
-                if (this.flipUpend) flipAngle++;
-
-                if (flipAngle === 1) angle = -angle;
-
-                angle += this.roll;
-
-                let stamp = this.currentStampPosition,
-                    lineOffset = this.controlledLineOffset,
-                    localBox = this.localBox;
-
-                myPoint.x += lineOffset[0];
-                myPoint.y += lineOffset[1];
-
-                myPoint.angle = angle;
-
-                return myPoint;
-            }
+            return myPoint;
         }
         return false;
     }
@@ -320,12 +308,7 @@ P.factoryKill = function () {
         if (this.dirtyControlLock) this.cleanControlLock('control');
         if (this.dirtyEndLock) this.cleanControlLock('end');
 
-        if (this.startControlLockTo === 'path') this.dirtyStartControl = true;
-        if (this.endControlLockTo === 'path') this.dirtyEndControl = true;
-        if (this.controlLockTo === 'path') this.dirtyControl = true;
-        if (this.endLockTo === 'path') this.dirtyEnd = true;
-
-        if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle || this.dirtyPins) {
+        if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
 
             this.dirtyPathObject = true;
             if (this.collides) this.dirtyCollision = true;
@@ -338,8 +321,7 @@ P.factoryKill = function () {
             }
 
 // `pathCalculatedOnce` - calculating path data is an expensive operation - use this flag to limit the calculation to run only when needed
-            if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyPins)  this.pathCalculatedOnce = false;
-
+            if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd)  this.pathCalculatedOnce = false;
         }
 
         if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
@@ -501,6 +483,10 @@ P.factoryKill = function () {
 // `getControlPathData` - internal helper function - called by `cleanControl`
     P.getControlPathData = function (path, label, capLabel) {
 
+        let checkAttribute = this[`current${capLabel}PathData`];
+
+        if (checkAttribute) return checkAttribute;
+
         let pathPos = this[`${label}PathPosition`],
             tempPos = pathPos,
             pathData = path.getPathPositionData(pathPos);
@@ -511,7 +497,11 @@ P.factoryKill = function () {
         pathPos = parseFloat(pathPos.toFixed(6));
         if (pathPos !== tempPos) this[`${label}PathPosition`] = pathPos;
 
-        if (pathData) return pathData;
+        if (pathData) {
+
+            this[`current${capLabel}PathData`] = pathData;
+            return pathData;
+        }
 
         else {
 
@@ -538,31 +528,53 @@ P.factoryKill = function () {
         }
     };
 
-// `cleanDimensions` - internal helper function called by `prepareStamp` 
-// + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
-    P.cleanDimensions = function () {
+// // `cleanDimensions` - internal helper function called by `prepareStamp` 
+// // + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
+//     P.cleanDimensions = function () {
 
-        this.dirtyDimensions = false;
-        this.dirtyHandle = true;
-        this.dirtyOffset = true;
+//         this.dirtyDimensions = false;
+//         this.dirtyHandle = true;
+//         this.dirtyOffset = true;
 
-        this.dirtyStart = true;
-        this.dirtyStartControl = true;
-        this.dirtyEndControl = true;
-        this.dirtyControl = true;
-        this.dirtyEnd = true;
-    };
+//         this.dirtyStart = true;
+//         this.dirtyStartControl = true;
+//         this.dirtyEndControl = true;
+//         this.dirtyControl = true;
+//         this.dirtyEnd = true;
+//     };
 
 // `updatePathSubscribers`
     P.updatePathSubscribers = function () {
 
-        this.pathed.forEach(name => {
+        let items = this.pathed.concat(this.endSubscriber, this.endControlSubscriber, this.controlSubscriber, this.startControlSubscriber);
+
+        items.forEach(name => {
 
             let instance = artefact[name];
 
             if (instance) {
 
+                instance.currentPathData = false;
                 instance.dirtyStart = true;
+
+                if (instance.type === 'Line' || instance.type === 'Quadratic' || instance.type === 'Bezier') {
+
+                    if (instance.type === 'Quadratic') {
+
+                        instance.dirtyControl = true;
+                        instance.currentControlPathData = false;
+                    }
+
+                    else if (instance.type === 'Bezier') {
+
+                        instance.dirtyStartControl = true;
+                        instance.dirtyEndControl = true;
+                        instance.currentStartControlPathData = false;
+                        instance.currentEndControlPathData = false;
+                    }
+                    instance.currentEndPathData = false;
+                    instance.dirtyEnd = true;
+                }
                 if (instance.addPathHandle) instance.dirtyHandle = true;
                 if (instance.addPathOffset) instance.dirtyOffset = true;
                 if (instance.addPathRotation) instance.dirtyRotation = true;

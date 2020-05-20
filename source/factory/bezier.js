@@ -157,6 +157,21 @@ S.endControlPath = function (item) {
     this.setControlHelper(item, 'endControlPath', 'endControl');
     this.updateDirty();
     this.dirtyEndControl = true;
+    this.currentEndControlPathData = false;
+};
+
+// __endControlPathPosition__
+S.endControlPathPosition = function (item) {
+
+    this.endControlPathPosition = item;
+    this.dirtyEndControl = true;
+    this.currentEndControlPathData = false;
+};
+D.endControlPathPosition = function (item) {
+
+    this.endControlPathPosition += item;
+    this.dirtyEndControl = true;
+    this.currentEndControlPathData = false;
 };
 
 // __startControlPivot__
@@ -173,6 +188,21 @@ S.startControlPath = function (item) {
     this.setControlHelper(item, 'startControlPath', 'startControl');
     this.updateDirty();
     this.dirtyStartControl = true;
+    this.currentStartControlPathData = false;
+};
+
+// __startControlPathPosition__
+S.startControlPathPosition = function (item) {
+
+    this.startControlPathPosition = item;
+    this.dirtyStartControl = true;
+    this.currentStartControlPathData = false;
+};
+D.startControlPathPosition = function (item) {
+
+    this.startControlPathPosition += item;
+    this.dirtyStartControl = true;
+    this.currentStartControlPathData = false;
 };
 
 // __startControl__
@@ -184,6 +214,7 @@ S.startControlX = function (coord) {
         this.startControl[0] = coord;
         this.updateDirty();
         this.dirtyStartControl = true;
+        this.currentStartControlPathData = false;
     }
 };
 S.startControlY = function (coord) {
@@ -193,6 +224,7 @@ S.startControlY = function (coord) {
         this.startControl[1] = coord;
         this.updateDirty();
         this.dirtyStartControl = true;
+        this.currentStartControlPathData = false;
     }
 };
 S.startControl = function (x, y) {
@@ -200,6 +232,7 @@ S.startControl = function (x, y) {
     this.setCoordinateHelper('startControl', x, y);
     this.updateDirty();
     this.dirtyStartControl = true;
+    this.currentStartControlPathData = false;
 };
 D.startControlX = function (coord) {
 
@@ -207,6 +240,7 @@ D.startControlX = function (coord) {
     c[0] = addStrings(c[0], coord);
     this.updateDirty();
     this.dirtyStartControl = true;
+    this.currentStartControlPathData = false;
 };
 D.startControlY = function (coord) {
 
@@ -214,12 +248,14 @@ D.startControlY = function (coord) {
     c[1] = addStrings(c[1], coord);
     this.updateDirty();
     this.dirtyStartControl = true;
+    this.currentStartControlPathData = false;
 };
 D.startControl = function (x, y) {
 
     this.setDeltaCoordinateHelper('startControl', x, y);
     this.updateDirty();
     this.dirtyStartControl = true;
+    this.currentStartControlPathData = false;
 };
 
 // __endControl__
@@ -231,6 +267,7 @@ S.endControlX = function (coord) {
         this.endControl[0] = coord;
         this.updateDirty();
         this.dirtyEndControl = true;
+        this.currentEndControlPathData = false;
     }
 };
 S.endControlY = function (coord) {
@@ -240,6 +277,7 @@ S.endControlY = function (coord) {
         this.endControl[1] = coord;
         this.updateDirty();
         this.dirtyEndControl = true;
+        this.currentEndControlPathData = false;
     }
 };
 S.endControl = function (x, y) {
@@ -247,6 +285,7 @@ S.endControl = function (x, y) {
     this.setCoordinateHelper('endControl', x, y);
     this.updateDirty();
     this.dirtyEndControl = true;
+    this.currentEndControlPathData = false;
 };
 D.endControlX = function (coord) {
 
@@ -254,6 +293,7 @@ D.endControlX = function (coord) {
     c[0] = addStrings(c[0], coord);
     this.updateDirty();
     this.dirtyEndControl = true;
+    this.currentEndControlPathData = false;
 };
 D.endControlY = function (coord) {
 
@@ -261,12 +301,14 @@ D.endControlY = function (coord) {
     c[1] = addStrings(c[1], coord);
     this.updateDirty();
     this.dirtyEndControl = true;
+    this.currentEndControlPathData = false;
 };
 D.endControl = function (x, y) {
 
     this.setDeltaCoordinateHelper('endControl', x, y);
     this.updateDirty();
     this.dirtyEndControl = true;
+    this.currentEndControlPathData = false;
 };
 
 // __startControlLockTo__
@@ -283,6 +325,7 @@ S.endControlLockTo = function (item) {
     this.endControlLockTo = item;
     this.updateDirty();
     this.dirtyEndControlLock = true;
+    this.currentEndControlPathData = false;
 };
 
 
@@ -310,6 +353,20 @@ P.makeBezierPath = function () {
 
     return `m0,0c${(startControlX - startX)},${(startControlY - startY)} ${(endControlX - startX)},${(endControlY - startY)} ${(endX - startX)},${(endY - startY)}`;
 };
+
+// `cleanDimensions` - internal helper function called by `prepareStamp` 
+// + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
+    P.cleanDimensions = function () {
+
+        this.dirtyDimensions = false;
+        this.dirtyHandle = true;
+        this.dirtyOffset = true;
+
+        this.dirtyStart = true;
+        this.dirtyStartControl = true;
+        this.dirtyEndControl = true;
+        this.dirtyEnd = true;
+    };
 
 
 // #### Factories

@@ -37,7 +37,7 @@
 
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
-import { mergeOver, isa_obj, pushUnique, xt, xta, removeItem } from '../core/utilities.js';
+import { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
@@ -168,7 +168,6 @@ S.pins = function (item) {
             pins.length = 0;
             pins.push(...item);
             this.updateDirty();
-            this.dirtyPins = true;
         }
         else if (isa_obj(item) && xt(item.index)) {
 
@@ -179,7 +178,6 @@ S.pins = function (item) {
                 if (xt(item.x)) element[0] = item.x;
                 if (xt(item.y)) element[1] = item.y;
                 this.updateDirty();
-                this.dirtyPins = true;
             }
         }
     }
@@ -199,7 +197,6 @@ D.pins = function (item) {
                 if (xt(item.x)) element[0] = addStrings(element[0], item.x);
                 if (xt(item.y)) element[1] = addStrings(element[1], item.y);
                 this.updateDirty();
-                this.dirtyPins = true;
             }
         }
     }
@@ -211,7 +208,6 @@ S.tension = function (item) {
 
         this.tension = item;
         this.updateDirty();
-        this.dirtyPins = true;
     }
 };
 D.tension = function (item) {
@@ -220,7 +216,6 @@ D.tension = function (item) {
 
         this.tension += item;
         this.updateDirty();
-        this.dirtyPins = true;
     }
 };
 
@@ -228,47 +223,118 @@ S.closed = function (item) {
 
     this.closed = item;
     this.updateDirty();
-    this.dirtyPins = true;
 };
 
 S.mapToPins = function (item) {
 
     this.mapToPins = item;
     this.updateDirty();
-    this.dirtyPins = true;
 };
 
+// __flipUpend__
+S.flipUpend = function (item) {
+
+    if (item !== this.flipUpend && this.collides) this.dirtyCollision = true;
+    this.flipUpend = item;
+    this.updateDirty();
+};
+
+// __flipReverse__
+S.flipReverse = function (item) {
+
+    if (item !== this.flipReverse && this.collides) this.dirtyCollision = true;
+    this.flipReverse = item;
+    this.updateDirty();
+};
+
+// __flipReverse__
+S.useAsPath = function (item) {
+
+    this.useAsPath = item;
+    this.updateDirty();
+};
+
+// __pivot__
+S.pivot = function (item) {
+
+    if (isa_boolean(item) && !item) {
+
+        this.pivot = null;
+
+        if (this.lockTo[0] === 'pivot') this.lockTo[0] = 'start';
+        if (this.lockTo[1] === 'pivot') this.lockTo[1] = 'start';
+
+        this.dirtyStampPositions = true;
+        this.dirtyStampHandlePositions = true;
+    }
+    else {
+
+        let oldPivot = this.pivot,
+            newPivot = (item.substring) ? artefact[item] : item,
+            name = this.name;
+
+        if (newPivot && newPivot.name) {
+
+            if (oldPivot && oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
+
+            pushUnique(newPivot.pivoted, name);
+
+            this.pivot = newPivot;
+            this.dirtyStampPositions = true;
+            this.dirtyStampHandlePositions = true;
+        }
+    }
+    this.updateDirty();
+};
 
 
 // #### Prototype functions
 
+// `updateDirty` - internal setter helper function
+P.updateDirty = function () {
+
+    this.dirtySpecies = true;
+    this.dirtyPathObject = true;
+    this.dirtyPins = true;
+};
+
 // `getPinAt` - 
 P.getPinAt = function (index, coord) {
 
-    let pins = this.currentPins,
-        pin = pins[Math.floor(index)],
-        origin = pins[0];
+    let i = Math.floor(index);
 
-    let [x, y, w, h] = this.localBox;
+    if (this.useAsPath) {
 
-    let [px, py] = pin;
-    let [ox, oy] = origin;
-    let [lx, ly] = this.localOffset;
-    let [sx, sy] = this.currentStampPosition;
-    let dx, dy;
+        let pos = this.getPathPositionData(this.unitPartials[i]);
 
-    if (this.mapToPins) {
-        dx = px - ox + x;
-        dy = py - ox + y;
+        if (coord) {
+
+            if (coord === 'x') return pos.x;
+            if (coord === 'y') return pos.y;
+        }
+        return [pos.x, pos.y];
     }
     else {
-        dx = px - lx;
-        dy = py - ly;
-    }
 
-    // TODO: the current functionality does not yet correct for entity scale, roll or flip. Needs fixing.
+        let pins = this.currentPins,
+            pin = pins[i];
 
-    if (pin) {
+        let [x, y, w, h] = this.localBox;
+
+        let [px, py] = pin;
+        let [ox, oy] = pins[0];
+        let [lx, ly] = this.localOffset;
+        let [sx, sy] = this.currentStampPosition;
+        let dx, dy;
+
+        if (this.mapToPins) {
+            dx = px - ox + x;
+            dy = py - ox + y;
+        }
+        else {
+            dx = px - lx;
+            dy = py - ly;
+        }
 
         if (coord) {
 
@@ -277,7 +343,7 @@ P.getPinAt = function (index, coord) {
         }
         return [sx + dx, sy + dy];
     }
-    return [sx + dx, sy + dy];
+    return (coord) ? 0 : [0, 0];
 };
 
 // `updatePinAt` - 
@@ -297,7 +363,6 @@ P.updatePinAt = function (item, index) {
 
             pins[index] = item;
             this.updateDirty();
-            this.dirtyPins = true;
         }
     }
 };
@@ -317,7 +382,6 @@ P.removePinAt = function (index) {
 
         pins[index] = null;
         this.updateDirty();
-        this.dirtyPins = true;
     }
 };
 
@@ -360,7 +424,12 @@ P.prepareStamp = function() {
     if (this.dirtyStampPositions) this.cleanStampPositions();
 
     if (this.dirtySpecies) this.cleanSpecies();
-    if (this.dirtyPathObject) this.cleanPathObject();
+
+    if (this.dirtyPathObject) {
+
+        this.cleanPathObject();
+        this.updatePathSubscribers();
+    }
 
     if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 };
@@ -582,6 +651,17 @@ P.calculateLocalPathAdditionalActions = function () {
     this.calculateLocalPath(this.pathDefinition, true);
 };
 
+// `updatePathSubscribers`
+P.updatePathSubscribers = function () {
+
+    this.pathed.forEach(name => {
+
+        let instance = artefact[name];
+
+        if (instance) instance.dirtyStart = true;
+    });
+};
+
 // #### Factories
 
 // ##### makePolyline
@@ -589,7 +669,7 @@ P.calculateLocalPathAdditionalActions = function () {
 // + __pins__ (required) - an Array of either coordinate (`[x, y]`) arrays with coordinates defined as absolute (Number) or relative (String%) values; or artefact objects (or their name-String values).
 // + __tension__ float Number representing the bendiness of the line - for example: `0` (straight lines); `0.3` (a reasonably curved line).
 // + __closed__ Boolean - when set, the start and end pins will be joined to complete the shape
-// + __mapToPins__ Boolean - when set, the line will directly map to it's pin coordinates
+// + __mapToPins__ Boolean - when set, the line will map to its initial pin coordinate
 //
 // ```
 // scrawl.makePolyline({

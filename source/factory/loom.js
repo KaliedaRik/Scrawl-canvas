@@ -104,6 +104,7 @@ let defaultAttributes = {
 //  __loopPathCursors__ - Boolean flag - For animation purposes, the image will move between the struts with the bottom of the page appearing again at the top of the Loom as it moves down (and vice versa). 
 // + To change this functionality - so that the image slowly disappears as it animates up and down past the ends of the struts, set the attribute to `false`.
     loopPathCursors: true,
+    constantPathSpeed: true,
 
 // __isHorizontalCopy__ - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image. 
 // + To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to `false` 
@@ -771,7 +772,8 @@ P.prepareStamp = function() {
                 fPathEnd = this.fromPathEnd,
                 tPathStart = this.toPathStart,
                 tPathEnd = this.toPathEnd,
-                fPartial, tPartial, fRatio, tRatio, minPartial;
+                fPartial, tPartial, fRatio, tRatio, minPartial,
+                pathSpeed = this.constantPathSpeed;
 
             if (fPathStart < fPathEnd) fPartial = fPathEnd - fPathStart;
             else fPartial = fPathEnd + (1 - fPathStart);
@@ -787,10 +789,10 @@ P.prepareStamp = function() {
 
             for (let cursor = 0; cursor <= 1; cursor += pathDelta) {
 
-                ({x, y} = fPath.getPathPositionData(cursor));
+                ({x, y} = fPath.getPathPositionData(cursor, pathSpeed));
                 fromPathData.push([x - startX, y - startY]);
 
-                ({x, y} = tPath.getPathPositionData(cursor));
+                ({x, y} = tPath.getPathPositionData(cursor, pathSpeed));
                 toPathData.push([x - startX, y - startY]);
             }
 
@@ -1244,6 +1246,10 @@ P.getBoundingBox = function () {
                 let [lsx, lsy, sw, sh, sx, sy] = fPath.getBoundingBox();
                 let [lex, ley, ew, eh, ex, ey] = tPath.getBoundingBox();
 
+                if (isNaN(lsx) || isNaN(lsy) || isNaN(sw) || isNaN(sh) || isNaN(sx) || isNaN(sy) || isNaN(lex) || isNaN(ley) || isNaN(ew) || isNaN(eh) || isNaN(ex) || isNaN(ey)) this.dirtyStart = true;
+
+                if (lsx == lex && lsy == ley && sw == ew && sh == eh && sx == ex && sy == ey) this.dirtyStart = true;
+
                 lsx += sx;
                 lsy += sy;
                 lex += ex;
@@ -1374,9 +1380,9 @@ P.doStroke = function (engine) {
         if (host) {
 
             let fStart = fPath.currentStampPosition,
-                fEnd = fPath.currentEnd,
+                fEnd = fPath.getPathPositionData(1),
                 tStart = tPath.currentStampPosition,
-                tEnd = tPath.currentEnd;
+                tEnd = tPath.getPathPositionData(1);
 
             host.rotateDestination(engine, fStart[0], fStart[1], fPath);
             engine.stroke(fPath.pathObject);
@@ -1386,8 +1392,8 @@ P.doStroke = function (engine) {
 
             engine.setTransform(1,0, 0, 1, 0, 0);
             engine.beginPath()
-            engine.moveTo(...fEnd);
-            engine.lineTo(...tEnd);
+            engine.moveTo(fEnd.x, fEnd.y);
+            engine.lineTo(tEnd.x, tEnd.y);
             engine.moveTo(...tStart);
             engine.lineTo(...fStart);
             engine.closePath();

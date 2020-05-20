@@ -31,7 +31,9 @@ export default function (d, scale, start, useAsPath, precision) {
         oldY = 0;
 
     let xPoints = [],
-        yPoints = [];
+        yPoints = [],
+        progression = [],
+        positions = [];
 
     let reflectX = 0,
         reflectY = 0;
@@ -419,6 +421,8 @@ export default function (d, scale, start, useAsPath, precision) {
                     unitLengths[i] = results.length;
                     xPoints = xPoints.concat(results.xPoints);
                     yPoints = yPoints.concat(results.yPoints);
+                    progression.push(results.progression);
+                    positions.push(results.positions);
                     break;
                     
                 default :
@@ -433,13 +437,16 @@ export default function (d, scale, start, useAsPath, precision) {
         for (i = 0, iz = unitLengths.length; i < iz; i++) {
 
             mySum += unitLengths[i] / myLen;
-            unitPartials[i] = mySum;
+            unitPartials[i] = parseFloat(mySum.toFixed(6));
         }
     }
 
     returnObject.unitLengths = unitLengths;
     returnObject.unitPartials = unitPartials;
     returnObject.length = parseFloat(myLen.toFixed(1));
+    returnObject.unitPositions = positions;
+    returnObject.unitProgression = progression;
+
 
     // calculate bounding box dimensions
     let maxX = Math.max(...xPoints),
@@ -451,6 +458,8 @@ export default function (d, scale, start, useAsPath, precision) {
     returnObject.maxY = maxY;
     returnObject.minX = minX;
     returnObject.minY = minY;
+    returnObject.xRange = xPoints;
+    returnObject.yRange = yPoints;
 
     return returnObject;
 };
@@ -488,6 +497,8 @@ const getShapeUnitMetaData = function (species, precision, args) {
 
     let xPts = [],
         yPts = [],
+        progression = [],
+        positions = [],
         len = 0,
         w, h;
 
@@ -519,6 +530,8 @@ const getShapeUnitMetaData = function (species, precision, args) {
             xPts.length = 0;
             yPts.length = 0;
             newLength = 0;
+            progression.length = 0;
+            positions.length = 0;
 
             res = getXY[func](0, ...args);
             oldX = res.x;
@@ -540,6 +553,9 @@ const getShapeUnitMetaData = function (species, precision, args) {
                 newLength += Math.sqrt((w * w) + (h * h));
                 oldX = x;
                 oldY = y;
+
+                progression.push(newLength);
+                positions.push(t);
             }
 
             // Stop the while loop if we're getting close to the true length of the curve
@@ -557,7 +573,9 @@ const getShapeUnitMetaData = function (species, precision, args) {
     return {
         length: len,
         xPoints: xPts,
-        yPoints: yPts
+        yPoints: yPts,
+        positions: positions,
+        progression: progression,
     };
 };
 

@@ -83,3 +83,17 @@ scrawl.makeAnimation({
 // #### Development and testing
 // Because the code has been loaded as a __module__, Scrawl-canvas attributes and functions do not get added to the global namespace. For development work, we can overcome this issue (to a small extent) by console logging the scrawl library, so we can check internal attribute values and calculation results.
 console.log(scrawl.library);
+
+// A more interactive method is to assign the scrawl object to a window global variable - this then allows us to access all of the objects created by Scrawl-canvas and interact with them in the browser console:
+//
+// ```
+// // In the .js module file
+// window.scrawl = scrawl;
+//
+// // In the browser console
+// let b = scrawl.makeBlock({ ...etc... });
+// b.set({ ... etc ... });
+//
+// let a = scrawl.library.artefact['my-artefact'];
+// a.set({ ... etc ... })
+// ```
