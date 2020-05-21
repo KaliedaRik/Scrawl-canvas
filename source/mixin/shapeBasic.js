@@ -2,7 +2,7 @@
 // This mixin defines the key attributes and functionality for all Scrawl-canvas __path-defined entitys__. 
 
 // #### Imports
-import { radian } from '../core/library.js';
+import { radian, artefact } from '../core/library.js';
 import { mergeOver, xt, defaultNonReturnFunction, pushUnique } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from '../factory/vector.js';
@@ -254,14 +254,12 @@ export default function (P = {}) {
             }
             else {
 
-                // subsequent segments
-
-                // progress is pixel lengths
+                // subsequent segments - progress is pixel lengths
                 indexProgress = progress[index];
                 lastProgress = (index) ? progress[index - 1] : 0;
                 diffProgress = indexProgress - lastProgress;
 
-                // position is in the range 0-1
+                // ... and position is in the range 0-1
                 indexPosition = positions[index];
                 nextPosition = positions[index + 1];
                 diffPosition = nextPosition - indexPosition;
@@ -450,7 +448,6 @@ export default function (P = {}) {
         if (!this.noPathUpdates || !this.pathObject) {
 
             this.calculateLocalPath(this.pathDefinition);
-            this.cleanStampPositionsAdditionalActions();
 
             if (this.dirtyDimensions) this.cleanDimensions();
             if (this.dirtyHandle) this.cleanHandle();
@@ -551,16 +548,6 @@ export default function (P = {}) {
     };
     P.calculateLocalPathAdditionalActions = defaultNonReturnFunction;
 
-    // `cleanStampPositionsAdditionalActions` - internal helper function - called by `cleanPathObject`
-    P.cleanStampPositionsAdditionalActions = function () {
-
-        if (this.path && this.lockTo.indexOf('path') >= 0) {
-
-            this.dirtyStampPositions = true;
-            this.dirtyStampHandlePositions = true;
-        }
-    };
-
 // `updatePathSubscribers`
     P.updatePathSubscribers = function () {
 
@@ -575,8 +562,11 @@ export default function (P = {}) {
                 if (instance.addPathHandle) instance.dirtyHandle = true;
                 if (instance.addPathOffset) instance.dirtyOffset = true;
                 if (instance.addPathRotation) instance.dirtyRotation = true;
+
+                if (instance.type === 'Polyline') instance.dirtyPins = true;
+                else if (instance.type === 'Line' || instance.type === 'Quadratic' || instance.type === 'Bezier') instance.dirtyPins.push(this.name);
             }
-        });
+        }, this);
     };
 
 // #### Stamp methods

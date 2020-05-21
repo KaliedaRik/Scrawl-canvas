@@ -249,17 +249,40 @@ P.makeQuadraticPath = function () {
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 
 // + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
-    P.cleanDimensions = function () {
+P.cleanDimensions = function () {
 
-        this.dirtyDimensions = false;
-        this.dirtyHandle = true;
-        this.dirtyOffset = true;
+    this.dirtyDimensions = false;
+    this.dirtyHandle = true;
+    this.dirtyOffset = true;
 
-        this.dirtyStart = true;
-        this.dirtyControl = true;
-        this.dirtyEnd = true;
-    };
+    this.dirtyStart = true;
+    this.dirtyControl = true;
+    this.dirtyEnd = true;
+};
 
+P.preparePinsForStamp = function () {
+
+    let ePivot = this.endPivot,
+        ePath = this.endPath,
+        cPivot = this.controlPivot,
+        cPath = this.controlPath;
+
+    this.dirtyPins.forEach(name => {
+
+        if ((cPivot && cPivot.name === name) || (cPath && cPath.name === name)) {
+
+            this.dirtyControl = true;
+            if (this.controlLockTo.includes('path')) this.currentControlPathData = false;
+        }
+
+        if ((ePivot && ePivot.name === name) || (ePath && ePath.name === name)) {
+
+            this.dirtyEnd = true;
+            if (this.endLockTo.includes('path')) this.currentEndPathData = false;
+        }
+    });
+    this.dirtyPins.length = 0;
+};
 
 // #### Factories
 

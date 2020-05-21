@@ -867,11 +867,6 @@ export default function (P = {}) {
         if (this.dirtyPathObject) this.cleanPathObject();
     };
 
-    P.cleanStampPositionsAdditionalActions = function () {
-
-        if (this.domElement && this.collides) this.dirtyPathObject = true;
-    };
-
 // `stamp` - builds a set of Strings which can then be applied to the DOM wrapper's element's `style` attribute.
 // + The functionality for performing the update is defined in the [document](../core/document.html) module's `domShow` function, which will be called for each DOM-based artefact during the 'show' stage of the Display cycle
 // + Function returns a promise

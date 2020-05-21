@@ -75,12 +75,12 @@ let makeStars = function (buildNumber) {
 
             definitions: [{
                 attribute: 'startX',
-                integer: true,
+                // integer: true,
                 start: 300,
                 end: 300 + x,
             }, {
                 attribute: 'startY',
-                integer: true,
+                // integer: true,
                 start: 300,
                 end: 300 + y,
             }, {

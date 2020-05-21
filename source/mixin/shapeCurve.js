@@ -192,6 +192,8 @@ P.factoryKill = function () {
         this.endLockTo = 'coord';
         this.dirtyEnd = true;
 
+        this.dirtyPins = [];
+
         this.controlledLineOffset = makeCoordinate();
     };
 
@@ -199,11 +201,13 @@ P.factoryKill = function () {
     // `setControlHelper` - internal setter helper function
     P.setControlHelper = function (item, attr, label) {
 
+        let isPivot = (attr.indexOf('Pivot') > 0) ? true : false;
+
         if (isa_boolean(item) && !item) {
 
             this[attr] = null;
 
-            if (attr.indexOf('Pivot') > 0) {
+            if (isPivot) {
 
                 if (this[`${label}LockTo`] === 'pivot') {
 
@@ -235,9 +239,14 @@ P.factoryKill = function () {
 
             if (newControl && newControl.isArtefact) {
 
-                if (oldControl && oldControl.isArtefact && oldControl[`${label}Subscriber`]) removeItem(oldControl[`${label}Subscriber`], this.name);
+                if (oldControl && oldControl.isArtefact) {
 
-                if (newControl[`${label}Subscriber`]) pushUnique(newControl[`${label}Subscriber`], this.name);
+                    if (isPivot) removeItem(oldControl.pivoted, this.name);
+                    else removeItem(oldControl.pathed, this.name);
+                }
+
+                if (isPivot) pushUnique(newControl.pivoted, this.name);
+                else pushUnique(newControl.pathed, this.name);
 
                 this[attr] = newControl;
             }
@@ -291,7 +300,7 @@ P.factoryKill = function () {
             return myPoint;
         }
         return false;
-    }
+    };
 
 
 // #### Display cycle functionality
@@ -300,6 +309,12 @@ P.factoryKill = function () {
     P.prepareStamp = function() {
 
         if (this.dirtyHost) this.dirtyHost = false;
+
+        // `preparePinsForStamp` function defined in line, quadratic and bezier modules
+        if (this.dirtyPins.length) {
+
+            this.preparePinsForStamp();
+        }
 
 // `dirtyLock` flags (one for each control) - trigger __cleanLock__ functions - which in turn set appropriate dirty flags on the entity.
         if (this.dirtyLock) this.cleanLock();
@@ -365,7 +380,11 @@ P.factoryKill = function () {
         if (this.dirtySpecies) this.cleanSpecies();
         if (this.dirtyPathObject) this.cleanPathObject();
 
-        if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+        if (this.dirtyPositionSubscribers) {
+
+            this.updatePositionSubscribers();
+            this.updateControlPathSubscribers();
+        }
     };
 
 // `cleanControlLock` - internal helper function - called by `prepareStamp`
@@ -476,8 +495,7 @@ P.factoryKill = function () {
 
         this.dirtySpecies = true;
         this.dirtyPathObject = true;
-
-        this.updatePathSubscribers();
+        this.dirtyPositionSubscribers = true;
     };
 
 // `getControlPathData` - internal helper function - called by `cleanControl`
@@ -528,34 +546,17 @@ P.factoryKill = function () {
         }
     };
 
-// // `cleanDimensions` - internal helper function called by `prepareStamp` 
-// // + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
-//     P.cleanDimensions = function () {
+// `updateControlPathSubscribers`
+    P.updateControlPathSubscribers = function () {
 
-//         this.dirtyDimensions = false;
-//         this.dirtyHandle = true;
-//         this.dirtyOffset = true;
-
-//         this.dirtyStart = true;
-//         this.dirtyStartControl = true;
-//         this.dirtyEndControl = true;
-//         this.dirtyControl = true;
-//         this.dirtyEnd = true;
-//     };
-
-// `updatePathSubscribers`
-    P.updatePathSubscribers = function () {
-
-        let items = this.pathed.concat(this.endSubscriber, this.endControlSubscriber, this.controlSubscriber, this.startControlSubscriber);
+        // THIS WON'T WORK - got rid of these 'subscriber' Arrays!
+        let items = [].concat(this.endSubscriber, this.endControlSubscriber, this.controlSubscriber, this.startControlSubscriber);
 
         items.forEach(name => {
 
             let instance = artefact[name];
 
             if (instance) {
-
-                instance.currentPathData = false;
-                instance.dirtyStart = true;
 
                 if (instance.type === 'Line' || instance.type === 'Quadratic' || instance.type === 'Bezier') {
 
@@ -575,12 +576,12 @@ P.factoryKill = function () {
                     instance.currentEndPathData = false;
                     instance.dirtyEnd = true;
                 }
-                if (instance.addPathHandle) instance.dirtyHandle = true;
-                if (instance.addPathOffset) instance.dirtyOffset = true;
-                if (instance.addPathRotation) instance.dirtyRotation = true;
+                instance.currentPathData = false;
+                instance.dirtyStart = true;
             }
         });
     };
+
 
 // Return the prototype
     return P;

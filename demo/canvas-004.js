@@ -15,7 +15,7 @@ canvas.set({
         overflow: 'hidden',
         resize: 'both',
     },
-    fit: 'contain',
+    fit: 'cover',
     checkForResize: true,
 });
 

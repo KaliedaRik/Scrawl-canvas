@@ -948,15 +948,11 @@ export default function (P = {}) {
 // __roll__
     S.roll = function (item) {
 
-        if (!isa_number(item)) throw new Error(`mixin/position error - S.roll() argument not a number: ${item}`);
-
         this.roll = item;
         this.dirtyRotation = true;
     };
     D.roll = function (item) {
 
-        if (!isa_number(item)) throw new Error(`mixin/position error - D.roll() argument not a number: ${item}`);
-        
         this.roll += item;
         this.dirtyRotation = true;
     };
@@ -965,15 +961,11 @@ export default function (P = {}) {
 // __scale__
     S.scale = function (item) {
 
-        if (!isa_number(item)) throw new Error(`mixin/position error - S.scale() argument not a number: ${item}`);
-        
         this.scale = item;
         this.dirtyScale = true;
     };
     D.scale = function (item) {
 
-        if (!isa_number(item)) throw new Error(`mixin/position error - D.scale() argument not a number: ${item}`);
-        
         this.scale += item;
         this.dirtyScale = true;
     };
@@ -1055,11 +1047,6 @@ export default function (P = {}) {
 
         this.pivoted = [];
         this.mimicked = [];
-
-        this.controlSubscriber = [];
-        this.startControlSubscriber = [];
-        this.endControlSubscriber = [];
-        this.endSubscriber = [];
 
         this.dirtyScale = true;
         this.dirtyDimensions = true;
@@ -1560,9 +1547,6 @@ export default function (P = {}) {
                 localLockArray = [],
                 lock, i, coord, here, pathData,
                 hereFlag = false,
-                stamp = this.currentStampPosition,
-                oldX = stamp[0],
-                oldY = stamp[1],
                 offset = this.currentOffset,
                 isBeingDragged = this.isBeingDragged,
                 drag = this.currentDragOffset,
@@ -1674,14 +1658,15 @@ export default function (P = {}) {
                 stamp[i] = coord;
             }
         }
-        this.cleanStampPositionsAdditionalActions()
+        // Specific to non-entity artefacts 
+        if (this.domElement && this.collides) this.dirtyPathObject = true;
 
         if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;
     };
 
 
 // `cleanStampPositionsAdditionalActions` - some artefact types need to perform additional calculations to finalize the values in the __currentStampPosition__ array. Those factory functions will overwrite this function as required.
-    P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;
+    // P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;
 
 
 // `cleanStampHandlePositions` 
@@ -1747,18 +1732,13 @@ export default function (P = {}) {
         }
         
         // At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality. 
-        // + If this changes, then we should amend code so that we pass code flow to a `cleanStampHandlePositionsAdditionalActions` function, then move this `if` statement into an override of that function in the mixin/shape.js module file.
-        if (this.type === 'Shape') {
-
-            let box = this.localBox;
-            stampHandle[0] += box[0];
-            stampHandle[1] += box[1];
-        }
+        this.cleanStampHandlePositionsAdditionalActions();
 
         if (oldX !== stampHandle[0] || oldY !== stampHandle[1]) this.dirtyPositionSubscribers = true;
 
         if (this.domElement && this.collides) this.dirtyPathObject = true;
     };
+    P.cleanStampHandlePositionsAdditionalActions = defaultNonReturnFunction;
 
 // #### Collision functionality
 
@@ -1780,7 +1760,6 @@ export default function (P = {}) {
                 if (this.collides) this.calculateSensors();
             }
         }
-
         return [this.currentCollisionRadius, this.currentSensors];
     };
 
@@ -2065,55 +2044,6 @@ P.pickupArtefact = function (items = {}) {
         if (this.pivoted && this.pivoted.length) this.updatePivotSubscribers();
         if (this.mimicked && this.mimicked.length) this.updateMimicSubscribers();
         if (this.pathed && this.pathed.length) this.updatePathSubscribers();
-        if (this.controlSubscriber && this.controlSubscriber.length) this.updateControlSubscribers();
-        if (this.startControlSubscriber && this.startControlSubscriber.length) this.updateStartControlSubscribers();
-        if (this.endControlSubscriber && this.endControlSubscriber.length) this.updateEndControlSubscribers();
-        if (this.endSubscriber && this.endSubscriber.length) this.updateEndSubscribers();
-
-    };
-
-// `updateControlSubscribers`
-    P.updateControlSubscribers = function () {
-
-        this.controlSubscriber.forEach(name => {
-
-            let instance = artefact[name];
-
-            if (instance) instance.dirtyControl = true;
-        });
-    };
-
-// `updateStartControlSubscribers`
-    P.updateStartControlSubscribers = function () {
-
-        this.startControlSubscriber.forEach(name => {
-
-            let instance = artefact[name];
-
-            if (instance) instance.dirtyStartControl = true;
-        });
-    };
-
-// `updateEndControlSubscribers`
-    P.updateEndControlSubscribers = function () {
-
-        this.endControlSubscriber.forEach(name => {
-
-            let instance = artefact[name];
-
-            if (instance) instance.dirtyEndControl = true;
-        });
-    };
-
-// `updateEndSubscribers`
-    P.updateEndSubscribers = function () {
-
-        this.endSubscriber.forEach(name => {
-
-            let instance = artefact[name];
-
-            if (instance) instance.dirtyEnd = true;
-        });
     };
 
 // `updatePivotSubscribers`
@@ -2131,8 +2061,9 @@ P.pickupArtefact = function (items = {}) {
                 if (instance.addPivotRotation) instance.dirtyRotation = true;
 
                 if (instance.type === 'Polyline') instance.dirtyPins = true;
+                else if (instance.type === 'Line' || instance.type === 'Quadratic' || instance.type === 'Bezier') instance.dirtyPins.push(this.name);
             }
-        });
+        }, this);
     };
 
 // `updateMimicSubscribers`

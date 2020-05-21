@@ -80,12 +80,12 @@ let makeStars = function (buildNumber) {
             // We will animate the star's `start` Coordinate (using __startX__ and __startY__ pseudo-attributes)
             definitions: [{
                 attribute: 'startX',
-                integer: true,
+                // integer: true,
                 start: 300,
                 end: 300 + v.x
             }, {
                 attribute: 'startY',
-                integer: true,
+                // integer: true,
                 start: 300,
                 end: 300 + v.y
             }, {

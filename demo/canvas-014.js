@@ -235,21 +235,15 @@ scrawl.makePicture({
     handleX: 'center',
     handleY: 'center',
 
-    path: 'my-bezier',
-    pathPosition: 0,
-    lockTo: 'path',
+    path: 'path-line',
+    pathPosition: 0.1,
     addPathRotation: true,
+    lockTo: 'path',
 
-    // Delta animate the bunny at the same speed as the path-line animates
-    delta: {
-        pathPosition: 0.0015,
-    }
 }).clone({
 
     name: 'bunny2',
-    path: 'my-quad',
-    pathPosition: 0,
-    roll: 180,
+    pathPosition: 0.9,
 });
 
 
@@ -405,10 +399,5 @@ killArtefact('my-bezier', 5000, () => {
     scrawl.library.artefact['path-line'].set({
         endPath: 'my-bezier',
         endLockTo: 'path',
-    });
-
-    scrawl.library.artefact['bunny1'].set({
-        path: 'my-bezier',
-        lockTo: 'path',
     });
 });

@@ -363,18 +363,49 @@ P.makeBezierPath = function () {
 
 // `cleanDimensions` - internal helper function called by `prepareStamp` 
 // + Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.
-    P.cleanDimensions = function () {
+P.cleanDimensions = function () {
 
-        this.dirtyDimensions = false;
-        this.dirtyHandle = true;
-        this.dirtyOffset = true;
+    this.dirtyDimensions = false;
+    this.dirtyHandle = true;
+    this.dirtyOffset = true;
 
-        this.dirtyStart = true;
-        this.dirtyStartControl = true;
-        this.dirtyEndControl = true;
-        this.dirtyEnd = true;
-    };
+    this.dirtyStart = true;
+    this.dirtyStartControl = true;
+    this.dirtyEndControl = true;
+    this.dirtyEnd = true;
+};
 
+P.preparePinsForStamp = function () {
+
+    let ePivot = this.endPivot,
+        ePath = this.endPath,
+        scPivot = this.startControlPivot,
+        scPath = this.startControlPath,
+        ecPivot = this.endControlPivot,
+        ecPath = this.endControlPath;
+
+    this.dirtyPins.forEach(name => {
+
+        if ((scPivot && scPivot.name === name) || (scPath && scPath.name === name)) {
+
+            this.dirtyStartControl = true;
+            if (this.startControlLockTo.includes('path')) this.currentStartControlPathData = false;
+        }
+
+        if ((ecPivot && ecPivot.name === name) || (ecPath && ecPath.name === name)) {
+
+            this.dirtyEndControl = true;
+            if (this.endControlLockTo.includes('path')) this.currentEndControlPathData = false;
+        }
+
+        if ((ePivot && ePivot.name === name) || (ePath && ePath.name === name)) {
+
+            this.dirtyEnd = true;
+            if (this.endLockTo.includes('path')) this.currentEndPathData = false;
+        }
+    });
+    this.dirtyPins.length = 0;
+};
 
 // #### Factories
 
