@@ -46,7 +46,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the files to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.1.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-0-11.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-1-0.zip) - this package only includes the minified files.
+Alternatively, a zip package of the v8.1.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-1-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-1-0.zip) - this package only includes the minified files.
 
 ```
 <!-- Hello world -->
