@@ -228,7 +228,7 @@ else this.repeat = this.defs.repeat;
 P.checkSource = function (width, height) {
 if (this.currentDimensions[0] !== width || this.currentDimensions[1] !== height) this.notifySubscribers();
 };
-P.getData = function (entity, cell, isFill) {
+P.getData = function (entity, cell) {
 this.checkSource(this.sourceNaturalDimensions[0], this.sourceNaturalDimensions[1]);
 return this.buildStyle(cell);
 };
@@ -315,6 +315,8 @@ engine.setLineDash(engine.lineDash);
 }
 else engine[key] = state[key];
 }, state);
+engine.textAlign = state.textAlign;
+engine.textBaseline = state.textBaseline;
 return this;
 };
 P.setToDefaults = function () {
@@ -334,6 +336,8 @@ engine[key] = value;
 state[key] = value;
 }
 });
+engine.textAlign = state.textAlign = 'left';
+engine.textBaseline = state.textBaseline = 'top';
 return this;
 };
 P.stylesArray = ['Gradient', 'RadialGradient', 'Pattern'];
@@ -361,11 +365,11 @@ if (stylesnames.indexOf(item) >= 0) brokenStyle = styles[item];
 else if (cellnames.indexOf(item) >= 0) brokenStyle = cell[item];
 if (brokenStyle) {
 entity.state.fillStyle = brokenStyle;
-engine.fillStyle = brokenStyle.getData(entity, layer, true);
+engine.fillStyle = brokenStyle.getData(entity, layer);
 }
 else engine.fillStyle = item;
 }
-else engine.fillStyle = item.getData(entity, layer, true);
+else engine.fillStyle = item.getData(entity, layer);
 },
 font: function (item, engine) {
 engine.font = item;
@@ -395,12 +399,6 @@ engine.lineWidth = item;
 miterLimit: function (item, engine) {
 engine.miterLimit = item;
 },
-textAlign: function (item, engine) {
-engine.textAlign = item;
-},
-textBaseline: function (item, engine) {
-engine.textBaseline = item;
-},
 shadowBlur: function (item, engine) {
 engine.shadowBlur = item;
 },
@@ -420,11 +418,11 @@ if (stylesnames.indexOf(item) >= 0) brokenStyle = styles[item];
 else if (cellnames.indexOf(item) >= 0) brokenStyle = cell[item];
 if (brokenStyle) {
 entity.state.strokeStyle = brokenStyle;
-engine.strokeStyle = brokenStyle.getData(entity, layer, true);
+engine.strokeStyle = brokenStyle.getData(entity, layer);
 }
 else engine.strokeStyle = item;
 }
-else engine.strokeStyle = item.getData(entity, layer, false);
+else engine.strokeStyle = item.getData(entity, layer);
 },
 };
 P.clearShadow = function () {
@@ -537,8 +535,8 @@ currentDimensions = self.currentDimensions,
 curWidth = floor(currentDimensions[0]),
 curHeight = floor(currentDimensions[1]),
 hostDimensions = host.currentDimensions,
-destWidth = hostDimensions[0],
-destHeight = hostDimensions[1],
+destWidth = floor(hostDimensions[0]),
+destHeight = floor(hostDimensions[1]),
 composite = self.composite,
 alpha = self.alpha,
 controller = self.controller,

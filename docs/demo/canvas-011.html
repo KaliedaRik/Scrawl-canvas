@@ -160,6 +160,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-029.html">
+                  ./demo/canvas-029.js
+                </a>
+              
+                
+                <a class="source" href="canvas-030.html">
+                  ./demo/canvas-030.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -348,17 +358,13 @@ scrawl.library.canvas.mycanvas.set({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'japan_fill'</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">50</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">50</span>,
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'green'</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'gold'</span>,
 
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">'round'</span>,
-    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">'black'</span>,
 
     <span class="hljs-attr">scale</span>: <span class="hljs-number">0.2</span>,
     <span class="hljs-attr">scaleOutline</span>: <span class="hljs-literal">false</span>,
@@ -693,9 +699,22 @@ scrawl.library.canvas.mycanvas.set({
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'japan_draw'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
-    <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>showBoundingBox: false,</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'japan_drawAndFill'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">500</span>,
@@ -710,7 +729,7 @@ scrawl.library.canvas.mycanvas.set({
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'japan_drawThenFill'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">50</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">170</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">200</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">'drawThenFill'</span>,
 
 }).clone({
@@ -727,11 +746,11 @@ scrawl.library.canvas.mycanvas.set({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Change the fill and stroke styles on one of the blocks, and any block sharing that block’s state</p>
 
@@ -740,16 +759,26 @@ scrawl.library.canvas.mycanvas.set({
             <div class="content"><div class='highlight'><pre>scrawl.library.artefact.japan_fillAndDraw.set({
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'blue'</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'coral'</span>,
+});
+
+scrawl.makeWheel({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'pin'</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'japan_draw'</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">3</span>,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Create the drag-and-drop zone</p>
@@ -766,11 +795,11 @@ scrawl.library.canvas.mycanvas.set({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -799,11 +828,11 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -819,11 +848,11 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
@@ -834,11 +863,11 @@ Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>To test kill functionality</p>
 

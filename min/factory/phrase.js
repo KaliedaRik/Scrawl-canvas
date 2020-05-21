@@ -1,6 +1,6 @@
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
-import { mergeOver, pushUnique, xt, ensurePositiveFloat, ensureFloat, ensureString } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xta, isa_obj, ensurePositiveFloat, ensureFloat, ensureString } from '../core/utilities.js';
 import { requestCell, releaseCell } from './cell.js';
 import { makeFontAttributes } from './fontAttributes.js';
 import baseMix from '../mixin/base.js';
@@ -30,7 +30,23 @@ delete items.sizeValue;
 delete items.sizeMetric;
 delete items.family;
 this.entityInit(items);
-this.glyphStyles = [];
+this.sectionStyles = [];
+this.sectionClasses = {
+'DEFAULTS': { defaults: true },
+'BOLD': { weight: 'bold' },
+'ITALIC': { style: 'italic' },
+'SMALL-CAPS': { variant: 'small-caps' },
+'HIGHLIGHT': { highlight: true },
+'UNDERLINE': { underline: true },
+'OVERLINE': { overline: true },
+'/BOLD': { weight: 'normal' },
+'/ITALIC': { style: 'normal' },
+'/SMALL-CAPS': { variant: 'normal' },
+'/HIGHLIGHT': { highlight: false },
+'/UNDERLINE': { underline: false },
+'/OVERLINE': { overline: false }
+};
+this.dirtyDimensions = true;
 this.dirtyText = true;
 this.dirtyFont = true;
 this.dirtyPathObject = true;
@@ -48,12 +64,14 @@ P = entityMix(P);
 P = filterMix(P);
 let defaultAttributes = {
 text: '',
+width: 'auto',
 exposeText: true,
-lineHeight: 1.5,
+lineHeight: 1.15,
 letterSpacing: 0,
 justify: 'left',
-glyphStyles: [],
-overlinePosition: 0.1,
+sectionClassMarker: '§',
+sectionClasses: null,
+overlinePosition: -0.1,
 overlineStyle: 'rgb(250,0,0)',
 underlinePosition: 0.6,
 underlineStyle: 'rgb(250,0,0)',
@@ -126,10 +144,14 @@ this.dirtyHandle = true;
 this.dirtyText = true;
 this.dirtyPathObject = true;
 };
+G.text = function () {
+return this.currentText || this.text || '';
+};
 S.text = function (item) {
 this.text = ensureString(item);
 this.dirtyText = true;
 this.dirtyPathObject = true;
+this.dirtyDimensions = true;
 };
 P.permittedJustifications = ['left', 'right', 'center', 'full'];
 S.justify = function (item) {
@@ -311,19 +333,49 @@ this.fontAttributes.set({family: item});
 this.dirtyFont = true;
 this.dirtyPathObject = true;
 };
-P.setGlyphStyles = function (args, ...pos) {
-if (args && Array.isArray(pos)) {
-let styles = this.glyphStyles,
-slot, style, i, iz;
-for (i = 0, iz = pos.length; i < iz; i++) {
-slot = pos[i];
-style = styles[slot];
-if (!style) styles[slot] = args;
-else mergeOver(style, args);
+P.cleanDimensionsAdditionalActions = function () {
+if (this.dimensions[0] === 'auto') {
+if (!this.currentText) this.buildText();
+let myCell = requestCell(),
+engine = myCell.engine;
+engine.font = this.fontAttributes.buildFont();
+this.currentDimensions[0] = Math.ceil(engine.measureText(this.currentText).width);
+releaseCell(myCell);
 }
-this.dirtyPathObject = true;
+this.currentDimensions[1] = Math.ceil((this.textHeight * this.textLines.length * this.lineHeight) / this.scale);
+};
+P.setSectionStyles = function (text) {
+let search = new RegExp(this.sectionClassMarker),
+parseArray = text.split(search),
+styles = this.sectionStyles,
+classes = this.sectionClasses,
+parsedText = '',
+classObj, index, styleObj;
+styles.length = 0;
+parseArray.forEach(item => {
+classObj = classes[item];
+if (classObj) {
+index = parsedText.length;
+styleObj = styles[index];
+if (!styleObj) styles[index] = Object.assign({}, classObj);
+else Object.assign(styleObj, classObj);
+}
+else if (xt(item)) parsedText += item;
+});
+return parsedText;
+};
+P.addSectionClass = function (label, obj) {
+if (xta(label, obj) && label.substring && isa_obj(obj)) {
+this.sectionClasses[label] = obj;
+}
 this.dirtyText = true;
-}
+this.dirtyPathObject = true;
+return this;
+};
+P.removeSectionClass = function (label) {
+delete this.sectionClasses[label];
+this.dirtyText = true;
+this.dirtyPathObject = true;
 return this;
 };
 P.getTextPath = function () {
@@ -353,27 +405,19 @@ let handle = this.currentHandle,
 dims = this.currentDimensions,
 scale = this.currentScale,
 x = -handle[0] * scale,
-y = (-handle[1] * scale) - (this.textHeight / 2),
-w = dims[0] * scale;
-let h;
-if (this.textLines) {
-h = (this.textHeight * this.textLines.length * this.lineHeight) + (this.textHeight / 2);
-}
-else {
-h = 20;
-this.dirtyPathObject = true;
-this.dirtyFont = true;
-this.dirtyText = true;
-this.dirtyMimicDimensions = true;
-this.dirtyHandle = true;
-}
+y = -handle[1] * scale,
+w = dims[0] * scale,
+h = dims[1] * scale;
+this.boxStartValues = [x, y];
 p.rect(x, y, w, h);
 }
 };
 P.buildText = function () {
 this.dirtyText = false;
-this.text = this.convertTextEntityCharacters(this.text);
-this.calculateTextPositions(this.text);
+let t = this.convertTextEntityCharacters(this.text);
+t = this.setSectionStyles(t);
+this.currentText = t;
+this.calculateTextPositions(t);
 if (this.exposeText) {
 if (!this.exposedTextHold) {
 let myhold = document.createElement('div');
@@ -381,7 +425,7 @@ myhold.id = `${this.name}-text-hold`;
 this.exposedTextHold = myhold;
 this.exposedTextHoldAttached = false;
 }
-this.exposedTextHold.textContent = this.text;
+this.exposedTextHold.textContent = t;
 if (!this.exposedTextHoldAttached) {
 if(this.currentHost && this.currentHost.controller && this.currentHost.controller.textHold) {
 this.currentHost.controller.textHold.appendChild(this.exposedTextHold);
@@ -397,20 +441,24 @@ textEntityConverter.innerHTML = mytext;
 return textEntityConverter.value;
 };
 P.calculateTextPositions = function (mytext) {
-let makeStyle = function (item) {
+const makeStyle = function (item) {
+if (!host) {
+self.dirtyPathObject = true;
+self.dirtyText = true;
+return 'black';
+}
 if (item.substring) {
 let brokenStyle = false;
 if (stylesnames.indexOf(item) >= 0) brokenStyle = styles[item];
 else if (cellnames.indexOf(item) >= 0) brokenStyle = cell[item];
-if (brokenStyle) return brokenStyle.getData(self, host, true);
-else return item;
+if (brokenStyle) return brokenStyle;
 }
-else return item.getData(self, host, true);
+return item;
 };
 let myCell = requestCell(),
 engine = myCell.engine;
 let self = this,
-host = (this.group && this.group.getHost) ? this.group.getHost() : myCell;
+host = (this.group && this.group.getHost) ? this.group.getHost() : false;
 let textGlyphs,
 textGlyphWidths = [],
 textLines = [],
@@ -428,7 +476,7 @@ path = this.getTextPath(),
 direction, loop, rotate;
 let fontAttributes = this.fontAttributes,
 glyphAttributes = fontAttributes.clone({});
-let glyphStyles = this.glyphStyles;
+let sectionStyles = this.sectionStyles;
 let state = this.state,
 fontLibrary = {},
 fontArray = [];
@@ -456,14 +504,14 @@ let overlineStyle = (this.overlineStyle) ? makeStyle(this.overlineStyle) : false
 overlinePosition = this.overlinePosition,
 overlineFlag = false;
 let maxHeight = 0;
-textGlyphs = (treatWordAsGlyph) ? this.text.split(' ') : this.text.split('');
+textGlyphs = (treatWordAsGlyph) ? mytext.split(' ') : mytext.split('');
 fontArray.push(currentFont);
 for (i = 0, iz = textGlyphs.length; i < iz; i++) {
 item = textGlyphs[i];
 textPositions[i] = [, , , , , , item, 0, 0, 0];
 if (item === ' ') spacesArray.push(i);
 }
-if (!glyphStyles[0]) glyphStyles[0] = {
+if (!sectionStyles[0]) sectionStyles[0] = {
 family: glyphAttributes.family,
 size: (glyphAttributes.sizeValue) ? `${glyphAttributes.sizeValue}${glyphAttributes.sizeMetric}` : glyphAttributes.sizeMetric,
 stretch: glyphAttributes.stretch,
@@ -471,14 +519,13 @@ style: glyphAttributes.style,
 variant: glyphAttributes.variant,
 weight: glyphAttributes.weight,
 };
-for (i = 0, iz = glyphStyles.length; i < iz; i++) {
-gStyle = glyphStyles[i];
+for (i = 0, iz = sectionStyles.length; i < iz; i++) {
+gStyle = sectionStyles[i];
 if (gStyle) {
 gPos = textPositions[i];
+if (gPos) {
 if (i === 0) {
 gPos[0] = currentFont;
-gPos[1] = currentStrokeStyle;
-gPos[2] = currentFillStyle;
 gPos[3] = highlightFlag;
 gPos[4] = underlineFlag;
 gPos[5] = overlineFlag;
@@ -528,6 +575,7 @@ if (item !== currentFont) {
 currentFont = item;
 gPos[0] = currentFont;
 if (fontArray.indexOf(currentFont) < 0) fontArray.push(currentFont);
+}
 }
 }
 }
@@ -582,7 +630,7 @@ starts = ends + 1;
 }
 if (i + 1 === iz) {
 if (lineLen === totalLen) {
-fragment = this.text;
+fragment = mytext;
 textLines.push(fragment);
 textLineWords.push((treatWordAsGlyph) ? fragment.split(' ').length - 1 : fragment.split(' ').length);
 textLineWidths.push(totalLen);
@@ -603,17 +651,17 @@ glyphArr[3] = highlightFlag;
 glyphArr[4] = underlineFlag;
 glyphArr[5] = overlineFlag;
 }
-if (!path) {
 if (scale <= 0) scale = 1;
-dims[1] = ((maxHeight * textLines.length * lineHeight) - (maxHeight / 2)) / scale;
+dims[1] = Math.ceil((maxHeight * textLines.length * lineHeight) / scale);
 this.cleanHandle();
 this.dirtyHandle = false;
 handle = this.currentHandle;
 handleX = -handle[0] * scale;
 handleY = -handle[1] * scale;
+if (!path) {
 if (justify === 'full') {
 cursor = 0;
-height = handleY + (maxHeight / 2);
+height = handleY;
 for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 len = handleX;
 if (textLineWords[i] > 1) space = (width - textLineWidths[i]) / (textLineWords[i] - 1);
@@ -621,8 +669,8 @@ else space = 0;
 for (j = 0, jz = textLines[i].length; j < jz; j++) {
 item = textPositions[cursor];
 if (item[6] === ' ') textGlyphWidths[cursor] += space;
-item[7] = len;
-item[8] = height;
+item[7] = Math.floor(len);
+item[8] = Math.floor(height);
 item[9] = textGlyphWidths[cursor];
 len += textGlyphWidths[cursor];
 cursor++;
@@ -633,15 +681,15 @@ height += (maxHeight * lineHeight);
 }
 else {
 cursor = 0;
-height = handleY + (maxHeight / 2);
+height = handleY;
 for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 if (justify === 'right') len = (width - textLineWidths[i]) + handleX;
 else if (justify === 'center') len = ((width - textLineWidths[i]) / 2) + handleX;
 else len = handleX;
 for (j = 0, jz = textLines[i].length; j < jz; j++) {
 item = textPositions[cursor];
-item[7] = len;
-item[8] = height;
+item[7] = Math.floor(len);
+item[8] = Math.floor(height);
 item[9] = textGlyphWidths[cursor];
 len += textGlyphWidths[cursor];
 cursor++;
@@ -670,18 +718,17 @@ preStamper = this.preStamper,
 stamper = this.stamper;
 if (dest) {
 engine = dest.engine;
-if (!this.noCanvasEngineUpdates) dest.setEngine(this);
-if (this.method === 'none') {
-this.performRotation(engine);
-}
+if (this.method === 'none') this.performRotation(engine);
 else if (this.textPath) {
+if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 this.getTextPath();
 this.calculateGlyphPathPositions();
 pos = this.textPositions;
 let item, pathData,
 addTextPathRoll = this.addTextPathRoll,
 aPR = this.addPathRotation,
-cr = this.currentRotation;
+cr = this.currentRotation,
+handle = this.currentHandle;
 this.addPathRotation = addTextPathRoll;
 for (i = 0, iz = pos.length; i < iz; i++) {
 item = pos[i];
@@ -690,7 +737,8 @@ if (pathData) {
 this.currentPathData = pathData;
 if (addTextPathRoll) this.currentRotation = pathData.angle;
 dest.rotateDestination(engine, pathData.x, pathData.y, this);
-data = preStamper(engine, this, item);
+engine.translate(-handle[0], -handle[1]);
+data = preStamper(dest, engine, this, item);
 stamper[method](engine, this, data);
 }
 }
@@ -698,10 +746,11 @@ this.addPathRotation = aPR;
 this.currentRotation = cr;
 }
 else {
-pos = this.textPositions;
 this.performRotation(engine);
+if (!this.noCanvasEngineUpdates) dest.setEngine(this);
+pos = this.textPositions;
 for (i = 0, iz = pos.length; i < iz; i++) {
-data = preStamper(engine, this, pos[i]);
+data = preStamper(dest, engine, this, pos[i]);
 stamper[method](engine, this, data);
 }
 if (this.showBoundingBox) this.drawBoundingBox(engine);
@@ -717,13 +766,30 @@ direction = (this.textPathDirection === 'ltr') ? true : false,
 pathPos = this.textPathPosition,
 distance, posArray, i, iz, width,
 justify = this.justify,
-loop = this.textPathLoop;
+loop = this.textPathLoop,
+localPathPos,
+pathSpeed = this.constantPathSpeed;
 for (i = 0, iz = textPos.length; i < iz; i++) {
 posArray = textPos[i];
 width = widths[i];
-if (justify === 'right') posArray[7] = -width;
-else if (justify === 'center') posArray[7] = -width / 2;
-posArray[10] = (pathPos <= 1 && pathPos >= 0) ? path.getPathPositionData(pathPos) : false;
+switch (justify) {
+case 'center' :
+localPathPos = pathPos + ((width / 2) / len);
+posArray[7] = -width / 2;
+break;
+case 'right' :
+localPathPos = pathPos + (width / len);
+posArray[7] = -width;
+break;
+default :
+localPathPos = pathPos;
+}
+if (loop && (localPathPos > 1 || localPathPos < 0)) {
+localPathPos = (localPathPos > 0.5) ? localPathPos - 1 : localPathPos + 1;
+}
+posArray[10] = (localPathPos <= 1 && localPathPos >= 0) ?
+path.getPathPositionData(localPathPos, pathSpeed) :
+false;
 posArray[9] = width;
 if (direction) pathPos += (width / len);
 else pathPos -= (width / len);
@@ -732,34 +798,37 @@ pathPos = (pathPos > 0.5) ? pathPos - 1 : pathPos + 1;
 }
 }
 };
-P.preStamper = function (engine, entity, args) {
+P.preStamper = function (dest, engine, entity, args) {
+const makeStyle = function (item) {
+if (item.getData) return item.getData(entity, dest);
+return item;
+};
 let [font, strokeStyle, fillStyle, highlight, underline, overline, ...data] = args;
 if (font) engine.font = font;
 if (highlight || underline || overline) {
 let highlightStyle = entity.highlightStyle,
 height = entity.textHeight,
-halfHeight = height / 2,
 underlineStyle = entity.underlineStyle,
 underlinePosition = entity.underlinePosition,
 overlineStyle = entity.overlineStyle,
 overlinePosition = entity.overlinePosition;
 engine.save();
 if (highlight) {
-engine.fillStyle = highlightStyle;
-engine.fillRect(data[1], data[2] - halfHeight, data[3], height);
+engine.fillStyle = makeStyle(highlightStyle);
+engine.fillRect(data[1], data[2], data[3], height);
 }
 if (underline) {
-engine.strokeStyle = underlineStyle;
-engine.strokeRect(data[1], data[2] - halfHeight + (height * underlinePosition), data[3], 1);
+engine.strokeStyle = makeStyle(underlineStyle);
+engine.strokeRect(data[1], data[2] + (height * underlinePosition), data[3], 1);
 }
 if (overline) {
-engine.strokeStyle = overlineStyle;
-engine.strokeRect(data[1], data[2] - halfHeight + (height * overlinePosition), data[3], 1);
+engine.strokeStyle = makeStyle(overlineStyle);
+engine.strokeRect(data[1], data[2] + (height * overlinePosition), data[3], 1);
 }
 engine.restore();
 }
-if (strokeStyle) engine.strokeStyle = strokeStyle;
-if (fillStyle) engine.fillStyle = fillStyle;
+if (strokeStyle) engine.strokeStyle = makeStyle(strokeStyle);
+if (fillStyle) engine.fillStyle = makeStyle(fillStyle);
 return data;
 };
 P.stamper = {
@@ -812,8 +881,8 @@ engine.restore();
 P.performRotation = function (engine) {
 let dest = this.currentHost;
 if (dest) {
-let stamp = this.currentStampPosition;
-dest.rotateDestination(engine, stamp[0], stamp[1], this);
+let [x, y] = this.currentStampPosition;
+dest.rotateDestination(engine, x, y, this);
 }
 };
 const makePhrase = function (items) {

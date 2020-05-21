@@ -89,8 +89,8 @@ let [w, h] = dom.currentDimensions;
 if (dom.type === 'Canvas') {
 if (!dom.computedStyles) dom.computedStyles = window.getComputedStyle(dom.domElement);
 let s = dom.computedStyles,
-hw = here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight),
-hh = here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth) - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom);
+hw = Math.floor(here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight)),
+hh = Math.floor(here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth) - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom));
 if (w !== hw || h !== hh) {
 dom.set({
 dimensions: [hw, hh],

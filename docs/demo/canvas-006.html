@@ -160,6 +160,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-029.html">
+                  ./demo/canvas-029.js
+                </a>
+              
+                
+                <a class="source" href="canvas-030.html">
+                  ./demo/canvas-030.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -515,16 +525,7 @@ porthole.set({
             </div>
             
             <div class="content"><div class='highlight'><pre>            definitions: [{
-                <span class="hljs-attr">attribute</span>: <span class="hljs-string">'startX'</span>,
-                <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">start</span>: <span class="hljs-number">300</span>,
-                <span class="hljs-attr">end</span>: <span class="hljs-number">300</span> + v.x
-            }, {
-                <span class="hljs-attr">attribute</span>: <span class="hljs-string">'startY'</span>,
-                <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
-                <span class="hljs-attr">start</span>: <span class="hljs-number">300</span>,
-                <span class="hljs-attr">end</span>: <span class="hljs-number">300</span> + v.y
-            }, {</pre></div></div>
+                <span class="hljs-attr">attribute</span>: <span class="hljs-string">'startX'</span>,</pre></div></div>
             
         </li>
         
@@ -534,6 +535,41 @@ porthole.set({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>integer: true,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                start: <span class="hljs-number">300</span>,
+                <span class="hljs-attr">end</span>: <span class="hljs-number">300</span> + v.x
+            }, {
+                <span class="hljs-attr">attribute</span>: <span class="hljs-string">'startY'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>integer: true,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                start: <span class="hljs-number">300</span>,
+                <span class="hljs-attr">end</span>: <span class="hljs-number">300</span> + v.y
+            }, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>We will also animate the star’s <code>scale</code> value to make the animation look more 3D</p>
 
@@ -547,11 +583,11 @@ porthole.set({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>We start the Tween running immediately after it has been created.</p>
 
@@ -564,11 +600,11 @@ porthole.set({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>We need to release our Vector back to its vector pool</p>
 <ul>
@@ -582,11 +618,11 @@ porthole.set({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Change the color of the stars each time the user clicks on the porthole</p>
 
@@ -600,11 +636,11 @@ porthole.set({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Generate the initial stars</p>
 
@@ -615,11 +651,11 @@ porthole.set({
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -646,11 +682,11 @@ Stars: ${starCount}`;
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -666,11 +702,11 @@ Stars: ${starCount}`;
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Event listeners</p>

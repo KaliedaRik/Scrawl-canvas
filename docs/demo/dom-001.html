@@ -160,6 +160,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-029.html">
+                  ./demo/canvas-029.js
+                </a>
+              
+                
+                <a class="source" href="canvas-030.html">
+                  ./demo/canvas-030.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -483,6 +493,27 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>A more interactive method is to assign the scrawl object to a window global variable - this then allows us to access all of the objects created by Scrawl-canvas and interact with them in the browser console:</p>
+<pre><code><span class="hljs-comment">// In the .js module file</span>
+<span class="hljs-built_in">window</span>.scrawl = scrawl;
+
+<span class="hljs-comment">// In the browser console</span>
+<span class="hljs-keyword">let</span> b = scrawl.makeBlock({ ...etc... });
+b.set({ ... etc ... });
+
+<span class="hljs-keyword">let</span> a = scrawl.library.artefact[<span class="hljs-string">'my-artefact'</span>];
+a.set({ ... etc ... })</code></pre>
+            </div>
             
         </li>
         

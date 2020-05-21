@@ -70,6 +70,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
                 <a class="source" href="../factory/block.html">
                   ./source/factory/block.js
                 </a>
@@ -130,8 +135,18 @@
                 </a>
               
                 
+                <a class="source" href="../factory/line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
                 <a class="source" href="../factory/loom.html">
                   ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="../factory/oval.html">
+                  ./source/factory/oval.js
                 </a>
               
                 
@@ -155,6 +170,21 @@
                 </a>
               
                 
+                <a class="source" href="../factory/polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
                 <a class="source" href="../factory/quaternion.html">
                   ./source/factory/quaternion.js
                 </a>
@@ -162,6 +192,11 @@
                 
                 <a class="source" href="../factory/radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rectangle.html">
+                  ./source/factory/rectangle.js
                 </a>
               
                 
@@ -175,6 +210,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
                 <a class="source" href="../factory/spriteAsset.html">
                   ./source/factory/spriteAsset.js
                 </a>
@@ -185,8 +225,18 @@
                 </a>
               
                 
+                <a class="source" href="../factory/star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
                 <a class="source" href="../factory/state.html">
                   ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tetragon.html">
+                  ./source/factory/tetragon.js
                 </a>
               
                 
@@ -262,6 +312,16 @@
                 
                 <a class="source" href="position.html">
                   ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
                 </a>
               
                 
@@ -369,7 +429,9 @@
         oldY = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">let</span> xPoints = [],
-        yPoints = [];
+        yPoints = [],
+        progression = [],
+        positions = [];
 
     <span class="hljs-keyword">let</span> reflectX = <span class="hljs-number">0</span>,
         reflectY = <span class="hljs-number">0</span>;</pre></div></div>
@@ -421,7 +483,7 @@
               </div>
               <p>The purpose of this loop is to </p>
 <ol>
-<li>convert all point values fromn strings to floats</li>
+<li>convert all point values from strings to floats</li>
 <li>scale every value</li>
 <li>relativize every value to the last stated cursor position</li>
 <li>populate the temporary myData array with data which can be used for all subsequent calculations</li>
@@ -833,6 +895,8 @@
                     unitLengths[i] = results.length;
                     xPoints = xPoints.concat(results.xPoints);
                     yPoints = yPoints.concat(results.yPoints);
+                    progression.push(results.progression);
+                    positions.push(results.positions);
                     <span class="hljs-keyword">break</span>;
                     
                 <span class="hljs-keyword">default</span> :
@@ -847,13 +911,15 @@
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = unitLengths.length; i &lt; iz; i++) {
 
             mySum += unitLengths[i] / myLen;
-            unitPartials[i] = mySum;
+            unitPartials[i] = <span class="hljs-built_in">parseFloat</span>(mySum.toFixed(<span class="hljs-number">6</span>));
         }
     }
 
     returnObject.unitLengths = unitLengths;
     returnObject.unitPartials = unitPartials;
-    returnObject.length = <span class="hljs-built_in">parseFloat</span>(myLen.toFixed(<span class="hljs-number">1</span>));</pre></div></div>
+    returnObject.length = <span class="hljs-built_in">parseFloat</span>(myLen.toFixed(<span class="hljs-number">1</span>));
+    returnObject.unitPositions = positions;
+    returnObject.unitProgression = progression;</pre></div></div>
             
         </li>
         
@@ -877,6 +943,8 @@
     returnObject.maxY = maxY;
     returnObject.minX = minX;
     returnObject.minY = minY;
+    returnObject.xRange = xPoints;
+    returnObject.yRange = yPoints;
 
     <span class="hljs-keyword">return</span> returnObject;
 };</pre></div></div>
@@ -950,6 +1018,8 @@
 
     <span class="hljs-keyword">let</span> xPts = [],
         yPts = [],
+        progression = [],
+        positions = [],
         len = <span class="hljs-number">0</span>,
         w, h;</pre></div></div>
             
@@ -995,6 +1065,8 @@
             xPts.length = <span class="hljs-number">0</span>;
             yPts.length = <span class="hljs-number">0</span>;
             newLength = <span class="hljs-number">0</span>;
+            progression.length = <span class="hljs-number">0</span>;
+            positions.length = <span class="hljs-number">0</span>;
 
             res = getXY[func](<span class="hljs-number">0</span>, ...args);
             oldX = res.x;
@@ -1016,6 +1088,9 @@
                 newLength += <span class="hljs-built_in">Math</span>.sqrt((w * w) + (h * h));
                 oldX = x;
                 oldY = y;
+
+                progression.push(newLength);
+                positions.push(t);
             }</pre></div></div>
             
         </li>
@@ -1057,7 +1132,9 @@
     <span class="hljs-keyword">return</span> {
         <span class="hljs-attr">length</span>: len,
         <span class="hljs-attr">xPoints</span>: xPts,
-        <span class="hljs-attr">yPoints</span>: yPts
+        <span class="hljs-attr">yPoints</span>: yPts,
+        <span class="hljs-attr">positions</span>: positions,
+        <span class="hljs-attr">progression</span>: progression,
     };
 };</pre></div></div>
             

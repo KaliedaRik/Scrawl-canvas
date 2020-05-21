@@ -70,6 +70,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
                 <a class="source" href="../factory/block.html">
                   ./source/factory/block.js
                 </a>
@@ -130,8 +135,18 @@
                 </a>
               
                 
+                <a class="source" href="../factory/line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
                 <a class="source" href="../factory/loom.html">
                   ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="../factory/oval.html">
+                  ./source/factory/oval.js
                 </a>
               
                 
@@ -155,6 +170,21 @@
                 </a>
               
                 
+                <a class="source" href="../factory/polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
                 <a class="source" href="../factory/quaternion.html">
                   ./source/factory/quaternion.js
                 </a>
@@ -162,6 +192,11 @@
                 
                 <a class="source" href="../factory/radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rectangle.html">
+                  ./source/factory/rectangle.js
                 </a>
               
                 
@@ -175,6 +210,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
                 <a class="source" href="../factory/spriteAsset.html">
                   ./source/factory/spriteAsset.js
                 </a>
@@ -185,8 +225,18 @@
                 </a>
               
                 
+                <a class="source" href="../factory/star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
                 <a class="source" href="../factory/state.html">
                   ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tetragon.html">
+                  ./source/factory/tetragon.js
                 </a>
               
                 
@@ -262,6 +312,16 @@
                 
                 <a class="source" href="../mixin/position.html">
                   ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
                 </a>
               
                 
@@ -624,8 +684,8 @@
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!dom.computedStyles) dom.computedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(dom.domElement);
 
             <span class="hljs-keyword">let</span> s = dom.computedStyles,
-                hw = here.w - <span class="hljs-built_in">parseFloat</span>(s.borderLeftWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderRightWidth) - <span class="hljs-built_in">parseFloat</span>(s.paddingLeft) - <span class="hljs-built_in">parseFloat</span>(s.paddingRight),
-                hh = here.h - <span class="hljs-built_in">parseFloat</span>(s.borderTopWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderBottomWidth) - <span class="hljs-built_in">parseFloat</span>(s.paddingTop) - <span class="hljs-built_in">parseFloat</span>(s.paddingBottom);
+                hw = <span class="hljs-built_in">Math</span>.floor(here.w - <span class="hljs-built_in">parseFloat</span>(s.borderLeftWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderRightWidth) - <span class="hljs-built_in">parseFloat</span>(s.paddingLeft) - <span class="hljs-built_in">parseFloat</span>(s.paddingRight)),
+                hh = <span class="hljs-built_in">Math</span>.floor(here.h - <span class="hljs-built_in">parseFloat</span>(s.borderTopWidth) - <span class="hljs-built_in">parseFloat</span>(s.borderBottomWidth) - <span class="hljs-built_in">parseFloat</span>(s.paddingTop) - <span class="hljs-built_in">parseFloat</span>(s.paddingBottom));
 
             <span class="hljs-keyword">if</span> (w !== hw || h !== hh) {
 

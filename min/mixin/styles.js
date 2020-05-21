@@ -260,13 +260,13 @@ this.delta = {};
 this.set(this.defs);
 this.set(items);
 };
-P.getData = function (entity, cell, isFill) {
+P.getData = function (entity, cell) {
 if(this.palette && this.palette.dirtyPalette) this.palette.recalculate();
-this.cleanStyle(entity, cell, isFill);
-this.finalizeCoordinates(entity, isFill);
+this.cleanStyle(entity, cell);
+this.finalizeCoordinates(entity);
 return this.buildStyle(cell);
 };
-P.cleanStyle = function (entity = {}, cell = {}, isFill) {
+P.cleanStyle = function (entity = {}, cell = {}) {
 let dims, w, h, scale;
 if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
 dims = entity.currentDimensions;
@@ -295,7 +295,7 @@ else if (val === 'center') current[i] = dim / 2;
 else current[i] = (parseFloat(val) / 100) * dim;
 }
 };
-P.finalizeCoordinates = function (entity = {}, isFill) {
+P.finalizeCoordinates = function (entity = {}) {
 let currentStart = this.currentStart,
 currentEnd = this.currentEnd,
 entityStampPosition = entity.currentStampPosition,
@@ -310,8 +310,6 @@ else {
 correctX = -entityStampPosition[0] || 0;
 correctY = -entityStampPosition[1] || 0;
 }
-if (entity.flipReverse) correctX = -correctX;
-if (entity.flipUpend) correctY = -correctY;
 this.updateGradientArgs(correctX, correctY);
 };
 P.cleanRadius = defaultNonReturnFunction;

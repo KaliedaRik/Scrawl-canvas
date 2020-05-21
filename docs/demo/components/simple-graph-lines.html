@@ -564,9 +564,7 @@ Data supplied to graph module as Javascript object with structure:
                         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'aliceblue'</span>,
                     });
 
-                    frame.updateSubtitle(
-                        <span class="hljs-string">`<span class="hljs-subst">${label}</span>: <span class="hljs-subst">${data[index].toLocaleString()}</span>`</span>, 
-                        {<span class="hljs-attr">fill</span>: <span class="hljs-string">'darkred'</span>}, <span class="hljs-number">9</span>);
+                    frame.updateSubtitle(<span class="hljs-string">`<span class="hljs-subst">${label}</span>: §RED§<span class="hljs-subst">${data[index].toLocaleString()}</span>`</span>);
 
                     <span class="hljs-keyword">this</span>.set({
                         <span class="hljs-attr">scale</span>: <span class="hljs-number">1.5</span>,

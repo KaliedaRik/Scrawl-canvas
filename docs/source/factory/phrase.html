@@ -70,6 +70,11 @@
                 </a>
               
                 
+                <a class="source" href="bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
                 <a class="source" href="block.html">
                   ./source/factory/block.js
                 </a>
@@ -130,8 +135,18 @@
                 </a>
               
                 
+                <a class="source" href="line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="oval.html">
+                  ./source/factory/oval.js
                 </a>
               
                 
@@ -155,6 +170,21 @@
                 </a>
               
                 
+                <a class="source" href="polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
                 <a class="source" href="quaternion.html">
                   ./source/factory/quaternion.js
                 </a>
@@ -162,6 +192,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rectangle.html">
+                  ./source/factory/rectangle.js
                 </a>
               
                 
@@ -175,6 +210,11 @@
                 </a>
               
                 
+                <a class="source" href="spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
                 <a class="source" href="spriteAsset.html">
                   ./source/factory/spriteAsset.js
                 </a>
@@ -185,8 +225,18 @@
                 </a>
               
                 
+                <a class="source" href="star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
                 <a class="source" href="state.html">
                   ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="tetragon.html">
+                  ./source/factory/tetragon.js
                 </a>
               
                 
@@ -265,6 +315,16 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/shapePathCalculation.html">
                   ./source/mixin/shapePathCalculation.js
                 </a>
@@ -312,8 +372,13 @@
 </ul>
 <p>Phrase entity <strong>dimensions</strong> work differently to that of other entitys:</p>
 <ul>
-<li>The <code>width</code> attribute is required. Phrase entitys will automatically render text longer than its width in multiple lines on the canvas.</li>
-<li>The <code>height</code> attribute is normally disregarded. Instead height is calculated as a combination of the font <code>size</code>, <code>lineheight</code>, and the number of lines of text that need to be rendered on the canvas - which itself depends on the text’s length and the entity’s <code>width</code> attribute</li>
+<li>The <code>width</code> attribute is required for multi-line text. When set, Phrase entitys will automatically render text longer than its width in multiple lines on the canvas.</li>
+<li>The <code>height</code> attribute is normally disregarded. Instead height is calculated as a combination of the font <code>size</code>, <code>lineheight</code>, and the number of lines of text that need to be rendered on the canvas - which itself depends on the text’s length and the entity’s <code>width</code> attribute.</li>
+</ul>
+<p><strong>Be aware that text is <em>always</em> rendered as a graphic, not a block.</strong> </p>
+<ul>
+<li>Scrawl-canvas ignores all attempts to set the canvas context engine’s <code>textAlign</code> and <code>textBaseline</code> attributes, which are permanently set to the defaults <code>left</code> and <code>top</code> respectively. </li>
+<li>Each glyph (letter) is stamped separately onto the canvas - this allows us to include letterspacing and justification functionality, and to allow text to be styled on a per-glyph basis (overline/underline, highlight, color, bold/italics, etc).</li>
 </ul>
 <p>Phrase entitys use <a href="./fontAttribute.html">FontAttribute objects</a> to help manage their text font:</p>
 <ul>
@@ -341,11 +406,13 @@
 <ul>
 <li><a href="../../demo/canvas-015.html">Canvas-015</a> - Phrase entity (make, clone, method, multiline)</li>
 <li><a href="../../demo/canvas-016.html">Canvas-016</a> - Phrase entity position and font attributes; Block mimic functionality</li>
-<li><a href="../../demo/canvas-017.html">Canvas-017</a> - Phrase entity - test lineHeight, letterSpacing and justify attributes; setGlyphStyles() functionality</li>
+<li><a href="../../demo/canvas-017.html">Canvas-017</a> - Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality</li>
 <li><a href="../../demo/canvas-018.html">Canvas-018</a> - Phrase entity - text along a path</li>
 <li><a href="../../demo/canvas-019.html">Canvas-019</a> - Artefact collision detection</li>
+<li><a href="../../demo/canvas-029.html">Canvas-029</a> - Phrase entitys and gradients</li>
 <li><a href="../../demo/component-001.html">Component-001</a> - Scrawl-canvas DOM element components</li>
 <li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
+<li><a href="../../demo/component-005.html">Component-005</a> - Scrawl-canvas modularized code - London crime charts</li>
 </ul>
 
             </div>
@@ -365,7 +432,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, cellnames, styles, stylesnames, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, ensurePositiveFloat, ensureFloat, ensureString } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xta, isa_obj, ensurePositiveFloat, ensureFloat, ensureString } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cell.js'</span>;
 
@@ -431,8 +498,24 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
 
     <span class="hljs-keyword">this</span>.entityInit(items);
 
-    <span class="hljs-keyword">this</span>.glyphStyles = [];
+    <span class="hljs-keyword">this</span>.sectionStyles = [];
+    <span class="hljs-keyword">this</span>.sectionClasses = {
+        <span class="hljs-string">'DEFAULTS'</span>: { <span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">'BOLD'</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">'bold'</span> },
+        <span class="hljs-string">'ITALIC'</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'italic'</span> },
+        <span class="hljs-string">'SMALL-CAPS'</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">'small-caps'</span> },
+        <span class="hljs-string">'HIGHLIGHT'</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">'UNDERLINE'</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">'OVERLINE'</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">'/BOLD'</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">'normal'</span> },
+        <span class="hljs-string">'/ITALIC'</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'normal'</span> },
+        <span class="hljs-string">'/SMALL-CAPS'</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">'normal'</span> },
+        <span class="hljs-string">'/HIGHLIGHT'</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">false</span> },
+        <span class="hljs-string">'/UNDERLINE'</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">false</span> },
+        <span class="hljs-string">'/OVERLINE'</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">false</span> }
+    };
 
+    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
@@ -524,6 +607,24 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
+              <p><strong>width</strong> - Number or String</p>
+<ul>
+<li>In addition to normal dimensional values, Phrase entitys will accept the String label <strong>‘auto’</strong> (default). When set to ‘auto’ the width will be calculated as the natural, single line text length.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    width: <span class="hljs-string">'auto'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
               <p><strong>exposeText</strong> - Boolean accessibility feature</p>
 <ul>
 <li>When <strong>exposeText</strong> is set to true (default), Scrawl-canvas will create an element in the DOM and mirror its current text value in that element. </li>
@@ -537,26 +638,26 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <p><strong>lineHeight</strong> - a positive float Number multiplier applied to the font height to add space between lines of text</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    lineHeight: <span class="hljs-number">1.5</span>,</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><strong>lineHeight</strong> - a positive float Number multiplier applied to the font height to add space between lines of text</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    lineHeight: <span class="hljs-number">1.15</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p><strong>letterSpacing</strong> - a positive float Number representing a set number of pixels to place between each glyph (letter). Can be overridden for letter ranges using styling objects</p>
 
@@ -567,11 +668,11 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><strong>justify</strong> - String value to indicate how the text should justify itself within its dimensions box.</p>
 <ul>
@@ -585,50 +686,15 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <h5 id="in-text-styling">In-text styling</h5>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p><strong>glyphStyles</strong> - Array of styling objects</p>
-<p>Glyphs (letters) can be individually styled by adding a <strong><em>styling object</em></strong> to the <code>glyphStyles</code> Array. Subsequent glyphs will inherit those styles until a second styling object is encountered further along the array.</p>
-<p>Subsequent styling objects will alter specified attributes, leaving other attributes in their current (not default) state. To reset all attributes to their defaults and at the same time change selected attributes, include <code>defaults: true</code> in the object.</p>
-<p>The styling object can take one or more of the following attributes:</p>
-<ul>
-<li><code>style</code> - eg ‘italic’</li>
-<li><code>variant</code> - eg ‘small-caps’</li>
-<li><code>weight</code> - eg ‘bold’</li>
-<li><code>stretch</code></li>
-<li><code>size</code> - any permitted font size value</li>
-<li><code>family</code> </li>
-<li><code>space</code> - alter the letterSpacing values to spread or condense glyphs</li>
-<li><code>fill</code> - fillStyle to be applied to the glyph</li>
-<li><code>stroke</code> - strokeStyle to be applied to the glyph</li>
-<li><code>highlight</code> - boolean - whether highlight should be applied to the glyph</li>
-<li><code>underline</code> - boolean - whether underline should be applied to the glyph</li>
-<li><code>overline</code> - boolean - whether overline should be applied to the glyph</li>
-<li><code>defaults</code> - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity’s current font and fill/stroke style values</li>
-</ul>
-<pre><code><span class="hljs-comment">// Example: "make the word glyphs bold"</span>
-myPhrase.setGlyphStyles({<span class="hljs-attr">weight</span>: <span class="hljs-string">'bold'</span>}, <span class="hljs-number">14</span>);
-myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span>}, <span class="hljs-number">20</span>);</code></pre>
+              <h5 id="in-text-styling">In-text styling</h5>
+
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    glyphStyles: [],</pre></div></div>
             
         </li>
         
@@ -639,14 +705,50 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <h5 id="overlines-underlines-highlighting">Overlines, underlines, highlighting</h5>
-<p>We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyph ranges using <code>glyphStyles</code> styling objects.</p>
+              <p><strong>sectionClasses</strong> - Array of styling objects</p>
+<p>Glyphs (letters) can be individually styled by adding a <strong><em>styling object</em></strong> to the <code>sectionClasses</code> Array, and then adding <strong>section style markup</strong> to the Phrase’s text String attribute. Subsequent glyphs will inherit those styles until a second style marker updating or terminating that particular style is encountered.</p>
+<p>The following font attributes can be modified on a per-glyph basis using section classes:</p>
 <ul>
-<li>over/underline decoration positions are float Numbers (generally) in the range <code>0 - 1</code> which represent where on the Phrase text line the decoration should appear. The values are relative to line heights, which in turn depend on font size and Phrase lineHeight attributes.</li>
-<li>over/underline decoration style values, and the highlight style value, can be any valid CSS color String.</li>
+<li><code>style</code> - eg ‘italic’</li>
+<li><code>variant</code> - eg ‘small-caps’</li>
+<li><code>weight</code> - eg ‘bold’</li>
+<li><code>stretch</code></li>
+<li><code>size</code> - any permitted font size value</li>
+<li><code>family</code> - font family</li>
+<li><code>space</code> - alter the letterSpacing values to spread or condense glyphs</li>
+<li><code>fill</code> - fillStyle to be applied to the glyph</li>
+<li><code>stroke</code> - strokeStyle to be applied to the glyph</li>
+<li><code>highlight</code> - boolean - whether highlight should be applied to the glyph</li>
+<li><code>underline</code> - boolean - whether underline should be applied to the glyph</li>
+<li><code>overline</code> - boolean - whether overline should be applied to the glyph</li>
+<li><code>defaults</code> - boolean - setting this to true will set the glyph (and subsequent glyphs) to the Phrase entity’s current font and fill/stroke style values</li>
+</ul>
+<p>Usage: </p>
+<ol>
+<li>Add styling objects to the <code>sectionClasses</code> Array - a number of styling objects are pre-defined for every Phrase entity; these can be added to, modified or deleted at any time using the <code>addSectionClass</code> and <code>removeSectionClass</code> functions.</li>
+<li>If necessary, update the entity’s <code>sectionClassMarker</code> delimiter attrbute. The attribute has to be a String, but that string can define a Regular Expression - for example setting the attribute to <code>[§&lt;&gt;]</code> will identify style markup delimeted by both <code>§marker-label§</code> and <code>&lt;marker-label&gt;</code>.</li>
+<li>Add section style markup to the Phrase entity’s text attribute value.</li>
+</ol>
+<pre><code><span class="hljs-keyword">let</span> myPhrase = scrawl.makePhrase({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-phrase'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'This is §RED§some red text§DEFAULTS§ for demonstration.'</span>
+});
+
+myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">'red'</span> });</code></pre><p>The following classes are pre-defined for every Phrase entity:</p>
+<ul>
+<li><code>DEFAULTS</code> - remove all inline glyph styling from this point on</li>
+<li><code>BOLD</code>, <code>/BOLD</code> - add/remove bold styling</li>
+<li><code>ITALIC</code>, <code>/ITALIC</code> - add/remove italic styling</li>
+<li><code>SMALL-CAPS</code>, <code>/SMALL-CAPS</code> - add/remove small-caps styling</li>
+<li><code>HIGHLIGHT</code>, <code>/HIGHLIGHT</code> - add/remove glyph background highlight</li>
+<li><code>UNDERLINE</code>, <code>/UNDERLINE</code> - add/remove glyph underline</li>
+<li><code>OVERLINE</code>, <code>/OVERLINE</code> - add/remove glyph overline</li>
 </ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    sectionClassMarker: <span class="hljs-string">'§'</span>,
+    <span class="hljs-attr">sectionClasses</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -657,12 +759,15 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p><strong>overlinePosition</strong>, <strong>overlineStyle</strong></p>
+              <h5 id="overlines-underlines-highlighting">Overlines, underlines, highlighting</h5>
+<p>We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyphs using <strong>sectionClasses</strong> styling objects.</p>
+<ul>
+<li>over/underline decoration positions are float Numbers (generally) in the range <code>0 - 1</code> which represent where on the Phrase text line the decoration should appear. The values are relative to line heights, which in turn depend on font size and Phrase lineHeight attributes.</li>
+<li>for <strong>strikethrough</strong> text, use appropriately positioned overlines.</li>
+<li>over/underline decoration style values, and the highlight style value, can be any valid CSS color String.</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    overlinePosition: <span class="hljs-number">0.1</span>,
-    <span class="hljs-attr">overlineStyle</span>: <span class="hljs-string">'rgb(250,0,0)'</span>,</pre></div></div>
             
         </li>
         
@@ -672,6 +777,22 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p><strong>overlinePosition</strong>, <strong>overlineStyle</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    overlinePosition: <span class="hljs-number">-0.1</span>,
+    <span class="hljs-attr">overlineStyle</span>: <span class="hljs-string">'rgb(250,0,0)'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><strong>underlinePosition</strong>, <strong>underlineStyle</strong></p>
 
@@ -683,11 +804,11 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><strong>highlightStyle</strong></p>
 
@@ -698,31 +819,16 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
         </li>
         
         
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <h5 id="bounding-box">Bounding box</h5>
-<p>The bounding box represents the Phrase entity’s collision detection <strong><em>hit area</em></strong>. It contains all of the entity’s text, including line spacing.</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p><strong>boundingBoxColor</strong></p>
+              <h5 id="bounding-box">Bounding box</h5>
+<p>The bounding box represents the Phrase entity’s collision detection <strong><em>hit area</em></strong>. It contains all of the entity’s text, including line spacing.</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    boundingBoxColor: <span class="hljs-string">'rgba(0,0,0,0.5)'</span>,</pre></div></div>
             
         </li>
         
@@ -733,11 +839,11 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p><strong>showBoundingBox</strong> - Boolean flag indicating whether the Phrase entity’s bounding box should be displayed</p>
+              <p><strong>boundingBoxColor</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    boundingBoxColor: <span class="hljs-string">'rgba(0,0,0,0.5)'</span>,</pre></div></div>
             
         </li>
         
@@ -747,6 +853,21 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p><strong>showBoundingBox</strong> - Boolean flag indicating whether the Phrase entity’s bounding box should be displayed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h5 id="text-along-a-path">Text along a path</h5>
 <p>Phrase entitys, alongside other artefacts, can use a <a href="./shape.html">Shape entity</a> as a <strong><em>reference path</em></strong> to determine its location in the canvas display - achieved by setting the <code>path</code>, <code>pathPosition</code>, etc attributes as required.</p>
@@ -760,11 +881,11 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p><strong>textPath</strong> - Shape entity to be used as the text path; can be supplied either as the entity object itself, or as the entity’s name-String.</p>
 
@@ -775,11 +896,11 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p><strong>textPathPosition</strong> - float Number value between <code>0.0 - 1.0</code> representing the text’s first character’s position on the path.</p>
 
@@ -790,11 +911,11 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p><strong>textPathLoop</strong> - Boolean flag - when true (default) the first character’s position will loop back to <code>0</code> when it passes <code>1</code> (and vice versa).</p>
 
@@ -805,11 +926,11 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><strong>addTextPathRoll</strong> - Boolean flag - when true (default) each glyph in the text will rotate to match its position’s tangent on the path.</p>
 
@@ -820,11 +941,11 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><strong>textPathDirection</strong> - String with values <code>ltr</code> or <code>rtl</code> - affects how the text glyphs will arrange themselves along the path.</p>
 
@@ -835,11 +956,11 @@ myPhrase.setGlyphStyles({<span class="hljs-attr">defaults</span>: <span class="h
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><strong>treatWordAsGlyph</strong> - Boolean flag - when true, Scrawl-canvas will treat each word in the text as if it was a glyph/letter; default: false.</p>
 
@@ -852,11 +973,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -881,11 +1002,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -895,11 +1016,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -913,11 +1034,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -930,11 +1051,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p><strong>handle</strong></p>
 
@@ -994,32 +1115,37 @@ D.handle = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <p><strong>text</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.text = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.text = ensureString(item);
-    
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p><strong>text</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.text = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentText || <span class="hljs-keyword">this</span>.text || <span class="hljs-string">''</span>;
+};
+S.text = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">this</span>.text = ensureString(item);
+    
+    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p><strong>justify</strong></p>
 
@@ -1037,11 +1163,11 @@ S.justify = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p><strong>width</strong></p>
 
@@ -1070,11 +1196,11 @@ D.width = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p><strong>scale</strong></p>
 
@@ -1104,11 +1230,11 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p><strong>lineHeight</strong></p>
 
@@ -1121,11 +1247,11 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>TODO: temporary fix that needs a longer-term solution</p>
 <ul>
@@ -1147,11 +1273,11 @@ D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>TODO: temporary fix that needs a longer-term solution (see setter above)</p>
 
@@ -1166,11 +1292,11 @@ D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p><strong>letterSpacing</strong></p>
 
@@ -1195,11 +1321,11 @@ D.letterSpacing = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p><strong>overlinePosition</strong></p>
 
@@ -1223,11 +1349,11 @@ D.overlinePosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p><strong>underlinePosition</strong></p>
 
@@ -1251,11 +1377,11 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p><strong>textPath</strong></p>
 
@@ -1273,11 +1399,11 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><strong>textPathPosition</strong></p>
 
@@ -1309,11 +1435,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <h5 id="fontattribute-attributes">FontAttribute attributes</h5>
 <p>Phrase entitys break down fonts into their constituent parts using <a href="./fontAttribute.html">FontAttribute</a> objects.</p>
@@ -1328,11 +1454,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><strong>font</strong> - the desired CSS font (<code>get</code> returns the actual font String being used)</p>
 <ul>
@@ -1356,11 +1482,11 @@ S.font = <span class="hljs-function"><span class="hljs-keyword">function</span> 
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p><strong>style</strong> - CSS <code>font-style</code> String - <code>normal</code>, <code>italic</code></p>
 
@@ -1381,11 +1507,11 @@ S.style = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p><strong>variant</strong> - CSS <code>font-variant</code> String - <code>normal</code>, <code>small-caps</code></p>
 
@@ -1406,11 +1532,11 @@ S.variant = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p><strong>weight</strong> - CSS <code>font-weight</code> String - <code>normal</code>, <code>bold</code>, <code>lighter</code>, <code>bolder</code>, or an integer Number (between <code>1</code> and <code>1000</code>)</p>
 
@@ -1431,11 +1557,11 @@ S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p><strong>stretch</strong> - CSS <code>font-stretch</code> String - <code>normal</code></p>
 
@@ -1456,11 +1582,11 @@ S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><strong>size</strong> - CSS <code>font-size</code> String:</p>
 <ul>
@@ -1487,11 +1613,11 @@ S.size = <span class="hljs-function"><span class="hljs-keyword">function</span> 
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><strong>sizeValue</strong> - the Number part of the font’s size value</p>
 
@@ -1519,11 +1645,11 @@ D.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><strong>sizeMetric</strong> - the String metric part of the font’s size value</p>
 
@@ -1544,11 +1670,11 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><strong>family</strong> - CSS <code>font-family</code> String</p>
 
@@ -1569,56 +1695,34 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-57">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
-              <p><code>setGlyphStyles</code>
-We have more control over the <code>glyphStyles</code> array if we use this dedicated function to manage them. Requires two (or more) arguments:</p>
-<ul>
-<li>First argument - object containing one or more <code>key: value</code> attributes - permitted keys are: <code>style</code>, <code>variant</code>, <code>weight</code>, <code>stretch</code>, <code>size</code>, <code>family</code>, <code>space</code>, <code>fill</code>, <code>stroke</code>, <code>highlight</code>, <code>underline</code>, <code>overline</code>, <code>defaults</code></li>
-<li>Second argument - Array of positive integer Numbers representing the index at which point the style will be applied to the text String</li>
-<li>Alternatively the second and subsequent arguments can be positive integer Numbers, serving the same purpose</li>
-</ul>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setGlyphStyles = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args, ...pos</span>) </span>{
+            <div class="content"><div class='highlight'><pre>
+P.cleanDimensionsAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (args &amp;&amp; <span class="hljs-built_in">Array</span>.isArray(pos)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">0</span>] === <span class="hljs-string">'auto'</span>) {
 
-        <span class="hljs-keyword">let</span> styles = <span class="hljs-keyword">this</span>.glyphStyles,
-            slot, style, i, iz;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.currentText) <span class="hljs-keyword">this</span>.buildText();
 
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = pos.length; i &lt; iz; i++) {
+        <span class="hljs-keyword">let</span> myCell = requestCell(),
+            engine = myCell.engine;
 
-            slot = pos[i];
-            style = styles[slot];
+        engine.font = <span class="hljs-keyword">this</span>.fontAttributes.buildFont();
 
-            <span class="hljs-keyword">if</span> (!style) styles[slot] = args;
-            <span class="hljs-keyword">else</span> mergeOver(style, args);
-        }
+        <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>] = <span class="hljs-built_in">Math</span>.ceil(engine.measureText(<span class="hljs-keyword">this</span>.currentText).width);
 
-        <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+        releaseCell(myCell);
     }
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">1</span>] = <span class="hljs-built_in">Math</span>.ceil((<span class="hljs-keyword">this</span>.textHeight * <span class="hljs-keyword">this</span>.textLines.length * <span class="hljs-keyword">this</span>.lineHeight) / <span class="hljs-keyword">this</span>.scale);
 };</pre></div></div>
             
         </li>
@@ -1629,6 +1733,82 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p><code>setSectionStyles</code> - internal function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.setSectionStyles = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">text</span>) </span>{
+
+    <span class="hljs-keyword">let</span> search = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-keyword">this</span>.sectionClassMarker),
+        parseArray = text.split(search),
+        styles = <span class="hljs-keyword">this</span>.sectionStyles,
+        classes = <span class="hljs-keyword">this</span>.sectionClasses,
+        parsedText = <span class="hljs-string">''</span>,
+        classObj, index, styleObj;
+
+    styles.length = <span class="hljs-number">0</span>;
+
+    parseArray.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+
+        classObj = classes[item];
+
+        <span class="hljs-keyword">if</span> (classObj) {
+
+            index = parsedText.length;
+            styleObj = styles[index];
+
+            <span class="hljs-keyword">if</span> (!styleObj) styles[index] = <span class="hljs-built_in">Object</span>.assign({}, classObj);
+            <span class="hljs-keyword">else</span> <span class="hljs-built_in">Object</span>.assign(styleObj, classObj);
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xt(item)) parsedText += item;
+    });
+    <span class="hljs-keyword">return</span> parsedText;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p><code>addSectionClass</code>, <code>removeSectionClass</code> - add and remove section class definitions to the entity’s <code>sectionClasses</code> object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.addSectionClass = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">label, obj</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (xta(label, obj) &amp;&amp; label.substring &amp;&amp; isa_obj(obj)) {
+
+        <span class="hljs-keyword">this</span>.sectionClasses[label] = obj;
+    }
+    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};
+
+P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">label</span>) </span>{
+
+    <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.sectionClasses[label];
+
+    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p><code>getTextPath</code> - internal function</p>
 
@@ -1655,11 +1835,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 <p>Phrase entitys, because they handle graphical text which has its own special requirements and methods in the Canvas API, has to overwrite a substantial portion of the Display cycle functionality defined in the entity mixin.</p>
@@ -1669,11 +1849,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-61">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p><code>cleanPathObject</code> - overwrites mixin/entity.js functionality so that it can deal with the <code>dirtyFont</code>, <code>dirtyText</code> and <code>dirtyHandle</code> flags </p>
 <ul>
@@ -1706,36 +1886,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
             scale = <span class="hljs-keyword">this</span>.currentScale,
             x = -handle[<span class="hljs-number">0</span>] * scale,
-            y = (-handle[<span class="hljs-number">1</span>] * scale) - (<span class="hljs-keyword">this</span>.textHeight / <span class="hljs-number">2</span>),
-            w = dims[<span class="hljs-number">0</span>] * scale;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-62">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
-              </div>
-              <p>TODO: current height-related code is a temporary fix that needs a longer-term solution</p>
+            y = -handle[<span class="hljs-number">1</span>] * scale,
+            w = dims[<span class="hljs-number">0</span>] * scale,
+            h = dims[<span class="hljs-number">1</span>] * scale;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> h;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.textLines) {
-
-            h = (<span class="hljs-keyword">this</span>.textHeight * <span class="hljs-keyword">this</span>.textLines.length * <span class="hljs-keyword">this</span>.lineHeight) + (<span class="hljs-keyword">this</span>.textHeight / <span class="hljs-number">2</span>);
-        }
-        <span class="hljs-keyword">else</span> {
-
-            h = <span class="hljs-number">20</span>;
-            <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyMimicDimensions = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-        }
+        <span class="hljs-keyword">this</span>.boxStartValues = [x, y];
 
         p.rect(x, y, w, h);
     }
@@ -1744,11 +1899,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p><code>buildText</code> - internal function called by <code>cleanPathObject</code></p>
 
@@ -1757,8 +1912,14 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
             <div class="content"><div class='highlight'><pre>P.buildText = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">this</span>.text = <span class="hljs-keyword">this</span>.convertTextEntityCharacters(<span class="hljs-keyword">this</span>.text);
-    <span class="hljs-keyword">this</span>.calculateTextPositions(<span class="hljs-keyword">this</span>.text);
+
+    <span class="hljs-keyword">let</span> t = <span class="hljs-keyword">this</span>.convertTextEntityCharacters(<span class="hljs-keyword">this</span>.text);
+
+    t = <span class="hljs-keyword">this</span>.setSectionStyles(t);
+
+    <span class="hljs-keyword">this</span>.currentText = t;
+
+    <span class="hljs-keyword">this</span>.calculateTextPositions(t);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.exposeText) {
 
@@ -1770,7 +1931,7 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
             <span class="hljs-keyword">this</span>.exposedTextHoldAttached = <span class="hljs-literal">false</span>;
         }
 
-        <span class="hljs-keyword">this</span>.exposedTextHold.textContent = <span class="hljs-keyword">this</span>.text;
+        <span class="hljs-keyword">this</span>.exposedTextHold.textContent = t;
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.exposedTextHoldAttached) {
 
@@ -1786,11 +1947,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p><code>convertTextEntityCharacters</code> - internal function called by <code>buildText</code></p>
 <ul>
@@ -1813,11 +1974,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p><code>calculateTextPositions</code> - internal function called by <code>buildText</code></p>
 <ul>
@@ -1831,11 +1992,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <ol start="0">
 <li><code>strokeStyle</code> and <code>fillStyle</code> helper function</li>
@@ -1843,7 +2004,14 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> makeStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> makeStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!host) {
+
+            self.dirtyPathObject = <span class="hljs-literal">true</span>;
+            self.dirtyText = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">return</span> <span class="hljs-string">'black'</span>;
+        }
 
         <span class="hljs-keyword">if</span> (item.substring) {
 
@@ -1852,20 +2020,19 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
             <span class="hljs-keyword">if</span> (stylesnames.indexOf(item) &gt;= <span class="hljs-number">0</span>) brokenStyle = styles[item];
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cellnames.indexOf(item) &gt;= <span class="hljs-number">0</span>) brokenStyle = cell[item];
 
-            <span class="hljs-keyword">if</span> (brokenStyle) <span class="hljs-keyword">return</span> brokenStyle.getData(self, host, <span class="hljs-literal">true</span>);
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> item;
+            <span class="hljs-keyword">if</span> (brokenStyle) <span class="hljs-keyword">return</span> brokenStyle;
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> item.getData(self, host, <span class="hljs-literal">true</span>);
+        <span class="hljs-keyword">return</span> item;
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <ol>
 <li>Setup - get values for text? arrays, current?, highlight?, ?Attributes, etc</li>
@@ -1877,7 +2044,7 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         engine = myCell.engine;
 
     <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>,
-        host = (<span class="hljs-keyword">this</span>.group &amp;&amp; <span class="hljs-keyword">this</span>.group.getHost) ? <span class="hljs-keyword">this</span>.group.getHost() : myCell;
+        host = (<span class="hljs-keyword">this</span>.group &amp;&amp; <span class="hljs-keyword">this</span>.group.getHost) ? <span class="hljs-keyword">this</span>.group.getHost() : <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> textGlyphs, 
         textGlyphWidths = [], 
@@ -1899,7 +2066,7 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
     <span class="hljs-keyword">let</span> fontAttributes = <span class="hljs-keyword">this</span>.fontAttributes,
         glyphAttributes = fontAttributes.clone({});
 
-    <span class="hljs-keyword">let</span> glyphStyles = <span class="hljs-keyword">this</span>.glyphStyles;
+    <span class="hljs-keyword">let</span> sectionStyles = <span class="hljs-keyword">this</span>.sectionStyles;
 
     <span class="hljs-keyword">let</span> state = <span class="hljs-keyword">this</span>.state,
         fontLibrary = {},
@@ -1939,11 +2106,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <ol start="2">
 <li>Create <code>textGlyphs</code> array</li>
@@ -1954,17 +2121,17 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    textGlyphs = (treatWordAsGlyph) ? <span class="hljs-keyword">this</span>.text.split(<span class="hljs-string">' '</span>) : <span class="hljs-keyword">this</span>.text.split(<span class="hljs-string">''</span>);
+            <div class="content"><div class='highlight'><pre>    textGlyphs = (treatWordAsGlyph) ? mytext.split(<span class="hljs-string">' '</span>) : mytext.split(<span class="hljs-string">''</span>);
     fontArray.push(currentFont);</pre></div></div>
             
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <ol start="3">
 <li><code>textPositions</code> array will include an array of data for each glyph</li>
@@ -1988,19 +2155,19 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <ol start="4">
-<li>Process the <code>glyphStyles</code> array to start populating the <code>textPositions</code> arrays</li>
+<li>Process the <code>sectionStyles</code> array to start populating the <code>textPositions</code> arrays</li>
 </ol>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!glyphStyles[<span class="hljs-number">0</span>]) glyphStyles[<span class="hljs-number">0</span>] = {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!sectionStyles[<span class="hljs-number">0</span>]) sectionStyles[<span class="hljs-number">0</span>] = {
         <span class="hljs-attr">family</span>: glyphAttributes.family,
         <span class="hljs-attr">size</span>: (glyphAttributes.sizeValue) ? <span class="hljs-string">`<span class="hljs-subst">${glyphAttributes.sizeValue}</span><span class="hljs-subst">${glyphAttributes.sizeMetric}</span>`</span> : glyphAttributes.sizeMetric,
         <span class="hljs-attr">stretch</span>: glyphAttributes.stretch,
@@ -2009,83 +2176,84 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         <span class="hljs-attr">weight</span>: glyphAttributes.weight,
     };
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = glyphStyles.length; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = sectionStyles.length; i &lt; iz; i++) {
 
-        gStyle = glyphStyles[i];
+        gStyle = sectionStyles[i];
 
         <span class="hljs-keyword">if</span> (gStyle) {
 
             gPos = textPositions[i];
 
-            <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) {
-                gPos[<span class="hljs-number">0</span>] = currentFont;
-                gPos[<span class="hljs-number">1</span>] = currentStrokeStyle;
-                gPos[<span class="hljs-number">2</span>] = currentFillStyle;
-                gPos[<span class="hljs-number">3</span>] = highlightFlag;
-                gPos[<span class="hljs-number">4</span>] = underlineFlag;
-                gPos[<span class="hljs-number">5</span>] = overlineFlag;
-            }
+            <span class="hljs-keyword">if</span> (gPos) {
 
-            <span class="hljs-keyword">if</span> (gStyle.defaults) {
-                currentFont = glyphAttributes.update(scale, fontAttributes);
-                currentStrokeStyle = defaultStrokeStyle;
-                currentFillStyle = defaultFillStyle;
-                currentSpace = defaultSpace;
-                gPos[<span class="hljs-number">0</span>] = currentFont;
-                gPos[<span class="hljs-number">1</span>] = currentStrokeStyle;
-                gPos[<span class="hljs-number">2</span>] = currentFillStyle;
-                gPos[<span class="hljs-number">3</span>] = highlightFlag;
-                gPos[<span class="hljs-number">4</span>] = underlineFlag;
-                gPos[<span class="hljs-number">5</span>] = overlineFlag;
-            }
-
-            item = gStyle.stroke;
-            <span class="hljs-keyword">if</span> (item &amp;&amp; item !== currentStrokeStyle) {
-
-                currentStrokeStyle = makeStyle(gStyle.stroke);
-                gPos[<span class="hljs-number">1</span>] = currentStrokeStyle;
-            };
-
-            item = gStyle.fill;
-            <span class="hljs-keyword">if</span> (item &amp;&amp; item !== currentFillStyle) {
-
-                currentFillStyle = makeStyle(gStyle.fill);
-                gPos[<span class="hljs-number">2</span>] = currentFillStyle;
-            };
-
-            item = gStyle.space;
-            <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== currentSpace) currentSpace = item * scale
-
-            item = gStyle.highlight;
-            <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== highlightFlag) {
-
-                highlightFlag = item;
-                gPos[<span class="hljs-number">3</span>] = highlightFlag;
-            };
-
-            item = gStyle.underline;
-            <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== underlineFlag) {
-
-                underlineFlag = item;
-                gPos[<span class="hljs-number">4</span>] = underlineFlag;
-            };
-
-            item = gStyle.overline;
-            <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== overlineFlag) {
-
-                overlineFlag = item;
-                gPos[<span class="hljs-number">5</span>] = overlineFlag;
-            };
-
-            <span class="hljs-keyword">if</span> (i !== <span class="hljs-number">0</span> &amp;&amp; (gStyle.variant || gStyle.weight || gStyle.style || gStyle.stretch || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font)) {
-
-                item = glyphAttributes.update(scale, gStyle);
-                <span class="hljs-keyword">if</span> (item !== currentFont) {
-
-                    currentFont = item;
+                <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) {
                     gPos[<span class="hljs-number">0</span>] = currentFont;
+                    gPos[<span class="hljs-number">3</span>] = highlightFlag;
+                    gPos[<span class="hljs-number">4</span>] = underlineFlag;
+                    gPos[<span class="hljs-number">5</span>] = overlineFlag;
+                }
 
-                    <span class="hljs-keyword">if</span> (fontArray.indexOf(currentFont) &lt; <span class="hljs-number">0</span>) fontArray.push(currentFont);
+                <span class="hljs-keyword">if</span> (gStyle.defaults) {
+                    currentFont = glyphAttributes.update(scale, fontAttributes);
+                    currentStrokeStyle = defaultStrokeStyle;
+                    currentFillStyle = defaultFillStyle;
+                    currentSpace = defaultSpace;
+                    gPos[<span class="hljs-number">0</span>] = currentFont;
+                    gPos[<span class="hljs-number">1</span>] = currentStrokeStyle;
+                    gPos[<span class="hljs-number">2</span>] = currentFillStyle;
+                    gPos[<span class="hljs-number">3</span>] = highlightFlag;
+                    gPos[<span class="hljs-number">4</span>] = underlineFlag;
+                    gPos[<span class="hljs-number">5</span>] = overlineFlag;
+                }
+
+                item = gStyle.stroke;
+                <span class="hljs-keyword">if</span> (item &amp;&amp; item !== currentStrokeStyle) {
+
+                    currentStrokeStyle = makeStyle(gStyle.stroke);
+                    gPos[<span class="hljs-number">1</span>] = currentStrokeStyle;
+                };
+
+                item = gStyle.fill;
+                <span class="hljs-keyword">if</span> (item &amp;&amp; item !== currentFillStyle) {
+
+                    currentFillStyle = makeStyle(gStyle.fill);
+                    gPos[<span class="hljs-number">2</span>] = currentFillStyle;
+                };
+
+                item = gStyle.space;
+                <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== currentSpace) currentSpace = item * scale
+
+                item = gStyle.highlight;
+                <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== highlightFlag) {
+
+                    highlightFlag = item;
+                    gPos[<span class="hljs-number">3</span>] = highlightFlag;
+                };
+
+                item = gStyle.underline;
+                <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== underlineFlag) {
+
+                    underlineFlag = item;
+                    gPos[<span class="hljs-number">4</span>] = underlineFlag;
+                };
+
+                item = gStyle.overline;
+                <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== overlineFlag) {
+
+                    overlineFlag = item;
+                    gPos[<span class="hljs-number">5</span>] = overlineFlag;
+                };
+
+                <span class="hljs-keyword">if</span> (i !== <span class="hljs-number">0</span> &amp;&amp; (gStyle.variant || gStyle.weight || gStyle.style || gStyle.stretch || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font)) {
+
+                    item = glyphAttributes.update(scale, gStyle);
+                    <span class="hljs-keyword">if</span> (item !== currentFont) {
+
+                        currentFont = item;
+                        gPos[<span class="hljs-number">0</span>] = currentFont;
+
+                        <span class="hljs-keyword">if</span> (fontArray.indexOf(currentFont) &lt; <span class="hljs-number">0</span>) fontArray.push(currentFont);
+                    }
                 }
             }
         }</pre></div></div>
@@ -2093,11 +2261,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>Setup <code>textGlyphWidths</code> array, populating it with current letterSpacing values</p>
 
@@ -2109,11 +2277,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p>Finish populating <code>textGlyphWidths</code></p>
 
@@ -2129,11 +2297,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <ol start="5">
 <li>Calculate the text <code>height</code> value</li>
@@ -2156,11 +2324,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <ol start="6">
 <li>Calculate glyph <code>width</code> values</li>
@@ -2208,11 +2376,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>Calculate text line arrays</p>
 
@@ -2234,11 +2402,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>Need <code>starts</code> to be less than <code>ends</code></p>
 <ul>
@@ -2264,11 +2432,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p>Need to pick up the last (or only) line</p>
 
@@ -2279,11 +2447,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>Pick up single line</p>
 
@@ -2291,7 +2459,7 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (lineLen === totalLen) {
 
-                fragment = <span class="hljs-keyword">this</span>.text;
+                fragment = mytext;
 
                 textLines.push(fragment);
                 textLineWords.push((treatWordAsGlyph) ? fragment.split(<span class="hljs-string">' '</span>).length - <span class="hljs-number">1</span> : fragment.split(<span class="hljs-string">' '</span>).length);
@@ -2301,11 +2469,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>Final line of multiline text</p>
 
@@ -2326,11 +2494,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>… And complete the population of data for <code>highlight</code>, <code>overline</code>, <code>underline</code></p>
 
@@ -2348,21 +2516,6 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-81">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
-              </div>
-              <p>Handle path positioning (which we’ll assume will need to be done for every display cycle) separately during stamping</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!path) {</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-82">
             <div class="annotation">
               
@@ -2375,7 +2528,16 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (scale &lt;= <span class="hljs-number">0</span>) scale = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (scale &lt;= <span class="hljs-number">0</span>) scale = <span class="hljs-number">1</span>;
+
+    dims[<span class="hljs-number">1</span>] = <span class="hljs-built_in">Math</span>.ceil((maxHeight * textLines.length * lineHeight) / scale);
+
+    <span class="hljs-keyword">this</span>.cleanHandle();
+    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">false</span>;
+    handle = <span class="hljs-keyword">this</span>.currentHandle;
+    
+    handleX = -handle[<span class="hljs-number">0</span>] * scale;
+    handleY = -handle[<span class="hljs-number">1</span>] * scale;</pre></div></div>
             
         </li>
         
@@ -2386,21 +2548,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
-              <p>TODO: current height-related code is a temporary fix that needs a longer-term solution</p>
-<ul>
-<li>At the moment we reset the currentDimensions height value on each stamp</li>
-</ul>
+              <p>Handle path positioning (which we’ll assume will need to be done for every display cycle) separately during stamping</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        dims[<span class="hljs-number">1</span>] = ((maxHeight * textLines.length * lineHeight) - (maxHeight / <span class="hljs-number">2</span>)) / scale;
-
-        <span class="hljs-keyword">this</span>.cleanHandle();
-        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">false</span>;
-        handle = <span class="hljs-keyword">this</span>.currentHandle;
-        
-        handleX = -handle[<span class="hljs-number">0</span>] * scale;
-        handleY = -handle[<span class="hljs-number">1</span>] * scale;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!path) {</pre></div></div>
             
         </li>
         
@@ -2436,7 +2588,7 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'full'</span>) {
 
             cursor = <span class="hljs-number">0</span>;
-            height = handleY + (maxHeight / <span class="hljs-number">2</span>);
+            height = handleY;
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textLineWidths.length; i &lt; iz; i++) {
 
@@ -2451,8 +2603,8 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
                     <span class="hljs-keyword">if</span> (item[<span class="hljs-number">6</span>] === <span class="hljs-string">' '</span>) textGlyphWidths[cursor] += space;
 
-                    item[<span class="hljs-number">7</span>] = len;
-                    item[<span class="hljs-number">8</span>] = height;
+                    item[<span class="hljs-number">7</span>] = <span class="hljs-built_in">Math</span>.floor(len);
+                    item[<span class="hljs-number">8</span>] = <span class="hljs-built_in">Math</span>.floor(height);
                     item[<span class="hljs-number">9</span>] = textGlyphWidths[cursor];
 
                     len += textGlyphWidths[cursor];
@@ -2481,7 +2633,7 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> {
 
             cursor = <span class="hljs-number">0</span>;
-            height = handleY + (maxHeight / <span class="hljs-number">2</span>);
+            height = handleY;
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textLineWidths.length; i &lt; iz; i++) {
 
@@ -2493,8 +2645,8 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
                     item = textPositions[cursor];
 
-                    item[<span class="hljs-number">7</span>] = len;
-                    item[<span class="hljs-number">8</span>] = height;
+                    item[<span class="hljs-number">7</span>] = <span class="hljs-built_in">Math</span>.floor(len);
+                    item[<span class="hljs-number">8</span>] = <span class="hljs-built_in">Math</span>.floor(height);
                     item[<span class="hljs-number">9</span>] = textGlyphWidths[cursor];
 
                     len += textGlyphWidths[cursor];
@@ -2574,14 +2726,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
         engine = dest.engine;
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-keyword">this</span>);
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.method === <span class="hljs-string">'none'</span>) {
-
-            <span class="hljs-keyword">this</span>.performRotation(engine);
-        }
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.method === <span class="hljs-string">'none'</span>) <span class="hljs-keyword">this</span>.performRotation(engine);
 
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.textPath) {
+
+            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-keyword">this</span>);
 
             <span class="hljs-keyword">this</span>.getTextPath();
             <span class="hljs-keyword">this</span>.calculateGlyphPathPositions();
@@ -2591,7 +2740,8 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
             <span class="hljs-keyword">let</span> item, pathData,
                 addTextPathRoll = <span class="hljs-keyword">this</span>.addTextPathRoll,
                 aPR = <span class="hljs-keyword">this</span>.addPathRotation,
-                cr = <span class="hljs-keyword">this</span>.currentRotation;
+                cr = <span class="hljs-keyword">this</span>.currentRotation,
+                handle = <span class="hljs-keyword">this</span>.currentHandle;
 
             <span class="hljs-keyword">this</span>.addPathRotation = addTextPathRoll;
 
@@ -2608,27 +2758,28 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
                     dest.rotateDestination(engine, pathData.x, pathData.y, <span class="hljs-keyword">this</span>);
 
-                    data = preStamper(engine, <span class="hljs-keyword">this</span>, item);
+                    engine.translate(-handle[<span class="hljs-number">0</span>], -handle[<span class="hljs-number">1</span>]);
+
+                    data = preStamper(dest, engine, <span class="hljs-keyword">this</span>, item);
                     stamper[method](engine, <span class="hljs-keyword">this</span>, data);
                 }
             }
-
             <span class="hljs-keyword">this</span>.addPathRotation = aPR;
             <span class="hljs-keyword">this</span>.currentRotation = cr;
         }
-
         <span class="hljs-keyword">else</span> {
-
-            pos = <span class="hljs-keyword">this</span>.textPositions;
 
             <span class="hljs-keyword">this</span>.performRotation(engine);
 
+            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-keyword">this</span>);
+
+            pos = <span class="hljs-keyword">this</span>.textPositions;
+
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = pos.length; i &lt; iz; i++) {
 
-                data = preStamper(engine, <span class="hljs-keyword">this</span>, pos[i]);
+                data = preStamper(dest, engine, <span class="hljs-keyword">this</span>, pos[i]);
                 stamper[method](engine, <span class="hljs-keyword">this</span>, data);
             }
-
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
         }
     }
@@ -2657,12 +2808,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         pathPos = <span class="hljs-keyword">this</span>.textPathPosition,
         distance, posArray, i, iz, width,
         justify = <span class="hljs-keyword">this</span>.justify,
-        loop = <span class="hljs-keyword">this</span>.textPathLoop;
+        loop = <span class="hljs-keyword">this</span>.textPathLoop,
+        localPathPos,
+        pathSpeed = <span class="hljs-keyword">this</span>.constantPathSpeed;
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textPos.length; i &lt; iz; i++) {
-
-        posArray = textPos[i];
-        width = widths[i];</pre></div></div>
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textPos.length; i &lt; iz; i++) {</pre></div></div>
             
         </li>
         
@@ -2673,17 +2823,49 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
-              <p>TODO - using non-left justified text buggers up letter kerning along the line</p>
-<ul>
-<li>But left-justified makes the letters lean a little to the left</li>
-</ul>
+              <p>textPathPosition Array indexes [
+0-font - font definition, or null
+1-strokeStyle - Boolean
+2-fillStyle - Boolean 
+3-highlight - Boolean
+4-underline - Boolean
+5-overline - Boolean 
+6-text - String
+7-startX - Number - on paths, acts as a negative offset for justifying glyphs
+8-startY - Number
+9-pathData - Object {x: Number (px), y: Number (px), angle: Number (degrees)}
+]</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'right'</span>) posArray[<span class="hljs-number">7</span>] = -width;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'center'</span>) posArray[<span class="hljs-number">7</span>] = -width / <span class="hljs-number">2</span>;
+            <div class="content"><div class='highlight'><pre>        posArray = textPos[i];
+        width = widths[i];
 
-        posArray[<span class="hljs-number">10</span>] = (pathPos &lt;= <span class="hljs-number">1</span> &amp;&amp; pathPos &gt;= <span class="hljs-number">0</span>) ? path.getPathPositionData(pathPos) : <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">switch</span> (justify) {
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">'center'</span> :
+                localPathPos = pathPos + ((width / <span class="hljs-number">2</span>) / len);
+                posArray[<span class="hljs-number">7</span>] = -width / <span class="hljs-number">2</span>;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">'right'</span> :
+                localPathPos = pathPos + (width / len);
+                posArray[<span class="hljs-number">7</span>] = -width;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">default</span> :
+                localPathPos = pathPos;
+        }
+
+        <span class="hljs-keyword">if</span> (loop &amp;&amp; (localPathPos &gt; <span class="hljs-number">1</span> || localPathPos &lt; <span class="hljs-number">0</span>)) {
+
+            localPathPos = (localPathPos &gt; <span class="hljs-number">0.5</span>) ? localPathPos - <span class="hljs-number">1</span> : localPathPos + <span class="hljs-number">1</span>;
+        }
+
+        posArray[<span class="hljs-number">10</span>] = (localPathPos &lt;= <span class="hljs-number">1</span> &amp;&amp; localPathPos &gt;= <span class="hljs-number">0</span>) ? 
+            path.getPathPositionData(localPathPos, pathSpeed) : 
+            <span class="hljs-literal">false</span>;
+
         posArray[<span class="hljs-number">9</span>] = width;
 
         <span class="hljs-keyword">if</span> (direction) pathPos += (width / len);
@@ -2709,7 +2891,14 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.preStamper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, args</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.preStamper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">dest, engine, entity, args</span>) </span>{
+
+    <span class="hljs-keyword">const</span> makeStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (item.getData) <span class="hljs-keyword">return</span> item.getData(entity, dest);
+
+        <span class="hljs-keyword">return</span> item;
+    };
 
     <span class="hljs-keyword">let</span> [font, strokeStyle, fillStyle, highlight, underline, overline, ...data] = args;
 
@@ -2719,40 +2908,12 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
         <span class="hljs-keyword">let</span> highlightStyle = entity.highlightStyle,
             height = entity.textHeight,
-            halfHeight = height / <span class="hljs-number">2</span>,
             underlineStyle = entity.underlineStyle,
             underlinePosition = entity.underlinePosition,
             overlineStyle = entity.overlineStyle,
             overlinePosition = entity.overlinePosition;
 
-        engine.save();
-
-        <span class="hljs-keyword">if</span> (highlight) {
-
-            engine.fillStyle = highlightStyle;
-            engine.fillRect(data[<span class="hljs-number">1</span>], data[<span class="hljs-number">2</span>] - halfHeight, data[<span class="hljs-number">3</span>], height);
-        }
-
-        <span class="hljs-keyword">if</span> (underline) {
-
-            engine.strokeStyle = underlineStyle;
-            engine.strokeRect(data[<span class="hljs-number">1</span>], data[<span class="hljs-number">2</span>] - halfHeight + (height * underlinePosition), data[<span class="hljs-number">3</span>], <span class="hljs-number">1</span>);
-        }
-
-        <span class="hljs-keyword">if</span> (overline) {
-
-            engine.strokeStyle = overlineStyle;
-            engine.strokeRect(data[<span class="hljs-number">1</span>], data[<span class="hljs-number">2</span>] - halfHeight + (height * overlinePosition), data[<span class="hljs-number">3</span>], <span class="hljs-number">1</span>);
-        }
-
-        engine.restore();
-    }
-
-    <span class="hljs-keyword">if</span> (strokeStyle) engine.strokeStyle = strokeStyle;
-    <span class="hljs-keyword">if</span> (fillStyle) engine.fillStyle = fillStyle;
-
-    <span class="hljs-keyword">return</span> data;
-};</pre></div></div>
+        engine.save();</pre></div></div>
             
         </li>
         
@@ -2763,11 +2924,38 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
-              <p><code>stamper</code> - object holding stamp method functions - functions called by <code>regularStampSynchronousActions</code></p>
+              <p>data[0] - glyph
+data[1] - xpos
+data[2] - ypos
+data[3] - width</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.stamper = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (highlight) {
+
+            engine.fillStyle = makeStyle(highlightStyle);
+            engine.fillRect(data[<span class="hljs-number">1</span>], data[<span class="hljs-number">2</span>], data[<span class="hljs-number">3</span>], height);
+        }
+
+        <span class="hljs-keyword">if</span> (underline) {
+
+            engine.strokeStyle = makeStyle(underlineStyle);
+            engine.strokeRect(data[<span class="hljs-number">1</span>], data[<span class="hljs-number">2</span>] + (height * underlinePosition), data[<span class="hljs-number">3</span>], <span class="hljs-number">1</span>);
+        }
+
+        <span class="hljs-keyword">if</span> (overline) {
+
+            engine.strokeStyle = makeStyle(overlineStyle);
+            engine.strokeRect(data[<span class="hljs-number">1</span>], data[<span class="hljs-number">2</span>] + (height * overlinePosition), data[<span class="hljs-number">3</span>], <span class="hljs-number">1</span>);
+        }
+        engine.restore();
+    }
+
+    <span class="hljs-keyword">if</span> (strokeStyle) engine.strokeStyle = makeStyle(strokeStyle);
+    <span class="hljs-keyword">if</span> (fillStyle) engine.fillStyle = makeStyle(fillStyle);
+
+    <span class="hljs-keyword">return</span> data;
+};</pre></div></div>
             
         </li>
         
@@ -2777,6 +2965,21 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-94">&#182;</a>
+              </div>
+              <p><code>stamper</code> - object holding stamp method functions - functions called by <code>regularStampSynchronousActions</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.stamper = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-95">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
               <p><code>stamper.draw</code></p>
 
@@ -2790,11 +2993,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-95">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-95">&#182;</a>
+                <a class="pilcrow" href="#section-96">&#182;</a>
               </div>
               <p><code>stamper.fill</code></p>
 
@@ -2808,11 +3011,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-96">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-96">&#182;</a>
+                <a class="pilcrow" href="#section-97">&#182;</a>
               </div>
               <p><code>stamper.drawAndFill</code></p>
 
@@ -2829,11 +3032,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-97">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-97">&#182;</a>
+                <a class="pilcrow" href="#section-98">&#182;</a>
               </div>
               <p><code>stamper.fillAndDraw</code></p>
 
@@ -2851,11 +3054,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-98">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-98">&#182;</a>
+                <a class="pilcrow" href="#section-99">&#182;</a>
               </div>
               <p><code>stamper.drawThenFill</code></p>
 
@@ -2870,11 +3073,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-99">
+        <li id="section-100">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-99">&#182;</a>
+                <a class="pilcrow" href="#section-100">&#182;</a>
               </div>
               <p><code>stamper.fillThenDraw</code></p>
 
@@ -2889,11 +3092,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-100">
+        <li id="section-101">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-100">&#182;</a>
+                <a class="pilcrow" href="#section-101">&#182;</a>
               </div>
               <p><code>stamper.clear</code></p>
 
@@ -2911,11 +3114,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-101">
+        <li id="section-102">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-101">&#182;</a>
+                <a class="pilcrow" href="#section-102">&#182;</a>
               </div>
               <p><code>drawBoundingBox</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
 
@@ -2938,11 +3141,11 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
         </li>
         
         
-        <li id="section-102">
+        <li id="section-103">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-102">&#182;</a>
+                <a class="pilcrow" href="#section-103">&#182;</a>
               </div>
               <p><code>performRotation</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
 <ul>
@@ -2958,20 +3161,20 @@ We have more control over the <code>glyphStyles</code> array if we use this dedi
 
     <span class="hljs-keyword">if</span> (dest) {
 
-        <span class="hljs-keyword">let</span> stamp = <span class="hljs-keyword">this</span>.currentStampPosition;
+        <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-keyword">this</span>.currentStampPosition;
 
-        dest.rotateDestination(engine, stamp[<span class="hljs-number">0</span>], stamp[<span class="hljs-number">1</span>], <span class="hljs-keyword">this</span>);
+        dest.rotateDestination(engine, x, y, <span class="hljs-keyword">this</span>);
     }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-103">
+        <li id="section-104">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-103">&#182;</a>
+                <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makePhrase({
@@ -3019,11 +3222,11 @@ constructors.Phrase = Phrase;</pre></div></div>
         </li>
         
         
-        <li id="section-104">
+        <li id="section-105">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-104">&#182;</a>
+                <a class="pilcrow" href="#section-105">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

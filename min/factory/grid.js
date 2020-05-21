@@ -228,11 +228,11 @@ engine.fillStyle = obj.source;
 break;
 case 'cellGradient' :
 this.lockFillStyleToEntity = false;
-engine.fillStyle = obj.source.getData(this, this.currentHost, true);
+engine.fillStyle = obj.source.getData(this, this.currentHost);
 break;
 case 'gridGradient' :
 this.lockFillStyleToEntity = true;
-engine.fillStyle = obj.source.getData(this, this.currentHost, true);
+engine.fillStyle = obj.source.getData(this, this.currentHost);
 break;
 }
 }
@@ -297,11 +297,11 @@ else if (isa_number(gColor) && isa_obj(tileSources[gColor])) gObject = tileSourc
 switch (gObject.type) {
 case 'cellGradient' :
 this.lockFillStyleToEntity = false;
-engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
+engine.strokeStyle = gObject.source.getData(this, this.currentHost);
 break;
 case 'gridGradient' :
 this.lockFillStyleToEntity = true;
-engine.strokeStyle = gObject.source.getData(this, this.currentHost, true);
+engine.strokeStyle = gObject.source.getData(this, this.currentHost);
 break;
 case 'color' :
 engine.strokeStyle = gObject.source;

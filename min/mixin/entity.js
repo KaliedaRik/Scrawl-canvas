@@ -65,11 +65,11 @@ this.lockFillStyleToEntity = item;
 this.lockStrokeStyleToEntity = item;
 };
 S.flipUpend = function (item) {
-if (item !== this.flipUpend) this.dirtyCollision = true;
+if (item !== this.flipUpend && this.collides) this.dirtyCollision = true;
 this.flipUpend = item;
 };
 S.flipReverse = function (item) {
-if (item !== this.flipReverse) this.dirtyCollision = true;
+if (item !== this.flipReverse && this.collides) this.dirtyCollision = true;
 this.flipReverse = item;
 };
 P.get = function (item) {
@@ -158,7 +158,7 @@ this.dirtyHost = false;
 this.dirtyDimensions = true;
 }
 if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
-if (this.dirtyRotation) this.dirtyCollision = true;
+if (this.dirtyRotation && this.collides) this.dirtyCollision = true;
 if (this.dirtyScale) this.cleanScale();
 if (this.dirtyDimensions) this.cleanDimensions();
 if (this.dirtyLock) this.cleanLock();
@@ -174,7 +174,7 @@ if (this.dirtyStampPositions) this.cleanStampPositions();
 if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 if (this.dirtyPathObject) {
 this.cleanPathObject();
-this.dirtyCollision = true;
+if (this.collides) this.dirtyCollision = true;
 }
 if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 if (this.anchor && this.dirtyAnchorHold) {

@@ -18,6 +18,7 @@ delta: null,
 noDeltaUpdates: false,
 pivot: '',
 pivotCorner: '',
+pivotPin: 0,
 pivoted: null,
 addPivotHandle: false,
 addPivotOffset: true,
@@ -27,6 +28,7 @@ pathPosition: 0,
 addPathHandle: false,
 addPathOffset: true,
 addPathRotation: false,
+constantPathSpeed: false,
 mimic: '',
 mimicked: null,
 useMimicDimensions: false,
@@ -91,6 +93,11 @@ if (art.name !== myname) {
 if (art.pivot && art.pivot.name === myname) art.set({ pivot: false});
 if (art.mimic && art.mimic.name === myname) art.set({ mimic: false});
 if (art.path && art.path.name === myname) art.set({ path: false});
+if (Array.isArray(art.pins)) {
+art.pins.forEach((item, index) => {
+if (isa_obj(item) && item.name === myname) art.removePinAt(index);
+});
+}
 }
 });
 Object.entries(tween).forEach(([name, t]) => {
@@ -262,11 +269,11 @@ this.dirtyDimensions = true;
 }
 S.sensorSpacing = function (val) {
 this.sensorSpacing = val;
-this.dirtyCollision = true;
+if (this.collides) this.dirtyCollision = true;
 };
 D.sensorSpacing = function (val) {
 this.sensorSpacing += val;
-this.dirtyCollision = true;
+if (this.collides) this.dirtyCollision = true;
 };
 S.pivot = function (item) {
 if (isa_boolean(item) && !item) {
@@ -332,6 +339,7 @@ if (item > 1) item = item % 1;
 this.pathPosition = parseFloat(item.toFixed(6));
 this.dirtyStampPositions = true;
 this.dirtyStampHandlePositions = true;
+this.currentPathData = false;
 };
 D.pathPosition = function (item) {
 let pos = this.pathPosition + item
@@ -340,6 +348,7 @@ if (pos > 1) pos = pos % 1;
 this.pathPosition = parseFloat(pos.toFixed(6));
 this.dirtyStampPositions = true;
 this.dirtyStampHandlePositions = true;
+this.currentPathData = false;
 };
 S.addPathHandle = function (item) {
 this.addPathHandle = item;
@@ -442,22 +451,18 @@ this.lockTo[1] = item;
 this.dirtyLock = true;
 };
 S.roll = function (item) {
-if (!isa_number(item)) throw new Error(`mixin/position error - S.roll() argument not a number: ${item}`);
 this.roll = item;
 this.dirtyRotation = true;
 };
 D.roll = function (item) {
-if (!isa_number(item)) throw new Error(`mixin/position error - D.roll() argument not a number: ${item}`);
 this.roll += item;
 this.dirtyRotation = true;
 };
 S.scale = function (item) {
-if (!isa_number(item)) throw new Error(`mixin/position error - S.scale() argument not a number: ${item}`);
 this.scale = item;
 this.dirtyScale = true;
 };
 D.scale = function (item) {
-if (!isa_number(item)) throw new Error(`mixin/position error - D.scale() argument not a number: ${item}`);
 this.scale += item;
 this.dirtyScale = true;
 };
@@ -507,10 +512,6 @@ this.delta = {};
 this.lockTo = ['start', 'start'];
 this.pivoted = [];
 this.mimicked = [];
-this.controlSubscriber = [];
-this.startControlSubscriber = [];
-this.endControlSubscriber = [];
-this.endSubscriber = [];
 this.dirtyScale = true;
 this.dirtyDimensions = true;
 this.dirtyLock = true;
@@ -792,9 +793,6 @@ let lockArray = this.lockTo,
 localLockArray = [],
 lock, i, coord, here, pathData,
 hereFlag = false,
-stamp = this.currentStampPosition,
-oldX = stamp[0],
-oldY = stamp[1],
 offset = this.currentOffset,
 isBeingDragged = this.isBeingDragged,
 drag = this.currentDragOffset,
@@ -825,6 +823,9 @@ case 'pivot' :
 if (this.pivotCorner && pivot.getCornerCoordinate) {
 coord = pivot.getCornerCoordinate(this.pivotCorner, (i) ? 'y' : 'x');
 }
+else if (pivot.type === 'Polyline') {
+coord = pivot.getPinAt(this.pivotPin, (i) ? 'y' : 'x');
+}
 else coord = pivot.currentStampPosition[i];
 if (!this.addPivotOffset) coord -= pivot.currentOffset[i];
 coord += offset[i];
@@ -852,7 +853,7 @@ coord = (i === 0) ? here.x : here.y;
 if (isBeingDragged) {
 cache[i] = coord;
 coord += drag[i];
-this.dirtyCollision = true;
+if (this.collides) this.dirtyCollision = true;
 }
 coord += offset[i];
 break;
@@ -862,10 +863,9 @@ coord = start[i] + offset[i];
 stamp[i] = coord;
 }
 }
-this.cleanStampPositionsAdditionalActions()
+if (this.domElement && this.collides) this.dirtyPathObject = true;
 if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;
 };
-P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;
 P.cleanStampHandlePositions = function () {
 this.dirtyStampHandlePositions = false;
 let stampHandle = this.currentStampHandlePosition,
@@ -905,14 +905,11 @@ break;
 stampHandle[i] = coord;
 }
 }
-if (this.type === 'Shape') {
-let box = this.localBox;
-stampHandle[0] += box[0];
-stampHandle[1] += box[1];
-}
+this.cleanStampHandlePositionsAdditionalActions();
 if (oldX !== stampHandle[0] || oldY !== stampHandle[1]) this.dirtyPositionSubscribers = true;
 if (this.domElement && this.collides) this.dirtyPathObject = true;
 };
+P.cleanStampHandlePositionsAdditionalActions = defaultNonReturnFunction;
 P.cleanCollisionData = function () {
 if (!this.currentCollisionRadius) this.currentCollisionRadius = 0;
 if (!this.currentSensors) this.currentSensors = [];
@@ -1006,12 +1003,14 @@ let [entityRadius, entitySensors] = this.cleanCollisionData();
 return entitySensors;
 }
 P.getPathData = function () {
+if (this.currentPathData) return this.currentPathData;
 let pathPos = this.pathPosition,
 path = this.path,
 currentPathData;
 if (path) {
-currentPathData = path.getPathPositionData(pathPos);
+currentPathData = path.getPathPositionData(pathPos, this.constantPathSpeed);
 if (this.addPathRotation) this.dirtyRotation = true;
+this.currentPathData = currentPathData;
 return currentPathData;
 }
 return false;
@@ -1104,34 +1103,6 @@ this.dirtyPositionSubscribers = false;
 if (this.pivoted && this.pivoted.length) this.updatePivotSubscribers();
 if (this.mimicked && this.mimicked.length) this.updateMimicSubscribers();
 if (this.pathed && this.pathed.length) this.updatePathSubscribers();
-if (this.controlSubscriber && this.controlSubscriber.length) this.updateControlSubscribers();
-if (this.startControlSubscriber && this.startControlSubscriber.length) this.updateStartControlSubscribers();
-if (this.endControlSubscriber && this.endControlSubscriber.length) this.updateEndControlSubscribers();
-if (this.endSubscriber && this.endSubscriber.length) this.updateEndSubscribers();
-};
-P.updateControlSubscribers = function () {
-this.controlSubscriber.forEach(name => {
-let instance = artefact[name];
-if (instance) instance.dirtyControl = true;
-});
-};
-P.updateStartControlSubscribers = function () {
-this.startControlSubscriber.forEach(name => {
-let instance = artefact[name];
-if (instance) instance.dirtyStartControl = true;
-});
-};
-P.updateEndControlSubscribers = function () {
-this.endControlSubscriber.forEach(name => {
-let instance = artefact[name];
-if (instance) instance.dirtyEndControl = true;
-});
-};
-P.updateEndSubscribers = function () {
-this.endSubscriber.forEach(name => {
-let instance = artefact[name];
-if (instance) instance.dirtyEnd = true;
-});
 };
 P.updatePivotSubscribers = function () {
 this.pivoted.forEach(name => {
@@ -1141,8 +1112,10 @@ instance.dirtyStart = true;
 if (instance.addPivotHandle) instance.dirtyHandle = true;
 if (instance.addPivotOffset) instance.dirtyOffset = true;
 if (instance.addPivotRotation) instance.dirtyRotation = true;
+if (instance.type === 'Polyline') instance.dirtyPins = true;
+else if (instance.type === 'Line' || instance.type === 'Quadratic' || instance.type === 'Bezier') instance.dirtyPins.push(this.name);
 }
-});
+}, this);
 };
 P.updateMimicSubscribers = function () {
 let DMH = this.dirtyMimicHandle;

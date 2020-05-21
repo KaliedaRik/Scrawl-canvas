@@ -56,7 +56,7 @@ if (engine) return engine.createPattern(this.source, this.repeat);
 }
 return 'rgba(0,0,0,0)';
 };
-P.getData = function (entity, cell, isFill) {
+P.getData = function (entity, cell) {
 if (this.dirtyAsset) this.cleanAsset();
 this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
 return this.buildStyle(cell);

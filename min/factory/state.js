@@ -26,8 +26,8 @@ shadowOffsetY: 0,
 shadowBlur: 0,
 shadowColor: 'rgba(0,0,0,0)',
 font: '12px sans-serif',
-textAlign: 'start',
-textBaseline: 'alphabetic',
+textAlign: 'left',
+textBaseline: 'top',
 };
 P.processPacketOut = function (key, value, includes) {
 let result = true;
@@ -177,6 +177,8 @@ this[key] = engine[key];
 }
 this.lineDash = (xt(engine.lineDash)) ? engine.lineDash : [];
 this.lineDashOffset = xtGet(engine.lineDashOffset, 0);
+engine.textAlign = this.textAlign = 'left';
+engine.textBaseline = this.textBaseline = 'top';
 return this;
 };
 const makeState = function (items) {

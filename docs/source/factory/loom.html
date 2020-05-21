@@ -70,6 +70,11 @@
                 </a>
               
                 
+                <a class="source" href="bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
                 <a class="source" href="block.html">
                   ./source/factory/block.js
                 </a>
@@ -130,8 +135,18 @@
                 </a>
               
                 
+                <a class="source" href="line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="oval.html">
+                  ./source/factory/oval.js
                 </a>
               
                 
@@ -155,6 +170,21 @@
                 </a>
               
                 
+                <a class="source" href="polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
                 <a class="source" href="quaternion.html">
                   ./source/factory/quaternion.js
                 </a>
@@ -162,6 +192,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rectangle.html">
+                  ./source/factory/rectangle.js
                 </a>
               
                 
@@ -175,6 +210,11 @@
                 </a>
               
                 
+                <a class="source" href="spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
                 <a class="source" href="spriteAsset.html">
                   ./source/factory/spriteAsset.js
                 </a>
@@ -185,8 +225,18 @@
                 </a>
               
                 
+                <a class="source" href="star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
                 <a class="source" href="state.html">
                   ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="tetragon.html">
+                  ./source/factory/tetragon.js
                 </a>
               
                 
@@ -262,6 +312,16 @@
                 
                 <a class="source" href="../mixin/position.html">
                   ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
                 </a>
               
                 
@@ -533,7 +593,8 @@ P = anchorMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    loopPathCursors: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    loopPathCursors: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">constantPathSpeed</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -1752,7 +1813,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
                 fPathEnd = <span class="hljs-keyword">this</span>.fromPathEnd,
                 tPathStart = <span class="hljs-keyword">this</span>.toPathStart,
                 tPathEnd = <span class="hljs-keyword">this</span>.toPathEnd,
-                fPartial, tPartial, fRatio, tRatio, minPartial;
+                fPartial, tPartial, fRatio, tRatio, minPartial,
+                pathSpeed = <span class="hljs-keyword">this</span>.constantPathSpeed;
 
             <span class="hljs-keyword">if</span> (fPathStart &lt; fPathEnd) fPartial = fPathEnd - fPathStart;
             <span class="hljs-keyword">else</span> fPartial = fPathEnd + (<span class="hljs-number">1</span> - fPathStart);
@@ -1768,10 +1830,10 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
 
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> cursor = <span class="hljs-number">0</span>; cursor &lt;= <span class="hljs-number">1</span>; cursor += pathDelta) {
 
-                ({x, y} = fPath.getPathPositionData(cursor));
+                ({x, y} = fPath.getPathPositionData(cursor, pathSpeed));
                 fromPathData.push([x - startX, y - startY]);
 
-                ({x, y} = tPath.getPathPositionData(cursor));
+                ({x, y} = tPath.getPathPositionData(cursor, pathSpeed));
                 toPathData.push([x - startX, y - startY]);
             }
 
@@ -2371,6 +2433,10 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
                 <span class="hljs-keyword">let</span> [lsx, lsy, sw, sh, sx, sy] = fPath.getBoundingBox();
                 <span class="hljs-keyword">let</span> [lex, ley, ew, eh, ex, ey] = tPath.getBoundingBox();
 
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(lsx) || <span class="hljs-built_in">isNaN</span>(lsy) || <span class="hljs-built_in">isNaN</span>(sw) || <span class="hljs-built_in">isNaN</span>(sh) || <span class="hljs-built_in">isNaN</span>(sx) || <span class="hljs-built_in">isNaN</span>(sy) || <span class="hljs-built_in">isNaN</span>(lex) || <span class="hljs-built_in">isNaN</span>(ley) || <span class="hljs-built_in">isNaN</span>(ew) || <span class="hljs-built_in">isNaN</span>(eh) || <span class="hljs-built_in">isNaN</span>(ex) || <span class="hljs-built_in">isNaN</span>(ey)) <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+
+                <span class="hljs-keyword">if</span> (lsx == lex &amp;&amp; lsy == ley &amp;&amp; sw == ew &amp;&amp; sh == eh &amp;&amp; sx == ex &amp;&amp; sy == ey) <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+
                 lsx += sx;
                 lsy += sy;
                 lex += ex;
@@ -2629,9 +2695,9 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <span class="hljs-keyword">if</span> (host) {
 
             <span class="hljs-keyword">let</span> fStart = fPath.currentStampPosition,
-                fEnd = fPath.currentEnd,
+                fEnd = fPath.getPathPositionData(<span class="hljs-number">1</span>),
                 tStart = tPath.currentStampPosition,
-                tEnd = tPath.currentEnd;
+                tEnd = tPath.getPathPositionData(<span class="hljs-number">1</span>);
 
             host.rotateDestination(engine, fStart[<span class="hljs-number">0</span>], fStart[<span class="hljs-number">1</span>], fPath);
             engine.stroke(fPath.pathObject);
@@ -2641,8 +2707,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
 
             engine.setTransform(<span class="hljs-number">1</span>,<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
             engine.beginPath()
-            engine.moveTo(...fEnd);
-            engine.lineTo(...tEnd);
+            engine.moveTo(fEnd.x, fEnd.y);
+            engine.lineTo(tEnd.x, tEnd.y);
             engine.moveTo(...tStart);
             engine.lineTo(...fStart);
             engine.closePath();

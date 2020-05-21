@@ -160,6 +160,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-029.html">
+                  ./demo/canvas-029.js
+                </a>
+              
+                
+                <a class="source" href="canvas-030.html">
+                  ./demo/canvas-030.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -307,7 +317,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../source/scrawl.js'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../source/scrawl.js'</span>;</pre></div></div>
             
         </li>
         
@@ -367,11 +377,14 @@
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
 
-    <span class="hljs-attr">loops</span>: <span class="hljs-number">4</span>,
-    <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">0.5</span>,
-    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">loops</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">2</span>,
 
-    <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">40</span>,
+    <span class="hljs-attr">scaleOutline</span>: <span class="hljs-literal">false</span>,
+
+    <span class="hljs-attr">flipUpend</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">30</span>,
 
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
@@ -398,7 +411,7 @@
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'100%'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'70%'</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
 
@@ -426,8 +439,12 @@
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'myPhrase'</span>,
 
-    <span class="hljs-attr">text</span>: <span class="hljs-string">'Lorem ipsum har varit standard ända sedan 1500-talet, ___ när-en-okänd-boksättare-tog att antal bokstäver och blandade dem för att göra ett provexemplar av en bok.'</span>,
+    <span class="hljs-attr">sectionClassMarker</span>: <span class="hljs-string">'[§&lt;&gt;]'</span>,
+
+    <span class="hljs-attr">text</span>: <span class="hljs-string">'&amp;shy;§ITALIC§Lorem§/ITALIC§ ipsum §Red-Text§har varit &lt;ITALIC&gt;standard&lt;/ITALIC&gt; &amp;auml;nda sedan §SMALL-CAPS§1500-talet§/SMALL-CAPS§, när-en-ok&amp;aring;nd-§BOLD§bok§DEFAULTS§sättare-tog att antal §BOLD§bok§/BOLD§stäver §OVERLINE§och &lt;HIGHLIGHT&gt;blandade§/OVERLINE§ dem&lt;/HIGHLIGHT&gt; för §size-24§Red-Text§att§DEFAULTS§ g&amp;ouml;ra, §Letter-spacing-10§ett prov§UNDERLINE§exemplar&lt;/UNDERLINE&gt;§/Letter-spacing-10§ §MONO§av en §BOLD§b&amp;oacute;k.'</span>,
     <span class="hljs-attr">font</span>: <span class="hljs-string">"16px 'Open Sans', 'Fira Sans', 'Lucida Sans', 'Lucida Sans Unicode', 'Trebuchet MS', 'Liberation Sans', 'Nimbus Sans L', sans-serif"</span>,
+
+    <span class="hljs-attr">justify</span>: <span class="hljs-string">'center'</span>,
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'#003399'</span>,
 
@@ -435,70 +452,19 @@
 
     <span class="hljs-attr">textPath</span>: <span class="hljs-string">'spiral-path'</span>,
     <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">0.9</span>,
-    <span class="hljs-attr">textPathDirection</span>: <span class="hljs-string">'rtl'</span>,
 
-    <span class="hljs-attr">justify</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-number">12</span>,
 
     <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">0.0006</span>,
+        <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">-0.0006</span>,
     }
 });
 
-lorem.setGlyphStyles({
-
-    <span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span>
-}, <span class="hljs-number">70</span>, <span class="hljs-number">126</span>, <span class="hljs-number">158</span>).setGlyphStyles({
-
-    <span class="hljs-attr">fill</span>: <span class="hljs-string">'black'</span>
-}, <span class="hljs-number">12</span>).setGlyphStyles({
-
-    <span class="hljs-attr">style</span>: <span class="hljs-string">'italic'</span>
-}, <span class="hljs-number">22</span>).setGlyphStyles({
-
-    <span class="hljs-attr">style</span>: <span class="hljs-string">'normal'</span>
-}, <span class="hljs-number">30</span>).setGlyphStyles({
-
-    <span class="hljs-attr">variant</span>: <span class="hljs-string">'small-caps'</span>
-}, <span class="hljs-number">42</span>).setGlyphStyles({
-
-    <span class="hljs-attr">variant</span>: <span class="hljs-string">'normal'</span>
-}, <span class="hljs-number">52</span>).setGlyphStyles({
-
-    <span class="hljs-attr">weight</span>: <span class="hljs-string">'bold'</span>
-}, <span class="hljs-number">67</span>, <span class="hljs-number">92</span>, <span class="hljs-number">155</span>).setGlyphStyles({
-
-    <span class="hljs-attr">weight</span>: <span class="hljs-string">'normal'</span>
-}, <span class="hljs-number">95</span>).setGlyphStyles({
-
-    <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span>
-}, <span class="hljs-number">106</span>).setGlyphStyles({
-
-    <span class="hljs-attr">highlight</span>: <span class="hljs-literal">false</span>
-}, <span class="hljs-number">118</span>).setGlyphStyles({
-
-    <span class="hljs-attr">underline</span>: <span class="hljs-literal">true</span>
-}, <span class="hljs-number">140</span>).setGlyphStyles({
-
-    <span class="hljs-attr">underline</span>: <span class="hljs-literal">false</span>
-}, <span class="hljs-number">148</span>).setGlyphStyles({
-
-    <span class="hljs-attr">overline</span>: <span class="hljs-literal">true</span>
-}, <span class="hljs-number">102</span>).setGlyphStyles({
-
-    <span class="hljs-attr">overline</span>: <span class="hljs-literal">false</span>
-}, <span class="hljs-number">114</span>).setGlyphStyles({
-
-    <span class="hljs-attr">size</span>: <span class="hljs-string">'24px'</span>
-}, <span class="hljs-number">123</span>).setGlyphStyles({
-
-    <span class="hljs-attr">space</span>: <span class="hljs-number">10</span>
-}, <span class="hljs-number">132</span>).setGlyphStyles({
-
-    <span class="hljs-attr">space</span>: <span class="hljs-number">0</span>
-}, <span class="hljs-number">135</span>).setGlyphStyles({
-
-    <span class="hljs-attr">family</span>: <span class="hljs-string">'monospace'</span>
-}, <span class="hljs-number">149</span>);</pre></div></div>
+lorem.addSectionClass(<span class="hljs-string">'Red-Text'</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">'red'</span> })
+.addSectionClass(<span class="hljs-string">'size-24'</span>, { <span class="hljs-attr">size</span>: <span class="hljs-string">'24px'</span> })
+.addSectionClass(<span class="hljs-string">'Letter-spacing-10'</span>, { <span class="hljs-attr">space</span>: <span class="hljs-number">10</span> })
+.addSectionClass(<span class="hljs-string">'/Letter-spacing-10'</span>, { <span class="hljs-attr">space</span>: <span class="hljs-number">0</span> })
+.addSectionClass(<span class="hljs-string">'MONO'</span>, { <span class="hljs-attr">family</span>: <span class="hljs-string">'monospace'</span> });</pre></div></div>
             
         </li>
         
@@ -677,10 +643,10 @@ lorem.setGlyphStyles({
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#handle_xAbsolute'</span>).value = <span class="hljs-number">100</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#handle_yAbsolute'</span>).value = <span class="hljs-number">100</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#roll'</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#scale'</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#upend'</span>).options.selectedIndex = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reverse'</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#direction'</span>).options.selectedIndex = <span class="hljs-number">1</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#scale'</span>).value = <span class="hljs-number">40</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#upend'</span>).options.selectedIndex = <span class="hljs-number">1</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reverse'</span>).options.selectedIndex = <span class="hljs-number">0</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#direction'</span>).options.selectedIndex = <span class="hljs-number">0</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#justify'</span>).options.selectedIndex = <span class="hljs-number">1</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#overline'</span>).value = <span class="hljs-number">0.1</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#letterSpacing'</span>).value = <span class="hljs-number">0</span>;

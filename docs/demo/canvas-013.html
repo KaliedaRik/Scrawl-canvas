@@ -160,6 +160,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-029.html">
+                  ./demo/canvas-029.js
+                </a>
+              
+                
+                <a class="source" href="canvas-030.html">
+                  ./demo/canvas-030.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -290,7 +300,7 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="demo-canvas-013">Demo Canvas 013</h1>
-<p>Defined Shape entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral</p>
+<p>Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral</p>
 
             </div>
             
@@ -446,9 +456,9 @@ canvas.set({
             <div class="content"><div class='highlight'><pre>scrawl.makeLine({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'firstLine'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">320</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-number">580</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-number">275</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-number">295</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
     <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkgoldenrod'</span>,
@@ -459,15 +469,15 @@ canvas.set({
 
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'secondLine'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'19%'</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-string">'17.2%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'22%'</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">'19.2%'</span>,
 
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'thirdLine'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">'20%'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'18.25%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'18.5%'</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">'85%'</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-string">'18.25%'</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">'18.5%'</span>,
 });</pre></div></div>
             
         </li>
@@ -486,12 +496,11 @@ canvas.set({
             <div class="content"><div class='highlight'><pre>scrawl.makeQuadratic({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'firstQuad'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">'5%'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'26.5%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'30.5%'</span>,
     <span class="hljs-attr">controlX</span>: <span class="hljs-string">'50%'</span>,
-    <span class="hljs-attr">controlY</span>: <span class="hljs-string">'18%'</span>,
+    <span class="hljs-attr">controlY</span>: <span class="hljs-string">'22%'</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">'95%'</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-string">'26.5%'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">'30.5%'</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
     <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkseagreen'</span>,
@@ -503,13 +512,13 @@ canvas.set({
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'secondQuad'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">'7%'</span>,
-    <span class="hljs-attr">controlY</span>: <span class="hljs-string">'15.5%'</span>,
+    <span class="hljs-attr">controlY</span>: <span class="hljs-string">'18.5%'</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">'93%'</span>,
 
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'thirdQuad'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">'9%'</span>,
-    <span class="hljs-attr">controlY</span>: <span class="hljs-string">'12%'</span>,
+    <span class="hljs-attr">controlY</span>: <span class="hljs-string">'15%'</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">'91%'</span>,
 });</pre></div></div>
             
@@ -536,7 +545,6 @@ canvas.set({
     <span class="hljs-attr">endControlY</span>: <span class="hljs-string">'41%'</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">'95%'</span>,
     <span class="hljs-attr">endY</span>: <span class="hljs-string">'36%'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
     <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'linen'</span>,
@@ -626,7 +634,7 @@ canvas.set({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'equiTriangle'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">935</span>,
-    <span class="hljs-attr">sideLength</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">60</span>,
     <span class="hljs-attr">sides</span>: <span class="hljs-number">3</span>,
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'lightblue'</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
@@ -647,7 +655,7 @@ canvas.set({
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'11sides'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">420</span>,
-    <span class="hljs-attr">sideLength</span>: <span class="hljs-number">30</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">30</span>,
     <span class="hljs-attr">sides</span>: <span class="hljs-number">11</span>,
 });</pre></div></div>
             
@@ -710,7 +718,9 @@ canvas.set({
     <span class="hljs-attr">startY</span>: <span class="hljs-number">1310</span>,
     <span class="hljs-attr">loops</span>: <span class="hljs-number">5</span>,
     <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">0.1</span>,
-    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">70</span>,
+    <span class="hljs-attr">scaleOutline</span>: <span class="hljs-literal">false</span>,
 
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
@@ -718,19 +728,19 @@ canvas.set({
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'spiral2'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">350</span>,
-    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">3</span>,
 
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'spiral3'</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">1550</span>,
     <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">0.3</span>,
-    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">0</span>,
 
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'spiral4'</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">50</span>,
     <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">0.3</span>,
-    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">3</span>,
 });</pre></div></div>
             
         </li>
@@ -768,7 +778,7 @@ canvas.set({
 
     <span class="hljs-attr">delta</span>: {
         <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.0015</span>,
-    }
+    },
 
 }).clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'_blockRectangle'</span>,
@@ -984,7 +994,9 @@ canvas.set({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
+});
+
+<span class="hljs-built_in">console</span>.log(scrawl.library.entity);</pre></div></div>
             
         </li>
         

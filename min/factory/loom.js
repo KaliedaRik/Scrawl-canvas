@@ -41,6 +41,7 @@ toPathStart: 0,
 toPathEnd: 1,
 synchronizePathCursors: true,
 loopPathCursors: true,
+constantPathSpeed: true,
 isHorizontalCopy: true,
 showBoundingBox: false,
 boundingBoxColor: '#000000',
@@ -400,7 +401,8 @@ let fPathStart = this.fromPathStart,
 fPathEnd = this.fromPathEnd,
 tPathStart = this.toPathStart,
 tPathEnd = this.toPathEnd,
-fPartial, tPartial, fRatio, tRatio, minPartial;
+fPartial, tPartial, fRatio, tRatio, minPartial,
+pathSpeed = this.constantPathSpeed;
 if (fPathStart < fPathEnd) fPartial = fPathEnd - fPathStart;
 else fPartial = fPathEnd + (1 - fPathStart);
 if (fPartial < 0.005) fPartial = 0.005;
@@ -410,9 +412,9 @@ if (tPartial < 0.005) tPartial = 0.005;
 minPartial = mCeil(mMin(fPartial, tPartial));
 pathDelta = 1 / (pathSteps * (1 / minPartial));
 for (let cursor = 0; cursor <= 1; cursor += pathDelta) {
-({x, y} = fPath.getPathPositionData(cursor));
+({x, y} = fPath.getPathPositionData(cursor, pathSpeed));
 fromPathData.push([x - startX, y - startY]);
-({x, y} = tPath.getPathPositionData(cursor));
+({x, y} = tPath.getPathPositionData(cursor, pathSpeed));
 toPathData.push([x - startX, y - startY]);
 }
 this.fromPathSteps = fPartial / minPartial;
@@ -705,6 +707,8 @@ if (fPath.getBoundingBox && tPath.getBoundingBox) {
 this.dirtyStart = false;
 let [lsx, lsy, sw, sh, sx, sy] = fPath.getBoundingBox();
 let [lex, ley, ew, eh, ex, ey] = tPath.getBoundingBox();
+if (isNaN(lsx) || isNaN(lsy) || isNaN(sw) || isNaN(sh) || isNaN(sx) || isNaN(sy) || isNaN(lex) || isNaN(ley) || isNaN(ew) || isNaN(eh) || isNaN(ex) || isNaN(ey)) this.dirtyStart = true;
+if (lsx == lex && lsy == ley && sw == ew && sh == eh && sx == ex && sy == ey) this.dirtyStart = true;
 lsx += sx;
 lsy += sy;
 lex += ex;
@@ -780,17 +784,17 @@ if(fPath && fPath.getBoundingBox && tPath && tPath.getBoundingBox) {
 let host = this.currentHost;
 if (host) {
 let fStart = fPath.currentStampPosition,
-fEnd = fPath.currentEnd,
+fEnd = fPath.getPathPositionData(1),
 tStart = tPath.currentStampPosition,
-tEnd = tPath.currentEnd;
+tEnd = tPath.getPathPositionData(1);
 host.rotateDestination(engine, fStart[0], fStart[1], fPath);
 engine.stroke(fPath.pathObject);
 host.rotateDestination(engine, tStart[0], tStart[1], fPath);
 engine.stroke(tPath.pathObject);
 engine.setTransform(1,0, 0, 1, 0, 0);
 engine.beginPath()
-engine.moveTo(...fEnd);
-engine.lineTo(...tEnd);
+engine.moveTo(fEnd.x, fEnd.y);
+engine.lineTo(tEnd.x, tEnd.y);
 engine.moveTo(...tStart);
 engine.lineTo(...fStart);
 engine.closePath();

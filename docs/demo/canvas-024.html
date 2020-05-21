@@ -160,6 +160,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-029.html">
+                  ./demo/canvas-029.js
+                </a>
+              
+                
+                <a class="source" href="canvas-030.html">
+                  ./demo/canvas-030.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -471,8 +481,9 @@ canvas.set({
 
     <span class="hljs-attr">pivot</span>: <span class="hljs-string">'pin-1'</span>,
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
-
     <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">0.05</span>,
 
     <span class="hljs-attr">controlPivot</span>: <span class="hljs-string">'pin-2'</span>,
     <span class="hljs-attr">controlLockTo</span>: <span class="hljs-string">'pivot'</span>,
@@ -493,6 +504,8 @@ canvas.set({
     <span class="hljs-attr">pivot</span>: <span class="hljs-string">'pin-4'</span>,
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
     <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">precision</span>: <span class="hljs-number">0.05</span>,
 
     <span class="hljs-attr">startControlPivot</span>: <span class="hljs-string">'pin-5'</span>,
     <span class="hljs-attr">startControlLockTo</span>: <span class="hljs-string">'pivot'</span>,
@@ -699,8 +712,7 @@ scrawl.addListener(<span class="hljs-string">'move'</span>, interactions, canvas
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Loom frame struts - from strut: ${myLoom.fromPathStart.toFixed(3)}, ${myLoom.fromPathEnd.toFixed(3)}; to strut: ${myLoom.toPathStart.toFixed(3)}, ${myLoom.toPathEnd.toFixed(3)}
-Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();</pre></div></div>
             

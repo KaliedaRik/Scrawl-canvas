@@ -15,7 +15,9 @@ curY = 0,
 oldX = 0,
 oldY = 0;
 let xPoints = [],
-yPoints = [];
+yPoints = [],
+progression = [],
+positions = [];
 let reflectX = 0,
 reflectY = 0;
 let buildArrays = (thesePoints) => {
@@ -304,6 +306,8 @@ results = getShapeUnitMetaData(spec, precision, data);
 unitLengths[i] = results.length;
 xPoints = xPoints.concat(results.xPoints);
 yPoints = yPoints.concat(results.yPoints);
+progression.push(results.progression);
+positions.push(results.positions);
 break;
 default :
 unitLengths[i] = 0;
@@ -313,12 +317,14 @@ myLen = unitLengths.reduce((a, v) => a + v, 0);
 let mySum = 0;
 for (i = 0, iz = unitLengths.length; i < iz; i++) {
 mySum += unitLengths[i] / myLen;
-unitPartials[i] = mySum;
+unitPartials[i] = parseFloat(mySum.toFixed(6));
 }
 }
 returnObject.unitLengths = unitLengths;
 returnObject.unitPartials = unitPartials;
 returnObject.length = parseFloat(myLen.toFixed(1));
+returnObject.unitPositions = positions;
+returnObject.unitProgression = progression;
 let maxX = Math.max(...xPoints),
 maxY = Math.max(...yPoints),
 minX = Math.min(...xPoints),
@@ -327,6 +333,8 @@ returnObject.maxX = maxX;
 returnObject.maxY = maxY;
 returnObject.minX = minX;
 returnObject.minY = minY;
+returnObject.xRange = xPoints;
+returnObject.yRange = yPoints;
 return returnObject;
 };
 const vector = {
@@ -347,6 +355,8 @@ v.y = mag * Math.sin(arg);
 const getShapeUnitMetaData = function (species, precision, args) {
 let xPts = [],
 yPts = [],
+progression = [],
+positions = [],
 len = 0,
 w, h;
 if (species === 'linear') {
@@ -368,6 +378,8 @@ while (!flag) {
 xPts.length = 0;
 yPts.length = 0;
 newLength = 0;
+progression.length = 0;
+positions.length = 0;
 res = getXY[func](0, ...args);
 oldX = res.x;
 oldY = res.y;
@@ -383,6 +395,8 @@ h = y - oldY;
 newLength += Math.sqrt((w * w) + (h * h));
 oldX = x;
 oldY = y;
+progression.push(newLength);
+positions.push(t);
 }
 if (newLength < len + precision) flag = true;
 len = newLength;
@@ -393,7 +407,9 @@ if (step < 0.004) flag = true;
 return {
 length: len,
 xPoints: xPts,
-yPoints: yPts
+yPoints: yPts,
+positions: positions,
+progression: progression,
 };
 };
 const getXY = {

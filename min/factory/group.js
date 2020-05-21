@@ -89,8 +89,8 @@ batchResort: true
 };
 P.getHost = function (item) {
 let host = this.currentHost;
-if (host && item === host.name) return host;
-else return artefact[item] || cell[item] || null;
+if (!host || host.substring) return artefact[item] || cell[item] || artefact[host] || cell[host] || null;
+else return host;
 };
 P.forceStamp = function () {
 var self = this;

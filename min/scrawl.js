@@ -39,6 +39,9 @@ import {
 makeBlock,
 } from './factory/block.js';
 import {
+makeBezier,
+} from './factory/bezier.js';
+import {
 makeColor,
 } from './factory/color.js';
 import {
@@ -65,8 +68,14 @@ createImageFromGroup,
 createImageFromEntity,
 } from './factory/imageAsset.js';
 import {
+makeLine,
+} from './factory/line.js';
+import {
 makeLoom,
 } from './factory/loom.js';
+import {
+makeOval,
+} from './factory/oval.js';
 import {
 makePattern,
 } from './factory/pattern.js';
@@ -77,6 +86,15 @@ import {
 makePicture,
 } from './factory/picture.js';
 import {
+makePolygon,
+} from './factory/polygon.js';
+import {
+makePolyline,
+} from './factory/polyline.js';
+import {
+makeQuadratic,
+} from './factory/quadratic.js';
+import {
 requestQuaternion,
 releaseQuaternion,
 } from './factory/quaternion.js';
@@ -84,23 +102,26 @@ import {
 makeRadialGradient,
 } from './factory/radialGradient.js';
 import {
+makeRectangle,
+} from './factory/rectangle.js';
+import {
 makeRender,
 } from './factory/renderAnimation.js';
 import {
 makeShape,
-makeLine,
-makeQuadratic,
-makeBezier,
-makeRectangle,
-makeOval,
-makeTetragon,
-makePolygon,
-makeStar,
-makeSpiral,
 } from './factory/shape.js';
+import {
+makeSpiral,
+} from './factory/spiral.js';
 import {
 importSprite,
 } from './factory/spriteAsset.js';
+import {
+makeStar,
+} from './factory/star.js';
+import {
+makeTetragon,
+} from './factory/tetragon.js';
 import {
 makeTicker,
 } from './factory/ticker.js';
@@ -147,6 +168,7 @@ render,
 makeAnimationObserver,
 makeAction,
 makeAnimation,
+makeBezier,
 makeBlock,
 makeColor,
 requestCoordinate,
@@ -160,25 +182,25 @@ importDomImage,
 createImageFromCell,
 createImageFromGroup,
 createImageFromEntity,
+makeLine,
 makeLoom,
+makeOval,
 makePattern,
 makePhrase,
 makePicture,
+makePolygon,
+makePolyline,
+makeQuadratic,
 requestQuaternion,
 releaseQuaternion,
 makeRadialGradient,
+makeRectangle,
 makeRender,
 makeShape,
-makeLine,
-makeQuadratic,
-makeBezier,
-makeRectangle,
-makeOval,
-makeTetragon,
-makePolygon,
-makeStar,
 makeSpiral,
 importSprite,
+makeStar,
+makeTetragon,
 makeTicker,
 makeTween,
 requestVector,

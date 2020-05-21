@@ -507,9 +507,6 @@ if (this.dirtyStampPositions) this.cleanStampPositions();
 if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 if (this.dirtyPathObject) this.cleanPathObject();
 };
-P.cleanStampPositionsAdditionalActions = function () {
-if (this.domElement && this.collides) this.dirtyPathObject = true;
-};
 P.stamp = function () {
 let self = this;
 return new Promise((resolve, reject) => {

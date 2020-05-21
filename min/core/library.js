@@ -1,4 +1,4 @@
-const version = '8.0.11';
+const version = '8.1.0';
 const anchor = {};
 const anchornames = [];
 const animation = {};

@@ -70,6 +70,11 @@
                 </a>
               
                 
+                <a class="source" href="bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
                 <a class="source" href="block.html">
                   ./source/factory/block.js
                 </a>
@@ -130,8 +135,18 @@
                 </a>
               
                 
+                <a class="source" href="line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="oval.html">
+                  ./source/factory/oval.js
                 </a>
               
                 
@@ -155,6 +170,21 @@
                 </a>
               
                 
+                <a class="source" href="polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
                 <a class="source" href="quaternion.html">
                   ./source/factory/quaternion.js
                 </a>
@@ -162,6 +192,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rectangle.html">
+                  ./source/factory/rectangle.js
                 </a>
               
                 
@@ -175,6 +210,11 @@
                 </a>
               
                 
+                <a class="source" href="spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
                 <a class="source" href="spriteAsset.html">
                   ./source/factory/spriteAsset.js
                 </a>
@@ -185,8 +225,18 @@
                 </a>
               
                 
+                <a class="source" href="star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
                 <a class="source" href="state.html">
                   ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="tetragon.html">
+                  ./source/factory/tetragon.js
                 </a>
               
                 
@@ -262,6 +312,16 @@
                 
                 <a class="source" href="../mixin/position.html">
                   ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
                 </a>
               
                 
@@ -646,7 +706,7 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getData = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">entity, cell, isFill</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.getData = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">entity, cell</span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyAsset) <span class="hljs-keyword">this</span>.cleanAsset();
     <span class="hljs-keyword">this</span>.asset.checkSource(<span class="hljs-keyword">this</span>.sourceNaturalWidth, <span class="hljs-keyword">this</span>.sourceNaturalHeight);
