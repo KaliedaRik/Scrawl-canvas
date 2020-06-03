@@ -45,16 +45,24 @@ import {
     addCanvas,
     getCanvas,
     setCurrentCanvas,
-    addListener,
-    removeListener,
-    addNativeListener,
-    removeNativeListener,
+    // addListener,
+    // removeListener,
+    // addNativeListener,
+    // removeNativeListener,
     clear,
     compile,
     show,
     render,
-    makeAnimationObserver,
+    // makeAnimationObserver,
 } from './core/document.js';
+
+import { 
+    addListener,
+    removeListener,
+    addNativeListener,
+    removeNativeListener,
+    makeAnimationObserver,
+} from './core/events.js';
 
 import * as library from './core/library.js';
 
@@ -283,14 +291,22 @@ export default {
     addCanvas,
     getCanvas,
     setCurrentCanvas,
-    addListener,
-    removeListener,
-    addNativeListener,
-    removeNativeListener,
+    // addListener,
+    // removeListener,
+    // addNativeListener,
+    // removeNativeListener,
     clear,
     compile,
     show,
     render,
+    // makeAnimationObserver,
+
+
+    // core/events.js
+    addListener,
+    removeListener,
+    addNativeListener,
+    removeNativeListener,
     makeAnimationObserver,
 
 

@@ -25,7 +25,9 @@
 
 // #### Imports
 import { animation, artefact, constructors } from '../core/library.js';
-import { clear, compile, show, makeAnimationObserver } from '../core/document.js';
+// import { clear, compile, show, makeAnimationObserver } from '../core/document.js';
+import { clear, compile, show } from '../core/document.js';
+import { makeAnimationObserver } from '../core/events.js';
 import { mergeOver, pushUnique, removeItem, xt, isa_obj, isa_fn, 
     defaultNonReturnFunction, defaultPromiseReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
