@@ -57,7 +57,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta, pushUnique } from '../core/utilities.js';
+import { λnull, isa_obj, mergeOver, xt, xta, pushUnique } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -151,7 +151,7 @@ S.colors = function (item) {
 
 
 // __stops__ - Do nothing. The stops array needs to be kept private, its values set only via the `recalculate` function, which happens whenever the `dirtyPalette` attribute is set to true.
-S.stops = defaultNonReturnFunction;
+S.stops = λnull;
 
 
 // #### Prototype functions

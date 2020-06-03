@@ -5,9 +5,16 @@
 
 // #### Imports
 import { artefact } from '../core/library.js';
-import { mergeOver, isa_boolean, xt, xta, addStrings, capitalize, removeItem, pushUnique } from '../core/utilities.js';
+import { mergeOver, isa_boolean, xt, xta, addStrings, removeItem, pushUnique } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
+
+
+const capitalize = (s) => {
+
+    if (typeof s !== 'string') return '';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
 
 // #### Export function

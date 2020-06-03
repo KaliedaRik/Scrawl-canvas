@@ -13,7 +13,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, xt, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, λnull } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
@@ -87,7 +87,7 @@ S.revert = function (item) {
 
     this.revert = item;
 
-    if (typeof this.revert !== 'function') this.revert = defaultNonReturnFunction;
+    if (typeof this.revert !== 'function') this.revert = λnull;
 };
 
 // Internal attribute. Set true after the ticker moves past the instance's time value (and set false if the ticker is moving backwards)

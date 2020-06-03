@@ -7,8 +7,7 @@
 
 // #### Imports
 import * as library from "./library.js";
-import { xt, xta, isa_dom, isa_fn, defaultNonReturnFunction } from "./utilities.js";
-// import { addListener, addNativeListener, removeListener, removeNativeListener } from "./document.js";
+import { xt, xta, isa_dom, isa_fn, λnull } from "./utilities.js";
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
@@ -309,7 +308,7 @@ const observeAndUpdate = function (items = {}) {
     let listener = (items.useNativeListener) ? addNativeListener : addListener,
         killListener = (items.useNativeListener) ? removeNativeListener : removeListener;
 
-    let stop = defaultNonReturnFunction;
+    let stop = λnull;
 
     if (items.preventDefault) {
 

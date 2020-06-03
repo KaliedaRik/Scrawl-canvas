@@ -12,8 +12,7 @@
 
 // #### Imports
 import * as library from '../core/library.js';
-import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction, 
-    generateUuid, isa_fn, mergeOver, pushUnique, xt, xta, addStrings } from '../core/utilities.js';
+import { λnull, generateUuid, isa_fn, mergeOver, pushUnique, xt, xta, addStrings } from '../core/utilities.js';
 import { currentGroup, scrawlCanvasHold } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
@@ -354,17 +353,17 @@ export default function (P = {}) {
 
         if (!items.group) items.group = currentGroup;
 
-        this.onEnter = defaultNonReturnFunction;
-        this.onLeave = defaultNonReturnFunction;
-        this.onDown = defaultNonReturnFunction;
-        this.onUp = defaultNonReturnFunction;
+        this.onEnter = λnull;
+        this.onLeave = λnull;
+        this.onDown = λnull;
+        this.onUp = λnull;
 
         this.set(items);
 
         this.midInitActions(items);
     };
 
-    P.midInitActions = defaultNonReturnFunction;
+    P.midInitActions = λnull;
 
 
 // #### Display cycle functionality
@@ -461,7 +460,7 @@ export default function (P = {}) {
 
 // `cleanPathObject` - ___this function will be overwritten by every entity Factory___, to meet their individual requirements.
 // + The function needs to build a Canvas API [Path2D](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) object and store it in the __pathObject__ attribute. The Path2D object is used for both entity stamping (see below) and entity collision detection work.
-    P.cleanPathObject = defaultNonReturnFunction;
+    P.cleanPathObject = λnull;
 
 // ##### Step 2: invoke the entity's stamp action
 // `stamp` - returns a Promise. This is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.

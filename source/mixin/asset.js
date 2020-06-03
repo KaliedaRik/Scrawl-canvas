@@ -24,7 +24,7 @@
 
 
 // #### Imports
-import { mergeOver, pushUnique, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull } from '../core/utilities.js';
 
 
 // #### Export function
@@ -98,7 +98,7 @@ export default function (P = {}) {
     };
 
 // __subscribers__ - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions.
-    S.subscribers = defaultNonReturnFunction;
+    S.subscribers = λnull;
 
 
 // #### Prototype functions

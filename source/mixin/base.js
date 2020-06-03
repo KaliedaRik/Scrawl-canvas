@@ -15,9 +15,7 @@
 
 // #### Imports
 import * as library from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, generateUuid, 
-    isa_fn, isa_boolean, isa_vector, isa_obj, addStrings, xt, xta,
-    defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, generateUuid, isa_fn, isa_boolean, isa_obj, addStrings, xt, xta, λnull } from '../core/utilities.js';
 
 // #### Export function
 export default function (P = {}) {
@@ -504,7 +502,7 @@ export default function (P = {}) {
 
         if (xt(fItem) && fItem !== null && fItem.substring) {
 
-            if (fItem === '~~~') obj[item] = defaultNonReturnFunction;
+            if (fItem === '~~~') obj[item] = λnull;
             else {
 
                 let args, func, f;
@@ -521,7 +519,7 @@ export default function (P = {}) {
 
                     obj[item] = f.bind(obj);
                 }
-                else obj[item] = defaultNonReturnFunction;
+                else obj[item] = λnull;
             }
         }
     };

@@ -38,7 +38,7 @@
 
 // #### Imports
 import { constructors, animationtickers, radian } from '../core/library.js';
-import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λnull } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
@@ -260,7 +260,7 @@ S.commenceAction = function (item) {
 
     this.commenceAction = item;
     
-    if (typeof this.commenceAction !== 'function') this.commenceAction = defaultNonReturnFunction;
+    if (typeof this.commenceAction !== 'function') this.commenceAction = λnull;
 };
 
 // __completeAction__
@@ -268,7 +268,7 @@ S.completeAction = function (item) {
 
     this.completeAction = item;
 
-    if (typeof this.completeAction !== 'function') this.completeAction = defaultNonReturnFunction;
+    if (typeof this.completeAction !== 'function') this.completeAction = λnull;
 };
 
 // `set` - we perform some additional functionality in the Tween `set` function

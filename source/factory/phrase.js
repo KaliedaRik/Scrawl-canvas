@@ -43,7 +43,7 @@
 // #### Imports
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
-import { mergeOver, pushUnique, xt, xta, isa_obj, ensurePositiveFloat, ensureFloat, ensureString } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xta, isa_obj, isa_number } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -68,6 +68,37 @@ fontHeightCalculator.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWE
 scrawlCanvasHold.appendChild(fontHeightCalculator);
 
 const textEntityConverter = document.createElement('textarea');
+
+
+// __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
+const ensureFloat = (val, precision) => {
+
+    val = parseFloat(val);
+
+    if (!isa_number(val)) val = 0;
+    if (!isa_number(precision)) precision = 0;
+
+    return parseFloat(val.toFixed(precision));
+};
+
+
+// __ensurePositiveFloat__ - return the value provided as a positive floating point number of given precision; return 0 if not a number
+const ensurePositiveFloat = (val, precision) => {
+
+    val = parseFloat(val);
+
+    if (!isa_number(val)) val = 0;
+    if (!isa_number(precision)) precision = 0;
+
+    return Math.abs(parseFloat(val.toFixed(precision)));
+};
+
+
+// __ensureString__ - return a String representation of the value
+const ensureString = (val) => {
+
+    return (val.substring) ? val : val.toString;
+};
 
 
 // #### Phrase constructor

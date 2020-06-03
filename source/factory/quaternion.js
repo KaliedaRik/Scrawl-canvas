@@ -4,7 +4,7 @@
 
 // #### Imports
 import { radian, constructors } from '../core/library.js';
-import { isa_quaternion, isa_vector, isa_number, xt, xto } from '../core/utilities.js';
+import { isa_quaternion, isa_number, xt, xto } from '../core/utilities.js';
 
 import { requestVector, releaseVector, makeVector } from './vector.js';
 
@@ -46,23 +46,23 @@ P.type = 'Quaternion';
 // + `set(Vector)` - a Vector object
 // + `set({x:Number, y:Number, z:Number})` - a Javascript object containing one or more attributes from: x, y, z - with values in degrees (not radians)
 // + `set({pitch:Number, yaw:Number, roll:Number})` - a Javascript object containing one or more attributes: __pitch__ (for x-axis rotations); __yaw__ (for y-axis rotations); __roll__ (for z-axis rotations) - with values in degrees (not radians)
-P.set = function (items = {}) {
+P.set = function (obj = {}) {
 
-    if (isa_quaternion(items)) return this.setFromQuaternion(items);
+    if (isa_quaternion(obj)) return this.setFromQuaternion(obj);
 
-    if (isa_vector(items)) return this.setFromVector(items);
+    if ((obj && obj.type && obj.type === 'Vector')) return this.setFromVector(obj);
 
-    if (xto(items.pitch, items.yaw, items.roll)) return this.setFromEuler(items);
+    if (xto(obj.pitch, obj.yaw, obj.roll)) return this.setFromEuler(obj);
 
     let x, y, z, n, v,
         tv = this.v;
 
-    v = (xt(items.vector) || xt(items.v)) ? (items.vector || items.v) : false;
-    n = (xt(items.scalar) || xt(items.n)) ? (items.scalar || items.n || 0) : false;
+    v = (xt(obj.vector) || xt(obj.v)) ? (obj.vector || obj.v) : false;
+    n = (xt(obj.scalar) || xt(obj.n)) ? (obj.scalar || obj.n || 0) : false;
 
-    x = (v) ? (v.x || 0) : items.x || false;
-    y = (v) ? (v.y || 0) : items.y || false;
-    z = (v) ? (v.z || 0) : items.z || false;
+    x = (v) ? (v.x || 0) : obj.x || false;
+    y = (v) ? (v.y || 0) : obj.y || false;
+    z = (v) ? (v.z || 0) : obj.z || false;
 
     this.n = (isa_number(n)) ? n : this.n;
 

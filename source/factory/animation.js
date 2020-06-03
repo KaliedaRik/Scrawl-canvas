@@ -22,8 +22,7 @@
 
 // #### Imports
 import { animation, constructors } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt, 
-    defaultNonReturnFunction, defaultPromiseReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, λnull, λpromise, λthis } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';
@@ -34,10 +33,10 @@ const Animation = function (items = {}) {
 
     this.makeName(items.name);
     this.order = (xt(items.order)) ? items.order : this.defs.order;
-    this.fn = items.fn || defaultPromiseReturnFunction;
-    this.onRun = items.onRun || defaultNonReturnFunction;
-    this.onHalt = items.onHalt || defaultNonReturnFunction;
-    this.onKill = items.onKill || defaultNonReturnFunction;
+    this.fn = items.fn || λpromise;
+    this.onRun = items.onRun || λnull;
+    this.onHalt = items.onHalt || λnull;
+    this.onKill = items.onKill || λnull;
 
     this.register();
 
@@ -87,9 +86,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
 // This functionality is disabled for Animation objects
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
@@ -98,7 +97,7 @@ P.saveAsPacket = function () {
 
 // #### Clone management
 // This functionality is disabled for Animation objects
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 
 
 // #### Kill management

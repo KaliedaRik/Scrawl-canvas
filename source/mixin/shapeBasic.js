@@ -3,7 +3,7 @@
 
 // #### Imports
 import { radian, artefact } from '../core/library.js';
-import { mergeOver, xt, defaultNonReturnFunction, pushUnique } from '../core/utilities.js';
+import { mergeOver, xt, λnull, pushUnique } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from '../factory/vector.js';
 
@@ -88,12 +88,12 @@ export default function (P = {}) {
     };
 
     // Invalidate __dimensions__ setters - dimensions are an emergent property of shapes, not a defining property
-    S.width = defaultNonReturnFunction;
-    S.height = defaultNonReturnFunction;
-    S.dimensions = defaultNonReturnFunction;
-    D.width = defaultNonReturnFunction;
-    D.height = defaultNonReturnFunction;
-    D.dimensions = defaultNonReturnFunction;
+    S.width = λnull;
+    S.height = λnull;
+    S.dimensions = λnull;
+    D.width = λnull;
+    D.height = λnull;
+    D.dimensions = λnull;
 
     // __pathDefinition__
     S.pathDefinition = function (item) {
@@ -546,7 +546,7 @@ export default function (P = {}) {
             if (!isCalledFromAdditionalActions) this.calculateLocalPathAdditionalActions();
         }
     };
-    P.calculateLocalPathAdditionalActions = defaultNonReturnFunction;
+    P.calculateLocalPathAdditionalActions = λnull;
 
 // `updatePathSubscribers`
     P.updatePathSubscribers = function () {

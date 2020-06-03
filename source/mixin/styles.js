@@ -14,7 +14,7 @@
 
 // #### Imports
 import { entity, asset, palette } from '../core/library.js';
-import { addStrings, defaultNonReturnFunction, mergeOver, xt, isa_obj, mergeDiscard } from '../core/utilities.js';
+import { addStrings, λnull, mergeOver, xt, isa_obj, mergeDiscard } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 import { makePalette } from '../factory/palette.js';
@@ -543,7 +543,7 @@ export default function (P = {}) {
 
 
 // `cleanRadius` - overwritten by the RadialGradient factory
-    P.cleanRadius = defaultNonReturnFunction;
+    P.cleanRadius = λnull;
 
 
 // `buildStyle` - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here

@@ -22,8 +22,7 @@
 
 // #### Imports
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, pushUnique, isa_number, isa_obj, 
-    defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_number, isa_obj, λnull, xt, xta } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -202,7 +201,7 @@ S.columns = function (item) {
     }
     this.dirtyPathObject = true;
 };
-D.columns = defaultNonReturnFunction;
+D.columns = λnull;
 
 // __rows__
 S.rows = function (item) {
@@ -224,7 +223,7 @@ S.rows = function (item) {
     }
     this.dirtyPathObject = true;
 };
-D.rows = defaultNonReturnFunction;
+D.rows = λnull;
 
 
 // #### Tile management

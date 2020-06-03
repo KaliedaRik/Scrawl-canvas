@@ -36,7 +36,7 @@
 
 // #### Imports
 import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, λthis, λnull } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 
@@ -143,14 +143,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet/Clone management
 // This functionality is disabled for Stack objects
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 
 
 // #### Kill functionality

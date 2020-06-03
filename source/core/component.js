@@ -5,7 +5,7 @@
 
 
 // ## Imports
-import { isa_dom, isa_boolean, isa_obj, defaultNonReturnFunction } from "./utilities.js";
+import { isa_dom, isa_boolean, isa_obj } from "./utilities.js";
 import { artefact, unstackedelement } from "./library.js";
 // import { makeAnimationObserver } from './document.js';
 import { makeAnimationObserver } from './events.js';

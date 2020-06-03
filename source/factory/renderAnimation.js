@@ -28,8 +28,7 @@ import { animation, artefact, constructors } from '../core/library.js';
 // import { clear, compile, show, makeAnimationObserver } from '../core/document.js';
 import { clear, compile, show } from '../core/document.js';
 import { makeAnimationObserver } from '../core/events.js';
-import { mergeOver, pushUnique, removeItem, xt, isa_obj, isa_fn, 
-    defaultNonReturnFunction, defaultPromiseReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, isa_obj, isa_fn, λnull, λthis } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';
@@ -75,19 +74,19 @@ const RenderAnimation = function (items = {}) {
     // These attributes are the same as for the Animation object
     this.order = (xt(items.order)) ? items.order : this.defs.order;
 
-    this.onRun = items.onRun || defaultNonReturnFunction;
-    this.onHalt = items.onHalt || defaultNonReturnFunction;
-    this.onKill = items.onKill || defaultNonReturnFunction;
+    this.onRun = items.onRun || λnull;
+    this.onHalt = items.onHalt || λnull;
+    this.onKill = items.onKill || λnull;
 
     // These attributes are specific to RenderAnimation
     this.target = target;
 
-    this.commence = items.commence || defaultNonReturnFunction;
-    this.afterClear = items.afterClear || defaultNonReturnFunction;
-    this.afterCompile = items.afterCompile || defaultNonReturnFunction;
-    this.afterShow = items.afterShow || defaultNonReturnFunction;
-    this.afterCreated = items.afterCreated || defaultNonReturnFunction;
-    this.error = items.error || defaultNonReturnFunction;
+    this.commence = items.commence || λnull;
+    this.afterClear = items.afterClear || λnull;
+    this.afterCompile = items.afterCompile || λnull;
+    this.afterShow = items.afterShow || λnull;
+    this.afterCreated = items.afterCreated || λnull;
+    this.error = items.error || λnull;
 
     this.readyToInitialize = true;
 
@@ -193,9 +192,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
 // Animations do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
@@ -203,7 +202,7 @@ P.saveAsPacket = function () {
 
 
 // #### Clone management
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 
 
 // #### Kill management

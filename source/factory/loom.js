@@ -23,7 +23,7 @@
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
-import { mergeOver, mergeDiscard, pushUnique, defaultNonReturnFunction, defaultThisReturnFunction, xta } from '../core/utilities.js';
+import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta } from '../core/utilities.js';
 
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
@@ -44,10 +44,10 @@ const Loom = function (items = {}) {
 
     if (!items.group) items.group = currentGroup;
 
-    this.onEnter = defaultNonReturnFunction;
-    this.onLeave = defaultNonReturnFunction;
-    this.onDown = defaultNonReturnFunction;
-    this.onUp = defaultNonReturnFunction;
+    this.onEnter = λnull;
+    this.onLeave = λnull;
+    this.onDown = λnull;
+    this.onUp = λnull;
 
     this.delta = {};
 
@@ -264,7 +264,7 @@ P.handlePacketAnchor = function (copy, items) {
 
 // #### Clone management
 // TODO - this functionality is currently disabled, need to enable it and make it work properly
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 
 
 // #### Kill management
@@ -694,7 +694,7 @@ P.setDeltaValues = function (items = {}) {
 };
 
 // Invalidate mid-init functionality
-P.midInitActions = defaultNonReturnFunction;
+P.midInitActions = λnull;
 
 // Invalidating sensor functionality
 P.cleanCollisionData = function () {
@@ -1362,7 +1362,7 @@ P.clear = function (engine) {
 };
 
 // `none`
-P.none = defaultNonReturnFunction;
+P.none = λnull;
 
 
 // These __stroke__ and __fill__ functions handle most of the stuff that the method functions require to stamp the Loom entity onto a canvas cell.

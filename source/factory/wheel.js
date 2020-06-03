@@ -18,13 +18,25 @@
 
 // #### Imports
 import { constructors, radian } from '../core/library.js';
-import { mergeOver, xt, xto, ensureFloat } from '../core/utilities.js';
+import { mergeOver, xt, xto, isa_number } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
 import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
 import filterMix from '../mixin/filter.js';
+
+
+// __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
+const ensureFloat = (val, precision) => {
+
+    val = parseFloat(val);
+
+    if (!isa_number(val)) val = 0;
+    if (!isa_number(precision)) precision = 0;
+
+    return parseFloat(val.toFixed(precision));
+};
 
 
 // #### Wheel constructor

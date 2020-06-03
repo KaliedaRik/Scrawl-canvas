@@ -14,7 +14,7 @@
 
 
 // #### Imports
-import { isa_fn, isa_dom, defaultNonReturnFunction } from "./utilities.js";
+import { isa_fn, isa_dom, λnull } from "./utilities.js";
 
 // TODO - documentation
 //
@@ -42,7 +42,7 @@ const makeAnimationObserver = function (anim, wrapper, specs = {}) {
             observer.disconnect();
         }
     }
-    else return defaultNonReturnFunction;
+    else return λnull;
 }
 
 // `Exported function` (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.

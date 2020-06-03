@@ -39,56 +39,6 @@ const addStrings = (current, delta) => {
     return current;
 };
 
-// TODO documentation
-const capitalize = (s) => {
-
-    if (typeof s !== 'string') return ''
-    return s.charAt(0).toUpperCase() + s.slice(1)
-}
-
-
-// __convertLength__ takes a value, checks if it is a percent value and - if true - returns a value relative to the supplied length; otherwise returns the value as a number
-//
-// Examples:
-// ```
-// convertLength(20, 40);
-// -> 20
-//    
-// convertLength('20%', 40);
-// -> 8
-// ```
-const convertLength = (val, len) => {
-
-    if (!xt(val)) throw new Error(`core/base error - convertLength() bad value argument: ${val}`);
-    if (!isa_number(len)) throw new Error(`core/base error - convertLength() bad length argument: ${len}`);
-
-    if (isa_number(val)) return val;
-
-    else {
-
-        switch(val){
-
-            case 'top' :
-            case 'left' :
-                return 0;
-
-            case 'bottom' :
-            case 'right' :
-                return len;
-
-            case 'center' :
-                return len / 2;
-
-            default :
-                val = parseFloat(val);
-
-                if (!isa_number(val)) throw new Error(`core/base error - convertLength() value converst to NaN: ${val}`);
-
-                return ( val / 100) * len;
-        }
-    }
-};
-
 
 // __convertTime__ converts a time value into its component string suffix and (millisecond) number value properties; returns an array
 //
@@ -140,63 +90,10 @@ const convertTime = (item) => {
 };
 
 
-// __defaultXYZReturnFunction__ helps us avoid errors when invoking a function attribute settable by the coder
-const defaultNonReturnFunction = () => {};
-const defaultArgReturnFunction = (a) => a;
-const defaultThisReturnFunction = function () { return this; };
-const defaultFalseReturnFunction = () => false;
-const defaultZeroReturnFunction = () => 0;
-const defaultBlankStringReturnFunction = () => '';
-const defaultPromiseReturnFunction = () => Promise.resolve(true);
-
-
-// __ensureInteger__ - return the value provided if it is an integer number and, if it isn't, return 0
-const ensureInteger = (val) => {
-
-    val = parseInt(val, 10);
-    if (!isa_number(val)) val = 0;
-    return val;
-};
-
-
-// __ensurePositiveInteger__ - return the value provided if it is a positive integer number and, if it isn't, return 0
-const ensurePositiveInteger = (val) => {
-
-    val = parseInt(val, 10);
-    if (!isa_number(val)) val = 0;
-    return Math.abs(val);
-};
-
-
-// __ensureFloat__ - return the value provided as a floating point number of given precision; return 0 if not a number
-const ensureFloat = (val, precision) => {
-
-    val = parseFloat(val);
-
-    if (!isa_number(val)) val = 0;
-    if (!isa_number(precision)) precision = 0;
-
-    return parseFloat(val.toFixed(precision));
-};
-
-
-// __ensurePositiveFloat__ - return the value provided as a positive floating point number of given precision; return 0 if not a number
-const ensurePositiveFloat = (val, precision) => {
-
-    val = parseFloat(val);
-
-    if (!isa_number(val)) val = 0;
-    if (!isa_number(precision)) precision = 0;
-
-    return Math.abs(parseFloat(val.toFixed(precision)));
-};
-
-
-// __ensureString__ - return a String representation of the value
-const ensureString = (val) => {
-
-    return (val.substring) ? val : val.toString;
-};
+// __λ functions__ helps us avoid errors when invoking a function attribute settable by the coder
+const λnull = () => {};
+const λthis = function () { return this; };
+const λpromise = () => Promise.resolve(true);
 
 
 // __generateUuid__ is a simple (crude) uuid generator 
@@ -225,16 +122,8 @@ const isa_canvas = item => (Object.prototype.toString.call(item) === '[object HT
 const isa_dom = item => (item && item.querySelector && item.dispatchEvent) ? true : false;
 
 
-// __isa_engine__ checks to make sure the argument is a &lt;canvas> element's context engine'
-const isa_engine = item => (item && item.quadraticCurveTo) ? true : false;
-
-
 // __isa_fn__ checks to make sure the argument is a JavaScript function object
 const isa_fn = item => (typeof item === 'function') ? true : false;
-
-
-// __isa_img__ checks to make sure the argument is a DOM &lt;img> element
-const isa_img = item => (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
 
 
 // __isa_number__ checks to make sure the argument is true number (excluding NaN)
@@ -247,39 +136,6 @@ const isa_obj = item => (Object.prototype.toString.call(item) === '[object Objec
 
 // __isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object
 const isa_quaternion = item => (item && item.type && item.type === 'Quaternion') ? true : false;
-
-
-// __isa_str__ checks to make sure the argument is a JavaScript String
-const isa_str = item => (item && item.substring) ? true : false;
-
-
-// __isa_vector__ checks to make sure the argument is a Scrawl-canvas Vector object
-const isa_vector = item => (item && item.type && item.type === 'Vector') ? true : false;
-
-
-// __isa_video__ checks to make sure the argument is a DOM &lt;video> element
-const isa_video = item => (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
-
-
-// __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
-
-// __locateTarget__ - Used by gradients
-const locateTargetSections = ['artefact', 'group', 'animation', 'tween', 'styles'];
-const locateTarget = (item) => {
-
-    if(item && item.substring){
-
-        let result;
-
-        return (locateTargetSections.some(section => {
-            
-            result = library[section][item];
-            return result;
-
-        })) ? result : false;
-    }
-    return false;
-};
 
 
 // __mergeInto__ takes two objects and merges the attributes of one into the other. This function mutates the 'original' object rather than generating a third, new onject
@@ -423,35 +279,18 @@ const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true 
 // #### Exports
 export {
     addStrings,
-    convertLength,
-    capitalize,
     convertTime,
-    defaultNonReturnFunction,
-    defaultArgReturnFunction,
-    defaultThisReturnFunction,
-    defaultFalseReturnFunction,
-    defaultZeroReturnFunction,
-    defaultBlankStringReturnFunction,
-    defaultPromiseReturnFunction,
-    ensureInteger,
-    ensurePositiveInteger,
-    ensureFloat,
-    ensurePositiveFloat,
-    ensureString,
+    λnull,
+    λthis,
+    λpromise,
     generateUuid,
     isa_boolean,
     isa_canvas,
     isa_dom,
-    isa_engine,
     isa_fn,
-    isa_img,
     isa_number,
     isa_obj,
     isa_quaternion,
-    isa_str,
-    isa_vector,
-    isa_video,
-    locateTarget,
     mergeDiscard,
     mergeInto,
     mergeOver,

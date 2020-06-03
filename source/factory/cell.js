@@ -41,8 +41,7 @@
 import { artefact, asset, tween, radian, constructors, 
     styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
 
-import { convertLength, generateUuid, isa_canvas, isa_obj, mergeOver, xt, xtGet, 
-    defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
+import { generateUuid, isa_canvas, isa_obj, mergeOver, xt, xtGet, λthis, λnull } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
@@ -188,14 +187,14 @@ delete P.defs.sourceLoaded;
 
 // #### Packet/Clone management
 // This functionality is disabled for Cell objects
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 
 
 // #### Kill functionality

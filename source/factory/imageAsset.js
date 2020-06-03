@@ -17,8 +17,7 @@
 
 // #### Imports
 import { constructors, canvas, cell, group, artefact } from '../core/library.js';
-import { mergeOver, isa_obj, 
-    defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, isa_obj, λthis, λnull } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -69,13 +68,13 @@ P.saveAsPacket = function () {
 
     return [this.name, this.type, this.lib, {}];
 };
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 
 
 // #### Clone management
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 
 
 // #### Kill management

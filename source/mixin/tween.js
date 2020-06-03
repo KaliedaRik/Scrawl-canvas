@@ -4,8 +4,28 @@
 
 
 // #### Imports
+import * as library from '../core/library.js';
 import { constructors, animationtickers } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, λnull } from '../core/utilities.js';
+
+
+// __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
+const locateTargetSections = ['artefact', 'group', 'animation', 'tween', 'styles'];
+const locateTarget = (item) => {
+
+    if(item && item.substring){
+
+        let result;
+
+        return (locateTargetSections.some(section => {
+            
+            result = library[section][item];
+            return result;
+
+        })) ? result : false;
+    }
+    return false;
+};
 
 
 // #### Export function
@@ -93,7 +113,7 @@ export default function (P = {}) {
 
         this.action = item;
         
-        if (typeof this.action !== 'function') this.action = defaultNonReturnFunction;
+        if (typeof this.action !== 'function') this.action = λnull;
     };
 
 

@@ -132,9 +132,7 @@
 
 // #### Imports
 import { artefact, group, tween } from '../core/library.js';
-import { defaultNonReturnFunction, mergeOver, mergeInto, mergeDiscard, 
-    isa_obj, isa_number, isa_boolean, xt, xta, xto, xtGet, 
-    addStrings, pushUnique, removeItem } from '../core/utilities.js';
+import { λnull, mergeOver, mergeInto, mergeDiscard, isa_obj, isa_number, isa_boolean, xt, xta, xto, xtGet, addStrings, pushUnique, removeItem } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
@@ -455,7 +453,7 @@ export default function (P = {}) {
     };
 
 // Specific factories can overwrite this function to perform additional actions required to clean themselves from the Scrawl-canvas system
-    P.factoryKill = defaultNonReturnFunction;
+    P.factoryKill = λnull;
 
 
 
@@ -1061,7 +1059,7 @@ export default function (P = {}) {
         this.initializeDomPositions();
     };
 
-    P.initializeDomPositions = defaultNonReturnFunction;
+    P.initializeDomPositions = λnull;
 
 
 // `setCoordinateHelper` - internal helper function used by positional and dimensional setter (S.) functions. Arguments are:
@@ -1386,7 +1384,7 @@ export default function (P = {}) {
 
 
 // `cleanDimensionsAdditionalActions` - overwritten by some artefact factory files
-    P.cleanDimensionsAdditionalActions = defaultNonReturnFunction;
+    P.cleanDimensionsAdditionalActions = λnull;
 
 
 // `cleanLock` - clean function for __lockTo__ array
@@ -1665,10 +1663,6 @@ export default function (P = {}) {
     };
 
 
-// `cleanStampPositionsAdditionalActions` - some artefact types need to perform additional calculations to finalize the values in the __currentStampPosition__ array. Those factory functions will overwrite this function as required.
-    // P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;
-
-
 // `cleanStampHandlePositions` 
 // + an entity's __currentStampHandlePosition__ values get applied after the canvas grid has been set up for the stamp operation. 
 // + Entities include handle values as part of their 'path' calculation.
@@ -1738,7 +1732,7 @@ export default function (P = {}) {
 
         if (this.domElement && this.collides) this.dirtyPathObject = true;
     };
-    P.cleanStampHandlePositionsAdditionalActions = defaultNonReturnFunction;
+    P.cleanStampHandlePositionsAdditionalActions = λnull;
 
 // #### Collision functionality
 
@@ -2099,11 +2093,11 @@ P.pickupArtefact = function (items = {}) {
 
 
 // `updatePathSubscribers`
-    P.updatePathSubscribers = defaultNonReturnFunction;
+    P.updatePathSubscribers = λnull;
 
 
 // `updateImageSubscribers`
-    P.updateImageSubscribers = defaultNonReturnFunction;
+    P.updateImageSubscribers = λnull;
 
 // Return the prototype
     return P;

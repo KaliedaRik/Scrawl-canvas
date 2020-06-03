@@ -14,8 +14,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, generateUuid, xt, isa_obj, 
-    defaultNonReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
+import { mergeOver, generateUuid, xt, isa_obj, λnull, λthis } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -62,13 +61,13 @@ P.saveAsPacket = function () {
 
     return [this.name, this.type, this.lib, {}];
 };
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 
 
 // #### Clone management
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 
 
 // #### Kill management
@@ -108,7 +107,7 @@ S.source = function (items = []) {
 // #### Prototype functions
 
 // Sprite assets do not use the `checkSource` function. Instead, Picture entitys will interrogate the checkSpriteFrame function (defined in mixin/assetConsumer.js)
-P.checkSource = defaultNonReturnFunction;
+P.checkSource = λnull;
 
 // `gettableSpriteAssetAtributes`, `settableSpriteAssetAtributes` - exported Arrays.
 const gettableSpriteAssetAtributes = [];

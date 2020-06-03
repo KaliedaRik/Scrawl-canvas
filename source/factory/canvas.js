@@ -31,8 +31,7 @@
 // #### Imports
 import { cell, constructors, artefact, group } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, xt, 
-    defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
+import { generateUuid, mergeOver, pushUnique, removeItem, xt, λthis, λnull } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeState } from './state.js';
@@ -235,14 +234,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet/Clone management
 // This functionality is disabled for Canvas objects
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 
 
 // #### Kill functionality
