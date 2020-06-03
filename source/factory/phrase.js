@@ -448,9 +448,8 @@ S.lineHeight = function (item) {
 
     this.lineHeight = ensurePositiveFloat(item, 3);
 
-    // TODO: temporary fix that needs a longer-term solution
-    // + text display, entity height and pathObject fall out of sync at small/negative values
-    // + won't be resolved without a proper fix for the height issue!
+    // TODO: text display, entity height and pathObject fall out of sync at small/negative values
+    // + This is a temporary fix
     if (this.lineHeight < 0.5) this.lineHeight = 0.5;
     
     this.dirtyPathObject = true;
@@ -460,7 +459,8 @@ D.lineHeight = function (item) {
 
     this.lineHeight += ensureFloat(item, 3);
 
-    // TODO: temporary fix that needs a longer-term solution (see setter above)
+    // TODO: text display, entity height and pathObject fall out of sync at small/negative values
+    // + This is a temporary fix
     if (this.lineHeight < 0.5) this.lineHeight = 0.5;
 
     this.dirtyPathObject = true;
@@ -796,6 +796,7 @@ P.cleanPathObject = function () {
             this.fontAttributes.buildFont(this.scale);
             this.dirtyText = true;
             this.dirtyMimicDimensions = true;
+            this.dirtyPositionSubscribers = true;
         }
         if (this.dirtyText) this.buildText();
 
