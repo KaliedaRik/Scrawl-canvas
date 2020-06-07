@@ -261,28 +261,29 @@ const releaseFilterWorker = function (f) {
     filterPool.push(f);
 };
 
+// #### IMPORTANT!
+// + Almost all modern browsers support import.meta.url
+// + Toolchain bundlers generally DO NOT SUPPORT import.meta.url
+// + The workaround is to gather all web worker code into a single file, string it, and build an url from that string. Yes, it is ugly. No, there is no viable production-ready alternative to the following.
+//
+// For use in a website that does not use webpack, rollup, parcel, etc in their toolchain
+// + Comment out all the lines marked 'BUNDLED SITE'
+// + Uncomment the lines marked 'MODERN SITE'
+// 
+// By default, Scrawl-canvas is distributed in a bundler-safe form
+
+import { filterUrl } from '../worker/filter-stringed.js';                       // BUNDLED SITE
+
 // __buildFilterWorker__ - create a new filter web worker
 const buildFilterWorker = function () {
 
-    // #### The correct code
-    // This code has been commented out because of the Babel issue
-    // + To use the worker file (as is right and proper!), uncomment the following 4 code lines and comment out all the `filterCode` and `filterUrl` code at the end of this file.
+    // let path = import.meta.url.slice(0, -('factory/filter.js'.length));      // MODERN SITE
+    // let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?     // MODERN SITE
+    //     `${path}worker/filter_canvas.js` :                                   // MODERN SITE
+    //     `${path}worker/filter.js`;                                           // MODERN SITE
 
-    // let path = import.meta.url.slice(0, -('factory/filter.js'.length))
-
-    // let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ? 
-    //     `${path}worker/filter.js` : 
-    //     `${path}worker/filter.js`;
-
-    // Sept 2019 - chrome does not yet support module workers
-    // ```
-    // return new Worker(filterUrl, {type: 'module'});
-    // ```
-    return new Worker(filterUrl);
+    return new Worker(filterUrl);                                               // BUNDLED SITE
 };
-
-// Babel issue fix - create a URL from a code string stored in worker/filter-stringed.js
-import { filterUrl } from '../worker/filter-stringed.js';
 
 
 // `Exported function` __actionFilterWorker__ - send a task to the filter web worker, and retrieve the resulting image. This function returns a Promise.
