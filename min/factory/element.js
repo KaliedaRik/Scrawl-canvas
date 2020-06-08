@@ -25,6 +25,7 @@ if (el) {
 el.id = this.name;
 if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
 }
+this.apply();
 return this;
 };
 let P = Element.prototype = Object.create(Object.prototype);

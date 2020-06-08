@@ -131,7 +131,6 @@ let defaultAttributes = {
     interferenceLoops: 2,
     interferenceFactor: 1.03,
 
-
 // The Loom entity does not use the [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts. 
 //
 // It does, however, use these attributes (alongside their setters and getters): __visibility__, __order__, __delta__, __host__, __group__, __anchor__, __collides__.
@@ -141,8 +140,6 @@ let defaultAttributes = {
     host: null,
     group: null,
     anchor: null,
-    collides: false,
-
 
 // __noCanvasEngineUpdates__ - Boolean flag - Canvas engine updates are required for the Loom's border - strokeStyle and line styling; if a Loom is to be drawn without a border, then setting this flag to `true` may help improve rendering efficiency.
     noCanvasEngineUpdates: false,

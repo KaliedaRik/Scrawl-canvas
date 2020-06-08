@@ -1,6 +1,6 @@
 import { constructors, artefact } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta } from '../core/utilities.js';
-import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
+import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
 import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
 import positionMix from '../mixin/position.js';
@@ -481,6 +481,18 @@ self.dirtyScale = true;
 }
 resolve(true);
 });
+};
+P.apply = function() {
+applyCoreResizeListener();
+this.prepareStamp();
+let self = this;
+this.stamp()
+.then(() => {
+domShow(self.name);
+self.dirtyPathObject = true;
+self.cleanPathObject();
+})
+.catch(err => console.log(err));
 };
 return P;
 };

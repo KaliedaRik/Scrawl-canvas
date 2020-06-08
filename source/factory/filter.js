@@ -272,17 +272,26 @@ const releaseFilterWorker = function (f) {
 // 
 // By default, Scrawl-canvas is distributed in a bundler-safe form
 
-import { filterUrl } from '../worker/filter-stringed.js';                       // BUNDLED SITE
+// BUNDLED SITE
+import { filterUrl } from '../worker/filter-stringed.js';                       
 
 // __buildFilterWorker__ - create a new filter web worker
 const buildFilterWorker = function () {
 
-    // let path = import.meta.url.slice(0, -('factory/filter.js'.length));      // MODERN SITE
-    // let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?     // MODERN SITE
-    //     `${path}worker/filter_canvas.js` :                                   // MODERN SITE
-    //     `${path}worker/filter.js`;                                           // MODERN SITE
+    // MODERN SITE
+    // let path = import.meta.url.slice(0, -('factory/filter.js'.length)); 
 
-    return new Worker(filterUrl);                                               // BUNDLED SITE
+    // MODERN SITE    
+    // let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?    
+
+    // MODERN SITE 
+    //     `${path}worker/filter_canvas.js` :    
+
+    // MODERN SITE                              
+    //     `${path}worker/filter.js`;                                           
+
+    // BUNDLED SITE
+    return new Worker(filterUrl);                                               
 };
 
 

@@ -83,7 +83,9 @@ return filterPool.shift();
 const releaseFilterWorker = function (f) {
 filterPool.push(f);
 };
+import { filterUrl } from '../worker/filter-stringed.js';
 const buildFilterWorker = function () {
+return new Worker(filterUrl);
 };
 const actionFilterWorker = function (worker, items) {
 return new Promise((resolve, reject) => {

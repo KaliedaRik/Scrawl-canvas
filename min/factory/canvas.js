@@ -96,6 +96,7 @@ el.setAttribute('aria-describedby', ariaDescription.id);
 this.cleanAria();
 }
 this.dirtyCells = true;
+this.apply();
 if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
 return this;
 };
