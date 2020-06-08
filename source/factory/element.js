@@ -29,6 +29,7 @@
 // + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
 // + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
 // + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
+// + [Component-002](../../demo/component-002.html) - Scrawl-canvas stack element components
 
 
 // #### Imports
