@@ -139,7 +139,7 @@ let controls = function () {
     };
 }();
 
-scrawl.addListener('up', controls, '.controls');
+scrawl.addListener('up', controls, '.control_button');
 
 // #### Development and testing
 console.log(scrawl.library);

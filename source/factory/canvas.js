@@ -161,6 +161,7 @@ const Canvas = function (items = {}) {
     }
 
     this.dirtyCells = true;
+    this.apply();
 
     if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
     

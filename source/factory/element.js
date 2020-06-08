@@ -77,6 +77,8 @@ const Element = function (items = {}) {
 
         if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
     }
+    this.apply();
+    
     return this;
 };
 
