@@ -132,7 +132,7 @@
 
 // #### Imports
 import { artefact, group, tween } from '../core/library.js';
-import { λnull, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique } from '../core/utilities.js';
+import { λnull, mergeOver, mergeInto, mergeDiscard, isa_obj, isa_number, isa_boolean, xt, xta, xto, xtGet, addStrings, pushUnique, removeItem } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
@@ -237,13 +237,79 @@ export default function (P = {}) {
 // + Dimensions values WILL respect the artefact's `scale` attribute.
         dimensions: null,
 
+// __delta__ - a Javascript object containing `{key:value, key:value, etc}` attributes. 
+// + As part of the Display cycle, delta values get added to artefact attribute values - this is a very simple form of animation.
+// + __noDeltaUpdates__ - Boolean flag to switch off the automatic application of delta attribute values as part of each iteration of the Display cycle.
+// + Delta updates can be invoked independently from the Display cycle by invoking `artefact.updateByDelta`, `artefact.reverseByDelta`.
+// + In addition to using `artefact.set`, we can also update the delta object values using `artefact.setDeltaValues`.
+//
+// ```
+// // This Block artefact will animate itself across the <canvas> element
+// // - it will move to the right and upwards until the `delta` values are updated
+// // - animation will stop when the `noDeltaUpdates` flag is set
+// let myBlock = scrawl.makeBlock({
+//     start: ['left', 500],
+//     delta: {
+//         startX: 0.5,
+//         startY: '-0.3',
+//     },
+//     noDeltaUpdates: false,
+// });
+// ```
+        delta: null,
+        noDeltaUpdates: false,
+
+// __pivot__ - reference artefact object. Can also be set using the artefact's name-String.
+        pivot: '',
+
+// __pivotCorner__ - Element artefacts allow other artefacts to use their corner positions as pivots, by setting this attribute to `topLeft`, `topRight`, `bottomRight` or `bottomLeft`; default is `''` to use the Element's start coordinate.
+        pivotCorner: '',  
+
+// __pivotPin__ - Polyline entitys are composed of a set of pin coordinates with the start being pin[0]; can reference other pins by setting this attribute to the appropriate index value (for example, the second pin will be pin[1]).
+        pivotPin: 0,
 
 // __pivoted__ - internal Array holding details of the artefacts using this artefact as their pivot reference.
         pivoted: null,
 
+// __addPivotHandle__, __addPivotOffset__, __addPivotRotation__ - Boolean flags. When set, the artifact will add its own values to the reference artefact's values, rather than use them as replacement values.
+        addPivotHandle: false,
+        addPivotOffset: true,
+        addPivotRotation: false,
+
+// __path__ - reference Shape entity object. Can also be set using the Shape's name-String.
+        path: '',
+
+// __pathPosition__ - float Number between `0.0` - `1.0` representing the distance along the Shape path which is to be used as the reference coordinate.
+        pathPosition: 0,
+
+// __addPathHandle__, __addPathOffset__, __addPathRotation__ - Boolean flags. When set, the artifact will add its own values to the reference artefact's values, rather than use them as replacement values.
+        addPathHandle: false,
+        addPathOffset: true,
+        addPathRotation: false,
+        constantPathSpeed: false,
+
+// __mimic__ - reference artefact object. Can also be set using the artefact's name-String.
+        mimic: '',
 
 // __mimicked__ - internal Array holding details of the artefacts using this artefact as their mimic reference.
         mimicked: null,
+
+// __useMimic...__ - a set of Boolean flags determining which attributes should be taken from the mimic reference artefact. By default, the artefact will use its own attribute values; setting any of these flags changes the behaviour for that attribute.
+        useMimicDimensions: false,
+        useMimicScale: false,
+        useMimicStart: false,
+        useMimicHandle: false,
+        useMimicOffset: false,
+        useMimicRotation: false,
+        useMimicFlip: false,
+
+// __addOwn...ToMimic__ - a set of Boolean flags determining which mimic attributes should be added to this artefact's own attribute values. By default, none are added; setting any of these flags changes the behaviour for that attribute.
+        addOwnDimensionsToMimic: false,
+        addOwnScaleToMimic: false,
+        addOwnStartToMimic: false,
+        addOwnHandleToMimic: false,
+        addOwnOffsetToMimic: false,
+        addOwnRotationToMimic: false,
 
 
 // __lockTo__ - `[x-lock, y-lock]` Array; locks can be set to: `start` (the default), `pivot`, `path`, `mimic`, or `mouse`.
@@ -262,6 +328,13 @@ export default function (P = {}) {
 // + values represent ___degrees___, not radians.
 // + Some effort is made in the code to keep this value within the bounds of `-360` and `+360`. Value is measured in degrees (not radians!)
         roll: 0,
+
+// __collides__ - by default, artefacts do not perform collision detection; it has to be switched on by setting this Boolean flag.
+// + mouse/touch cursor position detection over the artefact - for a range of functionalities including _drag-and-drop_, hover state, etc - is enabled by default and cannot be switched off.
+        collides: false,
+
+// __sensorSpacing__ - integer Number value representing the distance (measured in px) between collision detection sensors placed along the artefact's stroke path.
+        sensorSpacing: 50,
 
 
 // ##### Animation speed
@@ -282,10 +355,6 @@ export default function (P = {}) {
         noCanvasEngineUpdates: false,
         noFilters: false,
         noPathUpdates: false,
-
-
-// __purge__ - ?
-        purge: null,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -294,7 +363,7 @@ export default function (P = {}) {
     P.packetExclusions = pushUnique(P.packetExclusions, ['pathObject', 'mimicked', 'pivoted']);
     P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)', 'Subscriber$']);
     P.packetCoordinates = pushUnique(P.packetCoordinates, ['start', 'handle', 'offset']);
-    P.packetObjects = pushUnique(P.packetObjects, ['group']);
+    P.packetObjects = pushUnique(P.packetObjects, ['group', 'pivot', 'path', 'mimic']);
     P.packetFunctions = pushUnique(P.packetFunctions, []);
 
     P.processPacketOut = function (key, value, includes) {
@@ -385,6 +454,7 @@ export default function (P = {}) {
 
 // Specific factories can overwrite this function to perform additional actions required to clean themselves from the Scrawl-canvas system
     P.factoryKill = λnull;
+
 
 
 // #### Get, Set, deltaSet
@@ -601,6 +671,252 @@ export default function (P = {}) {
         this.dirtyDimensions = true;
     }
 
+// __sensorSpacing__
+    S.sensorSpacing = function (val) {
+
+        this.sensorSpacing = val;
+        if (this.collides) this.dirtyCollision = true;
+    };
+    D.sensorSpacing = function (val) {
+
+        this.sensorSpacing += val;
+        if (this.collides) this.dirtyCollision = true;
+    };
+
+
+// __pivot__
+    S.pivot = function (item) {
+
+        if (isa_boolean(item) && !item) {
+
+            this.pivot = null;
+
+            if (this.lockTo[0] === 'pivot') this.lockTo[0] = 'start';
+            if (this.lockTo[1] === 'pivot') this.lockTo[1] = 'start';
+
+            this.dirtyStampPositions = true;
+            this.dirtyStampHandlePositions = true;
+        }
+        else {
+
+            let oldPivot = this.pivot,
+                newPivot = (item.substring) ? artefact[item] : item,
+                name = this.name;
+
+            if (newPivot && newPivot.name) {
+
+                if (oldPivot && oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
+
+                pushUnique(newPivot.pivoted, name);
+
+                this.pivot = newPivot;
+                this.dirtyStampPositions = true;
+                this.dirtyStampHandlePositions = true;
+            }
+        }
+    };
+
+
+// __pivotCorner__
+    P.pivotCorners = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
+    S.pivotCorner = function (item) {
+
+        if (this.pivotCorners.indexOf(item) >= 0) this.pivotCorner = item;
+    };
+
+
+// __addPivotHandle__, __addPivotOffset__, __addPivotRotation__
+    S.addPivotHandle = function (item) {
+
+        this.addPivotHandle = item;
+        this.dirtyHandle = true;
+    };
+    S.addPivotOffset = function (item) {
+
+        this.addPivotOffset = item;
+        this.dirtyOffset = true;
+    };
+    S.addPivotRotation = function (item) {
+
+        this.addPivotRotation = item;
+        this.dirtyRotation = true;
+    };
+
+
+// __path__
+    S.path = function (item) {
+
+        if (isa_boolean(item) && !item) {
+
+            this.path = null;
+
+            if (this.lockTo[0] === 'path') this.lockTo[0] = 'start';
+            if (this.lockTo[1] === 'path') this.lockTo[1] = 'start';
+
+            this.dirtyStampPositions = true;
+            this.dirtyStampHandlePositions = true;
+        }
+        else {
+
+            let oldPath = this.path,
+                newPath = (item.substring) ? artefact[item] : item,
+                name = this.name;
+
+            if (newPath && newPath.name && newPath.useAsPath) {
+
+                if (oldPath && oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
+
+                pushUnique(newPath.pathed, name);
+
+                this.path = newPath;
+                this.dirtyStampPositions = true;
+                this.dirtyStampHandlePositions = true;
+            }
+        }
+    };
+
+//  __pathPosition__
+// + TODO: current functionality is for pathPosition to loop - is there a case for adding a pathPosition loop flag? If yes, then when that flag is false values < 0 would be corrected back to 0, and vals > 1 would be corrected back to 1.
+    S.pathPosition = function (item) {
+
+        if (item < 0) item = Math.abs(item);
+        if (item > 1) item = item % 1;
+
+        this.pathPosition = parseFloat(item.toFixed(6));
+        this.dirtyStampPositions = true;
+        this.dirtyStampHandlePositions = true;
+        this.currentPathData = false;
+    };
+    D.pathPosition = function (item) {
+
+        let pos = this.pathPosition + item
+
+        if (pos < 0) pos += 1;
+        if (pos > 1) pos = pos % 1;
+
+        this.pathPosition = parseFloat(pos.toFixed(6));
+        this.dirtyStampPositions = true;
+        this.dirtyStampHandlePositions = true;
+        this.currentPathData = false;
+    };
+
+
+// __addPathHandle__, __addPathOffset__, __addPathRotation__
+    S.addPathHandle = function (item) {
+
+        this.addPathHandle = item;
+        this.dirtyHandle = true;
+    };
+    S.addPathOffset = function (item) {
+
+        this.addPathOffset = item;
+        this.dirtyOffset = true;
+    };
+    S.addPathRotation = function (item) {
+
+        this.addPathRotation = item;
+        this.dirtyRotation = true;
+    };
+
+
+// __mimic__
+    S.mimic = function (item) {
+
+        if (isa_boolean(item) && !item) {
+
+            this.mimic = null;
+
+            if (this.lockTo[0] === 'mimic') this.lockTo[0] = 'start';
+            if (this.lockTo[1] === 'mimic') this.lockTo[1] = 'start';
+
+            this.dirtyStampPositions = true;
+            this.dirtyStampHandlePositions = true;
+        }
+        else {
+
+            let oldMimic = this.mimic,
+                newMimic = (item.substring) ? artefact[item] : item,
+                name = this.name;
+
+            if (newMimic && newMimic.name) {
+
+                if (oldMimic && oldMimic.name !== newMimic.name) removeItem(oldMimic.mimicked, name);
+
+                pushUnique(newMimic.mimicked, name);
+
+                this.mimic = newMimic;
+                this.dirtyStampPositions = true;
+                this.dirtyStampHandlePositions = true;
+            }
+        }
+    };
+
+
+// __useMimicDimensions__, __useMimicScale__, __useMimicStart__, __useMimicHandle__, __useMimicOffset__, __useMimicRotation__
+    S.useMimicDimensions = function (item) {
+
+        this.useMimicDimensions = item;
+        this.dirtyDimensions = true;
+    };
+    S.useMimicScale = function (item) {
+
+        this.useMimicScale = item;
+        this.dirtyScale = true;
+    };
+    S.useMimicStart = function (item) {
+
+        this.useMimicStart = item;
+        this.dirtyStart = true;
+    };
+    S.useMimicHandle = function (item) {
+
+        this.useMimicHandle = item;
+        this.dirtyHandle = true;
+    };
+    S.useMimicOffset = function (item) {
+
+        this.useMimicOffset = item;
+        this.dirtyOffset = true;
+    };
+    S.useMimicRotation = function (item) {
+
+        this.useMimicRotation = item;
+        this.dirtyRotation = true;
+    };
+
+// __addOwnDimensionsToMimic__, __addOwnScaleToMimic__, __addOwnStartToMimic__, __addOwnHandleToMimic__, __addOwnOffsetToMimic__, __addOwnRotationToMimic__
+    S.addOwnDimensionsToMimic = function (item) {
+
+        this.addOwnDimensionsToMimic = item;
+        this.dirtyDimensions = true;
+    };
+    S.addOwnScaleToMimic = function (item) {
+
+        this.addOwnScaleToMimic = item;
+        this.dirtyScale = true;
+    };
+    S.addOwnStartToMimic = function (item) {
+
+        this.addOwnStartToMimic = item;
+        this.dirtyStart = true;
+    };
+    S.addOwnHandleToMimic = function (item) {
+
+        this.addOwnHandleToMimic = item;
+        this.dirtyHandle = true;
+    };
+    S.addOwnOffsetToMimic = function (item) {
+
+        this.addOwnOffsetToMimic = item;
+        this.dirtyOffset = true;
+    };
+    S.addOwnRotationToMimic = function (item) {
+
+        this.addOwnRotationToMimic = item;
+        this.dirtyRotation = true;
+    };
+            
+
 // __lockXTo__, __lockYTo__, __lockTo__
     S.lockTo = function (item) {
 
@@ -639,6 +955,7 @@ export default function (P = {}) {
         this.dirtyRotation = true;
     };
 
+
 // __scale__
     S.scale = function (item) {
 
@@ -649,6 +966,12 @@ export default function (P = {}) {
 
         this.scale += item;
         this.dirtyScale = true;
+    };
+
+// __delta__
+    S.delta = function (items = {}) {
+
+        if (items) this.delta = mergeDiscard(this.delta, items);
     };
 
 // __host__ - internal function
@@ -693,72 +1016,6 @@ export default function (P = {}) {
 
 
 // #### Prototype functions
-
-// `purgeArtefact` - Artefact objects gather many attributes during their creation. Many of these may not be subsequentlyt used - for instance, if the artefact is never going to mimic another artefact, then it doesn't need all the attributes and flags associated with mimic functionality. In such cases, we can purge the artefact object of those attributes to free up a tiny bit of extra memory
-// + Argument can be a string of value `pivot`, `mimic`, `path`, `filter`, or an array of such strings.
-// + Passing the argument `all` will purge all attributes listed in the `doPurge` internal function.
-// + Clone functionality - include items to be purged
-    P.purgeArtefact = function (item) {
-
-    	const doPurge = function (art, val) {
-
-    		switch (val) {
-
-    			case 'pivot' :
-                    delete art.pivot;
-                    delete art.pivotCorner;
-                    delete art.pivotPin;
-                    delete art.addPivotHandle;
-                    delete art.addPivotOffset;
-                    delete art.addPivotRotation;
-    				break;
-
-                case 'mimic' :
-                    delete art.mimic;
-                    delete art.useMimicDimensions;
-                    delete art.useMimicScale;
-                    delete art.useMimicStart;
-                    delete art.useMimicHandle;
-                    delete art.useMimicOffset;
-                    delete art.useMimicRotation;
-                    delete art.useMimicFlip;
-                    delete art.addOwnDimensionsToMimic;
-                    delete art.addOwnScaleToMimic;
-                    delete art.addOwnStartToMimic;
-                    delete art.addOwnHandleToMimic;
-                    delete art.addOwnOffsetToMimic;
-                    delete art.addOwnRotationToMimic;
-                    break;
-
-                case 'path' :
-                    delete art.path;
-                    delete art.pathPosition;
-                    delete art.addPathHandle;
-                    delete art.addPathOffset;
-                    delete art.addPathRotation;
-                    delete art.constantPathSpeed;
-                    break;
-
-                case 'filter' :
-                    delete art.filter;
-                    delete art.filterAlpha;
-                    delete art.filterComposite;
-                    delete art.isStencil;
-                    break;
-    		}
-    	}
-
-    	if (item.substring) {
-
-            if (item === 'all') item = ['pivot', 'mimic', 'path', 'filter'];
-            else item = [item];
-        }
-
-    	if (Array.isArray(item)) item.forEach(purge => doPurge(this, purge));
-
-        return this;
-    };
-
 
 // `initializePositions` - Internal function called by all artefact factories 
 // + Setup initial Arrays and Objects, including `current...` and `...Subscriber` Arrays.
@@ -874,6 +1131,79 @@ export default function (P = {}) {
             c[0] = addStrings(myX, x);
             c[1] = addStrings(myY, y);
         }
+    };
+
+// `updateByDelta` - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the __delta__ attribute object then those __delta animations__ will start playing immediately.
+    P.updateByDelta = function () {
+
+        this.setDelta(this.delta);
+
+        return this;
+    };
+
+
+// `reverseByDelta` - The opposite action to 'updateByDelta'; values in the __delta__ attribute object will be subtracted from the current value for that Scrawl-canvas object.
+    P.reverseByDelta = function () {
+
+        let temp = {};
+        
+        Object.entries(this.delta).forEach(([key, val]) => {
+
+            if (val.substring) val = -(parseFloat(val)) + '%';
+            else val = -val;
+
+            temp[key] = val;
+        });
+
+        this.setDelta(temp);
+
+        return this;
+    };
+
+// `setDeltaValues`
+// + TODO - the idea is that we can do things like 'add:1', 'subtract:5', 'multiply:6', 'divide:3.4', etc
+// + for this to work, we need to do do work here to split the val string on the ':'
+// + for now, just do reverse and zero numbers
+    P.setDeltaValues = function (items = {}) {
+
+        let delta = this.delta, 
+            oldVal, action;
+
+        Object.entries(items).forEach(([key, requirement]) => {
+
+            if (xt(delta[key])) {
+
+                action = requirement;
+
+                oldVal = delta[key];
+
+                switch (action) {
+
+                    case 'reverse' :
+                        if (oldVal.toFixed) delta[key] = -oldVal;
+                        // TODO: reverse String% (and em, etc) values
+                        break;
+
+                    case 'zero' :
+                        if (oldVal.toFixed) delta[key] = 0;
+                        // TODO: zero String% (and em, etc) values
+                        break;
+
+                    case 'add' :
+                        break;
+
+                    case 'subtract' :
+                        break;
+
+                    case 'multiply' :
+                        break;
+
+                    case 'divide' :
+                        break;
+                }
+            }
+        })
+        return this;
     };
 
 
@@ -1404,28 +1734,163 @@ export default function (P = {}) {
     };
     P.cleanStampHandlePositionsAdditionalActions = λnull;
 
+// #### Collision functionality
 
-// // `getPathData`
-//     P.getPathData = function () {
+// `cleanCollisionData`
+// + We only need to recalculate collisions data when the artefact has been asked to perform some collision detection functionality - it does not happen as part of the Display cycle
+    P.cleanCollisionData = function () {
 
-//     	if (this.currentPathData) return this.currentPathData;
+        if (!this.currentCollisionRadius) this.currentCollisionRadius = 0;
+        if (!this.currentSensors) this.currentSensors = [];
 
-//         let pathPos = this.pathPosition,
-//             path = this.path,
-//             currentPathData;
+        if (!this.noUserInteraction) {
 
-//         if (path) {
+            if (this.dirtyCollision) {
 
-//             currentPathData = path.getPathPositionData(pathPos, this.constantPathSpeed);
+                this.dirtyCollision = false;
 
-//             if (this.addPathRotation) this.dirtyRotation = true;
+                this.calculateCollisionRadius();
 
-//             this.currentPathData = currentPathData;
+                if (this.collides) this.calculateSensors();
+            }
+        }
+        return [this.currentCollisionRadius, this.currentSensors];
+    };
 
-//             return currentPathData;
-//         }
-//         return false;
-//     };
+// `calculateCollisionRadius`
+// We can use the __currentCollisionRadius__ attribute to quickly calculate whether two given artefacts are capable of intersecting, before proceeding to check if they do intersect (assuming they can)
+    P.calculateCollisionRadius = function () {
+
+        if (!this.noUserInteraction) {
+
+            let stamp = this.currentStampPosition,
+                handle = this.currentStampHandlePosition,
+                dims = this.currentDimensions,
+                scale = this.currentScale;
+
+            let radii = [],
+                sx = stamp[0],
+                sy = stamp[1],
+                lx = (sx - (handle[0] * scale)),
+                ty = (sy - (handle[1] * scale)),
+                rx = lx + (dims[0] * scale),
+                by = ty + (dims[1] * scale);
+
+            // BUG: fails for DOM-based artefacts (Stack, Canvas, Element) whose computed height is `0` - because: `auto`?
+            radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - ty) * (sy - ty))));
+            radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - by) * (sy - by))));
+            radii.push(Math.sqrt(((sx - lx) * (sx - lx)) + ((sy - by) * (sy - by))));
+            radii.push(Math.sqrt(((sx - rx) * (sx - rx)) + ((sy - ty) * (sy - ty))));
+
+            this.currentCollisionRadius = Math.ceil(Math.max(...radii));
+        }
+    };
+
+// `calculateSensors` - internal function - overwritten by various artefact factories to meet their specific requirements
+    P.calculateSensors = function () {
+
+        if (!this.noUserInteraction) {
+
+            let stamp = this.currentStampPosition,
+                handle = this.currentStampHandlePosition,
+                dims = this.currentDimensions,
+                scale = this.currentScale,
+                upend = this.flipUpend,
+                reverse = this.flipReverse;
+
+            let rotate = function(x, y, angle, sx, sy) {
+
+                let arr = [0, 0];
+
+                arr[0] = Math.atan2(y, x);
+                arr[0] += (angle * 0.01745329251);
+                arr[1] = Math.sqrt((x * x) + (y * y));
+
+                return [Math.round(arr[1] * Math.cos(arr[0])) + sx, Math.round(arr[1] * Math.sin(arr[0])) + sy];
+            };
+
+            let sensors = this.currentSensors;
+            sensors.length = 0;
+
+            let roll = this.roll,
+                sx = stamp[0],
+                sy = stamp[1],
+                handleX = (reverse) ? -handle[0] * scale : handle[0] * scale,
+                handleY = (upend) ? -handle[1] * scale : handle[1] * scale,
+                lx = -handleX,
+                ty = -handleY,
+                width = dims[0] * scale,
+                height = dims[1] * scale,
+                rx = (reverse) ? lx - width : lx + width,
+                by = (upend) ? ty - height : ty + height;
+
+            sensors.push(rotate(lx, ty, roll, sx, sy));
+            sensors.push(rotate(rx, ty, roll, sx, sy));
+            sensors.push(rotate(rx, by, roll, sx, sy));
+            sensors.push(rotate(lx, by, roll, sx, sy));
+
+            let sensorSpacing = this.sensorSpacing || 50,
+                widthSensors = parseInt(width / sensorSpacing, 10),
+                heightSensors = parseInt(height / sensorSpacing, 10),
+                partial, place, i, iz;
+
+            if (widthSensors) {
+
+                let partial = width / (widthSensors + 1),
+                    place = lx;
+
+                for (i = 0; i < widthSensors; i++) {
+
+                    place += (reverse) ? -partial : partial;
+                    sensors.push(rotate(place, ty, roll, sx, sy));
+                    sensors.push(rotate(place, by, roll, sx, sy));
+                }
+            }
+
+            if (heightSensors) {
+
+                let partial = height / (heightSensors + 1),
+                    place = ty;
+
+                for (i = 0; i < heightSensors; i++) {
+
+                    place += (upend) ? -partial : partial;
+                    sensors.push(rotate(lx, place, roll, sx, sy));
+                    sensors.push(rotate(rx, place, roll, sx, sy));
+                }
+            }
+        }
+    };
+
+
+// `getSensors`
+    P.getSensors = function () {
+
+        let [entityRadius, entitySensors] = this.cleanCollisionData();
+        return entitySensors;
+    }
+
+// `getPathData`
+    P.getPathData = function () {
+
+    	if (this.currentPathData) return this.currentPathData;
+
+        let pathPos = this.pathPosition,
+            path = this.path,
+            currentPathData;
+
+        if (path) {
+
+            currentPathData = path.getPathPositionData(pathPos, this.constantPathSpeed);
+
+            if (this.addPathRotation) this.dirtyRotation = true;
+
+            this.currentPathData = currentPathData;
+
+            return currentPathData;
+        }
+        return false;
+    };
 
 
 // `checkHit`
@@ -1500,43 +1965,43 @@ export default function (P = {}) {
     };
 
 // `pickupArtefact`
-    P.pickupArtefact = function (items = {}) {
+P.pickupArtefact = function (items = {}) {
 
-        let {x, y} = items;
+    let {x, y} = items;
 
-        if (xta(x, y)) {
+    if (xta(x, y)) {
 
-            this.isBeingDragged = true;
-            this.currentDragCache.set(this.currentDragOffset);
+        this.isBeingDragged = true;
+        this.currentDragCache.set(this.currentDragOffset);
 
-            if (this.lockTo[0] === 'start') {
-                this.currentDragOffset[0] = this.currentStart[0] - x;
-            }
-            else if (this.lockTo[0] === 'pivot' && this.pivot) {
-                this.currentDragOffset[0] = this.pivot.get('startX') - x;
-            }
-            else if (this.lockTo[0] === 'mimic' && this.mimic) {
-                this.currentDragOffset[0] = this.mimic.get('startX') - x;
-            }
-
-            if (this.lockTo[1] === 'start') {
-                this.currentDragOffset[1] = this.currentStart[1] - y;
-            }
-            else if (this.lockTo[1] === 'pivot' && this.pivot) {
-                this.currentDragOffset[1] = this.pivot.get('startY') - y;
-            }
-            else if (this.lockTo[1] === 'mimic' && this.mimic) {
-                this.currentDragOffset[1] = this.mimic.get('startY') - y;
-            }
-
-            this.order += 9999;
-
-            this.group.batchResort = true;
-
-            if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
+        if (this.lockTo[0] === 'start') {
+            this.currentDragOffset[0] = this.currentStart[0] - x;
         }
-        return this;
-    };
+        else if (this.lockTo[0] === 'pivot' && this.pivot) {
+            this.currentDragOffset[0] = this.pivot.get('startX') - x;
+        }
+        else if (this.lockTo[0] === 'mimic' && this.mimic) {
+            this.currentDragOffset[0] = this.mimic.get('startX') - x;
+        }
+
+        if (this.lockTo[1] === 'start') {
+            this.currentDragOffset[1] = this.currentStart[1] - y;
+        }
+        else if (this.lockTo[1] === 'pivot' && this.pivot) {
+            this.currentDragOffset[1] = this.pivot.get('startY') - y;
+        }
+        else if (this.lockTo[1] === 'mimic' && this.mimic) {
+            this.currentDragOffset[1] = this.mimic.get('startY') - y;
+        }
+
+        this.order += 9999;
+
+        this.group.batchResort = true;
+
+        if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
+    }
+    return this;
+};
 
 // `dropArtefact`
     P.dropArtefact = function () {
@@ -1576,17 +2041,63 @@ export default function (P = {}) {
     };
 
 // `updatePivotSubscribers`
-    P.updatePivotSubscribers = λnull;
+    P.updatePivotSubscribers = function () {
+
+        this.pivoted.forEach(name => {
+
+            let instance = artefact[name];
+
+            if (instance) {
+
+                instance.dirtyStart = true;
+                if (instance.addPivotHandle) instance.dirtyHandle = true;
+                if (instance.addPivotOffset) instance.dirtyOffset = true;
+                if (instance.addPivotRotation) instance.dirtyRotation = true;
+
+                if (instance.type === 'Polyline') instance.dirtyPins = true;
+                else if (instance.type === 'Line' || instance.type === 'Quadratic' || instance.type === 'Bezier') instance.dirtyPins.push(this.name);
+            }
+        }, this);
+    };
 
 // `updateMimicSubscribers`
-    P.updateMimicSubscribers = λnull;
+    P.updateMimicSubscribers = function () {
+
+        let DMH = this.dirtyMimicHandle;
+        let DMO = this.dirtyMimicOffset;
+        let DMR = this.dirtyMimicRotation;
+        let DMS = this.dirtyMimicScale;
+        let DMD = this.dirtyMimicDimensions;
+
+        this.mimicked.forEach(name => {
+
+            let instance = artefact[name];
+
+            if (instance) {
+
+                if (instance.useMimicStart) instance.dirtyStart = true;
+                if (DMH && instance.useMimicHandle) instance.dirtyHandle = true;
+                if (DMO && instance.useMimicOffset) instance.dirtyOffset = true;
+                if (DMR && instance.useMimicRotation) instance.dirtyRotation = true;
+                if (DMS && instance.useMimicScale) instance.dirtyScale = true;
+                if (DMD && instance.useMimicDimensions) instance.dirtyDimensions = true;
+            }
+        });
+
+        this.dirtyMimicHandle = false;
+        this.dirtyMimicOffset = false;
+        this.dirtyMimicRotation = false;
+        this.dirtyMimicScale = false;
+        this.dirtyMimicDimensions = false;
+    };
+
 
 // `updatePathSubscribers`
     P.updatePathSubscribers = λnull;
 
+
 // `updateImageSubscribers`
     P.updateImageSubscribers = λnull;
-
 
 // Return the prototype
     return P;

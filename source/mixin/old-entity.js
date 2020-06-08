@@ -21,34 +21,9 @@ import { requestCell, releaseCell } from '../factory/cell.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from '../factory/filter.js';
 import { importDomImage } from '../factory/imageAsset.js';
 
-import positionMix from '../mixin/position.js';
-import deltaMix from '../mixin/delta.js';
-import pivotMix from '../mixin/pivot.js';
-import mimicMix from '../mixin/mimic.js';
-import pathMix from '../mixin/path.js';
-import anchorMix from '../mixin/anchor.js';
-import filterMix from '../mixin/filter.js';
-
 
 // #### Export function
 export default function (P = {}) {
-
-
-// #### Mixins
-// + [position](../mixin/position.html)
-// + [delta](../mixin/delta.html)
-// + [pivot](../mixin/pivot.html)
-// + [mimic](../mixin/mimic.html)
-// + [path](../mixin/path.html)
-// + [anchor](../mixin/anchor.html)
-// + [filter](../mixin/filter.html)
-    P = positionMix(P);
-    P = deltaMix(P);
-    P = pivotMix(P);
-    P = mimicMix(P);
-    P = pathMix(P);
-    P = anchorMix(P);
-    P = filterMix(P);
 
 
 // #### Shared attributes
@@ -363,7 +338,6 @@ export default function (P = {}) {
         return this;
     };
 
-
 // #### Prototype functions
 
 // `entityInit` - internal function, called by all entity factory constructors
@@ -387,8 +361,6 @@ export default function (P = {}) {
         this.set(items);
 
         this.midInitActions(items);
-
-        if (this.purge) this.purgeArtefact(this.purge);
     };
 
     P.midInitActions = λnull;
