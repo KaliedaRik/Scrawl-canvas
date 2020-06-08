@@ -13,9 +13,8 @@
 
 
 // ## Imports
-import { unstackedelement, unstackedelementnames, constructors } from '../core/library.js';
-import { generateUuid, pushUnique, removeItem, xt, isa_obj, isa_boolean, mergeOver } from '../core/utilities.js';
-import { uiSubscribedElements } from '../core/userInteraction.js';
+import { unstackedelement, constructors } from '../core/library.js';
+import { xt, mergeOver } from '../core/utilities.js';
 
 import { makeCanvas } from './canvas.js';
 

@@ -6,7 +6,7 @@
 
 // #### Imports
 import { mergeOver, xt } from '../core/utilities.js';
-import { assetnames, asset } from '../core/library.js';
+import { asset } from '../core/library.js';
 
 import { importImage } from '../factory/imageAsset.js';
 import { importVideo } from '../factory/videoAsset.js';

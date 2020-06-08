@@ -40,7 +40,7 @@
 // #### Imports
 import { constructors, asset, artefact } from '../core/library.js';
 
-import { mergeOver, xt, xta, addStrings, pushUnique, removeItem } from '../core/utilities.js';
+import { mergeOver, xta, addStrings, pushUnique, removeItem } from '../core/utilities.js';
 
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';

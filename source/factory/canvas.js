@@ -31,7 +31,7 @@
 // #### Imports
 import { cell, constructors, artefact, group } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, xt, λthis, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, λthis, λnull } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeState } from './state.js';
@@ -158,12 +158,9 @@ const Canvas = function (items = {}) {
         el.setAttribute('aria-describedby', ariaDescription.id);
 
         this.cleanAria();
-
-        // el.style.boxSizing = 'content-box'
     }
 
     this.dirtyCells = true;
-    this.apply();
 
     if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
     

@@ -5,8 +5,8 @@
 
 // #### Imports
 import * as library from '../core/library.js';
-import { constructors, animationtickers } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, λnull } from '../core/utilities.js';
+import { animationtickers } from '../core/library.js';
+import { mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, λnull } from '../core/utilities.js';
 
 
 // __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library

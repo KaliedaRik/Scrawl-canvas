@@ -13,8 +13,8 @@
 
 
 // #### Imports
-import { entity, asset, palette } from '../core/library.js';
-import { addStrings, λnull, mergeOver, xt, isa_obj, mergeDiscard } from '../core/utilities.js';
+import { entity, palette } from '../core/library.js';
+import { addStrings, λnull, mergeOver, isa_obj, mergeDiscard } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 import { makePalette } from '../factory/palette.js';

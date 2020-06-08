@@ -12,9 +12,9 @@
 
 
 // #### Imports
-import { constructors, artefact, group } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, isa_obj, isa_fn, isa_dom, isa_quaternion, xt, addStrings, xta } from '../core/utilities.js';
-import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
+import { constructors, artefact } from '../core/library.js';
+import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta } from '../core/utilities.js';
+import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
@@ -594,6 +594,7 @@ export default function (P = {}) {
             if (!this.pathCorners.length) this.addPathCorners();
 
             if (!this.currentCornersData) this.currentCornersData = [];
+
             let cornerData = this.currentCornersData;
             cornerData.length = 0;
             cornerData.push(...this.checkCornerPositions());
@@ -856,27 +857,6 @@ export default function (P = {}) {
 
             resolve(true);
         });
-    };
-
-
-// `apply`
-// + I really don't like this functionality - see if we can purge it from the code base?
-    P.apply = function() {
-
-        applyCoreResizeListener();
-
-        this.prepareStamp();
-
-        let self = this;
-
-        this.stamp()
-        .then(() => {
-
-            domShow(self.name);
-            self.dirtyPathObject = true;
-            self.cleanPathObject();
-        })
-        .catch(err => console.log(err));
     };
 
 // Return the prototype

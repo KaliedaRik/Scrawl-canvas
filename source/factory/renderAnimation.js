@@ -25,10 +25,9 @@
 
 // #### Imports
 import { animation, artefact, constructors } from '../core/library.js';
-// import { clear, compile, show, makeAnimationObserver } from '../core/document.js';
 import { clear, compile, show } from '../core/document.js';
 import { makeAnimationObserver } from '../core/events.js';
-import { mergeOver, pushUnique, removeItem, xt, isa_obj, isa_fn, λnull, λthis } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, λnull, λthis } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';

@@ -85,7 +85,9 @@ scrawl.makeWheel({
     shadowOffsetX: 4,
     shadowOffsetY: 4,
     shadowBlur: 2,
-    shadowColor: 'black'
+    shadowColor: 'black',
+
+    purge: 'all',
 
 }).clone({
     name: 'mywheel-draw',

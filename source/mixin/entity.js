@@ -11,10 +11,8 @@
 
 
 // #### Imports
-import * as library from '../core/library.js';
-import { λnull, generateUuid, isa_fn, mergeOver, pushUnique, xt, xta, addStrings } from '../core/utilities.js';
+import { λnull, mergeOver, pushUnique, xt, addStrings } from '../core/utilities.js';
 import { currentGroup, scrawlCanvasHold } from '../core/document.js';
-import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';

@@ -3,7 +3,7 @@
 
 
 // #### Imports
-import { mergeOver, mergeDiscard } from '../core/utilities.js';
+import { mergeOver, mergeDiscard, xt } from '../core/utilities.js';
 
 
 // #### Export function

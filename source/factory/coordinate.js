@@ -4,7 +4,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { xt, isa_obj, isa_number } from '../core/utilities.js';
+import { xt, isa_number } from '../core/utilities.js';
 
 
 // #### Coordinate constructor
@@ -163,11 +163,11 @@ P.scalarMultiply = function (item) {
 // Divide both Coordinate Array members by the argument Number
 P.scalarDivide = function (item) {
 
-    if (!isa_number(item)) throw new Error(`Coordinate error - scalarDivide() argument not a number: ${item}`);
-    if (!item) throw new Error(`Coordinate error - scalarDivide() divide by zero`);
+    if (item && item.toFixed) {
 
-    this[0] /= item;
-    this[1] /= item;
+        this[0] /= item;
+        this[1] /= item;
+    }
 
     return this;
 };
@@ -184,7 +184,7 @@ P.getMagnitude = function () {
 // Rotate the Coordinate by the argument number (treating the Coordinate as if it was a 2D vector) - the argument represents degrees, not radians
 P.rotate = function (angle) {
 
-    if (!isa_number(item)) throw new Error(`Coordinate error - rotate() argument not a number: ${angle}`);
+    // if (!isa_number(item)) throw new Error(`Coordinate error - rotate() argument not a number: ${angle}`);
 
     let stat_vr = [0, 0];
 

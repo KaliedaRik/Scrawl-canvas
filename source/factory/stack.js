@@ -35,9 +35,9 @@
 
 
 // #### Imports
-import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, λthis, λnull } from '../core/utilities.js';
-import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
+import { constructors, group, stack, element, artefact, canvas } from '../core/library.js';
+import { mergeOver, pushUnique, isa_dom, removeItem, xt, addStrings, λthis, λnull } from '../core/utilities.js';
+import { rootElements, setRootElementsSort, domShow } from '../core/document.js';
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 
 import { makeGroup } from './group.js';
@@ -96,7 +96,6 @@ const Stack = function (items = {}) {
             setRootElementsSort();
         }
     }
-
     return this;
 };
 

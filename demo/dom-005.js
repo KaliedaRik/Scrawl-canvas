@@ -23,7 +23,7 @@ porthole.set({
 // Create new elements and their associated Tweens (each star element has its own Tween)
 // + See Demo [Canvas-006](./canvas-006.html) for a more detailed explanation of this approach to generating new stars.
 let starCount = 0,
-    addNumber = 25;
+    addNumber = 100;
 
 let makeStars = function (buildNumber) {
 
@@ -49,11 +49,13 @@ let makeStars = function (buildNumber) {
             noFilters: true,
             noPathUpdates: true,
 
+            purge: 'all',
+
             css: {
                 backgroundColor: 'white',
                 borderRadius: '50%'
-            }
-        })
+            },
+        });
 
         let r1 = Math.random();
 
@@ -75,12 +77,10 @@ let makeStars = function (buildNumber) {
 
             definitions: [{
                 attribute: 'startX',
-                // integer: true,
                 start: 300,
                 end: 300 + x,
             }, {
                 attribute: 'startY',
-                // integer: true,
                 start: 300,
                 end: 300 + y,
             }, {
@@ -93,7 +93,7 @@ let makeStars = function (buildNumber) {
     }
 };
 
-makeStars(50);
+makeStars(100);
 
 
 // #### Scene animation

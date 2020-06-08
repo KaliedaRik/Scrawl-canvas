@@ -27,8 +27,6 @@ stack.addNewElement({
     group: 'my-hit-group',
     tag: 'div',
 
-    collides: true,
-
     text: 'Default square <div>',
 
     css: {
@@ -69,8 +67,6 @@ stack.addNewElement({
     handleX: 'center',
     handleY: 'center',
     roll: 30,
-
-    collides: true,
 
     classes: 'red-text',
 
@@ -140,7 +136,7 @@ stack.addNewElement({
 
 // Handle the pre-existing SVG elements that have been automatically imported into the stack
 
-// SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt __drag-and-drop__ functionality (because: collision functionality not implemented). We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.
+// SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas's inbuilt __drag-and-drop__ functionality. We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.
 stack.addNewElement({
 
     name: 'weather-icon-dragger',
@@ -155,7 +151,6 @@ stack.addNewElement({
     handleY: 'center',
 
     group: hitGroup.name,
-    collides: true,
 
     classes: 'circle',
     css: {
@@ -225,6 +220,9 @@ scrawl.makeRender({
     name: 'demo-animation',
     target: stack,
     afterShow: report,
+
+    // The elements in the stack don't know their positions, and thus their hit zones (for drag-and-drop), until after the first render. This one-time-run function is enough to get the elements to perform the necessary recalculations.
+    afterCreated: () => stack.set({ width: stack.get('width')}),
 });
 
 // #### Development and testing

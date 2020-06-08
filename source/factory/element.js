@@ -32,8 +32,8 @@
 
 
 // #### Imports
-import { group, element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
-import { generateUuid, pushUnique, mergeOver, removeItem, xt, isa_obj, isa_dom, isa_boolean } from '../core/utilities.js';
+import { element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
+import { pushUnique, removeItem, isa_dom } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeCanvas } from './canvas.js';
@@ -77,9 +77,6 @@ const Element = function (items = {}) {
 
         if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
     }
-
-    this.apply();
-    
     return this;
 };
 

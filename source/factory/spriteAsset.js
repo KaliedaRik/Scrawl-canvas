@@ -14,7 +14,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, generateUuid, xt, isa_obj, λnull, λthis } from '../core/utilities.js';
+import { mergeOver, isa_obj, λnull, λthis } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';

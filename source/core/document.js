@@ -7,7 +7,7 @@
 
 
 // #### Imports
-import { isa_canvas, generateUuid, isa_fn, isa_dom, pushUnique, removeItem, xt } from "./utilities.js";
+import { isa_canvas, generateUuid, isa_dom, pushUnique, removeItem, xt } from "./utilities.js";
 import { artefact, canvas, group, stack, css, xcss } from "./library.js";
 
 import { makeStack } from "../factory/stack.js";

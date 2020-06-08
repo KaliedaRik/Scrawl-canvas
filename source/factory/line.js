@@ -35,7 +35,7 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
+import { constructors } from '../core/library.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';

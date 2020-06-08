@@ -38,10 +38,9 @@
 
 
 // #### Imports
-import { artefact, asset, tween, radian, constructors, 
-    styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
+import { artefact, asset, tween, radian, constructors, styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
 
-import { generateUuid, isa_canvas, isa_obj, mergeOver, xt, xtGet, λthis, λnull } from '../core/utilities.js';
+import { generateUuid, isa_canvas, mergeOver, λthis, λnull } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 

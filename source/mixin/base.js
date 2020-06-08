@@ -15,7 +15,7 @@
 
 // #### Imports
 import * as library from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, generateUuid, isa_fn, isa_boolean, isa_obj, addStrings, xt, xta, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, generateUuid, isa_boolean, isa_obj, addStrings, xt, xta, λnull } from '../core/utilities.js';
 
 // #### Export function
 export default function (P = {}) {

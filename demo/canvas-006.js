@@ -35,6 +35,8 @@ let starling = scrawl.makeWheel({
     noPositionDependencies: true,
     noFilters: true,
     noUserInteraction: true,
+
+    purge: 'all',
 });
 
 let starCount = 0,

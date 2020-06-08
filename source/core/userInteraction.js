@@ -7,7 +7,7 @@
 
 // #### Imports
 import * as library from "./library.js";
-import { xt, xta, isa_dom, isa_fn, λnull } from "./utilities.js";
+import { xt, xta, isa_dom, λnull } from "./utilities.js";
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
