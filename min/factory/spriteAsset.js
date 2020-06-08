@@ -1,6 +1,5 @@
 import { constructors } from '../core/library.js';
-import { mergeOver, generateUuid, xt, isa_obj,
-defaultNonReturnFunction, defaultThisReturnFunction } from '../core/utilities.js';
+import { mergeOver, isa_obj, λnull, λthis } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 const SpriteAsset = function (items = {}) {
@@ -21,10 +20,10 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.saveAsPacket = function () {
 return [this.name, this.type, this.lib, {}];
 };
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
-P.clone = defaultThisReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
+P.clone = λthis;
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -42,7 +41,7 @@ this.sourceNaturalHeight = items[0].naturalHeight;
 this.sourceLoaded = items[0].complete;
 }
 };
-P.checkSource = defaultNonReturnFunction;
+P.checkSource = λnull;
 const gettableSpriteAssetAtributes = [];
 const settableSpriteAssetAtributes = [];
 const importSprite = function (...args) {

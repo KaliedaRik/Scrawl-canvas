@@ -1,6 +1,6 @@
 import * as library from "./library.js";
-import { xt, xta, isa_dom, isa_fn, defaultNonReturnFunction } from "./utilities.js";
-import { addListener, addNativeListener, removeListener, removeNativeListener } from "./document.js";
+import { xt, xta, isa_dom, λnull } from "./utilities.js";
+import { addListener, addNativeListener, removeListener, removeNativeListener } from "./events.js";
 import { makeAnimation } from "../factory/animation.js";
 const uiSubscribedElements = [];
 let trackMouse = false,
@@ -174,7 +174,7 @@ let event = items.event,
 origin = items.origin;
 let listener = (items.useNativeListener) ? addNativeListener : addListener,
 killListener = (items.useNativeListener) ? removeNativeListener : removeListener;
-let stop = defaultNonReturnFunction;
+let stop = λnull;
 if (items.preventDefault) {
 stop = (e) => {
 e.preventDefault();

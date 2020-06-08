@@ -375,8 +375,6 @@
     <span class="hljs-attr">group</span>: <span class="hljs-string">'my-hit-group'</span>,
     <span class="hljs-attr">tag</span>: <span class="hljs-string">'div'</span>,
 
-    <span class="hljs-attr">collides</span>: <span class="hljs-literal">true</span>,
-
     <span class="hljs-attr">text</span>: <span class="hljs-string">'Default square &lt;div&gt;'</span>,
 
     <span class="hljs-attr">css</span>: {
@@ -429,8 +427,6 @@
     <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">30</span>,
-
-    <span class="hljs-attr">collides</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">classes</span>: <span class="hljs-string">'red-text'</span>,
 
@@ -530,7 +526,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas’s inbuilt <strong>drag-and-drop</strong> functionality (because: collision functionality not implemented). We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.</p>
+              <p>SVG elements, because their child elements are effectively instructions on how to draw them, do not play nicely with Scrawl-canvas’s inbuilt <strong>drag-and-drop</strong> functionality. We can get around this issue by creating elements to be used for DnD, then pivot the SVG elements to those elements.</p>
 
             </div>
             
@@ -548,7 +544,6 @@
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
 
     <span class="hljs-attr">group</span>: hitGroup.name,
-    <span class="hljs-attr">collides</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">classes</span>: <span class="hljs-string">'circle'</span>,
     <span class="hljs-attr">css</span>: {
@@ -650,8 +645,7 @@ artefact[<span class="hljs-string">'simple-svg'</span>].set({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
     <span class="hljs-attr">target</span>: stack,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
+    <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
             
         </li>
         
@@ -661,6 +655,22 @@ artefact[<span class="hljs-string">'simple-svg'</span>].set({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>The elements in the stack don’t know their positions, and thus their hit zones (for drag-and-drop), until after the first render. This one-time-run function is enough to get the elements to perform the necessary recalculations.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    afterCreated: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> stack.set({ <span class="hljs-attr">width</span>: stack.get(<span class="hljs-string">'width'</span>)}),
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

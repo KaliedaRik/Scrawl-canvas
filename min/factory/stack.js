@@ -1,13 +1,11 @@
-import { constructors, group, stack, stacknames, element, artefact, artefactnames, canvas } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_dom, removeItem, xt, xto, addStrings, defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
-import { rootElements, setRootElementsSort, addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
+import { constructors, group, stack, element, artefact, canvas } from '../core/library.js';
+import { mergeOver, pushUnique, isa_dom, removeItem, xt, addStrings, λthis, λnull } from '../core/utilities.js';
+import { rootElements, setRootElementsSort, domShow } from '../core/document.js';
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 import { makeGroup } from './group.js';
 import { makeElement } from './element.js';
 import { makeCoordinate } from './coordinate.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 const Stack = function (items = {}) {
@@ -51,8 +49,6 @@ P.lib = 'stack';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = cascadeMix(P);
 P = domMix(P);
 let defaultAttributes = {
@@ -63,13 +59,13 @@ isResponsive: false,
 containElementsInHeight: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 P.saveAsPacket = function () {
 return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 P.kill = function () {
 let myname = this.name;
 removeItem(rootElements, myname);
@@ -131,7 +127,6 @@ if (items.dirtyOffset) art.dirtyOffset = true;
 if (items.dirtyHandle) art.dirtyHandle = true;
 if (items.dirtyRotation) art.dirtyRotation = true;
 if (items.dirtyPathObject) art.dirtyPathObject = true;
-if (items.dirtyCollision) art.dirtyCollision = true;
 })
 });
 };
@@ -142,14 +137,12 @@ dirtyDimensions: true,
 dirtyPath: true,
 dirtyStart: true,
 dirtyHandle: true,
-dirtyCollision: true,
 });
 }
 this.dirtyDomDimensions = true;
 this.dirtyPath = true;
 this.dirtyStart = true;
 this.dirtyHandle = true;
-this.dirtyCollision = true;
 };
 P.cleanPerspective = function () {
 this.dirtyPerspective = false;
@@ -160,7 +153,6 @@ if (this.groupBuckets) {
 this.updateArtefacts({
 dirtyHandle: true,
 dirtyPathObject: true,
-dirtyCollision: true,
 });
 }
 };

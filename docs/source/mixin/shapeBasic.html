@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -378,11 +413,13 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { radian, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, xt, defaultNonReturnFunction, pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, xt, λ<span class="hljs-literal">null</span>, pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> { requestVector, releaseVector } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/vector.js'</span>;
 
-<span class="hljs-keyword">import</span> calculatePath <span class="hljs-keyword">from</span> <span class="hljs-string">'./shapePathCalculation.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> calculatePath <span class="hljs-keyword">from</span> <span class="hljs-string">'./shapePathCalculation.js'</span>;
+
+<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">'./entity.js'</span>;</pre></div></div>
             
         </li>
         
@@ -408,6 +445,24 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
+              <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/entity.html">entity</a></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P = entityMix(P);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
               <h4 id="shared-attributes">Shared attributes</h4>
 
             </div>
@@ -431,11 +486,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -460,28 +515,14 @@
         </li>
         
         
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality defined here</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality defined here</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
 
             </div>
             
@@ -493,6 +534,20 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -529,31 +584,31 @@
         </li>
         
         
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>Invalidate <strong>dimensions</strong> setters - dimensions are an emergent property of shapes, not a defining property</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.width = defaultNonReturnFunction;
-    S.height = defaultNonReturnFunction;
-    S.dimensions = defaultNonReturnFunction;
-    D.width = defaultNonReturnFunction;
-    D.height = defaultNonReturnFunction;
-    D.dimensions = defaultNonReturnFunction;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Invalidate <strong>dimensions</strong> setters - dimensions are an emergent property of shapes, not a defining property</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.width = λ<span class="hljs-literal">null</span>;
+    S.height = λ<span class="hljs-literal">null</span>;
+    S.dimensions = λ<span class="hljs-literal">null</span>;
+    D.width = λ<span class="hljs-literal">null</span>;
+    D.height = λ<span class="hljs-literal">null</span>;
+    D.dimensions = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p><strong>pathDefinition</strong></p>
 
@@ -568,11 +623,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -581,11 +636,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p><code>updateDirty</code> - internal setter helper function</p>
 
@@ -600,11 +655,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><code>midInitActions</code> - internal constructor helper function</p>
 
@@ -618,11 +673,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p><code>shapeInit</code> - internal constructor helper function</p>
 
@@ -644,11 +699,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h4 id="path-related-functionality">Path-related functionality</h4>
 
@@ -657,11 +712,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p><code>positionPointOnPath</code></p>
 
@@ -693,11 +748,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><code>getBezierXY</code></p>
 
@@ -716,11 +771,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><code>getQuadraticXY</code></p>
 
@@ -739,11 +794,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><code>getLinearXY</code></p>
 
@@ -760,11 +815,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p><code>getBezierAngle</code></p>
 
@@ -782,11 +837,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><code>getQuadraticAngle</code></p>
 
@@ -804,11 +859,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><code>getLinearAngle</code></p>
 
@@ -825,11 +880,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><code>getConstantPosition</code> - internal function called by <code>getPathPositionData</code></p>
 
@@ -866,11 +921,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>first segment</p>
 
@@ -884,11 +939,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>subsequent segments - progress is pixel lengths</p>
 
@@ -901,11 +956,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>… and position is in the range 0-1</p>
 
@@ -925,11 +980,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><code>buildPathPositionObject</code> - internal function called by <code>getPathPositionData</code></p>
 
@@ -979,11 +1034,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><code>getPathPositionData</code></p>
 
@@ -1001,11 +1056,11 @@
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>… because sometimes everything doesn’t all add up to 1</p>
 
@@ -1019,11 +1074,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <ol>
 <li>Determine the pertinent subpath to use for calculation</li>
@@ -1043,11 +1098,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <ol start="2">
 <li>Calculate point along the subpath the pos value represents</li>
@@ -1071,54 +1126,15 @@
         </li>
         
         
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <h4 id="collision-detection">Collision detection</h4>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p><code>calculateSensors</code></p>
+              <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.calculateSensors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">let</span> sensorSpacing = <span class="hljs-keyword">this</span>.sensorSpacing || <span class="hljs-number">50</span>,
-            length = <span class="hljs-keyword">this</span>.length,
-            segments = <span class="hljs-built_in">parseInt</span>(length / sensorSpacing, <span class="hljs-number">10</span>),
-            pos = <span class="hljs-number">0</span>,
-            data, i, iz;
-
-        <span class="hljs-keyword">if</span> (segments &lt; <span class="hljs-number">4</span>) segments = <span class="hljs-number">4</span>;
-
-        <span class="hljs-keyword">let</span> segmentLength = <span class="hljs-number">1</span> / segments;
-
-        <span class="hljs-keyword">let</span> sensors = <span class="hljs-keyword">this</span>.currentSensors;
-        sensors.length = <span class="hljs-number">0</span>;
-
-        data = <span class="hljs-keyword">this</span>.getPathPositionData(<span class="hljs-number">0</span>);
-        sensors.push([data.x, data.y]);
-        
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; segments; i++) {
-
-            pos += segmentLength;
-            data = <span class="hljs-keyword">this</span>.getPathPositionData(pos);
-            sensors.push([data.x, data.y]);
-        }
-    };</pre></div></div>
             
         </li>
         
@@ -1128,19 +1144,6 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <h4 id="display-cycle-functionality">Display cycle functionality</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p><code>prepareStamp</code> - the purpose of most of these actions is described in the <a href="http://localhost:8080/docs/source/mixin/entity.html#section-31">entity mixin function</a> that this function overwrites</p>
 
@@ -1153,24 +1156,11 @@
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtySpecies || <span class="hljs-keyword">this</span>.dirtyDimensions || <span class="hljs-keyword">this</span>.dirtyStart || <span class="hljs-keyword">this</span>.dirtyHandle) {
 
             <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtySpecies)  <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
        }
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isBeingDragged || <span class="hljs-keyword">this</span>.lockTo.indexOf(<span class="hljs-string">'mouse'</span>) &gt;= <span class="hljs-number">0</span>) {
-
-            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
-        }
-
-        <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">this</span>.dirtyRotation || <span class="hljs-keyword">this</span>.dirtyOffset) &amp;&amp; <span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyCollision &amp;&amp; !<span class="hljs-keyword">this</span>.useAsPath) {
-
-            <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
-        }
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isBeingDragged || <span class="hljs-keyword">this</span>.lockTo.indexOf(<span class="hljs-string">'mouse'</span>) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale) <span class="hljs-keyword">this</span>.cleanScale();
 
@@ -1190,11 +1180,11 @@
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code> </p>
 <ul>
@@ -1215,11 +1205,11 @@
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p><code>cleanPathObject</code> - internal helper function - called by <code>prepareStamp</code></p>
 
@@ -1246,11 +1236,11 @@
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p><code>calculateLocalPath</code> - internal helper function - called by <code>cleanPathObject</code></p>
 
@@ -1259,8 +1249,6 @@
             <div class="content"><div class='highlight'><pre>    P.calculateLocalPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d, isCalledFromAdditionalActions</span>) </span>{
 
         <span class="hljs-keyword">let</span> res;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.useAsPath = <span class="hljs-literal">true</span>;
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.pathCalculatedOnce) {
 
@@ -1300,11 +1288,11 @@
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>we can do work here to flatten some of these arrays</p>
 
@@ -1354,16 +1342,16 @@
             <span class="hljs-keyword">if</span> (!isCalledFromAdditionalActions) <span class="hljs-keyword">this</span>.calculateLocalPathAdditionalActions();
         }
     };
-    P.calculateLocalPathAdditionalActions = defaultNonReturnFunction;</pre></div></div>
+    P.calculateLocalPathAdditionalActions = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p><code>updatePathSubscribers</code></p>
 
@@ -1392,11 +1380,11 @@
         </li>
         
         
-        <li id="section-41">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h4 id="stamp-methods">Stamp methods</h4>
 <p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
@@ -1406,11 +1394,11 @@
         </li>
         
         
-        <li id="section-42">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -1425,11 +1413,11 @@
         </li>
         
         
-        <li id="section-43">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -1444,11 +1432,11 @@
         </li>
         
         
-        <li id="section-44">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -1467,11 +1455,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -1491,11 +1479,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -1513,11 +1501,11 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -1535,11 +1523,11 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -1560,11 +1548,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><code>drawBoundingBox</code></p>
 
@@ -1590,11 +1578,11 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><code>getBoundingBox</code></p>
 
@@ -1613,11 +1601,11 @@
         </li>
         
         
-        <li id="section-51">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>Pad out excessively thin widths and heights</p>
 
@@ -1632,11 +1620,11 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

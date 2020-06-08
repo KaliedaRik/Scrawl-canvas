@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -379,7 +414,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_canvas, generateUuid, isa_fn, isa_dom, pushUnique, removeItem, xt, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_canvas, generateUuid, isa_dom, pushUnique, removeItem, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
 <span class="hljs-keyword">import</span> { artefact, canvas, group, stack, css, xcss } <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;
 
 <span class="hljs-keyword">import</span> { makeStack } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/stack.js"</span>;
@@ -1160,318 +1195,6 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-<p><code>Exported function</code> (to modules and scrawl object). </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper, specs = {}</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.IntersectionObserver === <span class="hljs-string">'function'</span> &amp;&amp; anim &amp;&amp; anim.run) {
-
-        <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
-
-            entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
-
-                <span class="hljs-keyword">if</span> (entry.isIntersecting) !anim.isRunning() &amp;&amp; anim.run();
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) anim.isRunning() &amp;&amp; anim.halt();
-            });
-        }, specs);
-
-        <span class="hljs-keyword">if</span> (wrapper &amp;&amp; wrapper.domElement) {
-
-            observer.observe(wrapper.domElement);
-        }
-
-        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            
-            observer.disconnect();
-        }
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> defaultNonReturnFunction;
-}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <h4 id="event-listeners">Event listeners</h4>
-<p>Each scrawl-canvas stack and canvas can have <strong>bespoke Scrawl-canvas listeners</strong> attached to them, to track user mouse and touch interactions with that element. Scrawl-canvas defines five bespoke listeners:</p>
-<ul>
-<li><strong>move</strong> - track mouse cursor and touch movements across the DOM element</li>
-<li><strong>down</strong> - register a new touch interaction, or user pressing the left mouse button</li>
-<li><strong>up</strong> - register the end of a touch interaction, or user releasing the left mouse button</li>
-<li><strong>enter</strong> - trigger an event when the mouse cursor or touch event enters into the DOM element</li>
-<li><strong>leave</strong> - trigger an event when the mouse cursor or touch event exits from the DOM element</li>
-</ul>
-<p>The functions all takes the following arguments:</p>
-<ul>
-<li><strong>evt</strong> - String name of the event (‘move’, ‘down’, ‘up’, ‘enter’, ‘leave’), or an array of such strings</li>
-<li><strong>fn</strong> - the function to be called when the event listener(s) trigger</li>
-<li><strong>targ</strong> - either the DOM element object, or an array of DOM element objects, or a query selector String; these elements need to be registered in the Scrawl-canvas library beforehend (done automatically for stack and canvas elements)</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
-
-    actionListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
-    actionListener(evt, fn, targ, <span class="hljs-string">'addEventListener'</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        removeListener(evt, fn, targ);
-    };
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addListener’ is <strong>removeListener</strong> which removes Scrawl-canvas event listeners from DOM elements in a similar way</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> removeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document removeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
-
-    actionListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
-              </div>
-              <p>Because devices and browsers differ in their approach to user interaction (mouse vs pointer vs touch), the actual functionality for adding and removing the event listeners associated with each approach is handled by dedicated actionXXXListener functions</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
-              </div>
-              <p>TODO: code up the functionality to manage touch events</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> actionListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ, action</span>) </span>{
-
-    <span class="hljs-keyword">let</span> events = [].concat(evt),
-        targets;
-    
-    <span class="hljs-keyword">if</span> (targ.substring) targets = <span class="hljs-built_in">document</span>.body.querySelectorAll(targ);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(targ)) targets = targ;
-    <span class="hljs-keyword">else</span> targets = [targ];
-
-    <span class="hljs-keyword">if</span> (navigator.pointerEnabled || navigator.msPointerEnabled) actionPointerListener(events, fn, targets, action);
-    <span class="hljs-keyword">else</span> actionMouseListener(events, fn, targets, action);
-};
-
-<span class="hljs-keyword">const</span> actionMouseListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">events, fn, targets, action</span>) </span>{
-
-    events.forEach(<span class="hljs-function"><span class="hljs-params">myevent</span> =&gt;</span> {
-
-        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (!isa_dom(target)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionMouseListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
-
-            <span class="hljs-keyword">switch</span> (myevent) {
-            
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'move'</span>:
-                    target[action](<span class="hljs-string">'mousemove'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchmove'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchfollow'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'up'</span>:
-                    target[action](<span class="hljs-string">'mouseup'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchend'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'down'</span>:
-                    target[action](<span class="hljs-string">'mousedown'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchstart'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'leave'</span>:
-                    target[action](<span class="hljs-string">'mouseleave'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchleave'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'enter'</span>:
-                    target[action](<span class="hljs-string">'mouseenter'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchenter'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-            }
-        });
-    });
-};
-
-<span class="hljs-keyword">const</span> actionPointerListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">events, fn, targets, action</span>) </span>{
-
-    events.forEach(<span class="hljs-function"><span class="hljs-params">myevent</span> =&gt;</span> {
-
-        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (!isa_dom(target)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionPointerListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
-
-            <span class="hljs-keyword">switch</span> (myevent) {
-            
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'move'</span>:
-                    target[action](<span class="hljs-string">'pointermove'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'up'</span>:
-                    target[action](<span class="hljs-string">'pointerup'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'down'</span>:
-                    target[action](<span class="hljs-string">'pointerdown'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'leave'</span>:
-                    target[action](<span class="hljs-string">'pointerleave'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'enter'</span>:
-                    target[action](<span class="hljs-string">'pointerenter'</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-            }
-        });
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p><strong>Any event listener</strong> can be added to a Scrawl-canvas stack or canvas DOM element. </p>
-<p>The <strong>addNativeListener</strong> function makes adding and removing these ‘native’ listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.</p>
-<p>The function requires three arguments:</p>
-<ul>
-<li><strong>evt</strong> - String name of the event (‘click’, ‘input’, ‘change’, etc), or an array of such strings</li>
-<li><strong>fn</strong> - the function to be called when the event listener(s) trigger</li>
-<li><strong>targ</strong> - either the DOM element object, or an array of DOM element objects, or a query selector String</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addNativeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addNativeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
-
-    actionNativeListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
-    actionNativeListener(evt, fn, targ, <span class="hljs-string">'addEventListener'</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        removeNativeListener(evt, fn, targ);
-    };
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addNativeListener’ is <strong>removeNativeListener</strong> which removes event listeners from DOM elements in a similar way</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> removeNativeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document removeNativeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
-
-    actionNativeListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
-};
-
-<span class="hljs-keyword">const</span> actionNativeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ, action</span>) </span>{
-
-    <span class="hljs-keyword">let</span> events = [].concat(evt),
-        targets;
-
-    <span class="hljs-keyword">if</span> (targ.substring) targets = <span class="hljs-built_in">document</span>.body.querySelectorAll(targ);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(targ)) targets = targ;
-    <span class="hljs-keyword">else</span> targets = [targ];
-
-    events.forEach(<span class="hljs-function"><span class="hljs-params">myevent</span> =&gt;</span> {
-
-        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (!isa_dom(target)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionNativeListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
-
-            target[action](myevent, fn, <span class="hljs-literal">false</span>);
-        });
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
-              </div>
               <h4 id="the-display-cycle">The Display cycle</h4>
 <p>Scrawl-canvas breaks down the Display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
 <p>The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element’s controller’s <strong>order</strong> attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value</p>
@@ -1483,11 +1206,11 @@
         </li>
         
         
-        <li id="section-44">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <h5 id="clear">Clear</h5>
 <ul>
@@ -1500,11 +1223,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). </p>
 
@@ -1519,11 +1242,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h5 id="compile">Compile</h5>
 <ul>
@@ -1536,11 +1259,11 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). </p>
 
@@ -1555,11 +1278,11 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <h5 id="show">Show</h5>
 <ul>
@@ -1572,11 +1295,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). </p>
 
@@ -1591,11 +1314,11 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <h5 id="render">Render</h5>
 <ul>
@@ -1607,11 +1330,11 @@
         </li>
         
         
-        <li id="section-51">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). </p>
 
@@ -1626,11 +1349,11 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Helper functions coordinate the actions required to complete a display cycle</p>
 
@@ -1664,11 +1387,11 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <h4 id="dom-element-updates">DOM element updates</h4>
 <p>Scrawl-canvas will batch process all DOM element updates, to minimize disruptive impacts on web page performance. We don’t maintain a full/comprehensive ‘shadow’ or ‘virtual’ DOM, but Scrawl-canvas does maintain a record of element (absolute) position and dimension data, alongside details of scaling, perspective and any other CSS related data (including CSS classes) which we tell it about, on a per-element basis.</p>
@@ -1681,11 +1404,11 @@
         </li>
         
         
-        <li id="section-54">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p>Local variable</p>
 
@@ -1696,11 +1419,11 @@
         </li>
         
         
-        <li id="section-55">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules). </p>
 
@@ -1719,11 +1442,11 @@
         </li>
         
         
-        <li id="section-56">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules). </p>
 
@@ -1737,11 +1460,11 @@
         </li>
         
         
-        <li id="section-57">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules). This is the <strong>main DOM manipulation function</strong> which will be triggered once during each Display cycle.</p>
 
@@ -1764,11 +1487,11 @@
         </li>
         
         
-        <li id="section-58">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>given the critical nature of these loops, using ‘for’ instead of ‘forEach’</p>
 
@@ -1793,11 +1516,11 @@
         </li>
         
         
-        <li id="section-59">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>update perspective</p>
 
@@ -1816,11 +1539,11 @@
         </li>
         
         
-        <li id="section-60">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>update position</p>
 
@@ -1835,11 +1558,11 @@
         </li>
         
         
-        <li id="section-61">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>update dimensions</p>
 
@@ -1868,11 +1591,11 @@
         </li>
         
         
-        <li id="section-62">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>update handle/transformOrigin</p>
 
@@ -1887,11 +1610,11 @@
         </li>
         
         
-        <li id="section-63">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>update transform</p>
 
@@ -1906,11 +1629,11 @@
         </li>
         
         
-        <li id="section-64">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>update visibility</p>
 
@@ -1925,11 +1648,11 @@
         </li>
         
         
-        <li id="section-65">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>update other CSS changes</p>
 
@@ -1964,11 +1687,11 @@
         </li>
         
         
-        <li id="section-66">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>update element classes</p>
 
@@ -1986,11 +1709,11 @@
         </li>
         
         
-        <li id="section-67">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <h4 id="dom-holding-areas">DOM Holding areas</h4>
 <p><code>Exported handles</code> (to modules). During its initialization phase, Scrawl-canvas will add two hidden ‘hold’ elements at the top and bottom of the document body where it can add additional elements as-and-when required. </p>
@@ -2000,11 +1723,11 @@
         </li>
         
         
-        <li id="section-68">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas&gt; elements to inform non-visual website visitors about content in the canvas.</p>
 
@@ -2025,11 +1748,11 @@ scrawlCanvasHold.id = <span class="hljs-string">'Scrawl-ARIA-default-hold'</span
         </li>
         
         
-        <li id="section-69">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>Navigation area - canvas anchor links. Canvases create their own (hidden) &lt;nav&gt; elements that directly follow them in the DOM. These are used to store &lt;a&gt; links for clickable entitys in the canvas display, making them accessible to non-visual users (for example: screen readers)</p>
 
@@ -2045,11 +1768,11 @@ scrawlNavigationHold.id = <span class="hljs-string">'Scrawl-navigation-default-h
         </li>
         
         
-        <li id="section-70">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -2071,17 +1794,10 @@ scrawlNavigationHold.id = <span class="hljs-string">'Scrawl-navigation-default-h
     rootElements,
     setRootElementsSort,
 
-    addListener,
-    removeListener,
-    addNativeListener,
-    removeNativeListener,
-
     clear,
     compile,
     show,
     render,
-
-    makeAnimationObserver,
 
     addDomShowElement,
     setDomShowRequired,

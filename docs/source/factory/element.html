@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -397,7 +432,6 @@ Element  ~~&gt; Entity (eg Block)  </code></pre><p>During initialization Scrawl-
 <li><a href="../../demo/dom-003.html">DOM-003</a> - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack</li>
 <li><a href="../../demo/dom-004.html">DOM-004</a> - Limitless rockets (clone and destroy elements, tweens, tickers)</li>
 <li><a href="../../demo/dom-006.html">DOM-006</a> - Tween actions on a DOM element; tracking tween and ticker activity (analytics)</li>
-<li><a href="../../demo/dom-013.html">DOM-013</a> - Artefact collision detection - DOM artefacts</li>
 <li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
 </ul>
 
@@ -416,15 +450,13 @@ Element  ~~&gt; Entity (eg Block)  </code></pre><p>During initialization Scrawl-
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { group, element, elementnames, artefact, artefactnames, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { generateUuid, pushUnique, mergeOver, removeItem, xt, isa_obj, isa_dom, isa_boolean } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { element, elementnames, artefact, artefactnames, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { pushUnique, removeItem, isa_dom } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 <span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/userInteraction.js'</span>;
 
 <span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'./canvas.js'</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/position.js'</span>;
-<span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/anchor.js'</span>;
 <span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/dom.js'</span>;</pre></div></div>
             
         </li>
@@ -486,9 +518,6 @@ Element  ~~&gt; Entity (eg Block)  </code></pre><p>During initialization Scrawl-
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.trackHere) pushUnique(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
     }
-
-    <span class="hljs-keyword">this</span>.apply();
-    
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };</pre></div></div>
             
@@ -521,12 +550,14 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/dom.html">dom</a></li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = domMix(P);</pre></div></div>
             
         </li>
@@ -541,7 +572,11 @@ P = domMix(P);</pre></div></div>
               <h4 id="element-attributes">Element attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, handle, offset, dimensions, delta, noDeltaUpdates, pivot, pivotCorner, pivoted, addPivotHandle, addPivotOffset, addPivotRotation, path, pathPosition, addPathHandle, addPathOffset, addPathRotation, mimic, mimicked, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic, lockTo, scale, roll, collides, sensorSpacing, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/dom.html">dom mixin</a>: <strong>domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes</strong>.</li>
 </ul>

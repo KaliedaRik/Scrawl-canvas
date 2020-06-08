@@ -1,13 +1,24 @@
-import * as library from '../core/library.js';
-import { defaultNonReturnFunction, defaultThisReturnFunction, defaultFalseReturnFunction,
-generateUuid, isa_fn, mergeOver, pushUnique, xt, xta, addStrings } from '../core/utilities.js';
+import { λnull, mergeOver, pushUnique, xt, addStrings } from '../core/utilities.js';
 import { currentGroup, scrawlCanvasHold } from '../core/document.js';
-import { currentCorePosition } from '../core/userInteraction.js';
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from '../factory/filter.js';
 import { importDomImage } from '../factory/imageAsset.js';
+import positionMix from '../mixin/position.js';
+import deltaMix from '../mixin/delta.js';
+import pivotMix from '../mixin/pivot.js';
+import mimicMix from '../mixin/mimic.js';
+import pathMix from '../mixin/path.js';
+import anchorMix from '../mixin/anchor.js';
+import filterMix from '../mixin/filter.js';
 export default function (P = {}) {
+P = positionMix(P);
+P = deltaMix(P);
+P = pivotMix(P);
+P = mimicMix(P);
+P = pathMix(P);
+P = anchorMix(P);
+P = filterMix(P);
 let defaultAttributes = {
 method: 'fill',
 pathObject: null,
@@ -63,14 +74,6 @@ return (this.group) ? this.group.name : '';
 S.lockStylesToEntity = function (item) {
 this.lockFillStyleToEntity = item;
 this.lockStrokeStyleToEntity = item;
-};
-S.flipUpend = function (item) {
-if (item !== this.flipUpend && this.collides) this.dirtyCollision = true;
-this.flipUpend = item;
-};
-S.flipReverse = function (item) {
-if (item !== this.flipReverse && this.collides) this.dirtyCollision = true;
-this.flipReverse = item;
 };
 P.get = function (item) {
 let getter = this.getters[item];
@@ -144,21 +147,21 @@ this.initializePositions();
 this.set(this.defs);
 this.state = makeState();
 if (!items.group) items.group = currentGroup;
-this.onEnter = defaultNonReturnFunction;
-this.onLeave = defaultNonReturnFunction;
-this.onDown = defaultNonReturnFunction;
-this.onUp = defaultNonReturnFunction;
+this.onEnter = λnull;
+this.onLeave = λnull;
+this.onDown = λnull;
+this.onUp = λnull;
 this.set(items);
 this.midInitActions(items);
+if (this.purge) this.purgeArtefact(this.purge);
 };
-P.midInitActions = defaultNonReturnFunction;
+P.midInitActions = λnull;
 P.prepareStamp = function() {
 if (this.dirtyHost) {
 this.dirtyHost = false;
 this.dirtyDimensions = true;
 }
 if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
-if (this.dirtyRotation && this.collides) this.dirtyCollision = true;
 if (this.dirtyScale) this.cleanScale();
 if (this.dirtyDimensions) this.cleanDimensions();
 if (this.dirtyLock) this.cleanLock();
@@ -172,17 +175,14 @@ this.dirtyStampHandlePositions = true;
 }
 if (this.dirtyStampPositions) this.cleanStampPositions();
 if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
-if (this.dirtyPathObject) {
-this.cleanPathObject();
-if (this.collides) this.dirtyCollision = true;
-}
+if (this.dirtyPathObject) this.cleanPathObject();
 if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 if (this.anchor && this.dirtyAnchorHold) {
 this.dirtyAnchorHold = false;
 this.buildAnchor(this.anchor);
 }
 };
-P.cleanPathObject = defaultNonReturnFunction;
+P.cleanPathObject = λnull;
 P.stamp = function (force = false, host, changes) {
 let filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
 if (force) {

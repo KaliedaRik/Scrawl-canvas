@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -378,7 +413,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { radian, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { isa_quaternion, isa_vector, isa_number, xt, xto } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { isa_quaternion, isa_number, xt, xto } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> { requestVector, releaseVector, makeVector } <span class="hljs-keyword">from</span> <span class="hljs-string">'./vector.js'</span>;</pre></div></div>
             
@@ -496,23 +531,23 @@ P.type = <span class="hljs-string">'Quaternion'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">obj = {}</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (isa_quaternion(items)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromQuaternion(items);
+    <span class="hljs-keyword">if</span> (isa_quaternion(obj)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromQuaternion(obj);
 
-    <span class="hljs-keyword">if</span> (isa_vector(items)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromVector(items);
+    <span class="hljs-keyword">if</span> ((obj &amp;&amp; obj.type &amp;&amp; obj.type === <span class="hljs-string">'Vector'</span>)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromVector(obj);
 
-    <span class="hljs-keyword">if</span> (xto(items.pitch, items.yaw, items.roll)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromEuler(items);
+    <span class="hljs-keyword">if</span> (xto(obj.pitch, obj.yaw, obj.roll)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromEuler(obj);
 
     <span class="hljs-keyword">let</span> x, y, z, n, v,
         tv = <span class="hljs-keyword">this</span>.v;
 
-    v = (xt(items.vector) || xt(items.v)) ? (items.vector || items.v) : <span class="hljs-literal">false</span>;
-    n = (xt(items.scalar) || xt(items.n)) ? (items.scalar || items.n || <span class="hljs-number">0</span>) : <span class="hljs-literal">false</span>;
+    v = (xt(obj.vector) || xt(obj.v)) ? (obj.vector || obj.v) : <span class="hljs-literal">false</span>;
+    n = (xt(obj.scalar) || xt(obj.n)) ? (obj.scalar || obj.n || <span class="hljs-number">0</span>) : <span class="hljs-literal">false</span>;
 
-    x = (v) ? (v.x || <span class="hljs-number">0</span>) : items.x || <span class="hljs-literal">false</span>;
-    y = (v) ? (v.y || <span class="hljs-number">0</span>) : items.y || <span class="hljs-literal">false</span>;
-    z = (v) ? (v.z || <span class="hljs-number">0</span>) : items.z || <span class="hljs-literal">false</span>;
+    x = (v) ? (v.x || <span class="hljs-number">0</span>) : obj.x || <span class="hljs-literal">false</span>;
+    y = (v) ? (v.y || <span class="hljs-number">0</span>) : obj.y || <span class="hljs-literal">false</span>;
+    z = (v) ? (v.z || <span class="hljs-number">0</span>) : obj.z || <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">this</span>.n = (isa_number(n)) ? n : <span class="hljs-keyword">this</span>.n;
 

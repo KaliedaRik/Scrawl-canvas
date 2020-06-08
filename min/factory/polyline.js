@@ -2,11 +2,7 @@ import { constructors, artefact } from '../core/library.js';
 import { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem } from '../core/utilities.js';
 import { makeCoordinate } from '../factory/coordinate.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
-import entityMix from '../mixin/entity.js';
 import shapeMix from '../mixin/shapeBasic.js';
-import filterMix from '../mixin/filter.js';
 const Polyline = function (items = {}) {
 this.pins = [];
 this.currentPins = [];
@@ -20,11 +16,7 @@ P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
-P = entityMix(P);
 P = shapeMix(P);
-P = filterMix(P);
 let defaultAttributes = {
 pins: null,
 tension: 0,
@@ -114,12 +106,10 @@ this.mapToPins = item;
 this.updateDirty();
 };
 S.flipUpend = function (item) {
-if (item !== this.flipUpend && this.collides) this.dirtyCollision = true;
 this.flipUpend = item;
 this.updateDirty();
 };
 S.flipReverse = function (item) {
-if (item !== this.flipReverse && this.collides) this.dirtyCollision = true;
 this.flipReverse = item;
 this.updateDirty();
 };
@@ -216,18 +206,9 @@ if (this.dirtyHost) this.dirtyHost = false;
 if (this.dirtyPins || this.dirtyLock) this.dirtySpecies = true;
 if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyHandle) {
 this.dirtyPathObject = true;
-if (this.collides) this.dirtyCollision = true;
 if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
 }
-if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
-this.dirtyStampPositions = true;
-if (this.collides) this.dirtyCollision = true;
-}
-if ((this.dirtyRotation || this.dirtyOffset) && this.collides) this.dirtyCollision = true;
-if (this.dirtyCollision && !this.useAsPath) {
-this.dirtyPathObject = true;
-this.pathCalculatedOnce = false;
-}
+if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) this.dirtyStampPositions = true;
 if (this.dirtyScale) this.cleanScale();
 if (this.dirtyStart) this.cleanStart();
 if (this.dirtyOffset) this.cleanOffset();

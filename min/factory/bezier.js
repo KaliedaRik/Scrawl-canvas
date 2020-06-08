@@ -2,12 +2,8 @@ import { constructors, artefact } from '../core/library.js';
 import { mergeOver, addStrings, pushUnique } from '../core/utilities.js';
 import { makeCoordinate } from './coordinate.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
-import entityMix from '../mixin/entity.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
-import filterMix from '../mixin/filter.js';
 const Bezier = function (items = {}) {
 this.startControl = makeCoordinate();
 this.endControl = makeCoordinate();
@@ -27,17 +23,10 @@ P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
-P = entityMix(P);
 P = shapeMix(P);
 P = curveMix(P);
-P = filterMix(P);
 let defaultAttributes = {
 startControl: null,
-endControl: null,
-currentStartControl: null,
-currentEndControl: null,
 startControlPivot: '',
 startControlPivotCorner: '',
 addStartControlPivotHandle: false,
@@ -46,7 +35,7 @@ startControlPath: '',
 startControlPathPosition: 0,
 addStartControlPathHandle: false,
 addStartControlPathOffset: true,
-startControlLockTo: '',
+endControl: null,
 endControlPivot: '',
 endControlPivotCorner: '',
 addEndControlPivotHandle: false,
@@ -55,6 +44,7 @@ endControlPath: '',
 endControlPathPosition: 0,
 addEndControlPathHandle: false,
 addEndControlPathOffset: true,
+startControlLockTo: '',
 endControlLockTo: '',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);

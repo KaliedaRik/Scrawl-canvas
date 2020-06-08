@@ -1,7 +1,5 @@
 import * as library from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, generateUuid,
-isa_fn, isa_boolean, isa_vector, isa_obj, addStrings, xt, xta,
-defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, generateUuid, isa_boolean, isa_obj, addStrings, xt, xta, λnull } from '../core/utilities.js';
 export default function (P = {}) {
 P.defs = {};
 P.getters = {};
@@ -222,7 +220,7 @@ catch (e) { console.log(e); return e }
 P.actionPacketFunctions = function(obj, item) {
 let fItem = obj[item];
 if (xt(fItem) && fItem !== null && fItem.substring) {
-if (fItem === '~~~') obj[item] = defaultNonReturnFunction;
+if (fItem === '~~~') obj[item] = λnull;
 else {
 let args, func, f;
 [args, func] = fItem.split('~~~');
@@ -232,7 +230,7 @@ if (func.indexOf('[native code]') < 0) {
 f = new Function(...args, func);
 obj[item] = f.bind(obj);
 }
-else obj[item] = defaultNonReturnFunction;
+else obj[item] = λnull;
 }
 }
 };

@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -390,9 +425,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, generateUuid, 
-    isa_fn, isa_boolean, isa_vector, isa_obj, addStrings, xt, xta,
-    defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, generateUuid, isa_boolean, isa_obj, addStrings, xt, xta, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
             
         </li>
         
@@ -1265,7 +1298,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
         <span class="hljs-keyword">if</span> (xt(fItem) &amp;&amp; fItem !== <span class="hljs-literal">null</span> &amp;&amp; fItem.substring) {
 
-            <span class="hljs-keyword">if</span> (fItem === <span class="hljs-string">'~~~'</span>) obj[item] = defaultNonReturnFunction;
+            <span class="hljs-keyword">if</span> (fItem === <span class="hljs-string">'~~~'</span>) obj[item] = λ<span class="hljs-literal">null</span>;
             <span class="hljs-keyword">else</span> {
 
                 <span class="hljs-keyword">let</span> args, func, f;
@@ -1294,7 +1327,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
                     obj[item] = f.bind(obj);
                 }
-                <span class="hljs-keyword">else</span> obj[item] = defaultNonReturnFunction;
+                <span class="hljs-keyword">else</span> obj[item] = λ<span class="hljs-literal">null</span>;
             }
         }
     };</pre></div></div>

@@ -1,13 +1,10 @@
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
-import { mergeOver, pushUnique, xt, xta, isa_obj, ensurePositiveFloat, ensureFloat, ensureString } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xta, isa_obj, isa_number } from '../core/utilities.js';
 import { requestCell, releaseCell } from './cell.js';
 import { makeFontAttributes } from './fontAttributes.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
-import filterMix from '../mixin/filter.js';
 const fontHeightCalculator = document.createElement('div');
 fontHeightCalculator.style.padding = 0;
 fontHeightCalculator.style.border = 0;
@@ -18,6 +15,21 @@ fontHeightCalculator.style.boxSizing = 'border-box';
 fontHeightCalculator.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
 scrawlCanvasHold.appendChild(fontHeightCalculator);
 const textEntityConverter = document.createElement('textarea');
+const ensureFloat = (val, precision) => {
+val = parseFloat(val);
+if (!isa_number(val)) val = 0;
+if (!isa_number(precision)) precision = 0;
+return parseFloat(val.toFixed(precision));
+};
+const ensurePositiveFloat = (val, precision) => {
+val = parseFloat(val);
+if (!isa_number(val)) val = 0;
+if (!isa_number(precision)) precision = 0;
+return Math.abs(parseFloat(val.toFixed(precision)));
+};
+const ensureString = (val) => {
+return (val.substring) ? val : val.toString;
+};
 const Phrase = function (items = {}) {
 this.fontAttributes = makeFontAttributes(items);
 delete items.font;
@@ -58,10 +70,7 @@ P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = entityMix(P);
-P = filterMix(P);
 let defaultAttributes = {
 text: '',
 width: 'auto',
@@ -397,6 +406,7 @@ this.dirtyFont = false;
 this.fontAttributes.buildFont(this.scale);
 this.dirtyText = true;
 this.dirtyMimicDimensions = true;
+this.dirtyPositionSubscribers = true;
 }
 if (this.dirtyText) this.buildText();
 if (this.dirtyHandle) this.cleanHandle();

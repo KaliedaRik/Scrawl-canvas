@@ -2,12 +2,8 @@ import { constructors, artefact } from '../core/library.js';
 import { mergeOver, addStrings, pushUnique } from '../core/utilities.js';
 import { makeCoordinate } from './coordinate.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
-import entityMix from '../mixin/entity.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
-import filterMix from '../mixin/filter.js';
 const Quadratic = function (items = {}) {
 this.control = makeCoordinate();
 this.currentControl = makeCoordinate();
@@ -23,15 +19,10 @@ P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
-P = entityMix(P);
 P = shapeMix(P);
 P = curveMix(P);
-P = filterMix(P);
 let defaultAttributes = {
 control: null,
-currentControl: null,
 controlPivot: '',
 controlPivotCorner: '',
 addControlPivotHandle: false,

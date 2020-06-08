@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -361,6 +396,12 @@
               </div>
               <h1 id="filter-worker">Filter worker</h1>
 <p>A long-running web worker which, when not in use, gets stored in the filter pool defined in the <a href="../factory/filter.html">filter factory</a></p>
+<p>TODO: we’ve had to move all the code from this module into a new, <a href="./filter-stringed.html">comment-free module</a> file because tools like <a href="https://reactjs.org/docs/create-a-new-react-app.html#create-react-app">CreateReactApp</a> - which uses <a href="https://webpack.js.org/">Webpack</a> as its bundler of choice - breaks when we <code>yarn add scrawl-canvas</code> to a project.</p>
+<ul>
+<li>The root of the issue is that <a href="https://babeljs.io/">Babel</a> currently breaks when it encounters the <code>import.meta</code> attribute.</li>
+<li>Babel do supply a plugin which is supposed to address this issue: <a href="https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-import-meta">babel-plugin-syntax-import-meta</a>. But trying to add this to a Webpack configuration - particularly as implemented by create-react-app - is, at best, a nightmare.</li>
+</ul>
+<p><strong>NOTE: any changes to filter code need to be replicated in both files!</strong></p>
 
             </div>
             
@@ -373,8 +414,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h4 id="imports">Imports</h4>
-<p>None used</p>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-007.html">Canvas-007</a> - Apply filters at the entity, group and cell level</li>
+<li><a href="../../demo/canvas-020.html">Canvas-020</a> - Testing createImageFromXXX functionality</li>
+<li><a href="../../demo/canvas-027.html">Canvas-027</a> - Video control and manipulation; chroma-based hit zone</li>
+<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets; save and load a range of different entitys</li>
+</ul>
 
             </div>
             
@@ -386,6 +432,20 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h4 id="imports">Imports</h4>
+<p>None used</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <h4 id="polyfills">Polyfills</h4>
 <p>TypedArray.slice() <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/slice">polyfill</a> - for blur filter</p>
@@ -403,31 +463,16 @@
         </li>
         
         
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h4 id="worker-wide-variables">Worker-wide variables</h4>
-<p>The following variables are defined here so that all filter functions - including user-defined filters - can make use of them:</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p><strong>packet</strong> - the <code>e.data</code> object sent to the web worker from the main code</p>
+              <h4 id="worker-wide-variables">Worker-wide variables</h4>
+<p>The following variables are defined here so that all filter functions - including user-defined filters - can make use of them:</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> packet;</pre></div></div>
             
         </li>
         
@@ -438,11 +483,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p><strong>image</strong> - the <code>ImageData</code> object</p>
+              <p><strong>packet</strong> - the <code>e.data</code> object sent to the web worker from the main code</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> image;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> packet;</pre></div></div>
             
         </li>
         
@@ -453,11 +498,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p><strong>iWidth</strong> - convenience variable - <code>image.width * 4</code> (to cope with moving through the data array by pixel)</p>
+              <p><strong>image</strong> - the <code>ImageData</code> object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> iWidth;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> image;</pre></div></div>
             
         </li>
         
@@ -468,11 +513,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p><strong>data</strong> - the <code>Uint8ClampedArray</code> data component of the ImageData object</p>
+              <p><strong>iWidth</strong> - convenience variable - <code>image.width * 4</code> (to cope with moving through the data array by pixel)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> data;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> iWidth;</pre></div></div>
             
         </li>
         
@@ -483,11 +528,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p><strong>cache</strong> - an Array of all the starting (ie: red channel) indexes for pixels whose alpha channel is &gt; 0 (and thus not transparent) - speeds up things for pixel-by-pixel filters that don’t need to process transparent pixels. Generated by running the web worker’s <code>getCache</code> function</p>
+              <p><strong>data</strong> - the <code>Uint8ClampedArray</code> data component of the ImageData object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> cache;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> data;</pre></div></div>
             
         </li>
         
@@ -498,11 +543,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p><strong>tiles</strong> - the output from running the web worker’s <code>getTiles</code> function. This effectively divides the image data into a grid of blocks which can be further processed by a filter</p>
+              <p><strong>cache</strong> - an Array of all the starting (ie: red channel) indexes for pixels whose alpha channel is &gt; 0 (and thus not transparent) - speeds up things for pixel-by-pixel filters that don’t need to process transparent pixels. Generated by running the web worker’s <code>getCache</code> function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> tiles;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> cache;</pre></div></div>
             
         </li>
         
@@ -512,6 +557,21 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p><strong>tiles</strong> - the output from running the web worker’s <code>getTiles</code> function. This effectively divides the image data into a grid of blocks which can be further processed by a filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> tiles;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p><strong>localX</strong>, <strong>localY</strong>, <strong>localWidth</strong>, <strong>localHeight</strong> - the start coordinates and dimensions of the box enclosing all the non-transparent pixels in the supplied image data array. Used mainly by the blur filter - but any filter (including user-defined filters) that needs to include transparent pixel values in its calculations, but would waste time processing non-visible areas of the image, can make use of these variables</p>
 
@@ -525,11 +585,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p><strong>filters</strong> - the filter objects Array sent to the web worker from the main code</p>
 
@@ -540,11 +600,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><strong>filter</strong> - the current filter object being processed by the web worker - holds all the settings required for that filter function, for example <code>filter.level</code> for the brightness, saturation and threshold filter functions</p>
 
@@ -555,11 +615,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p><strong>action</strong> - internal processing variable</p>
 
@@ -570,11 +630,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h4 id="messaging-and-error-handling">Messaging and error handling</h4>
 
@@ -616,11 +676,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p><strong>getCache</strong> - function that fills the <code>cache</code> worker variable with the starting index position of each non-transparent pixel in the current image’s Uint8ClampedArray Array</p>
 
@@ -642,11 +702,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><strong>getLocal</strong> - function that populates the <code>localX</code>, <code>localY</code>, <code>localWidth</code>, <code>localHeight</code> worker variables with relevant values for the current image data</p>
 
@@ -684,11 +744,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><strong>getTiles</strong> - function that populates the <code>tiles</code> worker Array with relevant values for the current image data</p>
 
@@ -743,11 +803,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><strong>average</strong> - Returns the average of values in an array</p>
 
@@ -773,11 +833,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p><strong>checkBounds</strong> - Checks that a position cursor is within the bounds of the data array</p>
 
@@ -795,11 +855,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>All the pre-defined filter functions are held as attributes to the <strong>actions object</strong></p>
 
@@ -810,11 +870,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><strong>userDefined</strong> - requires a String function in the <code>filter.userDefined</code> attribute, which will be generated into a working function by the web worker - such filters can make use of any other filter attributes (for example: <code>filter.level</code>) alongside the dedicated userDefined attributes <code>filter.udVariable0 - filter.udVariable9</code></p>
 
@@ -825,11 +885,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><strong>grayscale</strong> - desaturates the image</p>
 
@@ -850,11 +910,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p><strong>sepia</strong> - desaturates the image, then ‘antiques’ it by adding back some yellow tone</p>
 
@@ -881,11 +941,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p><strong>invert</strong> - turns white into black, and similar across the spectrum</p>
 
@@ -911,11 +971,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p><strong>red</strong> - suppresses the image’s green and blue channels</p>
 
@@ -936,11 +996,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><strong>green</strong> - suppresses the image’s red and blue channels</p>
 
@@ -961,11 +1021,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><strong>blue</strong> - suppresses the image’s red and green channels</p>
 
@@ -986,11 +1046,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><strong>notred</strong> - suppresses the image’s red channel</p>
 
@@ -1010,11 +1070,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p><strong>notgreen</strong> - suppresses the image’s green channel</p>
 
@@ -1034,11 +1094,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p><strong>notblue</strong> - suppresses the image’s blue channel</p>
 
@@ -1058,11 +1118,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p><strong>cyan</strong> - averages the image’s blue and green channels, and suppresses the red channel</p>
 
@@ -1087,11 +1147,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p><strong>magenta</strong> - averages the image’s red and blue channels, and suppresses the green channel</p>
 
@@ -1116,11 +1176,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p><strong>yellow</strong> - averages the image’s red and green channels, and suppresses the blue channel</p>
 
@@ -1145,11 +1205,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p><strong>brightness</strong> - multiplies the red, green and blue channel values by a value supplied in the filter.level attribute</p>
 
@@ -1176,11 +1236,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p><strong>saturation</strong> - multiplies the red, green and blue channel values by a value supplied in the filter.level attribute, then normalizes the result</p>
 
@@ -1207,11 +1267,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p><strong>threshold</strong> - desaturates each pixel then tests it against filter.level value; those pixels below the level are set to the filter.lowRGB values while the rest are set to the filter.highRGB values</p>
 
@@ -1254,11 +1314,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p><strong>channels</strong> - multiply each pixel’s channel values by the values set in the filter.RGB attributes</p>
 
@@ -1284,11 +1344,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p><strong>channelstep</strong> - divide, floor, and then multiply each pixel’s channel values by the values set in the filter.RGB attributes</p>
 
@@ -1318,11 +1378,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p><strong>tint</strong> - a more fine-grained form of the channels filter</p>
 
@@ -1358,26 +1418,13 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p><strong>chroma</strong> - will evaluate each pixel against a range array; pixels that fall within the range are set to transparent</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>The <strong>ranges</strong> attribute needs to be an array of arrays with the following format:</p>
+              <p><strong>chroma</strong> - will evaluate each pixel against a range array; pixels that fall within the range are set to transparent</p>
 
             </div>
             
@@ -1390,7 +1437,8 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <pre><code>[[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]</code></pre>
+              <p>The <strong>ranges</strong> attribute needs to be an array of arrays with the following format:</p>
+
             </div>
             
         </li>
@@ -1402,8 +1450,7 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>… multiple ranges can be defined - for instance to key out the lightest and darkest hues:</p>
-
+              <pre><code>[[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]</code></pre>
             </div>
             
         </li>
@@ -1414,6 +1461,19 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>… multiple ranges can be defined - for instance to key out the lightest and darkest hues:</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <pre><code>ranges: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>], [<span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>]]</code></pre>
             </div>
@@ -1478,11 +1538,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><strong>pixelate</strong> - create tiles - whose dimensions and positions are determined by values set in the filter tileWidth, tileHeight, offsetX and offsetY attributes - across the image and then average the pixels in each tile to a single color</p>
 
@@ -1533,11 +1593,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><strong>blur</strong> - creates a blurred image. Note: can be slow across larger images! The degree of the blur - which does not follow conventional algorithms such as gaussian - is determined by the filter attribute values for radius (number), passes (number) and shrink (boolean)</p>
 
@@ -1792,11 +1852,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><strong>matrix</strong> - apply a 3x3 matrix transform to each of the image’s pixels</p>
 
@@ -1894,11 +1954,11 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p><strong>matrix5</strong> - apply a 5x5 matrix transform to each of the image’s pixels</p>
 

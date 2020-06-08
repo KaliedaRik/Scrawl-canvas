@@ -1,8 +1,10 @@
 import { radian, artefact } from '../core/library.js';
-import { mergeOver, xt, defaultNonReturnFunction, pushUnique } from '../core/utilities.js';
+import { mergeOver, xt, λnull, pushUnique } from '../core/utilities.js';
 import { requestVector, releaseVector } from '../factory/vector.js';
 import calculatePath from './shapePathCalculation.js';
+import entityMix from './entity.js';
 export default function (P = {}) {
+P = entityMix(P);
 let defaultAttributes = {
 species: '',
 useAsPath: false,
@@ -44,12 +46,12 @@ S.constantPathSpeed = function (item) {
 this.constantPathSpeed = item;
 this.updateDirty();
 };
-S.width = defaultNonReturnFunction;
-S.height = defaultNonReturnFunction;
-S.dimensions = defaultNonReturnFunction;
-D.width = defaultNonReturnFunction;
-D.height = defaultNonReturnFunction;
-D.dimensions = defaultNonReturnFunction;
+S.width = λnull;
+S.height = λnull;
+S.dimensions = λnull;
+D.width = λnull;
+D.height = λnull;
+D.dimensions = λnull;
 S.pathDefinition = function (item) {
 if (item.substring) this.pathDefinition = item;
 this.dirtyPathObject = true;
@@ -207,40 +209,13 @@ return this.buildPathPositionObject(unit, myLen);
 }
 return false;
 }
-P.calculateSensors = function () {
-let sensorSpacing = this.sensorSpacing || 50,
-length = this.length,
-segments = parseInt(length / sensorSpacing, 10),
-pos = 0,
-data, i, iz;
-if (segments < 4) segments = 4;
-let segmentLength = 1 / segments;
-let sensors = this.currentSensors;
-sensors.length = 0;
-data = this.getPathPositionData(0);
-sensors.push([data.x, data.y]);
-for (i = 0; i < segments; i++) {
-pos += segmentLength;
-data = this.getPathPositionData(pos);
-sensors.push([data.x, data.y]);
-}
-};
 P.prepareStamp = function() {
 if (this.dirtyHost) this.dirtyHost = false;
 if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyHandle) {
 this.dirtyPathObject = true;
-if (this.collides) this.dirtyCollision = true;
 if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
 }
-if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
-this.dirtyStampPositions = true;
-if (this.collides) this.dirtyCollision = true;
-}
-if ((this.dirtyRotation || this.dirtyOffset) && this.collides) this.dirtyCollision = true;
-if (this.dirtyCollision && !this.useAsPath) {
-this.dirtyPathObject = true;
-this.pathCalculatedOnce = false;
-}
+if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) this.dirtyStampPositions = true;
 if (this.dirtyScale) this.cleanScale();
 if (this.dirtyStart) this.cleanStart();
 if (this.dirtyOffset) this.cleanOffset();
@@ -269,7 +244,6 @@ this.pathObject = new Path2D(`m${-handle[0]},${-handle[1]}${this.localPath}`);
 };
 P.calculateLocalPath = function (d, isCalledFromAdditionalActions) {
 let res;
-if (this.collides) this.useAsPath = true;
 if (!this.pathCalculatedOnce) {
 res = calculatePath(d, this.currentScale, this.currentStart, this.useAsPath, this.precision);
 this.pathCalculatedOnce = true;
@@ -327,7 +301,7 @@ this.unitPositions = flatPositions;
 if (!isCalledFromAdditionalActions) this.calculateLocalPathAdditionalActions();
 }
 };
-P.calculateLocalPathAdditionalActions = defaultNonReturnFunction;
+P.calculateLocalPathAdditionalActions = λnull;
 P.updatePathSubscribers = function () {
 this.pathed.forEach(name => {
 let instance = artefact[name];

@@ -1,12 +1,8 @@
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, pushUnique, isa_number, isa_obj,
-defaultNonReturnFunction, xt, xta } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_number, isa_obj, λnull, xt, xta } from '../core/utilities.js';
 import { requestCell, releaseCell } from './cell.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
-import filterMix from '../mixin/filter.js';
 const Grid = function (items = {}) {
 this.tileFill = [];
 this.tileSources = [];
@@ -43,10 +39,7 @@ P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = entityMix(P);
-P = filterMix(P);
 let defaultAttributes = {
 columns: 2,
 rows: 2,
@@ -96,7 +89,7 @@ this.tileFill = newFill;
 }
 this.dirtyPathObject = true;
 };
-D.columns = defaultNonReturnFunction;
+D.columns = λnull;
 S.rows = function (item) {
 if (isa_number(item)) {
 if (!Number.isInteger(item)) item = parseInt(item, 10);
@@ -109,7 +102,7 @@ if (currentRows < item) this.tileFill.fill(0, currentRows * this.columns);
 }
 this.dirtyPathObject = true;
 };
-D.rows = defaultNonReturnFunction;
+D.rows = λnull;
 P.setAllTilesTo = function (val) {
 if (isa_number(val)) {
 if (!Number.isInteger(val)) val = parseInt(val, 10);

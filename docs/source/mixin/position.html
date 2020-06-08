@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -487,16 +522,7 @@ scrawl.makeBlock({
 </ul>
 <p>We can <strong><em>emulate 3D rotations for Picture entity artefacts</em></strong> using the <a href="../factory/loom.html">Loom entity</a> - see Demo <a href="../../demo/dom-015.html">DOM-015</a> for an example of this in action.</p>
 <h5 id="collision-detection">Collision detection</h5>
-<p>The Scrawl-canvas collision detection system is entirely artefact-based</p>
-<ul>
-<li>By default, the CD system is disabled for artefacts</li>
-<li>However every artefact includes a <code>checkHit</code> function which reports whether a given Coordinate is in collision with it, using the Canvas API CanvasRenderingContext2D <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/isPointInPath">isPointInPath</a> function.</li>
-<li>We can enable an artefact’s CD functionality by setting its <strong>collides</strong> flag.</li>
-<li>When the <code>collides</code> flag is enabled, the artefact will (re)generate a set of <strong>sensor point coordinates</strong> as part of any changes to its position and rotation.</li>
-<li>These sensor points sit along the artefact’s <strong><em>stroke path</em></strong>; their density is determined by the value of its <strong>sensorSpacing</strong> attribute (default: 50px)</li>
-<li>The collision detection functionality itself is mediated by Group objects; we can get an artefact to feed in its sensor points to the Group’s <code>getArtefactAt</code> or <code>getAllArtefactsAt</code> functions, which return a <strong>hit report object</strong>, or an Array of such objects, or false if no hits are detected.</li>
-</ul>
-<p>See Demos <a href="../../demo/canvas-019.html">Canvas-019</a> and <a href="../../demo/dom-013.html">DOM-013</a> for examples of this functionality in action.</p>
+<p>Collision detection functionality - beyond mouse drag-and-drop - has been removed from Scrawl-canvas since v8.2.0</p>
 
             </div>
             
@@ -514,9 +540,7 @@ scrawl.makeBlock({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, group, tween } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { defaultNonReturnFunction, mergeOver, mergeInto, mergeDiscard, 
-    isa_obj, isa_number, isa_boolean, xt, xta, xto, xtGet, 
-    addStrings, pushUnique, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 <span class="hljs-keyword">import</span> { currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/userInteraction.js'</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/coordinate.js'</span>;
@@ -735,28 +759,11 @@ myBlock.setDelta({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p><strong>delta</strong> - a Javascript object containing <code>{key:value, key:value, etc}</code> attributes. </p>
-<ul>
-<li>As part of the Display cycle, delta values get added to artefact attribute values - this is a very simple form of animation.</li>
-<li><strong>noDeltaUpdates</strong> - Boolean flag to switch off the automatic application of delta attribute values as part of each iteration of the Display cycle.</li>
-<li>Delta updates can be invoked independently from the Display cycle by invoking <code>artefact.updateByDelta</code>, <code>artefact.reverseByDelta</code>.</li>
-<li>In addition to using <code>artefact.set</code>, we can also update the delta object values using <code>artefact.setDeltaValues</code>.</li>
-</ul>
-<pre><code><span class="hljs-comment">// This Block artefact will animate itself across the &lt;canvas&gt; element</span>
-<span class="hljs-comment">// - it will move to the right and upwards until the `delta` values are updated</span>
-<span class="hljs-comment">// - animation will stop when the `noDeltaUpdates` flag is set</span>
-<span class="hljs-keyword">let</span> myBlock = scrawl.makeBlock({
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'left'</span>, <span class="hljs-number">500</span>],
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">startX</span>: <span class="hljs-number">0.5</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">'-0.3'</span>,
-    },
-    <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">false</span>,
-});</code></pre>
+              <p><strong>pivoted</strong> - internal Array holding details of the artefacts using this artefact as their pivot reference.</p>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>        delta: <span class="hljs-literal">null</span>,
-        <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        pivoted: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -767,146 +774,6 @@ myBlock.setDelta({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p><strong>pivot</strong> - reference artefact object. Can also be set using the artefact’s name-String.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        pivot: <span class="hljs-string">''</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <p><strong>pivotCorner</strong> - Element artefacts allow other artefacts to use their corner positions as pivots, by setting this attribute to <code>topLeft</code>, <code>topRight</code>, <code>bottomRight</code> or <code>bottomLeft</code>; default is <code>&#39;&#39;</code> to use the Element’s start coordinate.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        pivotCorner: <span class="hljs-string">''</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p><strong>pivotPin</strong> - Polyline entitys are composed of a set of pin coordinates with the start being pin[0]; can reference other pins by setting this attribute to the appropriate index value (for example, the second pin will be pin[1]).</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        pivotPin: <span class="hljs-number">0</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p><strong>pivoted</strong> - internal Array holding details of the artefacts using this artefact as their pivot reference.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        pivoted: <span class="hljs-literal">null</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p><strong>addPivotHandle</strong>, <strong>addPivotOffset</strong>, <strong>addPivotRotation</strong> - Boolean flags. When set, the artifact will add its own values to the reference artefact’s values, rather than use them as replacement values.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        addPivotHandle: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">addPivotOffset</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">false</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p><strong>path</strong> - reference Shape entity object. Can also be set using the Shape’s name-String.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        path: <span class="hljs-string">''</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <p><strong>pathPosition</strong> - float Number between <code>0.0</code> - <code>1.0</code> representing the distance along the Shape path which is to be used as the reference coordinate.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        pathPosition: <span class="hljs-number">0</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p><strong>addPathHandle</strong>, <strong>addPathOffset</strong>, <strong>addPathRotation</strong> - Boolean flags. When set, the artifact will add its own values to the reference artefact’s values, rather than use them as replacement values.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        addPathHandle: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">addPathOffset</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">constantPathSpeed</span>: <span class="hljs-literal">false</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p><strong>mimic</strong> - reference artefact object. Can also be set using the artefact’s name-String.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        mimic: <span class="hljs-string">''</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
               <p><strong>mimicked</strong> - internal Array holding details of the artefacts using this artefact as their mimic reference.</p>
 
             </div>
@@ -916,52 +783,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-23">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p><strong>useMimic…</strong> - a set of Boolean flags determining which attributes should be taken from the mimic reference artefact. By default, the artefact will use its own attribute values; setting any of these flags changes the behaviour for that attribute.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        useMimicDimensions: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">useMimicScale</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">useMimicOffset</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">useMimicRotation</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">useMimicFlip</span>: <span class="hljs-literal">false</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p><strong>addOwn…ToMimic</strong> - a set of Boolean flags determining which mimic attributes should be added to this artefact’s own attribute values. By default, none are added; setting any of these flags changes the behaviour for that attribute.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        addOwnDimensionsToMimic: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">addOwnScaleToMimic</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">addOwnStartToMimic</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">addOwnOffsetToMimic</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">addOwnRotationToMimic</span>: <span class="hljs-literal">false</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><strong>lockTo</strong> - <code>[x-lock, y-lock]</code> Array; locks can be set to: <code>start</code> (the default), <code>pivot</code>, <code>path</code>, <code>mimic</code>, or <code>mouse</code>.</p>
 <ul>
@@ -975,11 +801,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>All artefacts (except compound entities such as Loom) can be scaled by setting their <strong>scale</strong> attribute to an appropriate float Number value:</p>
 <ul>
@@ -996,11 +822,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-27">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p><strong>roll</strong> - float Number representing the artefact’s rotation around the <code>z-axis</code> of its <strong><em>Rotation-Reflection point</em></strong>.</p>
 <ul>
@@ -1015,44 +841,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-28">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p><strong>collides</strong> - by default, artefacts do not perform collision detection; it has to be switched on by setting this Boolean flag.</p>
-<ul>
-<li>mouse/touch cursor position detection over the artefact - for a range of functionalities including <em>drag-and-drop</em>, hover state, etc - is enabled by default and cannot be switched off.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        collides: <span class="hljs-literal">false</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p><strong>sensorSpacing</strong> - integer Number value representing the distance (measured in px) between collision detection sensors placed along the artefact’s stroke path.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        sensorSpacing: <span class="hljs-number">50</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <h5 id="animation-speed">Animation speed</h5>
 <p>Scrawl-canvas assumes that an artefact will be <em>ready for anything</em>. However if we know beforehand that an artefact will not be requiring certain functionalities, we can switch them off; this will help make the artefact render more quickly. These <strong>noXXX</strong> flags include:</p>
@@ -1075,18 +868,33 @@ myBlock.setDelta({
         <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">noCanvasEngineUpdates</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">noFilters</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">noPathUpdates</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">noPathUpdates</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p><strong>purge</strong> - ?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        purge: <span class="hljs-literal">null</span>,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
         
-        <li id="section-31">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1095,7 +903,7 @@ myBlock.setDelta({
             <div class="content"><div class='highlight'><pre>    P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'pathObject'</span>, <span class="hljs-string">'mimicked'</span>, <span class="hljs-string">'pivoted'</span>]);
     P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, [<span class="hljs-string">'^(local|dirty|current)'</span>, <span class="hljs-string">'Subscriber$'</span>]);
     P.packetCoordinates = pushUnique(P.packetCoordinates, [<span class="hljs-string">'start'</span>, <span class="hljs-string">'handle'</span>, <span class="hljs-string">'offset'</span>]);
-    P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'group'</span>, <span class="hljs-string">'pivot'</span>, <span class="hljs-string">'path'</span>, <span class="hljs-string">'mimic'</span>]);
+    P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'group'</span>]);
     P.packetFunctions = pushUnique(P.packetFunctions, []);
 
     P.processPacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key, value, includes</span>) </span>{
@@ -1134,11 +942,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-32">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality defined here</p>
@@ -1148,11 +956,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-33">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1165,11 +973,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-34">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Remove artefact from all groups</p>
 
@@ -1183,11 +991,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-35">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>If the artefact has an anchor, it needs to be removed</p>
 
@@ -1198,11 +1006,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-36">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Remove from other artefacts</p>
 
@@ -1229,11 +1037,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-37">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Remove from tweens and actions targets arrays</p>
 
@@ -1247,11 +1055,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-38">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Factory-specific actions required to complete the kill</p>
 
@@ -1262,11 +1070,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-39">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Remove artefact from the Scrawl-canvas library</p>
 
@@ -1280,26 +1088,26 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-40">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Specific factories can overwrite this function to perform additional actions required to clean themselves from the Scrawl-canvas system</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.factoryKill = defaultNonReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.factoryKill = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-41">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <ul>
@@ -1315,11 +1123,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-42">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><strong>start</strong>, <strong>startX</strong>, <strong>startY</strong></p>
 
@@ -1379,11 +1187,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-43">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p><strong>handle</strong>, <strong>handleX</strong>, <strong>handleY</strong></p>
 
@@ -1443,11 +1251,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-44">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p><strong>offset</strong>, <strong>offsetX</strong>, <strong>offsetY</strong></p>
 
@@ -1507,11 +1315,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-45">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p><strong>dimensions</strong>, <strong>width</strong>, <strong>height</strong></p>
 
@@ -1571,371 +1379,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-46">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
-              </div>
-              <p><strong>sensorSpacing</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.sensorSpacing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.sensorSpacing = val;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
-    };
-    D.sensorSpacing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.sensorSpacing += val;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
-              </div>
-              <p><strong>pivot</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.pivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (isa_boolean(item) &amp;&amp; !item) {
-
-            <span class="hljs-keyword">this</span>.pivot = <span class="hljs-literal">null</span>;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'pivot'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">'start'</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'pivot'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">'start'</span>;
-
-            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-        }
-        <span class="hljs-keyword">else</span> {
-
-            <span class="hljs-keyword">let</span> oldPivot = <span class="hljs-keyword">this</span>.pivot,
-                newPivot = (item.substring) ? artefact[item] : item,
-                name = <span class="hljs-keyword">this</span>.name;
-
-            <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.name) {
-
-                <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
-
-                pushUnique(newPivot.pivoted, name);
-
-                <span class="hljs-keyword">this</span>.pivot = newPivot;
-                <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-            }
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
-              </div>
-              <p><strong>pivotCorner</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.pivotCorners = [<span class="hljs-string">'topLeft'</span>, <span class="hljs-string">'topRight'</span>, <span class="hljs-string">'bottomRight'</span>, <span class="hljs-string">'bottomLeft'</span>];
-    S.pivotCorner = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.pivotCorners.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.pivotCorner = item;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
-              </div>
-              <p><strong>addPivotHandle</strong>, <strong>addPivotOffset</strong>, <strong>addPivotRotation</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.addPivotHandle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addPivotHandle = item;
-        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    };
-    S.addPivotOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addPivotOffset = item;
-        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
-    };
-    S.addPivotRotation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addPivotRotation = item;
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
-              </div>
-              <p><strong>path</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.path = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (isa_boolean(item) &amp;&amp; !item) {
-
-            <span class="hljs-keyword">this</span>.path = <span class="hljs-literal">null</span>;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">'start'</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'path'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">'start'</span>;
-
-            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-        }
-        <span class="hljs-keyword">else</span> {
-
-            <span class="hljs-keyword">let</span> oldPath = <span class="hljs-keyword">this</span>.path,
-                newPath = (item.substring) ? artefact[item] : item,
-                name = <span class="hljs-keyword">this</span>.name;
-
-            <span class="hljs-keyword">if</span> (newPath &amp;&amp; newPath.name &amp;&amp; newPath.useAsPath) {
-
-                <span class="hljs-keyword">if</span> (oldPath &amp;&amp; oldPath.name !== newPath.name) removeItem(oldPath.pathed, name);
-
-                pushUnique(newPath.pathed, name);
-
-                <span class="hljs-keyword">this</span>.path = newPath;
-                <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-            }
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
-              </div>
-              <p> <strong>pathPosition</strong></p>
-<ul>
-<li>TODO: current functionality is for pathPosition to loop - is there a case for adding a pathPosition loop flag? If yes, then when that flag is false values &lt; 0 would be corrected back to 0, and vals &gt; 1 would be corrected back to 1.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.pathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-built_in">Math</span>.abs(item);
-        <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">1</span>) item = item % <span class="hljs-number">1</span>;
-
-        <span class="hljs-keyword">this</span>.pathPosition = <span class="hljs-built_in">parseFloat</span>(item.toFixed(<span class="hljs-number">6</span>));
-        <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.currentPathData = <span class="hljs-literal">false</span>;
-    };
-    D.pathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">let</span> pos = <span class="hljs-keyword">this</span>.pathPosition + item
-
-        <span class="hljs-keyword">if</span> (pos &lt; <span class="hljs-number">0</span>) pos += <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (pos &gt; <span class="hljs-number">1</span>) pos = pos % <span class="hljs-number">1</span>;
-
-        <span class="hljs-keyword">this</span>.pathPosition = <span class="hljs-built_in">parseFloat</span>(pos.toFixed(<span class="hljs-number">6</span>));
-        <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.currentPathData = <span class="hljs-literal">false</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
-              </div>
-              <p><strong>addPathHandle</strong>, <strong>addPathOffset</strong>, <strong>addPathRotation</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.addPathHandle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addPathHandle = item;
-        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    };
-    S.addPathOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addPathOffset = item;
-        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
-    };
-    S.addPathRotation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addPathRotation = item;
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-53">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
-              </div>
-              <p><strong>mimic</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.mimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (isa_boolean(item) &amp;&amp; !item) {
-
-            <span class="hljs-keyword">this</span>.mimic = <span class="hljs-literal">null</span>;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'mimic'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">'start'</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'mimic'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">'start'</span>;
-
-            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-        }
-        <span class="hljs-keyword">else</span> {
-
-            <span class="hljs-keyword">let</span> oldMimic = <span class="hljs-keyword">this</span>.mimic,
-                newMimic = (item.substring) ? artefact[item] : item,
-                name = <span class="hljs-keyword">this</span>.name;
-
-            <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.name) {
-
-                <span class="hljs-keyword">if</span> (oldMimic &amp;&amp; oldMimic.name !== newMimic.name) removeItem(oldMimic.mimicked, name);
-
-                pushUnique(newMimic.mimicked, name);
-
-                <span class="hljs-keyword">this</span>.mimic = newMimic;
-                <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-            }
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
-              </div>
-              <p><strong>useMimicDimensions</strong>, <strong>useMimicScale</strong>, <strong>useMimicStart</strong>, <strong>useMimicHandle</strong>, <strong>useMimicOffset</strong>, <strong>useMimicRotation</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.useMimicDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.useMimicDimensions = item;
-        <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
-    };
-    S.useMimicScale = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.useMimicScale = item;
-        <span class="hljs-keyword">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
-    };
-    S.useMimicStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.useMimicStart = item;
-        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    };
-    S.useMimicHandle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.useMimicHandle = item;
-        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    };
-    S.useMimicOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.useMimicOffset = item;
-        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
-    };
-    S.useMimicRotation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.useMimicRotation = item;
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-55">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
-              </div>
-              <p><strong>addOwnDimensionsToMimic</strong>, <strong>addOwnScaleToMimic</strong>, <strong>addOwnStartToMimic</strong>, <strong>addOwnHandleToMimic</strong>, <strong>addOwnOffsetToMimic</strong>, <strong>addOwnRotationToMimic</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.addOwnDimensionsToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addOwnDimensionsToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
-    };
-    S.addOwnScaleToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addOwnScaleToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
-    };
-    S.addOwnStartToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addOwnStartToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    };
-    S.addOwnHandleToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addOwnHandleToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    };
-    S.addOwnOffsetToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addOwnOffsetToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
-    };
-    S.addOwnRotationToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-        <span class="hljs-keyword">this</span>.addOwnRotationToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-56">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p><strong>lockXTo</strong>, <strong>lockYTo</strong>, <strong>lockTo</strong></p>
 
@@ -1969,11 +1417,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-57">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p><strong>roll</strong></p>
 
@@ -1993,11 +1441,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-58">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p><strong>scale</strong></p>
 
@@ -2017,29 +1465,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-59">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
-              </div>
-              <p><strong>delta</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.delta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (items) <span class="hljs-keyword">this</span>.delta = mergeDiscard(<span class="hljs-keyword">this</span>.delta, items);
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-60">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p><strong>host</strong> - internal function</p>
 
@@ -2065,11 +1495,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-61">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p><strong>group</strong></p>
 
@@ -2099,11 +1529,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-62">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -2112,11 +1542,90 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-63">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p><code>purgeArtefact</code> - Artefact objects gather many attributes during their creation. Many of these may not be subsequentlyt used - for instance, if the artefact is never going to mimic another artefact, then it doesn’t need all the attributes and flags associated with mimic functionality. In such cases, we can purge the artefact object of those attributes to free up a tiny bit of extra memory</p>
+<ul>
+<li>Argument can be a string of value <code>pivot</code>, <code>mimic</code>, <code>path</code>, <code>filter</code>, or an array of such strings.</li>
+<li>Passing the argument <code>all</code> will purge all attributes listed in the <code>doPurge</code> internal function.</li>
+<li>Clone functionality - include items to be purged</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.purgeArtefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    	<span class="hljs-keyword">const</span> doPurge = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">art, val</span>) </span>{
+
+    		<span class="hljs-keyword">switch</span> (val) {
+
+    			<span class="hljs-keyword">case</span> <span class="hljs-string">'pivot'</span> :
+                    <span class="hljs-keyword">delete</span> art.pivot;
+                    <span class="hljs-keyword">delete</span> art.pivotCorner;
+                    <span class="hljs-keyword">delete</span> art.pivotPin;
+                    <span class="hljs-keyword">delete</span> art.addPivotHandle;
+                    <span class="hljs-keyword">delete</span> art.addPivotOffset;
+                    <span class="hljs-keyword">delete</span> art.addPivotRotation;
+    				<span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'mimic'</span> :
+                    <span class="hljs-keyword">delete</span> art.mimic;
+                    <span class="hljs-keyword">delete</span> art.useMimicDimensions;
+                    <span class="hljs-keyword">delete</span> art.useMimicScale;
+                    <span class="hljs-keyword">delete</span> art.useMimicStart;
+                    <span class="hljs-keyword">delete</span> art.useMimicHandle;
+                    <span class="hljs-keyword">delete</span> art.useMimicOffset;
+                    <span class="hljs-keyword">delete</span> art.useMimicRotation;
+                    <span class="hljs-keyword">delete</span> art.useMimicFlip;
+                    <span class="hljs-keyword">delete</span> art.addOwnDimensionsToMimic;
+                    <span class="hljs-keyword">delete</span> art.addOwnScaleToMimic;
+                    <span class="hljs-keyword">delete</span> art.addOwnStartToMimic;
+                    <span class="hljs-keyword">delete</span> art.addOwnHandleToMimic;
+                    <span class="hljs-keyword">delete</span> art.addOwnOffsetToMimic;
+                    <span class="hljs-keyword">delete</span> art.addOwnRotationToMimic;
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'path'</span> :
+                    <span class="hljs-keyword">delete</span> art.path;
+                    <span class="hljs-keyword">delete</span> art.pathPosition;
+                    <span class="hljs-keyword">delete</span> art.addPathHandle;
+                    <span class="hljs-keyword">delete</span> art.addPathOffset;
+                    <span class="hljs-keyword">delete</span> art.addPathRotation;
+                    <span class="hljs-keyword">delete</span> art.constantPathSpeed;
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'filter'</span> :
+                    <span class="hljs-keyword">delete</span> art.filter;
+                    <span class="hljs-keyword">delete</span> art.filterAlpha;
+                    <span class="hljs-keyword">delete</span> art.filterComposite;
+                    <span class="hljs-keyword">delete</span> art.isStencil;
+                    <span class="hljs-keyword">break</span>;
+    		}
+    	}
+
+    	<span class="hljs-keyword">if</span> (item.substring) {
+
+            <span class="hljs-keyword">if</span> (item === <span class="hljs-string">'all'</span>) item = [<span class="hljs-string">'pivot'</span>, <span class="hljs-string">'mimic'</span>, <span class="hljs-string">'path'</span>, <span class="hljs-string">'filter'</span>];
+            <span class="hljs-keyword">else</span> item = [item];
+        }
+
+    	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) item.forEach(<span class="hljs-function"><span class="hljs-params">purge</span> =&gt;</span> doPurge(<span class="hljs-keyword">this</span>, purge));
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p><code>initializePositions</code> - Internal function called by all artefact factories </p>
 <ul>
@@ -2165,16 +1674,16 @@ myBlock.setDelta({
         <span class="hljs-keyword">this</span>.initializeDomPositions();
     };
 
-    P.initializeDomPositions = defaultNonReturnFunction;</pre></div></div>
+    P.initializeDomPositions = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-64">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p><code>setCoordinateHelper</code> - internal helper function used by positional and dimensional setter (S.) functions. Arguments are:</p>
 <ul>
@@ -2218,11 +1727,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-65">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p><code>setCoordinateHelper</code> - internal helper function used by positional and dimensional delta-setter (D.) functions. Arguments are:</p>
 <ul>
@@ -2268,147 +1777,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-66">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
-              </div>
-              <p><code>updateByDelta</code> - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the <strong>delta</strong> attribute object then those <strong>delta animations</strong> will start playing immediately.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.updateByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">this</span>.setDelta(<span class="hljs-keyword">this</span>.delta);
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-67">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
-              </div>
-              <p><code>reverseByDelta</code> - The opposite action to ‘updateByDelta’; values in the <strong>delta</strong> attribute object will be subtracted from the current value for that Scrawl-canvas object.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">let</span> temp = {};
-        
-        <span class="hljs-built_in">Object</span>.entries(<span class="hljs-keyword">this</span>.delta).forEach(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (val.substring) val = -(<span class="hljs-built_in">parseFloat</span>(val)) + <span class="hljs-string">'%'</span>;
-            <span class="hljs-keyword">else</span> val = -val;
-
-            temp[key] = val;
-        });
-
-        <span class="hljs-keyword">this</span>.setDelta(temp);
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-68">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
-              </div>
-              <p><code>setDeltaValues</code></p>
-<ul>
-<li>TODO - the idea is that we can do things like ‘add:1’, ‘subtract:5’, ‘multiply:6’, ‘divide:3.4’, etc</li>
-<li>for this to work, we need to do do work here to split the val string on the ‘:’</li>
-<li>for now, just do reverse and zero numbers</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.setDeltaValues = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-
-        <span class="hljs-keyword">let</span> delta = <span class="hljs-keyword">this</span>.delta, 
-            oldVal, action;
-
-        <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, requirement]</span>) =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (xt(delta[key])) {
-
-                action = requirement;
-
-                oldVal = delta[key];
-
-                <span class="hljs-keyword">switch</span> (action) {
-
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'reverse'</span> :
-                        <span class="hljs-keyword">if</span> (oldVal.toFixed) delta[key] = -oldVal;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-69">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
-              </div>
-              <p>TODO: reverse String% (and em, etc) values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">break</span>;
-
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'zero'</span> :
-                        <span class="hljs-keyword">if</span> (oldVal.toFixed) delta[key] = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
-              </div>
-              <p>TODO: zero String% (and em, etc) values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">break</span>;
-
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'add'</span> :
-                        <span class="hljs-keyword">break</span>;
-
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'subtract'</span> :
-                        <span class="hljs-keyword">break</span>;
-
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'multiply'</span> :
-                        <span class="hljs-keyword">break</span>;
-
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'divide'</span> :
-                        <span class="hljs-keyword">break</span>;
-                }
-            }
-        })
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-71">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p><code>getHost</code> - internal function - return the <strong>host</strong> object. Hosts can be various things, for instance:</p>
 <ul>
@@ -2441,11 +1814,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-72">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p><code>getHere</code> - the <strong>here</strong> parameter is owned by Canvas, Stack and (if enabled) Element artefacts and is set on them by calling <code>updateUiSubscribedElement</code> - thus not defined or updated by the artefact itself.</p>
 <pre><code>here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}</code></pre><p>Cell assets also have a <strong>here</strong> parameter, defined and updated by themselves with reference to their current Canvas host</p>
@@ -2481,11 +1854,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-73">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 <p>Clean functions are triggered by artefacts as they prepare to stamp themselves into their host environment. The decision to trigger a clean function is mediated by various <code>dirty...</code> flags, which get set when the artefact is updated via <code>set</code> and <code>deltaSet</code> calls.</p>
@@ -2495,11 +1868,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-74">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><code>cleanPosition</code> - internal helper function used by <code>cleanStart</code>, <code>cleanHandle</code> and <code>cleanOffset</code> functions</p>
 
@@ -2525,11 +1898,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-75">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><code>cleanScale</code> - set the artefact’s <strong>currentScale</strong> value.</p>
 <ul>
@@ -2577,11 +1950,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-76">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><code>cleanDimensions</code> - calculate the artefact’s <strong>currentDimensions</strong> Array</p>
 <ul>
@@ -2646,26 +2019,26 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-77">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwritten by some artefact factory files</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.cleanDimensionsAdditionalActions = defaultNonReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.cleanDimensionsAdditionalActions = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-78">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p><code>cleanLock</code> - clean function for <strong>lockTo</strong> array</p>
 
@@ -2682,11 +2055,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-79">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p><code>cleanStart</code> - calculate the artefact’s <strong>currentStart</strong> Array</p>
 <ul>
@@ -2716,11 +2089,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-80">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p><code>cleanOffset</code> - calculate the artefact’s <strong>currentOffset</strong> Array</p>
 <ul>
@@ -2752,11 +2125,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-81">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><code>cleanHandle</code> - calculate the artefact’s <strong>currentHandle</strong> Array</p>
 <ul>
@@ -2782,11 +2155,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-82">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><code>cleanRotation</code> - calculate the artefact’s <strong>currentRotation</strong> value</p>
 <ul>
@@ -2850,11 +2223,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-83">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>If this artefact is being mimicked by other artefacts, it needs to check its rotation values on every iteration of the display cycle</p>
 
@@ -2866,11 +2239,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-84">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><code>cleanStampPositions</code> </p>
 <ul>
@@ -2925,11 +2298,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-85">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p><code>x</code> and <code>y</code> coordinates can have different lockTo values</p>
 
@@ -2954,11 +2327,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-86">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>We loop twice - once for each coordinate: <code>x</code> is calculated on the first loop (<code>i === 0</code>); <code>y</code> on the second (<code>i === 1</code>)</p>
 
@@ -2975,11 +2348,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-87">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>When the pivot is an Element artefact, can use its corner values as pivots</p>
 
@@ -2993,11 +2366,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-88">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)</p>
 
@@ -3011,11 +2384,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-89">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>Everything else</p>
 
@@ -3064,7 +2437,6 @@ myBlock.setDelta({
 
                             cache[i] = coord;
                             coord += drag[i];
-                            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">true</span>;
                         }
                         coord += offset[i];
 
@@ -3075,48 +2447,18 @@ myBlock.setDelta({
                 }
                 stamp[i] = coord;
             }
-        }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-90">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
-              </div>
-              <p>Specific to non-entity artefacts </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; <span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-
+        }
         <span class="hljs-keyword">if</span> (oldX !== stamp[<span class="hljs-number">0</span>] || oldY !== stamp[<span class="hljs-number">1</span>]) <span class="hljs-keyword">this</span>.dirtyPositionSubscribers = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-91">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
-              </div>
-              <p><code>cleanStampPositionsAdditionalActions</code> - some artefact types need to perform additional calculations to finalize the values in the <strong>currentStampPosition</strong> array. Those factory functions will overwrite this function as required.
-P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-92">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p><code>cleanStampHandlePositions</code> </p>
 <ul>
@@ -3154,11 +2496,11 @@ P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;</p>
         </li>
         
         
-        <li id="section-93">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>We loop twice - once for each coordinate: <code>x</code> is calculated on the first loop (<code>i === 0</code>); <code>y</code> on the second (<code>i === 1</code>)</p>
 
@@ -3200,11 +2542,11 @@ P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;</p>
         </li>
         
         
-        <li id="section-94">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-94">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality. </p>
 
@@ -3213,261 +2555,120 @@ P.cleanStampPositionsAdditionalActions = defaultNonReturnFunction;</p>
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.cleanStampHandlePositionsAdditionalActions();
 
         <span class="hljs-keyword">if</span> (oldX !== stampHandle[<span class="hljs-number">0</span>] || oldY !== stampHandle[<span class="hljs-number">1</span>]) <span class="hljs-keyword">this</span>.dirtyPositionSubscribers = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; <span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
     };
-    P.cleanStampHandlePositionsAdditionalActions = defaultNonReturnFunction;</pre></div></div>
+    P.cleanStampHandlePositionsAdditionalActions = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-95">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-95">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
-              <h4 id="collision-functionality">Collision functionality</h4>
+              <p>// <code>getPathData</code>
+    P.getPathData = function () {</p>
 
             </div>
             
         </li>
         
         
-        <li id="section-96">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-96">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
-              <p><code>cleanCollisionData</code></p>
-<ul>
-<li>We only need to recalculate collisions data when the artefact has been asked to perform some collision detection functionality - it does not happen as part of the Display cycle</li>
-</ul>
-
+              <pre><code>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentPathData) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentPathData;</code></pre>
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.cleanCollisionData = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.currentCollisionRadius) <span class="hljs-keyword">this</span>.currentCollisionRadius = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.currentSensors) <span class="hljs-keyword">this</span>.currentSensors = [];
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noUserInteraction) {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyCollision) {
-
-                <span class="hljs-keyword">this</span>.dirtyCollision = <span class="hljs-literal">false</span>;
-
-                <span class="hljs-keyword">this</span>.calculateCollisionRadius();
-
-                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.collides) <span class="hljs-keyword">this</span>.calculateSensors();
-            }
-        }
-        <span class="hljs-keyword">return</span> [<span class="hljs-keyword">this</span>.currentCollisionRadius, <span class="hljs-keyword">this</span>.currentSensors];
-    };</pre></div></div>
             
         </li>
         
         
-        <li id="section-97">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-97">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
-              <p><code>calculateCollisionRadius</code>
-We can use the <strong>currentCollisionRadius</strong> attribute to quickly calculate whether two given artefacts are capable of intersecting, before proceeding to check if they do intersect (assuming they can)</p>
-
+              <pre><code>    <span class="hljs-keyword">let</span> pathPos = <span class="hljs-keyword">this</span>.pathPosition,
+        path = <span class="hljs-keyword">this</span>.path,
+        currentPathData;</code></pre>
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.calculateCollisionRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noUserInteraction) {
-
-            <span class="hljs-keyword">let</span> stamp = <span class="hljs-keyword">this</span>.currentStampPosition,
-                handle = <span class="hljs-keyword">this</span>.currentStampHandlePosition,
-                dims = <span class="hljs-keyword">this</span>.currentDimensions,
-                scale = <span class="hljs-keyword">this</span>.currentScale;
-
-            <span class="hljs-keyword">let</span> radii = [],
-                sx = stamp[<span class="hljs-number">0</span>],
-                sy = stamp[<span class="hljs-number">1</span>],
-                lx = (sx - (handle[<span class="hljs-number">0</span>] * scale)),
-                ty = (sy - (handle[<span class="hljs-number">1</span>] * scale)),
-                rx = lx + (dims[<span class="hljs-number">0</span>] * scale),
-                by = ty + (dims[<span class="hljs-number">1</span>] * scale);</pre></div></div>
             
         </li>
         
         
-        <li id="section-98">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-98">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
-              <p>BUG: fails for DOM-based artefacts (Stack, Canvas, Element) whose computed height is <code>0</code> - because: <code>auto</code>?</p>
-
+              <pre><code>    <span class="hljs-keyword">if</span> (path) {</code></pre>
             </div>
-            
-            <div class="content"><div class='highlight'><pre>            radii.push(<span class="hljs-built_in">Math</span>.sqrt(((sx - lx) * (sx - lx)) + ((sy - ty) * (sy - ty))));
-            radii.push(<span class="hljs-built_in">Math</span>.sqrt(((sx - rx) * (sx - rx)) + ((sy - by) * (sy - by))));
-            radii.push(<span class="hljs-built_in">Math</span>.sqrt(((sx - lx) * (sx - lx)) + ((sy - by) * (sy - by))));
-            radii.push(<span class="hljs-built_in">Math</span>.sqrt(((sx - rx) * (sx - rx)) + ((sy - ty) * (sy - ty))));
-
-            <span class="hljs-keyword">this</span>.currentCollisionRadius = <span class="hljs-built_in">Math</span>.ceil(<span class="hljs-built_in">Math</span>.max(...radii));
-        }
-    };</pre></div></div>
             
         </li>
         
         
-        <li id="section-99">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-99">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
-              <p><code>calculateSensors</code> - internal function - overwritten by various artefact factories to meet their specific requirements</p>
-
+              <pre><code>        currentPathData = path.getPathPositionData(pathPos, <span class="hljs-keyword">this</span>.constantPathSpeed);</code></pre>
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.calculateSensors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noUserInteraction) {
-
-            <span class="hljs-keyword">let</span> stamp = <span class="hljs-keyword">this</span>.currentStampPosition,
-                handle = <span class="hljs-keyword">this</span>.currentStampHandlePosition,
-                dims = <span class="hljs-keyword">this</span>.currentDimensions,
-                scale = <span class="hljs-keyword">this</span>.currentScale,
-                upend = <span class="hljs-keyword">this</span>.flipUpend,
-                reverse = <span class="hljs-keyword">this</span>.flipReverse;
-
-            <span class="hljs-keyword">let</span> rotate = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">x, y, angle, sx, sy</span>) </span>{
-
-                <span class="hljs-keyword">let</span> arr = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
-
-                arr[<span class="hljs-number">0</span>] = <span class="hljs-built_in">Math</span>.atan2(y, x);
-                arr[<span class="hljs-number">0</span>] += (angle * <span class="hljs-number">0.01745329251</span>);
-                arr[<span class="hljs-number">1</span>] = <span class="hljs-built_in">Math</span>.sqrt((x * x) + (y * y));
-
-                <span class="hljs-keyword">return</span> [<span class="hljs-built_in">Math</span>.round(arr[<span class="hljs-number">1</span>] * <span class="hljs-built_in">Math</span>.cos(arr[<span class="hljs-number">0</span>])) + sx, <span class="hljs-built_in">Math</span>.round(arr[<span class="hljs-number">1</span>] * <span class="hljs-built_in">Math</span>.sin(arr[<span class="hljs-number">0</span>])) + sy];
-            };
-
-            <span class="hljs-keyword">let</span> sensors = <span class="hljs-keyword">this</span>.currentSensors;
-            sensors.length = <span class="hljs-number">0</span>;
-
-            <span class="hljs-keyword">let</span> roll = <span class="hljs-keyword">this</span>.roll,
-                sx = stamp[<span class="hljs-number">0</span>],
-                sy = stamp[<span class="hljs-number">1</span>],
-                handleX = (reverse) ? -handle[<span class="hljs-number">0</span>] * scale : handle[<span class="hljs-number">0</span>] * scale,
-                handleY = (upend) ? -handle[<span class="hljs-number">1</span>] * scale : handle[<span class="hljs-number">1</span>] * scale,
-                lx = -handleX,
-                ty = -handleY,
-                width = dims[<span class="hljs-number">0</span>] * scale,
-                height = dims[<span class="hljs-number">1</span>] * scale,
-                rx = (reverse) ? lx - width : lx + width,
-                by = (upend) ? ty - height : ty + height;
-
-            sensors.push(rotate(lx, ty, roll, sx, sy));
-            sensors.push(rotate(rx, ty, roll, sx, sy));
-            sensors.push(rotate(rx, by, roll, sx, sy));
-            sensors.push(rotate(lx, by, roll, sx, sy));
-
-            <span class="hljs-keyword">let</span> sensorSpacing = <span class="hljs-keyword">this</span>.sensorSpacing || <span class="hljs-number">50</span>,
-                widthSensors = <span class="hljs-built_in">parseInt</span>(width / sensorSpacing, <span class="hljs-number">10</span>),
-                heightSensors = <span class="hljs-built_in">parseInt</span>(height / sensorSpacing, <span class="hljs-number">10</span>),
-                partial, place, i, iz;
-
-            <span class="hljs-keyword">if</span> (widthSensors) {
-
-                <span class="hljs-keyword">let</span> partial = width / (widthSensors + <span class="hljs-number">1</span>),
-                    place = lx;
-
-                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; widthSensors; i++) {
-
-                    place += (reverse) ? -partial : partial;
-                    sensors.push(rotate(place, ty, roll, sx, sy));
-                    sensors.push(rotate(place, by, roll, sx, sy));
-                }
-            }
-
-            <span class="hljs-keyword">if</span> (heightSensors) {
-
-                <span class="hljs-keyword">let</span> partial = height / (heightSensors + <span class="hljs-number">1</span>),
-                    place = ty;
-
-                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; heightSensors; i++) {
-
-                    place += (upend) ? -partial : partial;
-                    sensors.push(rotate(lx, place, roll, sx, sy));
-                    sensors.push(rotate(rx, place, roll, sx, sy));
-                }
-            }
-        }
-    };</pre></div></div>
             
         </li>
         
         
-        <li id="section-100">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-100">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
-              <p><code>getSensors</code></p>
-
+              <pre><code>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.addPathRotation) <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;</code></pre>
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">let</span> [entityRadius, entitySensors] = <span class="hljs-keyword">this</span>.cleanCollisionData();
-        <span class="hljs-keyword">return</span> entitySensors;
-    }</pre></div></div>
             
         </li>
         
         
-        <li id="section-101">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-101">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
-              <p><code>getPathData</code></p>
-
+              <pre><code>        <span class="hljs-keyword">this</span>.currentPathData = currentPathData;</code></pre>
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.getPathData = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentPathData) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentPathData;
-
-        <span class="hljs-keyword">let</span> pathPos = <span class="hljs-keyword">this</span>.pathPosition,
-            path = <span class="hljs-keyword">this</span>.path,
-            currentPathData;
-
-        <span class="hljs-keyword">if</span> (path) {
-
-            currentPathData = path.getPathPositionData(pathPos, <span class="hljs-keyword">this</span>.constantPathSpeed);
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.addPathRotation) <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
-
-            <span class="hljs-keyword">this</span>.currentPathData = currentPathData;
-
-            <span class="hljs-keyword">return</span> currentPathData;
-        }
-        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    };</pre></div></div>
             
         </li>
         
         
-        <li id="section-102">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-102">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <pre><code>        <span class="hljs-keyword">return</span> currentPathData;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+};</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p><code>checkHit</code></p>
 <ul>
@@ -3538,11 +2739,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-103">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-103">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>Function overwritten by entitys, if required</p>
 
@@ -3560,62 +2761,62 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-104">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-104">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p><code>pickupArtefact</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.pickupArtefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.pickupArtefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">let</span> {x, y} = items;
+        <span class="hljs-keyword">let</span> {x, y} = items;
 
-    <span class="hljs-keyword">if</span> (xta(x, y)) {
+        <span class="hljs-keyword">if</span> (xta(x, y)) {
 
-        <span class="hljs-keyword">this</span>.isBeingDragged = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.currentDragCache.set(<span class="hljs-keyword">this</span>.currentDragOffset);
+            <span class="hljs-keyword">this</span>.isBeingDragged = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">this</span>.currentDragCache.set(<span class="hljs-keyword">this</span>.currentDragOffset);
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'start'</span>) {
-            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">0</span>] - x;
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'start'</span>) {
+                <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">0</span>] - x;
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'pivot'</span> &amp;&amp; <span class="hljs-keyword">this</span>.pivot) {
+                <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.pivot.get(<span class="hljs-string">'startX'</span>) - x;
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'mimic'</span> &amp;&amp; <span class="hljs-keyword">this</span>.mimic) {
+                <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.mimic.get(<span class="hljs-string">'startX'</span>) - x;
+            }
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'start'</span>) {
+                <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">1</span>] - y;
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'pivot'</span> &amp;&amp; <span class="hljs-keyword">this</span>.pivot) {
+                <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.pivot.get(<span class="hljs-string">'startY'</span>) - y;
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'mimic'</span> &amp;&amp; <span class="hljs-keyword">this</span>.mimic) {
+                <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.mimic.get(<span class="hljs-string">'startY'</span>) - y;
+            }
+
+            <span class="hljs-keyword">this</span>.order += <span class="hljs-number">9999</span>;
+
+            <span class="hljs-keyword">this</span>.group.batchResort = <span class="hljs-literal">true</span>;
+
+            <span class="hljs-keyword">if</span> (xt(<span class="hljs-keyword">this</span>.dirtyPathObject)) <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'pivot'</span> &amp;&amp; <span class="hljs-keyword">this</span>.pivot) {
-            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.pivot.get(<span class="hljs-string">'startX'</span>) - x;
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'mimic'</span> &amp;&amp; <span class="hljs-keyword">this</span>.mimic) {
-            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.mimic.get(<span class="hljs-string">'startX'</span>) - x;
-        }
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'start'</span>) {
-            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">1</span>] - y;
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'pivot'</span> &amp;&amp; <span class="hljs-keyword">this</span>.pivot) {
-            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.pivot.get(<span class="hljs-string">'startY'</span>) - y;
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'mimic'</span> &amp;&amp; <span class="hljs-keyword">this</span>.mimic) {
-            <span class="hljs-keyword">this</span>.currentDragOffset[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.mimic.get(<span class="hljs-string">'startY'</span>) - y;
-        }
-
-        <span class="hljs-keyword">this</span>.order += <span class="hljs-number">9999</span>;
-
-        <span class="hljs-keyword">this</span>.group.batchResort = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">if</span> (xt(<span class="hljs-keyword">this</span>.dirtyPathObject)) <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};</pre></div></div>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    };</pre></div></div>
             
         </li>
         
         
-        <li id="section-105">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-105">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p><code>dropArtefact</code></p>
 
@@ -3642,11 +2843,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-106">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-106">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <h4 id="subscription-management">Subscription management</h4>
 <p>Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes. </p>
@@ -3663,11 +2864,11 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-107">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-107">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p><code>updatePositionSubscribers</code></p>
 
@@ -3685,116 +2886,71 @@ We can use the <strong>currentCollisionRadius</strong> attribute to quickly calc
         </li>
         
         
-        <li id="section-108">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-108">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p><code>updatePivotSubscribers</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.updatePivotSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">this</span>.pivoted.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> instance = artefact[name];
-
-            <span class="hljs-keyword">if</span> (instance) {
-
-                instance.dirtyStart = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.addPivotHandle) instance.dirtyHandle = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.addPivotOffset) instance.dirtyOffset = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.addPivotRotation) instance.dirtyRotation = <span class="hljs-literal">true</span>;
-
-                <span class="hljs-keyword">if</span> (instance.type === <span class="hljs-string">'Polyline'</span>) instance.dirtyPins = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (instance.type === <span class="hljs-string">'Line'</span> || instance.type === <span class="hljs-string">'Quadratic'</span> || instance.type === <span class="hljs-string">'Bezier'</span>) instance.dirtyPins.push(<span class="hljs-keyword">this</span>.name);
-            }
-        }, <span class="hljs-keyword">this</span>);
-    };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.updatePivotSubscribers = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-109">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-109">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p><code>updateMimicSubscribers</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.updateMimicSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">let</span> DMH = <span class="hljs-keyword">this</span>.dirtyMimicHandle;
-        <span class="hljs-keyword">let</span> DMO = <span class="hljs-keyword">this</span>.dirtyMimicOffset;
-        <span class="hljs-keyword">let</span> DMR = <span class="hljs-keyword">this</span>.dirtyMimicRotation;
-        <span class="hljs-keyword">let</span> DMS = <span class="hljs-keyword">this</span>.dirtyMimicScale;
-        <span class="hljs-keyword">let</span> DMD = <span class="hljs-keyword">this</span>.dirtyMimicDimensions;
-
-        <span class="hljs-keyword">this</span>.mimicked.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> instance = artefact[name];
-
-            <span class="hljs-keyword">if</span> (instance) {
-
-                <span class="hljs-keyword">if</span> (instance.useMimicStart) instance.dirtyStart = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (DMH &amp;&amp; instance.useMimicHandle) instance.dirtyHandle = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (DMO &amp;&amp; instance.useMimicOffset) instance.dirtyOffset = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (DMR &amp;&amp; instance.useMimicRotation) instance.dirtyRotation = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (DMS &amp;&amp; instance.useMimicScale) instance.dirtyScale = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (DMD &amp;&amp; instance.useMimicDimensions) instance.dirtyDimensions = <span class="hljs-literal">true</span>;
-            }
-        });
-
-        <span class="hljs-keyword">this</span>.dirtyMimicHandle = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">this</span>.dirtyMimicOffset = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">this</span>.dirtyMimicRotation = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">this</span>.dirtyMimicScale = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">this</span>.dirtyMimicDimensions = <span class="hljs-literal">false</span>;
-    };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.updateMimicSubscribers = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-110">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-110">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p><code>updatePathSubscribers</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.updatePathSubscribers = defaultNonReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.updatePathSubscribers = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-111">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-111">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <p><code>updateImageSubscribers</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.updateImageSubscribers = defaultNonReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.updateImageSubscribers = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-112">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-112">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

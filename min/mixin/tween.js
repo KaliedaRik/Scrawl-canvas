@@ -1,5 +1,17 @@
-import { constructors, animationtickers } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, isa_fn, isa_obj, xt, xtGet, convertTime, locateTarget, defaultNonReturnFunction } from '../core/utilities.js';
+import * as library from '../core/library.js';
+import { animationtickers } from '../core/library.js';
+import { mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, λnull } from '../core/utilities.js';
+const locateTargetSections = ['artefact', 'group', 'animation', 'tween', 'styles'];
+const locateTarget = (item) => {
+if(item && item.substring){
+let result;
+return (locateTargetSections.some(section => {
+result = library[section][item];
+return result;
+})) ? result : false;
+}
+return false;
+};
 export default function (P = {}) {
 let defaultAttributes = {
 order: 1,
@@ -32,7 +44,7 @@ this.setTargets(item);
 };
 S.action = function (item) {
 this.action = item;
-if (typeof this.action !== 'function') this.action = defaultNonReturnFunction;
+if (typeof this.action !== 'function') this.action = λnull;
 };
 P.calculateEffectiveTime = function (item) {
 let time = xtGet(item, this.time),

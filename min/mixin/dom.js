@@ -1,9 +1,21 @@
-import { constructors, artefact, group } from '../core/library.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, isa_obj, isa_fn, isa_dom, isa_quaternion, xt, addStrings, xta } from '../core/utilities.js';
-import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
+import { constructors, artefact } from '../core/library.js';
+import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta } from '../core/utilities.js';
+import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
+import positionMix from '../mixin/position.js';
+import deltaMix from './delta.js';
+import pivotMix from './pivot.js';
+import mimicMix from './mimic.js';
+import pathMix from './path.js';
+import anchorMix from '../mixin/anchor.js';
 export default function (P = {}) {
+P = positionMix(P);
+P = deltaMix(P);
+P = pivotMix(P);
+P = mimicMix(P);
+P = pathMix(P);
+P = anchorMix(P);
 let defaultAttributes = {
 domElement: '',
 pitch: 0,
@@ -99,10 +111,6 @@ this.dirtyCss = true;
 S.classes = function (item) {
 this.classes = item;
 this.dirtyClasses = true;
-};
-S.collides = function (item) {
-this.collides = item;
-if (item) this.dirtyPathObject = true;
 };
 S.domAttributes = function (item) {
 this.updateDomAttributes(item);
@@ -325,85 +333,9 @@ p.lineTo(cornerData[6], cornerData[7]);
 p.closePath();
 }
 };
-P.calculateSensors = function () {
-if (!this.noUserInteraction) {
-let [_tlx, _tly, _trx, _try, _brx, _bry, _blx, _bly] = this.currentCornersData;
-let sensors = this.currentSensors;
-sensors.length = 0;
-sensors.push([_tlx, _tly]);
-sensors.push([_trx, _try]);
-sensors.push([_brx, _bry]);
-sensors.push([_blx, _bly]);
-let sensorSpacing = this.sensorSpacing || 50,
-topLengthX = _tlx - _trx,
-topLengthY = _tly - _try,
-topLength = Math.sqrt((topLengthX * topLengthX) + (topLengthY * topLengthY)),
-topSensors = parseInt(topLength / sensorSpacing, 10) - 1,
-rightLengthX = _trx - _brx,
-rightLengthY = _try - _bry,
-rightLength = Math.sqrt((rightLengthX * rightLengthX) + (rightLengthY * rightLengthY)),
-rightSensors = parseInt(rightLength / sensorSpacing, 10) - 1,
-bottomLengthX = _brx - _blx,
-bottomLengthY = _bry - _bly,
-bottomLength = Math.sqrt((bottomLengthX * bottomLengthX) + (bottomLengthY * bottomLengthY)),
-bottomSensors = parseInt(bottomLength / sensorSpacing, 10) - 1,
-leftLengthX = _blx - _tlx,
-leftLengthY = _bly - _tly,
-leftLength =  Math.sqrt((leftLengthX * leftLengthX) + (leftLengthY * leftLengthY)),
-leftSensors = parseInt(leftLength / sensorSpacing, 10) - 1;
-let partX, partY, dx, dy, i;
-if (topSensors > 0) {
-partX = _trx;
-partY = _try;
-dx = topLengthX / (topSensors + 1);
-dy = topLengthY / (topSensors + 1);
-for (i = 0; i < topSensors; i++) {
-partX += dx;
-partY += dy;
-sensors.push([partX, partY]);
-}
-}
-if (rightSensors > 0) {
-partX = _brx;
-partY = _bry;
-dx = rightLengthX / (rightSensors + 1);
-dy = rightLengthY / (rightSensors + 1);
-for (i = 0; i < rightSensors; i++) {
-partX += dx;
-partY += dy;
-sensors.push([partX, partY]);
-}
-}
-if (bottomSensors > 0) {
-partX = _blx;
-partY = _bly;
-dx = bottomLengthX / (bottomSensors + 1);
-dy = bottomLengthY / (bottomSensors + 1);
-for (i = 0; i < bottomSensors; i++) {
-partX += dx;
-partY += dy;
-sensors.push([partX, partY]);
-}
-}
-if (leftSensors > 0) {
-partX = _tlx;
-partY = _tly;
-dx = leftLengthX / (leftSensors + 1);
-dy = leftLengthY / (leftSensors + 1);
-for (i = 0; i < leftSensors; i++) {
-partX += dx;
-partY += dy;
-sensors.push([partX, partY]);
-}
-}
-}
-};
 P.checkHit = function (items = [], mycell) {
 if (this.noUserInteraction) return false;
-if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
-this.cleanPathObject();
-this.dirtyCollision = false;
-}
+if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 let tests = (!Array.isArray(items)) ?  [items] : items,
 poolCellFlag = false;
 if (!mycell) {
@@ -485,10 +417,7 @@ let el = this.domElement;
 if (el) this.dirtyDimensions = true;
 };
 P.prepareStamp = function () {
-if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
-this.dirtyPathObject = true;
-this.dirtyCollision = true;
-}
+if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) this.dirtyPathObject = true;
 if (this.dirtyContent) this.cleanContent();
 if (this.dirtyScale) this.cleanScale();
 if (this.dirtyDimensions) this.cleanDimensions();
@@ -552,18 +481,6 @@ self.dirtyScale = true;
 }
 resolve(true);
 });
-};
-P.apply = function() {
-applyCoreResizeListener();
-this.prepareStamp();
-let self = this;
-this.stamp()
-.then(() => {
-domShow(self.name);
-self.dirtyPathObject = true;
-self.cleanPathObject();
-})
-.catch(err => console.log(err));
 };
 return P;
 };

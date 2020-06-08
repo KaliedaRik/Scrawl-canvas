@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Position-physics mixin</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="../core/animationloop.html">
+                  ./source/core/animationloop.js
+                </a>
+              
+                
+                <a class="source" href="../core/component.html">
+                  ./source/core/component.js
+                </a>
+              
+                
+                <a class="source" href="../core/document.html">
+                  ./source/core/document.js
+                </a>
+              
+                
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
+                <a class="source" href="../core/init.html">
+                  ./source/core/init.js
+                </a>
+              
+                
+                <a class="source" href="../core/library.html">
+                  ./source/core/library.js
+                </a>
+              
+                
+                <a class="source" href="../core/userInteraction.html">
+                  ./source/core/userInteraction.js
+                </a>
+              
+                
+                <a class="source" href="../core/utilities.html">
+                  ./source/core/utilities.js
+                </a>
+              
+                
+                <a class="source" href="../factory/action.html">
+                  ./source/factory/action.js
+                </a>
+              
+                
+                <a class="source" href="../factory/anchor.html">
+                  ./source/factory/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../factory/animation.html">
+                  ./source/factory/animation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
+                <a class="source" href="../factory/block.html">
+                  ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/canvas.html">
+                  ./source/factory/canvas.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cell.html">
+                  ./source/factory/cell.js
+                </a>
+              
+                
+                <a class="source" href="../factory/color.html">
+                  ./source/factory/color.js
+                </a>
+              
+                
+                <a class="source" href="../factory/coordinate.html">
+                  ./source/factory/coordinate.js
+                </a>
+              
+                
+                <a class="source" href="../factory/element.html">
+                  ./source/factory/element.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filter.html">
+                  ./source/factory/filter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/fontAttributes.html">
+                  ./source/factory/fontAttributes.js
+                </a>
+              
+                
+                <a class="source" href="../factory/gradient.html">
+                  ./source/factory/gradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/grid.html">
+                  ./source/factory/grid.js
+                </a>
+              
+                
+                <a class="source" href="../factory/group.html">
+                  ./source/factory/group.js
+                </a>
+              
+                
+                <a class="source" href="../factory/imageAsset.html">
+                  ./source/factory/imageAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
+                <a class="source" href="../factory/loom.html">
+                  ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="../factory/oval.html">
+                  ./source/factory/oval.js
+                </a>
+              
+                
+                <a class="source" href="../factory/palette.html">
+                  ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/pattern.html">
+                  ./source/factory/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../factory/phrase.html">
+                  ./source/factory/phrase.js
+                </a>
+              
+                
+                <a class="source" href="../factory/picture.html">
+                  ./source/factory/picture.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quaternion.html">
+                  ./source/factory/quaternion.js
+                </a>
+              
+                
+                <a class="source" href="../factory/radialGradient.html">
+                  ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rectangle.html">
+                  ./source/factory/rectangle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/renderAnimation.html">
+                  ./source/factory/renderAnimation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/shape.html">
+                  ./source/factory/shape.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spriteAsset.html">
+                  ./source/factory/spriteAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/stack.html">
+                  ./source/factory/stack.js
+                </a>
+              
+                
+                <a class="source" href="../factory/star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
+                <a class="source" href="../factory/state.html">
+                  ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tetragon.html">
+                  ./source/factory/tetragon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/ticker.html">
+                  ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tween.html">
+                  ./source/factory/tween.js
+                </a>
+              
+                
+                <a class="source" href="../factory/unstackedElement.html">
+                  ./source/factory/unstackedElement.js
+                </a>
+              
+                
+                <a class="source" href="../factory/vector.html">
+                  ./source/factory/vector.js
+                </a>
+              
+                
+                <a class="source" href="../factory/videoAsset.html">
+                  ./source/factory/videoAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/wheel.html">
+                  ./source/factory/wheel.js
+                </a>
+              
+                
+                <a class="source" href="anchor.html">
+                  ./source/mixin/anchor.js
+                </a>
+              
+                
+                <a class="source" href="asset.html">
+                  ./source/mixin/asset.js
+                </a>
+              
+                
+                <a class="source" href="assetConsumer.html">
+                  ./source/mixin/assetConsumer.js
+                </a>
+              
+                
+                <a class="source" href="base.html">
+                  ./source/mixin/base.js
+                </a>
+              
+                
+                <a class="source" href="cascade.html">
+                  ./source/mixin/cascade.js
+                </a>
+              
+                
+                <a class="source" href="delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
+                <a class="source" href="dom.html">
+                  ./source/mixin/dom.js
+                </a>
+              
+                
+                <a class="source" href="entity.html">
+                  ./source/mixin/entity.js
+                </a>
+              
+                
+                <a class="source" href="filter.html">
+                  ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="pivot.html">
+                  ./source/mixin/pivot.js
+                </a>
+              
+                
+                <a class="source" href="position.html">
+                  ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
+                </a>
+              
+                
+                <a class="source" href="shapePathCalculation.html">
+                  ./source/mixin/shapePathCalculation.js
+                </a>
+              
+                
+                <a class="source" href="styles.html">
+                  ./source/mixin/styles.js
+                </a>
+              
+                
+                <a class="source" href="tween.html">
+                  ./source/mixin/tween.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter.html">
+                  ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="position-physics-mixin">Position-physics mixin</h1>
+<p>This mixin defines additional attributes and functions for an artefact that uses physics functionality</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h4 id="imports">Imports</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, isa_boolean } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h4 id="export-function">Export function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h4 id="shared-attributes">Shared attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p><strong>pivot</strong> - reference artefact object. Can also be set using the artefact’s name-String.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        pivot: <span class="hljs-string">''</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p><strong>pivotCorner</strong> - Element artefacts allow other artefacts to use their corner positions as pivots, by setting this attribute to <code>topLeft</code>, <code>topRight</code>, <code>bottomRight</code> or <code>bottomLeft</code>; default is <code>&#39;&#39;</code> to use the Element’s start coordinate.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        pivotCorner: <span class="hljs-string">''</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p><strong>pivotPin</strong> - Polyline entitys are composed of a set of pin coordinates with the start being pin[0]; can reference other pins by setting this attribute to the appropriate index value (for example, the second pin will be pin[1]).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        pivotPin: <span class="hljs-number">0</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p><strong>addPivotHandle</strong>, <strong>addPivotOffset</strong>, <strong>addPivotRotation</strong> - Boolean flags. When set, the artifact will add its own values to the reference artefact’s values, rather than use them as replacement values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        addPivotHandle: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">addPivotOffset</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">false</span>,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
+    mergeOver(P, defaultAttributes);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h4 id="packet-management">Packet management</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'pivot'</span>]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.getters,
+        S = P.setters,
+        D = P.deltaSetters;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><strong>pivot</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.pivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (isa_boolean(item) &amp;&amp; !item) {
+
+            <span class="hljs-keyword">this</span>.pivot = <span class="hljs-literal">null</span>;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'pivot'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">'start'</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'pivot'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">'start'</span>;
+
+            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+        }
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">let</span> oldPivot = <span class="hljs-keyword">this</span>.pivot,
+                newPivot = (item.substring) ? artefact[item] : item,
+                name = <span class="hljs-keyword">this</span>.name;
+
+            <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.name) {
+
+                <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
+
+                pushUnique(newPivot.pivoted, name);
+
+                <span class="hljs-keyword">this</span>.pivot = newPivot;
+                <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+            }
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p><strong>pivotCorner</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.pivotCorners = [<span class="hljs-string">'topLeft'</span>, <span class="hljs-string">'topRight'</span>, <span class="hljs-string">'bottomRight'</span>, <span class="hljs-string">'bottomLeft'</span>];
+    S.pivotCorner = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.pivotCorners.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.pivotCorner = item;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p><strong>addPivotHandle</strong>, <strong>addPivotOffset</strong>, <strong>addPivotRotation</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.addPivotHandle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.addPivotHandle = item;
+        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    };
+    S.addPivotOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.addPivotOffset = item;
+        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+    };
+    S.addPivotRotation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.addPivotRotation = item;
+        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p><code>updatePivotSubscribers</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.updatePivotSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">this</span>.pivoted.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> instance = artefact[name];
+
+            <span class="hljs-keyword">if</span> (instance) {
+
+                instance.dirtyStart = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (instance.addPivotHandle) instance.dirtyHandle = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (instance.addPivotOffset) instance.dirtyOffset = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (instance.addPivotRotation) instance.dirtyRotation = <span class="hljs-literal">true</span>;
+
+                <span class="hljs-keyword">if</span> (instance.type === <span class="hljs-string">'Polyline'</span>) instance.dirtyPins = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (instance.type === <span class="hljs-string">'Line'</span> || instance.type === <span class="hljs-string">'Quadratic'</span> || instance.type === <span class="hljs-string">'Bezier'</span>) instance.dirtyPins.push(<span class="hljs-keyword">this</span>.name);
+            }
+        }, <span class="hljs-keyword">this</span>);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Return the prototype</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> P;
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

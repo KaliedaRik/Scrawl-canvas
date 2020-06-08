@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -405,7 +440,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, addStrings, convertLength, pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, addStrings, isa_number, pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
 <span class="hljs-keyword">import</span> stylesMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/styles.js'</span>;</pre></div></div>
@@ -685,6 +720,35 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
             </div>
             
             <div class="content"><div class='highlight'><pre>P.cleanRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">width</span>) </span>{
+
+    <span class="hljs-keyword">const</span> convertLength = <span class="hljs-function">(<span class="hljs-params">val, len</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (isa_number(val)) <span class="hljs-keyword">return</span> val;
+
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">switch</span>(val){
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'top'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'left'</span> :
+                    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'bottom'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'right'</span> :
+                    <span class="hljs-keyword">return</span> len;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'center'</span> :
+                    <span class="hljs-keyword">return</span> len / <span class="hljs-number">2</span>;
+
+                <span class="hljs-keyword">default</span> :
+                    val = <span class="hljs-built_in">parseFloat</span>(val);
+
+                    <span class="hljs-keyword">if</span> (!isa_number(val)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+
+                    <span class="hljs-keyword">return</span> ( val / <span class="hljs-number">100</span>) * len;
+            }
+        }
+    };
 
     <span class="hljs-keyword">this</span>.currentStartRadius = (width) ? convertLength(<span class="hljs-keyword">this</span>.startRadius, width) : <span class="hljs-keyword">this</span>.defs.startRadius;
     <span class="hljs-keyword">this</span>.currentEndRadius = (width) ? convertLength(<span class="hljs-keyword">this</span>.endRadius, width) : <span class="hljs-keyword">this</span>.defs.endRadius;

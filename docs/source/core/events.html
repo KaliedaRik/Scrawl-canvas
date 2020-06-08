@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>DOM event listeners</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="animationloop.html">
+                  ./source/core/animationloop.js
+                </a>
+              
+                
+                <a class="source" href="component.html">
+                  ./source/core/component.js
+                </a>
+              
+                
+                <a class="source" href="document.html">
+                  ./source/core/document.js
+                </a>
+              
+                
+                <a class="source" href="events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
+                <a class="source" href="init.html">
+                  ./source/core/init.js
+                </a>
+              
+                
+                <a class="source" href="library.html">
+                  ./source/core/library.js
+                </a>
+              
+                
+                <a class="source" href="userInteraction.html">
+                  ./source/core/userInteraction.js
+                </a>
+              
+                
+                <a class="source" href="utilities.html">
+                  ./source/core/utilities.js
+                </a>
+              
+                
+                <a class="source" href="../factory/action.html">
+                  ./source/factory/action.js
+                </a>
+              
+                
+                <a class="source" href="../factory/anchor.html">
+                  ./source/factory/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../factory/animation.html">
+                  ./source/factory/animation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
+                <a class="source" href="../factory/block.html">
+                  ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/canvas.html">
+                  ./source/factory/canvas.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cell.html">
+                  ./source/factory/cell.js
+                </a>
+              
+                
+                <a class="source" href="../factory/color.html">
+                  ./source/factory/color.js
+                </a>
+              
+                
+                <a class="source" href="../factory/coordinate.html">
+                  ./source/factory/coordinate.js
+                </a>
+              
+                
+                <a class="source" href="../factory/element.html">
+                  ./source/factory/element.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filter.html">
+                  ./source/factory/filter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/fontAttributes.html">
+                  ./source/factory/fontAttributes.js
+                </a>
+              
+                
+                <a class="source" href="../factory/gradient.html">
+                  ./source/factory/gradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/grid.html">
+                  ./source/factory/grid.js
+                </a>
+              
+                
+                <a class="source" href="../factory/group.html">
+                  ./source/factory/group.js
+                </a>
+              
+                
+                <a class="source" href="../factory/imageAsset.html">
+                  ./source/factory/imageAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
+                <a class="source" href="../factory/loom.html">
+                  ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="../factory/oval.html">
+                  ./source/factory/oval.js
+                </a>
+              
+                
+                <a class="source" href="../factory/palette.html">
+                  ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/pattern.html">
+                  ./source/factory/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../factory/phrase.html">
+                  ./source/factory/phrase.js
+                </a>
+              
+                
+                <a class="source" href="../factory/picture.html">
+                  ./source/factory/picture.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quaternion.html">
+                  ./source/factory/quaternion.js
+                </a>
+              
+                
+                <a class="source" href="../factory/radialGradient.html">
+                  ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rectangle.html">
+                  ./source/factory/rectangle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/renderAnimation.html">
+                  ./source/factory/renderAnimation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/shape.html">
+                  ./source/factory/shape.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spriteAsset.html">
+                  ./source/factory/spriteAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/stack.html">
+                  ./source/factory/stack.js
+                </a>
+              
+                
+                <a class="source" href="../factory/star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
+                <a class="source" href="../factory/state.html">
+                  ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tetragon.html">
+                  ./source/factory/tetragon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/ticker.html">
+                  ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tween.html">
+                  ./source/factory/tween.js
+                </a>
+              
+                
+                <a class="source" href="../factory/unstackedElement.html">
+                  ./source/factory/unstackedElement.js
+                </a>
+              
+                
+                <a class="source" href="../factory/vector.html">
+                  ./source/factory/vector.js
+                </a>
+              
+                
+                <a class="source" href="../factory/videoAsset.html">
+                  ./source/factory/videoAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/wheel.html">
+                  ./source/factory/wheel.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/anchor.html">
+                  ./source/mixin/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/asset.html">
+                  ./source/mixin/asset.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/assetConsumer.html">
+                  ./source/mixin/assetConsumer.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/base.html">
+                  ./source/mixin/base.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/cascade.html">
+                  ./source/mixin/cascade.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/dom.html">
+                  ./source/mixin/dom.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/entity.html">
+                  ./source/mixin/entity.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/filter.html">
+                  ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/position.html">
+                  ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapePathCalculation.html">
+                  ./source/mixin/shapePathCalculation.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/styles.html">
+                  ./source/mixin/styles.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/tween.html">
+                  ./source/mixin/tween.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter.html">
+                  ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="dom-event-listeners">DOM event listeners</h1>
+<p>Each scrawl-canvas stack and canvas can have <strong>bespoke Scrawl-canvas listeners</strong> attached to them, to track user mouse and touch interactions with that element. Scrawl-canvas defines five bespoke listeners:</p>
+<ul>
+<li><strong>move</strong> - track mouse cursor and touch movements across the DOM element</li>
+<li><strong>down</strong> - register a new touch interaction, or user pressing the left mouse button</li>
+<li><strong>up</strong> - register the end of a touch interaction, or user releasing the left mouse button</li>
+<li><strong>enter</strong> - trigger an event when the mouse cursor or touch event enters into the DOM element</li>
+<li><strong>leave</strong> - trigger an event when the mouse cursor or touch event exits from the DOM element</li>
+</ul>
+<p>The functions all takes the following arguments:</p>
+<ul>
+<li><strong>evt</strong> - String name of the event (‘move’, ‘down’, ‘up’, ‘enter’, ‘leave’), or an array of such strings</li>
+<li><strong>fn</strong> - the function to be called when the event listener(s) trigger</li>
+<li><strong>targ</strong> - either the DOM element object, or an array of DOM element objects, or a query selector String; these elements need to be registered in the Scrawl-canvas library beforehend (done automatically for stack and canvas elements)</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h4 id="imports">Imports</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>TODO - documentation</p>
+<p><code>Exported function</code> (to modules and scrawl object). </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper, specs = {}</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.IntersectionObserver === <span class="hljs-string">'function'</span> &amp;&amp; anim &amp;&amp; anim.run) {
+
+        <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
+
+            entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
+
+                <span class="hljs-keyword">if</span> (entry.isIntersecting) !anim.isRunning() &amp;&amp; anim.run();
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) anim.isRunning() &amp;&amp; anim.halt();
+            });
+        }, specs);
+
+        <span class="hljs-keyword">if</span> (wrapper &amp;&amp; wrapper.domElement) {
+
+            observer.observe(wrapper.domElement);
+        }
+
+        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            
+            observer.disconnect();
+        }
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> λ<span class="hljs-literal">null</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p><code>Exported function</code> (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
+
+    actionListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
+    actionListener(evt, fn, targ, <span class="hljs-string">'addEventListener'</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        removeListener(evt, fn, targ);
+    };
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addListener’ is <strong>removeListener</strong> which removes Scrawl-canvas event listeners from DOM elements in a similar way</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> removeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document removeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
+
+    actionListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Because devices and browsers differ in their approach to user interaction (mouse vs pointer vs touch), the actual functionality for adding and removing the event listeners associated with each approach is handled by dedicated actionXXXListener functions</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>TODO: code up the functionality to manage touch events</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> actionListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ, action</span>) </span>{
+
+    <span class="hljs-keyword">let</span> events = [].concat(evt),
+        targets;
+    
+    <span class="hljs-keyword">if</span> (targ.substring) targets = <span class="hljs-built_in">document</span>.body.querySelectorAll(targ);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(targ)) targets = targ;
+    <span class="hljs-keyword">else</span> targets = [targ];
+
+    <span class="hljs-keyword">if</span> (navigator.pointerEnabled || navigator.msPointerEnabled) actionPointerListener(events, fn, targets, action);
+    <span class="hljs-keyword">else</span> actionMouseListener(events, fn, targets, action);
+};
+
+<span class="hljs-keyword">const</span> actionMouseListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">events, fn, targets, action</span>) </span>{
+
+    events.forEach(<span class="hljs-function"><span class="hljs-params">myevent</span> =&gt;</span> {
+
+        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (!isa_dom(target)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionMouseListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
+
+            <span class="hljs-keyword">switch</span> (myevent) {
+            
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'move'</span>:
+                    target[action](<span class="hljs-string">'mousemove'</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">'touchmove'</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">'touchfollow'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'up'</span>:
+                    target[action](<span class="hljs-string">'mouseup'</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">'touchend'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'down'</span>:
+                    target[action](<span class="hljs-string">'mousedown'</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">'touchstart'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'leave'</span>:
+                    target[action](<span class="hljs-string">'mouseleave'</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">'touchleave'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'enter'</span>:
+                    target[action](<span class="hljs-string">'mouseenter'</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">'touchenter'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+            }
+        });
+    });
+};
+
+<span class="hljs-keyword">const</span> actionPointerListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">events, fn, targets, action</span>) </span>{
+
+    events.forEach(<span class="hljs-function"><span class="hljs-params">myevent</span> =&gt;</span> {
+
+        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (!isa_dom(target)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionPointerListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
+
+            <span class="hljs-keyword">switch</span> (myevent) {
+            
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'move'</span>:
+                    target[action](<span class="hljs-string">'pointermove'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'up'</span>:
+                    target[action](<span class="hljs-string">'pointerup'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'down'</span>:
+                    target[action](<span class="hljs-string">'pointerdown'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'leave'</span>:
+                    target[action](<span class="hljs-string">'pointerleave'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-string">'enter'</span>:
+                    target[action](<span class="hljs-string">'pointerenter'</span>, fn, <span class="hljs-literal">false</span>);
+                    <span class="hljs-keyword">break</span>;
+            }
+        });
+    });
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p><strong>Any event listener</strong> can be added to a Scrawl-canvas stack or canvas DOM element. </p>
+<p>The <strong>addNativeListener</strong> function makes adding and removing these ‘native’ listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.</p>
+<p>The function requires three arguments:</p>
+<ul>
+<li><strong>evt</strong> - String name of the event (‘click’, ‘input’, ‘change’, etc), or an array of such strings</li>
+<li><strong>fn</strong> - the function to be called when the event listener(s) trigger</li>
+<li><strong>targ</strong> - either the DOM element object, or an array of DOM element objects, or a query selector String</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p><code>Exported function</code> (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addNativeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addNativeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
+
+    actionNativeListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
+    actionNativeListener(evt, fn, targ, <span class="hljs-string">'addEventListener'</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        removeNativeListener(evt, fn, targ);
+    };
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addNativeListener’ is <strong>removeNativeListener</strong> which removes event listeners from DOM elements in a similar way</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> removeNativeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document removeNativeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
+
+    actionNativeListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
+};
+
+<span class="hljs-keyword">const</span> actionNativeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ, action</span>) </span>{
+
+    <span class="hljs-keyword">let</span> events = [].concat(evt),
+        targets;
+
+    <span class="hljs-keyword">if</span> (targ.substring) targets = <span class="hljs-built_in">document</span>.body.querySelectorAll(targ);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(targ)) targets = targ;
+    <span class="hljs-keyword">else</span> targets = [targ];
+
+    events.forEach(<span class="hljs-function"><span class="hljs-params">myevent</span> =&gt;</span> {
+
+        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (!isa_dom(target)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionNativeListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
+
+            target[action](myevent, fn, <span class="hljs-literal">false</span>);
+        });
+    });
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
+    addListener,
+    removeListener,
+    addNativeListener,
+    removeNativeListener,
+    makeAnimationObserver,
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

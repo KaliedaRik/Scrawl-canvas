@@ -1,10 +1,13 @@
 import { constructors, radian } from '../core/library.js';
-import { mergeOver, xt, xto, ensureFloat } from '../core/utilities.js';
+import { mergeOver, xt, xto, isa_number } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
-import filterMix from '../mixin/filter.js';
+const ensureFloat = (val, precision) => {
+val = parseFloat(val);
+if (!isa_number(val)) val = 0;
+if (!isa_number(precision)) precision = 0;
+return parseFloat(val.toFixed(precision));
+};
 const Wheel = function (items = {}) {
 if (!xto(items.dimensions, items.width, items.height, items.radius)) items.radius = 5;
 this.entityInit(items);
@@ -16,10 +19,7 @@ P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = entityMix(P);
-P = filterMix(P);
 let defaultAttributes = {
 radius: 5,
 startAngle: 0,
@@ -128,148 +128,6 @@ dims[1] = dims[0];
 this.currentRadius = dims[0] / 2;
 }
 else this.currentRadius = calculatedRadius;
-};
-P.calculateSensors = function () {
-let rotate = function(coords, angle, sx, sy) {
-let [x, y] = coords,
-arr = [0, 0];
-arr[0] = Math.atan2(y, x);
-arr[0] += (angle * 0.01745329251);
-arr[1] = Math.sqrt((x * x) + (y * y));
-return [Math.round(arr[1] * Math.cos(arr[0])) + sx, Math.round(arr[1] * Math.sin(arr[0])) + sy];
-};
-let smallRotate = function(x, y, angle) {
-let arr = [0, 0];
-arr[0] = Math.atan2(y, x);
-arr[0] += (angle * 0.01745329251);
-arr[1] = Math.sqrt((x * x) + (y * y));
-return [Math.round(arr[1] * Math.cos(arr[0])), Math.round(arr[1] * Math.sin(arr[0]))];
-};
-this.calculatePerimeterLength();
-let stamp = this.currentStampPosition,
-handle = this.currentStampHandlePosition,
-scale = this.currentScale,
-radius = this.currentRadius * scale,
-startAngle = this.startAngle,
-endAngle = this.endAngle,
-circumferenceLength = this.circumferenceLength,
-circumferenceRatio = this.circumferenceRatio,
-upend = this.flipUpend,
-reverse = this.flipReverse;
-let roll = this.roll,
-sx = stamp[0],
-sy = stamp[1],
-handleX = (reverse) ? -handle[0] * scale : handle[0] * scale,
-handleY = (upend) ? -handle[1] * scale : handle[1] * scale;
-let sensorSpacing = this.sensorSpacing || 50;
-let sensors = this.currentSensors;
-sensors.length = 0;
-let circumferenceSensors = Math.ceil(circumferenceLength / sensorSpacing);
-if (circumferenceRatio < 0.25 && circumferenceSensors < 2) circumferenceSensors = 2;
-else if (circumferenceRatio < 0.5 && circumferenceSensors < 4) circumferenceSensors = 4;
-else if (circumferenceRatio < 0.75 && circumferenceSensors < 6) circumferenceSensors = 6;
-else if (circumferenceSensors < 8) circumferenceSensors = 8;
-let partialAngle = (circumferenceRatio * 360) / circumferenceSensors;
-if (!this.clockwise) partialAngle = -partialAngle;
-if ((reverse && !upend) || (!reverse && upend)) partialAngle = -partialAngle;
-if (reverse && !upend) {
-if (startAngle <= 180) startAngle = 180 - startAngle;
-else startAngle = (180 - startAngle) + 360;
-if (endAngle <= 180) endAngle = 180 - endAngle;
-else endAngle = (180 - endAngle) + 360;
-}
-else if (!reverse && upend) {
-if (startAngle <= 180) startAngle = 360 - startAngle;
-else startAngle = (180 - startAngle) + 180;
-if (endAngle <= 180) endAngle = 360 - endAngle;
-else endAngle = (180 - endAngle) + 180;
-}
-else if (reverse && upend) {
-startAngle += 180;
-endAngle += 180;
-if (startAngle > 360) startAngle -= 360;
-if (endAngle > 360) endAngle -= 360;
-}
-let currentAngle = startAngle,
-coord, i;
-for (i = 0; i <= circumferenceSensors; i++) {
-coord = smallRotate(radius, 0, currentAngle);
-if (reverse) coord[0] = coord[0] + handleX - radius;
-else coord[0] = coord[0] - handleX + radius;
-if (upend) coord[1] = coord[1] + handleY - radius;
-else coord[1] = coord[1] - handleY + radius;
-sensors.push(rotate(coord, roll, sx, sy));
-currentAngle += partialAngle;
-}
-let cx = (reverse) ? handleX - radius : -handleX + radius,
-cy = (upend) ? handleY - radius : -handleY + radius,
-startCoord = sensors[0],
-endCoord = sensors[sensors.length - 1],
-nonCircumferenceSensors, nonCircumferenceLength,
-centerCoord, dx, dy, plotX, plotY;
-if (this.includeCenter) {
-sensors.push(rotate([cx, cy], roll, sx, sy));
-centerCoord = sensors[sensors.length - 1];
-nonCircumferenceLength = radius * 2;
-nonCircumferenceSensors = Math.ceil(nonCircumferenceLength / sensorSpacing);
-nonCircumferenceSensors = Math.ceil(nonCircumferenceSensors / 2) - 2;
-if (nonCircumferenceSensors < 1) nonCircumferenceSensors = 1;
-dx = (endCoord[0] - centerCoord[0]) / (nonCircumferenceSensors + 1);
-dy = (endCoord[1] - centerCoord[1]) / (nonCircumferenceSensors + 1);
-plotX = centerCoord[0];
-plotY = centerCoord[1];
-for (i = 0; i < nonCircumferenceSensors; i++) {
-plotX += dx;
-plotY += dy;
-sensors.push([plotX, plotY]);
-}
-}
-if (this.closed) {
-if (this.includeCenter) {
-dx = (startCoord[0] - centerCoord[0]) / (nonCircumferenceSensors + 1);
-dy = (startCoord[1] - centerCoord[1]) / (nonCircumferenceSensors + 1);
-plotX = centerCoord[0];
-plotY = centerCoord[1];
-for (i = 0; i < nonCircumferenceSensors; i++) {
-plotX += dx;
-plotY += dy;
-sensors.push([plotX, plotY]);
-}
-}
-else {
-dx = endCoord[0] - startCoord[0];
-dy = endCoord[1] - startCoord[1];
-nonCircumferenceLength = Math.sqrt((dx * dx) + (dy * dy));
-nonCircumferenceSensors = Math.ceil(nonCircumferenceLength / sensorSpacing);
-nonCircumferenceSensors -= 2;
-if (nonCircumferenceSensors < 1) nonCircumferenceSensors = 1;
-dx /= (nonCircumferenceSensors + 1);
-dy /= (nonCircumferenceSensors + 1);
-plotX = startCoord[0];
-plotY = startCoord[1];
-for (i = 0; i < nonCircumferenceSensors; i++) {
-plotX += dx;
-plotY += dy;
-sensors.push([plotX, plotY]);
-}
-}
-}
-};
-P.calculatePerimeterLength = function () {
-let radius = this.currentRadius * this.currentScale,
-circumference = 2 * Math.PI * radius;
-let leastAngle = Math.min(this.startAngle, this.endAngle),
-starts = this.startAngle - leastAngle,
-ends = this.endAngle - leastAngle,
-leastDistance = Math.abs(ends - starts),
-circumferenceRatio;
-if (leastDistance > 360) circumferenceRatio = 1;
-if (leastDistance <= 0) circumferenceRatio = 0;
-else circumferenceRatio = leastDistance / 360;
-if (circumferenceRatio < 1 && this.clockwise) circumferenceRatio = 1 - circumferenceRatio;
-let perimeterCircumference = circumference * circumferenceRatio;
-this.circumferenceLength = perimeterCircumference;
-this.circumferenceRatio = circumferenceRatio;
 };
 P.cleanPathObject = function () {
 this.dirtyPathObject = false;

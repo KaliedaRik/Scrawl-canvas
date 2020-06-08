@@ -1,5 +1,5 @@
-import { entity, asset, palette } from '../core/library.js';
-import { addStrings, defaultNonReturnFunction, mergeOver, xt, isa_obj, mergeDiscard } from '../core/utilities.js';
+import { entity, palette } from '../core/library.js';
+import { addStrings, λnull, mergeOver, isa_obj, mergeDiscard } from '../core/utilities.js';
 import { makeCoordinate } from '../factory/coordinate.js';
 import { makePalette } from '../factory/palette.js';
 export default function (P = {}) {
@@ -312,7 +312,7 @@ correctY = -entityStampPosition[1] || 0;
 }
 this.updateGradientArgs(correctX, correctY);
 };
-P.cleanRadius = defaultNonReturnFunction;
+P.cleanRadius = λnull;
 P.buildStyle = function (cell) {
 return 'rgba(0,0,0,0)';
 };

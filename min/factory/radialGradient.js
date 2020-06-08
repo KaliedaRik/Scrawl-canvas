@@ -1,5 +1,5 @@
 import { constructors } from '../core/library.js';
-import { mergeOver, addStrings, convertLength, pushUnique } from '../core/utilities.js';
+import { mergeOver, addStrings, isa_number, pushUnique } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 const RadialGradient = function (items = {}) {
@@ -45,6 +45,25 @@ this.endRadius = addStrings(this.endRadius, item);
 this.dirtyStyle = true;
 };
 P.cleanRadius = function (width) {
+const convertLength = (val, len) => {
+if (isa_number(val)) return val;
+else {
+switch(val){
+case 'top' :
+case 'left' :
+return 0;
+case 'bottom' :
+case 'right' :
+return len;
+case 'center' :
+return len / 2;
+default :
+val = parseFloat(val);
+if (!isa_number(val)) return 0;
+return ( val / 100) * len;
+}
+}
+};
 this.currentStartRadius = (width) ? convertLength(this.startRadius, width) : this.defs.startRadius;
 this.currentEndRadius = (width) ? convertLength(this.endRadius, width) : this.defs.endRadius;
 };

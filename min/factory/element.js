@@ -1,10 +1,8 @@
-import { group, element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
-import { generateUuid, pushUnique, mergeOver, removeItem, xt, isa_obj, isa_dom, isa_boolean } from '../core/utilities.js';
+import { element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
+import { pushUnique, removeItem, isa_dom } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import domMix from '../mixin/dom.js';
 const Element = function (items = {}) {
 let el = items.domElement;
@@ -27,7 +25,6 @@ if (el) {
 el.id = this.name;
 if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
 }
-this.apply();
 return this;
 };
 let P = Element.prototype = Object.create(Object.prototype);
@@ -36,8 +33,6 @@ P.lib = 'element';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = domMix(P);
 P.factoryKill = function () {
 removeItem(uiSubscribedElements, this.name);

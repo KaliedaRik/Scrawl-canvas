@@ -1,5 +1,5 @@
 import { constructors } from '../core/library.js';
-import { xt, isa_obj, isa_number } from '../core/utilities.js';
+import { xt, isa_number } from '../core/utilities.js';
 const Coordinate = function (items, y) {
 let coords = [0, 0];
 Object.setPrototypeOf(coords, Coordinate.prototype);
@@ -77,10 +77,10 @@ this[1] *= item;
 return this;
 };
 P.scalarDivide = function (item) {
-if (!isa_number(item)) throw new Error(`Coordinate error - scalarDivide() argument not a number: ${item}`);
-if (!item) throw new Error(`Coordinate error - scalarDivide() divide by zero`);
+if (item && item.toFixed) {
 this[0] /= item;
 this[1] /= item;
+}
 return this;
 };
 P.getMagnitude = function () {
@@ -89,7 +89,6 @@ y = this[1];
 return Math.sqrt((x * x) + (y * y));
 };
 P.rotate = function (angle) {
-if (!isa_number(item)) throw new Error(`Coordinate error - rotate() argument not a number: ${angle}`);
 let stat_vr = [0, 0];
 let x = this[0],
 y = this[1];

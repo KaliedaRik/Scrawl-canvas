@@ -1,14 +1,11 @@
 import { constructors, asset, artefact } from '../core/library.js';
-import { mergeOver, xt, xta, addStrings, pushUnique, removeItem } from '../core/utilities.js';
+import { mergeOver, xta, addStrings, pushUnique, removeItem } from '../core/utilities.js';
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
 import { makeCoordinate } from './coordinate.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
-import filterMix from '../mixin/filter.js';
 const Picture = function (items = {}) {
 this.copyStart = makeCoordinate();
 this.currentCopyStart = makeCoordinate();
@@ -37,11 +34,8 @@ P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = entityMix(P);
 P = assetConsumerMix(P);
-P = filterMix(P);
 let defaultAttributes = {
 copyStart: null,
 copyDimensions: null,
@@ -288,7 +282,6 @@ else this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
 }
 if (this.dirtyDimensions || this.dirtyHandle || this.dirtyScale) this.dirtyPaste = true;
 if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
-if (this.dirtyRotation) this.dirtyCollision = true;
 if (this.dirtyScale) this.cleanScale();
 if (this.dirtyDimensions) this.cleanDimensions();
 if (this.dirtyLock) this.cleanLock();
@@ -306,10 +299,7 @@ if (this.dirtyCopyStart) this.cleanCopyStart();
 if (this.dirtyCopyDimensions) this.cleanCopyDimensions();
 if (this.dirtyImage) this.cleanImage();
 if (this.dirtyPaste) this.preparePasteObject();
-if (this.dirtyPathObject) {
-this.cleanPathObject();
-this.dirtyCollision = true;
-}
+if (this.dirtyPathObject) this.cleanPathObject();
 if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 if (this.dirtyImageSubscribers) this.updateImageSubscribers();
 };

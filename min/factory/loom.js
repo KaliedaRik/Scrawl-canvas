@@ -1,6 +1,6 @@
 import { constructors, artefact } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
-import { mergeOver, mergeDiscard, pushUnique, defaultNonReturnFunction, defaultThisReturnFunction, xta } from '../core/utilities.js';
+import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta } from '../core/utilities.js';
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import baseMix from '../mixin/base.js';
@@ -11,10 +11,10 @@ this.register();
 this.set(this.defs);
 this.state = makeState();
 if (!items.group) items.group = currentGroup;
-this.onEnter = defaultNonReturnFunction;
-this.onLeave = defaultNonReturnFunction;
-this.onDown = defaultNonReturnFunction;
-this.onUp = defaultNonReturnFunction;
+this.onEnter = λnull;
+this.onLeave = λnull;
+this.onDown = λnull;
+this.onUp = λnull;
 this.delta = {};
 this.set(items);
 this.fromPathData = [];
@@ -89,7 +89,7 @@ copy.anchor = a;
 }
 return copy;
 }
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;
@@ -357,7 +357,7 @@ break;
 })
 return this;
 };
-P.midInitActions = defaultNonReturnFunction;
+P.midInitActions = λnull;
 P.cleanCollisionData = function () {
 return [0, []];
 };
@@ -776,7 +776,7 @@ releaseCell(tempCell);
 if (this.showBoundingBox) this.drawBoundingBox(engine);
 }
 };
-P.none = defaultNonReturnFunction;
+P.none = λnull;
 P.doStroke = function (engine) {
 let fPath = this.fromPath,
 tPath = this.toPath;

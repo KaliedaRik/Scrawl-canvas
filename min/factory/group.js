@@ -1,5 +1,5 @@
-import { constructors, cell, artefact, group, groupnames, entity } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt } from '../core/utilities.js';
+import { constructors, cell, artefact, group, entity } from '../core/library.js';
+import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
 import { requestCell, releaseCell } from './cell.js';

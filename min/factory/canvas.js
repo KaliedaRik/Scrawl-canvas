@@ -1,14 +1,11 @@
 import { cell, constructors, artefact, group } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
-import { generateUuid, mergeOver, pushUnique, removeItem, xt,
-defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, λthis, λnull } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 import { makeState } from './state.js';
 import { makeCell } from './cell.js';
 import { makeCoordinate } from './coordinate.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import domMix from '../mixin/dom.js';
 const Canvas = function (items = {}) {
 let g, el;
@@ -99,7 +96,6 @@ el.setAttribute('aria-describedby', ariaDescription.id);
 this.cleanAria();
 }
 this.dirtyCells = true;
-this.apply();
 if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
 return this;
 };
@@ -109,8 +105,6 @@ P.lib = 'canvas';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = domMix(P);
 let defaultAttributes = {
 position: 'relative',
@@ -122,13 +116,13 @@ label: '',
 description: '',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 P.saveAsPacket = function () {
 return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 P.kill = function () {
 let name = this.name,
 host = this.host,

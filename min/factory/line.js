@@ -1,11 +1,7 @@
-import { constructors, artefact } from '../core/library.js';
+import { constructors } from '../core/library.js';
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
-import entityMix from '../mixin/entity.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
-import filterMix from '../mixin/filter.js';
 const Line = function (items = {}) {
 this.curveInit(items);
 this.shapeInit(items);
@@ -17,12 +13,8 @@ P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
-P = entityMix(P);
 P = shapeMix(P);
 P = curveMix(P);
-P = filterMix(P);
 P.cleanSpecies = function () {
 this.dirtySpecies = false;
 let p = 'M0,0';

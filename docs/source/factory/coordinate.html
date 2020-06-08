@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -378,7 +413,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { xt, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { xt, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
             
         </li>
         
@@ -699,11 +734,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!isa_number(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Coordinate error - scalarDivide() argument not a number: <span class="hljs-subst">${item}</span>`</span>);
-    <span class="hljs-keyword">if</span> (!item) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Coordinate error - scalarDivide() divide by zero`</span>);
+    <span class="hljs-keyword">if</span> (item &amp;&amp; item.toFixed) {
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] /= item;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] /= item;
+        <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] /= item;
+        <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] /= item;
+    }
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };</pre></div></div>
@@ -742,10 +777,22 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.rotate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">angle</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.rotate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">angle</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>if (!isa_number(item)) throw new Error(<code>Coordinate error - rotate() argument not a number: ${angle}</code>);</p>
 
-    <span class="hljs-keyword">if</span> (!isa_number(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Coordinate error - rotate() argument not a number: <span class="hljs-subst">${angle}</span>`</span>);
-
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
     <span class="hljs-keyword">let</span> stat_vr = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
 
     <span class="hljs-keyword">let</span> x = <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>],
@@ -764,11 +811,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Reverse the numerical sign on each of the Array’s members</p>
 
@@ -785,11 +832,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Get the Array’s <strong>dot product</strong> value (treating the Coordinate as if it was a 2D vector)</p>
 
@@ -803,11 +850,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><strong>Normalize</strong> the Array’s members (treating the Coordinate as if it was a 2D vector)</p>
 
@@ -827,11 +874,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h4 id="coordinate-pool">Coordinate pool</h4>
 <p>An attempt to reuse coordinates rather than constantly creating and deleting them</p>
@@ -843,11 +890,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><code>exported function</code> - retrieve a Coordinate from the coordinate pool</p>
 
@@ -865,11 +912,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p><code>exported function</code> - return a Coordinate to the coordinate pool. Failing to return Coordinates to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -883,11 +930,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -903,11 +950,11 @@ constructors.Coordinate = Coordinate;</pre></div></div>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

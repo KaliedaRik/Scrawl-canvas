@@ -1,5 +1,5 @@
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique } from '../core/utilities.js';
+import { pushUnique } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 const Gradient = function (items = {}) {

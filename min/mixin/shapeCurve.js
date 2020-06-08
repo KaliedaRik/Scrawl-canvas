@@ -1,10 +1,13 @@
 import { artefact } from '../core/library.js';
-import { mergeOver, isa_boolean, xt, xta, addStrings, capitalize, removeItem, pushUnique } from '../core/utilities.js';
+import { mergeOver, isa_boolean, xt, xta, addStrings, removeItem, pushUnique } from '../core/utilities.js';
 import { makeCoordinate } from '../factory/coordinate.js';
+const capitalize = (s) => {
+if (typeof s !== 'string') return '';
+return s.charAt(0).toUpperCase() + s.slice(1);
+}
 export default function (P = {}) {
 let defaultAttributes = {
 end: null,
-currentEnd: null,
 endPivot: '',
 endPivotCorner: '',
 addEndPivotHandle: false,
@@ -206,7 +209,6 @@ if (this.dirtyControlLock) this.cleanControlLock('control');
 if (this.dirtyEndLock) this.cleanControlLock('end');
 if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
 this.dirtyPathObject = true;
-if (this.collides) this.dirtyCollision = true;
 if (this.useStartAsControlPoint && this.dirtyStart) {
 this.dirtySpecies = true;
 this.pathCalculatedOnce = false;
@@ -215,17 +217,11 @@ if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirty
 }
 if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
 this.dirtyStampPositions = true;
-if (this.collides) this.dirtyCollision = true;
 if (this.useStartAsControlPoint) {
 this.dirtySpecies = true;
 this.dirtyPathObject = true;
 this.pathCalculatedOnce = false;
 }
-}
-if ((this.dirtyRotation || this.dirtyOffset) && this.collides) this.dirtyCollision = true;
-if (this.dirtyCollision && !this.useAsPath) {
-this.dirtyPathObject = true;
-this.pathCalculatedOnce = false;
 }
 if (this.dirtyScale) this.cleanScale();
 if (this.dirtyStart) this.cleanStart();

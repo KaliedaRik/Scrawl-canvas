@@ -1,5 +1,5 @@
 import { constructors } from '../core/library.js';
-import { defaultNonReturnFunction, isa_obj, mergeOver, xt, xta, pushUnique } from '../core/utilities.js';
+import { λnull, isa_obj, mergeOver, xt, xta, pushUnique } from '../core/utilities.js';
 import { makeColor } from './color.js';
 import baseMix from '../mixin/base.js';
 const Palette = function (items = {}) {
@@ -40,7 +40,7 @@ this.colors = item;
 this.dirtyPalette = true;
 }
 };
-S.stops = defaultNonReturnFunction;
+S.stops = λnull;
 P.recalculateHold = [];
 P.recalculate = function () {
 let keys, i, iz, j, jz, cursor, diff,

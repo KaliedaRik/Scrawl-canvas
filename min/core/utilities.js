@@ -9,31 +9,6 @@ return (stringFlag) ? current + '%' : current;
 }
 return current;
 };
-const capitalize = (s) => {
-if (typeof s !== 'string') return ''
-return s.charAt(0).toUpperCase() + s.slice(1)
-}
-const convertLength = (val, len) => {
-if (!xt(val)) throw new Error(`core/base error - convertLength() bad value argument: ${val}`);
-if (!isa_number(len)) throw new Error(`core/base error - convertLength() bad length argument: ${len}`);
-if (isa_number(val)) return val;
-else {
-switch(val){
-case 'top' :
-case 'left' :
-return 0;
-case 'bottom' :
-case 'right' :
-return len;
-case 'center' :
-return len / 2;
-default :
-val = parseFloat(val);
-if (!isa_number(val)) throw new Error(`core/base error - convertLength() value converst to NaN: ${val}`);
-return ( val / 100) * len;
-}
-}
-};
 const convertTime = (item) => {
 let a, timeUnit, timeValue;
 if (!xt(item)) throw new Error(`core/utilities convertTime() error - no argument supplied`);
@@ -54,38 +29,9 @@ timeUnit = 'ms';
 }
 return [timeUnit, timeValue];
 };
-const defaultNonReturnFunction = () => {};
-const defaultArgReturnFunction = (a) => a;
-const defaultThisReturnFunction = function () { return this; };
-const defaultFalseReturnFunction = () => false;
-const defaultZeroReturnFunction = () => 0;
-const defaultBlankStringReturnFunction = () => '';
-const defaultPromiseReturnFunction = () => Promise.resolve(true);
-const ensureInteger = (val) => {
-val = parseInt(val, 10);
-if (!isa_number(val)) val = 0;
-return val;
-};
-const ensurePositiveInteger = (val) => {
-val = parseInt(val, 10);
-if (!isa_number(val)) val = 0;
-return Math.abs(val);
-};
-const ensureFloat = (val, precision) => {
-val = parseFloat(val);
-if (!isa_number(val)) val = 0;
-if (!isa_number(precision)) precision = 0;
-return parseFloat(val.toFixed(precision));
-};
-const ensurePositiveFloat = (val, precision) => {
-val = parseFloat(val);
-if (!isa_number(val)) val = 0;
-if (!isa_number(precision)) precision = 0;
-return Math.abs(parseFloat(val.toFixed(precision)));
-};
-const ensureString = (val) => {
-return (val.substring) ? val : val.toString;
-};
+const λnull = () => {};
+const λthis = function () { return this; };
+const λpromise = () => Promise.resolve(true);
 const generateUuid = () => {
 function s4() {
 return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -95,26 +41,10 @@ return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 const isa_boolean = item => (typeof item === 'boolean') ? true : false;
 const isa_canvas = item => (Object.prototype.toString.call(item) === '[object HTMLCanvasElement]') ? true : false;
 const isa_dom = item => (item && item.querySelector && item.dispatchEvent) ? true : false;
-const isa_engine = item => (item && item.quadraticCurveTo) ? true : false;
 const isa_fn = item => (typeof item === 'function') ? true : false;
-const isa_img = item => (Object.prototype.toString.call(item) === '[object HTMLImageElement]') ? true : false;
 const isa_number = item => (typeof item != 'undefined' && item.toFixed && !Number.isNaN(item)) ? true : false;
 const isa_obj = item => (Object.prototype.toString.call(item) === '[object Object]') ? true : false;
 const isa_quaternion = item => (item && item.type && item.type === 'Quaternion') ? true : false;
-const isa_str = item => (item && item.substring) ? true : false;
-const isa_vector = item => (item && item.type && item.type === 'Vector') ? true : false;
-const isa_video = item => (Object.prototype.toString.call(item) === '[object HTMLVideoElement]') ? true : false;
-const locateTargetSections = ['artefact', 'group', 'animation', 'tween', 'styles'];
-const locateTarget = (item) => {
-if(item && item.substring){
-let result;
-return (locateTargetSections.some(section => {
-result = library[section][item];
-return result;
-})) ? result : false;
-}
-return false;
-};
 const mergeInto = (original, additional) => {
 if (!isa_obj(original) || !isa_obj(additional)) throw new Error(`core/utilities mergeInto() error - insufficient arguments supplied ${original}, ${additional}`);
 for (let key in additional) {
@@ -161,35 +91,18 @@ const xtGet = (...args) => args.find(item => typeof item != 'undefined');
 const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true : false;
 export {
 addStrings,
-convertLength,
-capitalize,
 convertTime,
-defaultNonReturnFunction,
-defaultArgReturnFunction,
-defaultThisReturnFunction,
-defaultFalseReturnFunction,
-defaultZeroReturnFunction,
-defaultBlankStringReturnFunction,
-defaultPromiseReturnFunction,
-ensureInteger,
-ensurePositiveInteger,
-ensureFloat,
-ensurePositiveFloat,
-ensureString,
+λnull,
+λthis,
+λpromise,
 generateUuid,
 isa_boolean,
 isa_canvas,
 isa_dom,
-isa_engine,
 isa_fn,
-isa_img,
 isa_number,
 isa_obj,
 isa_quaternion,
-isa_str,
-isa_vector,
-isa_video,
-locateTarget,
 mergeDiscard,
 mergeInto,
 mergeOver,

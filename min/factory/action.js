@@ -1,5 +1,5 @@
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, xt, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, λnull } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 const Action = function (items = {}) {
@@ -31,7 +31,7 @@ return copy;
 let S = P.setters;
 S.revert = function (item) {
 this.revert = item;
-if (typeof this.revert !== 'function') this.revert = defaultNonReturnFunction;
+if (typeof this.revert !== 'function') this.revert = λnull;
 };
 S.triggered = function (item) {
 if (this.triggered !== item) {

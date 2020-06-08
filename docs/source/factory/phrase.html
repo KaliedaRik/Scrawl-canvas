@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -408,7 +443,6 @@
 <li><a href="../../demo/canvas-016.html">Canvas-016</a> - Phrase entity position and font attributes; Block mimic functionality</li>
 <li><a href="../../demo/canvas-017.html">Canvas-017</a> - Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality</li>
 <li><a href="../../demo/canvas-018.html">Canvas-018</a> - Phrase entity - text along a path</li>
-<li><a href="../../demo/canvas-019.html">Canvas-019</a> - Artefact collision detection</li>
 <li><a href="../../demo/canvas-029.html">Canvas-029</a> - Phrase entitys and gradients</li>
 <li><a href="../../demo/component-001.html">Component-001</a> - Scrawl-canvas DOM element components</li>
 <li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
@@ -432,17 +466,14 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, cellnames, styles, stylesnames, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xta, isa_obj, ensurePositiveFloat, ensureFloat, ensureString } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xta, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cell.js'</span>;
 
 <span class="hljs-keyword">import</span> { makeFontAttributes } <span class="hljs-keyword">from</span> <span class="hljs-string">'./fontAttributes.js'</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/position.js'</span>;
-<span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/anchor.js'</span>;
-<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/entity.js'</span>;
-<span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/filter.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/entity.js'</span>;</pre></div></div>
             
         </li>
         
@@ -477,6 +508,70 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p><strong>ensureFloat</strong> - return the value provided as a floating point number of given precision; return 0 if not a number</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ensureFloat = <span class="hljs-function">(<span class="hljs-params">val, precision</span>) =&gt;</span> {
+
+    val = <span class="hljs-built_in">parseFloat</span>(val);
+
+    <span class="hljs-keyword">if</span> (!isa_number(val)) val = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (!isa_number(precision)) precision = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseFloat</span>(val.toFixed(precision));
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p><strong>ensurePositiveFloat</strong> - return the value provided as a positive floating point number of given precision; return 0 if not a number</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ensurePositiveFloat = <span class="hljs-function">(<span class="hljs-params">val, precision</span>) =&gt;</span> {
+
+    val = <span class="hljs-built_in">parseFloat</span>(val);
+
+    <span class="hljs-keyword">if</span> (!isa_number(val)) val = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (!isa_number(precision)) precision = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(<span class="hljs-built_in">parseFloat</span>(val.toFixed(precision)));
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p><strong>ensureString</strong> - return a String representation of the value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ensureString = <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">return</span> (val.substring) ? val : val.toString;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h4 id="phrase-constructor">Phrase constructor</h4>
 
@@ -526,11 +621,11 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
         </li>
         
         
-        <li id="section-6">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <h4 id="phrase-prototype">Phrase prototype</h4>
 
@@ -545,37 +640,42 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/entity.html">entity</a></li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
-P = entityMix(P);
-P = filterMix(P);</pre></div></div>
+P = entityMix(P);</pre></div></div>
             
         </li>
         
         
-        <li id="section-8">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <h4 id="phrase-attributes">Phrase attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, handle, offset, dimensions, delta, noDeltaUpdates, pivot, pivotCorner, pivoted, addPivotHandle, addPivotOffset, addPivotRotation, path, pathPosition, addPathHandle, addPathOffset, addPathRotation, mimic, mimicked, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic, lockTo, scale, roll, collides, sensorSpacing, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</em></strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil, filterAlpha, filterComposite</strong>.</li>
 </ul>
 
@@ -586,11 +686,11 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p><strong>text</strong> - the text String to be displayed by the Phrase</p>
 
@@ -601,11 +701,11 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p><strong>width</strong> - Number or String</p>
 <ul>
@@ -619,11 +719,11 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><strong>exposeText</strong> - Boolean accessibility feature</p>
 <ul>
@@ -638,11 +738,11 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p><strong>lineHeight</strong> - a positive float Number multiplier applied to the font height to add space between lines of text</p>
 
@@ -653,11 +753,11 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p><strong>letterSpacing</strong> - a positive float Number representing a set number of pixels to place between each glyph (letter). Can be overridden for letter ranges using styling objects</p>
 
@@ -668,11 +768,11 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p><strong>justify</strong> - String value to indicate how the text should justify itself within its dimensions box.</p>
 <ul>
@@ -686,11 +786,11 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <h5 id="in-text-styling">In-text styling</h5>
 
@@ -699,11 +799,11 @@ P = filterMix(P);</pre></div></div>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><strong>sectionClasses</strong> - Array of styling objects</p>
 <p>Glyphs (letters) can be individually styled by adding a <strong><em>styling object</em></strong> to the <code>sectionClasses</code> Array, and then adding <strong>section style markup</strong> to the Phrase’s text String attribute. Subsequent glyphs will inherit those styles until a second style marker updating or terminating that particular style is encountered.</p>
@@ -753,11 +853,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-17">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h5 id="overlines-underlines-highlighting">Overlines, underlines, highlighting</h5>
 <p>We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyphs using <strong>sectionClasses</strong> styling objects.</p>
@@ -772,11 +872,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-18">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p><strong>overlinePosition</strong>, <strong>overlineStyle</strong></p>
 
@@ -788,11 +888,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-19">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><strong>underlinePosition</strong>, <strong>underlineStyle</strong></p>
 
@@ -804,11 +904,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-20">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><strong>highlightStyle</strong></p>
 
@@ -819,11 +919,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-21">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h5 id="bounding-box">Bounding box</h5>
 <p>The bounding box represents the Phrase entity’s collision detection <strong><em>hit area</em></strong>. It contains all of the entity’s text, including line spacing.</p>
@@ -833,11 +933,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-22">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p><strong>boundingBoxColor</strong></p>
 
@@ -848,11 +948,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-23">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p><strong>showBoundingBox</strong> - Boolean flag indicating whether the Phrase entity’s bounding box should be displayed</p>
 
@@ -863,11 +963,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-24">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h5 id="text-along-a-path">Text along a path</h5>
 <p>Phrase entitys, alongside other artefacts, can use a <a href="./shape.html">Shape entity</a> as a <strong><em>reference path</em></strong> to determine its location in the canvas display - achieved by setting the <code>path</code>, <code>pathPosition</code>, etc attributes as required.</p>
@@ -881,11 +981,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-25">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><strong>textPath</strong> - Shape entity to be used as the text path; can be supplied either as the entity object itself, or as the entity’s name-String.</p>
 
@@ -896,11 +996,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-26">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><strong>textPathPosition</strong> - float Number value between <code>0.0 - 1.0</code> representing the text’s first character’s position on the path.</p>
 
@@ -911,11 +1011,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-27">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><strong>textPathLoop</strong> - Boolean flag - when true (default) the first character’s position will loop back to <code>0</code> when it passes <code>1</code> (and vice versa).</p>
 
@@ -926,11 +1026,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-28">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p><strong>addTextPathRoll</strong> - Boolean flag - when true (default) each glyph in the text will rotate to match its position’s tangent on the path.</p>
 
@@ -941,11 +1041,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-29">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p><strong>textPathDirection</strong> - String with values <code>ltr</code> or <code>rtl</code> - affects how the text glyphs will arrange themselves along the path.</p>
 
@@ -956,11 +1056,11 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
         </li>
         
         
-        <li id="section-30">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p><strong>treatWordAsGlyph</strong> - Boolean flag - when true, Scrawl-canvas will treat each word in the text as if it was a glyph/letter; default: false.</p>
 
@@ -973,11 +1073,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1002,11 +1102,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-32">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -1016,11 +1116,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-33">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1034,11 +1134,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-34">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1051,11 +1151,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-35">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p><strong>handle</strong></p>
 
@@ -1115,11 +1215,11 @@ D.handle = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-36">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p><strong>text</strong></p>
 
@@ -1141,11 +1241,11 @@ S.text = <span class="hljs-function"><span class="hljs-keyword">function</span> 
         </li>
         
         
-        <li id="section-37">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p><strong>justify</strong></p>
 
@@ -1163,11 +1263,11 @@ S.justify = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-38">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p><strong>width</strong></p>
 
@@ -1196,11 +1296,11 @@ D.width = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p><strong>scale</strong></p>
 
@@ -1230,11 +1330,11 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p><strong>lineHeight</strong></p>
 
@@ -1247,16 +1347,15 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>TODO: temporary fix that needs a longer-term solution</p>
+              <p>TODO: text display, entity height and pathObject fall out of sync at small/negative values</p>
 <ul>
-<li>text display, entity height and pathObject fall out of sync at small/negative values</li>
-<li>won’t be resolved without a proper fix for the height issue!</li>
+<li>This is a temporary fix</li>
 </ul>
 
             </div>
@@ -1273,13 +1372,16 @@ D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-42">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
-              <p>TODO: temporary fix that needs a longer-term solution (see setter above)</p>
+              <p>TODO: text display, entity height and pathObject fall out of sync at small/negative values</p>
+<ul>
+<li>This is a temporary fix</li>
+</ul>
 
             </div>
             
@@ -1292,11 +1394,11 @@ D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-43">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p><strong>letterSpacing</strong></p>
 
@@ -1321,11 +1423,11 @@ D.letterSpacing = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-44">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><strong>overlinePosition</strong></p>
 
@@ -1349,11 +1451,11 @@ D.overlinePosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-45">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><strong>underlinePosition</strong></p>
 
@@ -1377,11 +1479,11 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-46">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><strong>textPath</strong></p>
 
@@ -1399,11 +1501,11 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-47">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p><strong>textPathPosition</strong></p>
 
@@ -1435,11 +1537,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-48">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <h5 id="fontattribute-attributes">FontAttribute attributes</h5>
 <p>Phrase entitys break down fonts into their constituent parts using <a href="./fontAttribute.html">FontAttribute</a> objects.</p>
@@ -1454,11 +1556,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-49">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p><strong>font</strong> - the desired CSS font (<code>get</code> returns the actual font String being used)</p>
 <ul>
@@ -1482,11 +1584,11 @@ S.font = <span class="hljs-function"><span class="hljs-keyword">function</span> 
         </li>
         
         
-        <li id="section-50">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p><strong>style</strong> - CSS <code>font-style</code> String - <code>normal</code>, <code>italic</code></p>
 
@@ -1507,11 +1609,11 @@ S.style = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><strong>variant</strong> - CSS <code>font-variant</code> String - <code>normal</code>, <code>small-caps</code></p>
 
@@ -1532,11 +1634,11 @@ S.variant = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-52">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><strong>weight</strong> - CSS <code>font-weight</code> String - <code>normal</code>, <code>bold</code>, <code>lighter</code>, <code>bolder</code>, or an integer Number (between <code>1</code> and <code>1000</code>)</p>
 
@@ -1557,11 +1659,11 @@ S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-53">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><strong>stretch</strong> - CSS <code>font-stretch</code> String - <code>normal</code></p>
 
@@ -1582,11 +1684,11 @@ S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-54">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><strong>size</strong> - CSS <code>font-size</code> String:</p>
 <ul>
@@ -1613,11 +1715,11 @@ S.size = <span class="hljs-function"><span class="hljs-keyword">function</span> 
         </li>
         
         
-        <li id="section-55">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p><strong>sizeValue</strong> - the Number part of the font’s size value</p>
 
@@ -1645,11 +1747,11 @@ D.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-56">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p><strong>sizeMetric</strong> - the String metric part of the font’s size value</p>
 
@@ -1670,11 +1772,11 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-57">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p><strong>family</strong> - CSS <code>font-family</code> String</p>
 
@@ -1695,11 +1797,11 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-58">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1728,11 +1830,11 @@ P.cleanDimensionsAdditionalActions = <span class="hljs-function"><span class="hl
         </li>
         
         
-        <li id="section-59">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p><code>setSectionStyles</code> - internal function</p>
 
@@ -1769,11 +1871,11 @@ P.cleanDimensionsAdditionalActions = <span class="hljs-function"><span class="hl
         </li>
         
         
-        <li id="section-60">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p><code>addSectionClass</code>, <code>removeSectionClass</code> - add and remove section class definitions to the entity’s <code>sectionClasses</code> object.</p>
 
@@ -1804,11 +1906,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-61">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p><code>getTextPath</code> - internal function</p>
 
@@ -1835,11 +1937,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-62">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 <p>Phrase entitys, because they handle graphical text which has its own special requirements and methods in the Canvas API, has to overwrite a substantial portion of the Display cycle functionality defined in the entity mixin.</p>
@@ -1849,11 +1951,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-63">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p><code>cleanPathObject</code> - overwrites mixin/entity.js functionality so that it can deal with the <code>dirtyFont</code>, <code>dirtyText</code> and <code>dirtyHandle</code> flags </p>
 <ul>
@@ -1874,6 +1976,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             <span class="hljs-keyword">this</span>.fontAttributes.buildFont(<span class="hljs-keyword">this</span>.scale);
             <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">this</span>.dirtyMimicDimensions = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">this</span>.dirtyPositionSubscribers = <span class="hljs-literal">true</span>;
         }
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyText) <span class="hljs-keyword">this</span>.buildText();
 
@@ -1899,11 +2002,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-64">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p><code>buildText</code> - internal function called by <code>cleanPathObject</code></p>
 
@@ -1947,11 +2050,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-65">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p><code>convertTextEntityCharacters</code> - internal function called by <code>buildText</code></p>
 <ul>
@@ -1974,11 +2077,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-66">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p><code>calculateTextPositions</code> - internal function called by <code>buildText</code></p>
 <ul>
@@ -1992,11 +2095,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-67">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <ol start="0">
 <li><code>strokeStyle</code> and <code>fillStyle</code> helper function</li>
@@ -2028,11 +2131,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-68">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <ol>
 <li>Setup - get values for text? arrays, current?, highlight?, ?Attributes, etc</li>
@@ -2106,11 +2209,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-69">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <ol start="2">
 <li>Create <code>textGlyphs</code> array</li>
@@ -2127,11 +2230,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-70">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <ol start="3">
 <li><code>textPositions</code> array will include an array of data for each glyph</li>
@@ -2155,11 +2258,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-71">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <ol start="4">
 <li>Process the <code>sectionStyles</code> array to start populating the <code>textPositions</code> arrays</li>
@@ -2261,11 +2364,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-72">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>Setup <code>textGlyphWidths</code> array, populating it with current letterSpacing values</p>
 
@@ -2277,11 +2380,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-73">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>Finish populating <code>textGlyphWidths</code></p>
 
@@ -2297,11 +2400,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-74">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <ol start="5">
 <li>Calculate the text <code>height</code> value</li>
@@ -2324,11 +2427,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-75">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <ol start="6">
 <li>Calculate glyph <code>width</code> values</li>
@@ -2376,11 +2479,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-76">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>Calculate text line arrays</p>
 
@@ -2402,11 +2505,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-77">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>Need <code>starts</code> to be less than <code>ends</code></p>
 <ul>
@@ -2432,11 +2535,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-78">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>Need to pick up the last (or only) line</p>
 
@@ -2447,11 +2550,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-79">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p>Pick up single line</p>
 
@@ -2469,11 +2572,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-80">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <p>Final line of multiline text</p>
 
@@ -2494,11 +2597,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-81">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <p>… And complete the population of data for <code>highlight</code>, <code>overline</code>, <code>underline</code></p>
 
@@ -2516,11 +2619,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-82">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
               <ol start="7">
 <li>Calculate <code>localHeight</code></li>
@@ -2542,11 +2645,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-83">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
               <p>Handle path positioning (which we’ll assume will need to be done for every display cycle) separately during stamping</p>
 
@@ -2557,11 +2660,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-84">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
               <ol start="8">
 <li>We should now be in a position where we can calculate each glyph’s <code>startXY</code> values</li>
@@ -2575,11 +2678,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-85">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
               <p>Scenario 1: <code>justify === &#39;full&#39;</code></p>
 
@@ -2620,11 +2723,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-86">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-89">&#182;</a>
               </div>
               <p>Scenario 2: regular text - <code>justify === &#39;left&#39;</code>, or <code>&#39;centre&#39;</code>, or <code>&#39;right&#39;</code></p>
 
@@ -2663,11 +2766,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-87">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <ol start="9">
 <li>Clean up and exit</li>
@@ -2691,11 +2794,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-88">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
               <h5 id="stamping-the-entity-onto-a-cell-wrapper-canvas-element">Stamping the entity onto a Cell wrapper &lt;canvas&gt; element</h5>
 
@@ -2704,11 +2807,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-89">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-92">&#182;</a>
               </div>
               <p><code>regularStampSynchronousActions</code> - overwrites the mixin/entity.js function</p>
 
@@ -2788,11 +2891,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-90">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
               <p><code>calculateGlyphPathPositions</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
 
@@ -2817,11 +2920,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-91">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
+                <a class="pilcrow" href="#section-94">&#182;</a>
               </div>
               <p>textPathPosition Array indexes [
 0-font - font definition, or null
@@ -2881,11 +2984,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-92">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
               <p><code>preStamper</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
 
@@ -2918,11 +3021,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-93">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+                <a class="pilcrow" href="#section-96">&#182;</a>
               </div>
               <p>data[0] - glyph
 data[1] - xpos
@@ -2960,11 +3063,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-94">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-94">&#182;</a>
+                <a class="pilcrow" href="#section-97">&#182;</a>
               </div>
               <p><code>stamper</code> - object holding stamp method functions - functions called by <code>regularStampSynchronousActions</code></p>
 
@@ -2975,11 +3078,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-95">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-95">&#182;</a>
+                <a class="pilcrow" href="#section-98">&#182;</a>
               </div>
               <p><code>stamper.draw</code></p>
 
@@ -2993,11 +3096,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-96">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-96">&#182;</a>
+                <a class="pilcrow" href="#section-99">&#182;</a>
               </div>
               <p><code>stamper.fill</code></p>
 
@@ -3011,11 +3114,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-97">
+        <li id="section-100">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-97">&#182;</a>
+                <a class="pilcrow" href="#section-100">&#182;</a>
               </div>
               <p><code>stamper.drawAndFill</code></p>
 
@@ -3032,11 +3135,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-98">
+        <li id="section-101">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-98">&#182;</a>
+                <a class="pilcrow" href="#section-101">&#182;</a>
               </div>
               <p><code>stamper.fillAndDraw</code></p>
 
@@ -3054,11 +3157,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-99">
+        <li id="section-102">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-99">&#182;</a>
+                <a class="pilcrow" href="#section-102">&#182;</a>
               </div>
               <p><code>stamper.drawThenFill</code></p>
 
@@ -3073,11 +3176,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-100">
+        <li id="section-103">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-100">&#182;</a>
+                <a class="pilcrow" href="#section-103">&#182;</a>
               </div>
               <p><code>stamper.fillThenDraw</code></p>
 
@@ -3092,11 +3195,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-101">
+        <li id="section-104">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-101">&#182;</a>
+                <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
               <p><code>stamper.clear</code></p>
 
@@ -3114,11 +3217,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-102">
+        <li id="section-105">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-102">&#182;</a>
+                <a class="pilcrow" href="#section-105">&#182;</a>
               </div>
               <p><code>drawBoundingBox</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
 
@@ -3141,11 +3244,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-103">
+        <li id="section-106">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-103">&#182;</a>
+                <a class="pilcrow" href="#section-106">&#182;</a>
               </div>
               <p><code>performRotation</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
 <ul>
@@ -3170,11 +3273,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-104">
+        <li id="section-107">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-104">&#182;</a>
+                <a class="pilcrow" href="#section-107">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makePhrase({
@@ -3222,11 +3325,11 @@ constructors.Phrase = Phrase;</pre></div></div>
         </li>
         
         
-        <li id="section-105">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-105">&#182;</a>
+                <a class="pilcrow" href="#section-108">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

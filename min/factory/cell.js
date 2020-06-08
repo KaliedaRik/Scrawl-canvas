@@ -1,7 +1,5 @@
-import { artefact, asset, tween, radian, constructors,
-styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
-import { convertLength, generateUuid, isa_canvas, isa_obj, mergeOver, xt, xtGet,
-defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
+import { artefact, asset, tween, radian, constructors, styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
+import { generateUuid, isa_canvas, mergeOver, λthis, λnull } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
@@ -10,6 +8,10 @@ import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './
 import { importDomImage } from './imageAsset.js';
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
+import deltaMix from '../mixin/delta.js';
+import pivotMix from '../mixin/pivot.js';
+import mimicMix from '../mixin/mimic.js';
+import pathMix from '../mixin/path.js';
 import anchorMix from '../mixin/anchor.js';
 import cascadeMix from '../mixin/cascade.js';
 import assetMix from '../mixin/asset.js';
@@ -49,6 +51,10 @@ P.isArtefact = false;
 P.isAsset = true;
 P = baseMix(P);
 P = positionMix(P);
+P = deltaMix(P);
+P = pivotMix(P);
+P = mimicMix(P);
+P = pathMix(P);
 P = anchorMix(P);
 P = cascadeMix(P);
 P = assetMix(P);
@@ -71,13 +77,13 @@ controller: null,
 P.defs = mergeOver(P.defs, defaultAttributes);
 delete P.defs.source;
 delete P.defs.sourceLoaded;
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
 P.saveAsPacket = function () {
 return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = defaultThisReturnFunction;
+P.clone = λthis;
 P.kill = function () {
 let myname = this.name
 Object.entries(canvas).forEach(([name, cvs]) => {
@@ -255,7 +261,6 @@ if (items.dirtyOffset) art.dirtyOffset = true;
 if (items.dirtyHandle) art.dirtyHandle = true;
 if (items.dirtyRotation) art.dirtyRotation = true;
 if (items.dirtyPathObject) art.dirtyPathObject = true;
-if (items.dirtyCollision) art.dirtyCollision = true;
 })
 });
 };

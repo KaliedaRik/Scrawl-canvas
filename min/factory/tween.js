@@ -1,5 +1,5 @@
 import { constructors, animationtickers, radian } from '../core/library.js';
-import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λnull } from '../core/utilities.js';
 import { makeTicker } from './ticker.js';
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
@@ -108,11 +108,11 @@ this.setDefinitionsValues();
 };
 S.commenceAction = function (item) {
 this.commenceAction = item;
-if (typeof this.commenceAction !== 'function') this.commenceAction = defaultNonReturnFunction;
+if (typeof this.commenceAction !== 'function') this.commenceAction = λnull;
 };
 S.completeAction = function (item) {
 this.completeAction = item;
-if (typeof this.completeAction !== 'function') this.completeAction = defaultNonReturnFunction;
+if (typeof this.completeAction !== 'function') this.completeAction = λnull;
 };
 P.set = function (items) {
 let key, i, iz, s,

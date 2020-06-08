@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -414,7 +449,6 @@
 <li><a href="../../demo/canvas-013.html">Canvas-013</a> - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral</li>
 <li><a href="../../demo/canvas-014.html">Canvas-014</a> - Line, quadratic and bezier entitys - control lock alternatives</li>
 <li><a href="../../demo/canvas-018.html">Canvas-018</a> - Phrase entity - text along a path</li>
-<li><a href="../../demo/canvas-019.html">Canvas-019</a> - Artefact collision detection</li>
 <li><a href="../../demo/canvas-024.html">Canvas-024</a> - Loom entity functionality</li>
 <li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
 <li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
@@ -441,12 +475,8 @@
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'./coordinate.js'</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/position.js'</span>;
-<span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/anchor.js'</span>;
-<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/entity.js'</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/shapeBasic.js'</span>;
-<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/shapeCurve.js'</span>;
-<span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/filter.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/shapeCurve.js'</span>;</pre></div></div>
             
         </li>
         
@@ -504,16 +534,17 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/shapeBasic.html">shapeBasic</a></li>
+<li><a href="../mixin/shapeCurve.html">shapeCurve</a></li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
-P = entityMix(P);
 P = shapeMix(P);
-P = curveMix(P);
-P = filterMix(P);</pre></div></div>
+P = curveMix(P);</pre></div></div>
             
         </li>
         
@@ -525,25 +556,23 @@ P = filterMix(P);</pre></div></div>
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h4 id="quadratic-attributes">Quadratic attributes</h4>
+<ul>
+<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</em></strong>.</li>
+<li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil, filterAlpha, filterComposite</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/shapeBasic.html">shapeBasic mixin</a>: <strong>species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/shapeCurve.html">shapeCurve mixin</a>: <strong>end, endPivot, endPivotCorner, addEndPivotHandle, addEndPivotOffset, endPath, endPathPosition, addEndPathHandle, addEndPathOffset, endLockTo, useStartAsControlPoint</strong>.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {
-
-    <span class="hljs-attr">control</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">currentControl</span>: <span class="hljs-literal">null</span>,
-
-    <span class="hljs-attr">controlPivot</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">controlPivotCorner</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">addControlPivotHandle</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">addControlPivotOffset</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">controlPath</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">controlPathPosition</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">addControlPathHandle</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">addControlPathOffset</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">controlLockTo</span>: <span class="hljs-string">''</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -553,6 +582,88 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>The <strong>control</strong> coordinate (‘pin’) defines the quadratic curve’s control point.</p>
+<ul>
+<li>Similar to the <code>start</code> coordinate, the <code>control</code> coordinate can be updated using the pseudo-attributes <strong>controlX</strong> and <strong>controlY</strong>.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    control: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><strong>controlPivot</strong>, <strong>controlPivotCorner</strong>, <strong>addControlPivotHandle</strong>, <strong>addControlPivotOffset</strong></p>
+<ul>
+<li>Like the <code>start</code> coordinate, the <code>control</code> coordinate can be <strong>pivoted</strong> to another artefact. These attributes are used in the same way as the <code>pivot</code>, ‘pivotCorner’, <code>addPivotHandle</code> and <code>addPivotOffset</code> attributes. </li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    controlPivot: <span class="hljs-string">''</span>,
+    <span class="hljs-attr">controlPivotCorner</span>: <span class="hljs-string">''</span>,
+    <span class="hljs-attr">addControlPivotHandle</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">addControlPivotOffset</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p><strong>controlPath</strong>, <strong>controlPathPosition</strong>, <strong>addControlPathHandle</strong>, <strong>addControlPathOffset</strong></p>
+<ul>
+<li>Like the <code>start</code> coordinate, the <code>control</code> coordinate can be <strong>pathed</strong> to another artefact. These attributes are used in the same way as the <code>path</code>, ‘pathPosition’, <code>addPathHandle</code> and <code>addPathOffset</code> attributes.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    controlPath: <span class="hljs-string">''</span>,
+    <span class="hljs-attr">controlPathPosition</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">addControlPathHandle</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">addControlPathOffset</span>: <span class="hljs-literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><strong>controlLockTo</strong></p>
+<ul>
+<li>Like the <code>start</code> coordinate, the <code>control</code> coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: <code>coord</code> (default, for absolute positioning), <code>pivot</code>, <code>path</code>, <code>mouse</code>.</li>
+<li>The control coordinate does not support ‘mimic’ relative positioning.</li>
+<li>The control lock does not support setting the <code>x</code> and <code>y</code> coordinates separately - its value is a string argument, not an <code>[x, y]</code> array!</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    controlLockTo: <span class="hljs-string">''</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -567,11 +678,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -581,11 +692,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -595,11 +706,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -612,11 +723,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p><strong>controlPivot</strong></p>
 
@@ -632,11 +743,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><strong>controlPath</strong></p>
 
@@ -653,11 +764,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><strong>controlPathPosition</strong></p>
 
@@ -679,11 +790,11 @@ D.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-16">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><strong>control</strong></p>
 <ul>
@@ -746,11 +857,11 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-17">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p><strong>controlLockTo</strong></p>
 
@@ -767,11 +878,11 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-18">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -780,11 +891,11 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-19">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
@@ -804,11 +915,11 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-20">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><code>makeQuadraticPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
@@ -831,11 +942,11 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-21">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code> </p>
 <ul>
@@ -882,11 +993,11 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-22">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -895,11 +1006,11 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-23">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h5 id="makequadratic">makeQuadratic</h5>
 <p>Accepts argument with attributes:</p>
@@ -945,11 +1056,11 @@ constructors.Quadratic = Quadratic;</pre></div></div>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

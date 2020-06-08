@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Position-physics mixin</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="../core/animationloop.html">
+                  ./source/core/animationloop.js
+                </a>
+              
+                
+                <a class="source" href="../core/component.html">
+                  ./source/core/component.js
+                </a>
+              
+                
+                <a class="source" href="../core/document.html">
+                  ./source/core/document.js
+                </a>
+              
+                
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
+                <a class="source" href="../core/init.html">
+                  ./source/core/init.js
+                </a>
+              
+                
+                <a class="source" href="../core/library.html">
+                  ./source/core/library.js
+                </a>
+              
+                
+                <a class="source" href="../core/userInteraction.html">
+                  ./source/core/userInteraction.js
+                </a>
+              
+                
+                <a class="source" href="../core/utilities.html">
+                  ./source/core/utilities.js
+                </a>
+              
+                
+                <a class="source" href="../factory/action.html">
+                  ./source/factory/action.js
+                </a>
+              
+                
+                <a class="source" href="../factory/anchor.html">
+                  ./source/factory/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../factory/animation.html">
+                  ./source/factory/animation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
+                <a class="source" href="../factory/block.html">
+                  ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/canvas.html">
+                  ./source/factory/canvas.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cell.html">
+                  ./source/factory/cell.js
+                </a>
+              
+                
+                <a class="source" href="../factory/color.html">
+                  ./source/factory/color.js
+                </a>
+              
+                
+                <a class="source" href="../factory/coordinate.html">
+                  ./source/factory/coordinate.js
+                </a>
+              
+                
+                <a class="source" href="../factory/element.html">
+                  ./source/factory/element.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filter.html">
+                  ./source/factory/filter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/fontAttributes.html">
+                  ./source/factory/fontAttributes.js
+                </a>
+              
+                
+                <a class="source" href="../factory/gradient.html">
+                  ./source/factory/gradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/grid.html">
+                  ./source/factory/grid.js
+                </a>
+              
+                
+                <a class="source" href="../factory/group.html">
+                  ./source/factory/group.js
+                </a>
+              
+                
+                <a class="source" href="../factory/imageAsset.html">
+                  ./source/factory/imageAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
+                <a class="source" href="../factory/loom.html">
+                  ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="../factory/oval.html">
+                  ./source/factory/oval.js
+                </a>
+              
+                
+                <a class="source" href="../factory/palette.html">
+                  ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/pattern.html">
+                  ./source/factory/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../factory/phrase.html">
+                  ./source/factory/phrase.js
+                </a>
+              
+                
+                <a class="source" href="../factory/picture.html">
+                  ./source/factory/picture.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quaternion.html">
+                  ./source/factory/quaternion.js
+                </a>
+              
+                
+                <a class="source" href="../factory/radialGradient.html">
+                  ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rectangle.html">
+                  ./source/factory/rectangle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/renderAnimation.html">
+                  ./source/factory/renderAnimation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/shape.html">
+                  ./source/factory/shape.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spriteAsset.html">
+                  ./source/factory/spriteAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/stack.html">
+                  ./source/factory/stack.js
+                </a>
+              
+                
+                <a class="source" href="../factory/star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
+                <a class="source" href="../factory/state.html">
+                  ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tetragon.html">
+                  ./source/factory/tetragon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/ticker.html">
+                  ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tween.html">
+                  ./source/factory/tween.js
+                </a>
+              
+                
+                <a class="source" href="../factory/unstackedElement.html">
+                  ./source/factory/unstackedElement.js
+                </a>
+              
+                
+                <a class="source" href="../factory/vector.html">
+                  ./source/factory/vector.js
+                </a>
+              
+                
+                <a class="source" href="../factory/videoAsset.html">
+                  ./source/factory/videoAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/wheel.html">
+                  ./source/factory/wheel.js
+                </a>
+              
+                
+                <a class="source" href="anchor.html">
+                  ./source/mixin/anchor.js
+                </a>
+              
+                
+                <a class="source" href="asset.html">
+                  ./source/mixin/asset.js
+                </a>
+              
+                
+                <a class="source" href="assetConsumer.html">
+                  ./source/mixin/assetConsumer.js
+                </a>
+              
+                
+                <a class="source" href="base.html">
+                  ./source/mixin/base.js
+                </a>
+              
+                
+                <a class="source" href="cascade.html">
+                  ./source/mixin/cascade.js
+                </a>
+              
+                
+                <a class="source" href="delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
+                <a class="source" href="dom.html">
+                  ./source/mixin/dom.js
+                </a>
+              
+                
+                <a class="source" href="entity.html">
+                  ./source/mixin/entity.js
+                </a>
+              
+                
+                <a class="source" href="filter.html">
+                  ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="pivot.html">
+                  ./source/mixin/pivot.js
+                </a>
+              
+                
+                <a class="source" href="position.html">
+                  ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
+                </a>
+              
+                
+                <a class="source" href="shapePathCalculation.html">
+                  ./source/mixin/shapePathCalculation.js
+                </a>
+              
+                
+                <a class="source" href="styles.html">
+                  ./source/mixin/styles.js
+                </a>
+              
+                
+                <a class="source" href="tween.html">
+                  ./source/mixin/tween.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter.html">
+                  ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="position-physics-mixin">Position-physics mixin</h1>
+<p>This mixin defines additional attributes and functions for an artefact that uses physics functionality</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h4 id="imports">Imports</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_boolean } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h4 id="export-function">Export function</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h4 id="shared-attributes">Shared attributes</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p><strong>mimic</strong> - reference artefact object. Can also be set using the artefact’s name-String.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        mimic: <span class="hljs-string">''</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p><strong>useMimic…</strong> - a set of Boolean flags determining which attributes should be taken from the mimic reference artefact. By default, the artefact will use its own attribute values; setting any of these flags changes the behaviour for that attribute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        useMimicDimensions: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">useMimicScale</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">useMimicOffset</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">useMimicRotation</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">useMimicFlip</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p><strong>addOwn…ToMimic</strong> - a set of Boolean flags determining which mimic attributes should be added to this artefact’s own attribute values. By default, none are added; setting any of these flags changes the behaviour for that attribute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        addOwnDimensionsToMimic: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">addOwnScaleToMimic</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">addOwnStartToMimic</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">addOwnOffsetToMimic</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">addOwnRotationToMimic</span>: <span class="hljs-literal">false</span>,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
+    mergeOver(P, defaultAttributes);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h4 id="packet-management">Packet management</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'mimic'</span>]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.getters,
+        S = P.setters,
+        D = P.deltaSetters;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p><strong>mimic</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.mimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (isa_boolean(item) &amp;&amp; !item) {
+
+            <span class="hljs-keyword">this</span>.mimic = <span class="hljs-literal">null</span>;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'mimic'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">'start'</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'mimic'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">'start'</span>;
+
+            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+        }
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">let</span> oldMimic = <span class="hljs-keyword">this</span>.mimic,
+                newMimic = (item.substring) ? artefact[item] : item,
+                name = <span class="hljs-keyword">this</span>.name;
+
+            <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.name) {
+
+                <span class="hljs-keyword">if</span> (oldMimic &amp;&amp; oldMimic.name !== newMimic.name) removeItem(oldMimic.mimicked, name);
+
+                pushUnique(newMimic.mimicked, name);
+
+                <span class="hljs-keyword">this</span>.mimic = newMimic;
+                <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+            }
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><strong>useMimicDimensions</strong>, <strong>useMimicScale</strong>, <strong>useMimicStart</strong>, <strong>useMimicHandle</strong>, <strong>useMimicOffset</strong>, <strong>useMimicRotation</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.useMimicDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.useMimicDimensions = item;
+        <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    };
+    S.useMimicScale = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.useMimicScale = item;
+        <span class="hljs-keyword">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
+    };
+    S.useMimicStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.useMimicStart = item;
+        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+    };
+    S.useMimicHandle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.useMimicHandle = item;
+        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    };
+    S.useMimicOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.useMimicOffset = item;
+        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+    };
+    S.useMimicRotation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.useMimicRotation = item;
+        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p><strong>addOwnDimensionsToMimic</strong>, <strong>addOwnScaleToMimic</strong>, <strong>addOwnStartToMimic</strong>, <strong>addOwnHandleToMimic</strong>, <strong>addOwnOffsetToMimic</strong>, <strong>addOwnRotationToMimic</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.addOwnDimensionsToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.addOwnDimensionsToMimic = item;
+        <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    };
+    S.addOwnScaleToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.addOwnScaleToMimic = item;
+        <span class="hljs-keyword">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
+    };
+    S.addOwnStartToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.addOwnStartToMimic = item;
+        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+    };
+    S.addOwnHandleToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.addOwnHandleToMimic = item;
+        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    };
+    S.addOwnOffsetToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.addOwnOffsetToMimic = item;
+        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+    };
+    S.addOwnRotationToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+        <span class="hljs-keyword">this</span>.addOwnRotationToMimic = item;
+        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p><code>updateMimicSubscribers</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.updateMimicSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">let</span> DMH = <span class="hljs-keyword">this</span>.dirtyMimicHandle;
+        <span class="hljs-keyword">let</span> DMO = <span class="hljs-keyword">this</span>.dirtyMimicOffset;
+        <span class="hljs-keyword">let</span> DMR = <span class="hljs-keyword">this</span>.dirtyMimicRotation;
+        <span class="hljs-keyword">let</span> DMS = <span class="hljs-keyword">this</span>.dirtyMimicScale;
+        <span class="hljs-keyword">let</span> DMD = <span class="hljs-keyword">this</span>.dirtyMimicDimensions;
+
+        <span class="hljs-keyword">this</span>.mimicked.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> instance = artefact[name];
+
+            <span class="hljs-keyword">if</span> (instance) {
+
+                <span class="hljs-keyword">if</span> (instance.useMimicStart) instance.dirtyStart = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (DMH &amp;&amp; instance.useMimicHandle) instance.dirtyHandle = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (DMO &amp;&amp; instance.useMimicOffset) instance.dirtyOffset = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (DMR &amp;&amp; instance.useMimicRotation) instance.dirtyRotation = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (DMS &amp;&amp; instance.useMimicScale) instance.dirtyScale = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (DMD &amp;&amp; instance.useMimicDimensions) instance.dirtyDimensions = <span class="hljs-literal">true</span>;
+            }
+        });
+
+        <span class="hljs-keyword">this</span>.dirtyMimicHandle = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">this</span>.dirtyMimicOffset = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">this</span>.dirtyMimicRotation = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">this</span>.dirtyMimicScale = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">this</span>.dirtyMimicDimensions = <span class="hljs-literal">false</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Return the prototype</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> P;
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

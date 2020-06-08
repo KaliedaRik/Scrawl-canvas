@@ -1,5 +1,5 @@
 import { constructors, cell, entity } from '../core/library.js';
-import { mergeOver, pushUnique, isa_fn, isa_obj } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_obj } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
 const Pattern = function (items = {}) {

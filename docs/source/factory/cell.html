@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -427,11 +462,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, tween, radian, constructors, 
-    styles, stylesnames, cell, cellnames, group, canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, tween, radian, constructors, styles, stylesnames, cell, cellnames, group, canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
 
-<span class="hljs-keyword">import</span> { convertLength, generateUuid, isa_canvas, isa_obj, mergeOver, xt, xtGet, 
-    defaultThisReturnFunction, defaultNonReturnFunction } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { generateUuid, isa_canvas, mergeOver, λ<span class="hljs-keyword">this</span>, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
 
@@ -443,6 +476,10 @@
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
 <span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/position.js'</span>;
+<span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/delta.js'</span>;
+<span class="hljs-keyword">import</span> pivotMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/pivot.js'</span>;
+<span class="hljs-keyword">import</span> mimicMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/mimic.js'</span>;
+<span class="hljs-keyword">import</span> pathMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/path.js'</span>;
 <span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/anchor.js'</span>;
 <span class="hljs-keyword">import</span> cascadeMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/cascade.js'</span>;
 <span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/asset.js'</span>;
@@ -534,11 +571,27 @@ P.isAsset = <span class="hljs-literal">true</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
+<ul>
+<li><a href="../mixin/base.html">base</a></li>
+<li><a href="../mixin/position.html">position</a></li>
+<li><a href="../mixin/delta.html">delta</a></li>
+<li><a href="../mixin/pivot.html">pivot</a></li>
+<li><a href="../mixin/mimic.html">mimic</a></li>
+<li><a href="../mixin/path.html">path</a></li>
+<li><a href="../mixin/anchor.html">anchor</a></li>
+<li><a href="../mixin/cascade.html">cascade</a></li>
+<li><a href="../mixin/asset.html">asset</a></li>
+<li><a href="../mixin/filter.html">filter</a></li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
 P = positionMix(P);
+P = deltaMix(P);
+P = pivotMix(P);
+P = mimicMix(P);
+P = pathMix(P);
 P = anchorMix(P);
 P = cascadeMix(P);
 P = assetMix(P);
@@ -556,11 +609,15 @@ P = filterMix(P);</pre></div></div>
               <h4 id="cell-attributes">Cell attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, handle, offset, dimensions, delta, noDeltaUpdates, pivot, pivotCorner, pivoted, addPivotHandle, addPivotOffset, addPivotRotation, path, pathPosition, addPathHandle, addPathOffset, addPathRotation, mimic, mimicked, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic, lockTo, scale, roll, collides, sensorSpacing, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil, filterAlpha, filterComposite</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/cascade.html">cascade mixin</a>: <strong>groups</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/asset.html">asset mixin</a>: <strong>source, subscribers</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil, filterAlpha, filterComposite</strong>.</li>
 </ul>
 
             </div>
@@ -801,14 +858,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
+            <div class="content"><div class='highlight'><pre>P.stringifyFunction = λ<span class="hljs-literal">null</span>;
+P.processPacketOut = λ<span class="hljs-literal">null</span>;
+P.finalizePacketOut = λ<span class="hljs-literal">null</span>;
 P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.lib}</span>, {}]`</span>
 };
-P.clone = defaultThisReturnFunction;</pre></div></div>
+P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
             
         </li>
         
@@ -1357,7 +1414,6 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
             <span class="hljs-keyword">if</span> (items.dirtyHandle) art.dirtyHandle = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyRotation) art.dirtyRotation = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyPathObject) art.dirtyPathObject = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (items.dirtyCollision) art.dirtyCollision = <span class="hljs-literal">true</span>;
         })
     });
 };</pre></div></div>
@@ -2735,7 +2791,7 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
               <p><code>rotateDestination</code> - internal function, called by entity objects about to stamp themselves onto the Cell.</p>
 <ul>
 <li>entity stamp functionality works by performing a <code>setTransform</code> action on the Cell engine so that engine coordinates [0, 0] equal the entity’s <code>currentStampPosition</code> coordinates, alongside any directionality (<code>flipReverse</code>, <code>flipUpend</code>) and rotational (<code>roll</code>) changes necessary</li>
-<li>doing it this way saves a massive amount of calculation that is otherwise required to correctly position the entity in the display; also makes collision detection a lot simpler</li>
+<li>doing it this way saves a massive amount of calculation that is otherwise required to correctly position the entity in the display</li>
 </ul>
 
             </div>

@@ -1,4 +1,4 @@
-import { mergeOver, pushUnique, defaultNonReturnFunction } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull } from '../core/utilities.js';
 export default function (P = {}) {
 let defaultAttributes = {
 sourceLoaded: false,
@@ -21,7 +21,7 @@ if (item) {
 if (this.sourceLoaded) this.notifySubscribers();
 }
 };
-S.subscribers = defaultNonReturnFunction;
+S.subscribers = λnull;
 P.assetConstructor = function (items = {}) {
 this.makeName(items.name);
 this.register();

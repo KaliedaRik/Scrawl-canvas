@@ -1,6 +1,5 @@
 import { constructors } from '../core/library.js';
-import { mergeOver, generateUuid, xt,
-defaultThisReturnFunction, defaultNonReturnFunction } from '../core/utilities.js';
+import { generateUuid, xt, λthis, λnull } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 const VideoAsset = function (items = {}) {
@@ -16,10 +15,10 @@ P = assetMix(P);
 P.saveAsPacket = function () {
 return [this.name, this.type, this.lib, {}];
 };
-P.stringifyFunction = defaultNonReturnFunction;
-P.processPacketOut = defaultNonReturnFunction;
-P.finalizePacketOut = defaultNonReturnFunction;
-P.clone = defaultThisReturnFunction;
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
+P.clone = λthis;
 let G = P.getters,
 S = P.setters,
 D = P.deltaSetters;

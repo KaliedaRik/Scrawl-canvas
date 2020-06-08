@@ -1,5 +1,4 @@
 import { constructors, artefact } from '../core/library.js';
-import { scrawlNavigationHold } from '../core/document.js';
 import { mergeOver, pushUnique, isa_fn, isa_dom } from '../core/utilities.js';
 import baseMix from '../mixin/base.js';
 const Anchor = function (items = {}) {

@@ -35,6 +35,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
                 <a class="source" href="../core/init.html">
                   ./source/core/init.js
                 </a>
@@ -295,6 +300,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -307,6 +317,21 @@
                 
                 <a class="source" href="../mixin/filter.html">
                   ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
                 </a>
               
                 
@@ -340,8 +365,18 @@
                 </a>
               
                 
+                <a class="source" href="../worker/filter-stringed.html">
+                  ./source/worker/filter-stringed.js
+                </a>
+              
+                
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
+                </a>
+              
+                
+                <a class="source" href="../worker/filter_canvas.html">
+                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -411,7 +446,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, mergeDiscard, pushUnique, defaultNonReturnFunction, defaultThisReturnFunction, xta } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { mergeOver, mergeDiscard, pushUnique, λ<span class="hljs-literal">null</span>, λ<span class="hljs-keyword">this</span>, xta } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/state.js'</span>;
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/cell.js'</span>;
@@ -443,10 +478,10 @@
 
     <span class="hljs-keyword">if</span> (!items.group) items.group = currentGroup;
 
-    <span class="hljs-keyword">this</span>.onEnter = defaultNonReturnFunction;
-    <span class="hljs-keyword">this</span>.onLeave = defaultNonReturnFunction;
-    <span class="hljs-keyword">this</span>.onDown = defaultNonReturnFunction;
-    <span class="hljs-keyword">this</span>.onUp = defaultNonReturnFunction;
+    <span class="hljs-keyword">this</span>.onEnter = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">this</span>.onLeave = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">this</span>.onDown = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">this</span>.onUp = λ<span class="hljs-literal">null</span>;
 
     <span class="hljs-keyword">this</span>.delta = {};
 
@@ -932,7 +967,7 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.clone = defaultThisReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
             
         </li>
         
@@ -1670,7 +1705,7 @@ P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">functi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.midInitActions = defaultNonReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.midInitActions = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -2655,7 +2690,7 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.none = defaultNonReturnFunction;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.none = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
