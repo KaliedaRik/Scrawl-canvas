@@ -15,8 +15,6 @@
 // #### Demos:
 // + [Canvas-022](../../demo/canvas-022.html) - Grid entity - basic functionality (color, gradients)
 // + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
-// + [Canvas-019](../../demo/canvas-019.html) - Artefact collision detection
-// + [DOM-013](../../demo/dom-013.html) - Artefact collision detection - DOM artefacts
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
 
 
@@ -27,10 +25,7 @@ import { mergeOver, pushUnique, isa_number, isa_obj, λnull, xt, xta } from '../
 import { requestCell, releaseCell } from './cell.js';
 
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
-import filterMix from '../mixin/filter.js';
 
 
 // #### Grid constructor
@@ -88,19 +83,21 @@ P.isAsset = false;
 
 
 // #### Mixins
+// + [base](../mixin/base.html)
+// + [entity](../mixin/entity.html)
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = entityMix(P);
-P = filterMix(P);
-
 
 
 // #### Grid attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, handle, offset, dimensions, delta, noDeltaUpdates, pivot, pivotCorner, pivoted, addPivotHandle, addPivotOffset, addPivotRotation, path, pathPosition, addPathHandle, addPathOffset, addPathRotation, mimic, mimicked, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic, lockTo, scale, roll, collides, sensorSpacing, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates__.
+// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge__.
+// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
+// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
+// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
+// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
+// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor___.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
 let defaultAttributes = {
 

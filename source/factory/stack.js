@@ -45,8 +45,6 @@ import { makeElement } from './element.js';
 import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
 
@@ -112,16 +110,21 @@ P.isAsset = false;
 
 
 // #### Mixins
+// + [base](../mixin/base.html)
+// + [cascade](../mixin/cascade.html)
+// + [dom](../mixin/dom.html)
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = cascadeMix(P);
 P = domMix(P);
 
 
 // #### Stack attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, handle, offset, dimensions, delta, noDeltaUpdates, pivot, pivotCorner, pivoted, addPivotHandle, addPivotOffset, addPivotRotation, path, pathPosition, addPathHandle, addPathOffset, addPathRotation, mimic, mimicked, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic, lockTo, scale, roll, collides, sensorSpacing, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates__.
+// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge__.
+// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
+// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
+// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
+// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
 // + Attributes defined in the [dom mixin](../mixin/dom.html): __domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes__.
@@ -253,7 +256,6 @@ P.updateArtefacts = function (items = {}) {
             if (items.dirtyHandle) art.dirtyHandle = true;
             if (items.dirtyRotation) art.dirtyRotation = true;
             if (items.dirtyPathObject) art.dirtyPathObject = true;
-            if (items.dirtyCollision) art.dirtyCollision = true;
         })
     });
 };
@@ -268,7 +270,6 @@ P.cleanDimensionsAdditionalActions = function () {
             dirtyPath: true,
             dirtyStart: true,
             dirtyHandle: true,
-            dirtyCollision: true,
         });
     }
 
@@ -276,7 +277,6 @@ P.cleanDimensionsAdditionalActions = function () {
     this.dirtyPath = true;
     this.dirtyStart = true;
     this.dirtyHandle = true;
-    this.dirtyCollision = true;
 };
 
 // `cleanPerspective` - internal function
@@ -294,7 +294,6 @@ P.cleanPerspective = function () {
         this.updateArtefacts({
             dirtyHandle: true,
             dirtyPathObject: true,
-            dirtyCollision: true,
         });
     }
 };

@@ -9,9 +9,16 @@ import { requestVector, releaseVector } from '../factory/vector.js';
 
 import calculatePath from './shapePathCalculation.js';
 
+import entityMix from './entity.js';
+
 
 // #### Export function
 export default function (P = {}) {
+
+
+// #### Mixins
+// + [entity](../mixin/entity.html)
+    P = entityMix(P);
 
 
 // #### Shared attributes
@@ -354,37 +361,6 @@ export default function (P = {}) {
     }
 
 
-    // #### Collision detection
-
-    // `calculateSensors`
-    P.calculateSensors = function () {
-
-        let sensorSpacing = this.sensorSpacing || 50,
-            length = this.length,
-            segments = parseInt(length / sensorSpacing, 10),
-            pos = 0,
-            data, i, iz;
-
-        if (segments < 4) segments = 4;
-
-        let segmentLength = 1 / segments;
-
-        let sensors = this.currentSensors;
-        sensors.length = 0;
-
-        data = this.getPathPositionData(0);
-        sensors.push([data.x, data.y]);
-        
-        for (i = 0; i < segments; i++) {
-
-            pos += segmentLength;
-            data = this.getPathPositionData(pos);
-            sensors.push([data.x, data.y]);
-        }
-    };
-
-
-
 // #### Display cycle functionality
 
     // `prepareStamp` - the purpose of most of these actions is described in the [entity mixin function](http://localhost:8080/docs/source/mixin/entity.html#section-31) that this function overwrites
@@ -395,24 +371,11 @@ export default function (P = {}) {
         if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyHandle) {
 
             this.dirtyPathObject = true;
-            if (this.collides) this.dirtyCollision = true;
 
             if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
        }
 
-        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
-
-            this.dirtyStampPositions = true;
-            if (this.collides) this.dirtyCollision = true;
-        }
-
-        if ((this.dirtyRotation || this.dirtyOffset) && this.collides) this.dirtyCollision = true;
-
-        if (this.dirtyCollision && !this.useAsPath) {
-
-            this.dirtyPathObject = true;
-            this.pathCalculatedOnce = false;
-        }
+        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) this.dirtyStampPositions = true;
 
         if (this.dirtyScale) this.cleanScale();
 
@@ -463,8 +426,6 @@ export default function (P = {}) {
     P.calculateLocalPath = function (d, isCalledFromAdditionalActions) {
 
         let res;
-
-        if (this.collides) this.useAsPath = true;
 
         if (!this.pathCalculatedOnce) {
 

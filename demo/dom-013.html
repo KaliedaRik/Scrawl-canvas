@@ -8,86 +8,13 @@
   <title>Demo DOM 013</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
-
-  <style>
-    #mystack {
-      border-width: 0;
-    }
-
-    #myelement {
-      border: 1px solid blue;
-      cursor: grab;
-    }
-
-    .controls {
-      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
-    }
-  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 013</h1>
   <h2>Artefact collision detection - DOM artefacts</h2>
 
-  <div id="mystack" data-stack>
-    <canvas id="mycanvas"></canvas>
-    <p id="myelement">This element can be dragged around the stack using the mouse.</p>
-  </div>
-
-  <p id="reportmessage"></p>
-
-  <div class="controls">
-
-    <div class="lavender label">Collision sensitivity</div>
-    <div class="lavender"><input class="controlItem" id="sensitivity" type="range" value="50" min="10" max="200" step="1" /></div>
-    <div class="lavender">&nbsp</div>
-    <div class="blue label">Stack perspective</div>
-    <div class="blue"><input class="controlItem" id="perspective" type="range" value="1200" min="200" max="2000" step="5" /></div>
-    <div class="blue">&nbsp</div>
-
-    <div class="green label">Handles</div>
-    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
-    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
-
-    <div class="green label">Offset</div>
-    <div class="green">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
-    <div class="green">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
-
-    <div class="yellow label">Roll</div>
-    <div class="yellow"><input class="controlItem" id="roll" type="range" value="10" min="0" max="360" step="1" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Pitch</div>
-    <div class="yellow"><input class="controlItem" id="pitch" type="range" value="20" min="0" max="360" step="1" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Yaw</div>
-    <div class="yellow"><input class="controlItem" id="yaw" type="range" value="30" min="0" max="360" step="1" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Scale</div>
-    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2" step="0.02" /></div>
-    <div class="yellow">&nbsp;</div>
-  </div>
-
-  <div class="testinfo">
-    <h4>Test purpose</h4>
-    <p>Drag and drop the element to test its sensors correctly collide with underlying canvas entitys</p>
-
-    <ul>
-      <li>Create a set of blocks to act as the grid over which the test element will be dragged</li>
-      <li>Perform artefact collision checks between the element and the grid group, updating colliding grid entitys to show that they are in collision</li>
-      <li>Drag and drop the element across the stack canvas, to check that element's sensors are correctly positioned and the artefact collision detection works as expected</li>
-      <li>Vary the element's attributes (handle, offset, 3d-rotation, scale) to make sure its sensors correctly account for these changes</li>
-    </ul>
-
-    <p><b>Note:</b> there is currently a very annoying, persistent error where the element fails to update its path after its stack is resized as part of page initiation. A temporary fix (a setTimeout function) has been applied in the demo build code, but this is an unsatisfactory solution as there's a visible flash of red dots at the top of the stack while the display waits for the timeout to trigger. This needs to be fixed.</p>
-
-    <p>The same bug (and the same fix) occurs on demo DOM-015 (which was built using this demo as a template).</p>
-    <p><a href="../docs/demo/dom-013.html">Annotated code</a></p>
-  </div>
-
-  <script src="dom-013.js" type="module"></script>
+  <p>Collision detection functionality was removed from the Scrawl-canvas code base from v8.2.0</p>
 
 </body>
 

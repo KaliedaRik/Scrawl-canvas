@@ -120,15 +120,8 @@
 // We can ___emulate 3D rotations for Picture entity artefacts___ using the [Loom entity](../factory/loom.html) - see Demo [DOM-015](../../demo/dom-015.html) for an example of this in action.
 //
 // ##### Collision detection
-// The Scrawl-canvas collision detection system is entirely artefact-based
-// + By default, the CD system is disabled for artefacts
-// + However every artefact includes a `checkHit` function which reports whether a given Coordinate is in collision with it, using the Canvas API CanvasRenderingContext2D [isPointInPath](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/isPointInPath) function.
-// + We can enable an artefact's CD functionality by setting its __collides__ flag.
-// + When the `collides` flag is enabled, the artefact will (re)generate a set of __sensor point coordinates__ as part of any changes to its position and rotation.
-// + These sensor points sit along the artefact's ___stroke path___; their density is determined by the value of its __sensorSpacing__ attribute (default: 50px)
-// + The collision detection functionality itself is mediated by Group objects; we can get an artefact to feed in its sensor points to the Group's `getArtefactAt` or `getAllArtefactsAt` functions, which return a __hit report object__, or an Array of such objects, or false if no hits are detected.
-//
-// See Demos [Canvas-019](../../demo/canvas-019.html) and [DOM-013](../../demo/dom-013.html) for examples of this functionality in action.
+// Collision detection functionality - beyond mouse drag-and-drop - has been removed from Scrawl-canvas since v8.2.0
+
 
 // #### Imports
 import { artefact, group, tween } from '../core/library.js';
@@ -1314,7 +1307,6 @@ export default function (P = {}) {
 
                             cache[i] = coord;
                             coord += drag[i];
-                            if (this.collides) this.dirtyCollision = true;
                         }
                         coord += offset[i];
 
@@ -1326,9 +1318,6 @@ export default function (P = {}) {
                 stamp[i] = coord;
             }
         }
-        // Specific to non-entity artefacts 
-        if (this.domElement && this.collides) this.dirtyPathObject = true;
-
         if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;
     };
 
@@ -1399,8 +1388,6 @@ export default function (P = {}) {
         this.cleanStampHandlePositionsAdditionalActions();
 
         if (oldX !== stampHandle[0] || oldY !== stampHandle[1]) this.dirtyPositionSubscribers = true;
-
-        if (this.domElement && this.collides) this.dirtyPathObject = true;
     };
     P.cleanStampHandlePositionsAdditionalActions = λnull;
 

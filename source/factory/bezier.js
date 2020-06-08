@@ -29,7 +29,6 @@
 // + [Canvas-013](../../demo/canvas-013.html) - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral
 // + [Canvas-014](../../demo/canvas-014.html) - Line, quadratic and bezier entitys - control lock alternatives
 // + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
-// + [Canvas-019](../../demo/canvas-019.html) - Artefact collision detection
 // + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
 // + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
@@ -42,12 +41,8 @@ import { mergeOver, addStrings, pushUnique } from '../core/utilities.js';
 import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
-import entityMix from '../mixin/entity.js';
 import shapeMix from '../mixin/shapeBasic.js';
 import curveMix from '../mixin/shapeCurve.js';
-import filterMix from '../mixin/filter.js';
 
 
 // #### Bezier constructor
@@ -81,42 +76,69 @@ P.isAsset = false;
 
 
 // #### Mixins
+// + [base](../mixin/base.html)
+// + [shapeBasic](../mixin/shapeBasic.html)
+// + [shapeCurve](../mixin/shapeCurve.html)
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
-P = entityMix(P);
 P = shapeMix(P);
 P = curveMix(P);
-P = filterMix(P);
 
 
 // #### Bezier attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge__.
+// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
+// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
+// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
+// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
+// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor___.
+// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
+// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
+// + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
+// + Attributes defined in the [shapeCurve mixin](../mixin/shapeCurve.html): __end, endPivot, endPivotCorner, addEndPivotHandle, addEndPivotOffset, endPath, endPathPosition, addEndPathHandle, addEndPathOffset, endLockTo, useStartAsControlPoint__.
 let defaultAttributes = {
 
+// The __startControl__ coordinate ('pin') defines the bezier curve's first control point.
+// + Similar to the `start` coordinate, the `startControl` coordinate can be updated using the pseudo-attributes __startControlX__ and __startControlY__.
     startControl: null,
-    endControl: null,
 
-    currentStartControl: null,
-    currentEndControl: null,
-
+// __startControlPivot__, __startControlPivotCorner__, __addStartControlPivotHandle__, __addStartControlPivotOffset__
+// + Like the `start` coordinate, the `startControl` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes. 
     startControlPivot: '',
     startControlPivotCorner: '',
     addStartControlPivotHandle: false,
     addStartControlPivotOffset: false,
+
+// __startControlPath__, __startControlPathPosition__, __addStartControlPathHandle__, __addStartControlPathOffset__
+// + Like the `start` coordinate, the `startControl` coordinate can be __pathed__ to another artefact. These attributes are used in the same way as the `path`, 'pathPosition', `addPathHandle` and `addPathOffset` attributes.
     startControlPath: '',
     startControlPathPosition: 0,
     addStartControlPathHandle: false,
     addStartControlPathOffset: true,
-    startControlLockTo: '',
 
+// The __endControl__ coordinate ('pin') defines the bezier curve's second control point.
+// + Similar to the `start` coordinate, the `endControl` coordinate can be updated using the pseudo-attributes __endControlX__ and __endControlY__.
+    endControl: null,
+
+// __endControlPivot__, __endControlPivotCorner__, __addEndControlPivotHandle__, __addEndControlPivotOffset__
+// + Like the `start` coordinate, the `endControl` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes. 
     endControlPivot: '',
     endControlPivotCorner: '',
     addEndControlPivotHandle: false,
     addEndControlPivotOffset: false,
+
+// __endControlPath__, __endControlPathPosition__, __addEndControlPathHandle__, __addEndControlPathOffset__
+// + Like the `start` coordinate, the `endControl` coordinate can be __pathed__ to another artefact. These attributes are used in the same way as the `path`, 'pathPosition', `addPathHandle` and `addPathOffset` attributes.
     endControlPath: '',
     endControlPathPosition: 0,
     addEndControlPathHandle: false,
     addEndControlPathOffset: true,
+
+// __startControlLockTo__, __endControlLockTo__
+// + Like the `start` coordinate, the `startControl` and `endControl` coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: `coord` (default, for absolute positioning), `pivot`, `path`, `mouse`.
+// + These coordinates do not support 'mimic' relative positioning.
+// + These locks do not support setting the `x` and `y` coordinates separately - their value is a string argument, not an `[x, y]` array!
+    startControlLockTo: '',
     endControlLockTo: '',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);

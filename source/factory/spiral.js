@@ -29,7 +29,6 @@
 // + [Canvas-013](../../demo/canvas-013.html) - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral
 // + [Canvas-014](../../demo/canvas-014.html) - Line, quadratic and bezier entitys - control lock alternatives
 // + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
-// + [Canvas-019](../../demo/canvas-019.html) - Artefact collision detection
 // + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
 // + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
@@ -40,11 +39,7 @@ import { constructors } from '../core/library.js';
 import { mergeOver } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
-import entityMix from '../mixin/entity.js';
 import shapeMix from '../mixin/shapeBasic.js';
-import filterMix from '../mixin/filter.js';
 
 
 // #### Spiral constructor
@@ -64,16 +59,23 @@ P.isAsset = false;
 
 
 // #### Mixins
+// + [base](../mixin/base.html)
+// + [shapeBasic](../mixin/shapeBasic.html)
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
-P = entityMix(P);
 P = shapeMix(P);
-P = filterMix(P);
 
 
 // #### Spiral attributes
-// [copy relevant parts from shape-original js]
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge__.
+// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
+// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
+// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
+// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
+// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor___.
+// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
+// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
+// + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
 let defaultAttributes = {
 
     loops: 1,

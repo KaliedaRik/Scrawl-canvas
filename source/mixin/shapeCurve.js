@@ -24,21 +24,31 @@ export default function (P = {}) {
 // #### Shared attributes
     let defaultAttributes = {
 
+// The __end__ coordinate ('pin') defines where a curve terminates.
+// + Similar to the `start` coordinate, the `end` coordinate can be updated using the pseudo-attributes __endX__ and __endY__.
         end: null,
-        currentEnd: null,
 
+// __endPivot__, __endPivotCorner__, __addEndPivotHandle__, __addEndPivotOffset__
+// + Like the `start` coordinate, the `end` coordinate can be __pivoted__ to another artefact. These attributes are used in the same way as the `pivot`, 'pivotCorner', `addPivotHandle` and `addPivotOffset` attributes. 
         endPivot: '',
         endPivotCorner: '',
         addEndPivotHandle: false,
         addEndPivotOffset: false,
 
+// __endPath__, __endPathPosition__, __addEndPathHandle__, __addEndPathOffset__
+// + Like the `start` coordinate, the `end` coordinate can be __pathed__ to another artefact. These attributes are used in the same way as the `path`, 'pathPosition', `addPathHandle` and `addPathOffset` attributes.
         endPath: '',
         endPathPosition: 0,
         addEndPathHandle: false,
         addEndPathOffset: true,
 
+// __endLockTo__
+// + Like the `start` coordinate, the `end` coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: `coord` (default, for absolute positioning), `pivot`, `path`, `mouse`.
+// + The end coordinate does not support 'mimic' relative positioning.
+// + The end lock does not support setting the `x` and `y` coordinates separately - its value is a string argument, not an `[x, y]` array!
         endLockTo: '',
 
+// __useStartAsControlPoint__ - by default, updating the curve entity's `start` coordinate will move the entire curve. In situations where we need to treat the start coordinate like a curve 'pin', set this attribute to `true`.
         useStartAsControlPoint: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
@@ -333,7 +343,6 @@ P.factoryKill = function () {
         if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd || this.dirtyHandle) {
 
             this.dirtyPathObject = true;
-            if (this.collides) this.dirtyCollision = true;
 
 // `dirtySpecies` flag is specific to Shape entitys
             if (this.useStartAsControlPoint && this.dirtyStart) {
@@ -349,7 +358,6 @@ P.factoryKill = function () {
         if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
 
             this.dirtyStampPositions = true;
-            if (this.collides) this.dirtyCollision = true;
 
 // `useStartAsControlPoint` 
 // + When false, this flag indicates that line, quadratic and bezier shapes should treat `start` Coordinate updates as an instruction to move the entire Shape. 
@@ -360,14 +368,6 @@ P.factoryKill = function () {
                 this.dirtyPathObject = true;
                 this.pathCalculatedOnce = false;
             }
-        }
-
-        if ((this.dirtyRotation || this.dirtyOffset) && this.collides) this.dirtyCollision = true;
-
-        if (this.dirtyCollision && !this.useAsPath) {
-
-            this.dirtyPathObject = true;
-            this.pathCalculatedOnce = false;
         }
 
         if (this.dirtyScale) this.cleanScale();

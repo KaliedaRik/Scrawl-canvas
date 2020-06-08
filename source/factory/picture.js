@@ -30,7 +30,6 @@
 // #### Demos:
 // + [Canvas-008](../../demo/canvas-008.html) - Picture entity position; manipulate copy attributes
 // + [Canvas-010](../../demo/canvas-010.html) - Use video sources and media streams for Picture entitys
-// + [Canvas-019](../../demo/canvas-019.html) - Artefact collision detection
 // + [Canvas-021](../../demo/canvas-021.html) - Import and use spritesheets
 // + [Canvas-023](../../demo/canvas-023.html) - Grid entity - using picture-based assets (image, video, sprite)
 // + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
@@ -49,11 +48,8 @@ import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imag
 import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
-import positionMix from '../mixin/position.js';
-import anchorMix from '../mixin/anchor.js';
 import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/assetConsumer.js';
-import filterMix from '../mixin/filter.js';
 
 
 // #### Picture constructor
@@ -101,22 +97,25 @@ P.isAsset = false;
 
 
 // #### Mixins
+// + [base](../mixin/base.html)
+// + [entity](../mixin/entity.html)
+// + [assetConsumer](../mixin/assetConsumer.html)
 P = baseMix(P);
-P = positionMix(P);
-P = anchorMix(P);
 P = entityMix(P);
 P = assetConsumerMix(P);
-P = filterMix(P);
-
 
 
 // #### Picture attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, handle, offset, dimensions, delta, noDeltaUpdates, pivot, pivotCorner, pivoted, addPivotHandle, addPivotOffset, addPivotRotation, path, pathPosition, addPathHandle, addPathOffset, addPathRotation, mimic, mimicked, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic, lockTo, scale, roll, collides, sensorSpacing, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates__.
+// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge__.
+// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
+// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
+// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
+// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
+// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor___.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor__.
-// + Attributes defined in the [assetConsumer mixin](../mixin/assetConsumer.html): __asset, spriteTrack, imageSource, spriteSource, videoSource, source__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
+// + Attributes defined in the [assetConsumer mixin](../mixin/assetConsumer.html): __asset, spriteTrack, imageSource, spriteSource, videoSource, source__.
 let defaultAttributes = {
 
 // __copyStart__ - Coordinate array
@@ -510,8 +509,6 @@ P.prepareStamp = function() {
 
     if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
-    if (this.dirtyRotation) this.dirtyCollision = true;
-
     if (this.dirtyScale) this.cleanScale();
     if (this.dirtyDimensions) this.cleanDimensions();
     if (this.dirtyLock) this.cleanLock();
@@ -534,11 +531,7 @@ P.prepareStamp = function() {
     if (this.dirtyImage) this.cleanImage();
     if (this.dirtyPaste) this.preparePasteObject();
 
-    if (this.dirtyPathObject) {
-
-        this.cleanPathObject();
-        this.dirtyCollision = true;
-    }
+    if (this.dirtyPathObject) this.cleanPathObject();
 
     // Update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
     if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();

@@ -53,6 +53,10 @@ import { importDomImage } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
 import positionMix from '../mixin/position.js';
+import deltaMix from '../mixin/delta.js';
+import pivotMix from '../mixin/pivot.js';
+import mimicMix from '../mixin/mimic.js';
+import pathMix from '../mixin/path.js';
 import anchorMix from '../mixin/anchor.js';
 import cascadeMix from '../mixin/cascade.js';
 import assetMix from '../mixin/asset.js';
@@ -114,8 +118,22 @@ P.isAsset = true;
 
 
 // #### Mixins
+// + [base](../mixin/base.html)
+// + [position](../mixin/position.html)
+// + [delta](../mixin/delta.html)
+// + [pivot](../mixin/pivot.html)
+// + [mimic](../mixin/mimic.html)
+// + [path](../mixin/path.html)
+// + [anchor](../mixin/anchor.html)
+// + [cascade](../mixin/cascade.html)
+// + [asset](../mixin/asset.html)
+// + [filter](../mixin/filter.html)
 P = baseMix(P);
 P = positionMix(P);
+P = deltaMix(P);
+P = pivotMix(P);
+P = mimicMix(P);
+P = pathMix(P);
 P = anchorMix(P);
 P = cascadeMix(P);
 P = assetMix(P);
@@ -124,11 +142,15 @@ P = filterMix(P);
 
 // #### Cell attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, handle, offset, dimensions, delta, noDeltaUpdates, pivot, pivotCorner, pivoted, addPivotHandle, addPivotOffset, addPivotRotation, path, pathPosition, addPathHandle, addPathOffset, addPathRotation, mimic, mimicked, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic, lockTo, scale, roll, collides, sensorSpacing, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates__.
+// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge__.
+// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
+// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
+// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
+// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
+// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
 // + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
-// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
 let defaultAttributes = {
 
 // The following booleans determine whether a Cell canvas will, clear, compile and/or show itself as part of the Display cycle.
@@ -485,7 +507,6 @@ P.updateArtefacts = function (items = {}) {
             if (items.dirtyHandle) art.dirtyHandle = true;
             if (items.dirtyRotation) art.dirtyRotation = true;
             if (items.dirtyPathObject) art.dirtyPathObject = true;
-            if (items.dirtyCollision) art.dirtyCollision = true;
         })
     });
 };
@@ -1374,7 +1395,7 @@ P.getEntityHits = function () {
 
 // `rotateDestination` - internal function, called by entity objects about to stamp themselves onto the Cell.
 // + entity stamp functionality works by performing a `setTransform` action on the Cell engine so that engine coordinates [0, 0] equal the entity's `currentStampPosition` coordinates, alongside any directionality (`flipReverse`, `flipUpend`) and rotational (`roll`) changes necessary
-// + doing it this way saves a massive amount of calculation that is otherwise required to correctly position the entity in the display; also makes collision detection a lot simpler
+// + doing it this way saves a massive amount of calculation that is otherwise required to correctly position the entity in the display
 P.rotateDestination = function (engine, x, y, entity) {
 
     let self = (entity) ? entity : this,

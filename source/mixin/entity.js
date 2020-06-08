@@ -255,20 +255,6 @@ export default function (P = {}) {
         this.lockStrokeStyleToEntity = item;
     };
 
-// __flipUpend__
-    S.flipUpend = function (item) {
-
-        if (item !== this.flipUpend && this.collides) this.dirtyCollision = true;
-        this.flipUpend = item;
-    };
-
-// __flipReverse__
-    S.flipReverse = function (item) {
-
-        if (item !== this.flipReverse && this.collides) this.dirtyCollision = true;
-        this.flipReverse = item;
-    };
-
 // Entity `get`, `set` and `deltaSet` functions need to take into account the entity State object, whose attributes can be retrieved/amended directly on the entity object
     P.get = function (item) {
 
@@ -428,9 +414,6 @@ export default function (P = {}) {
 // A number of updates (__scale__, __dimensions__, __start__, __offset__, __handle__) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own `dirtyPathObject` flag as a result.
         if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
-// Any change in an entity's __roll__ attribute means the entity will need to recalculate its collision sensors, as indicated by the entity setting its own `dirtyCollision` flag.
-        if (this.dirtyRotation && this.collides) this.dirtyCollision = true;
-
 // `dirtyScale` - triggers __cleanScale__ function - which in turn sets the `dirtyDimensions`, `dirtyHandle` and (if required) `dirtyPositionSubscribers`, `dirtyMimicScale` flags on the entity.
         if (this.dirtyScale) this.cleanScale();
 
@@ -463,17 +446,11 @@ export default function (P = {}) {
         if (this.dirtyStampPositions) this.cleanStampPositions();
         if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
-// If the entity's Path2D object has been marked as dirty by the `dirtyPathObject` flag, rebuild it by invoking the __cleanPathObject__ function - results in the entity setting its `dirtyCollision` flag.
-        if (this.dirtyPathObject) {
-
-            this.cleanPathObject();
-            if (this.collides) this.dirtyCollision = true;
-        }
+// If the entity's Path2D object has been marked as dirty by the `dirtyPathObject` flag, rebuild it by invoking the __cleanPathObject__ function.
+        if (this.dirtyPathObject) this.cleanPathObject();
 
 // `dirtyPositionSubscribers` - update any artefacts subscribed to this entity as their `pivot` or `mimic` source, if required, by invoking the __updatePositionSubscribers__ function.
         if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
-
-// The `dirtyCollision` flag is not checked or actioned here - it only needs to be dealt with when an entity is asked to perform a __checkHit__ calculation.
 
 // The `dirtyFilters` flag is checked and handled by the __filteredStamp__ function.
 

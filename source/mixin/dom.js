@@ -19,9 +19,31 @@ import { addDomShowElement, setDomShowRequired, domShow } from '../core/document
 
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
 
+import positionMix from '../mixin/position.js';
+import deltaMix from './delta.js';
+import pivotMix from './pivot.js';
+import mimicMix from './mimic.js';
+import pathMix from './path.js';
+import anchorMix from '../mixin/anchor.js';
+
 
 // #### Export function
 export default function (P = {}) {
+
+
+// #### Mixins
+// + [position](../mixin/position.html)
+// + [delta](../mixin/delta.html)
+// + [pivot](../mixin/pivot.html)
+// + [mimic](../mixin/mimic.html)
+// + [path](../mixin/path.html)
+// + [anchor](../mixin/anchor.html)
+    P = positionMix(P);
+    P = deltaMix(P);
+    P = pivotMix(P);
+    P = mimicMix(P);
+    P = pathMix(P);
+    P = anchorMix(P);
 
 
 // #### Shared attributes
@@ -217,14 +239,6 @@ export default function (P = {}) {
         this.classes = item;
 
         this.dirtyClasses = true;
-    };
-
-// `collides`
-    S.collides = function (item) {
-
-        this.collides = item;
-
-        if (item) this.dirtyPathObject = true;
     };
 
 // `domAttributes` - see `updateDomAttributes` below
@@ -593,117 +607,12 @@ export default function (P = {}) {
         }
     };
 
-// `calculateSensors`
-// + Overwrites mixin/position.js function
-    P.calculateSensors = function () {
-
-        if (!this.noUserInteraction) {
-
-            let [_tlx, _tly, _trx, _try, _brx, _bry, _blx, _bly] = this.currentCornersData;
-
-            let sensors = this.currentSensors;
-            sensors.length = 0;
-
-            sensors.push([_tlx, _tly]);
-            sensors.push([_trx, _try]);
-            sensors.push([_brx, _bry]);
-            sensors.push([_blx, _bly]);
-
-            let sensorSpacing = this.sensorSpacing || 50,
-                topLengthX = _tlx - _trx,
-                topLengthY = _tly - _try,
-                topLength = Math.sqrt((topLengthX * topLengthX) + (topLengthY * topLengthY)),
-                topSensors = parseInt(topLength / sensorSpacing, 10) - 1,
-
-                rightLengthX = _trx - _brx,
-                rightLengthY = _try - _bry,
-                rightLength = Math.sqrt((rightLengthX * rightLengthX) + (rightLengthY * rightLengthY)),
-                rightSensors = parseInt(rightLength / sensorSpacing, 10) - 1,
-
-                bottomLengthX = _brx - _blx,
-                bottomLengthY = _bry - _bly,
-                bottomLength = Math.sqrt((bottomLengthX * bottomLengthX) + (bottomLengthY * bottomLengthY)),
-                bottomSensors = parseInt(bottomLength / sensorSpacing, 10) - 1,
-
-                leftLengthX = _blx - _tlx,
-                leftLengthY = _bly - _tly,
-                leftLength =  Math.sqrt((leftLengthX * leftLengthX) + (leftLengthY * leftLengthY)),
-                leftSensors = parseInt(leftLength / sensorSpacing, 10) - 1;
-
-            let partX, partY, dx, dy, i;
-
-            if (topSensors > 0) {
-
-                partX = _trx;
-                partY = _try;
-                dx = topLengthX / (topSensors + 1);
-                dy = topLengthY / (topSensors + 1);
-
-                for (i = 0; i < topSensors; i++) {
-
-                    partX += dx;
-                    partY += dy;
-                    sensors.push([partX, partY]);
-                }
-            }
-
-            if (rightSensors > 0) {
-
-                partX = _brx;
-                partY = _bry;
-                dx = rightLengthX / (rightSensors + 1);
-                dy = rightLengthY / (rightSensors + 1);
-
-                for (i = 0; i < rightSensors; i++) {
-
-                    partX += dx;
-                    partY += dy;
-                    sensors.push([partX, partY]);
-                }
-            }
-
-            if (bottomSensors > 0) {
-
-                partX = _blx;
-                partY = _bly;
-                dx = bottomLengthX / (bottomSensors + 1);
-                dy = bottomLengthY / (bottomSensors + 1);
-
-                for (i = 0; i < bottomSensors; i++) {
-
-                    partX += dx;
-                    partY += dy;
-                    sensors.push([partX, partY]);
-                }
-            }
-
-            if (leftSensors > 0) {
-
-                partX = _tlx;
-                partY = _tly;
-                dx = leftLengthX / (leftSensors + 1);
-                dy = leftLengthY / (leftSensors + 1);
-
-                for (i = 0; i < leftSensors; i++) {
-
-                    partX += dx;
-                    partY += dy;
-                    sensors.push([partX, partY]);
-                }
-            }
-        }
-    };
-
 // `checkHit`
     P.checkHit = function (items = [], mycell) {
 
         if (this.noUserInteraction) return false;
 
-        if (this.dirtyCollision || !this.pathObject || this.dirtyPathObject) {
-
-            this.cleanPathObject();
-            this.dirtyCollision = false;
-        }
+        if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
 
         let tests = (!Array.isArray(items)) ?  [items] : items,
             poolCellFlag = false;
@@ -837,11 +746,7 @@ export default function (P = {}) {
 // `prepareStamp` - check all the dirty flags and call the appropriate `clean` functions if they are set
     P.prepareStamp = function () {
 
-        if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) {
-
-            this.dirtyPathObject = true;
-            this.dirtyCollision = true;
-        }
+        if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation) this.dirtyPathObject = true;
 
         if (this.dirtyContent) this.cleanContent();
         if (this.dirtyScale) this.cleanScale();
