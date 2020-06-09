@@ -2,7 +2,7 @@
 // Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys
 
 // [Run code](../../demo/canvas-001.html)
-import scrawl from '../build/scrawl.js'
+import scrawl from '../min/scrawl.js'
 
 
 // #### Scene setup

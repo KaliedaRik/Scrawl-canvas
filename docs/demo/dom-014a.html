@@ -323,211 +323,211 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>import scrawl from '../source/scrawl.js'
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../source/scrawl.js'</span>
 
-let canvas = scrawl.library.artefact.mycanvas1;
+<span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas1;
 canvas.setAsCurrentCanvas();
 
 canvas.setBase({
-    backgroundColor: 'aliceblue',
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'aliceblue'</span>,
 });
 
-let myPivot = scrawl.makeWheel({
-    name: 'mouse-pivot',
-    method: 'none',
+<span class="hljs-keyword">let</span> myPivot = scrawl.makeWheel({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'mouse-pivot'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'none'</span>,
 
-    startX: 'center',
-    startY: 'center',
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'center'</span>,
 });
 
-let myblock = scrawl.makeBlock({
-    name: 'base-block',
+<span class="hljs-keyword">let</span> myblock = scrawl.makeBlock({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'base-block'</span>,
 
-    width: 150,
-    height: 100,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">150</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">100</span>,
 
-    handleX: 'center',
-    handleY: 'center',
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
 
-    offsetX: -140,
-    offsetY: -50,
+    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">-140</span>,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">-50</span>,
 
-    pivot: 'mouse-pivot',
-    lockTo: 'pivot',
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'mouse-pivot'</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
 
-    fillStyle: 'darkblue',
-    strokeStyle: 'gold',
-    method: 'fillAndDraw',
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'darkblue'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'gold'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
 
-    lineWidth: 6,
-    lineJoin: 'round',
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">'round'</span>,
 
-    delta: {
-        roll: 0.5,
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.5</span>,
     },
 });
 
-let mywheel = scrawl.makeWheel({
-    name: 'base-wheel',
+<span class="hljs-keyword">let</span> mywheel = scrawl.makeWheel({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'base-wheel'</span>,
 
-    radius: 60,
-    startAngle: 35,
-    endAngle: -35,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">startAngle</span>: <span class="hljs-number">35</span>,
+    <span class="hljs-attr">endAngle</span>: <span class="hljs-number">-35</span>,
 
-    handleX: 'center',
-    handleY: 'center',
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
 
-    offsetX: 140,
-    offsetY: 50,
+    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">140</span>,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">50</span>,
 
-    pivot: 'mouse-pivot',
-    lockTo: 'pivot',
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'mouse-pivot'</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
 
-    fillStyle: 'purple',
-    strokeStyle: 'gold',
-    method: 'fillAndDraw',
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'purple'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'gold'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
 
-    lineWidth: 6,
-    lineJoin: 'round',
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">'round'</span>,
 
-    delta: {
-        roll: -0.5,
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">-0.5</span>,
     },
 });
 
 myblock.clone({
-    name: 'pivot-block',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'pivot-block'</span>,
 
-    height: 30,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">30</span>,
 
-    handleX: 'center',
-    handleY: 'center',
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
 
-    strokeStyle: 'red',
-    lineWidth: 3,
-    method: 'draw',
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
 
-    pivot: 'base-block',
-    lockTo: 'pivot',
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'base-block'</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
 
-    offsetX: 0,
-    offsetY: 110,
-    addPivotOffset: true,
+    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">110</span>,
+    <span class="hljs-attr">addPivotOffset</span>: <span class="hljs-literal">true</span>,
 
-    delta: {
-        roll: 0,
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
     },
 
 }).clone({
-    name: 'pivot-wheel',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'pivot-wheel'</span>,
 
-    pivot: 'base-wheel',
-    addPivotRotation: true,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'base-wheel'</span>,
+    <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">true</span>,
 
-    handleX: 0,
-    handleY: '50%',
+    <span class="hljs-attr">handleX</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'50%'</span>,
 
-    offsetY: 0,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">0</span>,
 
 }).clone({
-    name: 'mimic-wheel',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'mimic-wheel'</span>,
 
-    mimic: 'base-wheel',
-    lockTo: 'mimic',
+    <span class="hljs-attr">mimic</span>: <span class="hljs-string">'base-wheel'</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'mimic'</span>,
 
-    width: 20,
-    height: 20,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">20</span>,
 
-    handleX: 10,
-    handleY: 10,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-number">10</span>,
 
-    strokeStyle: 'darkgreen',
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkgreen'</span>,
 
-    useMimicDimensions: true,
-    useMimicScale: true,
-    useMimicStart: true,
-    useMimicHandle: true,
-    useMimicOffset: true,
-    useMimicRotation: true,
-    useMimicFlip: true,
+    <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicScale</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicOffset</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicRotation</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicFlip</span>: <span class="hljs-literal">true</span>,
 
-    addOwnDimensionsToMimic: true,
-    addOwnScaleToMimic: false,
-    addOwnStartToMimic: false,
-    addOwnHandleToMimic: true,
-    addOwnOffsetToMimic: false,
-    addOwnRotationToMimic: false,
+    <span class="hljs-attr">addOwnDimensionsToMimic</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">addOwnScaleToMimic</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">addOwnStartToMimic</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">addOwnOffsetToMimic</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">addOwnRotationToMimic</span>: <span class="hljs-literal">false</span>,
 });
 
 mywheel.clone({
-    name: 'mimic-block',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'mimic-block'</span>,
 
-    mimic: 'base-block',
-    lockTo: 'mimic',
+    <span class="hljs-attr">mimic</span>: <span class="hljs-string">'base-block'</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'mimic'</span>,
 
-    width: 60,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">60</span>,
 
-    strokeStyle: 'darkgreen',
-    lineWidth: 3,
-    method: 'draw',
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkgreen'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
 
-    useMimicDimensions: true,
-    useMimicScale: true,
-    useMimicStart: true,
-    useMimicHandle: false,
-    useMimicOffset: true,
-    useMimicRotation: true,
+    <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicScale</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">useMimicOffset</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useMimicRotation</span>: <span class="hljs-literal">true</span>,
 
-    addOwnDimensionsToMimic: true,
-    addOwnScaleToMimic: false,
-    addOwnStartToMimic: false,
-    addOwnHandleToMimic: false,
-    addOwnOffsetToMimic: false,
-    addOwnRotationToMimic: false,
+    <span class="hljs-attr">addOwnDimensionsToMimic</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">addOwnScaleToMimic</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">addOwnStartToMimic</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">addOwnOffsetToMimic</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">addOwnRotationToMimic</span>: <span class="hljs-literal">false</span>,
 });
 
-let mouseCheck = function () {
+<span class="hljs-keyword">let</span> mouseCheck = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let active = false;
+    <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
 
-    return function () {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        if (canvas.here.active !== active) {
+        <span class="hljs-keyword">if</span> (canvas.here.active !== active) {
 
             active = canvas.here.active;
 
             myPivot.set({
-                lockTo: (active) ? 'mouse' : 'start'
+                <span class="hljs-attr">lockTo</span>: (active) ? <span class="hljs-string">'mouse'</span> : <span class="hljs-string">'start'</span>
             });
         }
     };
 }();
 
-let report = function () {
+<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let testTicker = Date.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
         testTime, testNow,
-        testMessage = document.querySelector('#reportmessage1');
+        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reportmessage1'</span>);
 
-    return function () {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        testNow = Date.now();
+        testNow = <span class="hljs-built_in">Date</span>.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Animation threshhold set to 0.5
+        testMessage.textContent = <span class="hljs-string">`Animation threshhold set to 0.5
  - 50% of canvas must be visible for animation to run
-Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();
 
-let animation = scrawl.makeRender({
+<span class="hljs-keyword">let</span> animation = scrawl.makeRender({
 
-    name: 'demo-animation1',
-    target: canvas,
-    commence: mouseCheck,
-    afterShow: report,
-    delay: true
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation1'</span>,
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">commence</span>: mouseCheck,
+    <span class="hljs-attr">afterShow</span>: report,
+    <span class="hljs-attr">delay</span>: <span class="hljs-literal">true</span>
 });</pre></div></div>
             
         </li>

@@ -405,7 +405,8 @@
 </ul>
 <p><strong>A <a href="./stack.html">Stack</a> is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
 <pre><code>Stack    ~~&gt; Canvas/Cell  
-Element  ~~&gt; Entity (eg Block)  </code></pre><p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
+Element  ~~&gt; Entity (eg Block)  </code></pre>
+<p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
 <ul>
 <li>Stack elements have <code>relative</code> positioning within the DOM</li>
 <li>Element elements have <code>absolute</code> positioning within the Stack</li>
@@ -433,6 +434,7 @@ Element  ~~&gt; Entity (eg Block)  </code></pre><p>During initialization Scrawl-
 <li><a href="../../demo/dom-004.html">DOM-004</a> - Limitless rockets (clone and destroy elements, tweens, tickers)</li>
 <li><a href="../../demo/dom-006.html">DOM-006</a> - Tween actions on a DOM element; tracking tween and ticker activity (analytics)</li>
 <li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
+<li><a href="../../demo/component-002.html">Component-002</a> - Scrawl-canvas stack element components</li>
 </ul>
 
             </div>
@@ -518,6 +520,8 @@ Element  ~~&gt; Entity (eg Block)  </code></pre><p>During initialization Scrawl-
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.trackHere) pushUnique(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
     }
+    <span class="hljs-keyword">this</span>.apply();
+    
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };</pre></div></div>
             
@@ -870,6 +874,7 @@ stack.addNewElement({
         <span class="hljs-attr">border</span>: <span class="hljs-number">0</span>,
     },
 });</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{

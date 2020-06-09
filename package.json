@@ -1,11 +1,10 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.1.0",
-  "description": "Version 8.1.0 - 21 May 2020",
+  "version": "8.2.0",
+  "description": "Version 8.2.0 - 9 June 2020",
   "main": "min/scrawl.js",
   "scripts": {
-    "build": "rollup -c",
-    "makedocs": "docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js"
+    "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js"
   },
   "repository": {
     "type": "git",

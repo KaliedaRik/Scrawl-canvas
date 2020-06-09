@@ -866,24 +866,24 @@ S.clockwise = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.dimensionsHelper = function () {
+            <div class="content"><div class='highlight'><pre>P.dimensionsHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let width = this.dimensions[0];
+    <span class="hljs-keyword">let</span> width = <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">0</span>];
 
-    if (width.substring) this.radius = `${(parseFloat(width) / 2)}%`;
-    else this.radius = (width / 2);
+    <span class="hljs-keyword">if</span> (width.substring) <span class="hljs-keyword">this</span>.radius = <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-built_in">parseFloat</span>(width) / <span class="hljs-number">2</span>)}</span>%`</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.radius = (width / <span class="hljs-number">2</span>);
 
-    this.dirtyDimensions = true;
+    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
 };
-P.radiusHelper = function () {
+P.radiusHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let radius = this.radius,
-        dims = this.dimensions;
+    <span class="hljs-keyword">let</span> radius = <span class="hljs-keyword">this</span>.radius,
+        dims = <span class="hljs-keyword">this</span>.dimensions;
 
-    if (radius.substring) dims[0] = dims[1] = (parseFloat(radius) * 2) + '%';
-    else dims[0] = dims[1] = (radius * 2);
+    <span class="hljs-keyword">if</span> (radius.substring) dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = (<span class="hljs-built_in">parseFloat</span>(radius) * <span class="hljs-number">2</span>) + <span class="hljs-string">'%'</span>;
+    <span class="hljs-keyword">else</span> dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = (radius * <span class="hljs-number">2</span>);
 
-    this.dirtyDimensions = true;
+    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -992,6 +992,7 @@ P.radiusHelper = function () {
     <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
     <span class="hljs-attr">sharedState</span>: <span class="hljs-literal">true</span>,
 });</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeWheel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{

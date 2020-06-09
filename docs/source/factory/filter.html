@@ -574,6 +574,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 <span class="hljs-string">`red`</span>, <span class="hljs-string">`green`</span>, <span class="hljs-string">`blue`</span>
 <span class="hljs-string">`notred`</span>, <span class="hljs-string">`notgreen`</span>, <span class="hljs-string">`notblue`</span>
 <span class="hljs-string">`cyan`</span>, <span class="hljs-string">`magenta`</span>, <span class="hljs-string">`yellow`</span></code></pre>
+
             </div>
             
         </li>
@@ -587,6 +588,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               </div>
               <p>The following methods require the <strong>level</strong> attribute:</p>
 <pre><code><span class="hljs-string">`brightness`</span>, <span class="hljs-string">`saturation`</span>, <span class="hljs-string">`threshold`</span></code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>    level: <span class="hljs-number">0</span>,</pre></div></div>
@@ -713,7 +715,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
     bottomLeftWeight,
     bottomCenterWeight,
     bottomRightWeight,
-]</code></pre><p>… where the top row is the row above the home pixel, etc</p>
+]</code></pre>
+<p>… where the top row is the row above the home pixel, etc</p>
 <p>The method also makes use of the <strong>includeAlpha</strong> attribute.</p>
 
             </div>
@@ -743,8 +746,10 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>The <strong>ranges</strong> attribute - used by the <code>chroma</code> method - needs to be an array of arrays with the following format:</p>
-<pre><code>[[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]</code></pre><p>… multiple ranges can be defined - for instance to key out the lightest and darkest hues:</p>
+<pre><code>[[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]</code></pre>
+<p>… multiple ranges can be defined - for instance to key out the lightest and darkest hues:</p>
 <pre><code>ranges: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>], [<span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>]]</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>    ranges: <span class="hljs-literal">null</span>,</pre></div></div>
@@ -1003,9 +1008,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">import</span> { filterUrl } <span class="hljs-keyword">from</span> <span class="hljs-string">'../worker/filter-stringed.js'</span>;                       <span class="hljs-comment">// BUNDLED SITE</span></pre></div></div>
-            
         </li>
         
         
@@ -1015,11 +1017,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p><strong>buildFilterWorker</strong> - create a new filter web worker</p>
+              <p>BUNDLED SITE</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { filterUrl } <span class="hljs-keyword">from</span> <span class="hljs-string">'../worker/filter-stringed.js'</span>;</pre></div></div>
             
         </li>
         
@@ -1030,16 +1032,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <p>let path = import.meta.url.slice(0, -(‘factory/filter.js’.length));      // MODERN SITE
-let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?     // MODERN SITE
-    <code>${path}worker/filter_canvas.js</code> :                                   // MODERN SITE
-    <code>${path}worker/filter.js</code>;                                           // MODERN SITE</p>
+              <p><strong>buildFilterWorker</strong> - create a new filter web worker</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Worker(filterUrl);                                               <span class="hljs-comment">// BUNDLED SITE</span>
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -1049,6 +1046,76 @@ let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?     // MODE
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>MODERN SITE
+let path = import.meta.url.slice(0, -(‘factory/filter.js’.length)); </p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>MODERN SITE<br>let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?    </p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>MODERN SITE 
+    <code>${path}worker/filter_canvas.js</code> :    </p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>MODERN SITE<br>    <code>${path}worker/filter.js</code>;                                           </p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>BUNDLED SITE</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Worker(filterUrl);                                               
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p><code>Exported function</code> <strong>actionFilterWorker</strong> - send a task to the filter web worker, and retrieve the resulting image. This function returns a Promise.</p>
 
@@ -1077,11 +1144,11 @@ let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?     // MODE
         </li>
         
         
-        <li id="section-36">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeFilter({
@@ -1131,6 +1198,7 @@ scrawl.makeFilter({
             }
         }`</span>,
 });</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeFilter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
@@ -1143,11 +1211,11 @@ constructors.Filter = Filter;</pre></div></div>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

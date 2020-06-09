@@ -742,8 +742,7 @@ P = anchorMix(P);</pre></div></div>
     <span class="hljs-attr">delta</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">host</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">anchor</span>: <span class="hljs-literal">null</span>,
-    <span class="hljs-attr">collides</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+    <span class="hljs-attr">anchor</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -841,7 +840,8 @@ P = anchorMix(P);</pre></div></div>
         target:
         anchorType
         <span class="hljs-attr">clickAction</span>: 
-    }</code></pre><p>Note that Loom entitys DO NOT SUPPORT the sensor component of the Scrawl-canvas collisions system and will return an empty array when asked to supply sensor coordinates for testing against other artefacts.</p>
+    }</code></pre>
+<p>Note that Loom entitys DO NOT SUPPORT the sensor component of the Scrawl-canvas collisions system and will return an empty array when asked to supply sensor coordinates for testing against other artefacts.</p>
 
             </div>
             
@@ -2969,6 +2969,7 @@ scrawl.makePicture({
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">'fillThenDraw'</span>,
 });</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLoom = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{

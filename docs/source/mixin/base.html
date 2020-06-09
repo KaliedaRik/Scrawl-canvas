@@ -515,6 +515,7 @@
               <p><code>get</code> - Retrieve an attribute value using the <strong>get</strong> function. While many attributes can be retrieved directly - for example, <em>scrawl.artefact.myelement.scale</em> - some attributes should only ever be retrieved using get:</p>
 <pre><code>scrawl.artefact.myelement.get(<span class="hljs-string">'startX'</span>);
 -&gt; <span class="hljs-number">200</span></code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
@@ -555,6 +556,7 @@
     <span class="hljs-attr">scale</span>: <span class="hljs-number">1.5</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">90</span>,
 });</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
@@ -594,6 +596,7 @@
     <span class="hljs-attr">scale</span>: <span class="hljs-number">0.05</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">5</span>,
 });</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
@@ -661,7 +664,8 @@
               <h4 id="packet-management">Packet management</h4>
 <p><strong>Packets</strong> are Scrawl-canvas’s way of generating and consuming SC object data, both locally and over a network. A packet is a formatted JSON String which can be captured in a variable or saved to a text file.</p>
 <p>The packet format is as follows:</p>
-<pre><code><span class="hljs-string">"[object-name, object-type, object's-library-section, {object-data-key:value-pairs}]"</span></code></pre><ul>
+<pre><code><span class="hljs-string">"[object-name, object-type, object's-library-section, {object-data-key:value-pairs}]"</span></code></pre>
+<ul>
 <li>Use <strong>saveAsPacket()</strong> to get a stringified representation of a Scrawl-canvas object, which can then be consumed by other SC objects at a later date.</li>
 <li>Use <strong>actionPacket(‘packet-string’)</strong> to apply a previously saved packet to an existing SC object, or to create a new SC object from the packet if it doesn’t exist already</li>
 <li>Use <strong>importPacket(url)</strong> to retrieve a packet from a text file (normally kept remotely on a server); the function’s argument can be either the packet file’s url address, or an Array of such addresses.</li>
@@ -723,6 +727,7 @@ box.kill()
 
 <span class="hljs-comment">// recreate the entity - if we had saved the packet to a file on a server</span>
 <span class="hljs-keyword">let</span> fetchedBox = canvas.importPacket(<span class="hljs-string">'https://example.com/path/to/boxPacket.txt'</span>);</code></pre>
+
             </div>
             
         </li>
@@ -908,7 +913,7 @@ box.kill()
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>The dotAll /s regex flag currently not supported by Firefox
-let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
+let matches = val.toString().match(/((.<em>?)).*?{(.</em>)}/s);</p>
 
             </div>
             
@@ -1347,6 +1352,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
     <span class="hljs-attr">name</span>: <span class="hljs-string">'myclonedelement'</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">60</span>,
 });</code></pre>
+
             </div>
             
         </li>

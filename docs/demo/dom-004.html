@@ -414,30 +414,30 @@ rocket.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>let report = function () {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let testTicker = Date.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
         testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reportmessage'</span>);
 
-    return function () {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        testNow = Date.now();
+        testNow = <span class="hljs-built_in">Date</span>.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        let t = Object.keys(library.tween),
-            a = Object.keys(artefact),
-            n = Object.keys(library.animation),
-            k = Object.keys(library.animationtickers),
-            e = Object.keys(library.element);
+        <span class="hljs-keyword">let</span> t = <span class="hljs-built_in">Object</span>.keys(library.tween),
+            a = <span class="hljs-built_in">Object</span>.keys(artefact),
+            n = <span class="hljs-built_in">Object</span>.keys(library.animation),
+            k = <span class="hljs-built_in">Object</span>.keys(library.animationtickers),
+            e = <span class="hljs-built_in">Object</span>.keys(library.element);
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-tween - ${t.length}, ${library.tweennames.length}: ${t.join(', ')}
-artefact - ${a.length}, ${library.artefactnames.length}: ${a.join(', ')}
-element - ${e.length}, ${library.elementnames.length}: ${e.join(', ')}
-tickers - ${k.length}, ${library.animationtickersnames.length}: ${k.join(', ')}
-animation - ${n.length}, ${library.animationnames.length}: ${n.join(', ')}`;
+        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+tween - <span class="hljs-subst">${t.length}</span>, <span class="hljs-subst">${library.tweennames.length}</span>: <span class="hljs-subst">${t.join(<span class="hljs-string">', '</span>)}</span>
+artefact - <span class="hljs-subst">${a.length}</span>, <span class="hljs-subst">${library.artefactnames.length}</span>: <span class="hljs-subst">${a.join(<span class="hljs-string">', '</span>)}</span>
+element - <span class="hljs-subst">${e.length}</span>, <span class="hljs-subst">${library.elementnames.length}</span>: <span class="hljs-subst">${e.join(<span class="hljs-string">', '</span>)}</span>
+tickers - <span class="hljs-subst">${k.length}</span>, <span class="hljs-subst">${library.animationtickersnames.length}</span>: <span class="hljs-subst">${k.join(<span class="hljs-string">', '</span>)}</span>
+animation - <span class="hljs-subst">${n.length}</span>, <span class="hljs-subst">${library.animationnames.length}</span>: <span class="hljs-subst">${n.join(<span class="hljs-string">', '</span>)}</span>`</span>;
     };
 }();</pre></div></div>
             

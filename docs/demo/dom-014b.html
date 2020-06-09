@@ -323,255 +323,255 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>import scrawl from '../source/scrawl.js'
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../source/scrawl.js'</span>
 
-let canvas = scrawl.library.artefact.mycanvas2;
+<span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas2;
 canvas.setAsCurrentCanvas();
 
 canvas.set({
-    css: {
-        border: '1px solid black'
+    <span class="hljs-attr">css</span>: {
+        <span class="hljs-attr">border</span>: <span class="hljs-string">'1px solid black'</span>
     }
 });
 
-let myRadial = scrawl.makeRadialGradient({
-    name: 'circle-waves',
+<span class="hljs-keyword">let</span> myRadial = scrawl.makeRadialGradient({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'circle-waves'</span>,
 
-    startX: '30%',
-    startY: '30%',
-    endX: '50%',
-    endY: '50%',
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'30%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'30%'</span>,
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">'50%'</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">'50%'</span>,
 
-    endRadius: '50%',
+    <span class="hljs-attr">endRadius</span>: <span class="hljs-string">'50%'</span>,
 
-    paletteStart: 200,
-    paletteEnd: 800,
+    <span class="hljs-attr">paletteStart</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">paletteEnd</span>: <span class="hljs-number">800</span>,
 
-    delta: {
-        paletteStart: -1,
-        paletteEnd: -1
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">paletteStart</span>: <span class="hljs-number">-1</span>,
+        <span class="hljs-attr">paletteEnd</span>: <span class="hljs-number">-1</span>
     },
 
-    cyclePalette: true
+    <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>
 })
-.updateColor(0, 'black')
-.updateColor(99, 'red')
-.updateColor(199, 'black')
-.updateColor(299, 'blue')
-.updateColor(399, 'black')
-.updateColor(499, 'gold')
-.updateColor(599, 'black')
-.updateColor(699, 'green')
-.updateColor(799, 'black')
-.updateColor(899, 'lavender')
-.updateColor(999, 'black');
+.updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">99</span>, <span class="hljs-string">'red'</span>)
+.updateColor(<span class="hljs-number">199</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">299</span>, <span class="hljs-string">'blue'</span>)
+.updateColor(<span class="hljs-number">399</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">499</span>, <span class="hljs-string">'gold'</span>)
+.updateColor(<span class="hljs-number">599</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">699</span>, <span class="hljs-string">'green'</span>)
+.updateColor(<span class="hljs-number">799</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">899</span>, <span class="hljs-string">'lavender'</span>)
+.updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">'black'</span>);
 
 scrawl.makeGradient({
-    name: 'colored-pipes',
-    endX: '100%',
-    cyclePalette: true
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'colored-pipes'</span>,
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">'100%'</span>,
+    <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>
 })
-.updateColor(0, 'black')
-.updateColor(49, 'yellow')
-.updateColor(99, 'black')
-.updateColor(149, 'lightyellow')
-.updateColor(199, 'black')
-.updateColor(249, 'goldenrod')
-.updateColor(299, 'black')
-.updateColor(349, 'lemonchiffon')
-.updateColor(399, 'black')
-.updateColor(449, 'gold')
-.updateColor(499, 'black')
-.updateColor(549, 'tan')
-.updateColor(599, 'black')
-.updateColor(649, 'wheat')
-.updateColor(699, 'black')
-.updateColor(749, 'yellowgreen')
-.updateColor(799, 'black')
-.updateColor(849, 'peachpuff')
-.updateColor(899, 'black')
-.updateColor(949, 'papayawhip')
-.updateColor(999, 'black');
+.updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">49</span>, <span class="hljs-string">'yellow'</span>)
+.updateColor(<span class="hljs-number">99</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">149</span>, <span class="hljs-string">'lightyellow'</span>)
+.updateColor(<span class="hljs-number">199</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">249</span>, <span class="hljs-string">'goldenrod'</span>)
+.updateColor(<span class="hljs-number">299</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">349</span>, <span class="hljs-string">'lemonchiffon'</span>)
+.updateColor(<span class="hljs-number">399</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">449</span>, <span class="hljs-string">'gold'</span>)
+.updateColor(<span class="hljs-number">499</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">549</span>, <span class="hljs-string">'tan'</span>)
+.updateColor(<span class="hljs-number">599</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">649</span>, <span class="hljs-string">'wheat'</span>)
+.updateColor(<span class="hljs-number">699</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">749</span>, <span class="hljs-string">'yellowgreen'</span>)
+.updateColor(<span class="hljs-number">799</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">849</span>, <span class="hljs-string">'peachpuff'</span>)
+.updateColor(<span class="hljs-number">899</span>, <span class="hljs-string">'black'</span>)
+.updateColor(<span class="hljs-number">949</span>, <span class="hljs-string">'papayawhip'</span>)
+.updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">'black'</span>);
 
 scrawl.makeGradient({
-    name: 'linear',
-    endX: '100%',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'linear'</span>,
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">'100%'</span>,
 })
-.updateColor(0, 'blue')
-.updateColor(495, 'red')
-.updateColor(500, 'yellow')
-.updateColor(505, 'red')
-.updateColor(999, 'green');
+.updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">'blue'</span>)
+.updateColor(<span class="hljs-number">495</span>, <span class="hljs-string">'red'</span>)
+.updateColor(<span class="hljs-number">500</span>, <span class="hljs-string">'yellow'</span>)
+.updateColor(<span class="hljs-number">505</span>, <span class="hljs-string">'red'</span>)
+.updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">'green'</span>);
 
 scrawl.makeBlock({
-    name: 'cell-locked-block',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'cell-locked-block'</span>,
 
-    width: 150,
-    height: 150,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">150</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">150</span>,
 
-    startX: 180,
-    startY: 120,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">180</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">120</span>,
 
-    handleX: 'center',
-    handleY: 'center',
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
 
-    fillStyle: 'linear',
-    strokeStyle: 'coral',
-    lineWidth: 6,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'linear'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'coral'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
 
-    delta: {
-        roll: 0.5
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.5</span>
     },
 
-    method: 'fillAndDraw',
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
 
 }).clone({
-    name: 'entity-locked-block',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'entity-locked-block'</span>,
 
-    scale: 1.2,
-    startY: 480,
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">1.2</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">480</span>,
 
-    lockFillStyleToEntity: true,
+    <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
 
 }).clone({
-    name: 'animated-block',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'animated-block'</span>,
 
-    width: 160,
-    height: 90,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">160</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">90</span>,
 
-    startY: 300,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">300</span>,
 
-    fillStyle: 'colored-pipes',
-    lineWidth: 2,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'colored-pipes'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
 
-    delta: {
-        roll: -0.2
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">-0.2</span>
     },
 });
 
 scrawl.makeWheel({
-    name: 'cell-locked-wheel',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'cell-locked-wheel'</span>,
 
-    radius: 75,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">75</span>,
 
-    startX: 480,
-    startY: 120,
-    handleX: 'center',
-    handleY: 'center',
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">480</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">120</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
 
-    fillStyle: 'linear',
-    strokeStyle: 'coral',
-    lineWidth: 6,
-    lineDash: [4, 4],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'linear'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'coral'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">lineDash</span>: [<span class="hljs-number">4</span>, <span class="hljs-number">4</span>],
 
-    delta: {
-        roll: -0.5
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">-0.5</span>
     },
 
-    method: 'fillAndDraw',
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
 
 }).clone({
-    name: 'entity-locked-wheel',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'entity-locked-wheel'</span>,
 
-    scale: 1.2,
-    startY: 480,
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">1.2</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">480</span>,
 
-    lockFillStyleToEntity: true,
+    <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
 
 }).clone({
-    name: 'animated-wheel',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'animated-wheel'</span>,
 
-    scale: 0.9,
-    startY: 300,
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">0.9</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">300</span>,
 
-    fillStyle: myRadial,
-    lineWidth: 2,
-    lineDash: [],
+    <span class="hljs-attr">fillStyle</span>: myRadial,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">lineDash</span>: [],
 
-    delta: {
-        roll: 0.2
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.2</span>
     },
 });
 
-let tweenEngine = (start, change, position) =&gt; {
+<span class="hljs-keyword">let</span> tweenEngine = <span class="hljs-function">(<span class="hljs-params">start, change, position</span>) =&gt;</span> {
 
-    let temp = 1 - position,
+    <span class="hljs-keyword">let</span> temp = <span class="hljs-number">1</span> - position,
         val;
 
-    val = (position &lt; 0.5) ?
-        start + ((position * position) * change * 2) :
-        (start + change) + ((temp * temp) * -change * 2);
+    val = (position &lt; <span class="hljs-number">0.5</span>) ?
+        start + ((position * position) * change * <span class="hljs-number">2</span>) :
+        (start + change) + ((temp * temp) * -change * <span class="hljs-number">2</span>);
 
-    return val % 1000;
+    <span class="hljs-keyword">return</span> val % <span class="hljs-number">1000</span>;
 };
 
-let tweeny = scrawl.makeTween({
-    name: 'mytween',
-    targets: 'colored-pipes',
-    duration: 5000,
-    cycles: 1,
-    definitions: [{
-        attribute: 'paletteStart',
-        integer: true,
-        start: 0,
-        end: 2999,
-        engine: tweenEngine
+<span class="hljs-keyword">let</span> tweeny = scrawl.makeTween({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'mytween'</span>,
+    <span class="hljs-attr">targets</span>: <span class="hljs-string">'colored-pipes'</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
+    <span class="hljs-attr">cycles</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">definitions</span>: [{
+        <span class="hljs-attr">attribute</span>: <span class="hljs-string">'paletteStart'</span>,
+        <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">end</span>: <span class="hljs-number">2999</span>,
+        <span class="hljs-attr">engine</span>: tweenEngine
     }, {
-        attribute: 'paletteEnd',
-        integer: true,
-        start: 999,
-        end: 3998,
-        engine: tweenEngine
+        <span class="hljs-attr">attribute</span>: <span class="hljs-string">'paletteEnd'</span>,
+        <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">start</span>: <span class="hljs-number">999</span>,
+        <span class="hljs-attr">end</span>: <span class="hljs-number">3998</span>,
+        <span class="hljs-attr">engine</span>: tweenEngine
     }]
 });
 
-let current = scrawl.makeDragZone({
+<span class="hljs-keyword">let</span> current = scrawl.makeDragZone({
 
-    zone: canvas,
-    endOn: ['up', 'leave'],
-    exposeCurrentArtefact: true,
+    <span class="hljs-attr">zone</span>: canvas,
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">'up'</span>, <span class="hljs-string">'leave'</span>],
+    <span class="hljs-attr">exposeCurrentArtefact</span>: <span class="hljs-literal">true</span>,
 });
 
-let report = function () {
+<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let testTicker = Date.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
         testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage2');
+        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reportmessage2'</span>);
 
-    return function () {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        testNow = Date.now();
+        testNow = <span class="hljs-built_in">Date</span>.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
         dragging = current();
 
-        testMessage.textContent = `Animation threshhold set to 1.0
+        testMessage.textContent = <span class="hljs-string">`Animation threshhold set to 1.0
 - 100% of the canvas must be visible for the animation to run
-Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
+Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+Currently dragging: <span class="hljs-subst">${(dragging) ? dragging.artefact.name : <span class="hljs-string">'nothing'</span>}</span>`</span>;
     };
 }();
 
-let animateGradients = function () {
+<span class="hljs-keyword">let</span> animateGradients = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let dragging;
+    <span class="hljs-keyword">let</span> dragging;
 
-    return function () {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         myRadial.updateByDelta();
         dragging = current();
 
-        if (dragging &amp;&amp; dragging.artefact.name === 'animated-block' &amp;&amp; !tweeny.isRunning()) tweeny.run();
+        <span class="hljs-keyword">if</span> (dragging &amp;&amp; dragging.artefact.name === <span class="hljs-string">'animated-block'</span> &amp;&amp; !tweeny.isRunning()) tweeny.run();
     }
 }();
 
-let animation = scrawl.makeRender({
+<span class="hljs-keyword">let</span> animation = scrawl.makeRender({
 
-    name: 'demo-animation2',
-    target: canvas,
-    commence: animateGradients,
-    afterShow: report,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation2'</span>,
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">commence</span>: animateGradients,
+    <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
         </li>

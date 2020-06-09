@@ -405,7 +405,8 @@
 </ul>
 <p><strong>A Stack is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
 <pre><code>Stack    ~~&gt; Canvas/Cell  
-Element  ~~&gt; Entity (eg Block)  </code></pre><p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
+Element  ~~&gt; Entity (eg Block)  </code></pre>
+<p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
 <ul>
 <li>Stack elements have <code>relative</code> positioning within the DOM</li>
 <li>Element elements have <code>absolute</code> positioning within the Stack</li>

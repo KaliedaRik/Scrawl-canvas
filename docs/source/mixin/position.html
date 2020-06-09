@@ -473,7 +473,8 @@ scrawl.makeBlock({
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">'fillThenDraw'</span>,
-});</code></pre><h5 id="referencing-other-artefacts">Referencing other artefacts</h5>
+});</code></pre>
+<h5 id="referencing-other-artefacts">Referencing other artefacts</h5>
 <p>Scrawl-canvas allows an artefact to reference other artefacts. The referenced objects supply data back to the first artefact, which it then uses to update its position and dimensions. </p>
 <ul>
 <li>This all happens automatically once the reference is set up, with updates occuring as part of the Scrawl-canvas <strong>Display cycle</strong>.</li>
@@ -596,15 +597,18 @@ scrawl.makeBlock({
 
 <span class="hljs-keyword">let</span> myBlock = scrawl.makeBlock({
     <span class="hljs-attr">group</span>: myGroup,
-});</code></pre><ul>
+});</code></pre>
+<ul>
 <li>Similarly the <strong>set</strong> function’s object argument can accept a name String, or the new group’s object itself:</li>
 </ul>
 <pre><code>myBlock.set({
     <span class="hljs-attr">group</span>: <span class="hljs-string">'my-first-group'</span>,
-});</code></pre><ul>
+});</code></pre>
+<ul>
 <li>If no group value is supplied when building a new <strong>entity</strong>, then the <strong><em>current group</em></strong> will be assigned as the entity’s group. This is a Scrawl-canvas ‘global’ value which will update whenever the user sets a Canvas wrapper as the current canvas:</li>
 </ul>
-<pre><code>scrawl.setCurrentCanvas(<span class="hljs-string">'my-other-canvas'</span>);</code></pre><ul>
+<pre><code>scrawl.setCurrentCanvas(<span class="hljs-string">'my-other-canvas'</span>);</code></pre>
+<ul>
 <li>For some Canvas and Stack wrappers, the value of their group attribute will be set to <code>root</code> - this indicates that the wrapper’s DOM element is not contained within another Stack.</li>
 <li>TODO: we need to decide whether we want a user-available scrawl.setCurrentStack function and, if yes, how that will impact on the core/document.js <strong>currentGroup</strong> variable exported by that module - given that we will then have both currentStack and currentCanvas variables, but only one currentGroup variable shared between them.</li>
 </ul>
@@ -687,7 +691,8 @@ myBlock.setDelta({
 
 myBlock.setDelta({
     <span class="hljs-attr">start</span>: [<span class="hljs-number">1</span>, <span class="hljs-string">'0.5%'</span>],
-});</code></pre><ul>
+});</code></pre>
+<ul>
 <li>Start values DO NOT respect the artefact’s <code>scale</code> attribute.</li>
 </ul>
 
@@ -1821,8 +1826,10 @@ myBlock.setDelta({
                 <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p><code>getHere</code> - the <strong>here</strong> parameter is owned by Canvas, Stack and (if enabled) Element artefacts and is set on them by calling <code>updateUiSubscribedElement</code> - thus not defined or updated by the artefact itself.</p>
-<pre><code>here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}</code></pre><p>Cell assets also have a <strong>here</strong> parameter, defined and updated by themselves with reference to their current Canvas host</p>
-<pre><code>here {x, y, w, h, xRatio, yRatio}</code></pre><ul>
+<pre><code>here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}</code></pre>
+<p>Cell assets also have a <strong>here</strong> parameter, defined and updated by themselves with reference to their current Canvas host</p>
+<pre><code>here {x, y, w, h, xRatio, yRatio}</code></pre>
+<ul>
 <li>NOTE: Canvas, Stack, Element (if enabled) and Cell all need to create their <code>here</code> attribute immediately after they first calculate their <code>currentDimensions</code> Coordinate, which needs to happen as part of the constructor!</li>
 </ul>
 
@@ -2582,6 +2589,7 @@ myBlock.setDelta({
                 <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <pre><code>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentPathData) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentPathData;</code></pre>
+
             </div>
             
         </li>
@@ -2596,6 +2604,7 @@ myBlock.setDelta({
               <pre><code>    <span class="hljs-keyword">let</span> pathPos = <span class="hljs-keyword">this</span>.pathPosition,
         path = <span class="hljs-keyword">this</span>.path,
         currentPathData;</code></pre>
+
             </div>
             
         </li>
@@ -2608,6 +2617,7 @@ myBlock.setDelta({
                 <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <pre><code>    <span class="hljs-keyword">if</span> (path) {</code></pre>
+
             </div>
             
         </li>
@@ -2620,6 +2630,7 @@ myBlock.setDelta({
                 <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <pre><code>        currentPathData = path.getPathPositionData(pathPos, <span class="hljs-keyword">this</span>.constantPathSpeed);</code></pre>
+
             </div>
             
         </li>
@@ -2632,6 +2643,7 @@ myBlock.setDelta({
                 <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <pre><code>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.addPathRotation) <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;</code></pre>
+
             </div>
             
         </li>
@@ -2644,6 +2656,7 @@ myBlock.setDelta({
                 <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <pre><code>        <span class="hljs-keyword">this</span>.currentPathData = currentPathData;</code></pre>
+
             </div>
             
         </li>
@@ -2659,6 +2672,7 @@ myBlock.setDelta({
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };</code></pre>
+
             </div>
             
         </li>

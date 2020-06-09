@@ -425,7 +425,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
 <span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-<span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/userInteraction.js'</span>;
+<span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/userInteraction.js'</span>;
 <span class="hljs-keyword">import</span> { addDomShowElement, setDomShowRequired, domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
 
 <span class="hljs-keyword">import</span> { makeQuaternion, requestQuaternion, releaseQuaternion } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/quaternion.js'</span>;
@@ -2076,6 +2076,40 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p><code>apply</code></p>
+<ul>
+<li>I really don’t like this functionality - see if we can purge it from the code base?</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.apply = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+
+        applyCoreResizeListener();
+
+        <span class="hljs-keyword">this</span>.prepareStamp();
+
+        <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+
+        <span class="hljs-keyword">this</span>.stamp()
+        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+            domShow(self.name);
+            self.dirtyPathObject = <span class="hljs-literal">true</span>;
+            self.cleanPathObject();
+        })
+        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

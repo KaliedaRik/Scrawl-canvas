@@ -608,7 +608,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
     <span class="hljs-attr">description</span>: <span class="hljs-string">'Link to the Wikipedia article on boxes (opens in new tab)'</span>,
 
     <span class="hljs-attr">clickAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'box clicked'</span>) },
-}</code></pre><p>This <strong>works as expected</strong> - the function returns a string which can then be attached to the &lt;a&gt; DOM element’s <em>onclick</em> attribute:</p>
+}</code></pre>
+<p>This <strong>works as expected</strong> - the function returns a string which can then be attached to the &lt;a&gt; DOM element’s <em>onclick</em> attribute:</p>
 <pre><code>anchor: {
     <span class="hljs-attr">name</span>: <span class="hljs-string">'wikipedia-box-link'</span>,
     <span class="hljs-attr">href</span>: <span class="hljs-string">'https://en.wikipedia.org/wiki/Box'</span>,
@@ -616,6 +617,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
     <span class="hljs-attr">clickAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">`console.log('box clicked')`</span> },
 },</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>    clickAction: <span class="hljs-literal">null</span>,</pre></div></div>
@@ -768,7 +770,8 @@ anchor.referrerPolicy  ~~&gt; artefact.anchorReferrerPolicy
 anchor.ping            ~~&gt; artefact.anchorPing
 anchor.hreflang        ~~&gt; artefact.anchorHreflang
 anchor.href            ~~&gt; artefact.anchorHref
-anchor.download        ~~&gt; artefact.anchorDownload</code></pre><p>One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an ‘anchor’ attribute:</p>
+anchor.download        ~~&gt; artefact.anchorDownload</code></pre>
+<p>One or more of these attributes can also be set (in the artefact factory argument, or when invoking artefact.set) using an ‘anchor’ attribute:</p>
 <pre><code>artefact.set({
 
     <span class="hljs-attr">anchor</span>: {
@@ -783,6 +786,7 @@ anchor.download        ~~&gt; artefact.anchorDownload</code></pre><p>One or more
         <span class="hljs-attr">download</span>: <span class="hljs-string">'value'</span>,
     },
 });</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>S.download = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
@@ -993,6 +997,7 @@ scrawl.makeBlock({
 <span class="hljs-comment">// Add a listener to propagate DOM-detected click events on our canvas </span>
 <span class="hljs-comment">// back into the Scrawl-canvas event system</span>
 scrawl.addListener(<span class="hljs-string">'up'</span>, () =&gt; canvas.cascadeEventAction(<span class="hljs-string">'up'</span>), canvas.domElement);</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{

@@ -1,5 +1,5 @@
 # Scrawl-canvas Library 
-Version: `8.1.0 - 21 May 2020` 
+Version: `8.2.0 - 9 June 2020` 
 
 ![npm package](https://img.shields.io/npm/v/scrawl-canvas?color=brightgreen) ![dependencies](https://img.shields.io/librariesio/github/KaliedaRik/scrawl-canvas)
 
@@ -42,11 +42,11 @@ There are three main ways to include Scrawl-canvas in your project:
 
 ### Download, unpack, use
 
-1. Download the zipped files from GitHub
-2. Unzip the files to a folder in your project. 
+1. Download the zipped file from GitHub
+2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.1.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-1-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-1-0.zip) - this package only includes the minified files.
+Alternatively, a zip package of the v8.2.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-2-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-2-0.zip) - this package only includes the minified file.
 
 ```
 <!-- Hello world -->
@@ -95,7 +95,7 @@ Alternatively, a zip package of the v8.1.0 files can be downloaded from this lin
 This will pull the requested npm package directly into your web page:
 ```
 <script type="module">
-    import scrawl from 'https://unpkg.com/scrawl-canvas@8.1.0';
+    import scrawl from 'https://unpkg.com/scrawl-canvas@8.2.0';
     [...]
 </script>
 ```
@@ -121,10 +121,11 @@ import scrawl from 'scrawl-canvas';
 ```
 
 ## Local development and testing
-After downloading the library and unzipping it into a directory or folder, cd into that folder on the command line and start a local server. For instance if you have `http-server` installed:
+After downloading the library and unzipping it into a directory or folder, cd into that folder on the command line, run `yarn install` or `npm install` (for the toolchain - the library itself has no external dependencies) and start a local server. For instance if you have `http-server` installed:
 
 ```
 $> cd ./path/to/Scrawl-canvas
+$> yarn install
 $> http-server
 
 Starting up http-server, serving ./
@@ -144,10 +145,19 @@ Why this approach? Because most of the Scrawl-canvas functionality revolves arou
 Most Demos include some form of user interaction, which allows us to test specific aspects of the code base.
 
 ### Documentation
-The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/) - which has not been included in the GitHub repository and thus needs to be installed separately if you want to regenerate the documentation after making local changes to the source code.
+The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/). Documentation is regenerated each time the library is rebuilt.
 
 ### Minification
-We minify the source code using a small shell script, nothing more. When the library is added to a project using NPM or Yarn, the import statement will use the minified module files.
+We minify the source code using [rollup](https://rollupjs.org/guide/en/) and its [terser](https://terser.org/) [plugin](https://www.npmjs.com/package/rollup-plugin-terser).
+
+### Building the library
+
+Running the following command on the command line will recreate the minified file, and regenerate the documentation:
+
+```
+$> yarn build
+```
+
 
 ### Development team
 Developed by Rik Roots: rik.roots@rikworks.co.uk

@@ -891,93 +891,93 @@ scrawl.addNativeListener(<span class="hljs-string">'click'</span>, () =&gt; canv
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>let vtBackground = scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> vtBackground = scrawl.makeBlock({
 
-    name: 'test-video-time-background',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'test-video-time-background'</span>,
 
-    width: '100%',
-    height: 10,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">'100%'</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">10</span>,
 
-    fillStyle: 'white',
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'white'</span>,
 });
 
-let vtTime = vtBackground.clone({
+<span class="hljs-keyword">let</span> vtTime = vtBackground.clone({
 
-    name: 'test-video-time-bar',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'test-video-time-bar'</span>,
 
-    width: 0,
-    fillStyle: 'red',
+    <span class="hljs-attr">width</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
 })
 
-let vtPhrase = scrawl.makePhrase({
+<span class="hljs-keyword">let</span> vtPhrase = scrawl.makePhrase({
 
-    name: 'test-video-time-phrase',
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'test-video-time-phrase'</span>,
 
-    family: 'monospace',
-    size: '2em',
-    weight: '700',
+    <span class="hljs-attr">family</span>: <span class="hljs-string">'monospace'</span>,
+    <span class="hljs-attr">size</span>: <span class="hljs-string">'2em'</span>,
+    <span class="hljs-attr">weight</span>: <span class="hljs-string">'700'</span>,
 
-    startX: '1%',
-    startY: '4%',
-    width: '40%',
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">'1%'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'4%'</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">'40%'</span>,
 
-    fillStyle: 'yellow',
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'yellow'</span>,
 });
 
-let videoTimeBar = function () {
+<span class="hljs-keyword">let</span> videoTimeBar = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let currentVideoTime,
+    <span class="hljs-keyword">let</span> currentVideoTime,
         videoDuration;
 
-    return function () {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        currentVideoTime = myvideo.get('video_currentTime');
+        currentVideoTime = myvideo.get(<span class="hljs-string">'video_currentTime'</span>);
 
-        if (!videoDuration) videoDuration = myvideo.get('video_duration');
+        <span class="hljs-keyword">if</span> (!videoDuration) videoDuration = myvideo.get(<span class="hljs-string">'video_duration'</span>);
 
-        if (videoDuration) {
+        <span class="hljs-keyword">if</span> (videoDuration) {
 
             vtTime.set({
 
-                width: `${(currentVideoTime * 100) / videoDuration}%`,
+                <span class="hljs-attr">width</span>: <span class="hljs-string">`<span class="hljs-subst">${(currentVideoTime * <span class="hljs-number">100</span>) / videoDuration}</span>%`</span>,
             });
 
             vtPhrase.set({
 
-                text: ` ${currentVideoTime.toFixed(2)} / ${videoDuration.toFixed(2)}`,
+                <span class="hljs-attr">text</span>: <span class="hljs-string">` <span class="hljs-subst">${currentVideoTime.toFixed(<span class="hljs-number">2</span>)}</span> / <span class="hljs-subst">${videoDuration.toFixed(<span class="hljs-number">2</span>)}</span>`</span>,
             });
 
-            myticker.seekTo(currentVideoTime * 1000, true);
+            myticker.seekTo(currentVideoTime * <span class="hljs-number">1000</span>, <span class="hljs-literal">true</span>);
         }
     };
 }();
 
 
-let report = function () {
+<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let testTicker = Date.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
         testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reportmessage'</span>);
 
-    return function () {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        testNow = Date.now();
+        testNow = <span class="hljs-built_in">Date</span>.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();
 
 scrawl.makeRender({
-    name: 'test-animation',
-    target: canvas,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'test-animation'</span>,
+    <span class="hljs-attr">target</span>: canvas,
 
-    commence: videoTimeBar,
-    afterShow: report,
+    <span class="hljs-attr">commence</span>: videoTimeBar,
+    <span class="hljs-attr">afterShow</span>: report,
 });
 
-console.log(scrawl.library);</pre></div></div>
+<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

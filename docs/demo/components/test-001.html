@@ -99,6 +99,7 @@
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
 myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> myScrawlComponent(el));</code></pre>
+
             </div>
             
         </li>
@@ -207,12 +208,14 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
     canvas      <span class="hljs-comment">// the Scrawl-canvas wrapper for the component's canvas</span>
     animation   <span class="hljs-comment">// the Scrawl-canvas animation object</span>
     demolish    <span class="hljs-comment">// remove the component from the Scrawl-canvas library</span>
-}</code></pre><h5 id="usage-example">Usage example:</h5>
+}</code></pre>
+<h5 id="usage-example">Usage example:</h5>
 <pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
 <span class="hljs-keyword">import</span> { spotlightText } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> spotlightText(el));</code></pre><p><strong>Effects on the element:</strong> no additional effects.</p>
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> spotlightText(el));</code></pre>
+<p><strong>Effects on the element:</strong> no additional effects.</p>
 
             </div>
             
@@ -529,12 +532,14 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         textTween     <span class="hljs-comment">// Tween animation function</span>
         gradientTween <span class="hljs-comment">// Tween animation function</span>
     }
-}</code></pre><h5 id="usage-example">Usage example:</h5>
+}</code></pre>
+<h5 id="usage-example">Usage example:</h5>
 <pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
 <span class="hljs-keyword">import</span> { jazzyButton } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> jazzyButton(el));</code></pre><p><strong>Effects on the element:</strong> no additional effects.</p>
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> jazzyButton(el));</code></pre>
+<p><strong>Effects on the element:</strong> no additional effects.</p>
 
             </div>
             
@@ -794,39 +799,40 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 <span class="hljs-keyword">import</span> { pagePerformance } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> pagePerformance(el));</code></pre><p><strong>Effects on the element:</strong> updates the &lt;div&gt; element’s innerHTML data, which will replace any child elements or text placed between the element’s opening and closing tags.</p>
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> pagePerformance(el));</code></pre>
+<p><strong>Effects on the element:</strong> updates the &lt;div&gt; element’s innerHTML data, which will replace any child elements or text placed between the element’s opening and closing tags.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>const pagePerformance = (el) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pagePerformance = <span class="hljs-function">(<span class="hljs-params">el</span>) =&gt;</span> {
 
-    let report = function () {
+    <span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        let testTicker = Date.now(),
+        <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
             testTime, testNow,
-            testMessage = document.querySelector(`#${el.id}`);
+            testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">`#<span class="hljs-subst">${el.id}</span>`</span>);
 
-        return function () {
+        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-            testNow = Date.now();
+            testNow = <span class="hljs-built_in">Date</span>.now();
             testTime = testNow - testTicker;
             testTicker = testNow;
 
-            testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+            testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
 
-            console.log('report animation is running')
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'report animation is running'</span>)
         };
     }();
 
-    let component = scrawl.makeComponent({
-        domElement: el,
-        animationHooks: {
-            afterShow: report,
+    <span class="hljs-keyword">let</span> component = scrawl.makeComponent({
+        <span class="hljs-attr">domElement</span>: el,
+        <span class="hljs-attr">animationHooks</span>: {
+            <span class="hljs-attr">afterShow</span>: report,
         },
-        includeCanvas: false,
+        <span class="hljs-attr">includeCanvas</span>: <span class="hljs-literal">false</span>,
     })
 
-    return (component) ? true : false;
+    <span class="hljs-keyword">return</span> (component) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>

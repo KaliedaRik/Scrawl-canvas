@@ -350,37 +350,37 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>let report = function () {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    let testTicker = Date.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
         testTime, testNow, text,
-        testMessage = document.querySelector('#reportmessage');
+        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reportmessage'</span>);
 
-    let artefactnames = library.artefactnames,
+    <span class="hljs-keyword">let</span> artefactnames = library.artefactnames,
         stacknames = library.stacknames,
         cellnames = library.cellnames,
         stack = library.stack,
         canvas = library.canvas,
         cell = library.cell;
 
-    let a, s, el, c;
+    <span class="hljs-keyword">let</span> a, s, el, c;
 
-    return function () {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        a = Object.keys(artefact);
-        s = Object.keys(stack);
-        el = Object.keys(canvas);
-        c = Object.keys(cell);
+        a = <span class="hljs-built_in">Object</span>.keys(artefact);
+        s = <span class="hljs-built_in">Object</span>.keys(stack);
+        el = <span class="hljs-built_in">Object</span>.keys(canvas);
+        c = <span class="hljs-built_in">Object</span>.keys(cell);
 
-        testNow = Date.now();
+        testNow = <span class="hljs-built_in">Date</span>.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-artefact - ${a.length}, ${artefactnames.length}: [${(artefactnames).join(', ')}] 
-stack - ${s.length}, ${stacknames.length}: [${(stacknames).join(', ')}] 
-canvas - ${el.length}, ${canvasnames.length}: [${(canvasnames).join(', ')}]
-cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
+        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+artefact - <span class="hljs-subst">${a.length}</span>, <span class="hljs-subst">${artefactnames.length}</span>: [<span class="hljs-subst">${(artefactnames).join(<span class="hljs-string">', '</span>)}</span>] 
+stack - <span class="hljs-subst">${s.length}</span>, <span class="hljs-subst">${stacknames.length}</span>: [<span class="hljs-subst">${(stacknames).join(<span class="hljs-string">', '</span>)}</span>] 
+canvas - <span class="hljs-subst">${el.length}</span>, <span class="hljs-subst">${canvasnames.length}</span>: [<span class="hljs-subst">${(canvasnames).join(<span class="hljs-string">', '</span>)}</span>]
+cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${cellnames.length}</span>: [<span class="hljs-subst">${(cellnames).join(<span class="hljs-string">', '</span>)}</span>]`</span>;
     };
 }();</pre></div></div>
             
@@ -521,6 +521,7 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
         <span class="hljs-string">"bMax"</span>:<span class="hljs-number">10</span>
     }
 ]</code></pre>
+
             </div>
             
             <div class="content"><div class='highlight'><pre>
@@ -594,7 +595,7 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
         }
     };
 }();
-scrawl.addListener(<span class="hljs-string">'up'</span>, controls, <span class="hljs-string">'.controls'</span>);</pre></div></div>
+scrawl.addListener(<span class="hljs-string">'up'</span>, controls, <span class="hljs-string">'.control_button'</span>);</pre></div></div>
             
         </li>
         
