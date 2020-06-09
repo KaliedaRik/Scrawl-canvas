@@ -4,8 +4,7 @@
   "description": "Version 8.1.0 - 21 May 2020",
   "main": "min/scrawl.js",
   "scripts": {
-    "test": "echo \"Use demo folder examples for testing\" && exit 1",
-    "minify": "./minifier.sh",
+    "build": "rollup -c",
     "makedocs": "docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js"
   },
   "repository": {
@@ -17,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/KaliedaRik/Scrawl-canvas/issues"
   },
-  "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme"
+  "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
+  "devDependencies": {
+    "docco": "^0.8.0",
+    "rollup": "^2.15.0",
+    "rollup-plugin-terser": "^6.1.0"
+  }
 }
