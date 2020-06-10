@@ -8,7 +8,7 @@
 
 // #### Imports
 // Initialize scrawl-canvas
-import scrawl from '../source/scrawl.js';
+import scrawl from '../min/scrawl.js';
 
 // Import the component code we want to use
 import { spotlightText, jazzyButton, pagePerformance } from './components/test-001.js';
