@@ -501,7 +501,11 @@ P.prepareStamp = function() {
     if (this.asset) {
 
         if (this.asset.type === 'Sprite') this.checkSpriteFrame(this);
-        else this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
+        else {
+
+            if (this.asset.checkSource) this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
+            else this.dirtyAsset = true;
+        }
     }
 
     //  See the [entity mixin function](http://localhost:8080/docs/source/mixin/entity.html#section-31) for details on the following checks and actions
@@ -590,23 +594,31 @@ P.draw = function (engine) {
 // `fill`
 P.fill = function (engine) {
 
-    engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    if (this.source) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
 // `drawAndFill`
 P.drawAndFill = function (engine) {
 
     engine.stroke(this.pathObject);
-    this.currentHost.clearShadow();
-    engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+
+    if (this.source) {
+
+        this.currentHost.clearShadow();
+        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    }
 };
 
 // `fillAndDraw`
 P.fillAndDraw = function (engine) {
 
     engine.stroke(this.pathObject);
-    this.currentHost.clearShadow();
-    engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+
+    if (this.source) {
+
+        this.currentHost.clearShadow();
+        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    }
     engine.stroke(this.pathObject);
 };
 
@@ -614,13 +626,13 @@ P.fillAndDraw = function (engine) {
 P.drawThenFill = function (engine) {
 
     engine.stroke(this.pathObject);
-    engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    if (this.source) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
 // `fillThenDraw`
 P.fillThenDraw = function (engine) {
 
-    engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    if (this.source) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
     engine.stroke(this.pathObject);
 };
 

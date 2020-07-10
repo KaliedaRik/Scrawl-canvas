@@ -553,9 +553,9 @@ P.clear = function () {
 
                     next(counter + 1)
                     .then(res => resolve(true))
-                    .catch(err => reject(false));
+                    .catch(err => reject(err));
                 })
-                .catch(err => reject(false));
+                .catch(err => reject(err));
             }
             else resolve(true);
         });
@@ -585,9 +585,9 @@ P.compile = function () {
 
                     next(counter + 1)
                     .then(res => resolve(true))
-                    .catch(err => reject(false));
+                    .catch(err => reject(err));
                 })
-                .catch(err => reject(false));
+                .catch(err => reject(err));
             }
             else {
 
@@ -595,7 +595,7 @@ P.compile = function () {
 
                 self.stamp()
                 .then(res => resolve(true))
-                .catch(err => reject(false));
+                .catch(err => reject(err));
             }
         });
     };
@@ -628,9 +628,9 @@ P.show = function(){
 
                     next(counter + 1)
                     .then(res => resolve(true))
-                    .catch(err => reject(false));
+                    .catch(err => reject(err));
                 })
-                .catch(err => reject(false));
+                .catch(err => reject(err));
             }
             else {
 
@@ -645,7 +645,7 @@ P.show = function(){
 
                     resolve(true);
                 })
-                .catch(() => resolve(false));
+                .catch(() => reject(err));
             }
         });
     };

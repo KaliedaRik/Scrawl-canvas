@@ -286,7 +286,7 @@ P.stamp = function () {
                 .catch(err => {
 
                     if (filterCell) releaseCell(filterCell);
-                    reject(false)
+                    reject(err)
                 });
             }
 
@@ -372,9 +372,9 @@ P.stampAction = function (myCell) {
 
                     next(counter + 1)
                     .then(res => resolve(true))
-                    .catch(err => reject(false));
+                    .catch(err => reject(err));
                 })
-                .catch(err => reject(false));
+                .catch(err => reject(err));
             }
 
             // The else branch should only trigger once all the artefacts have been processed. At this point we should be okay to action any Group-level filters on the (entity) artefact output
@@ -387,7 +387,7 @@ P.stampAction = function (myCell) {
                         self.applyFilters(myCell)
                         .then(img => self.stashAction(img))
                         .then(res => resolve(true))
-                        .catch(err => reject(false));
+                        .catch(err => reject(err));
                     }
                     else if (self.stashOutput) {
 
@@ -413,7 +413,7 @@ P.stampAction = function (myCell) {
 
                             self.stashAction(tempImg)
                             .then(res => resolve(true))
-                            .catch(err => reject(false));
+                            .catch(err => reject(err));
                         }
                         else reject ('Could not find real engine');
                     }
@@ -442,7 +442,7 @@ P.applyFilters = function (myCell) {
         let currentHost = self.currentHost,
             filterHost = myCell;
 
-        if (!currentHost || !filterHost) reject(false);
+        if (!currentHost || !filterHost) reject('Group.applyFilters - no host');
 
         // An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current Cell display, taking into account the Group's `composite` and `alpha` values
         let cleanup = function () {
@@ -507,7 +507,7 @@ P.applyFilters = function (myCell) {
         .catch(err => {
 
             cleanup();
-            reject(false);
+            reject(err);
         });
     });
 };

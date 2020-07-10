@@ -899,6 +899,13 @@ P.stamp = function (force = false, host, changes) {
                     self.sourceImageData = res;
                     return self.cleanOutput();
                 })
+                .catch(err => {
+
+                    // We don't need to completely reject if output is not clean
+                    // + It should be enough to bale out of the stamp functionality and hope it resolves during the next RAF iteration
+                    console.log(err);
+                    resolve(err)
+                })
                 .then(res => {
 
                     self.output = res;

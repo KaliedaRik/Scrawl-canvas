@@ -490,7 +490,7 @@ export default function (P = {}) {
             if (this.stashOutput || filterTest) return this.filteredStamp();
             else return this.regularStamp();
         }
-        return Promise.resolve(false);
+        return Promise.resolve('entity.stamp');
     };
 
 // `regularStamp` - handles stamping functionality for all entitys that do not have any filter functions associated with them - returns a Promise.
@@ -503,9 +503,9 @@ export default function (P = {}) {
             if (self.currentHost) {
 
                 self.regularStampSynchronousActions();
-                resolve(true);
+                resolve('entity.regularStamp resolving');
             }
-            reject(false);
+            reject('entity.regularStamp - no currentHost');
         });
     };
 
@@ -643,7 +643,7 @@ export default function (P = {}) {
                 .catch((err) => {
 
                     cleanup();
-                    reject(false);
+                    reject(err);
                 });
             }
 

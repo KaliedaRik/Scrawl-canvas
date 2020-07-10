@@ -899,9 +899,9 @@ P.compile = function(){
 
                         resolve(true);
                     })
-                    .catch(err => reject(false));
+                    .catch(err => reject(err));
                 })
-                .catch(err => reject(false));
+                .catch(err => reject(err));
             }
 
             // The else branch should only trigger once all the groups have been processed. At this point we should be okay to action any Cell-level filters on the output, and stash the output (if required)
@@ -912,13 +912,13 @@ P.compile = function(){
                     self.applyFilters()
                     .then(res => self.stashOutputAction())
                     .then(res => resolve(true))
-                    .catch(err => reject(false));
+                    .catch(err => reject(err));
                 }
                 else {
 
                     self.stashOutputAction()
                     .then(res => resolve(true))
-                    .catch(err => reject(false));
+                    .catch(err => reject(err));
                 }
             }
         });

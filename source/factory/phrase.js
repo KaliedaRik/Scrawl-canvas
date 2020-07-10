@@ -704,7 +704,8 @@ P.cleanDimensionsAdditionalActions = function () {
         releaseCell(myCell);
     }
 
-    this.currentDimensions[1] = Math.ceil((this.textHeight * this.textLines.length * this.lineHeight) / this.scale);
+    if (this.textLines) this.currentDimensions[1] = Math.ceil((this.textHeight * this.textLines.length * this.lineHeight) / this.scale);
+    else this.dirtyDimensions = true;
 };
 
 // `setSectionStyles` - internal function
