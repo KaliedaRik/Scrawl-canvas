@@ -1,5 +1,5 @@
-// # Position-physics mixin
-// This mixin defines additional attributes and functions for an artefact that uses physics functionality
+// # Delta mixin
+// This mixin defines additional attributes and functions for an artefact that uses delta functionality
 
 
 // #### Imports
@@ -67,6 +67,7 @@ export default function (P = {}) {
  // `updateByDelta` - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the __delta__ attribute object then those __delta animations__ will start playing immediately.
     P.updateByDelta = function () {
 
+if (this.name == 'kaliedoscope-clock-background') console.log(this.name, 'updateByDelta')
         this.setDelta(this.delta);
 
         return this;

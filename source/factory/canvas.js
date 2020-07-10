@@ -538,18 +538,29 @@ P.clear = function () {
 
     let self = this;
 
-    return new Promise((resolve) => {
+    if (self.dirtyCells) self.cleanCells();
 
-        let promises = [];
+    let next = (counter) => {
 
-        if (self.dirtyCells) self.cleanCells();
+        return new Promise((resolve, reject) => {
 
-        self.cellBatchesClear.forEach(mycell => promises.push(mycell.clear()));
+            let myCell = self.cellBatchesClear[counter];
 
-        Promise.all(promises)
-        .then(() => resolve(true))
-        .catch(() => resolve(false));
-    });
+            if (myCell) {
+
+                myCell.clear()
+                .then(res => {
+
+                    next(counter + 1)
+                    .then(res => resolve(true))
+                    .catch(err => reject(false));
+                })
+                .catch(err => reject(false));
+            }
+            else resolve(true);
+        });
+    };
+    return next(0);
 };
 
 // `compile` - For Cell objects in the wrapper's __cells__ (and associated) Arrays (returns a Promise):
@@ -559,20 +570,36 @@ P.compile = function () {
 
     let self = this;
 
-    return new Promise((resolve) => {
+    if (self.dirtyCells) self.cleanCells();
 
-        let promises = [];
+    let next = (counter) => {
 
-        if (self.dirtyCells) self.cleanCells();
+        return new Promise((resolve, reject) => {
 
-        self.cellBatchesCompile.forEach(mycell => promises.push(mycell.compile()));
+            let myCell = self.cellBatchesCompile[counter];
 
-        Promise.all(promises)
-        .then(() => self.prepareStamp())
-        .then(() => self.stamp())
-        .then(() => resolve(true))
-        .catch(() => resolve(false));
-    });
+            if (myCell) {
+
+                myCell.compile()
+                .then(res => {
+
+                    next(counter + 1)
+                    .then(res => resolve(true))
+                    .catch(err => reject(false));
+                })
+                .catch(err => reject(false));
+            }
+            else {
+
+                self.prepareStamp();
+
+                self.stamp()
+                .then(res => resolve(true))
+                .catch(err => reject(false));
+            }
+        });
+    };
+    return next(0);
 };
 
 // `show` - For Cell objects in the wrapper's __cells__ (and associated) Arrays (returns a Promise):
@@ -586,30 +613,43 @@ P.show = function(){
 
     let self = this;
 
-    return new Promise((resolve) => {
+    if (self.dirtyCells) self.cleanCells();
 
-        let promises = [];
+    let next = (counter) => {
 
-        if (self.dirtyCells) self.cleanCells();
+        return new Promise((resolve, reject) => {
 
-        self.cellBatchesShow.forEach(mycell => promises.push(mycell.show()));
+            let myCell = self.cellBatchesShow[counter];
 
-        Promise.all(promises)
-        .then((res) => {
+            if (myCell) {
 
-            self.engine.clearRect(0, 0, self.localWidth, self.localHeight);
-            return self.base.show();
-        })
-        .then(() => {
+                myCell.show()
+                .then(res => {
 
-            domShow();
+                    next(counter + 1)
+                    .then(res => resolve(true))
+                    .catch(err => reject(false));
+                })
+                .catch(err => reject(false));
+            }
+            else {
 
-            if (this.dirtyAria) this.cleanAria();
+                self.engine.clearRect(0, 0, self.localWidth, self.localHeight);
+                
+                self.base.show()
+                .then(res => {
 
-            resolve(true);
-        })
-        .catch(() => resolve(false));
-    });
+                    domShow();
+
+                    if (this.dirtyAria) this.cleanAria();
+
+                    resolve(true);
+                })
+                .catch(() => resolve(false));
+            }
+        });
+    };
+    return next(0);
 };
 
 // `render` - orchestrate a single Display cycle - clear, then compile, then show (returns a Promise).

@@ -556,10 +556,16 @@ P.cleanDimensionsAdditionalActions = function() {
 // `notifySubscriber` - Overrides mixin/asset.js function
 P.notifySubscriber = function (sub) {
 
-    sub.sourceNaturalDimensions[0] = this.currentDimensions[0];
-    sub.sourceNaturalDimensions[1] = this.currentDimensions[1];
+    if (!sub.sourceNaturalDimensions) sub.sourceNaturalDimensions = [];
+
+    sub.sourceNaturalWidth = this.currentDimensions[0];
+    sub.sourceNaturalHeight = this.currentDimensions[1];
+
     sub.sourceLoaded = true;
     sub.dirtyImage = true;
+
+    sub.dirtyCopyStart = true;
+    sub.dirtyCopyDimensions = true;
 };
 
 
@@ -731,14 +737,6 @@ P.setEngineActions = {
         engine.miterLimit = item;
     },
 
-    // textAlign: function (item, engine) {
-    //     engine.textAlign = item;
-    // },
-
-    // textBaseline: function (item, engine) {
-    //     engine.textBaseline = item;
-    // },
-
     shadowBlur: function (item, engine) {
         engine.shadowBlur = item;
     },
@@ -875,7 +873,7 @@ P.clear = function () {
 // `compile`
 P.compile = function(){
 
-let mystash = this.stashOutput;
+    let mystash = this.stashOutput;
 
     this.sortGroups();
     this.prepareStamp();
@@ -975,7 +973,7 @@ P.show = function () {
 
                 let fit = (controller) ? controller.fit : 'none',
                     relWidth, relHeight;
-                
+
                 switch (fit) {
 
                     case 'contain' :
@@ -1043,6 +1041,8 @@ P.show = function () {
                 paste = self.paste;
 
                 // Cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockTo; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path entity, etc. If pivoted to the mouse, they will use the base canvas's .here attribute, which takes into account differences between the base and display canvas dimensions.
+
+                if (!self.noDeltaUpdates) self.setDelta(self.delta);
 
                 self.prepareStamp();
 
@@ -1312,7 +1312,13 @@ P.updateBaseHere = function (controllerHere, fit) {
 P.prepareStamp = function () {
 
     if (this.dirtyScale) this.cleanScale();
-    if (this.dirtyDimensions) this.cleanDimensions();
+
+    if (this.dirtyDimensions) {
+
+        this.cleanDimensions();
+        this.dirtyAssetSubscribers = true;
+    }
+
     if (this.dirtyLock) this.cleanLock();
     if (this.dirtyStart) this.cleanStart();
     if (this.dirtyOffset) this.cleanOffset();
@@ -1327,6 +1333,14 @@ P.prepareStamp = function () {
 
     if (this.dirtyStampPositions) this.cleanStampPositions();
     if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
+
+    if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
+
+    if (this.dirtyAssetSubscribers) {
+
+        this.dirtyAssetSubscribers = false;
+        this.notifySubscribers();
+    }
 };
 
 
