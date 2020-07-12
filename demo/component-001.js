@@ -8,7 +8,7 @@
 
 // #### Imports
 // Initialize scrawl-canvas
-import scrawl from '../min/scrawl.js';
+import scrawl from '../source/scrawl.js';
 
 // Import the component code we want to use
 import { spotlightText, jazzyButton, pagePerformance } from './components/test-001.js';
@@ -27,7 +27,7 @@ spotlightElements.forEach(el => spotlightText(el));
 let myJazzy = [];
 jazzyElements.forEach(el => myJazzy.push(jazzyButton(el)));
 
-// make the third jazzy button (in the middle of the grid element) display it's canvas over the button
+// make the third jazzy button (in the middle of the grid element) display its canvas over the button
 myJazzy[2].element.set({
     canvasOnTop: true,
 });

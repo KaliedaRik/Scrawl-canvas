@@ -692,7 +692,7 @@ P.cleanDimensionsAdditionalActions = function () {
 
     if (this.dimensions[0] === 'auto') {
 
-        if (!this.currentText) this.buildText();
+        this.buildText();
 
         let myCell = requestCell(),
             engine = myCell.engine;
@@ -830,26 +830,30 @@ P.buildText = function () {
 
     this.currentText = t;
 
-    this.calculateTextPositions(t);
+    if (isNaN(this.currentDimensions[0])) this.dirtyText = true;
+    else {
 
-    if (this.exposeText) {
+        this.calculateTextPositions(t);
 
-        if (!this.exposedTextHold) {
+        if (this.exposeText) {
 
-            let myhold = document.createElement('div');
-            myhold.id = `${this.name}-text-hold`;
-            this.exposedTextHold = myhold;
-            this.exposedTextHoldAttached = false;
-        }
+            if (!this.exposedTextHold) {
 
-        this.exposedTextHold.textContent = t;
+                let myhold = document.createElement('div');
+                myhold.id = `${this.name}-text-hold`;
+                this.exposedTextHold = myhold;
+                this.exposedTextHoldAttached = false;
+            }
 
-        if (!this.exposedTextHoldAttached) {
+            this.exposedTextHold.textContent = t;
 
-            if(this.currentHost && this.currentHost.controller && this.currentHost.controller.textHold) {
+            if (!this.exposedTextHoldAttached) {
 
-                this.currentHost.controller.textHold.appendChild(this.exposedTextHold);
-                this.exposedTextHoldAttached = true;
+                if(this.currentHost && this.currentHost.controller && this.currentHost.controller.textHold) {
+
+                    this.currentHost.controller.textHold.appendChild(this.exposedTextHold);
+                    this.exposedTextHoldAttached = true;
+                }
             }
         }
     }
@@ -1249,6 +1253,8 @@ P.calculateTextPositions = function (mytext) {
 
             cursor = 0;
             height = handleY;
+
+            // console.log(this.name, width, height, textLineWidths, handleX);
 
             for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 

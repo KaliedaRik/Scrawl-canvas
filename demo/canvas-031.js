@@ -6,22 +6,22 @@ import scrawl from '../source/scrawl.js'
 
 
 // This code can be factored away into its own module
+// + Because: clocks are useful; most of this code can be thought of as clock boilerplate
 const buildClockface = function (canvas, namespace) {
 
     let entity = scrawl.library.entity;
 
+    // The clock face will go into its own Cell
     let myFace = canvas.buildCell({
 
         name: `${namespace}-face`,
 
         width: '100%',
         height: '100%',
-
-        compileOrder: 2,
-        showOrder: 2,
     });
 
 
+    // The clock frame is a wheel, as is the center pin
     scrawl.makeWheel({
 
         name: `${namespace}-clock-frame`,
@@ -55,6 +55,7 @@ const buildClockface = function (canvas, namespace) {
         shadowBlur: 3,
     });
 
+    // The hour, minute and second hands are all Line shapes
     scrawl.makeLine({
 
         name: `${namespace}-hour-hand`,
@@ -123,6 +124,9 @@ const buildClockface = function (canvas, namespace) {
 
     }();
 
+    // Once modularized, we can export a function to run the above code
+    // + When the function is invoked it builds the clock face Cell and entitys
+    // + It returns the cell, and the the clock tick function
     return {
 
         cell: myFace,
@@ -131,6 +135,7 @@ const buildClockface = function (canvas, namespace) {
 };
 
 
+// #### Scene setup
 let canvas = scrawl.library.canvas.mycanvas,
     base = canvas.base,
     namespace = 'kaliedoscope-clock';
@@ -143,7 +148,7 @@ canvas.set({
     fit: 'cover',
 });
 
-// Building the background - this goes in a separate Cell (offscreen canvas)
+// Building the background - this goes in a separate Cell
 let myBackground = canvas.buildCell({
 
     name: `${namespace}-background`,
@@ -152,6 +157,7 @@ let myBackground = canvas.buildCell({
     height: '100%',
 });
 
+// We use a wheel segment as a stencil
 scrawl.makeWheel({
 
     name: `${namespace}-clock-stencil`,
@@ -171,7 +177,7 @@ scrawl.makeWheel({
     method: 'fill',
 });
 
-// Using a color factory object to generate random colors within a restricted palette
+// Use a color factory object to generate random colors within a restricted palette
 let myColorFactory = scrawl.makeColor({
 
     name: `${namespace}-color-factory`,
@@ -181,7 +187,7 @@ let myColorFactory = scrawl.makeColor({
     bMax: 160,
 });
 
-
+// Add some blocks to create the animated background
 for (let i = 0; i < 50; i++) {
 
     scrawl.makeBlock({
@@ -212,6 +218,7 @@ for (let i = 0; i < 50; i++) {
     });
 }
 
+// We don't display the background Cell. Instead we use it as the source for a set of Picture entitys 
 scrawl.makePicture({
 
     name: `${namespace}-segment-0`,
@@ -254,25 +261,50 @@ scrawl.makePicture({
     roll: 0,
 });
 
+// Build the clock face
 let clock = buildClockface(canvas, namespace);
 
-canvas.base.set({
-    compileOrder: 1,
-});
 
+// #### Cell display and compile ordering
 myBackground.set({
     compileOrder: 0,
     shown: false,
+});
+
+canvas.base.set({
+    compileOrder: 1,
 });
 
 clock.cell.set({
     showOrder: 2,
 });
 
-scrawl.makeRender({
+
+// #### Scene animation
+// Function to display frames-per-second data, and other information relevant to the demo
+let report = function () {
+
+    let testTicker = Date.now(),
+        testTime, testNow,
+        testMessage = document.querySelector('#reportmessage');
+
+    return function () {
+
+        testNow = Date.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+    };
+}();
+
+
+// Create the Display cycle animation
+const myAnimation = scrawl.makeRender({
 
     name: `${namespace}-animation`,
     target: canvas,
 
     commence: clock.update,
+    afterShow: report,
 });
