@@ -1489,10 +1489,16 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
             
             <div class="content"><div class='highlight'><pre>P.notifySubscriber = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) </span>{
 
-    sub.sourceNaturalDimensions[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>];
-    sub.sourceNaturalDimensions[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">if</span> (!sub.sourceNaturalDimensions) sub.sourceNaturalDimensions = [];
+
+    sub.sourceNaturalWidth = <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>];
+    sub.sourceNaturalHeight = <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">1</span>];
+
     sub.sourceLoaded = <span class="hljs-literal">true</span>;
     sub.dirtyImage = <span class="hljs-literal">true</span>;
+
+    sub.dirtyCopyStart = <span class="hljs-literal">true</span>;
+    sub.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1756,39 +1762,8 @@ P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-attr">miterLimit</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, engine</span>) </span>{
         engine.miterLimit = item;
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-55">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
-              </div>
-              <p>textAlign: function (item, engine) {
-    engine.textAlign = item;
-},</p>
+    },
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-56">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
-              </div>
-              <p>textBaseline: function (item, engine) {
-    engine.textBaseline = item;
-},</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
     <span class="hljs-attr">shadowBlur</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, engine</span>) </span>{
         engine.shadowBlur = item;
     },
@@ -1828,11 +1803,11 @@ P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-57">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>The following functions are used as part of entity object <code>stamp</code> functionality - specifically for those with a <strong>method</strong> whose appearance is affected by shadows, and for the <code>clear</code> method</p>
 
@@ -1841,11 +1816,11 @@ P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-58">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><code>clearShadow</code></p>
 
@@ -1866,11 +1841,11 @@ P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-59">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><code>restoreShadow</code></p>
 
@@ -1893,11 +1868,11 @@ P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-60">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p><code>setToClearShape</code></p>
 
@@ -1918,11 +1893,11 @@ P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-61">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p><code>saveEngine</code>, <code>restoreEngine</code> - save and restore the Cell wrapper’s &lt;canvas&gt; element’s CanvasRenderingContext2D engine’s current state to/from a stack</p>
 
@@ -1943,11 +1918,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-62">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 <p>This functionality is entirely Promise-based, and triggered by the Cell’s Canvas wrapper controller</p>
@@ -1957,11 +1932,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-63">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2006,11 +1981,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-64">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p><code>compile</code></p>
 
@@ -2018,7 +1993,7 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.compile = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
 
-<span class="hljs-keyword">let</span> mystash = <span class="hljs-keyword">this</span>.stashOutput;
+    <span class="hljs-keyword">let</span> mystash = <span class="hljs-keyword">this</span>.stashOutput;
 
     <span class="hljs-keyword">this</span>.sortGroups();
     <span class="hljs-keyword">this</span>.prepareStamp();
@@ -2030,11 +2005,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-65">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>Doing it this way to ensure that each group completes its stamp action before the next one starts</p>
 
@@ -2056,19 +2031,19 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
                         resolve(<span class="hljs-literal">true</span>);
                     })
-                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
                 })
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
             }</pre></div></div>
             
         </li>
         
         
-        <li id="section-66">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>The else branch should only trigger once all the groups have been processed. At this point we should be okay to action any Cell-level filters on the output, and stash the output (if required)</p>
 
@@ -2081,13 +2056,13 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
                     self.applyFilters()
                     .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> self.stashOutputAction())
                     .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
                 }
                 <span class="hljs-keyword">else</span> {
 
                     self.stashOutputAction()
                     .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
                 }
             }
         });
@@ -2098,11 +2073,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-67">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p><code>show</code> - Note that functionality here differs for <strong>base cells</strong> and other Cell wrappers</p>
 
@@ -2117,11 +2092,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-68">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>get the destination cell’s canvas context</p>
 
@@ -2157,11 +2132,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-69">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller’s fit attribute requirements</p>
 
@@ -2178,7 +2153,7 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
                 <span class="hljs-keyword">let</span> fit = (controller) ? controller.fit : <span class="hljs-string">'none'</span>,
                     relWidth, relHeight;
-                
+
                 <span class="hljs-keyword">switch</span> (fit) {
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">'contain'</span> :</pre></div></div>
@@ -2186,11 +2161,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-70">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>base must copy into display resized, centered, letterboxing if necessary, maintaining aspect ratio</p>
 
@@ -2220,11 +2195,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-71">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>base must copy into display resized, centered, leaving no letterbox area, maintaining aspect ratio</p>
 
@@ -2254,11 +2229,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-72">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>base must copy into display resized, distorting the aspect ratio as necessary</p>
 
@@ -2276,11 +2251,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-73">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>base copies into display as-is, centred, maintaining aspect ratio</p>
 
@@ -2300,17 +2275,19 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-74">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>Cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockTo; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path entity, etc. If pivoted to the mouse, they will use the base canvas’s .here attribute, which takes into account differences between the base and display canvas dimensions.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>
+                <span class="hljs-keyword">if</span> (!self.noDeltaUpdates) self.setDelta(self.delta);
+
                 self.prepareStamp();
 
                 engine.globalCompositeOperation = composite;
@@ -2339,11 +2316,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-75">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p><code>applyFilters</code> - Internal function - add filters to the Cell’s current output.</p>
 <ul>
@@ -2397,11 +2374,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-76">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p><code>stashOutputAction</code> - Internal function - stash the Cell’s current output. While this function can be called at any time, the simplest way to invoke it is to set the Cell’s <strong>stashOutput</strong> flag to true, which will then invoke this function at the end of the compile step of the Display cycle (after any filters have been applied to the cell display).</p>
 <ul>
@@ -2434,11 +2411,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-77">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>Keep the stashed image within bounds of the Cell’s dimensions.</p>
 
@@ -2466,11 +2443,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-78">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>Get the imageData object, and stash it</p>
 
@@ -2484,11 +2461,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-79">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>Get the dataUrl String, updating the stashed &lt;img&gt; element with it</p>
 
@@ -2535,11 +2512,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-80">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p><code>getHost</code> - Internal function - get a reference to the Cell’s current host (where it will be stamping itself as part of the Display cycle).</p>
 <ul>
@@ -2565,11 +2542,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-81">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p><code>updateBaseHere</code> - Internal function - keeping the Canvas object’s ‘base’ Cell’s <code>.here</code> attribute up-to-date with accurate mouse/pointer/touch cursor data</p>
 
@@ -2661,11 +2638,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-82">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p><code>prepareStamp</code> - Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object’s base cell’s canvas. Will be invoked as part of the Display cycle ‘show’ functionality.</p>
 <ul>
@@ -2678,7 +2655,13 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
             <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale) <span class="hljs-keyword">this</span>.cleanScale();
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDimensions) <span class="hljs-keyword">this</span>.cleanDimensions();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDimensions) {
+
+        <span class="hljs-keyword">this</span>.cleanDimensions();
+        <span class="hljs-keyword">this</span>.dirtyAssetSubscribers = <span class="hljs-literal">true</span>;
+    }
+
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyLock) <span class="hljs-keyword">this</span>.cleanLock();
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStart) <span class="hljs-keyword">this</span>.cleanStart();
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyOffset) <span class="hljs-keyword">this</span>.cleanOffset();
@@ -2693,16 +2676,24 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStampPositions) <span class="hljs-keyword">this</span>.cleanStampPositions();
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStampHandlePositions) <span class="hljs-keyword">this</span>.cleanStampHandlePositions();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPositionSubscribers) <span class="hljs-keyword">this</span>.updatePositionSubscribers();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyAssetSubscribers) {
+
+        <span class="hljs-keyword">this</span>.dirtyAssetSubscribers = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">this</span>.notifySubscribers();
+    }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-83">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p><code>updateHere</code> - Internal function - get the Cell to update its .here information</p>
 
@@ -2737,11 +2728,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-84">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p><code>getEntityHits</code> - Returns an array of entity Objects responding ‘true’ to a checkHit call on them, for the Cell’s current <code>.here</code> attribute coordinates. Used in particular with <code>Canvas.cascadeEventAction()</code> function</p>
 
@@ -2782,11 +2773,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-85">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <p><code>rotateDestination</code> - internal function, called by entity objects about to stamp themselves onto the Cell.</p>
 <ul>
@@ -2831,11 +2822,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-86">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <h4 id="cell-pool">Cell pool</h4>
 <p>A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas&gt; element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.</p>
@@ -2859,11 +2850,11 @@ P.poolDefs = {
         </li>
         
         
-        <li id="section-87">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
               <p><code>Exported function</code> - <strong>requestCell</strong></p>
 
@@ -2885,11 +2876,11 @@ P.poolDefs = {
         </li>
         
         
-        <li id="section-88">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
               <p><code>Exported function</code> - <strong>releaseCell</strong></p>
 
@@ -2907,11 +2898,11 @@ P.poolDefs = {
         </li>
         
         
-        <li id="section-89">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2927,11 +2918,11 @@ constructors.Cell = Cell;</pre></div></div>
         </li>
         
         
-        <li id="section-90">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

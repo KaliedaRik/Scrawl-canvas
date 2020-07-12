@@ -1055,7 +1055,7 @@ else if (item) return artefact[item] || cell[item] || null;</p>
                 .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
 
                     <span class="hljs-keyword">if</span> (filterCell) releaseCell(filterCell);
-                    reject(<span class="hljs-literal">false</span>)
+                    reject(err)
                 });
             }</pre></div></div>
             
@@ -1212,9 +1212,9 @@ else if (item) return artefact[item] || cell[item] || null;</p>
 
                     next(counter + <span class="hljs-number">1</span>)
                     .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
                 })
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
             }</pre></div></div>
             
         </li>
@@ -1239,7 +1239,7 @@ else if (item) return artefact[item] || cell[item] || null;</p>
                         self.applyFilters(myCell)
                         .then(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> self.stashAction(img))
                         .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
                     }
                     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (self.stashOutput) {</pre></div></div>
             
@@ -1277,7 +1277,7 @@ else if (item) return artefact[item] || cell[item] || null;</p>
 
                             self.stashAction(tempImg)
                             .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(<span class="hljs-literal">false</span>));
+                            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
                         }
                         <span class="hljs-keyword">else</span> reject (<span class="hljs-string">'Could not find real engine'</span>);
                     }
@@ -1366,7 +1366,7 @@ else if (item) return artefact[item] || cell[item] || null;</p>
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> currentHost = self.currentHost,
             filterHost = myCell;
 
-        <span class="hljs-keyword">if</span> (!currentHost || !filterHost) reject(<span class="hljs-literal">false</span>);</pre></div></div>
+        <span class="hljs-keyword">if</span> (!currentHost || !filterHost) reject(<span class="hljs-string">'Group.applyFilters - no host'</span>);</pre></div></div>
             
         </li>
         
@@ -1503,7 +1503,7 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
 
             cleanup();
-            reject(<span class="hljs-literal">false</span>);
+            reject(err);
         });
     });
 };</pre></div></div>

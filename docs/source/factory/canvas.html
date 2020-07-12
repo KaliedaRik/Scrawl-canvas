@@ -1483,18 +1483,29 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
+    <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
 
-        <span class="hljs-keyword">let</span> promises = [];
+    <span class="hljs-keyword">let</span> next = <span class="hljs-function">(<span class="hljs-params">counter</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
 
-        self.cellBatchesClear.forEach(<span class="hljs-function"><span class="hljs-params">mycell</span> =&gt;</span> promises.push(mycell.clear()));
+            <span class="hljs-keyword">let</span> myCell = self.cellBatchesClear[counter];
 
-        <span class="hljs-built_in">Promise</span>.all(promises)
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-        .catch(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">false</span>));
-    });
+            <span class="hljs-keyword">if</span> (myCell) {
+
+                myCell.clear()
+                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+
+                    next(counter + <span class="hljs-number">1</span>)
+                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
+                })
+                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
+            }
+            <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">true</span>);
+        });
+    };
+    <span class="hljs-keyword">return</span> next(<span class="hljs-number">0</span>);
 };</pre></div></div>
             
         </li>
@@ -1518,20 +1529,36 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
+    <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
 
-        <span class="hljs-keyword">let</span> promises = [];
+    <span class="hljs-keyword">let</span> next = <span class="hljs-function">(<span class="hljs-params">counter</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
 
-        self.cellBatchesCompile.forEach(<span class="hljs-function"><span class="hljs-params">mycell</span> =&gt;</span> promises.push(mycell.compile()));
+            <span class="hljs-keyword">let</span> myCell = self.cellBatchesCompile[counter];
 
-        <span class="hljs-built_in">Promise</span>.all(promises)
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> self.prepareStamp())
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> self.stamp())
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-        .catch(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">false</span>));
-    });
+            <span class="hljs-keyword">if</span> (myCell) {
+
+                myCell.compile()
+                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+
+                    next(counter + <span class="hljs-number">1</span>)
+                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
+                })
+                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
+            }
+            <span class="hljs-keyword">else</span> {
+
+                self.prepareStamp();
+
+                self.stamp()
+                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
+            }
+        });
+    };
+    <span class="hljs-keyword">return</span> next(<span class="hljs-number">0</span>);
 };</pre></div></div>
             
         </li>
@@ -1560,30 +1587,43 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
+    <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
 
-        <span class="hljs-keyword">let</span> promises = [];
+    <span class="hljs-keyword">let</span> next = <span class="hljs-function">(<span class="hljs-params">counter</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
 
-        self.cellBatchesShow.forEach(<span class="hljs-function"><span class="hljs-params">mycell</span> =&gt;</span> promises.push(mycell.show()));
+            <span class="hljs-keyword">let</span> myCell = self.cellBatchesShow[counter];
 
-        <span class="hljs-built_in">Promise</span>.all(promises)
-        .then(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {
+            <span class="hljs-keyword">if</span> (myCell) {
 
-            self.engine.clearRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, self.localWidth, self.localHeight);
-            <span class="hljs-keyword">return</span> self.base.show();
-        })
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+                myCell.show()
+                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
 
-            domShow();
+                    next(counter + <span class="hljs-number">1</span>)
+                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
+                })
+                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
+            }
+            <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyAria) <span class="hljs-keyword">this</span>.cleanAria();
+                self.engine.clearRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, self.localWidth, self.localHeight);
+                
+                self.base.show()
+                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
 
-            resolve(<span class="hljs-literal">true</span>);
-        })
-        .catch(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">false</span>));
-    });
+                    domShow();
+
+                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyAria) <span class="hljs-keyword">this</span>.cleanAria();
+
+                    resolve(<span class="hljs-literal">true</span>);
+                })
+                .catch(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> reject(err));
+            }
+        });
+    };
+    <span class="hljs-keyword">return</span> next(<span class="hljs-number">0</span>);
 };</pre></div></div>
             
         </li>

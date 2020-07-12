@@ -1261,7 +1261,11 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.asset) {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.asset.type === <span class="hljs-string">'Sprite'</span>) <span class="hljs-keyword">this</span>.checkSpriteFrame(<span class="hljs-keyword">this</span>);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.asset.checkSource(<span class="hljs-keyword">this</span>.sourceNaturalWidth, <span class="hljs-keyword">this</span>.sourceNaturalHeight);
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.asset.checkSource) <span class="hljs-keyword">this</span>.asset.checkSource(<span class="hljs-keyword">this</span>.sourceNaturalWidth, <span class="hljs-keyword">this</span>.sourceNaturalHeight);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyAsset = <span class="hljs-literal">true</span>;
+        }
     }</pre></div></div>
             
         </li>
@@ -1449,7 +1453,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.source) engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
 };</pre></div></div>
             
         </li>
@@ -1468,8 +1472,12 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             <div class="content"><div class='highlight'><pre>P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
-    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
-    engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.source) {
+
+        <span class="hljs-keyword">this</span>.currentHost.clearShadow();
+        engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    }
 };</pre></div></div>
             
         </li>
@@ -1488,8 +1496,12 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             <div class="content"><div class='highlight'><pre>P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
-    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
-    engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.source) {
+
+        <span class="hljs-keyword">this</span>.currentHost.clearShadow();
+        engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    }
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
 };</pre></div></div>
             
@@ -1509,7 +1521,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             <div class="content"><div class='highlight'><pre>P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
-    engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.source) engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
 };</pre></div></div>
             
         </li>
@@ -1527,7 +1539,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.source) engine.drawImage(<span class="hljs-keyword">this</span>.source, ...this.copyArray, ...this.pasteArray);
     engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
 };</pre></div></div>
             

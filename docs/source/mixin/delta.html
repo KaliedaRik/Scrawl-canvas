@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Position-physics mixin</title>
+  <title>Delta mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -394,8 +394,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="position-physics-mixin">Position-physics mixin</h1>
-<p>This mixin defines additional attributes and functions for an artefact that uses physics functionality</p>
+              <h1 id="delta-mixin">Delta mixin</h1>
+<p>This mixin defines additional attributes and functions for an artefact that uses delta functionality</p>
 
             </div>
             
@@ -584,6 +584,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.updateByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.name == <span class="hljs-string">'kaliedoscope-clock-background'</span>) <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name, <span class="hljs-string">'updateByDelta'</span>)
         <span class="hljs-keyword">this</span>.setDelta(<span class="hljs-keyword">this</span>.delta);
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
