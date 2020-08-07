@@ -5,6 +5,8 @@ Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk
 
 __Do you want to contribute?__ I've been developing this project for too long by myself, and would really welcome contributions from - even collaboration with - people who can bring a different perspective and a fresh set of eyes to the work.
 
+[![Rate on Openbase](https://badges.openbase.io/js/rating/scrawl-canvas.svg)](https://openbase.io/js/scrawl-canvas?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
+
 ### What?
 Scrawl-canvas is a JavaScript library for working with the HTML5 &lt;canvas> element. The library:
 + Automatically discovers existing &lt;canvas> elements in a web page.

@@ -894,17 +894,17 @@ P.stamp = function (force = false, host, changes) {
             return new Promise((resolve, reject) => {
 
                 self.cleanInput()
-                .then(res => {
-
-                    self.sourceImageData = res;
-                    return self.cleanOutput();
-                })
                 .catch(err => {
 
                     // We don't need to completely reject if output is not clean
                     // + It should be enough to bale out of the stamp functionality and hope it resolves during the next RAF iteration
-                    console.log(err);
-                    resolve(err)
+                    console.log(`${self.name} - cleanInput Error: source has a zero dimension`);
+                    resolve(false);
+                })
+                .then(res => {
+
+                    self.sourceImageData = res;
+                    return self.cleanOutput();
                 })
                 .then(res => {
 
@@ -964,7 +964,7 @@ P.cleanInput = function () {
         if (!sourceDimension) {
 
             self.dirtyInput = true;
-            reject(new Error(`${self.name} - cleanInput Error: source has a zero dimension`));
+            reject();
         }
 
         let cell = requestCell(),
@@ -975,7 +975,7 @@ P.cleanInput = function () {
         canvas.height = sourceDimension;
         engine.setTransform(1, 0, 0, 1, 0, 0);
 
-        self.source.stamp(true, cell, {
+        self.source.stamp(true, cell, { 
             startX: 0,
             startY: 0,
             handleX: 0,
