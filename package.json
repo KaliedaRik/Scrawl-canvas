@@ -6,6 +6,7 @@
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js"
   },
+  "keywords": ["html5","dom","canvas","canvas2d","2d","graphics","infographics","visualization","chart","animation","js","javascript","accessible","accessibility","responsive"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KaliedaRik/Scrawl-canvas.git"
