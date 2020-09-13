@@ -1,5 +1,5 @@
 // # Demo Canvas 031 
-// Cell generation and processing order - kaliedoscope clock
+// Cell generation and processing order - kaleidoscope clock
 
 // [Run code](../../demo/canvas-031.html)
 import scrawl from '../source/scrawl.js'
@@ -273,10 +273,6 @@ myBackground.set({
 
 canvas.base.set({
     compileOrder: 1,
-});
-
-clock.cell.set({
-    showOrder: 2,
 });
 
 

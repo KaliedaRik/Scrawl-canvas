@@ -34,6 +34,7 @@
 // #### Demos:
 // + All canvas and component demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
+// + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
 // + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
 
 

@@ -2044,11 +2044,6 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
             <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
 
                 self.cleanInput()
-                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-
-                    self.sourceImageData = res;
-                    <span class="hljs-keyword">return</span> self.cleanOutput();
-                })
                 .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {</pre></div></div>
             
         </li>
@@ -2067,8 +2062,13 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-built_in">console</span>.log(err);
-                    resolve(err)
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${self.name}</span> - cleanInput Error: source has a zero dimension`</span>);
+                    resolve(<span class="hljs-literal">false</span>);
+                })
+                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+
+                    self.sourceImageData = res;
+                    <span class="hljs-keyword">return</span> self.cleanOutput();
                 })
                 .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
 
@@ -2151,7 +2151,7 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <span class="hljs-keyword">if</span> (!sourceDimension) {
 
             self.dirtyInput = <span class="hljs-literal">true</span>;
-            reject(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${self.name}</span> - cleanInput Error: source has a zero dimension`</span>));
+            reject();
         }
 
         <span class="hljs-keyword">let</span> cell = requestCell(),
@@ -2162,7 +2162,7 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         canvas.height = sourceDimension;
         engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-        self.source.stamp(<span class="hljs-literal">true</span>, cell, {
+        self.source.stamp(<span class="hljs-literal">true</span>, cell, { 
             <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">handleX</span>: <span class="hljs-number">0</span>,

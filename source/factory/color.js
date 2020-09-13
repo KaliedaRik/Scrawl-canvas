@@ -13,6 +13,7 @@
 // + for `rgb()` and `rgba()`, if any of the values (including alpha) is given as a %Number, all values will be treated as percentages (in the spec, rgb values all need to be either integer Number 0-255, or %Number 0%-100%, but channels cannot mix the two notations, whereas the alpha value format _can_ differ from rgb value format)
 
 // #### Demos:
+// + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets; save and load a range of different entitys
 // + [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
 // + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
