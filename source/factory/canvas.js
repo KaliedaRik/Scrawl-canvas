@@ -645,7 +645,7 @@ P.show = function(){
 
                     resolve(true);
                 })
-                .catch(() => reject(err));
+                .catch(err => reject(err));
             }
         });
     };

@@ -28,19 +28,30 @@
 
   <p>Scrawl-canvas is added to the page through a <span class="scrawl-code">&lt;script></span> tag at the bottom of the html code. The tag takes the following attributes:</p>
 
+  <h3>&lt;script <b>type="module"</b>><i>[Scrawl-canvas code goes here]</i>&lt;/script></h3>
+
+  <p>... or:</p>
+
   <h3>&lt;script src="dom-001.js" <b>type="module"</b>>&lt;/script></h3>
 
   <ul>
     <li><span class="scrawl-code">src=</span> - path to the user code which imports the <span class="scrawl-code">scrawl.js</span> file</li>
-    <li><span class="scrawl-code">type="module"</span> - user code file needs to be a module file (it has an <span class="scrawl-code">import</span> instruction at the top of the file)</li>
+    <li><span class="scrawl-code">type="module"</span> - user code needs to be modular (ES6 style) - it has an <span class="scrawl-code">import</span> instruction at the top of the file</li>
   </ul>
 
-  <p>By importing the scrawl.js file, the browser will also import all the related files required by Scrawl-canvas. The import code goes at the top of the user code (in this example, the <span class="scrawl-code">dom-001.js</span> file):</p>
+  <p>By importing the scrawl.js file, the browser will also import all the related files required by Scrawl-canvas. The import code goes at the top of the user code (in this demo, the <span class="scrawl-code">dom-001.js</span> file):</p>
 
-  <h3><b>import</b> scrawl from '../../relative/path/to/scrawl.js'<br />
-  scrawl.setScrawlPath('/absolute/path/to');</h3>
+  <h3><b>import</b> scrawl from '../../relative/path/to/scrawl.js';</h3>
 
-  <p>... the import doesn't need to be called <span class="scrawl-code">'scrawl'</span> - it can be whatever the user prefers.</p>
+  <p>... or if the library has been included via NPM or Yarn:</p>
+
+  <h3><b>import</b> scrawl from 'scrawl-canvas';</h3>
+
+  <p>... or if using the remote CDN version:</p>
+
+  <h3><b>import</b> scrawl from 'https://unpkg.com/scrawl-canvas@8.2.1';</h3>
+
+  <p>The import doesn't need to be called <span class="scrawl-code">'scrawl'</span> - it can be whatever the user prefers.</p>
 
   <div id="mystack" data-stack>
     <p id="reportmessage"></p>

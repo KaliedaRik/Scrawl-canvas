@@ -941,13 +941,18 @@ P.show = function () {
         if (engine) {
 
             let floor = Math.floor,
-                scale = self.currentScale,
+                hostDimensions = host.currentDimensions,
+                destWidth = floor(hostDimensions[0]),
+                destHeight = floor(hostDimensions[1]);
+
+            // Cannot draw to the destination canvas if either of its dimensions === 0
+            // - Test on Demo component-002
+            if (!destWidth || !destHeight) resolve(false);
+
+            let scale = self.currentScale,
                 currentDimensions = self.currentDimensions,
                 curWidth = floor(currentDimensions[0]),
                 curHeight = floor(currentDimensions[1]),
-                hostDimensions = host.currentDimensions,
-                destWidth = floor(hostDimensions[0]),
-                destHeight = floor(hostDimensions[1]),
                 composite = self.composite,
                 alpha = self.alpha,
                 controller = self.controller,
