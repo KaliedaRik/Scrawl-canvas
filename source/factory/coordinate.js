@@ -251,9 +251,9 @@ const releaseCoordinate = function (coordinate) {
 
 
 // #### Factory
-const makeCoordinate = function (items) {
+const makeCoordinate = function (items, y) {
 
-    return new Coordinate(items);
+    return new Coordinate(items, y);
 };
 
 constructors.Coordinate = Coordinate;

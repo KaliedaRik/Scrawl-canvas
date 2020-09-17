@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 032</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    canvas {
+      background-color: lemonchiffon;
+      border: 1px dashed red;
+      width: 100%;
+      height: 100%;
+    }
+    .canvas-host {
+      overflow: hidden;
+      resize: both;
+
+      border: 1px solid black;
+
+      width: 400px;
+      height: 400px;
+
+      min-width: 200px;
+      min-height: 200px;
+
+      max-width: 800px;
+      max-height: 800px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 032</h1>
+  <h2>Freehand drawing</h2>
+
+  <button id="clear-button">Clear lines</button>
+  <button id="undo-button">Undo</button>
+  <button id="redo-button">Redo</button>
+
+  <div class="canvas-host">
+      <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Define a responsive canvas element with a fixed-dimensions base Cell</li>
+      <li>Implement line drawing functionality using Polyline entitys</li>
+      <li>Add in user interaction buttons to implement undo/redo, and clear canvas, functionality.</li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-032.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-032.js" type="module"></script>
+
+</body>
+
+</html>
