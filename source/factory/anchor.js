@@ -297,13 +297,24 @@ P.update = function (item) {
 // To action a user `click` on an artifact with an associated anchor object, we generate a DOM MouseEvent originating from the anchor element which the browser can act on in the usual manner (browser/device dependent)
 P.click = function () {
 
-    let e = new MouseEvent('click', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-    });
+    if (!this.hasBeenRecentlyClicked) {
 
-    return this.domElement.dispatchEvent(e);
+        let e = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+        });
+
+        // This choke mechanism is intended to prevent "Maximum call stack size exceeded" errors occurring
+        // + Was causing an issue in Demo [Canvas-027](../../demo/canvas-027.html), where two entitys share the same anchor
+        this.hasBeenRecentlyClicked = true;
+
+        let self = this;
+        setTimeout(() => self.hasBeenRecentlyClicked = false, 200);
+
+        return this.domElement.dispatchEvent(e);
+    }
+    else return false;
 };
 
 
