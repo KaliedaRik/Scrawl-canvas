@@ -128,7 +128,7 @@ const Canvas = function (items = {}) {
         navigation.style.margin = '0px';
         navigation.style.overflow = 'hidden';
         this.navigation = navigation;
-        el.parentNode.insertBefore(navigation, el.nextSibling);
+        el.appendChild(navigation);
 
         let textHold = document.createElement('div');
         textHold.id = `${this.name}-text-hold`;
@@ -141,7 +141,7 @@ const Canvas = function (items = {}) {
         textHold.style.margin = '0px';
         textHold.style.overflow = 'hidden';
         this.textHold = textHold;
-        el.parentNode.insertBefore(textHold, el.nextSibling);
+        el.appendChild(textHold);
 
         let ariaLabel = document.createElement('div');
         ariaLabel.id = `${this.name}-ARIA-label`;
@@ -163,6 +163,7 @@ const Canvas = function (items = {}) {
     this.dirtyCells = true;
     this.apply();
 
+    this.dirtyDomDimensions = true;
     if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
     
     return this;
@@ -209,6 +210,9 @@ let defaultAttributes = {
 
 // __isComponent__ - set to true if canvas is being used as part of a Scrawl-canvas component.
     isComponent: false,
+
+// __renderOnResize__ - perform an additional render of the scene following a change in the canvas's dimensions
+    renderOnResize: true,
 
 // ##### Accessibility attributes
 // &lt;canvas> elements are __raster images__ - they contain no information within their content (beyond pixel data) which can be analyzed or passed on to the browser or other device. The element _can_ include `title` and various `item` attributes (alongside custom `data-` attributes) but inclusion of these depends entirely on the developer remembering to include them when coding up a web page.

@@ -587,6 +587,12 @@ const domShow = function (singleArtefact = '') {
 
                     el.width = w;
                     el.height = h;
+
+                    if (art.renderOnResize) {
+
+                        console.log(`${art.name} re-rendered following dimensions change`);
+                        art.render().catch(err => console.log(err));
+                    }
                 }
                 else {
 

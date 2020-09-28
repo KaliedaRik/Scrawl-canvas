@@ -61,6 +61,7 @@ fontHeightCalculator.style.height = 'auto';
 fontHeightCalculator.style.lineHeight = 1;
 fontHeightCalculator.style.boxSizing = 'border-box';
 fontHeightCalculator.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
+fontHeightCalculator.setAttribute('aria-hidden', 'true');
 scrawlCanvasHold.appendChild(fontHeightCalculator);
 
 const textEntityConverter = document.createElement('textarea');

@@ -111,6 +111,9 @@ scrawl.makeRender({
     name: 'demo-animation',
     commence: check,
     afterShow: report,
+
+    // During setup, the canvas resizes before its parent stack, meaning that the stack resize doesn't get cascaded down to the canvas for the initial display. We can fix that by adding a run-once function to the animation loop
+    afterCreated: () => canvas.set({ width: '100%'}),
 });
 
 

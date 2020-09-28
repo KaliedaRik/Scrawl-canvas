@@ -45,15 +45,10 @@ import {
     addCanvas,
     getCanvas,
     setCurrentCanvas,
-    // addListener,
-    // removeListener,
-    // addNativeListener,
-    // removeNativeListener,
     clear,
     compile,
     show,
     render,
-    // makeAnimationObserver,
 } from './core/document.js';
 
 import { 
@@ -291,15 +286,10 @@ export default {
     addCanvas,
     getCanvas,
     setCurrentCanvas,
-    // addListener,
-    // removeListener,
-    // addNativeListener,
-    // removeNativeListener,
     clear,
     compile,
     show,
     render,
-    // makeAnimationObserver,
 
 
     // core/events.js
