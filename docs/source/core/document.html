@@ -1580,6 +1580,8 @@
 
                     el.width = w;
                     el.height = h;
+
+                    <span class="hljs-keyword">if</span> (art.renderOnResize) art.render().catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
                 }
                 <span class="hljs-keyword">else</span> {
 

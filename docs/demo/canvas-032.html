@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Canvas 028</title>
+  <title>Demo Canvas 032</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -309,8 +309,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="demo-canvas-028">Demo Canvas 028</h1>
-<p>Image magnifier; test some composite operations</p>
+              <h1 id="demo-canvas-032">Demo Canvas 032</h1>
+<p>Freehand drawing</p>
 
             </div>
             
@@ -323,7 +323,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-028.html">Run code</a></p>
+              <p><a href="../../demo/canvas-032.html">Run code</a></p>
 
             </div>
             
@@ -342,160 +342,19 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">'.angels'</span>);
-
-<span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas,
+    base = canvas.base;
 
 canvas.set({
 
-    <span class="hljs-attr">fit</span>: <span class="hljs-string">'cover'</span>,
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'honeydew'</span>,
+    <span class="hljs-attr">fit</span>: <span class="hljs-string">'contain'</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
 
 }).setBase({
 
-    <span class="hljs-attr">width</span>: <span class="hljs-number">800</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
-
-}).setAsCurrentCanvas();
-
-<span class="hljs-keyword">let</span> magnifier = scrawl.makeGroup({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'magnifier-group'</span>,
-    <span class="hljs-attr">host</span>: canvas.base.name,
-    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-
-});
-
-scrawl.makeGroup({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'background-group'</span>,
-    <span class="hljs-attr">host</span>: canvas.base.name,
-    <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>
-});
-
-<span class="hljs-keyword">let</span> myradius = <span class="hljs-number">80</span>;
-
-<span class="hljs-keyword">let</span> mybackground = scrawl.makePicture({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'background'</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">'background-group'</span>,
-
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">'small-angels'</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-string">'100%'</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">'100%'</span>,
-
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">'100%'</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">'100%'</span>,
-
-    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">'destination-over'</span>,
-});
-
-scrawl.makeWheel({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'magnifier'</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">'magnifier-group'</span>,
-
-    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">80</span>,
-
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
-
-    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'mouse'</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
-
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'magnifier-rim'</span>,
-
-    <span class="hljs-attr">order</span>: <span class="hljs-number">3</span>,
-
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'gold'</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
-});
-
-<span class="hljs-keyword">let</span> myMagnifierImage = scrawl.makePicture({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'enlarged'</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">'magnifier-group'</span>,
-
-    <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
-
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">'big-angels'</span>,
-
-    <span class="hljs-attr">width</span>: myradius * <span class="hljs-number">2</span>,
-    <span class="hljs-attr">height</span>: myradius * <span class="hljs-number">2</span>,
-
-    <span class="hljs-attr">copyWidth</span>: myradius * <span class="hljs-number">2</span>,
-    <span class="hljs-attr">copyHeight</span>: myradius * <span class="hljs-number">2</span>,
-
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
-
-    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'mouse'</span>,
-
-    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">'source-in'</span>,
-});
-
-<span class="hljs-keyword">let</span> checkMagnifier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> display, base;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!display) display = canvas.here;
-        <span class="hljs-keyword">if</span> (!base) base = canvas.base.here;
-
-        <span class="hljs-keyword">let</span> active = display.active;
-
-        magnifier.set({
-            <span class="hljs-attr">visibility</span>: (active) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
-        });
-
-        <span class="hljs-keyword">if</span> (active) {
-
-            myMagnifierImage.set({
-
-                <span class="hljs-attr">copyStartX</span>: (base.x * <span class="hljs-number">3</span>) - myradius,
-                <span class="hljs-attr">copyStartY</span>: (base.y * <span class="hljs-number">3</span>) - myradius,
-            });
-        }
-    };
-}();
-
-<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
-        testTime, testNow,
-
-        displayed = canvas.here,
-        hidden = canvas.base.here,
-
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reportmessage'</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        testNow = <span class="hljs-built_in">Date</span>.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
-Display canvas mouse - x: <span class="hljs-subst">${displayed.x}</span>, y: <span class="hljs-subst">${displayed.y}</span>
-Base canvas mouse - x: <span class="hljs-subst">${hidden.x}</span>, y: <span class="hljs-subst">${hidden.y}</span>`</span>;
-    };
-}();
-
-scrawl.makeRender({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
-    <span class="hljs-attr">target</span>: canvas,
-
-    <span class="hljs-attr">commence</span>: checkMagnifier,
-    <span class="hljs-attr">afterShow</span>: report,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">1000</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">1000</span>,
 });</pre></div></div>
             
         </li>
@@ -507,25 +366,256 @@ scrawl.makeRender({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
+              <p>Internal state variables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> currentLine = <span class="hljs-literal">false</span>,
+    currentPins = [],
+    lineHold = [],
+    lineBin = [],
+    counter = <span class="hljs-number">0</span>,
+    lastX, lastY;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Use a color factory object to generate random colors within a restricted palette</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myColorFactory = scrawl.makeColor({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'color-factory'</span>,
+
+    <span class="hljs-attr">rMax</span>: <span class="hljs-number">160</span>,
+    <span class="hljs-attr">gMax</span>: <span class="hljs-number">160</span>,
+    <span class="hljs-attr">bMax</span>: <span class="hljs-number">160</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Freehand line drawing functions, used by event listeners attached to the canvas element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> startLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (base.here.active) {
+
+        <span class="hljs-keyword">let</span> coord = base.here;
+
+        <span class="hljs-keyword">if</span> (coord) {
+
+            currentPins.push([coord.x, coord.y])
+
+            currentLine = scrawl.makePolyline({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-string">`line-<span class="hljs-subst">${counter}</span>`</span>,
+
+                <span class="hljs-attr">pins</span>: currentPins,
+                <span class="hljs-attr">mapToPins</span>: <span class="hljs-literal">true</span>,
+
+                <span class="hljs-attr">tension</span>: <span class="hljs-number">0.3</span>,
+
+                <span class="hljs-attr">strokeStyle</span>: myColorFactory.get(<span class="hljs-string">'random'</span>),
+                <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span> + <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">20</span>),
+
+                <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
+                <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">'round'</span>,
+
+                <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+            });
+
+            counter++;
+        }
+
+    }
+};
+scrawl.addListener(<span class="hljs-string">'down'</span>, startLine, canvas.domElement);
+
+<span class="hljs-keyword">let</span> endLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (currentLine) lineHold.push(currentLine);
+
+    currentLine = <span class="hljs-literal">false</span>;
+    currentPins.length = <span class="hljs-number">0</span>;
+    lastX = lastY = <span class="hljs-number">-1</span>;
+};
+scrawl.addListener([<span class="hljs-string">'up'</span>, <span class="hljs-string">'leave'</span>], endLine, canvas.domElement);
+
+<span class="hljs-keyword">let</span> checkLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (currentLine &amp;&amp; base.here.active) {
+
+        <span class="hljs-keyword">let</span> coord = base.here;
+
+        <span class="hljs-keyword">let</span> x = coord.x,
+            y = coord.y;
+
+        <span class="hljs-keyword">if</span> (x === lastX &amp;&amp; y === lastY) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+        currentPins.push([x, y]);
+
+        currentLine.set({
+            <span class="hljs-attr">pins</span>: currentPins,
+        });
+
+        lastX = x;
+        lastY = y;
+    }
+};
+scrawl.addListener(<span class="hljs-string">'move'</span>, checkLine, canvas.domElement);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+        testTime, testNow,
+        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reportmessage'</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        testNow = <span class="hljs-built_in">Date</span>.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+
+        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+    };
+}();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Create the Display cycle animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
               <h4 id="user-interaction">User interaction</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Undo action</p>
 
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">'.control-item'</span>,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener(<span class="hljs-string">'click'</span>, (e) =&gt; {
 
-    <span class="hljs-attr">target</span>: mybackground,
+    <span class="hljs-keyword">let</span> line = lineHold.pop();
 
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-keyword">if</span> (line) {
 
-    <span class="hljs-attr">updates</span>: {
-        <span class="hljs-attr">composite</span>: [<span class="hljs-string">'globalCompositeOperation'</span>, <span class="hljs-string">'raw'</span>],
-    },
-});
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#composite'</span>).value = <span class="hljs-string">'destination-over'</span>;
+        line.set({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
+        lineBin.push(line);
+    }
+
+}, <span class="hljs-string">'#undo-button'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Redo action</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener(<span class="hljs-string">'click'</span>, (e) =&gt; {
+
+    <span class="hljs-keyword">let</span> line = lineBin.pop();
+
+    <span class="hljs-keyword">if</span> (line) {
+
+        line.set({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
+        lineHold.push(line);
+    }
+
+}, <span class="hljs-string">'#redo-button'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Clear action</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener(<span class="hljs-string">'click'</span>, (e) =&gt; {
+
+    lineHold.forEach(<span class="hljs-function"><span class="hljs-params">line</span> =&gt;</span> line &amp;&amp; line.kill());
+    lineHold.length = <span class="hljs-number">0</span>;
+
+    lineBin.forEach(<span class="hljs-function"><span class="hljs-params">line</span> =&gt;</span> line &amp;&amp; line.kill());
+    lineBin.length = <span class="hljs-number">0</span>;
+
+}, <span class="hljs-string">'#clear-button'</span>);
+
 
 <span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             

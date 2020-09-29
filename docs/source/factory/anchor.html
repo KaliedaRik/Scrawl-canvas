@@ -947,14 +947,13 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
             
             <div class="content"><div class='highlight'><pre>P.click = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> e = <span class="hljs-keyword">new</span> MouseEvent(<span class="hljs-string">'click'</span>, {
-        <span class="hljs-attr">view</span>: <span class="hljs-built_in">window</span>,
-        <span class="hljs-attr">bubbles</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">cancelable</span>: <span class="hljs-literal">true</span>
-    });
+    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.hasBeenRecentlyClicked) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.domElement.dispatchEvent(e);
-};</pre></div></div>
+        <span class="hljs-keyword">let</span> e = <span class="hljs-keyword">new</span> MouseEvent(<span class="hljs-string">'click'</span>, {
+            <span class="hljs-attr">view</span>: <span class="hljs-built_in">window</span>,
+            <span class="hljs-attr">bubbles</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">cancelable</span>: <span class="hljs-literal">true</span>
+        });</pre></div></div>
             
         </li>
         
@@ -964,6 +963,32 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>This choke mechanism is intended to prevent “Maximum call stack size exceeded” errors occurring</p>
+<ul>
+<li>Was causing an issue in Demo <a href="../../demo/canvas-027.html">Canvas-027</a>, where two entitys share the same anchor</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.hasBeenRecentlyClicked = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+        setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> self.hasBeenRecentlyClicked = <span class="hljs-literal">false</span>, <span class="hljs-number">200</span>);
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.domElement.dispatchEvent(e);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <p>To create an anchor, include an anchor definition object in any artefact object’s factory argument:</p>
@@ -1010,11 +1035,11 @@ constructors.Anchor = Anchor;</pre></div></div>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
