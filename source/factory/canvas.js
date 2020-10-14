@@ -40,6 +40,7 @@ import { makeCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
+import displayMix from '../mixin/displayShape.js';
 
 
 // #### Canvas constructor
@@ -70,6 +71,8 @@ const Canvas = function (items = {}) {
     this.set(this.defs);
 
     if (!items.label) items.label = `${this.name} canvas element`;
+
+    this.initializeDisplayShapeActions();
 
     this.set(items);
 
@@ -181,8 +184,10 @@ P.isAsset = false;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [dom](../mixin/dom.html)
+// + [display](../mixin/displayShape.html)
 P = baseMix(P);
 P = domMix(P);
+P = displayMix(P);
 
 
 // #### Canvas attributes
@@ -194,6 +199,7 @@ P = domMix(P);
 // + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [dom mixin](../mixin/dom.html): __domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes__.
+// + Attributes defined in the [display mixin](../mixin/displayShape.html): __breakToBanner, breakToLandscape, breakToPortrait, breakToSkyscraper, actionBannerShape, actionLandscapeShape, actionRectangleShape, actionPortraitShape, actionSkyscraperShape__.
 let defaultAttributes = {
 
 // __position__ - the CSS position value for the &lt;canvas> element. This value will be set to `absolute` when the element is an artefact associated with a Stack; `relative` in other cases.
@@ -227,7 +233,6 @@ let defaultAttributes = {
     title: '',
     label: '',
     description: '',
-
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -492,6 +497,7 @@ P.cleanDimensionsAdditionalActions = function () {
     }
 
     this.dirtyDomDimensions = true;
+    this.dirtyDisplayShape = true;
 };
 
 // `addCell` - add a Cell object to the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself

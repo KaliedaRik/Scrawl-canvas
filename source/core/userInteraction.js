@@ -364,6 +364,10 @@ const observeAndUpdate = function (items = {}) {
                         val = targetVal;
                         break;
 
+                    case 'string' :
+                        val = `${targetVal}`;
+                        break;
+
                     case 'boolean' :
                         if (xt(targetVal)) {
 

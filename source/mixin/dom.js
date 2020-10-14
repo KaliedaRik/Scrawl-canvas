@@ -1,4 +1,4 @@
-// # dom mixin
+// # DOM mixin
 // This mixin builds on the base and position mixins to give DOM elements (Scrawl-canvas [Stack](../factory/stack.html), [Canvas](../factory/canvas.html) and [Element](../factory/element.html) wrapper objects) the ability to act as __artefacts__ in a Scrawl-canvas stack environment.
 // + Absolute and relative positioning and dimensioning
 // + Positioning in the 3rd (z) dimension (absolute values only)
@@ -13,7 +13,7 @@
 
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λnull } from '../core/utilities.js';
 import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
 import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 
@@ -744,6 +744,9 @@ export default function (P = {}) {
         if (el) this.dirtyDimensions = true;
     };
 
+// `cleanDisplayShape` - overwritten in Stack and Canvas artefacts via the displayShape mixin
+    P.cleanDisplayShape = λnull;
+
 // `prepareStamp` - check all the dirty flags and call the appropriate `clean` functions if they are set
     P.prepareStamp = function () {
 
@@ -752,6 +755,7 @@ export default function (P = {}) {
         if (this.dirtyContent) this.cleanContent();
         if (this.dirtyScale) this.cleanScale();
         if (this.dirtyDimensions) this.cleanDimensions();
+        if (this.dirtyDisplayShape) this.cleanDisplayShape();
         if (this.dirtyLock) this.cleanLock();
         if (this.dirtyStart) this.cleanStart();
         if (this.dirtyOffset) this.cleanOffset();

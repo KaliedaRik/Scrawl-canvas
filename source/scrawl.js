@@ -57,6 +57,12 @@ import {
     addNativeListener,
     removeNativeListener,
     makeAnimationObserver,
+    reducedMotionActions,
+    setReduceMotionAction,
+    setNoPreferenceMotionAction,
+    colorSchemeActions,
+    setColorSchemeDarkAction,
+    setColorSchemeLightAction,
 } from './core/events.js';
 
 import * as library from './core/library.js';
@@ -298,6 +304,12 @@ export default {
     addNativeListener,
     removeNativeListener,
     makeAnimationObserver,
+    reducedMotionActions,
+    setReduceMotionAction,
+    setNoPreferenceMotionAction,
+    colorSchemeActions,
+    setColorSchemeDarkAction,
+    setColorSchemeLightAction,
 
 
     // factory/action.js

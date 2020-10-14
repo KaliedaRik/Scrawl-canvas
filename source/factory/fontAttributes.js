@@ -6,6 +6,8 @@
 // + If we stored FA instances in the library we'd risk running out of memory, or slowing up code speed, as the cloned instances are pretty temporary and get thrown away whenever a new Phrase.set invocation (involving font attributes) happens.
 //
 // The Phrase entity includes functionality to allow the getting and setting of FontAttribute attributes directly on the entity instance.
+//
+// Note that &lt;canvas> context engines will attempt to display [variable fonts](https://web.dev/variable-fonts/), but the added functionality of those fonts is, for the most part, ignored. Scrawl-canvas makes no overt attempts to overcome this limitation.
 
 
 // #### Demos:
@@ -72,11 +74,11 @@ let defaultAttributes = {
 //
 // _Values:_ 
 // + `normal`, `bold`, `lighter`, `bolder`; or
-// + a number (between 1 and 1000)
+// + a number (between 1 and 1000, usually in 100 steps between 100 and 900)
 //
 // (`normal` translates to 400; `bold` translates to 700)
 //
-// CANVAS CONTEXT ENGINE - doesn't seem to recognise number values (for Garamond), but doesn't choke on their presence either
+// CANVAS CONTEXT ENGINE - does seem to recognise both keyword and (x00) number values, but the interpretation of these values can be somewhat erratic. `normal` and `bold` keywords are generally respected and actioned as expected.
     weight: 'normal',
 
 
@@ -88,7 +90,7 @@ let defaultAttributes = {
 // + `semi-condensed`, `condensed`, `extra-condensed`, `ultra-condensed`
 // + `semi-expanded`, `expanded`, `extra-expanded`, `ultra-expanded`
 //
-// (Ignoring `number%` values as it clashes with font-size % values, which are far more likely to be used in a font string)
+// We ignore number% values (permitted values are 50% - 200%) because the context engine only accepts a single font string and the syntax requirements for that font string are that "font-stretch may only be a single keyword value"
 //
 // CANVAS CONTEXT ENGINE - doesn't seem to recognise font-stretch values (for Garamond), but doesn't choke on their presence either
     stretch: 'normal',

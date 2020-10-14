@@ -1,5 +1,5 @@
-// # Position-physics mixin
-// This mixin defines additional attributes and functions for an artefact that uses physics functionality
+// # Pivot mixin
+// This mixin defines the attributes and functionality required by an artefact so that it can position and rotate itself using values set in another artefact.
 
 
 // #### Imports

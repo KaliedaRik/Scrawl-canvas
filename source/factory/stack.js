@@ -47,6 +47,7 @@ import { makeCoordinate } from './coordinate.js';
 import baseMix from '../mixin/base.js';
 import cascadeMix from '../mixin/cascade.js';
 import domMix from '../mixin/dom.js';
+import displayMix from '../mixin/displayShape.js';
 
 
 // #### Stack constructor
@@ -82,6 +83,7 @@ const Stack = function (items = {}) {
     this.addGroups(g.name);
 
     this.set(this.defs);
+    this.initializeDisplayShapeActions();
     this.set(items);
 
     el = this.domElement;
@@ -112,9 +114,11 @@ P.isAsset = false;
 // + [base](../mixin/base.html)
 // + [cascade](../mixin/cascade.html)
 // + [dom](../mixin/dom.html)
+// + [display](../mixin/displayShape.html)
 P = baseMix(P);
 P = cascadeMix(P);
 P = domMix(P);
+P = displayMix(P);
 
 
 // #### Stack attributes
@@ -127,6 +131,7 @@ P = domMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
 // + Attributes defined in the [dom mixin](../mixin/dom.html): __domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes__.
+// + Attributes defined in the [display mixin](../mixin/displayShape.html): __breakToBanner, breakToLandscape, breakToPortrait, breakToSkyscraper, actionBannerShape, actionLandscapeShape, actionRectangleShape, actionPortraitShape, actionSkyscraperShape__.
 let defaultAttributes = {
 
 // __position__, __perspective__ - while most of the Stack wrapper's DOM element's attributes are handled through CSS, Scrawl-canvas takes control of some positioning-related attributes. Most of these are defined in the [dom mixin](../mixin/dom.html) - but the position and perspective attributes are managed in this module
@@ -276,6 +281,7 @@ P.cleanDimensionsAdditionalActions = function () {
     this.dirtyPath = true;
     this.dirtyStart = true;
     this.dirtyHandle = true;
+    this.dirtyDisplayShape = true;
 };
 
 // `cleanPerspective` - internal function

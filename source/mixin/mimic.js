@@ -1,5 +1,5 @@
-// # Position-physics mixin
-// This mixin defines additional attributes and functions for an artefact that uses physics functionality
+// # Mimic mixin
+// This mixin defines additional attributes and functions to allow an artefact to use a range of attribute values set in another artefact.
 
 
 // #### Imports
