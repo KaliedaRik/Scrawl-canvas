@@ -106,7 +106,6 @@ const Canvas = function (items = {}) {
             compiled: true,
             shown: false,
             isBase: true,
-            localizeHere: true,
             host: this.name,
             controller: this,
             order: 10,
@@ -152,6 +151,7 @@ const Canvas = function (items = {}) {
         this.ariaLabelElement = ariaLabel;
         scrawlCanvasHold.appendChild(ariaLabel);
         el.setAttribute('aria-labelledby', ariaLabel.id);
+        el.setAttribute('aria-live', 'polite');
 
         let ariaDescription = document.createElement('div');
         ariaDescription.id = `${this.name}-ARIA-description`;
@@ -159,6 +159,7 @@ const Canvas = function (items = {}) {
         this.ariaDescriptionElement = ariaDescription;
         scrawlCanvasHold.appendChild(ariaDescription);
         el.setAttribute('aria-describedby', ariaDescription.id);
+        el.setAttribute('aria-live', 'polite');
 
         this.cleanAria();
     }

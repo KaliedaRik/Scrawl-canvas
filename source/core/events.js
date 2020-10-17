@@ -16,9 +16,14 @@
 // #### Imports
 import { isa_fn, isa_dom, λnull } from "./utilities.js";
 
-// TODO - documentation
+// `Exported function` (to modules and scrawl object) - __scrawl.makeAnimationObserver__ - function to create and start a [DOM IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) object.
 //
-// `Exported function` (to modules and scrawl object). 
+// The function expects 3 arguments, in the following order:
+// + a Scrawl-canvas animation object (required) - either [Animation](../factory/Animation.html) or [RenderAnimation](../factory/RenderAnimation.html)
+// + A Scrawl-canvas element wrapper object (required) - either [Canvas](../factory/Canvas.html), [Stack](../factory/Stack.html) or [Element](../factory/Element.html)
+// + A Javascript object (optional) containing options to be applied to the observer - `root`, `rootMargin`, `threshold`
+//
+// The function returns a function which, when invoked, will disconnect the observer from the DOM.
 const makeAnimationObserver = function (anim, wrapper, specs = {}) {
 
     if (typeof window.IntersectionObserver === 'function' && anim && anim.run) {
@@ -45,7 +50,7 @@ const makeAnimationObserver = function (anim, wrapper, specs = {}) {
     else return λnull;
 }
 
-// `Exported function` (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
+// `Exported function` (to modules and scrawl object) - __scrawl.addListener__. Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
 const addListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document addListener() error - no function supplied: ${evt}, ${targ}`);
@@ -59,7 +64,7 @@ const addListener = function (evt, fn, targ) {
     };
 };
 
-// `Exported function` (to modules and scrawl object). The counterpart to 'addListener' is __removeListener__ which removes Scrawl-canvas event listeners from DOM elements in a similar way
+// `Exported function` (to modules and scrawl object) - __scrawl.removeListener__. The counterpart to 'addListener' is __removeListener__ which removes Scrawl-canvas event listeners from DOM elements in a similar way
 const removeListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document removeListener() error - no function supplied: ${evt}, ${targ}`);
@@ -159,7 +164,7 @@ const actionPointerListener = function (events, fn, targets, action) {
 
 // __Any event listener__ can be added to a Scrawl-canvas stack or canvas DOM element. 
 // 
-// The __addNativeListener__ function makes adding and removing these 'native' listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.
+// The __scrawl.addNativeListener__ function makes adding and removing these 'native' listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.
 //
 // The function requires three arguments:
 // + __evt__ - String name of the event ('click', 'input', 'change', etc), or an array of such strings
@@ -180,7 +185,7 @@ const addNativeListener = function (evt, fn, targ) {
     };
 };
 
-// `Exported function` (to modules and scrawl object). The counterpart to 'addNativeListener' is __removeNativeListener__ which removes event listeners from DOM elements in a similar way
+// `Exported function` (to modules and scrawl object). The counterpart to 'addNativeListener' is __scrawl.removeNativeListener__ which removes event listeners from DOM elements in a similar way
 const removeNativeListener = function (evt, fn, targ) {
 
     if (!isa_fn(fn)) throw new Error(`core/document removeNativeListener() error - no function supplied: ${evt}, ${targ}`);
@@ -209,7 +214,10 @@ const actionNativeListener = function (evt, fn, targ, action) {
 };
 
 // ## Accessibility, and user-defined, preferences
-//
+
+// #### Demos:
+// + [Canvas-033](../../demo/canvas-033.html) - User preferences: prefers-color-scheme; prefers-reduced-motion
+
 // #### prefers-reduced-motion media query
 // In many devices users have the option to set a system-wide flag indicating that, wherever possible, application and website animations should be reduced and/or prevented from playing. Scrawl-canvas investigates for this setting and supplies hooks to which developers can attach hook functions defining the actions to take when reduced motion has been requested, and for whenever this setting is changed.
 // 

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Demo Canvas 035</title>
+
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    
+    canvas {
+      border: 1px solid darkgreen;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 035</h1>
+  <h2>Pattern style functionality</h2>
+  <h3>The Block entity can be dragged around the &lt;canvas> element</h3>
+
+  <div class="controls">
+    
+    <div class="lavender label">Pattern</div>
+    <div class="lavender">
+      <select class="controlItem" id="pattern">
+        <option value="bunny-pattern">Bunny</option>
+        <option value="leaves-pattern">Leaves</option>
+        <option value="cell-pattern">Cell animation</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="lavender label">Repeat</div>
+    <div class="lavender">
+      <select class="controlItem" id="repeat">
+        <option value="repeat">repeat</option>
+        <option value="repeat-x">repeat-x</option>
+        <option value="repeat-y">repeat-y</option>
+        <option value="no-repeat">no-repeat</option>
+      </select>
+    </div>
+    <div class="lavender">&nbsp;</div>
+
+    <div class="blue label">Matrix</div>
+    <div class="blue">A: <input class="controlItem matrix" id="matrixA" type="range" value="1" min="-2" max="2" step="0.01" /></div>
+    <div class="blue">B: <input class="controlItem matrix" id="matrixB" type="range" value="0" min="-2" max="2" step="0.01" /></div>
+    <div class="blue label">&nbsp;</div>
+    <div class="blue">C: <input class="controlItem matrix" id="matrixC" type="range" value="0" min="-2" max="2" step="0.01" /></div>
+    <div class="blue">D: <input class="controlItem matrix" id="matrixD" type="range" value="1" min="-2" max="2" step="0.01" /></div>
+    <div class="blue label">&nbsp;</div>
+    <div class="blue">E: <input class="controlItem matrix" id="matrixE" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="blue">F: <input class="controlItem matrix" id="matrixF" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="blue label">&nbsp;</div>
+    <div class="blue">&nbsp;</div>
+    <div class="blue">&nbsp;</div>
+
+  </div>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="pink label">Block width</div>
+    <div class="pink">n% <input class="controlItem" id="relativeWidth" type="range" value="50" min="10" max="90" step="0.1" /></div>
+    <div class="pink">n <input class="controlItem" id="absoluteWidth" type="range" value="300" min="0" max="600" step="1" /></div>
+
+    <div class="pink label">Block height</div>
+    <div class="pink">n% <input class="controlItem" id="relativeHeight" type="range" value="50" min="10" max="90" step="0.1" /></div>
+    <div class="pink">n <input class="controlItem" id="absoluteHeight" type="range" value="200" min="0" max="400" step="1" /></div>
+
+    <div class="green label">Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="green label">Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+
+    <div class="green label">Offset ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="offset_xPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="offset_yPercent" type="range" value="0" min="-20" max="20" step="1" /></div>
+
+    <div class="green label">Offset (n)</div>
+    <div class="green">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-50" max="50" step="1" /></div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1.0" min="0" max="2.0" step="0.05" /></div>
+    <div class="yellow">
+      <select class="controlItem" id="scaleOutline">
+        <option value="0">Constant linewidth</option>
+        <option value="1">Scaled linewidth</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Flip-upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+  </div>
+
+<div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li></li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-035.html">Annotated code</a></p>
+  </div>
+
+
+  <script src="canvas-035.js" type="module"></script>
+
+</body>
+
+</html>

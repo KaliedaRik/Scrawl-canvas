@@ -7,7 +7,7 @@ import scrawl from '../source/scrawl.js';
 const stack = scrawl.library.artefact.mystack,
     mytext = scrawl.library.artefact.myelement;
 
-// Update the Stack
+// #### Scene setup
 stack.set({
 
     checkForResize: true,
@@ -19,7 +19,16 @@ mytext.set({
     handle: ['center', 'center'],
 });
 
-
+// Scrawl-canvas recognises five shapes, separated by four breakpoints: 
+// + `banner`
+// + `landscape`
+// + `rectangle`
+// + `portrait`
+// + `skyscraper`
+//
+// The values assigned to the breakpoints are Float numbers for the Stack artefact's width/height ratio - the value `3` represents the case where the width value is three times __more__ than the height value, while `0.35` represents a width (roughly) 3 times __less__ than the height.
+// 
+// We can set a Stack artefact's breakpoints in one go using the dedicated `setDisplayShapeBreakpoints()` function, as below. Alternatively we can use the regular `set()` function, supplying the attributes `breakToBanner`, `breakToLandscape`, `breakToPortrait` and `breakToSkyscraper` as required. The values given here are the default values for Stack artefacts.
 stack.setDisplayShapeBreakpoints({
     breakToBanner: 3,
     breakToLandscape: 1.5,
@@ -27,7 +36,9 @@ stack.setDisplayShapeBreakpoints({
     breakToSkyscraper: 0.35,
 });
 
-
+// Each display shape has an associated hook function (by default a function that does nothing) which Scrawl-canvas will run each time it detects that the Stack display shape has changed to that shape. We can replace these null-functions with our own; this allows us to configure the scene/animation to accommodate different display shapes, thus making the code reusable in a range of different web page environments.
+//
+// We can set/update these functions at any time using the normal `set()` function:
 stack.set({
 
     actionBannerShape: () => {
@@ -52,6 +63,7 @@ stack.set({
     },
 });
 
+// We can also set/update the functions using dedicated `setAction???Shape()` functions:
 stack.setActionPortraitShape(() => {
     mytext.set({
         roll: -67.5,
@@ -93,8 +105,10 @@ const demoAnimation = scrawl.makeRender({
     target: stack,
     afterShow: report,
 
+    // We manually trigger the display shape functionality after the first render cycle completes. This allows all artefacts to settle into a state where we can then update the Element artefact with text and roll values appropriate to the Stack element's initial shape
     afterCreated: () => stack.updateDisplayShape(),
 });
 
 
+// #### Development and testing
 console.log(scrawl.library);

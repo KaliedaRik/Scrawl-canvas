@@ -842,6 +842,7 @@ P.buildText = function () {
 
                 let myhold = document.createElement('div');
                 myhold.id = `${this.name}-text-hold`;
+                myhold.setAttribute('aria-live', 'polite');
                 this.exposedTextHold = myhold;
                 this.exposedTextHoldAttached = false;
             }

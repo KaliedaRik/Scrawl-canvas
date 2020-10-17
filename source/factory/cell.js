@@ -1,3 +1,16 @@
+
+
+// TODO - EXPERIMENT
+
+// LOOK to see if we can use canvas context-specific filters
+// https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
+
+
+
+
+
+
+
 // # Cell factory
 // Scrawl-canvas uses 'hidden' canvases - &lt;canvas> elements that are not part of the DOM - for much of its functionality:
 // + When we wrap a DOM-based &lt;canvas> element in a Scrawl-canvas [Canvas](./canvas.html) wrapper, we create a second 'hidden' &lt;canvas> element and assign it as that Canvas wrapper's __base cell__. 
@@ -60,6 +73,7 @@ import pathMix from '../mixin/path.js';
 import anchorMix from '../mixin/anchor.js';
 import cascadeMix from '../mixin/cascade.js';
 import assetMix from '../mixin/asset.js';
+import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
 
@@ -127,6 +141,7 @@ P.isAsset = true;
 // + [anchor](../mixin/anchor.html)
 // + [cascade](../mixin/cascade.html)
 // + [asset](../mixin/asset.html)
+// + [pattern](../mixin/pattern.html)
 // + [filter](../mixin/filter.html)
 P = baseMix(P);
 P = positionMix(P);
@@ -137,6 +152,7 @@ P = pathMix(P);
 P = anchorMix(P);
 P = cascadeMix(P);
 P = assetMix(P);
+P = patternMix(P);
 P = filterMix(P);
 
 
@@ -150,6 +166,7 @@ P = filterMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
 // + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
+// + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
 let defaultAttributes = {
 
@@ -183,12 +200,8 @@ let defaultAttributes = {
     scale: 1,
 
 
-// __localizeHere__ - when true, Scrawl-canvas will calculate a local .here object for the Cell, which allows mouse cursor movements to be tracked. In general, only 'base' Cells need this information.
-// + Set the attribute to false if there is no need for the displayed &lt;canvas> element to have mouse/touch/pointer-based user interaction. 
-    localizeHere: false,
-
-// Any Cell can be used as an asset by a Pattern styles. The __repeat__ attribute determines how the Pattern will consume the Cell asset.
-    repeat: 'repeat',
+// // Any Cell can be used as an asset by a Pattern styles. The __repeat__ attribute determines how the Pattern will consume the Cell asset.
+//     repeat: 'repeat',
 
 // Scrawl-canvas sets the following attributes automatically; do not change their values!
 
@@ -447,50 +460,19 @@ D.stashHeight = function (val) {
 
 // #### Prototype functions
 
-// The following setters and functions are used when the Cell wrapper acts as a Pattern style object's asset
-
-// `repeat`
-P.repeatValues = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat']
-S.repeat = function (item) {
-
-    if (this.repeatValues.indexOf(item) >= 0) this.repeat = item;
-    else this.repeat = this.defs.repeat;
-};
-
-// `checkSource`
+// `checkSource` - internal function
 P.checkSource = function (width, height) {
 
     if (this.currentDimensions[0] !== width || this.currentDimensions[1] !== height) this.notifySubscribers();
 };
 
-// `getData`
+// `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
 P.getData = function (entity, cell) {
 
     this.checkSource(this.sourceNaturalDimensions[0], this.sourceNaturalDimensions[1]);
 
     return this.buildStyle(cell);
 };
-
-// `buildStyle`
-P.buildStyle = function (mycell = {}) {
-    
-    if (mycell) {
-
-        let engine = false;
-
-        if (mycell.substring) {
-
-            let realcell = cell[mycell];
-
-            if (realcell && realcell.engine) engine = realcell.engine;
-        }
-        else if (mycell.engine) engine = mycell.engine;
-
-        if (engine) return engine.createPattern(this.element, this.repeat);
-    }
-    return 'rgba(0,0,0,0)';
-};
-
 
 // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
 P.updateArtefacts = function (items = {}) {

@@ -5,6 +5,7 @@
 import scrawl from '../source/scrawl.js'
 
 
+// #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
 const background_dark = '#404040',
@@ -24,7 +25,7 @@ canvas.set({
 
 }).setAsCurrentCanvas();
 
-
+// Create the demo Oval entity
 scrawl.makeOval({
 
     name: 'loader-track',
@@ -47,6 +48,8 @@ scrawl.makeOval({
     precision: 0.1
 });
 
+// Create the three Phrase entitys that will animate around the oval
+// + We give them their own group to make updating their attributes easier
 const textGroup = scrawl.makeGroup({
 
     name: 'text-group',
@@ -83,6 +86,8 @@ scrawl.makePhrase({
 });
 
 
+// #### prefers-color-scheme actions
+// Setup the actions to take, to match the animation scene to the user's preference for `dark` or `light` (default) color scheme
 scrawl.setColorSchemeDarkAction(() => {
 
     canvas.set({ backgroundColor: background_dark});
@@ -95,6 +100,8 @@ scrawl.setColorSchemeLightAction(() => {
     textGroup.setArtefacts({ fillStyle: text_light});
 });
 
+// Invoke prefers-color-scheme actions test
+// + Scrawl-canvas will automatically check to see if user changes their preference while the scene is running, and action the change when detected
 scrawl.colorSchemeActions();
 
 
@@ -116,7 +123,6 @@ let report = function () {
     };
 }();
 
-
 // Create the Display cycle animation
 const demoAnimation = scrawl.makeRender({
 
@@ -126,6 +132,8 @@ const demoAnimation = scrawl.makeRender({
 });
 
 
+// #### prefers-reduced-motion actions
+// Setup the actions to take, to match the animation scene to the user's preference for `reduced` or unspecified (default) animation
 scrawl.setReduceMotionAction(() => {
 
     if (demoAnimation.isRunning()) demoAnimation.halt();
@@ -136,7 +144,12 @@ scrawl.setNoPreferenceMotionAction(() => {
     if (!demoAnimation.isRunning()) demoAnimation.run();
 });
 
+// Invoke prefers-reduced-motion actions test
+// + Accessibility recommendation is that a scene should not animate for more than 5 seconds - we can honour this recommendation by delaying the test using `setTimeout`. This approach also allows us to add in an event listener (and any associated canvas chrome/notifications) which would allow the user to interact with the canvas so that animation can resume.
+// + Additionally, Scrawl-canvas will automatically check to see if user changes their preference while the scene is running, and action the change when detected.
 setTimeout(() => scrawl.reducedMotionActions(), 5000);
 
 
+// #### Development and testing
+// In chrome browsers, open the inspector and enable the __Rendering__ view - this includes selectors to emulate both `prefers-reduced-motion` and `prefers-color-scheme` user choices.
 console.log(scrawl.library);

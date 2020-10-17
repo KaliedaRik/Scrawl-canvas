@@ -132,6 +132,9 @@ let checkMagnifier = function () {
     };
 }();
 
+
+// #### Scene animation
+// Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
     let testTicker = Date.now(),
@@ -154,6 +157,7 @@ Base canvas mouse - x: ${hidden.x}, y: ${hidden.y}`;
     };
 }();
 
+// Create the Display cycle animation
 scrawl.makeRender({
     name: 'demo-animation',
     target: canvas,
@@ -161,6 +165,7 @@ scrawl.makeRender({
     commence: checkMagnifier,
     afterShow: report,
 });
+
 
 // #### User interaction
 scrawl.observeAndUpdate({
@@ -179,4 +184,6 @@ scrawl.observeAndUpdate({
 });
 document.querySelector('#composite').value = 'destination-over';
 
+
+// #### Development and testing
 console.log(scrawl.library);
