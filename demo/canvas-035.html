@@ -35,7 +35,9 @@
       <select class="controlItem" id="pattern">
         <option value="bunny-pattern">Bunny</option>
         <option value="leaves-pattern">Leaves</option>
+        <option value="video-pattern">Video</option>
         <option value="cell-pattern">Cell animation</option>
+        <option value="cat-pattern">Cat sprite</option>
       </select>
     </div>
     <div class="lavender">&nbsp;</div>
@@ -132,7 +134,15 @@
 <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li></li>
+      <li>Create a selection of Pattern objects, using images as their asset</li>
+      <li>Create a Pattern object using a video asset</li>
+      <li>Create a Cell wrapper which can be animated and used as a pattern</li>
+      <li>Create a Cell wrapper that hosts a Picture entity using a spritesheet as its asset, which can be animated and used as a pattern</li>
+      <li>Create a Block entity that uses patterns for its fillStyle attribute</li>
+      <li>Check that all patterns load and display as required</li>
+      <li>Check that all patterns are rendered appropriately when the display Block is moved and manipulated (note: patterns will not scale as the Block scales)</li>
+      <li>Check that all patterns react appropriately as the 'repeat' attribute is updated (in real time)</li>
+      <li>Check that all patterns react appropriately as each of the six pattern matrix values is manipulated (in real time)</li>
     </ul>
 
     <p><a href="../docs/demo/canvas-035.html">Annotated code</a></p>

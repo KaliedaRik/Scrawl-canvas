@@ -403,6 +403,8 @@ let killStyle = (name, time, finishResurrection) => {
 
         packet = scrawl.library.styles[name].saveAsPacket();
 
+        console.log(packet);
+
         scrawl.library.styles[name].kill();
 
         setTimeout(() => {

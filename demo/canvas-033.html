@@ -48,8 +48,19 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li></li>
+      <li>Create a resizable &lt;canvas> element</li>
+      <li>Create animated Oval and Phrase entitys to display in the canvas</li>
+      <li>Create hook functions for the Phrase that will be invoked as the user enables and disables 'prefers-color-scheme' and 'prefers-reduced-motion' in the Browser's Inspector (Chrome)</li>
+      <ul>
+        <li>When 'prefers-color-scheme' is set to 'light' (default) the background should be light gray and the text dark green</li>
+        <li>When 'prefers-color-scheme' is set to 'dark' the background should be dark gray and the text light green</li>
+        <li>When 'prefers-reduced-motion' is set to 'reduced' the animation should stop; resizing the &lt;canvas> element should lead to distortions in the scene</li>
+        <li>When 'prefers-reduced-motion' is unset the animation should start; resizing the &lt;canvas> element should lead to the scene remaining centred in the canvas with no distortion as the resize continues.</li>
+      </ul>
+      <li>When reloading the page, the scene should respect the last choices made in the browser's Inspector; in particular, if 'prefers-reduced-motion' has been set to 'reduced' the animation should play for five seconds, then stop automatically.</li>
     </ul>
+
+    <p>To toggle user preferences in Chrome: open the Inspector, press Ctrl/Cmd+Shift+P, type 'show rendering', click on the 'Show rendering' button.</p>
 
     <p><a href="../docs/demo/canvas-033.html">Annotated code</a></p>
   </div>

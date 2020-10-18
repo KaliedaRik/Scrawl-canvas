@@ -1,16 +1,3 @@
-
-
-// TODO - EXPERIMENT
-
-// LOOK to see if we can use canvas context-specific filters
-// https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
-
-
-
-
-
-
-
 // # Cell factory
 // Scrawl-canvas uses 'hidden' canvases - &lt;canvas> elements that are not part of the DOM - for much of its functionality:
 // + When we wrap a DOM-based &lt;canvas> element in a Scrawl-canvas [Canvas](./canvas.html) wrapper, we create a second 'hidden' &lt;canvas> element and assign it as that Canvas wrapper's __base cell__. 

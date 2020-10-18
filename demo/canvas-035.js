@@ -31,7 +31,32 @@ scrawl.makePattern({
 
     name: 'leaves-pattern',
     imageSource: 'img/leaves.png',
+
 });
+
+
+// Create video-based pattern
+const videoPattern = scrawl.makePattern({
+
+    name: 'video-pattern',
+    videoSource: 'img/Sea - 4006.mp4',
+}); 
+
+// The video can't play until we detect some form of user interaction
+scrawl.addListener('up', () => {
+
+    if (videoPattern.get('video_paused')) {
+
+        videoPattern.set({
+
+            video_muted: true,
+            video_loop: true,
+
+        }).videoPlay();
+    }
+
+}, canvas.domElement);
+
 
 // Create a Cell to use as a pattern
 canvas.buildCell({
@@ -69,9 +94,36 @@ scrawl.makeBlock({
     },
 });
 
-const myPatterns = [styles['bunny-pattern'], styles['leaves-pattern'], cells['cell-pattern']];
+
+// Create a spritesheet-based pattern
+// + As defined in the [CanvasPattern API](https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern) the pattern constructor takes an image source (&lt;img>, SVG &lt;image>, &lt;video>, &lt;canvas>, ImageBitmap, or OffscreenCanvas) as its argument, but is not able to use just a part of that source for the pattern. 
+// + To use a spritesheet as a source, we need to work around this limitation by putting a Picture entity using the spritesheet into a Cell, then using the Cell as the pattern's source.
+canvas.buildCell({
+
+    name: 'cat-pattern',
+
+    width: 150,
+    height: 75,
+
+    shown: false,
+});
+
+scrawl.makePicture({
+
+    name: 'cell-pattern-sprite',
+    group: 'cat-pattern',
+
+    width: '100%',
+    height: '100%',
+
+    spriteSource: 'img/cat-sprite.png',
+    spriteTrack: 'walk',
+    spriteFrameDuration: 100,
+
+}).playSprite();
 
 
+// We'll display the patterns in a Block entity which users can update and interact with, for testing
 const myBlock = scrawl.makeBlock({
 
     name: 'test-block',
@@ -87,7 +139,6 @@ const myBlock = scrawl.makeBlock({
 
     method: 'fillThenDraw',
 });
-
 
 
 // #### Scene animation
@@ -125,7 +176,7 @@ scrawl.makeDragZone({
     endOn: ['up', 'leave'],
 });
 
-// Setup form observer functionality
+// Setup form observer functionality for display block
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -167,6 +218,10 @@ scrawl.observeAndUpdate({
     },
 });
 
+// Setup form observer functionality for patterns
+// + we'll cascade form updates to all patterns, and Cells used as patterns
+const myPatterns = [styles['bunny-pattern'], styles['leaves-pattern'], styles['video-pattern'], cells['cell-pattern'], cells['cat-pattern']];
+
 let updateRepeat = (e) => {
 
     e.preventDefault();
@@ -186,7 +241,7 @@ let updateMatrix = (e) => {
     let val = e.target.value,
         id = e.target.id;
 
-    myPatterns.forEach(p => p.set({[id]: val}));
+    myPatterns.forEach(p => p.set({[id]: parseFloat(val)}));
 };
 scrawl.addNativeListener(['input', 'change'], updateMatrix, '.matrix');
 

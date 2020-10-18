@@ -15,6 +15,9 @@
 // #### Imports
 import { constructors, cell, entity } from '../core/library.js';
 import { mergeOver, pushUnique, isa_obj } from '../core/utilities.js';
+import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
+import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
+
 
 import baseMix from '../mixin/base.js';
 import patternMix from '../mixin/pattern.js';
@@ -59,6 +62,17 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // #### Packet management
 P.packetObjects = pushUnique(P.packetObjects, ['asset']);
 
+P.finalizePacketOut = function (copy, items) {
+
+    if (Array.isArray(items.patternMatrix)) copy.patternMatrix = items.patternMatrix;
+    else {
+
+        let m = this.patternMatrix;
+        if (m) copy.patternMatrix = [m.a, m.b, m.c, m.d, m.e, m.f];
+    }
+
+    return copy;
+};
 
 // #### Clone management
 // No additional clone functionality required
@@ -94,7 +108,68 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-// No additional get/set functionality required
+// Pattern `get` and `set` (but not `deltaSet`) functions need to take into account their current source, whose attributes can be retrieved/amended directly on the Picture object
+
+// `get`
+P.get = function (item) {
+
+    let source = this.source;
+
+    if ((item.indexOf('video_') === 0 || item.indexOf('image_') === 0) && source) {
+
+        if (gettableVideoAssetAtributes.indexOf(item) >= 0) return source[item.substring(6)];
+        else if (gettableImageAssetAtributes.indexOf(item) >= 0) return source[item.substring(6)];
+    }
+
+    else {
+
+        let getter = this.getters[item];
+
+        if (getter) return getter.call(this);
+
+        else {
+
+            let def = this.defs[item],
+                val;
+
+            if (typeof def != 'undefined') {
+
+                val = this[item];
+                return (typeof val != 'undefined') ? val : def;
+            }
+            return undef;
+        }
+    }
+};
+
+// `set`
+P.set = function (items = {}) {
+
+    if (items) {
+
+        let setters = this.setters,
+            defs = this.defs,
+            source = this.source;
+
+        Object.entries(items).forEach(([key, value]) => {
+
+            if ((key.indexOf('video_') === 0 || key.indexOf('image_') === 0) && source) {
+
+                if (settableVideoAssetAtributes.indexOf(key) >= 0) source[key.substring(6)] = value
+                else if (settableImageAssetAtributes.indexOf(key) >= 0) source[key.substring(6)] = value
+            }
+
+            else if (key && key !== 'name' && value != null) {
+
+               let predefined = setters[key];
+
+                if (predefined) predefined.call(this, value);
+                else if (typeof defs[key] !== 'undefined') this[key] = value;
+            }
+        }, this);
+    }
+    return this;
+};
 
 
 // #### Prototype functions
