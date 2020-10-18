@@ -180,6 +180,26 @@
                 </a>
               
                 
+                <a class="source" href="canvas-033.html">
+                  ./demo/canvas-033.js
+                </a>
+              
+                
+                <a class="source" href="canvas-034.html">
+                  ./demo/canvas-034.js
+                </a>
+              
+                
+                <a class="source" href="canvas-035.html">
+                  ./demo/canvas-035.js
+                </a>
+              
+                
+                <a class="source" href="canvas-036.html">
+                  ./demo/canvas-036.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -292,6 +312,11 @@
                 
                 <a class="source" href="dom-015.html">
                   ./demo/dom-015.js
+                </a>
+              
+                
+                <a class="source" href="dom-016.html">
+                  ./demo/dom-016.js
                 </a>
               
             </div>
@@ -466,9 +491,23 @@ scrawl.makeWheel({
             });
         }
     };
-}();
+}();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
-<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
         testTime, testNow,
@@ -488,9 +527,22 @@ scrawl.makeWheel({
 Display canvas mouse - x: <span class="hljs-subst">${displayed.x}</span>, y: <span class="hljs-subst">${displayed.y}</span>
 Base canvas mouse - x: <span class="hljs-subst">${hidden.x}</span>, y: <span class="hljs-subst">${hidden.y}</span>`</span>;
     };
-}();
+}();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Create the Display cycle animation</p>
 
-scrawl.makeRender({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
     <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
     <span class="hljs-attr">target</span>: canvas,
 
@@ -501,11 +553,11 @@ scrawl.makeRender({
         </li>
         
         
-        <li id="section-4">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 
@@ -525,9 +577,22 @@ scrawl.makeRender({
         <span class="hljs-attr">composite</span>: [<span class="hljs-string">'globalCompositeOperation'</span>, <span class="hljs-string">'raw'</span>],
     },
 });
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#composite'</span>).value = <span class="hljs-string">'destination-over'</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#composite'</span>).value = <span class="hljs-string">'destination-over'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

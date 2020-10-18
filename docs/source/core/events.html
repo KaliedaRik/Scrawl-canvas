@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/displayShape.html">
+                  ./source/mixin/displayShape.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -327,6 +332,11 @@
                 
                 <a class="source" href="../mixin/path.html">
                   ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
                 </a>
               
                 
@@ -436,8 +446,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>TODO - documentation</p>
-<p><code>Exported function</code> (to modules and scrawl object). </p>
+              <p><code>Exported function</code> (to modules and scrawl object) - <strong>scrawl.makeAnimationObserver</strong> - function to create and start a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">DOM IntersectionObserver</a> object.</p>
+<p>The function expects 3 arguments, in the following order:</p>
+<ul>
+<li>a Scrawl-canvas animation object (required) - either <a href="../factory/Animation.html">Animation</a> or <a href="../factory/RenderAnimation.html">RenderAnimation</a></li>
+<li>A Scrawl-canvas element wrapper object (required) - either <a href="../factory/Canvas.html">Canvas</a>, <a href="../factory/Stack.html">Stack</a> or <a href="../factory/Element.html">Element</a></li>
+<li>A Javascript object (optional) containing options to be applied to the observer - <code>root</code>, <code>rootMargin</code>, <code>threshold</code></li>
+</ul>
+<p>The function returns a function which, when invoked, will disconnect the observer from the DOM.</p>
 
             </div>
             
@@ -476,7 +492,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p><code>Exported function</code> (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
+              <p><code>Exported function</code> (to modules and scrawl object) - <strong>scrawl.addListener</strong>. Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.</p>
 
             </div>
             
@@ -502,7 +518,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addListener’ is <strong>removeListener</strong> which removes Scrawl-canvas event listeners from DOM elements in a similar way</p>
+              <p><code>Exported function</code> (to modules and scrawl object) - <strong>scrawl.removeListener</strong>. The counterpart to ‘addListener’ is <strong>removeListener</strong> which removes Scrawl-canvas event listeners from DOM elements in a similar way</p>
 
             </div>
             
@@ -636,7 +652,7 @@
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p><strong>Any event listener</strong> can be added to a Scrawl-canvas stack or canvas DOM element. </p>
-<p>The <strong>addNativeListener</strong> function makes adding and removing these ‘native’ listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.</p>
+<p>The <strong>scrawl.addNativeListener</strong> function makes adding and removing these ‘native’ listeners a little easier: multiple event listeners (which all trigger the same function) can be added to multiple DOM elements (that have been registered in the Scrawl-canvas library) in a single function call.</p>
 <p>The function requires three arguments:</p>
 <ul>
 <li><strong>evt</strong> - String name of the event (‘click’, ‘input’, ‘change’, etc), or an array of such strings</li>
@@ -681,7 +697,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addNativeListener’ is <strong>removeNativeListener</strong> which removes event listeners from DOM elements in a similar way</p>
+              <p><code>Exported function</code> (to modules and scrawl object). The counterpart to ‘addNativeListener’ is <strong>scrawl.removeNativeListener</strong> which removes event listeners from DOM elements in a similar way</p>
 
             </div>
             
@@ -721,6 +737,151 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
+              <h2 id="accessibility-and-user-defined-preferences">Accessibility, and user-defined, preferences</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-033.html">Canvas-033</a> - User preferences: prefers-color-scheme; prefers-reduced-motion</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h4 id="prefers-reduced-motion-media-query">prefers-reduced-motion media query</h4>
+<p>In many devices users have the option to set a system-wide flag indicating that, wherever possible, application and website animations should be reduced and/or prevented from playing. Scrawl-canvas investigates for this setting and supplies hooks to which developers can attach hook functions defining the actions to take when reduced motion has been requested, and for whenever this setting is changed.</p>
+<p>Exported function <code>reducedMotionActions</code> - <strong>we strongly recommend that, whenever a &lt;canvas&gt; scene is animated, developers call this function as part of their definition code.</strong> By default this function will run the <code>reducedMotion_reduceAction</code> function when reduced motion has been requested; in all other cases the <code>reducedMotion_noPreferenceAction</code> function will be invoked.</p>
+<ul>
+<li><code>reducedMotion_reduceAction</code> is by default a null-function. If actions need to be taken to reduce the speed of a canvas animation, or to stop it, then coders should replace this hook function with their own. Set using the <code>scrawl.setReduceMotionAction()</code> function</li>
+<li><code>reducedMotion_noPreferenceAction</code> - again, a null function by default. Coders can replace it with their own function to revert the actions set out in their reduceAction function (for instance, to restart a canvas animation). Set using the <code>scrawl.setNoPreferenceMotionAction()</code> function</li>
+</ul>
+<pre><code>__Example code__
+
+<span class="hljs-keyword">const</span> myAnimation = scrawl.makeRender({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'scene-animation'</span>,
+    <span class="hljs-attr">target</span>: mycanvas,
+    <span class="hljs-attr">delay</span>: <span class="hljs-literal">true</span>,
+});
+
+scrawl.setReduceMotionAction(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myAnimation.halt());
+scrawl.setNoPreferenceMotionAction(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myAnimation.run());
+
+scrawl.reducedMotionActions();</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> reducedMotionMediaQuery = <span class="hljs-built_in">window</span>.matchMedia(<span class="hljs-string">"(prefers-reduced-motion: reduce)"</span>);
+
+<span class="hljs-keyword">let</span> prefersReducedMotion = reducedMotionMediaQuery.matches,
+    reducedMotion_reduceAction = λ<span class="hljs-literal">null</span>,
+    reducedMotion_noPreferenceAction = λ<span class="hljs-literal">null</span>;
+
+<span class="hljs-keyword">const</span> reducedMotionActions = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+    <span class="hljs-keyword">if</span> (prefersReducedMotion) reducedMotion_reduceAction();
+    <span class="hljs-keyword">else</span> reducedMotion_noPreferenceAction();
+};
+
+reducedMotionMediaQuery.addEventListener(<span class="hljs-string">'change'</span>, () =&gt; {
+
+    prefersReducedMotion = reducedMotionMediaQuery.matches;
+    reducedMotionActions();
+});
+
+<span class="hljs-keyword">const</span> setReduceMotionAction = <span class="hljs-function">(<span class="hljs-params">func</span>) =&gt;</span> reducedMotion_reduceAction = func;
+<span class="hljs-keyword">const</span> setNoPreferenceMotionAction = <span class="hljs-function">(<span class="hljs-params">func</span>) =&gt;</span> reducedMotion_noPreferenceAction = func;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h4 id="prefers-color-scheme-media-query">prefers-color-scheme media query</h4>
+<p>In many devices users have the option to set a system-wide flag indicating that, wherever possible, application and website interfaces should use a dark, or light, color scheme. Scrawl-canvas investigates for this setting and supplies hooks to which developers can attach hook functions defining the actions to take when a preference has been selected, and for whenever this setting is changed. Where no selection has been made, Scrawl-canvas assumes that a light color scheme is preferred.</p>
+<p>Exported function <code>colorSchemeActions</code> - depending on the user selection, the appropriate color scheme hook function is run; where no selection has been made, this will be the lightAction function.</p>
+<ul>
+<li><code>colorScheme_darkAction</code> is by default a null-function. If actions need to be taken to update a scene to match surrounding dark-theme designs, then coders should replace this hook function with their own. Set using the <code>scrawl.setColorSchemeDarkAction()</code> function</li>
+<li><code>colorScheme_lightAction</code> - again, a null function by default. Coders can replace it with their own function to revert the actions set out in their darkAction function. Set using the <code>scrawl.setColorSchemeLightAction()</code> function</li>
+</ul>
+<pre><code>__Example code__
+
+<span class="hljs-keyword">const</span> canvas = scrawl.library.mycanvas;
+
+<span class="hljs-keyword">const</span> myBlock = scrawl.makeBlock({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'myThemedBlock'</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">'30%'</span>, <span class="hljs-string">'30%'</span>],
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
+});
+
+scrawl.setColorSchemeDarkAction(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    canvas.set({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'black'</span>});
+    myBlock.set({ <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'white'</span>});
+});
+
+scrawl.setColorSchemeLightAction(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    canvas.set({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'white'</span>});
+    myBlock.set({ <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'black'</span>});
+});
+
+scrawl.colorSchemeActions();</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">const</span> colorSchemeMediaQuery = <span class="hljs-built_in">window</span>.matchMedia(<span class="hljs-string">"(prefers-color-scheme: dark)"</span>);
+
+<span class="hljs-keyword">let</span> prefersColorScheme = colorSchemeMediaQuery.matches,
+    colorScheme_darkAction = λ<span class="hljs-literal">null</span>,
+    colorScheme_lightAction = λ<span class="hljs-literal">null</span>;
+
+<span class="hljs-keyword">const</span> colorSchemeActions = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+
+    <span class="hljs-keyword">if</span> (prefersColorScheme) colorScheme_darkAction();
+    <span class="hljs-keyword">else</span> colorScheme_lightAction();
+};
+
+colorSchemeMediaQuery.addEventListener(<span class="hljs-string">'change'</span>, () =&gt; {
+
+    prefersColorScheme = colorSchemeMediaQuery.matches;
+    colorSchemeActions();
+});
+
+<span class="hljs-keyword">const</span> setColorSchemeLightAction = <span class="hljs-function">(<span class="hljs-params">func</span>) =&gt;</span> colorScheme_lightAction = func;
+<span class="hljs-keyword">const</span> setColorSchemeDarkAction = <span class="hljs-function">(<span class="hljs-params">func</span>) =&gt;</span> colorScheme_darkAction = func;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
               <h4 id="exports">Exports</h4>
 
             </div>
@@ -730,7 +891,16 @@
     removeListener,
     addNativeListener,
     removeNativeListener,
+
     makeAnimationObserver,
+
+    reducedMotionActions,
+    setReduceMotionAction,
+    setNoPreferenceMotionAction,
+
+    colorSchemeActions,
+    setColorSchemeDarkAction,
+    setColorSchemeLightAction,
 };</pre></div></div>
             
         </li>

@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/displayShape.html">
+                  ./source/mixin/displayShape.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -327,6 +332,11 @@
                 
                 <a class="source" href="../mixin/path.html">
                   ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
                 </a>
               
                 
@@ -454,7 +464,8 @@
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'./coordinate.js'</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/dom.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/dom.js'</span>;
+<span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/displayShape.js'</span>;</pre></div></div>
             
         </li>
         
@@ -496,6 +507,8 @@
     <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
 
     <span class="hljs-keyword">if</span> (!items.label) items.label = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> canvas element`</span>;
+
+    <span class="hljs-keyword">this</span>.initializeDisplayShapeActions();
 
     <span class="hljs-keyword">this</span>.set(items);
 
@@ -553,7 +566,6 @@
             <span class="hljs-attr">compiled</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
             <span class="hljs-attr">isBase</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">localizeHere</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">host</span>: <span class="hljs-keyword">this</span>.name,
             <span class="hljs-attr">controller</span>: <span class="hljs-keyword">this</span>,
             <span class="hljs-attr">order</span>: <span class="hljs-number">10</span>,
@@ -623,6 +635,7 @@
         <span class="hljs-keyword">this</span>.ariaLabelElement = ariaLabel;
         scrawlCanvasHold.appendChild(ariaLabel);
         el.setAttribute(<span class="hljs-string">'aria-labelledby'</span>, ariaLabel.id);
+        el.setAttribute(<span class="hljs-string">'aria-live'</span>, <span class="hljs-string">'polite'</span>);
 
         <span class="hljs-keyword">let</span> ariaDescription = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
         ariaDescription.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-ARIA-description`</span>;
@@ -630,6 +643,7 @@
         <span class="hljs-keyword">this</span>.ariaDescriptionElement = ariaDescription;
         scrawlCanvasHold.appendChild(ariaDescription);
         el.setAttribute(<span class="hljs-string">'aria-describedby'</span>, ariaDescription.id);
+        el.setAttribute(<span class="hljs-string">'aria-live'</span>, <span class="hljs-string">'polite'</span>);
 
         <span class="hljs-keyword">this</span>.cleanAria();
     }
@@ -675,12 +689,14 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 <ul>
 <li><a href="../mixin/base.html">base</a></li>
 <li><a href="../mixin/dom.html">dom</a></li>
+<li><a href="../mixin/displayShape.html">display</a></li>
 </ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = domMix(P);</pre></div></div>
+P = domMix(P);
+P = displayMix(P);</pre></div></div>
             
         </li>
         
@@ -701,6 +717,7 @@ P = domMix(P);</pre></div></div>
 <li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/dom.html">dom mixin</a>: <strong>domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/displayShape.html">display mixin</a>: <strong>breakToBanner, breakToLandscape, breakToPortrait, breakToSkyscraper, actionBannerShape, actionLandscapeShape, actionRectangleShape, actionPortraitShape, actionSkyscraperShape</strong>.</li>
 </ul>
 
             </div>
@@ -807,7 +824,6 @@ P = domMix(P);</pre></div></div>
             <div class="content"><div class='highlight'><pre>    title: <span class="hljs-string">''</span>,
     <span class="hljs-attr">label</span>: <span class="hljs-string">''</span>,
     <span class="hljs-attr">description</span>: <span class="hljs-string">''</span>,
-
 };
 P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
@@ -1390,6 +1406,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
     }
 
     <span class="hljs-keyword">this</span>.dirtyDomDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>

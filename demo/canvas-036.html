@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 036</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    canvas {
+      background-color: lemonchiffon;
+      border: 1px dashed red;
+      width: 100%;
+      height: 100%;
+    }
+    .canvas-host {
+      overflow: hidden;
+      resize: both;
+
+      border: 1px solid black;
+
+      width: 400px;
+      height: 400px;
+
+      min-width: 200px;
+      min-height: 200px;
+
+      max-width: 800px;
+      max-height: 800px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 036</h1>
+  <h2>Cell functionality (functionality and associated tests needs to be expanded)</h2>
+  <h3>This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
+
+  <div class="canvas-host">
+      <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <p>Current functionality:</p>
+
+    <ul>
+      <li>Create a range of Cell artefacts with absolute and relative positioning and dimensions</li>
+      <li>Animate the Cells - for instance: delta roll; animate along a path</li>
+      <li>Pivot a Cell to another Cell, and to an entity object (not yet added to demo)</li>
+      <li>Pivot a Cell to mouse cursor (tested separately in Demo DOM-011)</li>
+    </ul>
+
+    <p>Future functionality (need to check to see if some of these have already been implemented in code, but not exposed in a usable manner):</p>
+
+    <ul>
+      <li>Cell borders, which can: be drawn on the base Cell either before or after the bordered Cell stamps itself onto it; use colors, gradients, patterns for its border; use shadows ('drawAndFill', 'fillAndDraw, 'drawThenFill', 'fillThenDraw')</li>
+      <li>Mouse collision detection - for instance update the Cell (and/or its constituent artefacts) when the mouse hovers over it or the user clicks/taps on it</li>
+      <li>Drag and drop Cells across the Canvas</li>
+      <li>Clone Cells (longer term objective)</li>
+    </ul>
+
+    <p>Known bugs:</p>
+    <ul>
+      <li>The Oval entity does not respond to changes in its Cell's dimensions - check to see if this is true of all Shape-based entitys</li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-036.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-036.js" type="module"></script>
+
+</body>
+
+</html>

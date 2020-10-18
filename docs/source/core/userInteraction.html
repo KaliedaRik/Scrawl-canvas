@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/displayShape.html">
+                  ./source/mixin/displayShape.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -327,6 +332,11 @@
                 
                 <a class="source" href="../mixin/path.html">
                   ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
                 </a>
               
                 
@@ -1001,6 +1011,10 @@
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">'raw'</span> :
                         val = targetVal;
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">'string'</span> :
+                        val = <span class="hljs-string">`<span class="hljs-subst">${targetVal}</span>`</span>;
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">'boolean'</span> :

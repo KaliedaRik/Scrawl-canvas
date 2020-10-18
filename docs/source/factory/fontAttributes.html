@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/displayShape.html">
+                  ./source/mixin/displayShape.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -327,6 +332,11 @@
                 
                 <a class="source" href="../mixin/path.html">
                   ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
                 </a>
               
                 
@@ -403,6 +413,7 @@
 <li>If we stored FA instances in the library we’d risk running out of memory, or slowing up code speed, as the cloned instances are pretty temporary and get thrown away whenever a new Phrase.set invocation (involving font attributes) happens.</li>
 </ul>
 <p>The Phrase entity includes functionality to allow the getting and setting of FontAttribute attributes directly on the entity instance.</p>
+<p>Note that &lt;canvas&gt; context engines will attempt to display <a href="https://web.dev/variable-fonts/">variable fonts</a>, but the added functionality of those fonts is, for the most part, ignored. Scrawl-canvas makes no overt attempts to overcome this limitation.</p>
 
             </div>
             
@@ -570,10 +581,10 @@ P.lib = <span class="hljs-string">'fontattribute'</span>;</pre></div></div>
 <p><em>Values:</em> </p>
 <ul>
 <li><code>normal</code>, <code>bold</code>, <code>lighter</code>, <code>bolder</code>; or</li>
-<li>a number (between 1 and 1000)</li>
+<li>a number (between 1 and 1000, usually in 100 steps between 100 and 900)</li>
 </ul>
 <p>(<code>normal</code> translates to 400; <code>bold</code> translates to 700)</p>
-<p>CANVAS CONTEXT ENGINE - doesn’t seem to recognise number values (for Garamond), but doesn’t choke on their presence either</p>
+<p>CANVAS CONTEXT ENGINE - does seem to recognise both keyword and (x00) number values, but the interpretation of these values can be somewhat erratic. <code>normal</code> and <code>bold</code> keywords are generally respected and actioned as expected.</p>
 
             </div>
             
@@ -595,7 +606,7 @@ P.lib = <span class="hljs-string">'fontattribute'</span>;</pre></div></div>
 <li><code>semi-condensed</code>, <code>condensed</code>, <code>extra-condensed</code>, <code>ultra-condensed</code></li>
 <li><code>semi-expanded</code>, <code>expanded</code>, <code>extra-expanded</code>, <code>ultra-expanded</code></li>
 </ul>
-<p>(Ignoring <code>number%</code> values as it clashes with font-size % values, which are far more likely to be used in a font string)</p>
+<p>We ignore number% values (permitted values are 50% - 200%) because the context engine only accepts a single font string and the syntax requirements for that font string are that “font-stretch may only be a single keyword value”</p>
 <p>CANVAS CONTEXT ENGINE - doesn’t seem to recognise font-stretch values (for Garamond), but doesn’t choke on their presence either</p>
 
             </div>

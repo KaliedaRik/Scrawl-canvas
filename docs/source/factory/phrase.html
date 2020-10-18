@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/displayShape.html">
+                  ./source/mixin/displayShape.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -327,6 +332,11 @@
                 
                 <a class="source" href="../mixin/path.html">
                   ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
                 </a>
               
                 
@@ -2036,6 +2046,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
                 <span class="hljs-keyword">let</span> myhold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
                 myhold.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-text-hold`</span>;
+                myhold.setAttribute(<span class="hljs-string">'aria-live'</span>, <span class="hljs-string">'polite'</span>);
                 <span class="hljs-keyword">this</span>.exposedTextHold = myhold;
                 <span class="hljs-keyword">this</span>.exposedTextHoldAttached = <span class="hljs-literal">false</span>;
             }

@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/displayShape.html">
+                  ./source/mixin/displayShape.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -327,6 +332,11 @@
                 
                 <a class="source" href="../mixin/path.html">
                   ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
                 </a>
               
                 
@@ -418,6 +428,7 @@
               <h4 id="demos">Demos:</h4>
 <ul>
 <li><a href="../../demo/canvas-009.html">Canvas-009</a> - Pattern styles; Entity web link anchors; Dynamic accessibility</li>
+<li><a href="../../demo/canvas-035.html">Canvas-035</a> - Pattern style functionality</li>
 </ul>
 
             </div>
@@ -437,8 +448,12 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
 <span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+<span class="hljs-keyword">import</span> { gettableVideoAssetAtributes, settableVideoAssetAtributes } <span class="hljs-keyword">from</span> <span class="hljs-string">'./videoAsset.js'</span>;
+<span class="hljs-keyword">import</span> { gettableImageAssetAtributes, settableImageAssetAtributes } <span class="hljs-keyword">from</span> <span class="hljs-string">'./imageAsset.js'</span>;
+
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
+<span class="hljs-keyword">import</span> patternMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/pattern.js'</span>;
 <span class="hljs-keyword">import</span> assetConsumerMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/assetConsumer.js'</span>;</pre></div></div>
             
         </li>
@@ -498,6 +513,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
+P = patternMix(P);
 P = assetConsumerMix(P);</pre></div></div>
             
         </li>
@@ -512,12 +528,14 @@ P = assetConsumerMix(P);</pre></div></div>
               <h4 id="pattern-attributes">Pattern attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/pattern.html">pattern mixin</a>: <strong>repeat</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/assetConsumer.html">assetConsumer mixin</a>: <strong>asset, spriteTrack, imageSource, spriteSource, videoSource, source</strong>.</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -528,11 +546,23 @@ P = assetConsumerMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p><strong>repeat</strong> - String indicating how to repeat the pattern’s image. Possible values are: <code>repeat</code> (default), <code>repeat-x</code>, <code>repeat-y</code>, <code>no-repeat</code></p>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    repeat: <span class="hljs-string">'repeat'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'asset'</span>]);
+
+P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(items.patternMatrix)) copy.patternMatrix = items.patternMatrix;
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">let</span> m = <span class="hljs-keyword">this</span>.patternMatrix;
+        <span class="hljs-keyword">if</span> (m) copy.patternMatrix = [m.a, m.b, m.c, m.d, m.e, m.f];
+    }
+
+    <span class="hljs-keyword">return</span> copy;
+};</pre></div></div>
             
         </li>
         
@@ -543,12 +573,10 @@ P = assetConsumerMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p><strong><em>Additional attributes and pseudo-attributes</em></strong> are defined in the <a href="../mixin/assetConsumer.html">assetConsumer mixin</a></p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -558,35 +586,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'asset'</span>]);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -601,11 +600,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Remove style from all entity state objects</p>
 
@@ -628,11 +627,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Remove style from the Scrawl-canvas library</p>
 
@@ -646,19 +645,101 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>Pattern <code>get</code> and <code>set</code> (but not <code>deltaSet</code>) functions need to take into account their current source, whose attributes can be retrieved/amended directly on the Picture object</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><code>get</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">let</span> source = <span class="hljs-keyword">this</span>.source;
+
+    <span class="hljs-keyword">if</span> ((item.indexOf(<span class="hljs-string">'video_'</span>) === <span class="hljs-number">0</span> || item.indexOf(<span class="hljs-string">'image_'</span>) === <span class="hljs-number">0</span>) &amp;&amp; source) {
+
+        <span class="hljs-keyword">if</span> (gettableVideoAssetAtributes.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> source[item.substring(<span class="hljs-number">6</span>)];
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (gettableImageAssetAtributes.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> source[item.substring(<span class="hljs-number">6</span>)];
+    }
+
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">let</span> getter = <span class="hljs-keyword">this</span>.getters[item];
+
+        <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.call(<span class="hljs-keyword">this</span>);
+
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">let</span> def = <span class="hljs-keyword">this</span>.defs[item],
+                val;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">'undefined'</span>) {
+
+                val = <span class="hljs-keyword">this</span>[item];
+                <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">'undefined'</span>) ? val : def;
+            }
+            <span class="hljs-keyword">return</span> undef;
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <p><code>set</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (items) {
+
+        <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.setters,
+            defs = <span class="hljs-keyword">this</span>.defs,
+            source = <span class="hljs-keyword">this</span>.source;
+
+        <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> ((key.indexOf(<span class="hljs-string">'video_'</span>) === <span class="hljs-number">0</span> || key.indexOf(<span class="hljs-string">'image_'</span>) === <span class="hljs-number">0</span>) &amp;&amp; source) {
+
+                <span class="hljs-keyword">if</span> (settableVideoAssetAtributes.indexOf(key) &gt;= <span class="hljs-number">0</span>) source[key.substring(<span class="hljs-number">6</span>)] = value
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (settableImageAssetAtributes.indexOf(key) &gt;= <span class="hljs-number">0</span>) source[key.substring(<span class="hljs-number">6</span>)] = value
+            }
+
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">'name'</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+
+               <span class="hljs-keyword">let</span> predefined = setters[key];
+
+                <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-keyword">this</span>, value);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">'undefined'</span>) <span class="hljs-keyword">this</span>[key] = value;
+            }
+        }, <span class="hljs-keyword">this</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+};</pre></div></div>
             
         </li>
         
@@ -669,16 +750,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p><strong>repeat</strong></p>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.repeatValues = [<span class="hljs-string">'repeat'</span>, <span class="hljs-string">'repeat-x'</span>, <span class="hljs-string">'repeat-y'</span>, <span class="hljs-string">'no-repeat'</span>]
-S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.repeatValues.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.repeat = item;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.repeat = <span class="hljs-keyword">this</span>.defs.repeat;
-};</pre></div></div>
             
         </li>
         
@@ -688,51 +762,6 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p><code>buildStyle</code> - internal function: creates the pattern on the Cell’s CanvasRenderingContext2D engine.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.buildStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">mycell = {}</span>) </span>{
-    
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.sourceLoaded &amp;&amp; mycell) {
-
-        <span class="hljs-keyword">let</span> engine = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">if</span> (mycell.substring) {
-
-            <span class="hljs-keyword">let</span> realcell = cell[mycell];
-
-            <span class="hljs-keyword">if</span> (realcell &amp;&amp; realcell.engine) engine = realcell.engine;
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mycell.engine) engine = mycell.engine;
-
-        <span class="hljs-keyword">if</span> (engine) <span class="hljs-keyword">return</span> engine.createPattern(<span class="hljs-keyword">this</span>.source, <span class="hljs-keyword">this</span>.repeat);
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-string">'rgba(0,0,0,0)'</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
 <ul>
@@ -752,11 +781,11 @@ S.repeat = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-20">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.importDomImage(<span class="hljs-string">'.mypatterns'</span>);
@@ -805,11 +834,11 @@ constructors.Pattern = Pattern;</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="../mixin/displayShape.html">
+                  ./source/mixin/displayShape.js
+                </a>
+              
+                
                 <a class="source" href="../mixin/dom.html">
                   ./source/mixin/dom.js
                 </a>
@@ -327,6 +332,11 @@
                 
                 <a class="source" href="../mixin/path.html">
                   ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
                 </a>
               
                 
@@ -465,7 +475,8 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
 <span class="hljs-keyword">import</span> cascadeMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/cascade.js'</span>;
-<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/dom.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/dom.js'</span>;
+<span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/displayShape.js'</span>;</pre></div></div>
             
         </li>
         
@@ -512,6 +523,7 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
     <span class="hljs-keyword">this</span>.addGroups(g.name);
 
     <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
+    <span class="hljs-keyword">this</span>.initializeDisplayShapeActions();
     <span class="hljs-keyword">this</span>.set(items);
 
     el = <span class="hljs-keyword">this</span>.domElement;
@@ -562,13 +574,15 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 <li><a href="../mixin/base.html">base</a></li>
 <li><a href="../mixin/cascade.html">cascade</a></li>
 <li><a href="../mixin/dom.html">dom</a></li>
+<li><a href="../mixin/displayShape.html">display</a></li>
 </ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
 P = cascadeMix(P);
-P = domMix(P);</pre></div></div>
+P = domMix(P);
+P = displayMix(P);</pre></div></div>
             
         </li>
         
@@ -590,6 +604,7 @@ P = domMix(P);</pre></div></div>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/cascade.html">cascade mixin</a>: <strong>groups</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/dom.html">dom mixin</a>: <strong>domElement, pitch, yaw, offsetZ, css, classes, position, actionResize, trackHere, domAttributes</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/displayShape.html">display mixin</a>: <strong>breakToBanner, breakToLandscape, breakToPortrait, breakToSkyscraper, actionBannerShape, actionLandscapeShape, actionRectangleShape, actionPortraitShape, actionSkyscraperShape</strong>.</li>
 </ul>
 
             </div>
@@ -908,6 +923,7 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
     <span class="hljs-keyword">this</span>.dirtyPath = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
