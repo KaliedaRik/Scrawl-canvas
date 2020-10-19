@@ -130,13 +130,16 @@ P.defs = {
 
 
 // ##### Font styling
-
 // __font__, __textAlign__, __textBaseline__ - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.
     font: '12px sans-serif',
-    // textAlign: 'start',
-    // textBaseline: 'alphabetic',
     textAlign: 'left',
     textBaseline: 'top',
+
+
+// ##### CSS/SVG filters
+// __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the entity as it is stamped on the canvas.
+// + Be aware that entitys can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the entity (or group or Cell). The two filter systems are completely separate - combine their effects at your own risk!
+    filter: 'none',
 };
 
 
@@ -252,7 +255,7 @@ S.strokeStyle = function (item) {
 
 // Internal arrays used by a number of Style functions
 P.allKeys = Object.keys(P.defs);
-P.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'];
+P.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur', 'filter'];
 P.lineKeys = ['lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'];
 P.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];
 P.textKeys = ['font'];
@@ -275,7 +278,7 @@ P.getChanges = function (ent, engineState) {
 
     if (ent.substring) ent = entity[ent];
 
-    // 'globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur'
+    // 'globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur', 'filter'
     for (i = 0, iz = mainKeys.length; i < iz; i++) {
 
         k = mainKeys[i];

@@ -30,6 +30,10 @@
       max-width: 800px;
       max-height: 800px;
     }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
   </style>
 </head>
 
@@ -37,6 +41,42 @@
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 036</h1>
   <h2>Cell functionality (functionality and associated tests needs to be expanded)</h2>
   <h3>This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
+
+  <div class="controls">
+    
+    <div class="lavender label">Cell filters</div>
+    <div class="lavender">
+      <select class="controlItem" id="cell-filter">
+        <option value="none">none</option>
+        <option value="blur(5px)">blur</option>
+        <option value="brightness(0.4)">brightness</option>
+        <option value="contrast(200%)">contrast</option>
+        <option value="drop-shadow(4px 4px 4px blue)">drop-shadow</option>
+        <option value="grayscale(100%)">grayscale</option>
+        <option value="hue-rotate(90deg)">hue-rotation</option>
+        <option value="invert(75%)">invert</option>
+        <option value="opacity(25%)">opacity</option>
+        <option value="saturate(30%)">saturate</option>
+        <option value="sepia(60%)">sepia</option>
+      </select>
+    </div>
+    <div class="lavender label">Entity filters</div>
+    <div class="lavender">
+      <select class="controlItem" id="entity-filter">
+        <option value="none">none</option>
+        <option value="blur(5px)">blur</option>
+        <option value="brightness(0.4)">brightness</option>
+        <option value="contrast(200%)">contrast</option>
+        <option value="drop-shadow(4px 4px 4px blue)">drop-shadow</option>
+        <option value="grayscale(100%)">grayscale</option>
+        <option value="hue-rotate(90deg)">hue-rotation</option>
+        <option value="invert(75%)">invert</option>
+        <option value="opacity(25%)">opacity</option>
+        <option value="saturate(30%)">saturate</option>
+        <option value="sepia(60%)">sepia</option>
+      </select>
+    </div>
+  </div>
 
   <div class="canvas-host">
       <canvas id="mycanvas"></canvas>
@@ -54,6 +94,7 @@
       <li>Animate the Cells - for instance: delta roll; animate along a path</li>
       <li>Pivot a Cell to another Cell, and to an entity object (not yet added to demo)</li>
       <li>Pivot a Cell to mouse cursor (tested separately in Demo DOM-011)</li>
+      <li>2d canvas engine (and entity) filter attribute - note this is the native CSS/SVG filter system as applied to canvas (which <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter">MDN notes as an "experimental technology"</a>), not the Scrawl-canvas filters functionality</li>
     </ul>
 
     <p>Future functionality (need to check to see if some of these have already been implemented in code, but not exposed in a usable manner):</p>

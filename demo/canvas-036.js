@@ -44,17 +44,17 @@ const cell1 = canvas.buildCell({
 
     name: 'cell-1',
 
-    width: 100,
-    height: 50,
+    width: 200,
+    height: 200,
 
-    startX: 200,
+    startX: 150,
     startY: 150,
 
-    handleX: '20%',
-    handleY: '50%',
+    handleX: '40%',
+    handleY: '40%',
 
     delta: {
-        roll: -1,
+        roll: -0.6,
     },
 
     backgroundColor: 'lightblue',
@@ -78,7 +78,7 @@ const cell2 = canvas.buildCell({
         roll: 0.4,
     },
 
-    backgroundColor: 'pink',
+    backgroundColor: 'lightblue',
 });
 
 // This Cell will animate along the track we created earlier
@@ -111,6 +111,8 @@ scrawl.makePhrase({
     group: 'cell-1',
 
     text: 'Cell 1',
+    font: '20px sans-serif',
+    fillStyle: 'red',
 
     start: [5, 5],
 
@@ -121,6 +123,9 @@ scrawl.makePhrase({
 
     text: 'Cell 2',
 
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+
 }).clone({
 
     name: 'label-3',
@@ -128,6 +133,30 @@ scrawl.makePhrase({
 
     text: 'Cell 3',
     fillStyle: 'white',
+});
+
+scrawl.makeWheel({
+
+    name: 'wheel-1',
+    group: 'cell-1',
+
+    radius: 30,
+
+    start: [100, 120],
+
+    strokeStyle: 'red',
+    lineWidth: 8,
+    method: 'draw',
+
+}).clone({
+
+    name: 'wheel-2',
+    group: 'cell-2',
+
+    radius: 40,
+
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
 });
 
 
@@ -160,6 +189,41 @@ const demoAnimation = scrawl.makeRender({
     name: "demo-animation",
     target: canvas,
     afterShow: report,
+});
+
+
+// #### User interaction
+// Setup form observer functionality for display block
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: cell1,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        'cell-filter': ['filter', 'raw'],
+    },
+});
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: scrawl.library.entity['label-2'],
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        'entity-filter': ['filter', 'raw'],
+    },
 });
 
 

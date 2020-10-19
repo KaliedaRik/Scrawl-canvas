@@ -186,9 +186,9 @@ let defaultAttributes = {
 // We can also scale the Cell's size in the displayed Canvas by setting the __scale__ attribute to an appropriate value.
     scale: 1,
 
-
-// // Any Cell can be used as an asset by a Pattern styles. The __repeat__ attribute determines how the Pattern will consume the Cell asset.
-//     repeat: 'repeat',
+// __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the Cell as it is stamped on its host canvas.
+// + Be aware that Cells can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the Cell. The two filter systems are completely separate - combine their effects at your own risk!
+    filter: 'none',
 
 // Scrawl-canvas sets the following attributes automatically; do not change their values!
 
@@ -668,6 +668,10 @@ P.setEngineActions = {
         else engine.fillStyle = item.getData(entity, layer);
     },
 
+    filter: function (item, engine) {
+        engine.filter = item;
+    },
+
     font: function (item, engine) {
         engine.font = item;
     },
@@ -908,6 +912,8 @@ P.show = function () {
             engine = (host && host.engine) ? host.engine : false;
 
         if (engine) {
+
+            engine.filter = self.filter;
 
             let floor = Math.floor,
                 hostDimensions = host.currentDimensions,
