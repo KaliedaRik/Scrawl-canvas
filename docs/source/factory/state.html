@@ -769,8 +769,13 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h5 id="font-styling">Font styling</h5>
+<p><strong>font</strong>, <strong>textAlign</strong>, <strong>textBaseline</strong> - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    font: <span class="hljs-string">'12px sans-serif'</span>,
+    <span class="hljs-attr">textAlign</span>: <span class="hljs-string">'left'</span>,
+    <span class="hljs-attr">textBaseline</span>: <span class="hljs-string">'top'</span>,</pre></div></div>
             
         </li>
         
@@ -781,11 +786,16 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p><strong>font</strong>, <strong>textAlign</strong>, <strong>textBaseline</strong> - the Canvas API standards for using fonts on a canvas are near-useless, and often lead to a sub-par display of text. The Scrawl-canvas Phrase entity uses the following attributes internally, but has its own set of attributes for defining the font styling used by its text.</p>
+              <h5 id="csssvg-filters">CSS/SVG filters</h5>
+<p><strong>filter</strong> - the Canvas 2D engine supports the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter">filter attribute</a> on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: ‘none’) defining one or more filter functions to be applied to the entity as it is stamped on the canvas.</p>
+<ul>
+<li>Be aware that entitys can also take a <code>filters</code> Array - this represents an array of Scrawl-canvas filters to be applied to the entity (or group or Cell). The two filter systems are completely separate - combine their effects at your own risk!</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    font: <span class="hljs-string">'12px sans-serif'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    filter: <span class="hljs-string">'none'</span>,
+};</pre></div></div>
             
         </li>
         
@@ -795,24 +805,6 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>textAlign: ‘start’,
-textBaseline: ‘alphabetic’,</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    textAlign: <span class="hljs-string">'left'</span>,
-    <span class="hljs-attr">textBaseline</span>: <span class="hljs-string">'top'</span>,
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -853,13 +845,27 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h4 id="clone-management">Clone management</h4>
+<p>Handled by Cell and entity objects, not by the State object</p>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
+              <h4 id="kill-management">Kill management</h4>
 <p>Handled by Cell and entity objects, not by the State object</p>
 
             </div>
@@ -872,20 +878,6 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>Handled by Cell and entity objects, not by the State object</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -958,15 +950,34 @@ S.strokeStyle = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p>Internal arrays used by a number of Style functions</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.allKeys = <span class="hljs-built_in">Object</span>.keys(P.defs);
+P.mainKeys = [<span class="hljs-string">'globalAlpha'</span>, <span class="hljs-string">'globalCompositeOperation'</span>, <span class="hljs-string">'shadowOffsetX'</span>, <span class="hljs-string">'shadowOffsetY'</span>, <span class="hljs-string">'shadowBlur'</span>, <span class="hljs-string">'filter'</span>];
+P.lineKeys = [<span class="hljs-string">'lineWidth'</span>, <span class="hljs-string">'lineCap'</span>, <span class="hljs-string">'lineJoin'</span>, <span class="hljs-string">'lineDash'</span>, <span class="hljs-string">'lineDashOffset'</span>, <span class="hljs-string">'miterLimit'</span>];
+P.styleKeys = [<span class="hljs-string">'fillStyle'</span>, <span class="hljs-string">'strokeStyle'</span>, <span class="hljs-string">'shadowColor'</span>];
+P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
             
         </li>
         
@@ -976,25 +987,6 @@ S.strokeStyle = <span class="hljs-function"><span class="hljs-keyword">function<
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>Internal arrays used by a number of Style functions</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.allKeys = <span class="hljs-built_in">Object</span>.keys(P.defs);
-P.mainKeys = [<span class="hljs-string">'globalAlpha'</span>, <span class="hljs-string">'globalCompositeOperation'</span>, <span class="hljs-string">'shadowOffsetX'</span>, <span class="hljs-string">'shadowOffsetY'</span>, <span class="hljs-string">'shadowBlur'</span>];
-P.lineKeys = [<span class="hljs-string">'lineWidth'</span>, <span class="hljs-string">'lineCap'</span>, <span class="hljs-string">'lineJoin'</span>, <span class="hljs-string">'lineDash'</span>, <span class="hljs-string">'lineDashOffset'</span>, <span class="hljs-string">'miterLimit'</span>];
-P.styleKeys = [<span class="hljs-string">'fillStyle'</span>, <span class="hljs-string">'strokeStyle'</span>, <span class="hljs-string">'shadowColor'</span>];
-P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><code>getChanges</code> is the key function performed by State objects. This is where the entity’s state is compared to a Cell engine’s current state, to identify which engine attributes need to change to bring it into alignment with the entity object’s requirements</p>
 
@@ -1020,13 +1012,13 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>‘globalAlpha’, ‘globalCompositeOperation’, ‘shadowOffsetX’, ‘shadowOffsetY’, ‘shadowBlur’</p>
+              <p>‘globalAlpha’, ‘globalCompositeOperation’, ‘shadowOffsetX’, ‘shadowOffsetY’, ‘shadowBlur’, ‘filter’</p>
 
             </div>
             
@@ -1042,11 +1034,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>‘lineWidth’, ‘lineCap’, ‘lineJoin’, ‘lineDash’, ‘lineDashOffset’, ‘miterLimit’</p>
 
@@ -1103,11 +1095,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>‘fillStyle’, ‘strokeStyle’, ‘shadowColor’</p>
 
@@ -1122,11 +1114,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>string colors - only update if necessary</p>
 
@@ -1137,11 +1129,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Color object colors need to be extracted before they can be compared and, if necessary, updated</p>
 
@@ -1157,11 +1149,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>gradient and pattern objects - get freshly deployed with each entity stamp</p>
 
@@ -1173,11 +1165,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>‘font’</p>
 
@@ -1200,11 +1192,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>The <code>setStateFromEngine</code> function takes a CanvasRenderingContext2D engine object and updates its own attributes to match the engine’s current state.</p>
 
@@ -1232,11 +1224,11 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <p>Only used internally by Cell and entity factory functions</p>
@@ -1253,11 +1245,11 @@ constructors.State = State;</pre></div></div>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

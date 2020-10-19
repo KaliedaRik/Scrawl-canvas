@@ -453,17 +453,17 @@ canvas.set({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'cell-1'</span>,
 
-    <span class="hljs-attr">width</span>: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>,
 
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">150</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">150</span>,
 
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'20%'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'50%'</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'40%'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'40%'</span>,
 
     <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">-1</span>,
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">-0.6</span>,
     },
 
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'lightblue'</span>,
@@ -499,7 +499,7 @@ canvas.set({
         <span class="hljs-attr">roll</span>: <span class="hljs-number">0.4</span>,
     },
 
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'pink'</span>,
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'lightblue'</span>,
 });</pre></div></div>
             
         </li>
@@ -556,6 +556,8 @@ canvas.set({
     <span class="hljs-attr">group</span>: <span class="hljs-string">'cell-1'</span>,
 
     <span class="hljs-attr">text</span>: <span class="hljs-string">'Cell 1'</span>,
+    <span class="hljs-attr">font</span>: <span class="hljs-string">'20px sans-serif'</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
 
     <span class="hljs-attr">start</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">5</span>],
 
@@ -566,6 +568,9 @@ canvas.set({
 
     <span class="hljs-attr">text</span>: <span class="hljs-string">'Cell 2'</span>,
 
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+
 }).clone({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'label-3'</span>,
@@ -573,6 +578,30 @@ canvas.set({
 
     <span class="hljs-attr">text</span>: <span class="hljs-string">'Cell 3'</span>,
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'white'</span>,
+});
+
+scrawl.makeWheel({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-1'</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">'cell-1'</span>,
+
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">30</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">100</span>, <span class="hljs-number">120</span>],
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">8</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-2'</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">'cell-2'</span>,
+
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">40</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
 });</pre></div></div>
             
         </li>
@@ -637,6 +666,52 @@ Cell 2 dimensions: <span class="hljs-subst">${cell2.currentDimensions}</span>`</
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Setup form observer functionality for display block</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">'.controlItem'</span>,
+
+    <span class="hljs-attr">target</span>: cell1,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+
+        <span class="hljs-string">'cell-filter'</span>: [<span class="hljs-string">'filter'</span>, <span class="hljs-string">'raw'</span>],
+    },
+});
+
+scrawl.observeAndUpdate({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">'.controlItem'</span>,
+
+    <span class="hljs-attr">target</span>: scrawl.library.entity[<span class="hljs-string">'label-2'</span>],
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+
+        <span class="hljs-string">'entity-filter'</span>: [<span class="hljs-string">'filter'</span>, <span class="hljs-string">'raw'</span>],
+    },
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

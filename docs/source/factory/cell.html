@@ -774,10 +774,14 @@ P = filterMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>// Any Cell can be used as an asset by a Pattern styles. The <strong>repeat</strong> attribute determines how the Pattern will consume the Cell asset.
-    repeat: ‘repeat’,</p>
+              <p><strong>filter</strong> - the Canvas 2D engine supports the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter">filter attribute</a> on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: ‘none’) defining one or more filter functions to be applied to the Cell as it is stamped on its host canvas.</p>
+<ul>
+<li>Be aware that Cells can also take a <code>filters</code> Array - this represents an array of Scrawl-canvas filters to be applied to the Cell. The two filter systems are completely separate - combine their effects at your own risk!</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    filter: <span class="hljs-string">'none'</span>,</pre></div></div>
             
         </li>
         
@@ -1656,6 +1660,10 @@ P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</s
         <span class="hljs-keyword">else</span> engine.fillStyle = item.getData(entity, layer);
     },
 
+    <span class="hljs-attr">filter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, engine</span>) </span>{
+        engine.filter = item;
+    },
+
     <span class="hljs-attr">font</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, engine</span>) </span>{
         engine.font = item;
     },
@@ -2037,6 +2045,8 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
             engine = (host &amp;&amp; host.engine) ? host.engine : <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">if</span> (engine) {
+
+            engine.filter = self.filter;
 
             <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
                 hostDimensions = host.currentDimensions,
