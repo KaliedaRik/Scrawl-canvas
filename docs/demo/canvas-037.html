@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Canvas 036</title>
+  <title>Demo Canvas 037</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -339,10 +339,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="demo-canvas-036">Demo Canvas 036</h1>
-<p>Cell functionality (functionality and associated tests needs to be expanded)</p>
+              <h1 id="demo-canvas-037">Demo Canvas 037</h1>
+<p>Pan and zoom using a Picture entity</p>
+<p>Scrawl-canvas does not include built-in functionality to easily “zoom” (expand/contract the contents of) a &lt;canvas&gt; element. Nor does it include functionality to “pan” (move in any direction through the contents of) the canvas. The use cases for, and the user interactions for controlling, such functionality are too varied; any attempt to capture a particular approach within the library’s code base would necessarily make other, equally valid, approaches more problematic for developers to implement.</p>
+<p>The code in this demo demonstrates how to capture user actions in events, which can then be used to build a “zoom and pan” experience. The demo uses a Picture entity, because that entity <em>does</em> include functionality which prevents the entity from going beyond the borders of its image (or video) asset.</p>
+<p><a href="../../demo/canvas-037.html">Run code</a></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../source/scrawl.js'</span>;</pre></div></div>
             
         </li>
         
@@ -353,11 +358,25 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-036.html">Run code</a></p>
+              <h4 id="scene-state">Scene state</h4>
+<p>Because we need to manually calculate the copy position and dimensions for the Picture entity, we need to create state to hold known values and record changes between user interactions</p>
+<ul>
+<li><code>naturalWidth/Height</code> - the image asset’s natural dimensions (fixed value)</li>
+<li><code>frameDimension</code> - the &lt;canvas&gt; element’s (non-responsive) dimension values</li>
+<li><code>scale</code> variables to track scale limits and value</li>
+<li><code>from</code> variables to track the copyStart coordinate</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../source/scrawl.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> naturalWidth = <span class="hljs-number">4160</span>,
+    naturalHeight = <span class="hljs-number">3120</span>,
+    frameDimension = <span class="hljs-number">500</span>,
+    maxScale = naturalHeight / frameDimension,
+    currentScale = maxScale,
+    minScale = <span class="hljs-number">1</span>,
+    fromLeft = <span class="hljs-number">0</span>,
+    fromTop = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -368,16 +387,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h4 id="scene-setup">Scene setup</h4>
+              <p>Convenience variables to access key Scrawl-canvas objects stored in the library</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
-
-
-canvas.set({
-
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'honeydew'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas, 
+    base = canvas.base,
+    baseGroup = scrawl.library.group[base.name];</pre></div></div>
             
         </li>
         
@@ -388,11 +404,21 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Make the Canvas adapt to changes in its container’s dimensions</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    checkForResize: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>canvas.set({
+
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'honeydew'</span>,
+
+    <span class="hljs-attr">width</span>: frameDimension,
+    <span class="hljs-attr">height</span>: frameDimension,
+
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">isComponent</span>: <span class="hljs-literal">true</span>,
+
+}).setAsCurrentCanvas();</pre></div></div>
             
         </li>
         
@@ -403,11 +429,24 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Cascade changes in the Canvas dimensions down to its base Cell</p>
+              <p>The Picture entity will cover the entire displayed canvas</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    isComponent: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> piccie = scrawl.makePicture({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'river-pic'</span>,
+
+    <span class="hljs-attr">imageSource</span>: <span class="hljs-string">'./img/river.jpg'</span>,
+
+    <span class="hljs-attr">width</span>: <span class="hljs-string">'100%'</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">'100%'</span>,
+
+    <span class="hljs-attr">copyWidth</span>: currentScale * frameDimension,
+    <span class="hljs-attr">copyHeight</span>: currentScale * frameDimension,
+
+    <span class="hljs-attr">copyStartX</span>: fromLeft,
+    <span class="hljs-attr">copyStartY</span>: fromTop,
 });</pre></div></div>
             
         </li>
@@ -419,27 +458,27 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Create a shape track along which we can animate a Cell</p>
+              <p>The Wheel entity, with its associated filter. The rim is a separate Wheel entity pivoted to the filtered Wheel</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeOval({
+            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'pixelate'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'pixelate'</span>,
+    <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">24</span>,
+    <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">24</span>,
+});
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'mytrack'</span>,
+scrawl.makeWheel({
 
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-string">'40%'</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-string">'40%'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'pixel-wheel'</span>,
 
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">80</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">'25%'</span>, <span class="hljs-string">'25%'</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
 
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'#808080'</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">10</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
-
-    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">precision</span>: <span class="hljs-number">0.1</span>,
-});</pre></div></div>
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">'pixelate'</span>],</pre></div></div>
             
         </li>
         
@@ -450,28 +489,24 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Create a Cell on the canvas</p>
+              <p>We set the <code>isStencil</code> flag to <code>true</code> so that the background covered by the wheel is displayed through the filter</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cell1 = canvas.buildCell({
+            <div class="content"><div class='highlight'><pre>    isStencil: <span class="hljs-literal">true</span>,
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'cell-1'</span>,
+}).clone({
 
-    <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'pixie-wheel-rim'</span>,
 
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">150</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">150</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">'pixel-wheel'</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
 
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'40%'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'40%'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
 
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">-0.6</span>,
-    },
-
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'lightblue'</span>,
+    <span class="hljs-attr">filters</span>: [],
 });</pre></div></div>
             
         </li>
@@ -482,141 +517,6 @@ canvas.set({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Cells cannot be cloned (yet - may introduce that functionality in a future update)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cell2 = canvas.buildCell({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'cell-2'</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-string">'20%'</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">'20%'</span>,
-
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">'60%'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'50%'</span>,
-
-    <span class="hljs-attr">handleX</span>: <span class="hljs-number">30</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-number">50</span>,
-
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.4</span>,
-    },
-
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'lightblue'</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>This Cell will animate along the track we created earlier</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cell3 = canvas.buildCell({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'cell-3'</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,
-
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'bottom'</span>,
-
-    <span class="hljs-attr">path</span>: <span class="hljs-string">'mytrack'</span>,
-    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'path'</span>,
-    <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">constantPathSpeed</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">delta</span>: {
-      <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">-0.001</span>,
-    },
-
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'black'</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>Add labels to Cells</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.makePhrase({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'label-1'</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">'cell-1'</span>,
-
-    <span class="hljs-attr">text</span>: <span class="hljs-string">'Cell 1'</span>,
-    <span class="hljs-attr">font</span>: <span class="hljs-string">'20px sans-serif'</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">5</span>],
-
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'label-2'</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">'cell-2'</span>,
-
-    <span class="hljs-attr">text</span>: <span class="hljs-string">'Cell 2'</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'label-3'</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">'cell-3'</span>,
-
-    <span class="hljs-attr">text</span>: <span class="hljs-string">'Cell 3'</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'white'</span>,
-});
-
-scrawl.makeWheel({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-1'</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">'cell-1'</span>,
-
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">30</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-number">100</span>, <span class="hljs-number">120</span>],
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">8</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
-
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-2'</span>,
-    <span class="hljs-attr">group</span>: <span class="hljs-string">'cell-2'</span>,
-
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">40</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -635,22 +535,18 @@ scrawl.makeWheel({
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
-Canvas dimensions: <span class="hljs-subst">${canvas.currentDimensions}</span>
-Base dimensions: <span class="hljs-subst">${canvas.base.currentDimensions}</span>
-Cell 1 dimensions: <span class="hljs-subst">${cell1.currentDimensions}</span>
-Cell 2 dimensions: <span class="hljs-subst">${cell2.currentDimensions}</span>`</span>;
+        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
         </li>
         
         
-        <li id="section-12">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -666,48 +562,153 @@ Cell 2 dimensions: <span class="hljs-subst">${cell2.currentDimensions}</span>`</
         </li>
         
         
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h4 id="built-in-user-interaction">Built-in user interaction</h4>
+<p>Drag-and-drop the filtered Wheel around the canvas - uses the Scrawl-canvas <code>makeDragZone</code> functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeGroup({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'drag-group'</span>,
+
+}).addArtefacts(<span class="hljs-string">'pixel-wheel'</span>);
+
+scrawl.makeDragZone({
+
+    <span class="hljs-attr">zone</span>: canvas,
+    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">'drag-group'</span>,
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">'up'</span>, <span class="hljs-string">'leave'</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h4 id="bespoke-user-interaction">Bespoke user interaction</h4>
+<p>We shall build the “zoom” and “pan” effects using event listeners.</p>
+<ul>
+<li>For the purposes of accessibility these events should be extended to include keyboard interactions</li>
+<li>Mobile devices should also include multitouch gestures - such activity is often best captured using a dedicated third party Javascript library, for example <a href="https://hammerjs.github.io/">hammer.js</a></li>
+</ul>
+<p>Zoom effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener(<span class="hljs-string">'wheel'</span>, (e) =&gt; {
+
+    e.preventDefault();
+
+    <span class="hljs-keyword">let</span> oldScale = currentScale,
+        here = canvas.here;
+
+    currentScale += (e.deltaY * <span class="hljs-number">-0.0005</span>);
+
+    <span class="hljs-keyword">if</span> (currentScale &gt; maxScale) currentScale = maxScale;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentScale &lt; minScale) currentScale = minScale;
+
+    <span class="hljs-keyword">let</span> delta = (frameDimension * oldScale) - (frameDimension * currentScale);
+
+    fromLeft += delta * here.normX;
+    fromTop += delta * here.normY;
+
+    piccie.set({
+
+        <span class="hljs-attr">copyWidth</span>: currentScale * frameDimension,
+        <span class="hljs-attr">copyHeight</span>: currentScale * frameDimension,
+
+        <span class="hljs-attr">copyStartX</span>: fromLeft,
+        <span class="hljs-attr">copyStartY</span>: fromTop,
+    });
+}, canvas.domElement);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Define some additional scene state, specifically for the “pan” effect</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> draggingArtefact = <span class="hljs-literal">false</span>,
+    currentDragX = <span class="hljs-number">0</span>,
+    currentDragY = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h4 id="user-interaction">User interaction</h4>
-<p>Setup form observer functionality for display block</p>
+              <p>Pan effect, split across three separate event listeners (starting, during, ending)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+            <div class="content"><div class='highlight'><pre>scrawl.addListener(<span class="hljs-string">'down'</span>, (e) =&gt; {
 
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">'.controlItem'</span>,
+    <span class="hljs-keyword">let</span> here = base.here,
+        target = baseGroup.getArtefactAt(base.here);
 
-    <span class="hljs-attr">target</span>: cell1,
+    draggingArtefact = (target &amp;&amp; target.artefact &amp;&amp; target.artefact.type == <span class="hljs-string">'Picture'</span>) ? 
+        target.artefact : 
+        <span class="hljs-literal">false</span>; 
 
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-keyword">if</span> (draggingArtefact) {
+        currentDragX = here.x;
+        currentDragY = here.y;
+    }
+}, canvas.domElement);
 
-    <span class="hljs-attr">updates</span>: {
+scrawl.addListener(<span class="hljs-string">'move'</span>, (e) =&gt; {
 
-        <span class="hljs-string">'cell-filter'</span>: [<span class="hljs-string">'filter'</span>, <span class="hljs-string">'raw'</span>],
-    },
-});
+    <span class="hljs-keyword">let</span> here = base.here;
 
-scrawl.observeAndUpdate({
+    <span class="hljs-keyword">if</span> (draggingArtefact) {
 
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">'.controlItem'</span>,
+        fromLeft += (currentDragX - here.x) * currentScale;
+        fromTop += (currentDragY - here.y) * currentScale;
 
-    <span class="hljs-attr">target</span>: scrawl.library.entity[<span class="hljs-string">'label-2'</span>],
+        currentDragX = here.x,
+        currentDragY = here.y;
 
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-keyword">if</span> (fromLeft &lt; <span class="hljs-number">0</span>) fromLeft = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fromLeft &gt; naturalWidth - frameDimension) fromLeft = naturalWidth - frameDimension;
 
-    <span class="hljs-attr">updates</span>: {
+        <span class="hljs-keyword">if</span> (fromTop &lt; <span class="hljs-number">0</span>) fromTop = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fromTop &gt; naturalHeight - frameDimension) fromTop = naturalHeight - frameDimension;
 
-        <span class="hljs-string">'entity-filter'</span>: [<span class="hljs-string">'filter'</span>, <span class="hljs-string">'raw'</span>],
-    },
-});</pre></div></div>
+        piccie.set({
+            <span class="hljs-attr">copyStartX</span>: fromLeft,
+            <span class="hljs-attr">copyStartY</span>: fromTop,
+        });
+    }
+}, canvas.domElement);
+
+scrawl.addListener([<span class="hljs-string">'up'</span>, <span class="hljs-string">'leave'</span>], (e) =&gt; {
+
+    draggingArtefact = <span class="hljs-literal">false</span>;
+    currentDragX = <span class="hljs-number">0</span>;
+    currentDragY = <span class="hljs-number">0</span>;
+
+}, canvas.domElement);</pre></div></div>
             
         </li>
         
