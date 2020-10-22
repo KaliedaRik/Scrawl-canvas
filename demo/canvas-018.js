@@ -168,6 +168,7 @@ let report = function () {
 scrawl.makeRender({
 
     name: 'demo-animation',
+    target: canvas,
     afterShow: report,
 });
 

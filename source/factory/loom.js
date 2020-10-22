@@ -306,20 +306,21 @@ P.get = function (item) {
 // __set__ - copied over from the entity mixin.
 P.set = function (items = {}) {
 
-    if (items) {
+    if (Object.keys(items).length) {
 
         let setters = this.setters,
             defs = this.defs,
             state = this.state,
             stateSetters = (state) ? state.setters : {},
-            stateDefs = (state) ? state.defs : {};
+            stateDefs = (state) ? state.defs : {},
+            predefined, stateFlag;
 
         Object.entries(items).forEach(([key, value]) => {
 
             if (key && key !== 'name' && value != null) {
 
-                let predefined = setters[key],
-                    stateFlag = false;
+                predefined = setters[key];
+                stateFlag = false;
 
                 if (!predefined) {
 
@@ -339,20 +340,21 @@ P.set = function (items = {}) {
 // __setDelta__ - copied over from the entity mixin.
 P.setDelta = function (items = {}) {
 
-    if (items) {
+    if (Object.keys(items).length) {
 
         let setters = this.deltaSetters,
             defs = this.defs,
             state = this.state,
             stateSetters = (state) ? state.deltaSetters : {},
-            stateDefs = (state) ? state.defs : {};
+            stateDefs = (state) ? state.defs : {},
+            predefined, stateFlag;
 
         Object.entries(items).forEach(([key, value]) => {
 
             if (key && key !== 'name' && value != null) {
 
-                let predefined = setters[key],
-                    stateFlag = false;
+                predefined = setters[key];
+                stateFlag = false;
 
                 if (!predefined) {
 

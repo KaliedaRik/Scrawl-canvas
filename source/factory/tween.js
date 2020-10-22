@@ -274,36 +274,39 @@ S.completeAction = function (item) {
 // `set` - we perform some additional functionality in the Tween `set` function
 // + updating the Tween's Ticker object happens here
 // + recalculating effectiveDuration happens here if the __time__ or __duration__ values change
-P.set = function (items) {
+P.set = function (items = {}) {
 
-    let key, i, iz, s,
-        setters = this.setters,
-        keys = Object.keys(items),
-        d = this.defs,
-        ticker = (xt(items.ticker)) ? this.ticker : false;
-
-    for (i = 0, iz = keys.length; i < iz; i++) {
-
-        key = keys[i];
+    if(Object.keys(items).length) {
         
-        if (key !== 'name') {
+        let key, i, iz, s,
+            setters = this.setters,
+            keys = Object.keys(items),
+            d = this.defs,
+            ticker = (xt(items.ticker)) ? this.ticker : false;
 
-            s = setters[key];
+        for (i = 0, iz = keys.length; i < iz; i++) {
+
+            key = keys[i];
             
-            if (s) s.call(this, items[key]);
-            else if (typeof d[key] !== 'undefined') this[key] = items[key];
+            if (key !== 'name') {
+
+                s = setters[key];
+                
+                if (s) s.call(this, items[key]);
+                else if (typeof d[key] !== 'undefined') this[key] = items[key];
+            }
         }
-    }
 
-    if (ticker) {
+        if (ticker) {
 
-        this.ticker = ticker;
-        this.addToTicker(items.ticker);
-    }
-    else if (xto(items.time, items.duration)) {
+            this.ticker = ticker;
+            this.addToTicker(items.ticker);
+        }
+        else if (xto(items.time, items.duration)) {
 
-        this.calculateEffectiveTime();
-        this.calculateEffectiveDuration();
+            this.calculateEffectiveTime();
+            this.calculateEffectiveDuration();
+        }
     }
 
     return this;

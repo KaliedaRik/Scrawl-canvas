@@ -316,7 +316,7 @@ export default function (P = {}) {
 // `set` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
     P.set = function (items = {}) {
 
-        if (items) {
+        if (Object.keys(items).length) {
 
             let setters = this.setters,
                 defs = this.defs,
@@ -350,7 +350,7 @@ export default function (P = {}) {
 // `setDelta` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
     P.setDelta = function (items = {}) {
 
-        if (items) {
+        if (Object.keys(items).length) {
 
             let setters = this.deltaSetters,
                 defs = this.defs,

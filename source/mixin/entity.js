@@ -11,7 +11,7 @@
 
 
 // #### Imports
-import { λnull, mergeOver, pushUnique, xt, addStrings } from '../core/utilities.js';
+import { λnull, mergeOver, pushUnique, xt, addStrings, isa_obj } from '../core/utilities.js';
 import { currentGroup, scrawlCanvasHold } from '../core/document.js';
 
 import { makeState } from '../factory/state.js';
@@ -287,20 +287,21 @@ export default function (P = {}) {
 
     P.set = function (items = {}) {
 
-        if (items) {
+        if (Object.keys(items).length) {
 
             let setters = this.setters,
                 defs = this.defs,
                 state = this.state,
                 stateSetters = (state) ? state.setters : {},
-                stateDefs = (state) ? state.defs : {};
+                stateDefs = (state) ? state.defs : {},
+                predefined, stateFlag;
 
             Object.entries(items).forEach(([key, value]) => {
 
                 if (key && key !== 'name' && value != null) {
 
-                    let predefined = setters[key],
-                        stateFlag = false;
+                    predefined = setters[key];
+                    stateFlag = false;
 
                     if (!predefined) {
 
@@ -319,20 +320,21 @@ export default function (P = {}) {
 
     P.setDelta = function (items = {}) {
 
-        if (items) {
+        if (Object.keys(items).length) {
 
             let setters = this.deltaSetters,
                 defs = this.defs,
                 state = this.state,
                 stateSetters = (state) ? state.deltaSetters : {},
-                stateDefs = (state) ? state.defs : {};
+                stateDefs = (state) ? state.defs : {},
+                predefined, stateFlag;
 
             Object.entries(items).forEach(([key, value]) => {
 
                 if (key && key !== 'name' && value != null) {
 
-                    let predefined = setters[key],
-                        stateFlag = false;
+                    predefined = setters[key];
+                    stateFlag = false;
 
                     if (!predefined) {
 

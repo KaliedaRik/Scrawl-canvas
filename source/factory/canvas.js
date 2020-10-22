@@ -499,6 +499,7 @@ P.cleanDimensionsAdditionalActions = function () {
 
     this.dirtyDomDimensions = true;
     this.dirtyDisplayShape = true;
+    this.dirtyDisplayArea = true;
 };
 
 // `addCell` - add a Cell object to the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself

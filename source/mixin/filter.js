@@ -96,12 +96,13 @@ export default function (P = {}) {
 
         let myfilters = this.filters,
             floor = Math.floor,
-            buckets = [];
+            buckets = [],
+            myobj, order;
 
         myfilters.forEach(name => {
 
-            let myobj = filter[name],
-                order = floor(myobj.order) || 0;
+            myobj = filter[name];
+            order = floor(myobj.order) || 0;
 
             if (!buckets[order]) buckets[order] = [];
 

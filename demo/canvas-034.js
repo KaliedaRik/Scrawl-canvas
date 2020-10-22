@@ -9,13 +9,8 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 canvas.set({
 
-    fit: "cover",
+    isComponent: true,
     checkForResize: true,
-
-}).setBase({
-
-    width: 800,
-    height: 800,
 
 }).setAsCurrentCanvas();
 
@@ -44,11 +39,19 @@ const mytext = scrawl.makePhrase({
 // The values assigned to the breakpoints are Float numbers for the displayed Canvas element's width/height ratio - the value `3` represents the case where the width value is three times __more__ than the height value, while `0.35` represents a width (roughly) 3 times __less__ than the height.
 // 
 // We can set a Canvas artefact's breakpoints in one go using the dedicated `setDisplayShapeBreakpoints()` function, as below. Alternatively we can use the regular `set()` function, supplying the attributes `breakToBanner`, `breakToLandscape`, `breakToPortrait` and `breakToSkyscraper` as required. The values given here are the default values for Canvas artefacts.
+//
+// Similar functionality exists to adjust to the current (base) Cell area (width * height)
 canvas.setDisplayShapeBreakpoints({
+
     breakToBanner: 3,
     breakToLandscape: 1.5,
     breakToPortrait: 0.65,
     breakToSkyscraper: 0.35,
+
+    breakToSmallest: 100000,
+    breakToSmaller: 150000,
+    breakToLarger: 200000,
+    breakToLargest: 300000,
 });
 
 // Each display shape has an associated hook function (by default a function that does nothing) which Scrawl-canvas will run each time it detects that the Canvas display shape has changed to that shape. We can replace these null-functions with our own; this allows us to configure the scene/animation to accommodate different display shapes, thus making the code reusable in a range of different web page environments.
@@ -76,6 +79,24 @@ canvas.set({
             roll: -90,
         });
     },
+
+    actionLargestArea: () => {
+        mytext.set({
+            size: '40px',
+        });
+    },
+
+    actionRegularArea: () => {
+        mytext.set({
+            size: '28px',
+        });
+    },
+
+    actionSmallestArea: () => {
+        mytext.set({
+            size: '16px',
+        });
+    },
 });
 
 // We can also set/update the functions using dedicated `setAction???Shape()` functions:
@@ -90,6 +111,18 @@ canvas.setActionLandscapeShape(() => {
     mytext.set({
         text: `Canvas display shape: ${canvas.get('displayShape')}`,
         roll: -22.5,
+    });
+});
+
+canvas.setActionLargerArea(() => {
+    mytext.set({
+        size: '34px',
+    });
+});
+
+canvas.setActionSmallerArea(() => {
+    mytext.set({
+        size: '22px',
     });
 });
 
@@ -121,7 +154,7 @@ const demoAnimation = scrawl.makeRender({
     afterShow: report,
 
     // We manually trigger the display shape functionality after the first render cycle completes. This allows all artefacts to settle into a state where we can then update the Phrase entity with text and roll values appropriate to the Canvas element's initial shape
-    afterCreated: () => canvas.updateDisplayShape(),
+    afterCreated: () => canvas.updateDisplay(),
 });
 
 

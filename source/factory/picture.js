@@ -321,14 +321,15 @@ P.get = function (item) {
 // `set`
 P.set = function (items = {}) {
 
-    if (items) {
+    if (Object.keys(items).length) {
 
         let setters = this.setters,
             defs = this.defs,
             state = this.state,
             source = this.source,
             stateSetters = (state) ? state.setters : {},
-            stateDefs = (state) ? state.defs : {};
+            stateDefs = (state) ? state.defs : {},
+            predefined, stateFlag;
 
         Object.entries(items).forEach(([key, value]) => {
 
@@ -340,8 +341,8 @@ P.set = function (items = {}) {
 
             else if (key && key !== 'name' && value != null) {
 
-                let predefined = setters[key],
-                    stateFlag = false;
+                predefined = setters[key];
+                stateFlag = false;
 
                 if (!predefined) {
 

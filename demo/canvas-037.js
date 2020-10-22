@@ -62,13 +62,11 @@ let piccie = scrawl.makePicture({
 
 // The Wheel entity, with its associated filter. The rim is a separate Wheel entity pivoted to the filtered Wheel
 scrawl.makeFilter({
-    name: 'pixelate',
-    method: 'pixelate',
-    tileWidth: 24,
-    tileHeight: 24,
+    name: 'do-nothing',
+    method: 'none',
 });
 
-scrawl.makeWheel({
+let filterTarget = scrawl.makeWheel({
 
     name: 'pixel-wheel',
 
@@ -77,14 +75,17 @@ scrawl.makeWheel({
     start: ['25%', '25%'],
     handle: ['center', 'center'],
 
-    filters: ['pixelate'],
+    filters: ['do-nothing'],
+    filter: 'none',
 
     // We set the `isStencil` flag to `true` so that the background covered by the wheel is displayed through the filter
     isStencil: true,
 
-}).clone({
+});
 
-    name: 'pixie-wheel-rim',
+filterTarget.clone({
+
+    name: 'pixel-wheel-rim',
 
     pivot: 'pixel-wheel',
     lockTo: 'pivot',
@@ -139,6 +140,22 @@ scrawl.makeDragZone({
     endOn: ['up', 'leave'],
 });
 
+// Filter selection
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: filterTarget,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        'css-filter': ['filter', 'raw'],
+    },
+});
 
 // #### Bespoke user interaction
 // We shall build the "zoom" and "pan" effects using event listeners.

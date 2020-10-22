@@ -37,6 +37,27 @@ export default function (P = {}) {
         actionRectangleShape: null,
         actionPortraitShape: null,
         actionSkyscraperShape: null,
+
+// Scrawl-canvas also recognises five areas, again separated by four breakpoints: 
+// + `smallest`
+// + `smaller`
+// + `regular`
+// + `larger`
+// + `largest`
+//
+// The values assigned to the breakpoints are Float numbers for the displayed Canvas element's pixel area (`width * height`).
+// + Useful for dynamic Cells - for example Canvas base Cells, where the canvas `isComponent` flag has been set to `true`; in these situations we can use the area breakpoints to adjust entity dimensions and scales, and text font sizes, to better match the changed environment.
+// + The other option - to set the base Cell's dimensions to known, static values and set the canvas's `fit` attribute - suffers from image degredation when the canvas and its base cell's dimensions are excessively different. 
+        breakToSmallest: 20000,
+        breakToSmaller: 80000,
+        breakToLarger: 180000,
+        breakToLargest: 320000,
+
+        actionSmallestArea: null,
+        actionSmallerArea: null,
+        actionRegularArea: null,
+        actionLargerArea: null,
+        actionLargestArea: null,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
     mergeOver(P, defaultAttributes);
@@ -72,6 +93,10 @@ export default function (P = {}) {
             breakToLandscape: this.breakToLandscape,
             breakToPortrait: this.breakToPortrait,
             breakToSkyscraper: this.breakToSkyscraper,
+            breakToSmallest: this.breakToSmallest,
+            breakToSmaller: this.breakToSmaller,
+            breakToLarger: this.breakToLarger,
+            breakToLargest: this.breakToLargest,
         };
     };
 
@@ -99,10 +124,27 @@ export default function (P = {}) {
                     case 'breakToSkyscraper' :
                         this.breakToSkyscraper = val;
                         break;
+
+                    case 'breakToSmallest' :
+                        this.breakToSmallest = val;
+                        break;
+
+                    case 'breakToSmaller' :
+                        this.breakToSmaller = val;
+                        break;
+
+                    case 'breakToLarger' :
+                        this.breakToLarger = val;
+                        break;
+
+                    case 'breakToLargest' :
+                        this.breakToLargest = val;
+                        break;
                 }
             }
         }
         this.dirtyDisplayShape = true;
+        this.dirtyDisplayArea = true;
     };
 // `setDisplayShapeBreakpoints` - an alternative mechanism to set breakpoints beyond the normal `set` function
     P.setDisplayShapeBreakpoints = S.displayShapeBreakpoints;
@@ -133,6 +175,34 @@ export default function (P = {}) {
 
         if (isa_number(item)) this.breakToSkyscraper = item;
         this.dirtyDisplayShape = true;
+    };
+
+// Set __breakToSmallest__ - the breakpoint between `smaller` and `smallest` display shapes
+    S.breakToSmallest = function (item) {
+
+        if (isa_number(item)) this.breakToSmallest = item;
+        this.dirtyDisplayArea = true;
+    };
+
+// Set __breakToSmaller__ - the breakpoint between `regular` and `smaller` display shapes
+    S.breakToSmaller = function (item) {
+
+        if (isa_number(item)) this.breakToSmaller = item;
+        this.dirtyDisplayArea = true;
+    };
+
+// Set __breakToLarger__ - the breakpoint between `regular` and `larger` display shapes
+    S.breakToLarger = function (item) {
+
+        if (isa_number(item)) this.breakToLarger = item;
+        this.dirtyDisplayArea = true;
+    };
+
+// Set __breakToLargest__ - the breakpoint between `larger` and `largest` display shapes
+    S.breakToLargest = function (item) {
+
+        if (isa_number(item)) this.breakToLargest = item;
+        this.dirtyDisplayArea = true;
     };
 
 // Each display shape has an associated hook function (by default a function that does nothing) which Scrawl-canvas will run each time it detects that the Canvas display shape has changed to that shape. We can replace these null-functions with our own; this allows us to configure the scene/animation to accommodate different display shapes, thus making the code reusable in a range of different web page environments.
@@ -184,6 +254,51 @@ export default function (P = {}) {
 // `setActionSkyscraperShape` - an alternative mechanism to set the __actionSkyscraperShape__ function, beyond the normal `set` functionality
     P.setActionSkyscraperShape = S.actionSkyscraperShape;
 
+// Set __actionSmallestArea__ - must be a Function
+    S.actionSmallestArea = function (item) {
+
+        if (isa_fn(item)) this.actionSmallestArea = item;
+        this.dirtyDisplayArea = true;
+    };
+// `setActionSmallestArea` - an alternative mechanism to set the __actionSmallestArea__ function, beyond the normal `set` functionality
+    P.setActionSmallestArea = S.actionSmallestArea;
+
+// Set __actionSmallerArea__ - must be a Function
+    S.actionSmallerArea = function (item) {
+
+        if (isa_fn(item)) this.actionSmallerArea = item;
+        this.dirtyDisplayArea = true;
+    };
+// `setActionSmallerArea` - an alternative mechanism to set the __actionSmallerArea__ function, beyond the normal `set` functionality
+    P.setActionSmallerArea = S.actionSmallerArea;
+
+// Set __actionRegularArea__ - must be a Function
+    S.actionRegularArea = function (item) {
+
+        if (isa_fn(item)) this.actionRegularArea = item;
+        this.dirtyDisplayArea = true;
+    };
+// `setActionRegularArea` - an alternative mechanism to set the __actionRegularArea__ function, beyond the normal `set` functionality
+    P.setActionRegularArea = S.actionRegularArea;
+
+// Set __actionLargerArea__ - must be a Function
+    S.actionLargerArea = function (item) {
+
+        if (isa_fn(item)) this.actionLargerArea = item;
+        this.dirtyDisplayArea = true;
+    };
+// `setActionLargerArea` - an alternative mechanism to set the __actionLargerArea__ function, beyond the normal `set` functionality
+    P.setActionLargerArea = S.actionLargerArea;
+
+// Set __actionLargestArea__ - must be a Function
+    S.actionLargestArea = function (item) {
+
+        if (isa_fn(item)) this.actionLargestArea = item;
+        this.dirtyDisplayArea = true;
+    };
+// `setActionLargestArea` - an alternative mechanism to set the __actionLargestArea__ function, beyond the normal `set` functionality
+    P.setActionLargestArea = S.actionLargestArea;
+
 
 // #### Prototype functions
 
@@ -198,6 +313,15 @@ export default function (P = {}) {
 
         this.currentDisplayShape = '';
         this.dirtyDisplayShape = true;
+
+        this.actionSmallestArea = λnull;
+        this.actionSmallerArea = λnull;
+        this.actionRegularArea = λnull;
+        this.actionLargerArea = λnull;
+        this.actionLargestArea = λnull;
+
+        this.currentDisplayArea = '';
+        this.dirtyDisplayArea = true;
     };
  
 // `cleanDisplayShape` - internal function; replaces the function defined in the dom.js mixin, invoked when required as part of the DOM artefact `prestamp` functionality
@@ -274,11 +398,100 @@ export default function (P = {}) {
         }
     };
 
+// `cleanDisplayArea` - internal function; replaces the function defined in the dom.js mixin, invoked when required as part of the DOM artefact `prestamp` functionality
+// + Note that `cleanDisplayArea` fires before `cleanDisplayShape`!
+    P.cleanDisplayArea = function () {
+
+        this.dirtyDisplayArea = false;
+
+        let [width, height] = this.currentDimensions;
+
+        if (width > 0 && height > 0) {
+
+            let area = width * height,
+                current = this.currentDisplayArea,
+                largest = this.breakToLargest,
+                larger = this.breakToLarger,
+                smaller = this.breakToSmaller,
+                smallest = this.breakToSmallest;
+
+            if (area > largest) {
+
+                if (current !== 'largest') {
+
+                    this.currentDisplayArea = 'largest';
+                    this.actionLargestArea();
+                    return true;
+                }
+                return false;
+            }
+            else if (area > larger) {
+
+                if (current !== 'larger') {
+
+                    this.currentDisplayArea = 'larger';
+                    this.actionLargerArea();
+                    return true;
+                }
+                return false;
+            }
+            else if (area < smallest) {
+                
+                if (current !== 'smallest') {
+
+                    this.currentDisplayArea = 'smallest';
+                    this.actionSmallestArea();
+                    return true;
+                }
+                return false;
+            }
+            else if (area < smaller) {
+                
+                if (current !== 'smaller') {
+
+                    this.currentDisplayArea = 'smaller';
+                    this.actionSmallerArea();
+                    return true;
+                }
+                return false;
+            }
+            else {
+
+                if (current !== 'regular') {
+
+                    this.currentDisplayArea = 'regular';
+                    this.actionRegularArea();
+                    return true;
+                }
+                return false;
+            }
+        }
+        else {
+
+            this.dirtyDisplayArea = true;
+            return false;
+        }
+    };
+
 // `updateDisplayShape` - use this function to force the Canvas or Stack artefact to re-evaluate its current display shape, and invoke the action hook function associated with that shape.
     P.updateDisplayShape = function () {
 
         this.currentDisplayShape = '';
         this.dirtyDisplayShape = true;
+    };
+
+// `updateDisplayArea` - use this function to force the Canvas or Stack artefact to re-evaluate its current display area, and invoke the action hook function associated with that area.
+    P.updateDisplayArea = function () {
+
+        this.currentDisplayArea = '';
+        this.dirtyDisplayArea = true;
+    };
+
+// `updateDisplay` - perform update for both display shape and area.
+    P.updateDisplay = function () {
+
+        this.updateDisplayShape();
+        this.updateDisplayArea();
     };
 
 

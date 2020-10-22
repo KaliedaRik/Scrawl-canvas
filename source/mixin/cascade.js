@@ -70,12 +70,13 @@ export default function (P = {}) {
 
             let floor = Math.floor,
                 groupnames = this.groups,
-                buckets = [];
+                buckets = [],
+                mygroup, order;
 
             groupnames.forEach(name => {
 
-                let mygroup = group[name],
-                    order = (mygroup) ? floor(mygroup.order) : 0;
+                mygroup = group[name];
+                order = (mygroup) ? floor(mygroup.order) : 0;
 
                 if (!buckets[order]) buckets[order] = [];
 
@@ -130,9 +131,13 @@ export default function (P = {}) {
 // `cascadeAction` - internal helper function used by the functions below
     P.cascadeAction = function (items, action) {
 
+        let grp;
+
+        console.log('cascadeAction')
+
         this.groups.forEach( groupname => {
 
-            let grp = group[groupname];
+            grp = group[groupname];
 
             if (grp) grp[action](items);
 

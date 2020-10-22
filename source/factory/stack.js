@@ -282,6 +282,7 @@ P.cleanDimensionsAdditionalActions = function () {
     this.dirtyStart = true;
     this.dirtyHandle = true;
     this.dirtyDisplayShape = true;
+    this.dirtyDisplayArea = true;
 };
 
 // `cleanPerspective` - internal function

@@ -8,17 +8,77 @@
   <title>Demo Canvas 037</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+
+    <style>
+      .controls {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+    </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 037</h1>
-  <h2>Pan and zoom using a Picture entity</h2>
+  <h2>Pan and zoom using a Picture entity; apply CSS/SVG filters to an entity</h2>
 
   <h3>Use the mouse scroll button to zoom the canvas display, and drag/drop to pan around the display</h3>
+
+  <div class="controls">
+    <div class="lavender label">CSS/SVG filters</div>
+    <div class="lavender">
+      <select class="controlItem" id="css-filter">
+        <option value="none">none</option>
+        <option value="blur(6px)">css blur</option>
+        <option value="brightness(0.4)">css brightness</option>
+        <option value="contrast(200%)">css contrast</option>
+        <option value="grayscale(100%)">css grayscale</option>
+        <option value="hue-rotate(90deg)">css hue-rotation</option>
+        <option value="invert(75%)">css invert</option>
+        <option value="saturate(30%)">css saturate</option>
+        <option value="sepia(100%)">css sepia</option>
+        <option value="url(#svg-blur)">svg blur</option>
+        <option value="url(#svg-posterize)">svg posterize</option>
+        <option value="url(#svg-duotone)">svg duotone</option>
+        <option value="url(#svg-noise)">svg noise</option>
+      </select>
+    </div>
+  </div>
 
   <canvas id="mycanvas"></canvas>
 
   <p id="reportmessage"></p>
+
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <filter id="svg-blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" edgeMode="duplicate" />
+    </filter>
+
+    <filter id="svg-posterize">
+      <feComponentTransfer>
+        <feFuncR type="discrete" tableValues=".1 .4 .7 1" />
+        <feFuncG type="discrete" tableValues=".1 .4 .7 1" />
+        <feFuncB type="discrete" tableValues=".1 .4 .7 1" />
+      </feComponentTransfer>
+    </filter>
+
+    <filter id="svg-duotone">
+      <feColorMatrix type="matrix" values=".33 .33 .33 0 0
+        .33 .33 .33 0 0
+        .33 .33 .33 0 0
+         0   0   0  1 0">
+      </feColorMatrix>
+
+      <feComponentTransfer color-interpolation-filters="sRGB">
+        <feFuncR type="table" tableValues=".996078431  .984313725"></feFuncR>
+        <feFuncG type="table" tableValues=".125490196  .941176471"></feFuncG>
+        <feFuncB type="table" tableValues=".552941176  .478431373"></feFuncB>
+      </feComponentTransfer>
+    </filter>
+
+    <filter id="svg-noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.04" result="NOISE" numOctaves="2" />
+      <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="20" xChannelSelector="R" yChannelSelector="R"></feDisplacementMap>
+    </filter>
+  </svg>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
@@ -27,7 +87,8 @@
       <li>Crerate a Picture entity hat displays a large image asset</li>
       <li>Add event listeners that allow the user to zoom the image in/out within the Picture. Zooming out should be constrained so that no blank space appears at the Picture's edges: when the image edge zooms past the Picture edge, it sticks to the edge. Wherever possible (as constrained by edges), the zoom effect should center on the mouse cursor.</li>
       <li>Add event listeners that allow the user to drag the image within the Picture; again, drag should be constrained so that no blank space appears at the Picture's edges</li>
-      <li>Add a draggable Wheel entity (with a filter) above the Picture: filtered contents of the Wheel should update in real time as the underlying Picture's image asset updates.</li>
+      <li>Add a draggable Wheel entity (acting as a stencil, with a filter) above the Picture: filtered contents of the Wheel should update in real time as the underlying Picture's image asset updates.</li>
+      <li>Test that a variety of CSS and SVG-based filters work on the Wheel entity.</li>
     </ul>
 
     <p><a href="../docs/demo/canvas-037.html">Annotated code</a></p>

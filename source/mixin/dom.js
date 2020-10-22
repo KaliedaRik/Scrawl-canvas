@@ -747,6 +747,9 @@ export default function (P = {}) {
 // `cleanDisplayShape` - overwritten in Stack and Canvas artefacts via the displayShape mixin
     P.cleanDisplayShape = λnull;
 
+// `cleanDisplayArea` - overwritten in Stack and Canvas artefacts via the displayShape mixin
+    P.cleanDisplayArea = λnull;
+
 // `prepareStamp` - check all the dirty flags and call the appropriate `clean` functions if they are set
     P.prepareStamp = function () {
 
@@ -755,6 +758,7 @@ export default function (P = {}) {
         if (this.dirtyContent) this.cleanContent();
         if (this.dirtyScale) this.cleanScale();
         if (this.dirtyDimensions) this.cleanDimensions();
+        if (this.dirtyDisplayArea) this.cleanDisplayArea();
         if (this.dirtyDisplayShape) this.cleanDisplayShape();
         if (this.dirtyLock) this.cleanLock();
         if (this.dirtyStart) this.cleanStart();

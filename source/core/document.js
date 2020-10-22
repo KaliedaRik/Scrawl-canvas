@@ -40,15 +40,16 @@ const sortRootElements = function () {
 
         rootElementsSort = false;
 
-        let buckets = [];
+        let buckets = [],
+            art, order;
 
         rootElements.forEach((item) => {
 
-            let art = artefact[item];
+            art = artefact[item];
 
             if (art) {
 
-                let order = floor(art.order) || 0;
+                order = floor(art.order) || 0;
 
                 if (!buckets[order]) buckets[order] = [];
                 
@@ -240,9 +241,11 @@ const addStack = function (items = {}) {
 // `Exported function` (to modules). Parse the DOM, looking for &lt;canvas> elements; then create __Canvas__ artefact and __Cell__ asset wrappers for each canvas found. Canvas elements do not need to be part of a stack and can appear anywhere in the HTML body.
 const getCanvases = function () {
 
+    let item;
+
     document.querySelectorAll('canvas').forEach((el, index) => {
 
-        let item = addInitialCanvasElement(el);
+        item = addInitialCanvasElement(el);
 
         if (!index) setCurrentCanvas(item);
     });
@@ -479,11 +482,12 @@ const displayCycleBatchProcess = function (method) {
 
     return new Promise((resolve, reject) => {
 
-        let promises = [];
+        let promises = [],
+            item;
 
         rootElements_sorted.forEach(name => {
 
-            let item = artefact[name];
+            item = artefact[name];
 
             if (item && item[method]) promises.push(item[method]());
         })

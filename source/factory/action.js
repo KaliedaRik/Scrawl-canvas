@@ -107,17 +107,18 @@ S.triggered = function (item) {
 // + recalculating effectiveDuration happens here if the __time__ value change
 P.set = function (items = {}) {
 
-    if (items) {
+    if (Object.keys(items).length) {
 
         let setters = this.setters,
             defs = this.defs,
-            ticker = (xt(items.ticker)) ? this.ticker : false;
+            ticker = (xt(items.ticker)) ? this.ticker : false,
+            predefined;
 
         Object.entries(items).forEach(([key, value]) => {
 
             if (key !== 'name') {
 
-                let predefined = setters[key];
+                predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
                 else if (typeof defs[key] !== 'undefined') this[key] = value;

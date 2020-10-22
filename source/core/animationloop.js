@@ -56,15 +56,16 @@ const sortAnimations = function () {
         resortBatchAnimations = false;
 
         let floor = Math.floor,
-            buckets = [];
+            buckets = [],
+            obj, order;
 
         animate.forEach(name => {
 
-            let obj = animation[name];
+            obj = animation[name];
 
             if (obj) {
 
-                let order = floor(obj.order) || 0;
+                order = floor(obj.order) || 0;
 
                 if (!buckets[order]) buckets[order] = [];
 

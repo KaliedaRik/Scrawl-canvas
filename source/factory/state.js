@@ -186,19 +186,22 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Get, Set, deltaSet
-P.set = function (items) {
+P.set = function (items = {}) {
 
-    let key, i, iz,
-        keys = Object.keys(items),
-        d = this.defs;
+    if(Object.keys(items).length) {
+        
+        let key, i, iz,
+            keys = Object.keys(items),
+            d = this.defs;
 
-    for (i = 0, iz = keys.length; i < iz; i++) {
+        for (i = 0, iz = keys.length; i < iz; i++) {
 
-        key = keys[i];
+            key = keys[i];
 
-        if (key !== 'name') {
+            if (key !== 'name') {
 
-            if (typeof d[key] !== 'undefined') this[key] = items[key];
+                if (typeof d[key] !== 'undefined') this[key] = items[key];
+            }
         }
     }
     return this;

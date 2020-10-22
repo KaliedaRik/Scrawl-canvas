@@ -75,16 +75,17 @@ export default function (P = {}) {
 // ```
     P.set = function (items = {}) {
 
-        if (items) {
+        if (Object.keys(items).length) {
 
             let setters = this.setters,
-                defs = this.defs;
+                defs = this.defs,
+                predefined;
 
             Object.entries(items).forEach(([key, value]) => {
 
                 if (key && key !== 'name' && value != null) {
 
-                    let predefined = setters[key];
+                    predefined = setters[key];
 
                     if (predefined) predefined.call(this, value);
                     else if (typeof defs[key] !== 'undefined') this[key] = value;
@@ -106,16 +107,17 @@ export default function (P = {}) {
 // ```
     P.setDelta = function (items = {}) {
 
-        if (items) {
+        if (Object.keys(items).length) {
 
             let setters = this.deltaSetters,
-                defs = this.defs;
+                defs = this.defs,
+                predefined;
 
             Object.entries(items).forEach(([key, value]) => {
 
                 if (key && key !== 'name' && value != null) {
 
-                    let predefined = setters[key];
+                    predefined = setters[key];
 
                     if (predefined) predefined.call(this, value);
                     else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);

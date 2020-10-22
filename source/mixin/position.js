@@ -1392,29 +1392,6 @@ export default function (P = {}) {
     P.cleanStampHandlePositionsAdditionalActions = λnull;
 
 
-// // `getPathData`
-//     P.getPathData = function () {
-
-//     	if (this.currentPathData) return this.currentPathData;
-
-//         let pathPos = this.pathPosition,
-//             path = this.path,
-//             currentPathData;
-
-//         if (path) {
-
-//             currentPathData = path.getPathPositionData(pathPos, this.constantPathSpeed);
-
-//             if (this.addPathRotation) this.dirtyRotation = true;
-
-//             this.currentPathData = currentPathData;
-
-//             return currentPathData;
-//         }
-//         return false;
-//     };
-
-
 // `checkHit`
 // + We use pool Cells (see [Cell code](../factory/cell.html)) to help calculate whether (any of) the Coordinate(s) supplied in the first argument are colliding with the artefact. 
 // + This works both for entitys and for DOM-based artefacts.

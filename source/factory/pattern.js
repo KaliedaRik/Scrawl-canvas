@@ -145,11 +145,12 @@ P.get = function (item) {
 // `set`
 P.set = function (items = {}) {
 
-    if (items) {
+    if (Object.keys(items).length) {
 
         let setters = this.setters,
             defs = this.defs,
-            source = this.source;
+            source = this.source,
+            predefined;
 
         Object.entries(items).forEach(([key, value]) => {
 
@@ -161,7 +162,7 @@ P.set = function (items = {}) {
 
             else if (key && key !== 'name' && value != null) {
 
-               let predefined = setters[key];
+               predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
