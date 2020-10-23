@@ -15,6 +15,24 @@
       width: 100%;
       height: 100%;
     }
+    canvas.javascript-disabled {
+      background-color: transparent;
+      border: 0;
+
+      background-image: url("thumbs/canvas-033.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas.javascript-disabled > nav, 
+    canvas.javascript-disabled > div {
+      height: auto;
+      max-height: none;
+    }
+
     .canvas-host {
       overflow: hidden;
       resize: both;
@@ -35,11 +53,22 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 033</h1>
-  <h2>User preferences: prefers-color-scheme; prefers-reduced-motion</h2>
+  <h2>User preferences: prefers-color-scheme; prefers-reduced-motion; Javascript disabled</h2>
   <h3>This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
 
   <div class="canvas-host">
-      <canvas id="mycanvas"></canvas>
+    <!-- 
+    This is a test to see if JS has been disabled 
+    - if it has, then the class will not be removed
+    - meaning we can display a background image instead
+    -->
+    <canvas id="mycanvas" class="javascript-disabled">
+      <p id="no-js-note" style="background-color: rgba(255,255,255,0.9); padding: 1em;">This content will <b>visually</b> appear when Javascript is disabled, and should be used to describe what the canvas would be showing had JS been working. Also include any <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas">relevant links in this copy</a>. Be aware that this text will display over the background image, so needs some styling to show up more clearly. Remember, if JS has been disabled, then text included in Phrase entitys and Anchor objects will not be processed and exposed in the canvas's sub-DOM! Note that Scrawl-canvas appends sub-DOM data/copy, so this paragraph will be the first canvas-related thing a screen reader encounters - unless we get the script snippet to add <i>aria-hidden="true"</i> as an attribute to this element.</p>
+    </canvas>
+    <script>
+      document.querySelector('#mycanvas').className = '';
+      document.querySelector('#no-js-note').setAttribute('aria-hidden', 'true');
+    </script>
   </div>
 
   <p id="reportmessage"></p>
@@ -61,6 +90,8 @@
     </ul>
 
     <p>To toggle user preferences in Chrome: open the Inspector, press Ctrl/Cmd+Shift+P, type 'show rendering', click on the 'Show rendering' button.</p>
+
+    <p>This demo also includes HTML/CSS code for action to take when Javascript has been disabled on a page. Specifically, a background image will be displayed in the canvas (via CSS) unless a &lt;script> tag in the HTML immediately following the &lt;canvas> element runs - the code removes a class from the canvas element, which prevents the background image displaying. Test this by disabling Javascript in the browser and then reloading the demo.</p>
 
     <p><a href="../docs/demo/canvas-033.html">Annotated code</a></p>
   </div>
