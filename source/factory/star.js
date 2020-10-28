@@ -32,6 +32,8 @@
 // + [Canvas-014](../../demo/canvas-014.html) - Line, quadratic and bezier entitys - control lock alternatives
 // + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
 // + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
+// + [Canvas-030](../../demo/canvas-030.html) - Polyline entity functionality
+// + [Canvas-038](../../demo/canvas-038.html) - Responsive Shape-based entitys
 // + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
 
@@ -180,6 +182,14 @@ P.makeStarPath = function () {
         myMin, myXoffset, myYoffset, i,
         myPath = '';
 
+    if (radius1.substring || radius2.substring) {
+
+        let here = this.getHere();
+
+        radius1 = (radius1.substring) ? (parseFloat(radius1) / 100) * here.w : radius1;
+        radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;
+    }
+
     let v1 = requestVector({x: 0, y: -radius1}),
         v2 = requestVector({x: 0, y: -radius2});
 
@@ -235,6 +245,7 @@ P.makeStarPath = function () {
 // Accepts argument with attributes:
 // + __radius1__ (required) - the _outer_ radius representing the distance between the center of the Shape and the tips of its (acute angle) points.
 // + __radius2__ (required) - the _inner_ radius representing the distance between the center of the Shape and the obtuse angle at the valley between the tips of its (acute angle) points.
+// + ... where these radius values are supplied as %Strings, they are calculated as relative to the canvas/cell ___width___ value.
 // + __points__ (required) - a positive integer Number representing the number of points the star will have.
 // + __twist__ - a float Number representing the degrees by which the star's second radius will be rotated out of line from its first radius; the default value `0` will produce a star with all of its sides of equal length and the star's valleys falling midway between its connecting points.
 // + Note that the use of _inner_ and _outer_ above is purely descriptive: `radius2` can be larger than `radius1`

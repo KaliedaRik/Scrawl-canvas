@@ -32,6 +32,8 @@
 // + [Canvas-014](../../demo/canvas-014.html) - Line, Quadratic and Bezier entitys - control lock alternatives
 // + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
 // + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
+// + [Canvas-030](../../demo/canvas-030.html) - Polyline entity functionality
+// + [Canvas-038](../../demo/canvas-038.html) - Responsive Shape-based entitys
 // + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
 

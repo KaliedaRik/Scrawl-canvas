@@ -410,6 +410,12 @@ export default function (P = {}) {
 
         if (!this.noPathUpdates || !this.pathObject) {
 
+            if (this.dirtyDimensions) {
+
+                this.cleanSpecies();
+                this.pathCalculatedOnce = false;
+            }
+
             this.calculateLocalPath(this.pathDefinition);
 
             if (this.dirtyDimensions) this.cleanDimensions();

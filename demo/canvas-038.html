@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 038</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+    .canvas-host {
+      overflow: hidden;
+      resize: both;
+
+      border: 1px solid black;
+
+      width: 400px;
+      height: 400px;
+
+      min-width: 200px;
+      min-height: 200px;
+
+      max-width: 800px;
+      max-height: 800px;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 038</h1>
+  <h2>Responsive Shape-based entitys</h2>
+  <h3>This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
+
+  <div class="canvas-host">
+      <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <p>Creation:</p>
+    <ul>
+      <li>Create a responsive, and a static, Oval entity</li>
+      <li>Create a responsive, and a static, Tetragon entity</li>
+      <li>Create a responsive, and a static, Line entity</li>
+      <li>Create a responsive, and a static, Rectangle entity</li>
+      <li>Create a responsive, and a static, Star entity</li>
+      <li>... All entitys should correctly create and display</li>
+    </ul>
+
+    <p>Testing - change the cell dimensions by dragging the bottom left corner, and observe changes in the shapes of the responsive entitys:</p>
+    <ul>
+      <li>Oval - radiusX follows cell width; radiusY follows cell height</li>
+      <li>Tetragon - radiusX follows cell width; radiusY follows cell height</li>
+      <li>Line - start and end coordinates update as the cell dimensions update</li>
+      <li>Rectangle - rectangleWidth and x-aligned radius values follow cell width; rectangleHeight  and y-aligned radius values follow cell height</li>
+      <li>Star - radius1 and radius2 both follow cell width</li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-036.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-038.js" type="module"></script>
+
+</body>
+
+</html>
