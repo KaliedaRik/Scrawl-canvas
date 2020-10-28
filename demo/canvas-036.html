@@ -39,8 +39,8 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 036</h1>
-  <h2>Cell functionality (functionality and associated tests needs to be expanded)</h2>
-  <h3>This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
+  <h2>Cell artefact-like positional functionality</h2>
+  <h3>This canvas is resizable - drag the bottom right corner to change its dimensions. Also, Cells 4 and 5 are enabled for drag-and-drop</h3>
 
   <div class="controls">
     
@@ -87,28 +87,29 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
 
-    <p>Current functionality:</p>
+    <p>Test Cell functionality - specifically their artefact-like behaviour:</p>
 
     <ul>
       <li>Create a range of Cell artefacts with absolute and relative positioning and dimensions</li>
+      <li>Test that responsive Cell dimensions automatically update by dragging the visible &lt;canvas> element's bottom right corner</li>
+      <li>Pivot an entity to a Cell; mimic an entity to a Cell</li>
+      <li>Pivot, mimic, path Cells to entitys</li>
       <li>Animate the Cells - for instance: delta roll; animate along a path</li>
-      <li>Pivot a Cell to another Cell, and to an entity object (not yet added to demo)</li>
-      <li>Pivot a Cell to mouse cursor (tested separately in Demo DOM-011)</li>
-      <li>2d canvas engine (and entity) filter attribute - note this is the native CSS/SVG filter system as applied to canvas (which <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter">MDN notes as an "experimental technology"</a>), not the Scrawl-canvas filters functionality</li>
+      <li>Pivot a Cell to mouse cursor (tested separately in <a href="dom-011.html">Demo DOM-011</a>)</li>
+      <li>Collision detection - for instance emulating mouse hover over a Cell</li>
+      <li>Drag-and-drop a Cell across the canvas</li>
     </ul>
 
-    <p>Future functionality (need to check to see if some of these have already been implemented in code, but not exposed in a usable manner):</p>
+    <p>Note that the base Cell will stamp all entitys assigned to it as part of its <b>compile</b> step in the Display cycle, but additional Cells do not get stamped onto the base until the <b>show</b> step - thus additional Cells always stamp on top of base Cell entitys.</p>
+
+    <p>To give a Cell a <i>border</i>, add a Block entity and mimic it to the Cell - making sure it mimics the Cell's start, handle, dimensions, scale and rotation while also adding its own dimensions (twice the value of the required border). Or <i>vice versa</i> - both methods are tested in the code.</p>
+
+    <p>Hover effects, and drag-and-drop, functionality for Cells has to be 'emulated' by setting up a Block entity to perform these actions then getting the Cell to mimic/pivot the Block.</p>
+
+    <p>Experimental filters functionality - CSS/SVG filters:</p>
 
     <ul>
-      <li>Cell borders, which can: be drawn on the base Cell either before or after the bordered Cell stamps itself onto it; use colors, gradients, patterns for its border; use shadows ('drawAndFill', 'fillAndDraw, 'drawThenFill', 'fillThenDraw')</li>
-      <li>Mouse collision detection - for instance update the Cell (and/or its constituent artefacts) when the mouse hovers over it or the user clicks/taps on it</li>
-      <li>Drag and drop Cells across the Canvas</li>
-      <li>Clone Cells (longer term objective)</li>
-    </ul>
-
-    <p>Known bugs:</p>
-    <ul>
-      <li>The Oval entity does not respond to changes in its Cell's dimensions - check to see if this is true of all Shape-based entitys</li>
+      <li>2d canvas engine (and entity) <b>filter</b> attribute - note this is the native CSS/SVG filter system as applied to canvas (which <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter">MDN notes as an "experimental technology"</a>), not the Scrawl-canvas filters functionality</li>
     </ul>
 
     <p><a href="../docs/demo/canvas-036.html">Annotated code</a></p>

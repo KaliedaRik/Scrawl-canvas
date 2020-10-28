@@ -455,6 +455,7 @@
 <li>All canvas and component demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. </li>
 <li><a href="../../demo/canvas-009.html">Canvas-009</a> - Pattern styles; Entity web link anchors; Dynamic accessibility</li>
 <li><a href="../../demo/canvas-031.html">Canvas-031</a> - Cell generation and processing order - kaleidoscope clock</li>
+<li><a href="../../demo/canvas-036.html">Canvas-036</a> - Cell artefact-like positional functionality</li>
 <li><a href="../../demo/dom-011.html">DOM-011</a> - Canvas controller <code>fit</code> attribute; Cell positioning (mouse)</li>
 </ul>
 
@@ -2606,7 +2607,8 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
               </div>
               <p><code>prepareStamp</code> - Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object’s base cell’s canvas. Will be invoked as part of the Display cycle ‘show’ functionality.</p>
 <ul>
-<li>Cells can emulate (most of) the functionality of entity artefacts, in that they can be positioned (start, handle, offset), rotated, scaled and flipped when they stamp themselves on the base cell. They can also be positioned using pivot, path and mouse functionality, and they can be dragged and dropped across the displayed &lt;canvas&gt; element as part of defined user interaction.</li>
+<li>Cells can emulate (much of) the functionality of entity artefacts, in that they can be positioned (start, handle, offset), rotated, scaled and flipped when they stamp themselves on the base cell. They can also be positioned using mimic, pivot, path and mouse functionality.</li>
+<li>Cells cannot be included in Group objects (which only accept artefacts as members); however drag-and-drop functionality can be emulated by creating a Block and pivot/mimic the Cell to that. Similarly, Block substitutes can be used for hover detection, with their hook functions tailored to pass on the required response to the Cell - see Demo <a href="../../demo/canvas-036.html">Canvas-036</a>.</li>
 <li>Note that Cells acting as a Canvas object’s ‘base’ cell will position themselves on the displayed Canvas in line with their Canvas controller’s ‘fit’ attribute, disregarding any positional information it may have been given.</li>
 </ul>
 
@@ -2751,6 +2753,7 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">let</span> self = (entity) ? entity : <span class="hljs-keyword">this</span>,
         mimic = self.mimic,
+        pivot = self.pivot,
         reverse, upend,
         rotation = self.currentRotation;
 
@@ -2763,6 +2766,15 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
         reverse = (self.flipReverse) ? <span class="hljs-number">-1</span> : <span class="hljs-number">1</span>;
         upend = (self.flipUpend) ? <span class="hljs-number">-1</span> : <span class="hljs-number">1</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (mimic &amp;&amp; mimic.name &amp;&amp; self.useMimicRotation) {
+
+        rotation = mimic.currentRotation;
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pivot &amp;&amp; pivot.name &amp;&amp; self.addPivotRotation) {
+
+        rotation = pivot.currentRotation;
     }
 
     <span class="hljs-keyword">if</span> (rotation) {

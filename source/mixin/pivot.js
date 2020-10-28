@@ -3,7 +3,7 @@
 
 
 // #### Imports
-import { artefact } from '../core/library.js';
+import { artefact, asset } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, isa_boolean } from '../core/utilities.js';
 
 
@@ -68,8 +68,16 @@ export default function (P = {}) {
         else {
 
             let oldPivot = this.pivot,
-                newPivot = (item.substring) ? artefact[item] : item,
                 name = this.name;
+
+            let newPivot = (item.substring) ? artefact[item] : item;
+
+            if (!newPivot) {
+
+                newPivot = asset[item];
+
+                if (newPivot && newPivot.type !== 'Cell') newPivot = false;
+            }
 
             if (newPivot && newPivot.name) {
 
@@ -119,6 +127,13 @@ export default function (P = {}) {
         this.pivoted.forEach(name => {
 
             let instance = artefact[name];
+
+            if (!instance) {
+
+                instance = asset[name];
+
+                if (!instance || instance.type !== 'Cell') instance = false;
+            }
 
             if (instance) {
 

@@ -19,25 +19,6 @@ canvas.set({
     isComponent: true,
 });
 
-// Create a shape track along which we can animate a Cell
-scrawl.makeOval({
-
-    name: 'mytrack',
-
-    radiusX: '40%',
-    radiusY: '40%',
-
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-
-    strokeStyle: '#808080',
-    lineWidth: 10,
-    method: 'draw',
-
-    useAsPath: true,
-    precision: 0.1,
-});
-
 
 // Create a Cell on the canvas
 const cell1 = canvas.buildCell({
@@ -81,6 +62,25 @@ const cell2 = canvas.buildCell({
     backgroundColor: 'lightblue',
 });
 
+// Create a shape track along which we can animate a Cell
+scrawl.makeOval({
+
+    name: 'mytrack',
+
+    radiusX: '40%',
+    radiusY: '40%',
+
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+
+    strokeStyle: '#808080',
+    lineWidth: 10,
+    method: 'draw',
+
+    useAsPath: true,
+    precision: 0.1,
+});
+
 // This Cell will animate along the track we created earlier
 const cell3 = canvas.buildCell({
 
@@ -103,6 +103,138 @@ const cell3 = canvas.buildCell({
 
     backgroundColor: 'black',
 });
+
+// Create some entitys to which we can pivot and mimic Cells
+// + Cells cannot take part in artefact functionality such as drag-and-drop because they are assets who use positional mixins to gain artefact-like behaviour, but they can't be included in Groups because they are limited to grouping Artefacts together
+// + One way to get around this limitation is to use Block entitys for testing collision detection, and then route mouse hover functionality through to any Cells pivoting or mimicking them. This should also allow us to drag-and-drop Cells (by proxy)
+let myGroup = scrawl.makeGroup({
+
+    name: 'target-group',
+    host: canvas.base.name,
+});
+
+scrawl.makeBlock({
+
+    name: 'block-1',
+    group: 'target-group',
+
+    start: ['80%', '10%'],
+    handle: ['center', 'center'],
+    dimensions: ['18%', '18%'],
+
+    fillStyle: 'blue',
+    strokeStyle: 'coral',
+    lineWidth: 4,
+
+    delta: {
+        roll: -0.2,
+    },
+
+    method: 'fillThenDraw',
+
+}).clone({
+
+    name: 'block-2',
+    dimensions: [120, 100],
+    handle: ['left', 'top'],
+    startY: '80%',
+
+    roll: 30,
+
+    delta: {
+        roll: 0,
+    },
+});
+
+// Create the drag-and-drop zone
+scrawl.makeDragZone({
+
+    zone: canvas,
+    collisionGroup: myGroup,
+    endOn: ['up', 'leave'],
+});
+
+// Check to see if a Cell will mimic on an entity
+let cell4 = canvas.buildCell({
+
+    name: 'cell-4',
+
+    mimic: 'block-1',
+    lockTo: 'mimic',
+
+    width: -20,
+    height: -20,
+
+    handleX: -10,
+    handleY: -10,
+
+    useMimicDimensions: true,
+    useMimicScale: true,
+    useMimicStart: true,
+    useMimicHandle: true,
+    useMimicOffset: false,
+    useMimicRotation: true,
+
+    addOwnDimensionsToMimic: true,
+    addOwnScaleToMimic: false,
+    addOwnStartToMimic: false,
+    addOwnHandleToMimic: true,
+    addOwnOffsetToMimic: false,
+    addOwnRotationToMimic: false,
+
+    backgroundColor: 'lavender',
+});
+
+// Check to see if a Cell will pivot to an entity
+let cell5 = canvas.buildCell({
+
+    name: 'cell-5',
+
+    pivot: 'block-2',
+    lockTo: 'pivot',
+
+    dimensions: [110, 90],
+    handle: [-5, -5],
+
+    addPivotRotation: true,
+
+    backgroundColor: 'lavender',
+});
+
+// Add in a hover check
+scrawl.library.entity['block-1'].set({
+
+    onEnter: function () {
+
+        this.set({
+            scale: 1.2,
+        });
+
+        cell4.set({
+            backgroundColor: 'pink',
+        });
+    },
+
+    onLeave: function () {
+
+        this.set({
+            scale: 1,
+        });
+
+        cell4.set({
+            backgroundColor: 'lavender',
+        });
+    },
+});
+
+scrawl.library.entity['block-2'].set({
+
+    onEnter: () => cell5.set({ backgroundColor: 'pink' }),
+
+    onLeave: () => cell5.set({ backgroundColor: 'lavender' }),
+});
+
+scrawl.addListener('move', () => canvas.here.active && canvas.cascadeEventAction('move'), canvas.domElement);
 
 // Add labels to Cells
 scrawl.makePhrase({
@@ -133,8 +265,24 @@ scrawl.makePhrase({
 
     text: 'Cell 3',
     fillStyle: 'white',
+
+}).clone({
+
+    name: 'label-4',
+    group: 'cell-4',
+
+    text: 'Cell 4',
+    fillStyle: 'green',
+
+}).clone({
+
+    name: 'label-5',
+    group: 'cell-5',
+
+    text: 'Cell 5',
 });
 
+// .. Also add some other entitys to the Cells
 scrawl.makeWheel({
 
     name: 'wheel-1',
@@ -157,6 +305,52 @@ scrawl.makeWheel({
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
+
+}).clone({
+
+    name: 'wheel-3',
+    group: canvas.base.name,
+
+    strokeStyle: 'green',
+
+    start: ['85%', '85%'],
+    pivot: 'cell-3',
+    lockTo: 'pivot',
+});
+
+scrawl.makeBlock({
+
+    name: 'mimic-block',
+
+    group: canvas.base.name,
+
+    fillStyle: 'yellow',
+    strokeStyle: 'green',
+    lineWidth: 4,
+    method: 'fillThenDraw',
+
+    mimic: 'cell-2',
+    lockTo: 'mimic',
+
+    width: 30,
+    height: 30,
+
+    handleX: 15,
+    handleY: 15,
+
+    useMimicDimensions: true,
+    useMimicScale: false,
+    useMimicStart: true,
+    useMimicHandle: true,
+    useMimicOffset: false,
+    useMimicRotation: true,
+
+    addOwnDimensionsToMimic: true,
+    addOwnScaleToMimic: false,
+    addOwnStartToMimic: false,
+    addOwnHandleToMimic: true,
+    addOwnOffsetToMimic: false,
+    addOwnRotationToMimic: false,
 });
 
 

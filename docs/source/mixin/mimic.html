@@ -422,7 +422,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
 <span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_boolean } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
             
         </li>
@@ -615,8 +615,16 @@
         <span class="hljs-keyword">else</span> {
 
             <span class="hljs-keyword">let</span> oldMimic = <span class="hljs-keyword">this</span>.mimic,
-                newMimic = (item.substring) ? artefact[item] : item,
                 name = <span class="hljs-keyword">this</span>.name;
+
+            <span class="hljs-keyword">let</span> newMimic = (item.substring) ? artefact[item] : item;
+            
+            <span class="hljs-keyword">if</span> (!newMimic) {
+
+                newMimic = asset[item];
+
+                <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.type !== <span class="hljs-string">'Cell'</span>) newMimic = <span class="hljs-literal">false</span>;
+            }
 
             <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.name) {
 
@@ -756,6 +764,13 @@
         <span class="hljs-keyword">this</span>.mimicked.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> instance = artefact[name];
+
+            <span class="hljs-keyword">if</span> (!instance) {
+
+                instance = asset[name];
+
+                <span class="hljs-keyword">if</span> (!instance || instance.type !== <span class="hljs-string">'Cell'</span>) instance = <span class="hljs-literal">false</span>;
+            }
 
             <span class="hljs-keyword">if</span> (instance) {
 

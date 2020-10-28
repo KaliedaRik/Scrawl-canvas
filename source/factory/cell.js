@@ -35,6 +35,7 @@
 // + All canvas and component demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
 // + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
+// + [Canvas-036](../../demo/canvas-036.html) - Cell artefact-like positional functionality
 // + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
 
 
@@ -1288,7 +1289,8 @@ P.updateBaseHere = function (controllerHere, fit) {
 
 
 // `prepareStamp` - Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object's base cell's canvas. Will be invoked as part of the Display cycle 'show' functionality.
-// + Cells can emulate (most of) the functionality of entity artefacts, in that they can be positioned (start, handle, offset), rotated, scaled and flipped when they stamp themselves on the base cell. They can also be positioned using pivot, path and mouse functionality, and they can be dragged and dropped across the displayed &lt;canvas> element as part of defined user interaction.
+// + Cells can emulate (much of) the functionality of entity artefacts, in that they can be positioned (start, handle, offset), rotated, scaled and flipped when they stamp themselves on the base cell. They can also be positioned using mimic, pivot, path and mouse functionality.
+// + Cells cannot be included in Group objects (which only accept artefacts as members); however drag-and-drop functionality can be emulated by creating a Block and pivot/mimic the Cell to that. Similarly, Block substitutes can be used for hover detection, with their hook functions tailored to pass on the required response to the Cell - see Demo [Canvas-036](../../demo/canvas-036.html).
 // + Note that Cells acting as a Canvas object's 'base' cell will position themselves on the displayed Canvas in line with their Canvas controller's 'fit' attribute, disregarding any positional information it may have been given.
 P.prepareStamp = function () {
 
@@ -1394,6 +1396,7 @@ P.rotateDestination = function (engine, x, y, entity) {
 
     let self = (entity) ? entity : this,
         mimic = self.mimic,
+        pivot = self.pivot,
         reverse, upend,
         rotation = self.currentRotation;
 
@@ -1406,6 +1409,15 @@ P.rotateDestination = function (engine, x, y, entity) {
 
         reverse = (self.flipReverse) ? -1 : 1;
         upend = (self.flipUpend) ? -1 : 1;
+    }
+
+    if (mimic && mimic.name && self.useMimicRotation) {
+
+        rotation = mimic.currentRotation;
+    }
+    else if (pivot && pivot.name && self.addPivotRotation) {
+
+        rotation = pivot.currentRotation;
     }
 
     if (rotation) {
