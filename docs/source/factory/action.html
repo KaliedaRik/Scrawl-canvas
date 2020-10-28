@@ -688,17 +688,18 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
             
             <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (items) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
 
         <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.setters,
             defs = <span class="hljs-keyword">this</span>.defs,
-            ticker = (xt(items.ticker)) ? <span class="hljs-keyword">this</span>.ticker : <span class="hljs-literal">false</span>;
+            ticker = (xt(items.ticker)) ? <span class="hljs-keyword">this</span>.ticker : <span class="hljs-literal">false</span>,
+            predefined;
 
         <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">'name'</span>) {
 
-                <span class="hljs-keyword">let</span> predefined = setters[key];
+                predefined = setters[key];
 
                 <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-keyword">this</span>, value);
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">'undefined'</span>) <span class="hljs-keyword">this</span>[key] = value;

@@ -883,19 +883,22 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">let</span> key, i, iz,
-        keys = <span class="hljs-built_in">Object</span>.keys(items),
-        d = <span class="hljs-keyword">this</span>.defs;
+    <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Object</span>.keys(items).length) {
+        
+        <span class="hljs-keyword">let</span> key, i, iz,
+            keys = <span class="hljs-built_in">Object</span>.keys(items),
+            d = <span class="hljs-keyword">this</span>.defs;
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.length; i &lt; iz; i++) {
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.length; i &lt; iz; i++) {
 
-        key = keys[i];
+            key = keys[i];
 
-        <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">'name'</span>) {
+            <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">'name'</span>) {
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d[key] !== <span class="hljs-string">'undefined'</span>) <span class="hljs-keyword">this</span>[key] = items[key];
+                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d[key] !== <span class="hljs-string">'undefined'</span>) <span class="hljs-keyword">this</span>[key] = items[key];
+            }
         }
     }
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;

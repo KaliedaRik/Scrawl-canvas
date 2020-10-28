@@ -515,15 +515,16 @@
         resortBatchAnimations = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
-            buckets = [];
+            buckets = [],
+            obj, order;
 
         animate.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> obj = animation[name];
+            obj = animation[name];
 
             <span class="hljs-keyword">if</span> (obj) {
 
-                <span class="hljs-keyword">let</span> order = floor(obj.order) || <span class="hljs-number">0</span>;
+                order = floor(obj.order) || <span class="hljs-number">0</span>;
 
                 <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
 

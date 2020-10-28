@@ -1900,6 +1900,21 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
+              <p><code>cleanDisplayArea</code> - overwritten in Stack and Canvas artefacts via the displayShape mixin</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.cleanDisplayArea = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
               <p><code>prepareStamp</code> - check all the dirty flags and call the appropriate <code>clean</code> functions if they are set</p>
 
             </div>
@@ -1911,6 +1926,7 @@
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyContent) <span class="hljs-keyword">this</span>.cleanContent();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale) <span class="hljs-keyword">this</span>.cleanScale();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDimensions) <span class="hljs-keyword">this</span>.cleanDimensions();
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDisplayArea) <span class="hljs-keyword">this</span>.cleanDisplayArea();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDisplayShape) <span class="hljs-keyword">this</span>.cleanDisplayShape();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyLock) <span class="hljs-keyword">this</span>.cleanLock();
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStart) <span class="hljs-keyword">this</span>.cleanStart();
@@ -1936,11 +1952,11 @@
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p><code>stamp</code> - builds a set of Strings which can then be applied to the DOM wrapper’s element’s <code>style</code> attribute.</p>
 <ul>
@@ -1968,11 +1984,11 @@
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>do not process if the DOM element is missing</p>
 
@@ -1983,11 +1999,11 @@
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>calculate transform strings on each iteration</p>
 
@@ -2033,11 +2049,11 @@
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>determine whether there is a need to trigger a redraw of the DOM element</p>
 
@@ -2052,11 +2068,11 @@
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
 
@@ -2067,11 +2083,11 @@
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>if this artefact’s pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration</p>
 
@@ -2097,11 +2113,11 @@
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p><code>apply</code></p>
 <ul>
@@ -2131,11 +2147,11 @@
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

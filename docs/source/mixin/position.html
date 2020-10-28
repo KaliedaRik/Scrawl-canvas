@@ -1144,6 +1144,35 @@ myBlock.setDelta({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
+              <p><strong>position</strong>, <strong>positionX</strong>, <strong>positionY</strong></p>
+<ul>
+<li><code>position</code> is a read-only pseudo-attribute which gives the current reflection-rotation point in canvas/stack coordinates.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    G.positionX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentStampPosition[<span class="hljs-number">0</span>];
+    };
+    G.positionY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentStampPosition[<span class="hljs-number">1</span>];
+    };
+    G.position = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">return</span> [].concat(<span class="hljs-keyword">this</span>.currentStampPosition);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
               <p><strong>start</strong>, <strong>startX</strong>, <strong>startY</strong></p>
 
             </div>
@@ -1202,11 +1231,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p><strong>handle</strong>, <strong>handleX</strong>, <strong>handleY</strong></p>
 
@@ -1266,11 +1295,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p><strong>offset</strong>, <strong>offsetX</strong>, <strong>offsetY</strong></p>
 
@@ -1330,11 +1359,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p><strong>dimensions</strong>, <strong>width</strong>, <strong>height</strong></p>
 
@@ -1394,11 +1423,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p><strong>lockXTo</strong>, <strong>lockYTo</strong>, <strong>lockTo</strong></p>
 
@@ -1432,11 +1461,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p><strong>roll</strong></p>
 
@@ -1456,11 +1485,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p><strong>scale</strong></p>
 
@@ -1480,11 +1509,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p><strong>host</strong> - internal function</p>
 
@@ -1510,11 +1539,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p><strong>group</strong></p>
 
@@ -1544,11 +1573,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1557,11 +1586,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p><code>purgeArtefact</code> - Artefact objects gather many attributes during their creation. Many of these may not be subsequentlyt used - for instance, if the artefact is never going to mimic another artefact, then it doesn’t need all the attributes and flags associated with mimic functionality. In such cases, we can purge the artefact object of those attributes to free up a tiny bit of extra memory</p>
 <ul>
@@ -1636,11 +1665,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p><code>initializePositions</code> - Internal function called by all artefact factories </p>
 <ul>
@@ -1694,11 +1723,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p><code>setCoordinateHelper</code> - internal helper function used by positional and dimensional setter (S.) functions. Arguments are:</p>
 <ul>
@@ -1742,11 +1771,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p><code>setCoordinateHelper</code> - internal helper function used by positional and dimensional delta-setter (D.) functions. Arguments are:</p>
 <ul>
@@ -1792,11 +1821,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p><code>getHost</code> - internal function - return the <strong>host</strong> object. Hosts can be various things, for instance:</p>
 <ul>
@@ -1829,11 +1858,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p><code>getHere</code> - the <strong>here</strong> parameter is owned by Canvas, Stack and (if enabled) Element artefacts and is set on them by calling <code>updateUiSubscribedElement</code> - thus not defined or updated by the artefact itself.</p>
 <pre><code>here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}</code></pre>
@@ -1871,11 +1900,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 <p>Clean functions are triggered by artefacts as they prepare to stamp themselves into their host environment. The decision to trigger a clean function is mediated by various <code>dirty...</code> flags, which get set when the artefact is updated via <code>set</code> and <code>deltaSet</code> calls.</p>
@@ -1885,11 +1914,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><code>cleanPosition</code> - internal helper function used by <code>cleanStart</code>, <code>cleanHandle</code> and <code>cleanOffset</code> functions</p>
 
@@ -1915,11 +1944,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><code>cleanScale</code> - set the artefact’s <strong>currentScale</strong> value.</p>
 <ul>
@@ -1967,11 +1996,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p><code>cleanDimensions</code> - calculate the artefact’s <strong>currentDimensions</strong> Array</p>
 <ul>
@@ -2036,11 +2065,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwritten by some artefact factory files</p>
 
@@ -2051,11 +2080,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p><code>cleanLock</code> - clean function for <strong>lockTo</strong> array</p>
 
@@ -2072,11 +2101,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p><code>cleanStart</code> - calculate the artefact’s <strong>currentStart</strong> Array</p>
 <ul>
@@ -2106,11 +2135,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><code>cleanOffset</code> - calculate the artefact’s <strong>currentOffset</strong> Array</p>
 <ul>
@@ -2142,11 +2171,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><code>cleanHandle</code> - calculate the artefact’s <strong>currentHandle</strong> Array</p>
 <ul>
@@ -2172,11 +2201,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><code>cleanRotation</code> - calculate the artefact’s <strong>currentRotation</strong> value</p>
 <ul>
@@ -2240,11 +2269,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>If this artefact is being mimicked by other artefacts, it needs to check its rotation values on every iteration of the display cycle</p>
 
@@ -2256,11 +2285,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p><code>cleanStampPositions</code> </p>
 <ul>
@@ -2315,11 +2344,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p><code>x</code> and <code>y</code> coordinates can have different lockTo values</p>
 
@@ -2344,11 +2373,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>We loop twice - once for each coordinate: <code>x</code> is calculated on the first loop (<code>i === 0</code>); <code>y</code> on the second (<code>i === 1</code>)</p>
 
@@ -2365,11 +2394,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>When the pivot is an Element artefact, can use its corner values as pivots</p>
 
@@ -2383,11 +2412,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)</p>
 
@@ -2401,11 +2430,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>Everything else</p>
 
@@ -2471,11 +2500,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p><code>cleanStampHandlePositions</code> </p>
 <ul>
@@ -2513,11 +2542,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>We loop twice - once for each coordinate: <code>x</code> is calculated on the first loop (<code>i === 0</code>); <code>y</code> on the second (<code>i === 1</code>)</p>
 
@@ -2559,11 +2588,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality. </p>
 
@@ -2578,121 +2607,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-66">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
-              </div>
-              <p>// <code>getPathData</code>
-    P.getPathData = function () {</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-67">&#182;</a>
-              </div>
-              <pre><code>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentPathData) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentPathData;</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-68">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
-              </div>
-              <pre><code>    <span class="hljs-keyword">let</span> pathPos = <span class="hljs-keyword">this</span>.pathPosition,
-        path = <span class="hljs-keyword">this</span>.path,
-        currentPathData;</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-69">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
-              </div>
-              <pre><code>    <span class="hljs-keyword">if</span> (path) {</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
-              </div>
-              <pre><code>        currentPathData = path.getPathPositionData(pathPos, <span class="hljs-keyword">this</span>.constantPathSpeed);</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-71">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
-              </div>
-              <pre><code>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.addPathRotation) <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-72">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
-              </div>
-              <pre><code>        <span class="hljs-keyword">this</span>.currentPathData = currentPathData;</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-73">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
-              </div>
-              <pre><code>        <span class="hljs-keyword">return</span> currentPathData;
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-};</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-74">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p><code>checkHit</code></p>
 <ul>
@@ -2763,11 +2682,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-75">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>Function overwritten by entitys, if required</p>
 
@@ -2785,11 +2704,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-76">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p><code>pickupArtefact</code></p>
 
@@ -2836,11 +2755,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-77">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p><code>dropArtefact</code></p>
 
@@ -2867,11 +2786,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-78">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <h4 id="subscription-management">Subscription management</h4>
 <p>Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes. </p>
@@ -2888,11 +2807,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-79">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p><code>updatePositionSubscribers</code></p>
 
@@ -2910,11 +2829,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-80">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p><code>updatePivotSubscribers</code></p>
 
@@ -2925,11 +2844,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-81">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p><code>updateMimicSubscribers</code></p>
 
@@ -2940,11 +2859,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-82">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p><code>updatePathSubscribers</code></p>
 
@@ -2955,11 +2874,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-83">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p><code>updateImageSubscribers</code></p>
 
@@ -2970,11 +2889,11 @@ myBlock.setDelta({
         </li>
         
         
-        <li id="section-84">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

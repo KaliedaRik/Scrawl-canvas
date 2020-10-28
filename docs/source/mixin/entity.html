@@ -429,7 +429,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, mergeOver, pushUnique, xt, addStrings } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, mergeOver, pushUnique, xt, addStrings, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
 <span class="hljs-keyword">import</span> { currentGroup, scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/state.js'</span>;
@@ -989,26 +989,27 @@
                 val = state[item];
                 <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">'undefined'</span>) ? val : def;
             }
-            <span class="hljs-keyword">return</span> undef;
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
         }
     };
 
     P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (items) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
 
             <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.setters,
                 defs = <span class="hljs-keyword">this</span>.defs,
                 state = <span class="hljs-keyword">this</span>.state,
                 stateSetters = (state) ? state.setters : {},
-                stateDefs = (state) ? state.defs : {};
+                stateDefs = (state) ? state.defs : {},
+                predefined, stateFlag;
 
             <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
 
                 <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">'name'</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
-                    <span class="hljs-keyword">let</span> predefined = setters[key],
-                        stateFlag = <span class="hljs-literal">false</span>;
+                    predefined = setters[key];
+                    stateFlag = <span class="hljs-literal">false</span>;
 
                     <span class="hljs-keyword">if</span> (!predefined) {
 
@@ -1027,20 +1028,21 @@
 
     P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (items) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
 
             <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.deltaSetters,
                 defs = <span class="hljs-keyword">this</span>.defs,
                 state = <span class="hljs-keyword">this</span>.state,
                 stateSetters = (state) ? state.deltaSetters : {},
-                stateDefs = (state) ? state.defs : {};
+                stateDefs = (state) ? state.defs : {},
+                predefined, stateFlag;
 
             <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
 
                 <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">'name'</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
-                    <span class="hljs-keyword">let</span> predefined = setters[key],
-                        stateFlag = <span class="hljs-literal">false</span>;
+                    predefined = setters[key];
+                    stateFlag = <span class="hljs-literal">false</span>;
 
                     <span class="hljs-keyword">if</span> (!predefined) {
 

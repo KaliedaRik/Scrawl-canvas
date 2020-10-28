@@ -1231,6 +1231,12 @@
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noPathUpdates || !<span class="hljs-keyword">this</span>.pathObject) {
 
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDimensions) {
+
+                <span class="hljs-keyword">this</span>.cleanSpecies();
+                <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
+            }
+
             <span class="hljs-keyword">this</span>.calculateLocalPath(<span class="hljs-keyword">this</span>.pathDefinition);
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDimensions) <span class="hljs-keyword">this</span>.cleanDimensions();

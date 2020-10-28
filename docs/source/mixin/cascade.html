@@ -623,12 +623,13 @@
 
             <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
                 groupnames = <span class="hljs-keyword">this</span>.groups,
-                buckets = [];
+                buckets = [],
+                mygroup, order;
 
             groupnames.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> mygroup = group[name],
-                    order = (mygroup) ? floor(mygroup.order) : <span class="hljs-number">0</span>;
+                mygroup = group[name];
+                order = (mygroup) ? floor(mygroup.order) : <span class="hljs-number">0</span>;
 
                 <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
 
@@ -739,9 +740,13 @@
             
             <div class="content"><div class='highlight'><pre>    P.cascadeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items, action</span>) </span>{
 
+        <span class="hljs-keyword">let</span> grp;
+
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'cascadeAction'</span>)
+
         <span class="hljs-keyword">this</span>.groups.forEach( <span class="hljs-function"><span class="hljs-params">groupname</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> grp = group[groupname];
+            grp = group[groupname];
 
             <span class="hljs-keyword">if</span> (grp) grp[action](items);
 

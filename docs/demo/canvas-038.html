@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Canvas 034</title>
+  <title>Demo Canvas 038</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -344,8 +344,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="demo-canvas-034">Demo Canvas 034</h1>
-<p>Determine the displayed shape of the visible canvas; react to changes in the displayed shape</p>
+              <h1 id="demo-canvas-038">Demo Canvas 038</h1>
+<p>Responsive Shape-based entitys</p>
 
             </div>
             
@@ -358,7 +358,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-034.html">Run code</a></p>
+              <p><a href="../../demo/canvas-038.html">Run code</a></p>
 
             </div>
             
@@ -379,12 +379,13 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
 
+
 canvas.set({
 
-    <span class="hljs-attr">isComponent</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'honeydew'</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
-
-}).setAsCurrentCanvas();</pre></div></div>
+    <span class="hljs-attr">isComponent</span>: <span class="hljs-literal">true</span>,
+});</pre></div></div>
             
         </li>
         
@@ -395,22 +396,133 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Create the demo Phrase entity</p>
+              <p>Create a shape track along which we can animate a Cell</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> mytext = scrawl.makePhrase({
+            <div class="content"><div class='highlight'><pre>scrawl.makeOval({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'display-shape-text'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-oval'</span>,
+
+    <span class="hljs-attr">radiusX</span>: <span class="hljs-string">'40%'</span>,
+    <span class="hljs-attr">radiusY</span>: <span class="hljs-string">'40%'</span>,
 
     <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
 
-    <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: undetermined`</span>,
-    <span class="hljs-attr">size</span>: <span class="hljs-string">'40px'</span>,
-    <span class="hljs-attr">justify</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'grey'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
 
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'black'</span>,
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-oval'</span>,
+
+    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">140</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'blue'</span>,
+});
+
+scrawl.makeTetragon({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-diamond'</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'lightgreen'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+
+    <span class="hljs-attr">radiusX</span>: <span class="hljs-string">'40%'</span>,
+    <span class="hljs-attr">radiusY</span>: <span class="hljs-string">'40%'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-diamond'</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkgreen'</span>,
+
+    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">140</span>,    
+});
+
+scrawl.makeLine({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-line'</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'orange'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">8</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">'20%'</span>, <span class="hljs-string">'45%'</span>],
+    <span class="hljs-attr">end</span>: [<span class="hljs-string">'80%'</span>, <span class="hljs-string">'45%'</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-line'</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'brown'</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">210</span>],
+    <span class="hljs-attr">end</span>: [<span class="hljs-number">350</span>, <span class="hljs-number">210</span>],
+});
+
+scrawl.makeRectangle({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-rectangle'</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'25%'</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+
+    <span class="hljs-attr">rectangleWidth</span>: <span class="hljs-string">'60%'</span>,
+    <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-string">'15%'</span>,
+
+    <span class="hljs-attr">radiusT</span>: <span class="hljs-string">'5%'</span>,
+    <span class="hljs-attr">radiusB</span>: <span class="hljs-string">'15%'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-rectangle'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'75%'</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'pink'</span>,
+
+    <span class="hljs-attr">rectangleWidth</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-number">100</span>,
+
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">15</span>,
+})
+
+scrawl.makeStar({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-star'</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'25%'</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+
+    <span class="hljs-attr">radius1</span>: <span class="hljs-string">'20%'</span>,
+    <span class="hljs-attr">radius2</span>: <span class="hljs-string">'10%'</span>,
+
+    <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'#420'</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-star'</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">'75%'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'#840'</span>,
+
+    <span class="hljs-attr">radius1</span>: <span class="hljs-number">120</span>,
+    <span class="hljs-attr">radius2</span>: <span class="hljs-number">80</span>,
 });</pre></div></div>
             
         </li>
@@ -421,137 +533,6 @@ canvas.set({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Scrawl-canvas recognises five shapes, separated by four breakpoints: </p>
-<ul>
-<li><code>banner</code></li>
-<li><code>landscape</code></li>
-<li><code>rectangle</code></li>
-<li><code>portrait</code></li>
-<li><code>skyscraper</code></li>
-</ul>
-<p>The values assigned to the breakpoints are Float numbers for the displayed Canvas element’s width/height ratio - the value <code>3</code> represents the case where the width value is three times <strong>more</strong> than the height value, while <code>0.35</code> represents a width (roughly) 3 times <strong>less</strong> than the height.</p>
-<p>We can set a Canvas artefact’s breakpoints in one go using the dedicated <code>setDisplayShapeBreakpoints()</code> function, as below. Alternatively we can use the regular <code>set()</code> function, supplying the attributes <code>breakToBanner</code>, <code>breakToLandscape</code>, <code>breakToPortrait</code> and <code>breakToSkyscraper</code> as required. The values given here are the default values for Canvas artefacts.</p>
-<p>Similar functionality exists to adjust to the current (base) Cell area (width * height)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>canvas.setDisplayShapeBreakpoints({
-
-    <span class="hljs-attr">breakToBanner</span>: <span class="hljs-number">3</span>,
-    <span class="hljs-attr">breakToLandscape</span>: <span class="hljs-number">1.5</span>,
-    <span class="hljs-attr">breakToPortrait</span>: <span class="hljs-number">0.65</span>,
-    <span class="hljs-attr">breakToSkyscraper</span>: <span class="hljs-number">0.35</span>,
-
-    <span class="hljs-attr">breakToSmallest</span>: <span class="hljs-number">100000</span>,
-    <span class="hljs-attr">breakToSmaller</span>: <span class="hljs-number">150000</span>,
-    <span class="hljs-attr">breakToLarger</span>: <span class="hljs-number">200000</span>,
-    <span class="hljs-attr">breakToLargest</span>: <span class="hljs-number">300000</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Each display shape has an associated hook function (by default a function that does nothing) which Scrawl-canvas will run each time it detects that the Canvas display shape has changed to that shape. We can replace these null-functions with our own; this allows us to configure the scene/animation to accommodate different display shapes, thus making the code reusable in a range of different web page environments.</p>
-<p>We can set/update these functions at any time using the normal <code>set()</code> function:</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>canvas.set({
-
-    <span class="hljs-attr">actionBannerShape</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        mytext.set({
-            <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">'displayShape'</span>)}</span>`</span>,
-            <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
-        });
-    },
-
-    <span class="hljs-attr">actionRectangleShape</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        mytext.set({
-            <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">'displayShape'</span>)}</span>`</span>,
-            <span class="hljs-attr">roll</span>: <span class="hljs-number">-45</span>,
-        });
-    },
-
-    <span class="hljs-attr">actionSkyscraperShape</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        mytext.set({
-            <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">'displayShape'</span>)}</span>`</span>,
-            <span class="hljs-attr">roll</span>: <span class="hljs-number">-90</span>,
-        });
-    },
-
-    <span class="hljs-attr">actionLargestArea</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        mytext.set({
-            <span class="hljs-attr">size</span>: <span class="hljs-string">'40px'</span>,
-        });
-    },
-
-    <span class="hljs-attr">actionRegularArea</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        mytext.set({
-            <span class="hljs-attr">size</span>: <span class="hljs-string">'28px'</span>,
-        });
-    },
-
-    <span class="hljs-attr">actionSmallestArea</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        mytext.set({
-            <span class="hljs-attr">size</span>: <span class="hljs-string">'16px'</span>,
-        });
-    },
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>We can also set/update the functions using dedicated <code>setAction???Shape()</code> functions:</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>canvas.setActionPortraitShape(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    mytext.set({
-        <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">'displayShape'</span>)}</span>`</span>,
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">-67.5</span>,
-    });
-});
-
-canvas.setActionLandscapeShape(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    mytext.set({
-        <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">'displayShape'</span>)}</span>`</span>,
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">-22.5</span>,
-    });
-});
-
-canvas.setActionLargerArea(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    mytext.set({
-        <span class="hljs-attr">size</span>: <span class="hljs-string">'34px'</span>,
-    });
-});
-
-canvas.setActionSmallerArea(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    mytext.set({
-        <span class="hljs-attr">size</span>: <span class="hljs-string">'22px'</span>,
-    });
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -577,11 +558,11 @@ canvas.setActionSmallerArea(<span class="hljs-function"><span class="hljs-params
         </li>
         
         
-        <li id="section-9">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -591,32 +572,17 @@ canvas.setActionSmallerArea(<span class="hljs-function"><span class="hljs-params
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">"demo-animation"</span>,
     <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>We manually trigger the display shape functionality after the first render cycle completes. This allows all artefacts to settle into a state where we can then update the Phrase entity with text and roll values appropriate to the Canvas element’s initial shape</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    afterCreated: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> canvas.updateDisplay(),
+    <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-11">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

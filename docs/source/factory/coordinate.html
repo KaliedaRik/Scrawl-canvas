@@ -517,12 +517,14 @@ P.type = <span class="hljs-string">'Coordinate'</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items, y</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">'Coordinate'</span>) <span class="hljs-keyword">this</span>.setFromArray(items);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">'Vector'</span>) <span class="hljs-keyword">this</span>.setFromVector(items);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">'Quaternion'</span>) <span class="hljs-keyword">this</span>.setFromVector(items.v);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(items)) <span class="hljs-keyword">this</span>.setFromArray(items);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xt(y)) <span class="hljs-keyword">this</span>.setFromArray([items, y]);
+    <span class="hljs-keyword">if</span> (xt(items)) {
 
+        <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">'Coordinate'</span>) <span class="hljs-keyword">this</span>.setFromArray(items);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">'Vector'</span>) <span class="hljs-keyword">this</span>.setFromVector(items);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">'Quaternion'</span>) <span class="hljs-keyword">this</span>.setFromVector(items.v);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(items)) <span class="hljs-keyword">this</span>.setFromArray(items);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xt(y)) <span class="hljs-keyword">this</span>.setFromArray([items, y]);
+    }
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 };
 

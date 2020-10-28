@@ -964,14 +964,15 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (items) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
 
         <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.setters,
             defs = <span class="hljs-keyword">this</span>.defs,
             state = <span class="hljs-keyword">this</span>.state,
             source = <span class="hljs-keyword">this</span>.source,
             stateSetters = (state) ? state.setters : {},
-            stateDefs = (state) ? state.defs : {};
+            stateDefs = (state) ? state.defs : {},
+            predefined, stateFlag;
 
         <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
 
@@ -983,8 +984,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">'name'</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
-                <span class="hljs-keyword">let</span> predefined = setters[key],
-                    stateFlag = <span class="hljs-literal">false</span>;
+                predefined = setters[key];
+                stateFlag = <span class="hljs-literal">false</span>;
 
                 <span class="hljs-keyword">if</span> (!predefined) {
 

@@ -405,6 +405,7 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="star-factory">Star factory</h1>
+<p>A factory for generating star shape-based entitys</p>
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
@@ -460,6 +461,8 @@
 <li><a href="../../demo/canvas-014.html">Canvas-014</a> - Line, quadratic and bezier entitys - control lock alternatives</li>
 <li><a href="../../demo/canvas-018.html">Canvas-018</a> - Phrase entity - text along a path</li>
 <li><a href="../../demo/canvas-024.html">Canvas-024</a> - Loom entity functionality</li>
+<li><a href="../../demo/canvas-030.html">Canvas-030</a> - Polyline entity functionality</li>
+<li><a href="../../demo/canvas-038.html">Canvas-038</a> - Responsive Shape-based entitys</li>
 <li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
 <li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
 </ul>
@@ -780,6 +783,14 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
         myMin, myXoffset, myYoffset, i,
         myPath = <span class="hljs-string">''</span>;
 
+    <span class="hljs-keyword">if</span> (radius1.substring || radius2.substring) {
+
+        <span class="hljs-keyword">let</span> here = <span class="hljs-keyword">this</span>.getHere();
+
+        radius1 = (radius1.substring) ? (<span class="hljs-built_in">parseFloat</span>(radius1) / <span class="hljs-number">100</span>) * here.w : radius1;
+        radius2 = (radius2.substring) ? (<span class="hljs-built_in">parseFloat</span>(radius2) / <span class="hljs-number">100</span>) * here.w : radius2;
+    }
+
     <span class="hljs-keyword">let</span> v1 = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -radius1}),
         v2 = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -radius2});
 
@@ -855,6 +866,7 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
 <ul>
 <li><strong>radius1</strong> (required) - the <em>outer</em> radius representing the distance between the center of the Shape and the tips of its (acute angle) points.</li>
 <li><strong>radius2</strong> (required) - the <em>inner</em> radius representing the distance between the center of the Shape and the obtuse angle at the valley between the tips of its (acute angle) points.</li>
+<li>… where these radius values are supplied as %Strings, they are calculated as relative to the canvas/cell <strong><em>width</em></strong> value.</li>
 <li><strong>points</strong> (required) - a positive integer Number representing the number of points the star will have.</li>
 <li><strong>twist</strong> - a float Number representing the degrees by which the star’s second radius will be rotated out of line from its first radius; the default value <code>0</code> will produce a star with all of its sides of equal length and the star’s valleys falling midway between its connecting points.</li>
 <li>Note that the use of <em>inner</em> and <em>outer</em> above is purely descriptive: <code>radius2</code> can be larger than <code>radius1</code></li>

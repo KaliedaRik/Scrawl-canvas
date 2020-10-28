@@ -679,12 +679,13 @@
 
         <span class="hljs-keyword">let</span> myfilters = <span class="hljs-keyword">this</span>.filters,
             floor = <span class="hljs-built_in">Math</span>.floor,
-            buckets = [];
+            buckets = [],
+            myobj, order;
 
         myfilters.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> myobj = filter[name],
-                order = floor(myobj.order) || <span class="hljs-number">0</span>;
+            myobj = filter[name];
+            order = floor(myobj.order) || <span class="hljs-number">0</span>;
 
             <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
 

@@ -992,7 +992,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (items) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
 
             <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.setters,
                 defs = <span class="hljs-keyword">this</span>.defs,
@@ -1037,7 +1037,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (items) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
 
             <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.deltaSetters,
                 defs = <span class="hljs-keyword">this</span>.defs,

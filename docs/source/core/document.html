@@ -488,15 +488,16 @@
 
         rootElementsSort = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> buckets = [];
+        <span class="hljs-keyword">let</span> buckets = [],
+            art, order;
 
         rootElements.forEach(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> art = artefact[item];
+            art = artefact[item];
 
             <span class="hljs-keyword">if</span> (art) {
 
-                <span class="hljs-keyword">let</span> order = floor(art.order) || <span class="hljs-number">0</span>;
+                order = floor(art.order) || <span class="hljs-number">0</span>;
 
                 <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
                 
@@ -941,9 +942,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getCanvases = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
+    <span class="hljs-keyword">let</span> item;
+
     <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'canvas'</span>).forEach(<span class="hljs-function">(<span class="hljs-params">el, index</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> item = addInitialCanvasElement(el);
+        item = addInitialCanvasElement(el);
 
         <span class="hljs-keyword">if</span> (!index) setCurrentCanvas(item);
     });
@@ -1379,11 +1382,12 @@
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> promises = [];
+        <span class="hljs-keyword">let</span> promises = [],
+            item;
 
         rootElements_sorted.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> item = artefact[name];
+            item = artefact[name];
 
             <span class="hljs-keyword">if</span> (item &amp;&amp; item[method]) promises.push(item[method]());
         })
