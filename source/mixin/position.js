@@ -386,6 +386,22 @@ export default function (P = {}) {
         S = P.setters,
         D = P.deltaSetters;
 
+// __position__, __positionX__, __positionY__
+// + `position` is a read-only pseudo-attribute which gives the current reflection-rotation point in canvas/stack coordinates.
+    G.positionX = function () {
+
+        return this.currentStampPosition[0];
+    };
+    G.positionY = function () {
+
+        return this.currentStampPosition[1];
+    };
+    G.position = function () {
+
+        return [].concat(this.currentStampPosition);
+    };
+
+
 // __start__, __startX__, __startY__
     G.startX = function () {
 

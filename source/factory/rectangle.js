@@ -1,4 +1,6 @@
 // # Rectangle factory
+// A factory for generating rectangular shape-based entitys, including round-cornered rectangles
+//
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
 // 
 // All path-defined entitys can be positioned, cloned, filtered etc:

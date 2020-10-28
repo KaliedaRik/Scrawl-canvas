@@ -281,7 +281,7 @@ export default function (P = {}) {
                 val = state[item];
                 return (typeof val != 'undefined') ? val : def;
             }
-            return undef;
+            return null;
         }
     };
 

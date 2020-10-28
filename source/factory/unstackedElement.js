@@ -1,6 +1,8 @@
 
 // # UnstackedElement factory
 
+// ___To be aware - this artefact factory is HIGHLY EXPERIMENTAL; its API will be subject to short-notice breaking changes as we amend and inprove the artefact's functionality___
+
 // TODO - documentation
 
 // #### To instantiate objects from the factory

@@ -1,4 +1,8 @@
 // # Polyline factory
+// A factory for generating an open or closed line/curve based shape entity, using a set of pins to mark the course the line
+//
+// ___To be aware - this entity factory is experimental; its API will be subject to short-notice breaking changes as we amend and inprove the entity's functionality___
+//
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
 // 
 // All path-defined entitys can be positioned, cloned, filtered etc:

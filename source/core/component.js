@@ -1,5 +1,7 @@
 // # Scrawl-canvas components
 
+// ___To be aware - this functionality is HIGHLY EXPERIMENTAL; it will be subject to short-notice breaking changes as we amend and inprove the concept of Scrawl-canvas components___
+
 // TODO - documentation
 
 

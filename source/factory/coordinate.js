@@ -43,12 +43,14 @@ P.type = 'Coordinate';
 // + `mycoordinate.set(a:Number|String, b:Number|String)` - supply two arguments to the function
 P.set = function (items, y) {
 
-    if (items.type === 'Coordinate') this.setFromArray(items);
-    else if (items.type === 'Vector') this.setFromVector(items);
-    else if (items.type === 'Quaternion') this.setFromVector(items.v);
-    else if (Array.isArray(items)) this.setFromArray(items);
-    else if (xt(y)) this.setFromArray([items, y]);
+    if (xt(items)) {
 
+        if (items.type === 'Coordinate') this.setFromArray(items);
+        else if (items.type === 'Vector') this.setFromVector(items);
+        else if (items.type === 'Quaternion') this.setFromVector(items.v);
+        else if (Array.isArray(items)) this.setFromArray(items);
+        else if (xt(y)) this.setFromArray([items, y]);
+    }
     return this;
 };
 
