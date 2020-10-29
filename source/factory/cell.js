@@ -36,6 +36,7 @@
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
 // + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
 // + [Canvas-036](../../demo/canvas-036.html) - Cell artefact-like positional functionality
+// + [Canvas-039](../../demo/canvas-039.html) - Detecting mouse/pointer cursor movements across a non-base Cell
 // + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
 
 
@@ -48,7 +49,7 @@ import { scrawlCanvasHold } from '../core/document.js';
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
-import { makeCoordinate } from './coordinate.js';
+import { makeCoordinate, requestCoordinate, releaseCoordinate } from './coordinate.js';
 import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
 import { importDomImage } from './imageAsset.js';
 
@@ -186,6 +187,12 @@ let defaultAttributes = {
 
 // We can also scale the Cell's size in the displayed Canvas by setting the __scale__ attribute to an appropriate value.
     scale: 1,
+
+// __flipReverse__, __flipUpend__ - Boolean flags which determine the orientation of the cell when it stamps itself on the display. 
+// + a `reversed` cell is effectively flipped 180&deg; around a vertical line passing through that cell's rotation-reflection (start) point - a face looking to the right will now look to the left
+// + an `upended` cell is effectively flipped 180&deg; around a horizontal line passing through that cell's rotation-reflection (start) point - a normal face will now appear upside-down
+    flipReverse: false,
+    flipUpend: false,
 
 // __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the Cell as it is stamped on its host canvas.
 // + Be aware that Cells can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the Cell. The two filter systems are completely separate - combine their effects at your own risk!
@@ -1294,6 +1301,8 @@ P.updateBaseHere = function (controllerHere, fit) {
 // + Note that Cells acting as a Canvas object's 'base' cell will position themselves on the displayed Canvas in line with their Canvas controller's 'fit' attribute, disregarding any positional information it may have been given.
 P.prepareStamp = function () {
 
+    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
+
     if (this.dirtyScale) this.cleanScale();
 
     if (this.dirtyDimensions) {
@@ -1317,6 +1326,8 @@ P.prepareStamp = function () {
     if (this.dirtyStampPositions) this.cleanStampPositions();
     if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
+    if (this.dirtyPathObject) this.cleanPathObject();
+
     if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
     if (this.dirtyAssetSubscribers) {
@@ -1326,31 +1337,111 @@ P.prepareStamp = function () {
     }
 };
 
+// `cleanPathObject` - Calculate the Cell's __Path2D object__
+P.cleanPathObject = function () {
+
+    this.dirtyPathObject = false;
+
+    if (!this.noPathUpdates || !this.pathObject) {
+
+        let p = this.pathObject = new Path2D();
+        
+        let handle = this.currentStampHandlePosition,
+            scale = this.currentScale,
+            dims = this.currentDimensions;
+
+        let x = -handle[0] * scale,
+            y = -handle[1] * scale,
+            w = dims[0] * scale,
+            h = dims[1] * scale;
+
+        p.rect(x, y, w, h);
+    }
+};
+
 
 // `updateHere` - Internal function - get the Cell to update its .here information
 P.updateHere = function () {
 
-    let d = this.controller,
-        rx, ry, dHere, here, 
-        round = Math.round;
+    if (!this.here) {
 
-    let [w, h] = this.currentDimensions;
+        this.here = {
+            x: 0,
+            y: 0,
+            w: 1,
+            h: 1,
+            active: false,
+        };
+    }
+    let localHere = this.here;
 
-    if (d && d.here) {
+    let [width, height] = this.currentDimensions;
 
-        if (!this.here) this.here = {};
+    localHere.w = width;
+    localHere.h = height;
+    localHere.x = -10000;
+    localHere.y = -10000;
+    localHere.active = false;
 
-        dHere = d.here;
-        here = this.here;
-        rx = w / dHere.w;
-        ry = h / dHere.h;
+    let host = this.currentHost;
 
-        here.xRatio = rx;
-        here.x = round(dHere.x * rx);
-        here.yRatio = ry;
-        here.y = round(dHere.y * ry);
-        here.w = w;
-        here.h = h;
+    if (host) {
+
+        let hostHere = host.here;
+
+        if (hostHere && hostHere.active) {
+
+            let {x:hostX, y:hostY, w:hostWidth, h:hostHeight} = hostHere;
+
+            if (!this.pathObject || this.dirtyPathObject) this.cleanPathObject();
+
+            let tempCell = requestCell();
+            let tempEngine = tempCell.engine;
+
+            let [stampX, stampY] = this.currentStampPosition;
+
+            tempCell.rotateDestination(tempEngine, stampX, stampY, this);
+
+            let active = tempEngine.isPointInPath(this.pathObject, hostX, hostY);
+
+            releaseCell(tempCell);
+
+            localHere.active = active;
+
+            if (active) {
+
+                let [stampHandleX, stampHandleY] = this.currentStampHandlePosition;
+
+                let {flipUpend, flipReverse, roll, scale} = this;
+
+                if (scale) {
+
+                    let left = ((hostX - stampX) / scale),
+                        top = ((hostY - stampY) / scale);
+
+                    if (flipReverse) left = -left;
+                    if (flipUpend) top = -top;
+
+                    if (roll) {
+
+                        if ((flipReverse && !flipUpend) || (!flipReverse && flipUpend)) roll = -roll;
+
+                        let coord = requestCoordinate(left, top);
+                        coord.rotate(-roll);
+
+                        [left, top] = coord;
+
+                        releaseCoordinate(coord);
+                    }
+
+                    left += stampHandleX;
+                    top += stampHandleY;
+
+                    localHere.x = left;
+                    localHere.y = top;
+                }
+            }
+        }
     }
 };
 

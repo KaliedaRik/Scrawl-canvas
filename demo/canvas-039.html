@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 039</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 039</h1>
+  <h2>Detecting mouse/pointer cursor movements across a non-base Cell</h2>
+
+  <div class="controls">
+    
+    <div class="blue label">Start</div>
+    <div class="blue">X: <input class="controlItem" id="start_x" type="range" value="300" min="-20" max="620" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_y" type="range" value="200" min="-20" max="420" step="1" /></div>
+
+    <div class="green label">Handles</div>
+    <div class="green">X: <input class="controlItem" id="handle_x" type="range" value="300" min="-300" max="900" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_y" type="range" value="200" min="-200" max="600" step="1" /></div>
+
+    <div class="blue label">Offset</div>
+    <div class="blue">X: <input class="controlItem" id="offset_x" type="range" value="0" min="-200" max="200" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="offset_y" type="range" value="0" min="-200" max="200" step="1" /></div>
+
+    <div class="green label">Dimensions</div>
+    <div class="green">W: <input class="controlItem" id="width" type="range" value="600" min="200" max="800" step="1" /></div>
+    <div class="green">H: <input class="controlItem" id="height" type="range" value="400" min="200" max="600" step="1" /></div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.2" max="2" step="0.01" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+  </div>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li></li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-039.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-039.js" type="module"></script>
+
+</body>
+
+</html>
