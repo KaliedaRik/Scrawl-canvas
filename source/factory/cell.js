@@ -108,6 +108,8 @@ const Cell = function (items = {}) {
 
     this.sourceLoaded = true;
 
+    this.here = {};
+
     return this;
 };
 
@@ -1214,8 +1216,8 @@ P.getHost = function () {
 P.updateBaseHere = function (controllerHere, fit) {
 
     if (this.isBase) {
-        if (!this.here) this.here = {};
 
+        if (!this.here) this.here = {};
         let here = this.here,
             dims = this.currentDimensions;
 
@@ -1363,16 +1365,8 @@ P.cleanPathObject = function () {
 // `updateHere` - Internal function - get the Cell to update its .here information
 P.updateHere = function () {
 
-    if (!this.here) {
+    if (!this.here) this.here = {};
 
-        this.here = {
-            x: 0,
-            y: 0,
-            w: 1,
-            h: 1,
-            active: false,
-        };
-    }
     let localHere = this.here;
 
     let [width, height] = this.currentDimensions;
@@ -1456,7 +1450,6 @@ P.getEntityHits = function () {
     if (this.groupBuckets) {
 
         this.groupBuckets.forEach(grp => {
-
             if (grp.visibility) results.push(grp.getAllArtefactsAt(this.here));
         }, this);
     }

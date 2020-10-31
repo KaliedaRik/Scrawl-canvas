@@ -7,7 +7,7 @@
 
 // #### Imports
 import * as library from "./library.js";
-import { xt, xta, isa_dom, λnull } from "./utilities.js";
+import { xt, xta, isa_dom, isa_fn, isa_boolean, isa_obj, λnull } from "./utilities.js";
 import { addListener, addNativeListener, removeListener, removeNativeListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
@@ -424,16 +424,16 @@ const observeAndUpdate = function (items = {}) {
 // Required attribute of the argument object:
 // + __.zone__ - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself
 //
-// Optional argument object attributes:
-// + __.coodinateSource__ - the .here object of whatever artefact/asset (Stack, Canvas, Element or Cell) will be supplying the coordinates. Defaults to the .here object of either the Stack zone, or the .here object of the Canvas zone's base Cell.
-// + __.collisionGroup__ - the group containg the draggable artefacts, or that Group object's name String. Defaults to the Stack zone's Group object, or the Canvas's base Cell's Group object.
-// + __.startOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'down'
-// + __.updateOnStart__ - an Object containing changes to be made (via set) to the artefact when it is picked up
-// + __.endOn__ - one of 'move', 'up', 'down', 'enter', 'leave', or an array of a selection of those strings. Defaults to 'up'
-// + __.updateOnEnd__ - an Object containing changes to be made (via set) to the artefact when it is dropped
-// + __.exposeCurrentArtefact__ boolean. Defaults to false
-//
-// If the exposeCurrentArtefact attribute is true, the function returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). 
+// Additional, optional, attributes in the argument object
+// + __.coordinateSource__ - an object containing a `here` object
+// + __.collisionGroup__ - String name of Group object, or Group object itself
+// + __.startOn__ - Array of Strings
+// + __.endOn__ - Array of Strings
+// + __.updateOnStart__ - Function, or a `set` object to be applied to the current artefact
+// + __.updateOnEnd__ - Function, or a `set` object to be applied to the current artefact
+// + __.exposeCurrentArtefact__ - Boolean
+// 
+// If `exposeCurrentArtefact` attribute is true, the factory returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). 
 //
 // Invoking the returned function with a single argument that evaluates to true will trigger the kill function.
 //
@@ -444,98 +444,117 @@ const observeAndUpdate = function (items = {}) {
 // `Exported function` (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.
 const makeDragZone = function (items = {}) {
 
-    if (!items.zone) return false;
+    let {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, exposeCurrentArtefact} = items
 
-    let target = (items.zone.substring) ? artefact[items.zone] : items.zone;
+    // `zone` is required
+    // + must be either a Canvas or Stack wrapper, or a wrapper's String name
+    if (!zone) return new Error('dragZone constructor - no zone supplied');
 
-    if (!target) return false;
+    if (zone.substring) zone = artefact[zone];
 
-    let targetElement = target.domElement,
-        coordinateSource, 
-        collisionGroup = (items.collisionGroup && items.collisionGroup.substring) ? library.group[items.collisionGroup] : items.collisionGroup, 
-        startOn = (items.startOn) ? items.startOn : ['down'],
-        endOn = (items.endOn) ? items.endOn : ['up'];
+    if (!zone || ['Canvas', 'Stack'].indexOf(zone.type) < 0) return new Error('dragZone constructor - zone object is not a Stack or Canvas wrapper');
 
-    if (target.type === 'Stack') {
+    let target = zone.domElement;
 
-        coordinateSource = items.coordinateSource;
-        if (!coordinateSource) coordinateSource = target.here;
+    if (!target) return new Error('dragZone constructor - zone does not contain a target DOM element');
 
-        collisionGroup = items.collisionGroup;
-        if (!collisionGroup) collisionGroup = library.group[target.name];
-        else if (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
+    // `collisionGroup` is optional; defaults to zone's namesake group
+    // + must be a Group object
+    if (!collisionGroup) {
+
+        if (zone.type === 'Canvas') collisionGroup = library.group[zone.base.name];
+        else collisionGroup = library.group[zone.name];
     }
-    else if (target.type === 'Canvas') {
+    else if (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
 
-        coordinateSource = items.coordinateSource;
+    if (!collisionGroup || collisionGroup.type !== 'Group') return new Error('dragZone constructor - unable to recover collisionGroup group');
 
-        // Generally the system won't have had time to establish target.base.here, if the dragzone is defined as part of setup before a Display cycle has completed - so the test gets repeated in the pickup function below, to capture those cases
-        if (!coordinateSource) coordinateSource = target.base.here;
+    // `coordinateSource` will be an object containing `x` and `y` attributes
+    // + default's to the zone's `here` object
+    if (coordinateSource) {
 
-        collisionGroup = items.collisionGroup;
-        if (!collisionGroup) collisionGroup = library.group[target.base.name];
-        else if (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
+        if (coordinateSource.here) coordinateSource = coordinateSource.here;
+        else if (!xta(coordinateSource.x, coordinateSource.y)) coordinateSource = false;
+    }
+    else {
+
+        if (zone.type === 'Canvas') coordinateSource = zone.base.here;
+        else coordinateSource = zone.here;
     }
 
-    if (!xta(targetElement, collisionGroup)) return false;
+    if (!coordinateSource) return new Error('dragZone constructor - unable to discover a usable coordinateSource object');
 
+    // `startOn`, `endOn` - if supplied, then need to be arrays
+    if (!Array.isArray(startOn)) startOn = ['down'];
+    if (!Array.isArray(endOn)) endOn = ['up'];
+
+    // We can only drag one artefact at a time; that artefact - alongside the hit coordinate's x and y values -  is stored in the `current` variable
     let current = false;
 
-    let pickup = function (e) {
+    // `updateOnStart`, `updateOnEnd` - if supplied, then need to be functions
+    if (isa_obj(updateOnStart)) updateOnStart = function () { current.artefact.set(items.updateOnStart) };
+    if (!isa_fn(updateOnStart)) updateOnStart = λnull;
+
+    if (isa_obj(updateOnEnd)) updateOnEnd = function () { current.artefact.set(items.updateOnEnd) };
+    if (!isa_fn(updateOnEnd)) updateOnEnd = λnull;
+
+    // `exposeCurrentArtefact` - if supplied, then needs to be a boolean
+    if (!isa_boolean(exposeCurrentArtefact)) exposeCurrentArtefact = false;
+
+    const checkE = function (e) {
 
         if (e.cancelable) {
             
             e.preventDefault();
             e.returnValue = false;
         }
+    };
+
+    const pickup = function (e) {
+
+        checkE(e);
 
         let type = e.type;
 
         if (type === 'touchstart' || type === 'touchcancel') touchAction(e);
-
-        if (!coordinateSource && target.type === 'Canvas') coordinateSource = target.base.here;
 
         current = collisionGroup.getArtefactAt(coordinateSource);
 
         if (current) {
 
             current.artefact.pickupArtefact(coordinateSource);
-            if (items.updateOnStart) current.artefact.set(items.updateOnStart);
+            updateOnStart();
         }
     };
 
     let drop = function (e) {
 
-        if (e.cancelable) {
-
-            e.preventDefault();
-            e.returnValue = false;
-        }
+        checkE(e);
 
         if (current) {
 
             current.artefact.dropArtefact();
-            if (items.updateOnEnd) current.artefact.set(items.updateOnEnd);
+            updateOnEnd();
             current = false;
         }
     };
 
-    let kill = function () {
+    const kill = function () {
 
-        removeListener(startOn, pickup, targetElement);
-        removeListener(endOn, drop, targetElement);
+        removeListener(startOn, pickup, target);
+        removeListener(endOn, drop, target);
     };
 
-    let getCurrent = function (actionKill = false) {
+    const getCurrent = function (actionKill = false) {
 
         if (actionKill) kill();
         else return current;
     };
 
-    addListener(startOn, pickup, targetElement);
-    addListener(endOn, drop, targetElement);
+    addListener(startOn, pickup, target);
+    addListener(endOn, drop, target);
 
-    if (items.exposeCurrentArtefact) return getCurrent;
+    if (exposeCurrentArtefact) return getCurrent;
     else return kill;
 };
 

@@ -205,12 +205,25 @@ P.makeTetragonPath = function () {
 
     if (radiusX.substring || radiusY.substring) {
 
-        let here = this.getHere(),
-            rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * here.w : radiusX,
-            ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * here.h : radiusY;
+        // let here = this.getHere(),
+        //     rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * here.w : radiusX,
+        //     ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * here.h : radiusY;
 
-        width = rx * 2;
-        height = ry * 2;
+        // width = rx * 2;
+        // height = ry * 2;
+
+        let host = this.getHost();
+
+        if (host) {
+
+            let [hW, hH] = host.currentDimensions;
+
+            let rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * hW : radiusX,
+                ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * hH : radiusY;
+
+            width = rx * 2;
+            height = ry * 2;
+        } 
     }
     else {
 

@@ -32,10 +32,16 @@ const mycell = canvas.buildCell({
     backgroundColor: 'lightblue',
 });
 
+scrawl.makeGroup({
+
+    name: 'drag-group',
+    host: 'test-cell'
+})
+
 scrawl.makeWheel({
 
     name: 'wheel-1',
-    group: 'test-cell',
+    group: 'drag-group',
 
     radius: 40,
 
@@ -99,23 +105,11 @@ let report = function () {
 
         mycell.updateHere();
 
-        let here = mycell.here;
-
         testNow = Date.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        if (here) {
-            testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-mycell: start - ${mycell.currentStart[0]}, ${mycell.currentStart[1]}
-        handle - ${mycell.currentHandle[0]}, ${mycell.currentHandle[1]}
-        offset - ${mycell.currentOffset[0]}, ${mycell.currentOffset[1]}
-        dimensions - ${here.w}, ${here.h}
-        ratio - ${here.xRatio}, ${here.yRatio}
-        scale - ${mycell.scale}
-        roll - ${mycell.roll}
-        cursor - ${here.x}, ${here.y}`;
-        }
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();
 
@@ -130,9 +124,17 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
+// Create the drag-and-drop zone
+scrawl.makeDragZone({
+
+    zone: canvas,
+    collisionGroup: 'drag-group',
+    coordinateSource: mycell,
+    endOn: ['up', 'leave'],
+});
+
+
 // Setup form observer functionality
-//
-// KNOWN ISSUE: in the mix between updating scale, font size and font family, the height calculation occasionally glitches, giving an incorrect height value for the Phrase entity
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],

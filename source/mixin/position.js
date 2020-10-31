@@ -929,7 +929,10 @@ export default function (P = {}) {
 
         if (host) {
 
-            if (host.here) return host.here;
+            if (host.here && Object.keys(host.here)) {
+
+            	return host.here;
+            }
             else if (host.currentDimensions) {
 
                 let dims = host.currentDimensions;
@@ -1081,20 +1084,30 @@ export default function (P = {}) {
 // + Start values do NOT scale
     P.cleanStart = function () {
 
-        this.dirtyStart = false;
+        let host = this.getHost(),
+        	w, h;
 
-        let here = this.getHere();
+        if (host) {
 
-        if (xt(here)) {
+	        this.dirtyStart = false;
 
-            if (xta(here.w, here.h)) {
+	        if (xta(host.w, host.h)) {
 
-                this.cleanPosition(this.currentStart, this.start, [here.w, here.h]);
-                this.dirtyStampPositions = true;
-            }
-            else this.dirtyStart = true;
+	        	w = host.w;
+	        	h = host.h;
+	        }
+	        else if (host.currentDimensions) {
+
+	        	[w, h] = host.currentDimensions;
+	        }
+	        else this.dirtyStart = true;
         }
-        else this.dirtyStart = true;
+
+        if (!this.dirtyStart) {
+
+            this.cleanPosition(this.currentStart, this.start, [w, h]);
+            this.dirtyStampPositions = true;
+        }
     };
 
 
@@ -1102,22 +1115,32 @@ export default function (P = {}) {
 // + Offset values do NOT scale
     P.cleanOffset = function () {
 
-        this.dirtyOffset = false;
+        let host = this.getHost(),
+        	w, h;
 
-        let here = this.getHere();
+        if (host) {
 
-        if (xt(here)) {
+	        this.dirtyOffset = false;
 
-            if (xta(here.w, here.h)) {
+	        if (xta(host.w, host.h)) {
 
-                this.cleanPosition(this.currentOffset, this.offset, [here.w, here.h]);
-                this.dirtyStampPositions = true;
+	        	w = host.w;
+	        	h = host.h;
+	        }
+	        else if (host.currentDimensions) {
 
-                if (this.mimicked && this.mimicked.length) this.dirtyMimicOffset = true;
-            }
-            else this.dirtyOffset = true;
+	        	[w, h] = host.currentDimensions;
+	        }
+	        else this.dirtyOffset = true;
         }
-        else this.dirtyOffset = true;
+        
+        if (!this.dirtyStart) {
+
+            this.cleanPosition(this.currentOffset, this.offset, [w, h]);
+            this.dirtyStampPositions = true;
+
+            if (this.mimicked && this.mimicked.length) this.dirtyMimicOffset = true;
+        }
     };
 
 

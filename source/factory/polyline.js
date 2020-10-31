@@ -507,14 +507,18 @@ P.cleanPinsArray = function () {
 
     let w = 1,
         h = 1,
-        here = this.getHere(),
+        host = this.getHost(),
         clean = this.cleanCoordinate,
-        x, y;
+        x, y, dims;
 
-    if (xta(here, here.w, here.h)) {
+    if (host) {
 
-        w = here.w; 
-        h = here.h;
+        dims = host.currentDimensions;
+
+        if (dims) {
+
+            [w, h] = dims;
+        }
     }
 
     pins.forEach((item, index) => {

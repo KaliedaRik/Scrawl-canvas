@@ -431,7 +431,7 @@ P.factoryKill = function () {
         }
 
         let lock = this[`${label}LockTo`], 
-            x, y, ox, oy, here, flag,
+            x, y, ox, oy, here, host, dims, flag,
             raw = this[label],
             current = this[`current${capLabel}`];
 
@@ -485,13 +485,15 @@ P.factoryKill = function () {
                 
                 x = y = 0;
 
-                here = this.getHere();
+                host = this.getHost();
 
-                if (xt(here)) {
+                if (host) {
 
-                    if (xta(here.w, here.h)) {
+                    dims = host.currentDimensions;
 
-                        this.cleanPosition(current, raw, [here.w, here.h]);
+                    if (dims) {
+
+                        this.cleanPosition(current, raw, dims);
                         [x, y] = current;
                     }
                 }
@@ -530,15 +532,17 @@ P.factoryKill = function () {
 
         else {
 
-            let here = this.getHere();
+            let host = this.getHost();
 
-            if (xt(here)) {
+            if (host) {
 
-                if (xta(here.w, here.h)) {
+                let dims = host.currentDimensions;
+
+                if (dims) {
 
                     let current = this[`current${capLabel}`];
 
-                    this.cleanPosition(current, this[label], [here.w, here.h]);
+                    this.cleanPosition(current, this[label], dims);
 
                     return {
                         x: current[0],

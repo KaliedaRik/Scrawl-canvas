@@ -184,10 +184,20 @@ P.makeStarPath = function () {
 
     if (radius1.substring || radius2.substring) {
 
-        let here = this.getHere();
+        // let here = this.getHere();
 
-        radius1 = (radius1.substring) ? (parseFloat(radius1) / 100) * here.w : radius1;
-        radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;
+        // radius1 = (radius1.substring) ? (parseFloat(radius1) / 100) * here.w : radius1;
+        // radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;
+
+        let host = this.getHost();
+
+        if (host) {
+
+            let [hW, hH] = host.currentDimensions;
+
+            radius1 = (radius1.substring) ? (parseFloat(radius1) / 100) * hW : radius1;
+            radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * hW : radius2;
+        } 
     }
 
     let v1 = requestVector({x: 0, y: -radius1}),
