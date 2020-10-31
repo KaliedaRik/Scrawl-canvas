@@ -425,7 +425,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;
-<span class="hljs-keyword">import</span> { xt, xta, isa_dom, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
+<span class="hljs-keyword">import</span> { xt, xta, isa_dom, isa_fn, isa_boolean, isa_obj, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
 <span class="hljs-keyword">import</span> { addListener, addNativeListener, removeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"./events.js"</span>;
 
 <span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/animation.js"</span>;</pre></div></div>
@@ -1080,17 +1080,17 @@
 <ul>
 <li><strong>.zone</strong> - either the String name of the Stack or Canvas artefact which will host the zone, or the Stack or Canvas artefact itself</li>
 </ul>
-<p>Optional argument object attributes:</p>
+<p>Additional, optional, attributes in the argument object</p>
 <ul>
-<li><strong>.coodinateSource</strong> - the .here object of whatever artefact/asset (Stack, Canvas, Element or Cell) will be supplying the coordinates. Defaults to the .here object of either the Stack zone, or the .here object of the Canvas zone’s base Cell.</li>
-<li><strong>.collisionGroup</strong> - the group containg the draggable artefacts, or that Group object’s name String. Defaults to the Stack zone’s Group object, or the Canvas’s base Cell’s Group object.</li>
-<li><strong>.startOn</strong> - one of ‘move’, ‘up’, ‘down’, ‘enter’, ‘leave’, or an array of a selection of those strings. Defaults to ‘down’</li>
-<li><strong>.updateOnStart</strong> - an Object containing changes to be made (via set) to the artefact when it is picked up</li>
-<li><strong>.endOn</strong> - one of ‘move’, ‘up’, ‘down’, ‘enter’, ‘leave’, or an array of a selection of those strings. Defaults to ‘up’</li>
-<li><strong>.updateOnEnd</strong> - an Object containing changes to be made (via set) to the artefact when it is dropped</li>
-<li><strong>.exposeCurrentArtefact</strong> boolean. Defaults to false</li>
+<li><strong>.coordinateSource</strong> - an object containing a <code>here</code> object</li>
+<li><strong>.collisionGroup</strong> - String name of Group object, or Group object itself</li>
+<li><strong>.startOn</strong> - Array of Strings</li>
+<li><strong>.endOn</strong> - Array of Strings</li>
+<li><strong>.updateOnStart</strong> - Function, or a <code>set</code> object to be applied to the current artefact</li>
+<li><strong>.updateOnEnd</strong> - Function, or a <code>set</code> object to be applied to the current artefact</li>
+<li><strong>.exposeCurrentArtefact</strong> - Boolean</li>
 </ul>
-<p>If the exposeCurrentArtefact attribute is true, the function returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). </p>
+<p>If <code>exposeCurrentArtefact</code> attribute is true, the factory returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). </p>
 <p>Invoking the returned function with a single argument that evaluates to true will trigger the kill function.</p>
 <p>If the exposeCurrentArtefact attribute is false, or omitted, the function returns a kill function that can be invoked to remove the event listeners from the Stack or Canvas zone’s DOM element.</p>
 <p>NOTE: drag-and-drop functionality using this factory function <strong>is not guaranteed</strong> for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.</p>
@@ -1112,30 +1112,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeDragZone = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!items.zone) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> target = (items.zone.substring) ? artefact[items.zone] : items.zone;
-
-    <span class="hljs-keyword">if</span> (!target) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> targetElement = target.domElement,
-        coordinateSource, 
-        collisionGroup = (items.collisionGroup &amp;&amp; items.collisionGroup.substring) ? library.group[items.collisionGroup] : items.collisionGroup, 
-        startOn = (items.startOn) ? items.startOn : [<span class="hljs-string">'down'</span>],
-        endOn = (items.endOn) ? items.endOn : [<span class="hljs-string">'up'</span>];
-
-    <span class="hljs-keyword">if</span> (target.type === <span class="hljs-string">'Stack'</span>) {
-
-        coordinateSource = items.coordinateSource;
-        <span class="hljs-keyword">if</span> (!coordinateSource) coordinateSource = target.here;
-
-        collisionGroup = items.collisionGroup;
-        <span class="hljs-keyword">if</span> (!collisionGroup) collisionGroup = library.group[target.name];
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (target.type === <span class="hljs-string">'Canvas'</span>) {
-
-        coordinateSource = items.coordinateSource;</pre></div></div>
+    <span class="hljs-keyword">let</span> {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, exposeCurrentArtefact} = items</pre></div></div>
             
         </li>
         
@@ -1146,78 +1123,22 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>Generally the system won’t have had time to establish target.base.here, if the dragzone is defined as part of setup before a Display cycle has completed - so the test gets repeated in the pickup function below, to capture those cases</p>
+              <p><code>zone</code> is required</p>
+<ul>
+<li>must be either a Canvas or Stack wrapper, or a wrapper’s String name</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!coordinateSource) coordinateSource = target.base.here;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!zone) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - no zone supplied'</span>);
 
-        collisionGroup = items.collisionGroup;
-        <span class="hljs-keyword">if</span> (!collisionGroup) collisionGroup = library.group[target.base.name];
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
-    }
+    <span class="hljs-keyword">if</span> (zone.substring) zone = artefact[zone];
 
-    <span class="hljs-keyword">if</span> (!xta(targetElement, collisionGroup)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (!zone || [<span class="hljs-string">'Canvas'</span>, <span class="hljs-string">'Stack'</span>].indexOf(zone.type) &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - zone object is not a Stack or Canvas wrapper'</span>);
 
-    <span class="hljs-keyword">let</span> current = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> target = zone.domElement;
 
-    <span class="hljs-keyword">let</span> pickup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (e.cancelable) {
-            
-            e.preventDefault();
-            e.returnValue = <span class="hljs-literal">false</span>;
-        }
-
-        <span class="hljs-keyword">let</span> type = e.type;
-
-        <span class="hljs-keyword">if</span> (type === <span class="hljs-string">'touchstart'</span> || type === <span class="hljs-string">'touchcancel'</span>) touchAction(e);
-
-        <span class="hljs-keyword">if</span> (!coordinateSource &amp;&amp; target.type === <span class="hljs-string">'Canvas'</span>) coordinateSource = target.base.here;
-
-        current = collisionGroup.getArtefactAt(coordinateSource);
-
-        <span class="hljs-keyword">if</span> (current) {
-
-            current.artefact.pickupArtefact(coordinateSource);
-            <span class="hljs-keyword">if</span> (items.updateOnStart) current.artefact.set(items.updateOnStart);
-        }
-    };
-
-    <span class="hljs-keyword">let</span> drop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (e.cancelable) {
-
-            e.preventDefault();
-            e.returnValue = <span class="hljs-literal">false</span>;
-        }
-
-        <span class="hljs-keyword">if</span> (current) {
-
-            current.artefact.dropArtefact();
-            <span class="hljs-keyword">if</span> (items.updateOnEnd) current.artefact.set(items.updateOnEnd);
-            current = <span class="hljs-literal">false</span>;
-        }
-    };
-
-    <span class="hljs-keyword">let</span> kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        removeListener(startOn, pickup, targetElement);
-        removeListener(endOn, drop, targetElement);
-    };
-
-    <span class="hljs-keyword">let</span> getCurrent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">actionKill = false</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (actionKill) kill();
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> current;
-    };
-
-    addListener(startOn, pickup, targetElement);
-    addListener(endOn, drop, targetElement);
-
-    <span class="hljs-keyword">if</span> (items.exposeCurrentArtefact) <span class="hljs-keyword">return</span> getCurrent;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> kill;
-};</pre></div></div>
+    <span class="hljs-keyword">if</span> (!target) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - zone does not contain a target DOM element'</span>);</pre></div></div>
             
         </li>
         
@@ -1227,6 +1148,182 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p><code>collisionGroup</code> is optional; defaults to zone’s namesake group</p>
+<ul>
+<li>must be a Group object</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!collisionGroup) {
+
+        <span class="hljs-keyword">if</span> (zone.type === <span class="hljs-string">'Canvas'</span>) collisionGroup = library.group[zone.base.name];
+        <span class="hljs-keyword">else</span> collisionGroup = library.group[zone.name];
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
+
+    <span class="hljs-keyword">if</span> (!collisionGroup || collisionGroup.type !== <span class="hljs-string">'Group'</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - unable to recover collisionGroup group'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p><code>coordinateSource</code> will be an object containing <code>x</code> and <code>y</code> attributes</p>
+<ul>
+<li>default’s to the zone’s <code>here</code> object</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (coordinateSource) {
+
+        <span class="hljs-keyword">if</span> (coordinateSource.here) coordinateSource = coordinateSource.here;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!xta(coordinateSource.x, coordinateSource.y)) coordinateSource = <span class="hljs-literal">false</span>;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">if</span> (zone.type === <span class="hljs-string">'Canvas'</span>) coordinateSource = zone.base.here;
+        <span class="hljs-keyword">else</span> coordinateSource = zone.here;
+    }
+
+    <span class="hljs-keyword">if</span> (!coordinateSource) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - unable to discover a usable coordinateSource object'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p><code>startOn</code>, <code>endOn</code> - if supplied, then need to be arrays</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(startOn)) startOn = [<span class="hljs-string">'down'</span>];
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(endOn)) endOn = [<span class="hljs-string">'up'</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>We can only drag one artefact at a time; that artefact - alongside the hit coordinate’s x and y values -  is stored in the <code>current</code> variable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> current = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p><code>updateOnStart</code>, <code>updateOnEnd</code> - if supplied, then need to be functions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (isa_obj(updateOnStart)) updateOnStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ current.artefact.set(items.updateOnStart) };
+    <span class="hljs-keyword">if</span> (!isa_fn(updateOnStart)) updateOnStart = λ<span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">if</span> (isa_obj(updateOnEnd)) updateOnEnd = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ current.artefact.set(items.updateOnEnd) };
+    <span class="hljs-keyword">if</span> (!isa_fn(updateOnEnd)) updateOnEnd = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p><code>exposeCurrentArtefact</code> - if supplied, then needs to be a boolean</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!isa_boolean(exposeCurrentArtefact)) exposeCurrentArtefact = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">const</span> checkE = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (e.cancelable) {
+            
+            e.preventDefault();
+            e.returnValue = <span class="hljs-literal">false</span>;
+        }
+    };
+
+    <span class="hljs-keyword">const</span> pickup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+
+        checkE(e);
+
+        <span class="hljs-keyword">let</span> type = e.type;
+
+        <span class="hljs-keyword">if</span> (type === <span class="hljs-string">'touchstart'</span> || type === <span class="hljs-string">'touchcancel'</span>) touchAction(e);
+
+        current = collisionGroup.getArtefactAt(coordinateSource);
+
+        <span class="hljs-keyword">if</span> (current) {
+
+            current.artefact.pickupArtefact(coordinateSource);
+            updateOnStart();
+        }
+    };
+
+    <span class="hljs-keyword">let</span> drop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+
+        checkE(e);
+
+        <span class="hljs-keyword">if</span> (current) {
+
+            current.artefact.dropArtefact();
+            updateOnEnd();
+            current = <span class="hljs-literal">false</span>;
+        }
+    };
+
+    <span class="hljs-keyword">const</span> kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        removeListener(startOn, pickup, target);
+        removeListener(endOn, drop, target);
+    };
+
+    <span class="hljs-keyword">const</span> getCurrent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">actionKill = false</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (actionKill) kill();
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> current;
+    };
+
+    addListener(startOn, pickup, target);
+    addListener(endOn, drop, target);
+
+    <span class="hljs-keyword">if</span> (exposeCurrentArtefact) <span class="hljs-keyword">return</span> getCurrent;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> kill;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

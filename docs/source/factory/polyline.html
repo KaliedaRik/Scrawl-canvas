@@ -1269,14 +1269,18 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">let</span> w = <span class="hljs-number">1</span>,
         h = <span class="hljs-number">1</span>,
-        here = <span class="hljs-keyword">this</span>.getHere(),
+        host = <span class="hljs-keyword">this</span>.getHost(),
         clean = <span class="hljs-keyword">this</span>.cleanCoordinate,
-        x, y;
+        x, y, dims;
 
-    <span class="hljs-keyword">if</span> (xta(here, here.w, here.h)) {
+    <span class="hljs-keyword">if</span> (host) {
 
-        w = here.w; 
-        h = here.h;
+        dims = host.currentDimensions;
+
+        <span class="hljs-keyword">if</span> (dims) {
+
+            [w, h] = dims;
+        }
     }
 
     pins.forEach(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> {

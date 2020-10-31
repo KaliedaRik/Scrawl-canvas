@@ -1881,7 +1881,10 @@ myBlock.setDelta({
 
         <span class="hljs-keyword">if</span> (host) {
 
-            <span class="hljs-keyword">if</span> (host.here) <span class="hljs-keyword">return</span> host.here;
+            <span class="hljs-keyword">if</span> (host.here &amp;&amp; <span class="hljs-built_in">Object</span>.keys(host.here)) {
+
+            	<span class="hljs-keyword">return</span> host.here;
+            }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (host.currentDimensions) {
 
                 <span class="hljs-keyword">let</span> dims = host.currentDimensions;
@@ -2117,20 +2120,30 @@ myBlock.setDelta({
             
             <div class="content"><div class='highlight'><pre>    P.cleanStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">let</span> host = <span class="hljs-keyword">this</span>.getHost(),
+        	w, h;
 
-        <span class="hljs-keyword">let</span> here = <span class="hljs-keyword">this</span>.getHere();
+        <span class="hljs-keyword">if</span> (host) {
 
-        <span class="hljs-keyword">if</span> (xt(here)) {
+	        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">if</span> (xta(here.w, here.h)) {
+	        <span class="hljs-keyword">if</span> (xta(host.w, host.h)) {
 
-                <span class="hljs-keyword">this</span>.cleanPosition(<span class="hljs-keyword">this</span>.currentStart, <span class="hljs-keyword">this</span>.start, [here.w, here.h]);
-                <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+	        	w = host.w;
+	        	h = host.h;
+	        }
+	        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (host.currentDimensions) {
+
+	        	[w, h] = host.currentDimensions;
+	        }
+	        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.dirtyStart) {
+
+            <span class="hljs-keyword">this</span>.cleanPosition(<span class="hljs-keyword">this</span>.currentStart, <span class="hljs-keyword">this</span>.start, [w, h]);
+            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+        }
     };</pre></div></div>
             
         </li>
@@ -2151,22 +2164,32 @@ myBlock.setDelta({
             
             <div class="content"><div class='highlight'><pre>    P.cleanOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">let</span> host = <span class="hljs-keyword">this</span>.getHost(),
+        	w, h;
 
-        <span class="hljs-keyword">let</span> here = <span class="hljs-keyword">this</span>.getHere();
+        <span class="hljs-keyword">if</span> (host) {
 
-        <span class="hljs-keyword">if</span> (xt(here)) {
+	        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">if</span> (xta(here.w, here.h)) {
+	        <span class="hljs-keyword">if</span> (xta(host.w, host.h)) {
 
-                <span class="hljs-keyword">this</span>.cleanPosition(<span class="hljs-keyword">this</span>.currentOffset, <span class="hljs-keyword">this</span>.offset, [here.w, here.h]);
-                <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+	        	w = host.w;
+	        	h = host.h;
+	        }
+	        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (host.currentDimensions) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.mimicked &amp;&amp; <span class="hljs-keyword">this</span>.mimicked.length) <span class="hljs-keyword">this</span>.dirtyMimicOffset = <span class="hljs-literal">true</span>;
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+	        	[w, h] = host.currentDimensions;
+	        }
+	        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+        
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.dirtyStart) {
+
+            <span class="hljs-keyword">this</span>.cleanPosition(<span class="hljs-keyword">this</span>.currentOffset, <span class="hljs-keyword">this</span>.offset, [w, h]);
+            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.mimicked &amp;&amp; <span class="hljs-keyword">this</span>.mimicked.length) <span class="hljs-keyword">this</span>.dirtyMimicOffset = <span class="hljs-literal">true</span>;
+        }
     };</pre></div></div>
             
         </li>

@@ -1223,7 +1223,7 @@
         }
 
         <span class="hljs-keyword">let</span> lock = <span class="hljs-keyword">this</span>[<span class="hljs-string">`<span class="hljs-subst">${label}</span>LockTo`</span>], 
-            x, y, ox, oy, here, flag,
+            x, y, ox, oy, here, host, dims, flag,
             raw = <span class="hljs-keyword">this</span>[label],
             current = <span class="hljs-keyword">this</span>[<span class="hljs-string">`current<span class="hljs-subst">${capLabel}</span>`</span>];
 
@@ -1277,13 +1277,15 @@
                 
                 x = y = <span class="hljs-number">0</span>;
 
-                here = <span class="hljs-keyword">this</span>.getHere();
+                host = <span class="hljs-keyword">this</span>.getHost();
 
-                <span class="hljs-keyword">if</span> (xt(here)) {
+                <span class="hljs-keyword">if</span> (host) {
 
-                    <span class="hljs-keyword">if</span> (xta(here.w, here.h)) {
+                    dims = host.currentDimensions;
 
-                        <span class="hljs-keyword">this</span>.cleanPosition(current, raw, [here.w, here.h]);
+                    <span class="hljs-keyword">if</span> (dims) {
+
+                        <span class="hljs-keyword">this</span>.cleanPosition(current, raw, dims);
                         [x, y] = current;
                     }
                 }
@@ -1334,15 +1336,17 @@
 
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> here = <span class="hljs-keyword">this</span>.getHere();
+            <span class="hljs-keyword">let</span> host = <span class="hljs-keyword">this</span>.getHost();
 
-            <span class="hljs-keyword">if</span> (xt(here)) {
+            <span class="hljs-keyword">if</span> (host) {
 
-                <span class="hljs-keyword">if</span> (xta(here.w, here.h)) {
+                <span class="hljs-keyword">let</span> dims = host.currentDimensions;
+
+                <span class="hljs-keyword">if</span> (dims) {
 
                     <span class="hljs-keyword">let</span> current = <span class="hljs-keyword">this</span>[<span class="hljs-string">`current<span class="hljs-subst">${capLabel}</span>`</span>];
 
-                    <span class="hljs-keyword">this</span>.cleanPosition(current, <span class="hljs-keyword">this</span>[label], [here.w, here.h]);
+                    <span class="hljs-keyword">this</span>.cleanPosition(current, <span class="hljs-keyword">this</span>[label], dims);
 
                     <span class="hljs-keyword">return</span> {
                         <span class="hljs-attr">x</span>: current[<span class="hljs-number">0</span>],

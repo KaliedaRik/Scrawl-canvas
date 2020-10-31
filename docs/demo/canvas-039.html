@@ -384,12 +384,89 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
 
+<span class="hljs-keyword">const</span> mycell = canvas.buildCell({
 
-canvas.set({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'test-cell'</span>,
 
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'honeydew'</span>,
-    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">isComponent</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">200</span>,
+
+    <span class="hljs-attr">handleX</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-number">200</span>,
+
+    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">0</span>,
+
+    <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
+
+    <span class="hljs-attr">flipUpend</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">false</span>,
+
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'lightblue'</span>,
+});
+
+scrawl.makeGroup({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'drag-group'</span>,
+    <span class="hljs-attr">host</span>: <span class="hljs-string">'test-cell'</span>
+})
+
+scrawl.makeWheel({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-1'</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">'drag-group'</span>,
+
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">40</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">250</span>, <span class="hljs-number">150</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-2'</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">250</span>, <span class="hljs-number">250</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'blue'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-3'</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">350</span>, <span class="hljs-number">250</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'green'</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-4'</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">350</span>, <span class="hljs-number">150</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'yellow'</span>,
+});
+
+scrawl.makeBlock({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'block-1'</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">'test-cell'</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">'5%'</span>, <span class="hljs-string">'5%'</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">'90%'</span>, <span class="hljs-string">'90%'</span>],
+
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+})
+
+scrawl.makeWheel({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'mouse-wheel'</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">'test-cell'</span>,
+
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
+
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'mouse'</span>,
 });</pre></div></div>
             
         </li>
@@ -400,144 +477,6 @@ canvas.set({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Create a shape track along which we can animate a Cell</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.makeOval({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-oval'</span>,
-
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-string">'40%'</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-string">'40%'</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'grey'</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">10</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
-
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-oval'</span>,
-
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">140</span>,
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'blue'</span>,
-});
-
-scrawl.makeTetragon({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-diamond'</span>,
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'lightgreen'</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-string">'40%'</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-string">'40%'</span>,
-
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-diamond'</span>,
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkgreen'</span>,
-
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">140</span>,    
-});
-
-scrawl.makeLine({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-line'</span>,
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'orange'</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">8</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'20%'</span>, <span class="hljs-string">'45%'</span>],
-    <span class="hljs-attr">end</span>: [<span class="hljs-string">'80%'</span>, <span class="hljs-string">'45%'</span>],
-
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-line'</span>,
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'brown'</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">210</span>],
-    <span class="hljs-attr">end</span>: [<span class="hljs-number">350</span>, <span class="hljs-number">210</span>],
-});
-
-scrawl.makeRectangle({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-rectangle'</span>,
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'25%'</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-
-    <span class="hljs-attr">rectangleWidth</span>: <span class="hljs-string">'60%'</span>,
-    <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-string">'15%'</span>,
-
-    <span class="hljs-attr">radiusT</span>: <span class="hljs-string">'5%'</span>,
-    <span class="hljs-attr">radiusB</span>: <span class="hljs-string">'15%'</span>,
-
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-rectangle'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'75%'</span>,
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'pink'</span>,
-
-    <span class="hljs-attr">rectangleWidth</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-number">100</span>,
-
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">15</span>,
-})
-
-scrawl.makeStar({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'responsive-star'</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'25%'</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-
-    <span class="hljs-attr">radius1</span>: <span class="hljs-string">'20%'</span>,
-    <span class="hljs-attr">radius2</span>: <span class="hljs-string">'10%'</span>,
-
-    <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'#420'</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
-
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'static-star'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'75%'</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'#840'</span>,
-
-    <span class="hljs-attr">radius1</span>: <span class="hljs-number">120</span>,
-    <span class="hljs-attr">radius2</span>: <span class="hljs-number">80</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -552,6 +491,8 @@ scrawl.makeStar({
 
     <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
+        mycell.updateHere();
+
         testNow = <span class="hljs-built_in">Date</span>.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
@@ -563,11 +504,11 @@ scrawl.makeStar({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -583,11 +524,104 @@ scrawl.makeStar({
         </li>
         
         
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Create the drag-and-drop zone</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeDragZone({
+
+    <span class="hljs-attr">zone</span>: canvas,
+    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">'drag-group'</span>,
+    <span class="hljs-attr">coordinateSource</span>: mycell,
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">'up'</span>, <span class="hljs-string">'leave'</span>],
+});</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Setup form observer functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">'input'</span>, <span class="hljs-string">'change'</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">'.controlItem'</span>,
+
+    <span class="hljs-attr">target</span>: mycell,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+
+        <span class="hljs-attr">width</span>: [<span class="hljs-string">'width'</span>, <span class="hljs-string">'round'</span>],
+        <span class="hljs-attr">height</span>: [<span class="hljs-string">'height'</span>, <span class="hljs-string">'round'</span>],
+
+        <span class="hljs-attr">start_x</span>: [<span class="hljs-string">'startX'</span>, <span class="hljs-string">'round'</span>],
+        <span class="hljs-attr">start_y</span>: [<span class="hljs-string">'startY'</span>, <span class="hljs-string">'round'</span>],
+
+        <span class="hljs-attr">handle_x</span>: [<span class="hljs-string">'handleX'</span>, <span class="hljs-string">'round'</span>],
+        <span class="hljs-attr">handle_y</span>: [<span class="hljs-string">'handleY'</span>, <span class="hljs-string">'round'</span>],
+
+        <span class="hljs-attr">offset_x</span>: [<span class="hljs-string">'offsetX'</span>, <span class="hljs-string">'round'</span>],
+        <span class="hljs-attr">offset_y</span>: [<span class="hljs-string">'offsetY'</span>, <span class="hljs-string">'round'</span>],
+
+        <span class="hljs-attr">roll</span>: [<span class="hljs-string">'roll'</span>, <span class="hljs-string">'float'</span>],
+        <span class="hljs-attr">scale</span>: [<span class="hljs-string">'scale'</span>, <span class="hljs-string">'float'</span>],
+
+        <span class="hljs-attr">upend</span>: [<span class="hljs-string">'flipUpend'</span>, <span class="hljs-string">'boolean'</span>],
+        <span class="hljs-attr">reverse</span>: [<span class="hljs-string">'flipReverse'</span>, <span class="hljs-string">'boolean'</span>],
+    },
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Setup form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#start_x'</span>).value = <span class="hljs-number">300</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#start_y'</span>).value = <span class="hljs-number">200</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#handle_x'</span>).value = <span class="hljs-number">300</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#handle_y'</span>).value = <span class="hljs-number">200</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#offset_x'</span>).value = <span class="hljs-number">0</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#offset_y'</span>).value = <span class="hljs-number">0</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#roll'</span>).value = <span class="hljs-number">0</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#scale'</span>).value = <span class="hljs-number">1</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#upend'</span>).options.selectedIndex = <span class="hljs-number">0</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#reverse'</span>).options.selectedIndex = <span class="hljs-number">0</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#width'</span>).value = <span class="hljs-number">600</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#height'</span>).value = <span class="hljs-number">400</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

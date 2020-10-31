@@ -791,14 +791,50 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
         radiusY = <span class="hljs-keyword">this</span>.radiusY,
         width, height;
 
-    <span class="hljs-keyword">if</span> (radiusX.substring || radiusY.substring) {
+    <span class="hljs-keyword">if</span> (radiusX.substring || radiusY.substring) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>let here = this.getHere(),
+    rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * here.w : radiusX,
+    ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * here.h : radiusY;</p>
 
-        <span class="hljs-keyword">let</span> here = <span class="hljs-keyword">this</span>.getHere(),
-            rx = (radiusX.substring) ? (<span class="hljs-built_in">parseFloat</span>(radiusX) / <span class="hljs-number">100</span>) * here.w : radiusX,
-            ry = (radiusY.substring) ? (<span class="hljs-built_in">parseFloat</span>(radiusY) / <span class="hljs-number">100</span>) * here.h : radiusY;
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>width = rx * 2;
+height = ry * 2;</p>
 
-        width = rx * <span class="hljs-number">2</span>;
-        height = ry * <span class="hljs-number">2</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        <span class="hljs-keyword">let</span> host = <span class="hljs-keyword">this</span>.getHost();
+
+        <span class="hljs-keyword">if</span> (host) {
+
+            <span class="hljs-keyword">let</span> [hW, hH] = host.currentDimensions;
+
+            <span class="hljs-keyword">let</span> rx = (radiusX.substring) ? (<span class="hljs-built_in">parseFloat</span>(radiusX) / <span class="hljs-number">100</span>) * hW : radiusX,
+                ry = (radiusY.substring) ? (<span class="hljs-built_in">parseFloat</span>(radiusY) / <span class="hljs-number">100</span>) * hH : radiusY;
+
+            width = rx * <span class="hljs-number">2</span>;
+            height = ry * <span class="hljs-number">2</span>;
+        } 
     }
     <span class="hljs-keyword">else</span> {
 
@@ -829,11 +865,11 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
 <ul>
@@ -848,11 +884,11 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -861,11 +897,11 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <h5 id="maketetragon">makeTetragon</h5>
 <p>Scrawl-canvas uses lines internally to create the Shape path. </p>
@@ -903,11 +939,11 @@ constructors.Tetragon = Tetragon;</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

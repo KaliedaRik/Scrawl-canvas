@@ -783,12 +783,45 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
         myMin, myXoffset, myYoffset, i,
         myPath = <span class="hljs-string">''</span>;
 
-    <span class="hljs-keyword">if</span> (radius1.substring || radius2.substring) {
+    <span class="hljs-keyword">if</span> (radius1.substring || radius2.substring) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>let here = this.getHere();</p>
 
-        <span class="hljs-keyword">let</span> here = <span class="hljs-keyword">this</span>.getHere();
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>radius1 = (radius1.substring) ? (parseFloat(radius1) / 100) * here.w : radius1;
+radius2 = (radius2.substring) ? (parseFloat(radius2) / 100) * here.w : radius2;</p>
 
-        radius1 = (radius1.substring) ? (<span class="hljs-built_in">parseFloat</span>(radius1) / <span class="hljs-number">100</span>) * here.w : radius1;
-        radius2 = (radius2.substring) ? (<span class="hljs-built_in">parseFloat</span>(radius2) / <span class="hljs-number">100</span>) * here.w : radius2;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+        <span class="hljs-keyword">let</span> host = <span class="hljs-keyword">this</span>.getHost();
+
+        <span class="hljs-keyword">if</span> (host) {
+
+            <span class="hljs-keyword">let</span> [hW, hH] = host.currentDimensions;
+
+            radius1 = (radius1.substring) ? (<span class="hljs-built_in">parseFloat</span>(radius1) / <span class="hljs-number">100</span>) * hW : radius1;
+            radius2 = (radius2.substring) ? (<span class="hljs-built_in">parseFloat</span>(radius2) / <span class="hljs-number">100</span>) * hW : radius2;
+        } 
     }
 
     <span class="hljs-keyword">let</span> v1 = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -radius1}),
@@ -842,11 +875,11 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -855,11 +888,11 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <h5 id="makestar">makeStar</h5>
 <p>Accepts argument with attributes:</p>
@@ -900,11 +933,11 @@ constructors.Star = Star;</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
