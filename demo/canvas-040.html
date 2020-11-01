@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 040</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 040</h1>
+  <h2>Filter parameters: Blur filter</h2>
+
+  <div class="controls">
+    
+    <div class="yellow label">Radius</div>
+    <div class="yellow"><input class="controlItem" id="radius" type="range" value="1" min="0" max="60" step="1" /></div>
+
+    <div class="yellow label">Passes</div>
+    <div class="yellow"><input class="controlItem" id="passes" type="range" value="1" min="0" max="10" step="1" /></div>
+
+    <div class="blue label">Shrinking radius</div>
+    <div class="blue">
+      <select class="controlItem" id="shrinkingRadius">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Include alpha</div>
+    <div class="blue">
+      <select class="controlItem" id="includeAlpha">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li></li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-040.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-040.js" type="module"></script>
+
+</body>
+
+</html>

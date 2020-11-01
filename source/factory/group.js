@@ -65,7 +65,7 @@ P = filterMix(P);
 
 // #### Group attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
+// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 let defaultAttributes = {
 
 // __artefacts__ - an Array containing the names of all artefact objects included in this group.
@@ -451,8 +451,8 @@ P.applyFilters = function (myCell) {
 
             currentEngine.save();
             
-            currentEngine.globalCompositeOperation = self.filterComposite;
-            currentEngine.globalAlpha = self.filterAlpha;
+            // currentEngine.globalCompositeOperation = self.filterComposite;
+            // currentEngine.globalAlpha = self.filterAlpha;
             currentEngine.setTransform(1, 0, 0, 1, 0, 0);
 
             currentEngine.drawImage(filterElement, 0, 0);

@@ -155,7 +155,7 @@ P = filterMix(P);
 // + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
 // + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
-// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil, filterAlpha, filterComposite__.
+// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
 // + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
@@ -1070,8 +1070,6 @@ P.applyFilters = function () {
     return new Promise(function(resolve){
 
         let engine = self.engine,
-            oldComposite = engine.globalCompositeOperation,
-            oldAlpha = engine.globalAlpha,
             image, worker;
 
         image = engine.getImageData(0, 0, self.currentDimensions[0], self.currentDimensions[1]);
@@ -1087,11 +1085,7 @@ P.applyFilters = function () {
 
             if (img) {
 
-                engine.globalCompositeOperation = self.filterComposite || 'source-over';
-                engine.globalAlpha = self.filterAlpha || 1;
                 engine.putImageData(img, 0, 0);
-                engine.globalCompositeOperation = oldComposite;
-                engine.globalAlpha = oldAlpha;
                 
                 resolve(true);
             }

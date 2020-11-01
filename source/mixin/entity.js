@@ -1,4 +1,4 @@
-// # Entity mixin
+ // # Entity mixin
 // This mixin builds on the base and position mixins to give Canvas entity objects (Scrawl-canvas [Block](../factory/block.html), [Grid](../factory/grid.html), [Loom](../factory/loom.html), [Phrase](../factory/phrase.html), [Picture](../factory/picture.html), [Shape](../factory/shape.html), [Wheel](../factory/wheel.html)) the ability to act as __artefacts__.
 //
 // Entitys differ from non-entity artefacts in that they are restricted to Cell wrappers (though no harm should come if they are included in Stack-related Groups).
@@ -531,8 +531,6 @@ export default function (P = {}) {
 
                 currentEngine.save();
                 
-                currentEngine.globalCompositeOperation = self.filterComposite;
-                currentEngine.globalAlpha = self.filterAlpha;
                 currentEngine.setTransform(1, 0, 0, 1, 0, 0);
 
                 currentEngine.drawImage(filterElement, 0, 0);

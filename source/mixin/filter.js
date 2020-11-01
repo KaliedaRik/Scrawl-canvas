@@ -29,14 +29,6 @@ export default function (P = {}) {
 
 // __isStencil__ - Use the entity as a stencil.
         isStencil: false,
-
-
-// __filterAlpha__ - To make the filter transparent, so that some of the original colour shows through
-        filterAlpha: 1,
-
-
-// __filterComposite__ - Change how the filter will be applied to the scene
-        filterComposite: 'source-over',
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 042</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 042</h1>
+  <h2>Filter parameters: grayscale, sepia, invert, brightness, saturation</h2>
+
+  <div class="controls">
+    
+    <div class="yellow label">Filter Alpha</div>
+    <div class="yellow"><input class="controlItem" id="filterAlpha" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="lavender label">Level</div>
+    <div class="lavender"><input class="controlItem" id="level" type="range" value="1" min="0" max="3" step="0.01" /></div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li></li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-042.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-042.js" type="module"></script>
+
+</body>
+
+</html>

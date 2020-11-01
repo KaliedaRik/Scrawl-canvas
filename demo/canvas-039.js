@@ -1,7 +1,7 @@
-// # Demo Canvas 038 
+// # Demo Canvas 039 
 // Responsive Shape-based entitys
 
-// [Run code](../../demo/canvas-038.html)
+// [Run code](../../demo/canvas-039.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup

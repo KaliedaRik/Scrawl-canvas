@@ -751,8 +751,6 @@ export default function (P = {}) {
                 case 'filter' :
                     delete art.filter;
                     delete art.filters;
-                    delete art.filterAlpha;
-                    delete art.filterComposite;
                     delete art.isStencil;
                     break;
     		}
