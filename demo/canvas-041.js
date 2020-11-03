@@ -1,14 +1,17 @@
 // # Demo Canvas 041 
-// Filter parameters: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue
+// Filter parameters: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert
 
 // [Run code](../../demo/canvas-041.html)
 import scrawl from '../source/scrawl.js';
+
 
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
 scrawl.importDomImage('.flowers');
 
+
+// Create the filters
 scrawl.makeFilter({
     name: 'red',
     method: 'red',
@@ -36,93 +39,184 @@ scrawl.makeFilter({
 }).clone({
     name: 'notblue',
     method: 'notblue',
+}).clone({
+    name: 'grayscale',
+    method: 'grayscale',
+}).clone({
+    name: 'sepia',
+    method: 'sepia',
+}).clone({
+    name: 'invert',
+    method: 'invert',
 });
 
-let piccy = scrawl.makePicture({
 
+// Create the target entitys
+scrawl.makePicture({
+
+    name: 'red-filter',
     asset: 'iris',
 
-    width: '100%',
-    height: '100%',
+    start: [10, 10],
+    dimensions: [120, 120],
 
     copyWidth: '100%',
     copyHeight: '100%',
 
     method: 'fill',
-});
-
-let filterWheels = scrawl.makeGroup({
-
-    name: 'wheel-filters',
-    host: canvas.base.name,
-});
-
-scrawl.makeWheel({
-
-    name: 'red-wheel',
-    group: 'wheel-filters',
-    radius: 50,
-
-    startX: 80,
-    startY: 80,
-
-    handle: ['center', 'center'],
-
-    method: 'fill',
 
     filters: ['red'],
-    isStencil: true,
 
 }).clone({
 
-    name: 'green-wheel',
-    startX: 200,
+    name: 'green-filter',
+    startX: 140,
     filters: ['green'],
 
 }).clone({
 
-    name: 'blue-wheel',
-    startX: 320,
+    name: 'blue-filter',
+    startX: 270,
     filters: ['blue'],
 
 }).clone({
 
-    name: 'cyan-wheel',
-    startX: 80,
-    startY: 200,
+    name: 'cyan-filter',
+    start: [10, 140],
     filters: ['cyan'],
 
 }).clone({
 
-    name: 'magenta-wheel',
-    startX: 200,
+    name: 'magenta-filter',
+    startX: 140,
     filters: ['magenta'],
 
 }).clone({
 
-    name: 'yellow-wheel',
-    startX: 320,
+    name: 'yellow-filter',
+    startX: 270,
     filters: ['yellow'],
 
 }).clone({
 
-    name: 'notred-wheel',
-    startX: 80,
-    startY: 320,
+    name: 'notred-filter',
+    start: [10, 270],
     filters: ['notred'],
 
 }).clone({
 
-    name: 'notgreen-wheel',
-    startX: 200,
+    name: 'notgreen-filter',
+    startX: 140,
     filters: ['notgreen'],
 
 }).clone({
 
-    name: 'notblue-wheel',
-    startX: 320,
+    name: 'notblue-filter',
+    startX: 270,
     filters: ['notblue'],
+
+}).clone({
+
+    name: 'grayscale-filter',
+    start: [10, 400],
+    filters: ['grayscale'],
+
+}).clone({
+
+    name: 'sepia-filter',
+    startX: 140,
+    filters: ['sepia'],
+
+}).clone({
+
+    name: 'invert-filter',
+    startX: 270,
+    filters: ['invert'],
 });
+
+scrawl.makePhrase({
+
+    name: 'red-label',
+    text: 'Red',
+
+    font: '20px sans-serif',
+
+    fillStyle: 'white',
+    lineWidth: 4,
+
+    method: 'drawThenFill',
+
+    pivot: 'red-filter',
+    lockTo: 'pivot',
+    offset: [5, 5],
+
+}).clone({
+
+    name: 'green-label',
+    text: 'Green',
+    pivot: 'green-filter',
+
+}).clone({
+
+    name: 'blue-label',
+    text: 'Blue',
+    pivot: 'blue-filter',
+
+}).clone({
+
+    name: 'cyan-label',
+    text: 'Cyan',
+    pivot: 'cyan-filter',
+
+}).clone({
+
+    name: 'magenta-label',
+    text: 'Magenta',
+    pivot: 'magenta-filter',
+
+}).clone({
+
+    name: 'yellow-label',
+    text: 'Yellow',
+    pivot: 'yellow-filter',
+
+}).clone({
+
+    name: 'notred-label',
+    text: 'Notred',
+    pivot: 'notred-filter',
+
+}).clone({
+
+    name: 'notgreen-label',
+    text: 'Notgreen',
+    pivot: 'notgreen-filter',
+
+}).clone({
+
+    name: 'notblue-label',
+    text: 'Notblue',
+    pivot: 'notblue-filter',
+
+}).clone({
+
+    name: 'grayscale-label',
+    text: 'Grayscale',
+    pivot: 'grayscale-filter',
+
+}).clone({
+
+    name: 'sepia-label',
+    text: 'Sepia',
+    pivot: 'sepia-filter',
+
+}).clone({
+
+    name: 'invert-label',
+    text: 'Invert',
+    pivot: 'invert-filter',
+});
+
 
 
 // #### Scene animation
@@ -151,30 +245,6 @@ const demoAnimation = scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
-
-
-// #### User interaction
-// Setup form observer functionality
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: filterWheels,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        filterAlpha: ['filterAlpha', 'float'],
-        filterComposite: ['filterComposite', 'raw'],
-    },
-});
-
-// Setup form
-document.querySelector('#filterAlpha').value = 1;
-document.querySelector('#filterComposite').options.selectedIndex = 0;
 
 
 // #### Development and testing

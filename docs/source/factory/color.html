@@ -1100,9 +1100,22 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
             
             <div class="content"><div class='highlight'><pre>P.convert = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
-    <span class="hljs-keyword">let</span> r, g, b, a, temp,
-        dec = <span class="hljs-keyword">this</span>.toDecimal,
-        round = <span class="hljs-built_in">Math</span>.round;
+    <span class="hljs-keyword">let</span> r, g, b, a, temp,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>dec = this.toDecimal,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        round = <span class="hljs-built_in">Math</span>.round;
 
     items = (items.substring) ? items : <span class="hljs-string">''</span>;
 
@@ -1118,15 +1131,15 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         
             <span class="hljs-keyword">if</span> (items.length &lt; <span class="hljs-number">5</span>) {
         
-                r = dec(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">1</span>]);
-                g = dec(items[<span class="hljs-number">2</span>] + items[<span class="hljs-number">2</span>]);
-                b = dec(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">3</span>]);
+                r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">1</span>], <span class="hljs-number">16</span>);
+                g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">2</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
+                b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">3</span>], <span class="hljs-number">16</span>);
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.length &lt; <span class="hljs-number">8</span>) {
         
-                r = dec(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">2</span>]);
-                g = dec(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">4</span>]);
-                b = dec(items[<span class="hljs-number">5</span>] + items[<span class="hljs-number">6</span>]);
+                r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
+                g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">4</span>], <span class="hljs-number">16</span>);
+                b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">5</span>] + items[<span class="hljs-number">6</span>], <span class="hljs-number">16</span>);
             }
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/rgb\(/</span>.test(items)) {
@@ -1170,11 +1183,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>the spec explanation can be found here <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">https://developer.mozilla.org/en-US/docs/Web/CSS/color_value</a></p>
 <p>see <a href="http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/">http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/</a> for one way we can approach converting hsl values to rgb</p>
@@ -1213,11 +1226,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>Color keywords harvested from <a href="https://developer.mozilla.org/en/docs/Web/CSS/color_value">https://developer.mozilla.org/en/docs/Web/CSS/color_value</a></p>
 
@@ -1375,11 +1388,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeColor({
@@ -1431,11 +1444,11 @@ constructors.Color = Color;</pre></div></div>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

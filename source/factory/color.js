@@ -320,7 +320,7 @@ P.updateByDelta = P.update;
 P.convert = function (items) {
 
     let r, g, b, a, temp,
-        dec = this.toDecimal,
+        // dec = this.toDecimal,
         round = Math.round;
 
     items = (items.substring) ? items : '';
@@ -337,15 +337,15 @@ P.convert = function (items) {
         
             if (items.length < 5) {
         
-                r = dec(items[1] + items[1]);
-                g = dec(items[2] + items[2]);
-                b = dec(items[3] + items[3]);
+                r = parseInt(items[1] + items[1], 16);
+                g = parseInt(items[2] + items[2], 16);
+                b = parseInt(items[3] + items[3], 16);
             }
             else if (items.length < 8) {
         
-                r = dec(items[1] + items[2]);
-                g = dec(items[3] + items[4]);
-                b = dec(items[5] + items[6]);
+                r = parseInt(items[1] + items[2], 16);
+                g = parseInt(items[3] + items[4], 16);
+                b = parseInt(items[5] + items[6], 16);
             }
         }
         else if (/rgb\(/.test(items)) {

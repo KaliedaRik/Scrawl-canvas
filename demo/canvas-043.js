@@ -1,7 +1,7 @@
-// # Demo Canvas 041 
-// Filter parameters: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue
+// # Demo Canvas 043 
+// Filter parameters: threshold
 
-// [Run code](../../demo/canvas-041.html)
+// [Run code](../../demo/canvas-043.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup
@@ -9,23 +9,26 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 scrawl.importDomImage('.flowers');
 
-scrawl.makeFilter({
-    name: 'grayscale',
-    method: 'grayscale',
-}).clone({
-    name: 'sepia',
-    method: 'sepia',
-}).clone({
-    name: 'invert',
-    method: 'invert',
+
+// Create the filter
+const myFilter = scrawl.makeFilter({
+
+    name: 'threshold',
+    method: 'threshold',
+
+    level: 127,
+
+    lowRed: 0,
+    lowGreen: 0,
+    lowBlue: 0,
+
+    highRed: 255,
+    highGreen: 255,
+    highBlue: 255,
 });
 
-let filterPics = scrawl.makeGroup({
 
-    name: 'picture-filters',
-    host: canvas.base.name,
-});
-
+// Create the target entity
 scrawl.makePicture({
 
     name: 'base-piccy',
@@ -39,37 +42,8 @@ scrawl.makePicture({
     copyHeight: '100%',
 
     method: 'fill',
-});
 
-scrawl.makePicture({
-
-    name: 'gray-piccy',
-    group: 'picture-filters',
-
-    asset: 'iris',
-
-    dimensions: ['40%', '40%'],
-    start: ['25%', '25%'],
-    handle: ['center', 'center'],
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-
-    filters: ['grayscale'],
-
-}).clone({
-
-    name: 'invert-piccy',
-    start: ['50%', '50%'],
-    filters: ['invert'],
-
-}).clone({
-
-    name: 'sepia-piccy',
-    start: ['75%', '75%'],
-    filters: ['sepia'],
+    filters: ['threshold'],
 });
 
 
@@ -81,13 +55,20 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let lowCol = document.querySelector('#lowColor'),
+        highCol = document.querySelector('#highColor'),
+        level = document.querySelector('#level');
+
     return function () {
 
         testNow = Date.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    low color: ${lowCol.value}
+    high color: ${highCol.value}
+    level: ${level.value}`;
     };
 }();
 
@@ -102,27 +83,48 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// Setup form observer functionality
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: filterPics,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        filterAlpha: ['filterAlpha', 'float'],
-        filterComposite: ['filterComposite', 'raw'],
-    },
+// Use a color object to convert between CSS hexadecimal and RGB decimal colors
+const converter = scrawl.makeColor({
+    name: 'converter',
 });
 
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => myFilter.set({ level: parseFloat(e.target.value) }), 
+    '#level');
+
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => {
+
+        converter.convert(e.target.value);
+
+        myFilter.set({ 
+            lowRed: converter.r,
+            lowGreen: converter.g,
+            lowBlue: converter.b,
+        });
+    }, 
+    '#lowColor');
+
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => {
+
+        converter.convert(e.target.value);
+
+        myFilter.set({ 
+            highRed: converter.r,
+            highGreen: converter.g,
+            highBlue: converter.b,
+        });
+    }, 
+    '#highColor');
+
 // Setup form
-document.querySelector('#filterAlpha').value = 1;
-document.querySelector('#filterComposite').options.selectedIndex = 0;
+document.querySelector('#lowColor').value = '#000000';
+document.querySelector('#highColor').value = '#ffffff';
+document.querySelector('#level').value = 127;
 
 
 // #### Development and testing

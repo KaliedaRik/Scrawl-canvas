@@ -1,5 +1,6 @@
 // # Demo Canvas 032 
 // Freehand drawing
+// + Note that the Polyline entity remains experimental technology and may be subject to breaking changes in future minor updates
 
 // [Run code](../../demo/canvas-032.html)
 import scrawl from '../source/scrawl.js'

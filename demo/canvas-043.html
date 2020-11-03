@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Canvas 042</title>
+  <title>Demo Canvas 043</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -19,45 +19,19 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 042</h1>
-  <h2>Filter parameters: brightness, saturation</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 043</h1>
+  <h2>Filter parameters: threshold</h2>
 
   <div class="controls">
-    
-    <div class="yellow label">Filter Alpha</div>
-    <div class="yellow"><input class="controlItem" id="filterAlpha" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
-    <div class="blue label">Filter Composite</div>
-    <div class="blue">
-      <select class="controlItem" id="filterComposite">
-        <option value="source-over">source-over</option>
-        <option value="source-in">source-in</option>
-        <option value="source-out">source-out</option>
-        <option value="source-atop">source-atop</option>
-        <option value="destination-over">destination-over</option>
-        <option value="destination-in">destination-in</option>
-        <option value="destination-out">destination-out</option>
-        <option value="destination-atop">destination-atop</option>
-        <option value="copy">copy</option>
-        <option value="xor">xor</option>
-        <option value="difference">difference</option>
-        <option value="exclusion">exclusion</option>
-        <option value="multiply">multiply</option>
-        <option value="screen">screen</option>
-        <option value="overlay">overlay</option>
-        <option value="lighter">lighter</option>
-        <option value="lighten">lighten</option>
-        <option value="darken">darken</option>
-        <option value="hard-light">hard-light</option>
-        <option value="soft-light">soft-light</option>
-        <option value="color-dodge">color-dodge</option>
-        <option value="color-burn">color-burn</option>
-        <option value="hue">hue</option>
-        <option value="saturation">saturation</option>
-        <option value="color">color</option>
-        <option value="luminosity">luminosity</option>
-      </select>
-    </div>
+    <div class="green label">Low color</div>
+    <div class="green"><input class="controlItem" id="lowColor" type="color" value="#000000" /></div>
+
+    <div class="green label">High color</div>
+    <div class="green"><input class="controlItem" id="highColor" type="color" value="#ffffff" /></div>
+
+    <div class="lavender label">Level</div>
+    <div class="lavender"><input class="controlItem" id="level" type="range" value="127" min="0" max="255" step="1" /></div>
 
   </div>
 
@@ -71,13 +45,15 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li></li>
+      <li>Create a test Picture entity</li>
+      <li>Create a threshold filter and apply it to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
 
-    <p><a href="../docs/demo/canvas-042.html">Annotated code</a></p>
+    <p><a href="../docs/demo/canvas-043.html">Annotated code</a></p>
   </div>
 
-  <script src="canvas-042.js" type="module"></script>
+  <script src="canvas-043.js" type="module"></script>
 
 </body>
 

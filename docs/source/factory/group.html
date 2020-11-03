@@ -536,7 +536,7 @@ P = filterMix(P);</pre></div></div>
               <h4 id="group-attributes">Group attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil, filterAlpha, filterComposite</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
 </ul>
 
             </div>
@@ -1395,16 +1395,7 @@ else if (item) return artefact[item] || cell[item] || null;</p>
 
             releaseFilterWorker(worker);
 
-            currentEngine.save();
-            
-            currentEngine.globalCompositeOperation = self.filterComposite;
-            currentEngine.globalAlpha = self.filterAlpha;
-            currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-
-            currentEngine.drawImage(filterElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-            
-            currentEngine.restore();
-        };</pre></div></div>
+            currentEngine.save();</pre></div></div>
             
         </li>
         
@@ -1414,6 +1405,27 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>currentEngine.globalCompositeOperation = self.filterComposite;
+currentEngine.globalAlpha = self.filterAlpha;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+            currentEngine.drawImage(filterElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            
+            currentEngine.restore();
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>Get handles to current and filter Cell elements and engines</p>
 
@@ -1428,11 +1440,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>Action a request to use the filtered artefacts as a stencil - as determined by the Group’s <code>isStencil</code> flag</p>
 
@@ -1451,11 +1463,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>At this point we will send the contents of the filterHost canvas over to the web worker, alongside details of the filters we wish to apply to it</p>
 
@@ -1475,11 +1487,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>Copy the filter worker’s output back onto the filterHost canvas</p>
 
@@ -1495,11 +1507,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>On success, cleanup and resolve</p>
 
@@ -1521,11 +1533,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><code>stashAction</code> - internal function which creates an ImageAsset object (and, as determined by the setting of the Group’s <code>stashOutputAsAsset</code> flag, an &lt;img&gt; element which gets attached to the DOM document in the <code>scrawlCanvasHold</code> hidden &lt;div&gt; element) from the Group’s entity’s output.</p>
 <p>NOTE: the <code>stashOutput</code> and <code>stashOutputAsAsset</code> flags are not Group object attributes. They are set on the group as a result of invoking the <code>scrawl.createImageFromGroup</code> function, and will be set to false as soon as the <code>Group.stashAction</code> function runs (in other words, stashing a Group’s output is a one-off operation).</p>
@@ -1588,11 +1600,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><code>getCellCoverage</code> - internal function which calculates the cumulative coverage of the Group’s artefacts. Used as part of the <code>stashAction</code> functionality</p>
 
@@ -1632,11 +1644,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <h4 id="artefact-management">Artefact management</h4>
 <p>Artefacts should be added to, and removed from, the Group object using the functions detailed below.</p>
@@ -1647,11 +1659,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><code>addArtefacts</code> - an artefact can belong to more than one Group</p>
 
@@ -1677,11 +1689,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p><code>removeArtefacts</code> - remove an artefact from this Group</p>
 
@@ -1705,11 +1717,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p><code>moveArtefactsIntoGroup</code> - remove the artefact from their current Group (which is generally their Display cycle group, as set in their <code>group</code> and/or <code>host</code> attribute) and add them to this Group</p>
 
@@ -1748,11 +1760,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p><code>clearArtefacts</code> - remove all artefacts from this Group</p>
 
@@ -1769,11 +1781,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p><code>updateArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDelta</code> function</p>
 
@@ -1788,11 +1800,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p><code>setArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>set</code> function</p>
 
@@ -1807,11 +1819,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p><code>updateByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>updateByDelta</code> function</p>
 
@@ -1826,11 +1838,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p><code>reverseByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>reverseByDelta</code> function</p>
 
@@ -1845,11 +1857,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p><code>addArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>addClasses</code> function</p>
 
@@ -1864,11 +1876,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p><code>removeArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>removeClasses</code> function</p>
 
@@ -1883,11 +1895,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p><code>cascadeAction</code> - internal helper function for the above artefact manipulation functionality</p>
 
@@ -1907,11 +1919,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p><code>setDeltaValues</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDeltaValues</code> function</p>
 
@@ -1927,11 +1939,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>We can add and remove filters to each of the Group’s entity artefacts using the following functions. The argument for each function can be one or more Filter name-Strings, or the Filter objects themselves, separated by commas.</p>
 
@@ -1940,11 +1952,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p><code>addFiltersToEntitys</code></p>
 
@@ -1964,11 +1976,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p><code>removeFiltersFromEntitys</code></p>
 
@@ -1988,11 +2000,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p><code>clearFiltersFromEntitys</code> - clears all filters from all the Group’s entity artefacts.</p>
 
@@ -2012,11 +2024,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 <p>The <code>getArtefactAt</code> function checks to see if any of the Group object’s artefacts are located at the supplied coordinates in the argument object. </p>
@@ -2062,11 +2074,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>The <code>getAllArtefactsAt</code> function returns an array of hit reports from all of the Group object’s artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.</p>
 <p>The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
@@ -2110,11 +2122,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>The <code>getArtefactCollisions</code> function returns an array of hit reports from all of the Group object’s artefacts which are currently in collision with the <strong>sensor</strong> coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
 <p>The argument must be either the artefact object itself, or its String name.</p>
@@ -2126,11 +2138,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>return empty array if no argument, or the argument is not an artefact, or the Group is empty</p>
 
@@ -2143,11 +2155,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>Return empty array if the artefact argument has not been setup to check for collisions</p>
 
@@ -2162,11 +2174,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p>Get entity collision data</p>
 
@@ -2177,11 +2189,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>Winnow step 1: don’t check the entity itself, or any missing or malformed artefacts in the Group</p>
 
@@ -2198,11 +2210,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>Winnow step 2: exclude all targets outside the artefact/target collision radius</p>
 
@@ -2234,11 +2246,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>Winnow step 3: perform hit checks on remaining targets - this will not retrieve targets entirely inside the artefact</p>
 
@@ -2256,11 +2268,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p>return filtered results</p>
 
@@ -2274,11 +2286,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> faces = scrawl.makeGroup({
@@ -2302,11 +2314,11 @@ constructors.Group = Group;</pre></div></div>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

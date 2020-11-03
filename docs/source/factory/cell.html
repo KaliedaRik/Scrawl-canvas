@@ -633,7 +633,7 @@ P = filterMix(P);</pre></div></div>
 <li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil, filterAlpha, filterComposite</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/cascade.html">cascade mixin</a>: <strong>groups</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/pattern.html">pattern mixin</a>: <strong>repeat</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/asset.html">asset mixin</a>: <strong>source, subscribers</strong>.</li>
@@ -2320,8 +2320,6 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resolve</span>)</span>{
 
         <span class="hljs-keyword">let</span> engine = self.engine,
-            oldComposite = engine.globalCompositeOperation,
-            oldAlpha = engine.globalAlpha,
             image, worker;
 
         image = engine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, self.currentDimensions[<span class="hljs-number">0</span>], self.currentDimensions[<span class="hljs-number">1</span>]);
@@ -2337,11 +2335,7 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
             <span class="hljs-keyword">if</span> (img) {
 
-                engine.globalCompositeOperation = self.filterComposite || <span class="hljs-string">'source-over'</span>;
-                engine.globalAlpha = self.filterAlpha || <span class="hljs-number">1</span>;
                 engine.putImageData(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                engine.globalCompositeOperation = oldComposite;
-                engine.globalAlpha = oldAlpha;
                 
                 resolve(<span class="hljs-literal">true</span>);
             }

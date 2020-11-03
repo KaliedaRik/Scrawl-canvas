@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Canvas 038</title>
+  <title>Demo Canvas 039</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -215,6 +215,56 @@
                 </a>
               
                 
+                <a class="source" href="canvas-040.html">
+                  ./demo/canvas-040.js
+                </a>
+              
+                
+                <a class="source" href="canvas-041.html">
+                  ./demo/canvas-041.js
+                </a>
+              
+                
+                <a class="source" href="canvas-042.html">
+                  ./demo/canvas-042.js
+                </a>
+              
+                
+                <a class="source" href="canvas-043.html">
+                  ./demo/canvas-043.js
+                </a>
+              
+                
+                <a class="source" href="canvas-044.html">
+                  ./demo/canvas-044.js
+                </a>
+              
+                
+                <a class="source" href="canvas-045.html">
+                  ./demo/canvas-045.js
+                </a>
+              
+                
+                <a class="source" href="canvas-046.html">
+                  ./demo/canvas-046.js
+                </a>
+              
+                
+                <a class="source" href="canvas-047.html">
+                  ./demo/canvas-047.js
+                </a>
+              
+                
+                <a class="source" href="canvas-048.html">
+                  ./demo/canvas-048.js
+                </a>
+              
+                
+                <a class="source" href="canvas-049.html">
+                  ./demo/canvas-049.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -349,8 +399,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="demo-canvas-038">Demo Canvas 038</h1>
-<p>Responsive Shape-based entitys</p>
+              <h1 id="demo-canvas-039">Demo Canvas 039</h1>
+<p>Detecting mouse/pointer cursor movements across a non-base Cell</p>
 
             </div>
             
@@ -363,7 +413,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p><a href="../../demo/canvas-038.html">Run code</a></p>
+              <p><a href="../../demo/canvas-039.html">Run code</a></p>
 
             </div>
             
@@ -382,9 +432,26 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Create a second cell for the canvas</p>
+<ul>
+<li>This cell will act as a moveable layer (start, handle, offset, roll, flipUpend, flipReverse)</li>
+<li>We will also add entitys to the new Cell, and create a drag zone on it so those entitys can be dragged and dropped across the Cell.</li>
+</ul>
 
-<span class="hljs-keyword">const</span> mycell = canvas.buildCell({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> mycell = canvas.buildCell({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'test-cell'</span>,
 
@@ -407,15 +474,41 @@
     <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">false</span>,
 
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'lightblue'</span>,
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Create the drag group</p>
 
-scrawl.makeGroup({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeGroup({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'drag-group'</span>,
     <span class="hljs-attr">host</span>: <span class="hljs-string">'test-cell'</span>
-})
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Create draggable entitys</p>
 
-scrawl.makeWheel({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeWheel({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">'wheel-1'</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">'drag-group'</span>,
@@ -472,11 +565,11 @@ scrawl.makeWheel({
         </li>
         
         
-        <li id="section-4">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -504,11 +597,11 @@ scrawl.makeWheel({
         </li>
         
         
-        <li id="section-5">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -524,11 +617,11 @@ scrawl.makeWheel({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Create the drag-and-drop zone</p>
@@ -546,11 +639,11 @@ scrawl.makeWheel({
         </li>
         
         
-        <li id="section-7">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Setup form observer functionality</p>
 
@@ -591,11 +684,11 @@ scrawl.makeWheel({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Setup form</p>
 
@@ -617,11 +710,11 @@ scrawl.makeWheel({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

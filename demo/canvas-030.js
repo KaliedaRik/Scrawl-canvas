@@ -1,5 +1,6 @@
 // # Demo Canvas 030 
 // Polyline entity functionality
+// + Note that the Polyline entity remains experimental technology and may be subject to breaking changes in future minor updates
 
 // [Run code](../../demo/canvas-030.html)
 import scrawl from '../source/scrawl.js'

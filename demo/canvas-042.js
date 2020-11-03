@@ -1,5 +1,5 @@
 // # Demo Canvas 042 
-// Filter parameters: grayscale, sepia, invert, brightness, saturation
+// Filter parameters: brightness, saturation
 
 // [Run code](../../demo/canvas-042.html)
 import scrawl from '../source/scrawl.js';
@@ -10,16 +10,9 @@ const canvas = scrawl.library.canvas.mycanvas,
 
 scrawl.importDomImage('.flowers');
 
+
+// Create the filters
 scrawl.makeFilter({
-    name: 'grayscale',
-    method: 'grayscale',
-}).clone({
-    name: 'sepia',
-    method: 'sepia',
-}).clone({
-    name: 'invert',
-    method: 'invert',
-}).clone({
     name: 'brightness',
     method: 'brightness',
     level: 1,
@@ -30,70 +23,52 @@ scrawl.makeFilter({
 
 const levelFilters = [filter.brightness, filter.saturation];
 
-let filterPics = scrawl.makeGroup({
 
-    name: 'picture-filters',
-    host: canvas.base.name,
-});
-
+// Create the target entitys
 scrawl.makePicture({
 
-    name: 'base-piccy',
+    name: 'brightness-picture',
 
     asset: 'iris',
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
-
-    method: 'fill',
-});
-
-scrawl.makePicture({
-
-    name: 'invert-piccy',
-    group: 'picture-filters',
-
-    asset: 'iris',
-
-    dimensions: ['40%', '40%'],
-    start: ['50%', '50%'],
-    handle: ['center', 'center'],
+    dimensions: [200, 200],
 
     copyWidth: '100%',
     copyHeight: '100%',
 
     method: 'fill',
 
-    filters: ['invert'],
-
-}).clone({
-
-    name: 'gray-piccy',
-    start: ['25%', '25%'],
-    filters: ['grayscale'],
-
-
-}).clone({
-
-    name: 'sepia-piccy',
-    start: ['75%', '75%'],
-    filters: ['sepia'],
-
-}).clone({
-
-    name: 'brightness-piccy',
-    start: ['25%', '75%'],
     filters: ['brightness'],
 
 }).clone({
 
-    name: 'saturation-piccy',
-    start: ['75%', '25%'],
+    name: 'saturation-picture',
+    startX: 200,
     filters: ['saturation'],
 });
+
+scrawl.makePhrase({
+
+    name: 'brightness-label',
+    text: 'Brightness',
+
+    font: '30px sans-serif',
+
+    fillStyle: 'white',
+    lineWidth: 4,
+
+    method: 'drawThenFill',
+
+    pivot: 'brightness-picture',
+    lockTo: 'pivot',
+    offset: [5, 5],
+
+}).clone({
+
+    name: 'saturation-label',
+    text: 'Saturation',
+    pivot: 'saturation-picture',
+})
 
 
 // #### Scene animation
@@ -111,7 +86,6 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    filterAlpha: ${scrawl.library.entity['invert-piccy'].filterAlpha}
     level: ${filter.brightness.level}`;
     };
 }();
@@ -127,23 +101,6 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// Setup form observer functionality
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: filterPics,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        filterAlpha: ['filterAlpha', 'float'],
-    },
-});
-
 scrawl.addNativeListener(['input', 'change'], (e) => {
 
     levelFilters.forEach(f => f.set({ level: parseFloat(e.target.value) }));
@@ -151,7 +108,6 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 }, '#level')
 
 // Setup form
-document.querySelector('#filterAlpha').value = 1;
 document.querySelector('#level').value = 1;
 
 

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 047</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 047</h1>
+  <h2>Filter parameters: pixelate</h2>
+
+  <div class="controls">
+
+    <div class="pink label">Tile Width</div>
+    <div class="pink"><input class="controlItem" id="tile_width" type="range" value="10" min="1" max="100" step="1" /></div>
+
+    <div class="pink label">Tile Height</div>
+    <div class="pink"><input class="controlItem" id="tile_height" type="range" value="10" min="1" max="100" step="1" /></div>
+
+    <div class="blue label">Offset X</div>
+    <div class="blue"><input class="controlItem" id="offset_x" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="blue label">Offset Y</div>
+    <div class="blue"><input class="controlItem" id="offset_y" type="range" value="0" min="0" max="100" step="1" /></div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create a pixelate filter and apply it to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-047.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-047.js" type="module"></script>
+
+</body>
+
+</html>

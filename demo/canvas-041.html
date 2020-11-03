@@ -9,9 +9,6 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
-    .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
-    }
     img {
       display: none;
     }
@@ -20,48 +17,9 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 041</h1>
-  <h2>Filter parameters: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue</h2>
+  <h2>Filter parameters: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert</h2>
 
-  <div class="controls">
-    
-    <div class="yellow label">Filter Alpha</div>
-    <div class="yellow"><input class="controlItem" id="filterAlpha" type="range" value="1" min="0" max="1" step="0.01" /></div>
-
-    <div class="blue label">Filter Composite</div>
-    <div class="blue">
-      <select class="controlItem" id="filterComposite">
-        <option value="source-over">source-over</option>
-        <option value="source-in">source-in</option>
-        <option value="source-out">source-out</option>
-        <option value="source-atop">source-atop</option>
-        <option value="destination-over">destination-over</option>
-        <option value="destination-in">destination-in</option>
-        <option value="destination-out">destination-out</option>
-        <option value="destination-atop">destination-atop</option>
-        <option value="copy">copy</option>
-        <option value="xor">xor</option>
-        <option value="difference">difference</option>
-        <option value="exclusion">exclusion</option>
-        <option value="multiply">multiply</option>
-        <option value="screen">screen</option>
-        <option value="overlay">overlay</option>
-        <option value="lighter">lighter</option>
-        <option value="lighten">lighten</option>
-        <option value="darken">darken</option>
-        <option value="hard-light">hard-light</option>
-        <option value="soft-light">soft-light</option>
-        <option value="color-dodge">color-dodge</option>
-        <option value="color-burn">color-burn</option>
-        <option value="hue">hue</option>
-        <option value="saturation">saturation</option>
-        <option value="color">color</option>
-        <option value="luminosity">luminosity</option>
-      </select>
-    </div>
-
-  </div>
-
-  <canvas id="mycanvas" width="400" height="400"></canvas>
+  <canvas id="mycanvas" width="400" height="540"></canvas>
 
   <img id="iris" src="img/iris.png" class="flowers" />
 
@@ -71,7 +29,8 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li></li>
+      <li>Create a test Picture entity</li>
+      <li>Create red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia and invert filters; apply them to the test entity</li>
     </ul>
 
     <p><a href="../docs/demo/canvas-041.html">Annotated code</a></p>

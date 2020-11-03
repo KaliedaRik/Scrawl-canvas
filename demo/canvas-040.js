@@ -8,17 +8,15 @@ import scrawl from '../source/scrawl.js';
 const canvas = scrawl.library.canvas.mycanvas;
 
 canvas.set({
-
     css: {
       display: 'inline-block',
     },
 });
 
-let dx = 0,
-    dy = 0;
-
 scrawl.importDomImage('.flowers');
 
+
+// Create the filter
 let blurFilter = scrawl.makeFilter({
 
     name: 'blur',
@@ -29,6 +27,8 @@ let blurFilter = scrawl.makeFilter({
     passes: 1,
 });
 
+
+// Create the target entity
 let piccy = scrawl.makePicture({
 
     asset: 'iris',
@@ -43,6 +43,7 @@ let piccy = scrawl.makePicture({
 
     filters: ['blur'],
 });
+
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
