@@ -64,7 +64,9 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    matrix3: ${matrix3.weights}
+    matrix5: ${matrix5.weights}`;
     };
 }();
 

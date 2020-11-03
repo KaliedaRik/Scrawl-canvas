@@ -86,16 +86,15 @@ let defaultAttributes = {
 
 
 // The following methods require no further attributes: 
-//
-//     `grayscale`, `sepia`, `invert`
-//     `red`, `green`, `blue`
-//     `notred`, `notgreen`, `notblue`
-//     `cyan`, `magenta`, `yellow`
+// + `grayscale`, `sepia`, `invert`
+// + `red`, `green`, `blue`
+// + `notred`, `notgreen`, `notblue`
+// + `cyan`, `magenta`, `yellow`
 
 
 // The following methods require the __level__ attribute:
 //
-//     `brightness`, `saturation`, `threshold`
+// + `brightness`, `saturation`, `threshold`
     level: 0,
 
 
@@ -138,42 +137,55 @@ let defaultAttributes = {
 // + the __radius__ of the blur effect, in pixels
 // + the __passes__ attribute (1+) determines how many times the blur filter will iterate
 // + the __shrinkingRadius__ flag reduces the radius by approx 70% on each successive pass
-// + when __includeAlpha__ flag is true, filter will include the alpha channel - note this will make the edges of the entity translucent
+// + when __includeAlpha__ flag is true, filter will include the alpha channel - note this may make the edges of the entity translucent
     radius: 1,
     passes: 1,
     shrinkingRadius: false,
     includeAlpha: false,
 
 
-// The `matrix` method requires a weights attribute - an array of 9 numbers in the following format:
-//
-//     weights: [
-//         topLeftWeight,
-//         topCenterWeight,
-//         topRightWeight,
-//         middleLeftWeight,
-//         homePixelWeight,
-//         middleRightWeight,
-//         bottomLeftWeight,
-//         bottomCenterWeight,
-//         bottomRightWeight,
-//     ]
-//
+// The `matrix` method requires a weights attribute - an array of 9 numbers (also known as a __kernel__) in the following format:
+// ```
+// weights: [
+//   topLeftWeight,
+//   topCenterWeight,
+//   topRightWeight,
+//   middleLeftWeight,
+//   homePixelWeight,
+//   middleRightWeight,
+//   bottomLeftWeight,
+//   bottomCenterWeight,
+//   bottomRightWeight,
+// ]
+// ```
 // ... where the top row is the row above the home pixel, etc
 //
 // The method also makes use of the __includeAlpha__ attribute.
 
 // The `matrix5` method is the same as the matrix method except that its weights array should contain 25 elements, to cover all the positions (from top-left corner) in a 5x5 grid
+// 
+// Some common kernels include:
+// + Identity - matrix3: [0,0,0,0,1,0,0,0,0]; matrix5: [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]
+// + Simple blur - matrix3: [0.1,0.1,0.1,0.1,0.2,0.1,0.1,0.1,0.1]
+// + Gaussian blur - matrix3: [0,0.14,0,0.14,0.44,0.14,0,0.13,0]
+// + Edge detect (example) - matrix3: [1,0,-1,0,0,0,-1,0,1]
+// + Edge emboss - matrix3: [-2,-1,0,-1,1,1,0,1,2]
+// + Edge enhance - matrix3: [0,0,0,-1,1,0,0,0,0]
+// + Laplacian edge - matrix3: [0,-1,0,-1,4,-1,0,-1,0]
+// + Laplacian edge + diagonals - matrix3: [-1,-1,-1,-1,8,-1,-1,-1,-1]
+// + Laplacian of Gaussian - matrix5: [0,0,-1,0,0,0,-1,-2,-1,0,-1,-2,16,-2,-1,0,-1,-2,-1,0,0,0,-1,0,0]
+// + Sharpen - matrix3: [0,-1,0,-1,5,-1,0,-1,0]
+// + Unsharp mask - matrix5: [1,4,6,4,1,4,16,24,16,4,6,24,-476,24,6,4,16,24,16,4,1,4,6,4,1]
     weights: null,
 
-
 // The __ranges__ attribute - used by the `chroma` method - needs to be an array of arrays with the following format:
-//
-//     [[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]
-//
+// ```
+// [[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]
+// ```
 // ... multiple ranges can be defined - for instance to key out the lightest and darkest hues:
-//
-//     ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]]
+// ```
+// ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]]
+// ```
     ranges: null,
 
 
