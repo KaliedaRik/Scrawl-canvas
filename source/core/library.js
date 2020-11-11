@@ -77,6 +77,20 @@ const palette = {};
 const palettenames = [];
     
 
+// Physics-related objects
+const particle = {};
+const particlenames = [];
+    
+const force = {};
+const forcenames = [];
+
+const spring = {};
+const springnames = [];
+    
+const world = {};
+const worldnames = [];
+    
+
 // Stack element wrappers created during Scrawl-canvas initialization, and created using the __makeStack__ and __addStack__ factories
 const stack = {};
 const stacknames = [];
@@ -137,10 +151,16 @@ export {
     filternames,
     fontattribute,
     fontattributenames,
+    force,
+    forcenames,
     group,
     groupnames,
     palette,
     palettenames,
+    particle,
+    particlenames,
+    spring,
+    springnames,
     stack,
     stacknames,
     styles,
@@ -149,6 +169,8 @@ export {
     tweennames,
     unstackedelement,
     unstackedelementnames,
+    world,
+    worldnames,
     constructors,
     radian,
     css,

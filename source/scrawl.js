@@ -108,8 +108,18 @@ import {
 
 
 import { 
+    makeEmitter,
+} from './factory/emitter.js';
+
+
+import { 
     makeFilter,
 } from './factory/filter.js';
+
+
+import { 
+    makeForce,
+} from './factory/particleForce.js';
 
 
 import { 
@@ -255,6 +265,11 @@ import {
 } from './factory/wheel.js';
 
 
+import { 
+    makeWorld,
+} from './factory/particleWorld.js';
+
+
 
 // ## Initialize Scrawl-canvas
 import { init } from './core/init.js';
@@ -337,8 +352,16 @@ export default {
     releaseCoordinate,
 
 
+    // factory/emitter.js
+    makeEmitter,
+
+
     // factory/filter.js
     makeFilter,
+
+
+    // factory/particleForce.js
+    makeForce,
 
 
     // factory/gradient.js
@@ -371,6 +394,7 @@ export default {
 
     // factory/oval.js
     makeOval,
+
 
     // factory/pattern.js
     makePattern,
@@ -454,4 +478,8 @@ export default {
 
     // factory/wheel.js
     makeWheel,
+
+
+    // factory/particleWorld.js
+    makeWorld,
 };
