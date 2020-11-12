@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Particles 002</title>
+  <title>Demo Particles 003</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -19,7 +19,7 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 002</h1>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 003</h1>
   <h2>Emitter using artefacts</h2>
 
   <div class="controls">
@@ -27,26 +27,29 @@
     <div class="green label">World speed</div>
     <div class="green"><input class="controlItem" id="world-speed" type="range" value="2" min="0.5" max="4" step="0.01" /></div>
 
+    <div class="green label">World color</div>
+    <div class="green"><input class="controlItem" id="color-controller" type="color" value="#b9b5df" /></div>
+
     <div class="green label">World alpha decay</div>
     <div class="green"><input class="controlItem" id="color-alpha" type="range" value="6" min="1" max="10" step="0.1" /></div>
-
-    <div class="green label">Particle stroke color</div>
-    <div class="green"><input class="controlItem" id="color-controller" type="color" value="#b9b5df" /></div>
 
     <div class="green label">Background color</div>
     <div class="green"><input class="controlItem" id="background" type="color" value="#000040" /></div>
 
-    <div class="green label">Minimum fill color</div>
-    <div class="green"><input class="controlItem" id="min-fill" type="color" value="#000000" /></div>
+    <div class="blue label">Max particles</div>
+    <div class="blue"><input class="controlItem" id="maxParticles" type="range" value="500" min="0" max="1000" step="1" /></div>
 
-    <div class="green label">Maximum fill color</div>
-    <div class="green"><input class="controlItem" id="max-fill" type="color" value="#ffffff" /></div>
+    <div class="blue label">Particle choke (ms)</div>
+    <div class="blue"><input class="controlItem" id="particleChoke" type="range" value="0" min="0" max="500" step="1" /></div>
 
-    <div class="blue label">Generation rate (per sec)</div>
-    <div class="blue"><input class="controlItem" id="generationRate" type="range" value="10" min="0" max="200" step="1" /></div>
+    <div class="blue label">Particle batch nr</div>
+    <div class="blue"><input class="controlItem" id="batchParticlesIn" type="range" value="1" min="0" max="20" step="1" /></div>
 
-    <div class="blue label">History length</div>
-    <div class="blue"><input class="controlItem" id="historyLength" type="range" value="20" min="1" max="200" step="1" /></div>
+    <div class="blue label">Particle history nr</div>
+    <div class="blue"><input class="controlItem" id="historyLength" type="range" value="5" min="1" max="200" step="1" /></div>
+
+    <div class="blue label">Particle lifetime (s)</div>
+    <div class="blue"><input class="controlItem" id="killParticleAfter" type="range" value="5" min="1" max="10" step="1" /></div>
 
     <div class="pink label">Artefact</div>
     <div class="pink">
@@ -59,8 +62,6 @@
       </select>
     </div>
 
-    <div class="pink label">&nbsp;</div>
-    <div class="pink">&nbsp;</div>
   </div>
 
   <canvas id="mycanvas" width="600" height="600"></canvas>
@@ -72,10 +73,10 @@
     <ul>
       <li>...</li>
     </ul>
-    <p><a href="../docs/demo/particles-002.html">Annotated code</a></p>
+    <p><a href="../docs/demo/particles-003.html">Annotated code</a></p>
   </div>
 
-  <script src="particles-002.js" type="module"></script>
+  <script src="particles-003.js" type="module"></script>
 
   <img id="bunny" src="img/bunny.png" />
 

@@ -207,6 +207,36 @@ P.set = function (items = {}) {
     return this;
 };
 
+P.setColor = function (item) {
+
+    this.convert(item);
+    return this;
+};
+
+P.setMinimumColor = function (item) {
+
+    this.convert(item);
+
+    this.rMin = this.r;
+    this.gMin = this.g;
+    this.bMin = this.b;
+    this.aMin = this.a;
+
+    return this;
+};
+
+P.setMaximumColor = function (item) {
+
+    this.convert(item);
+
+    this.rMax = this.r;
+    this.gMax = this.g;
+    this.bMax = this.b;
+    this.aMax = this.a;
+
+    return this;
+};
+
 // #### Prototype functions
 
 // `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.

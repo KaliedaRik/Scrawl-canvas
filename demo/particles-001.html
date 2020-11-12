@@ -44,23 +44,17 @@
     <div class="pink label">&nbsp;</div>
     <div class="pink">&nbsp;</div>
 
-    <div class="blue label">Max particles</div>
-    <div class="blue"><input class="controlItem" id="maxParticles" type="range" value="500" min="0" max="1000" step="1" /></div>
+    <div class="blue label">Generation rate (per sec)</div>
+    <div class="blue"><input class="controlItem" id="generationRate" type="range" value="60" min="0" max="200" step="1" /></div>
 
-    <div class="blue label">Particle choke (ms)</div>
-    <div class="blue"><input class="controlItem" id="particleChoke" type="range" value="0" min="0" max="500" step="1" /></div>
-
-    <div class="blue label">Particle batch nr</div>
-    <div class="blue"><input class="controlItem" id="batchParticlesIn" type="range" value="1" min="0" max="20" step="1" /></div>
-
-    <div class="blue label">Particle history nr</div>
+    <div class="blue label">History length</div>
     <div class="blue"><input class="controlItem" id="historyLength" type="range" value="100" min="1" max="200" step="1" /></div>
 
-    <div class="blue label">Particle lifetime (s)</div>
-    <div class="blue"><input class="controlItem" id="killParticleAfter" type="range" value="5" min="1" max="10" step="1" /></div>
+    <div class="lavender label">Lifespan (secs)</div>
+    <div class="lavender"><input class="controlItem" id="killAfterTime" type="range" value="5" min="0" max="10" step="0.1" /></div>
 
-    <div class="blue label">&nbsp;</div>
-    <div class="blue">&nbsp;</div>
+    <div class="lavender label">Life variation (secs)</div>
+    <div class="lavender"><input class="controlItem" id="killAfterTimeVariation" type="range" value="0.1" min="0" max="5" step="0.1" /></div>
 
     <div class="yellow label">Range - x</div>
     <div class="yellow"><input class="controlItem" id="range_x" type="range" value="40" min="-80" max="80" step="1" /></div>

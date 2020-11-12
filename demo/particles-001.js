@@ -1,5 +1,5 @@
 // # Demo Particles 001 
-// Physics-based unit particles
+// Emitter entity, and Particle World, basic functionality
 
 // [Run code](../../demo/particles-001.html)
 import scrawl from '../source/scrawl.js'
@@ -50,7 +50,7 @@ console.log(myWorld.get('hello'));
 myWorld.set({ testCoordinate: ['center', 'center'] });
 console.log(myWorld.get('testCoordinate'));
 
-const myemitter = scrawl.makeEmitter({
+const myEmitter = scrawl.makeEmitter({
 
     name: 'use-raw-2d-context',
     world: myWorld,
@@ -59,12 +59,9 @@ const myemitter = scrawl.makeEmitter({
 
     historyLength: 100,
 
-    killParticleAfter: 5,
-
-    maxParticles: 500,
-    batchParticlesIn: 1, 
-
-    particleChoke: 0,
+    generationRate: 60,
+    killAfterTime: 5,
+    killAfterTimeVariation: 0.1,
 
     artefact: scrawl.makeBlock({
         visibility: false,
@@ -141,7 +138,7 @@ let mouseCheck = function () {
 
             active = canvas.here.active;
 
-            myemitter.set({
+            myEmitter.set({
                 lockTo: (active) ? 'mouse' : 'start'
             });
         }
@@ -185,18 +182,16 @@ scrawl.observeAndUpdate({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: myemitter,
+    target: myEmitter,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
-
-        maxParticles: ['maxParticles', 'int'],
-        particleChoke: ['particleChoke', 'int'],
+        generationRate: ['generationRate', 'int'],
         historyLength: ['historyLength', 'int'],
-        killParticleAfter: ['killParticleAfter', 'int'],
-        batchParticlesIn: ['batchParticlesIn', 'int'],
+        killAfterTime: ['killAfterTime', 'float'],
+        killAfterTimeVariation: ['killAfterTimeVariation', 'float'],
         'range_x': ['rangeX', 'float'],
         'rangefrom_x': ['rangeFromX', 'float'],
         'range_y': ['rangeY', 'float'],
@@ -231,13 +226,13 @@ const useGravity = function () {
 
         if (selector.value === "yes") {
 
-            myemitter.set({
+            myEmitter.set({
                 forces: ['gravity'],
             });
         }
         else {
 
-            myemitter.set({
+            myEmitter.set({
                 forces: [],
             });
         }
@@ -249,11 +244,12 @@ document.querySelector('#color-controller').value = '#F0F8FF';
 document.querySelector('#world-speed').value = 2;
 document.querySelector('#color-alpha').value = 6;
 document.querySelector('#gravity').value = 'no';
-document.querySelector('#maxParticles').value = 500;
-document.querySelector('#particleChoke').value = 0;
+
+document.querySelector('#generationRate').value = 60;
 document.querySelector('#historyLength').value = 100;
-document.querySelector('#killParticleAfter').value = 5;
-document.querySelector('#batchParticlesIn').value = 1;
+document.querySelector('#killAfterTime').value = 5;
+document.querySelector('#killAfterTimeVariation').value = 0.1;
+
 document.querySelector('#range_x').value = 40;
 document.querySelector('#rangefrom_x').value = -20;
 document.querySelector('#range_y').value = 40;

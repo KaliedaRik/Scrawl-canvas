@@ -18,7 +18,7 @@ import { currentCorePosition } from '../core/userInteraction.js';
 
 import { requestParticle, releaseParticle } from './particle.js';
 import { makeVector } from './vector.js';
-
+import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -38,6 +38,9 @@ const Emitter = function (items = {}) {
     this.onLeave = λnull;
     this.onDown = λnull;
     this.onUp = λnull;
+
+    this.fillColorFactory = makeColor({ name: `${this.name}-fillColorFactory`});
+    this.strokeColorFactory = makeColor({ name: `${this.name}-strokeColorFactory`});
 
     this.stampAction = λnull;
 
@@ -74,20 +77,11 @@ P = entityMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-    group: null,
-    order: 0,
     world: null,
     artefact: null,
 
-    // lifespan: 1,
-    killParticleAfter: 0,
-    killParticleBeyond: 0,
-
-    depth: 0,
     stampAction: null,
 
-    // Particle-specific attributes
-    // + store them here so that we can use them when generating nerw particles
     historyLength: 1,
     engine: 'euler',
     forces: null,
@@ -98,6 +92,15 @@ let defaultAttributes = {
     liquidFriction: 1, 
     solidFriction: 1,
 
+    massVariation: 0,
+    areaVariation: 0,
+    airFrictionVariation: 0,
+    liquidFrictionVariation: 0, 
+    solidFrictionVariation: 0,
+
+    fillColorFactory: null,
+    strokeColorFactory: null,
+
     // attributes specific to emitters
 
     // __range__ defines a vector whose x/y/z values represent the +/- values to be used when generating the initial 'velocity' value for new particles. 
@@ -105,13 +108,22 @@ let defaultAttributes = {
     // + we should also be able to change the direction when the emitter's `roll` attribute is non-zero
     range: null,
     rangeFrom: null,
+    useGenerationArea: false,
 
-    //
-    maxParticles: 1,
+    particleCount: 0,
 
-    // 
-    particleChoke: 0,
-    batchParticlesIn: 1,
+    generationRate: 0,
+
+    killAfterTime: 0,
+    killAfterTimeVariation: 0,
+
+    killRadius: 0,
+    killRadiusVariation: 0,
+
+    killBeyondCanvas: false,
+
+    killBeyondScale: 0,
+
 
     // 
     particleStore: null,
@@ -158,11 +170,6 @@ S.stampAction = function (item) {
     if (isa_fn(item)) this.stampAction = item;
 };
 
-// S.completeAction = function (item) {
-
-//     if (isa_fn(item)) this.completeAction = item;
-// };
-
 
 S.artefact = function (item) {
 
@@ -174,39 +181,49 @@ S.artefact = function (item) {
     if (art) this.artefact = art;
 };
 
-// __group__
-S.group = function (item) {
+// // __group__
+// S.group = function (item) {
 
-    let g;
+//     let g;
 
-    if (item) {
+//     if (item) {
 
-        if (this.group && this.group.type === 'Group') this.group.removeArtefacts(this.name);
+//         if (this.group && this.group.type === 'Group') this.group.removeArtefacts(this.name);
 
-        if (item.substring) {
+//         if (item.substring) {
 
-            g = group[item];
+//             g = group[item];
 
-            if (g) this.group = g;
-            else this.group = item;
-        }
-        else this.group = item;
-    }
+//             if (g) this.group = g;
+//             else this.group = item;
+//         }
+//         else this.group = item;
+//     }
 
-    if (this.group && this.group.type === 'Group') this.group.addArtefacts(this.name);
+//     if (this.group && this.group.type === 'Group') this.group.addArtefacts(this.name);
+// };
+
+// // __host__ - internal function
+// S.host = function (item) {
+
+//     if (item) {
+
+//         let host = artefact[item];
+
+//         if (host && host.here) this.host = host.name;
+//         else this.host = item;
+//     }
+//     else this.host = '';
+// };
+
+S.fillColor = function (item) {
+
+    if (isa_obj(item)) this.fillColorFactory.set(item);
 };
 
-// __host__ - internal function
-S.host = function (item) {
+S.strokeColor = function (item) {
 
-    if (item) {
-
-        let host = artefact[item];
-
-        if (host && host.here) this.host = host.name;
-        else this.host = item;
-    }
-    else this.host = '';
+    if (isa_obj(item)) this.fillColorFactory.set(item);
 };
 
 
@@ -248,30 +265,9 @@ P.prepareStamp = function () {
     if (this.dirtyStampPositions) this.cleanStampPositions();
     if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
-    if (this.dirtyPathObject) this.cleanPathObject();
-
-    if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
-
-    if (this.anchor && this.dirtyAnchorHold) {
-
-        this.dirtyAnchorHold = false;
-        this.buildAnchor(this.anchor);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
     let now = Date.now();
 
-    let {generatorChoke, particleChoke, particleStore, deadParticles, liveParticles, killParticleAfter, killParticleBeyond, batchParticlesIn, maxParticles} = this;
+    let {particleStore, deadParticles, liveParticles, minimumCount, maximumCount, generationRate, generatorChoke} = this;
 
     if (!generatorChoke) {
 
@@ -291,19 +287,17 @@ P.prepareStamp = function () {
     particleStore.push(...liveParticles);
     liveParticles.length = 0;
 
-    if (this.generatorChoke <= now) {
+    let elapsed = now - generatorChoke;
 
-        let currentParticles = particleStore.length;
+    if (elapsed > 0 && generationRate) {
 
-        if (currentParticles < maxParticles) {
+        let canGenerate = Math.floor((generationRate / 1000) * elapsed);
 
-            let requiredParticles = maxParticles - currentParticles;
+        if (canGenerate) {
 
-            if (requiredParticles > batchParticlesIn) requiredParticles = batchParticlesIn;
-
-            this.addParticles(requiredParticles);
+            this.addParticles(canGenerate);
+            this.generatorChoke = now;
         }
-        this.generatorChoke += particleChoke;
     }
 };
 
@@ -312,40 +306,53 @@ P.addParticles = function (req) {
     let i, p,
         rnd = Math.random;
 
-    let {killParticleAfter, killParticleBeyond, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, range, rangeFrom, roll, currentStampPosition, particleStore} = this;
+    let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, useGenerationArea, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, killBeyondScale} = this;
 
-    let {x, y, z} = range;
-    let {x:fx, y:fy, z:fz} = rangeFrom;
+    if (useGenerationArea) {
 
-    let [cx, cy] = currentStampPosition;
-    
-    for (i = 0; i < req; i++) {
+    }
+    else {
 
-        p = requestParticle();
+        let {x, y, z} = range;
+        let {x:fx, y:fy, z:fz} = rangeFrom;
 
-        p.set({
-            positionX: cx,
-            positionY: cy,
-            positionZ: 0,
+        let [cx, cy] = currentStampPosition;
+        
+        for (i = 0; i < req; i++) {
 
-            velocityX: fx + (rnd() * x),
-            velocityY: fy + (rnd() * y),
-            velocityZ: fz + (rnd() * z),
+            p = requestParticle();
 
-            historyLength, 
-            engine, 
-            forces, 
-            springs, 
-            mass, 
-            area, 
-            airFriction, 
-            liquidFriction, 
-            solidFriction,
-        });
+            p.set({
+                positionX: cx,
+                positionY: cy,
+                positionZ: 0,
 
-        p.run(killParticleAfter, killParticleBeyond);
+                velocityX: fx + (rnd() * x),
+                velocityY: fy + (rnd() * y),
+                velocityZ: fz + (rnd() * z),
 
-        particleStore.push(p);
+                historyLength, 
+                engine, 
+                forces, 
+                springs, 
+
+                mass: mass + ((rnd() * massVariation * 2) - massVariation), 
+                area: area + ((rnd() * areaVariation * 2) - areaVariation), 
+                airFriction: airFriction + ((rnd() * airFrictionVariation * 2) - airFrictionVariation), 
+                liquidFriction: liquidFriction + ((rnd() * liquidFrictionVariation * 2) - liquidFrictionVariation), 
+                solidFriction: solidFriction + ((rnd() * solidFrictionVariation * 2) - solidFrictionVariation),
+
+                fill: fillColorFactory.get('random'),
+                stroke: strokeColorFactory.get('random'),
+            });
+
+            let timeKill = Math.abs(killAfterTime + ((rnd() * killAfterTimeVariation * 2) - killAfterTimeVariation));
+            let radiusKill = Math.abs(killRadius + ((rnd() * killRadiusVariation * 2) - killRadiusVariation));
+
+            p.run(timeKill, radiusKill, killBeyondCanvas, killBeyondScale);
+
+            particleStore.push(p);
+        }
     }
 };
 
@@ -397,21 +404,21 @@ P.halt = function () {
 // + Entity artefacts will use a Cell as their host
 //
 // All of the above can exist without a host (though in many cases this means they don't do much). Stack and Canvas wrappers will often be unhosted, sitting as `root` elements in the web page DOM
-P.getHost = function () {
+// P.getHost = function () {
 
-    if (this.currentHost) return this.currentHost;
-    else if (this.host) {
+//     if (this.currentHost) return this.currentHost;
+//     else if (this.host) {
 
-        let host = artefact[this.host];
+//         let host = artefact[this.host];
 
-        if (host) {
+//         if (host) {
 
-            this.currentHost = host;
-            return this.currentHost;
-        }
-    }
-    return currentCorePosition;
-};
+//             this.currentHost = host;
+//             return this.currentHost;
+//         }
+//     }
+//     return currentCorePosition;
+// };
 
 
 // #### Factory

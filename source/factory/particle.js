@@ -305,21 +305,24 @@ P.manageHistory = function (tick) {
 };
 
 // `run` - internal function
-P.run = function (time, limit) {
+P.run = function (timeKill, radiusKill, killBeyondCanvas, killBeyondScale) {
 
     this.hasLifetime = false;
-    if (time) {
+    if (timeKill) {
 
-        this.remainingTime = time;
+        this.remainingTime = timeKill;
         this.hasLifetime = true;
     }
 
     this.distanceLimit = 0;
-    if (limit) {
+    if (radiusKill) {
         
         this.initialPosition.set(this.position);
-        this.distanceLimit = limit;
+        this.distanceLimit = radiusKill;
     }
+
+    this.killBeyondCanvas = killBeyondCanvas;
+    this.killBeyondScale = killBeyondScale;
 
     this.isRunning = true;
 };

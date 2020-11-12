@@ -1,7 +1,7 @@
-// # Demo Particles 002 
-// Emitter using artefacts
+// # Demo Particles 003 
+// Emitter positioning
 
-// [Run code](../../demo/particles-002.html)
+// [Run code](../../demo/particles-003.html)
 import scrawl from '../source/scrawl.js'
 
 
@@ -18,7 +18,7 @@ canvas.setBase({
 let wheel = scrawl.makeWheel({ 
 
     name: 'particle-wheel-entity',
-    radius: 16, 
+    radius: 10, 
     handle: ['center', 'center'],
 
     fillStyle: 'bisque',
@@ -35,7 +35,7 @@ let wheel = scrawl.makeWheel({
 let block = scrawl.makeBlock({ 
 
     name: 'particle-block-entity',
-    dimensions: [30, 20],
+    dimensions: [20, 8],
     handle: ['center', 'center'],
     fillStyle: 'yellow',
 
@@ -126,10 +126,14 @@ const myemitter = scrawl.makeEmitter({
 
     start: ['center', 'center'],
 
-    historyLength: 20,
+    historyLength: 5,
 
-    generationRate: 10,
-    killAfterTime: 5,
+    killParticleAfter: 5,
+
+    maxParticles: 500,
+    batchParticlesIn: 1, 
+
+    particleChoke: 0,
 
     artefact: star,
 
@@ -147,15 +151,9 @@ const myemitter = scrawl.makeEmitter({
         if (particle && particle.history) {
 
             let history = particle.history,
-                fill = particle.fill,
                 remaining, alpha, scale, roll, position, z;
 
             let {particleColor, alphaDecay} = myWorld;
-
-            artefact.set({
-                strokeStyle: particleColor,
-                fillStyle: fill,
-            });
 
             history.forEach((p, index) => {
 
@@ -175,6 +173,7 @@ const myemitter = scrawl.makeEmitter({
                         start: position,
                         scale: scale,
                         globalAlpha: alpha,
+                        strokeStyle: particleColor,
                         roll: roll,
                     });
                 }
@@ -262,8 +261,11 @@ scrawl.observeAndUpdate({
 
     updates: {
 
-        generationRate: ['generationRate', 'int'],
+        maxParticles: ['maxParticles', 'int'],
+        particleChoke: ['particleChoke', 'int'],
         historyLength: ['historyLength', 'int'],
+        killParticleAfter: ['killParticleAfter', 'int'],
+        batchParticlesIn: ['batchParticlesIn', 'int'],
     },
 });
 
@@ -327,39 +329,15 @@ const useArtefact = function () {
 }();
 scrawl.addNativeListener(['input', 'change'], useArtefact, '#artefact');
 
-const setLowColor = function () {
 
-    const selector = document.querySelector('#min-fill'),
-        colorFactory = myemitter.fillColorFactory;
-
-    return function () {
-
-        colorFactory.setMinimumColor(selector.value);
-    }
-}();
-scrawl.addNativeListener(['input', 'change'], setLowColor, '#min-fill');
-
-const setHighColor = function () {
-
-    const selector = document.querySelector('#max-fill'),
-        colorFactory = myemitter.fillColorFactory;
-
-    return function () {
-
-        colorFactory.setMaximumColor(selector.value);
-    }
-}();
-scrawl.addNativeListener(['input', 'change'], setHighColor, '#max-fill');
-
-
-document.querySelector('#min-fill').value = '#000000';
-document.querySelector('#max-fill').value = '#ffffff';
 document.querySelector('#color-controller').value = '#F0F8FF';
-document.querySelector('#background').value = '#000040';
 document.querySelector('#world-speed').value = 2;
 document.querySelector('#color-alpha').value = 6;
-document.querySelector('#generationRate').value = 10;
-document.querySelector('#historyLength').value = 20;
+document.querySelector('#maxParticles').value = 500;
+document.querySelector('#particleChoke').value = 0;
+document.querySelector('#historyLength').value = 5;
+document.querySelector('#killParticleAfter').value = 5;
+document.querySelector('#batchParticlesIn').value = 1;
 document.querySelector('#artefact').value = 'star';
 
 // #### Development and testing
