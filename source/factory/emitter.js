@@ -108,7 +108,6 @@ let defaultAttributes = {
     // + we should also be able to change the direction when the emitter's `roll` attribute is non-zero
     range: null,
     rangeFrom: null,
-    useGenerationArea: false,
 
     particleCount: 0,
 
@@ -124,6 +123,8 @@ let defaultAttributes = {
 
     killBeyondScale: 0,
 
+    generateAlongPath: false,
+    generateInArea: false,
 
     // 
     particleStore: null,
@@ -179,6 +180,28 @@ S.artefact = function (item) {
     else if (isa_obj(item) && item.isArtefact) art = item;
 
     if (art) this.artefact = art;
+};
+
+S.generateAlongPath = function (item) {
+
+    let art;
+
+    if (item.substring) art = artefact[item];
+    else if (isa_obj(item) && item.isArtefact) art = item;
+
+    if (art && art.useAsPath) this.generateAlongPath = art;
+    else this.generateAlongPath = false;
+};
+
+S.generateInArea = function (item) {
+
+    let art;
+
+    if (item.substring) art = artefact[item];
+    else if (isa_obj(item) && item.isArtefact) art = item;
+
+    if (art) this.generateInArea = art;
+    else this.generateInArea = false;
 };
 
 S.fillColor = function (item) {
@@ -264,20 +287,72 @@ P.prepareStamp = function () {
 
 P.addParticles = function (req) {
 
-    let i, p,
-        rnd = Math.random;
+    const calc = function (item, itemVar) {
+        return item + ((Math.random() * itemVar * 2) - itemVar);
+    };
 
-    let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, useGenerationArea, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, killBeyondScale, currentRotation} = this;
+    const velocityCalc = function (item, itemVar) {
+        return item + (Math.random() * itemVar);
+    };
 
-    if (useGenerationArea) {
+    // let i, p, cx, cy,
+    //     rnd = Math.random;
+    let i, p, cx, cy, temp;
 
+    let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, killBeyondScale, currentRotation, generateAlongPath, generateInArea} = this;
+
+    let {x, y, z} = range;
+    let {x:fx, y:fy, z:fz} = rangeFrom;
+
+    if (generateInArea) {
+
+    }
+    else if (generateAlongPath) {
+
+        if (generateAlongPath.useAsPath) {
+
+            for (i = 0; i < req; i++) {
+
+                temp = generateAlongPath.getPathPositionData(Math.random(), true);
+
+                p = requestParticle();
+
+                p.set({
+                    positionX: temp.x,
+                    positionY: temp.y,
+                    positionZ: 0,
+
+                    velocityX: velocityCalc(fx, x),
+                    velocityY: velocityCalc(fy, y),
+                    velocityZ: velocityCalc(fz, z),
+
+                    historyLength, 
+                    engine, 
+                    forces, 
+                    springs, 
+
+                    mass: calc(mass, massVariation), 
+                    area: calc(area, areaVariation),  
+                    airFriction: calc(airFriction, airFrictionVariation),  
+                    liquidFriction: calc(liquidFriction, liquidFrictionVariation),  
+                    solidFriction: calc(solidFriction, solidFrictionVariation),  
+
+                    fill: fillColorFactory.get('random'),
+                    stroke: strokeColorFactory.get('random'),
+                });
+
+                let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
+                let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+
+                p.run(timeKill, radiusKill, killBeyondCanvas, killBeyondScale);
+
+                particleStore.push(p);
+            }
+        }
     }
     else {
 
-        let {x, y, z} = range;
-        let {x:fx, y:fy, z:fz} = rangeFrom;
-
-        let [cx, cy] = currentStampPosition;
+        [cx, cy] = currentStampPosition;
         
         for (i = 0; i < req; i++) {
 
@@ -288,20 +363,28 @@ P.addParticles = function (req) {
                 positionY: cy,
                 positionZ: 0,
 
-                velocityX: fx + (rnd() * x),
-                velocityY: fy + (rnd() * y),
-                velocityZ: fz + (rnd() * z),
+                // velocityX: fx + (rnd() * x),
+                // velocityY: fy + (rnd() * y),
+                // velocityZ: fz + (rnd() * z),
+                velocityX: velocityCalc(fx, x),
+                velocityY: velocityCalc(fy, y),
+                velocityZ: velocityCalc(fz, z),
 
                 historyLength, 
                 engine, 
                 forces, 
                 springs, 
 
-                mass: mass + ((rnd() * massVariation * 2) - massVariation), 
-                area: area + ((rnd() * areaVariation * 2) - areaVariation), 
-                airFriction: airFriction + ((rnd() * airFrictionVariation * 2) - airFrictionVariation), 
-                liquidFriction: liquidFriction + ((rnd() * liquidFrictionVariation * 2) - liquidFrictionVariation), 
-                solidFriction: solidFriction + ((rnd() * solidFrictionVariation * 2) - solidFrictionVariation),
+                // mass: mass + ((rnd() * massVariation * 2) - massVariation), 
+                // area: area + ((rnd() * areaVariation * 2) - areaVariation), 
+                // airFriction: airFriction + ((rnd() * airFrictionVariation * 2) - airFrictionVariation), 
+                // liquidFriction: liquidFriction + ((rnd() * liquidFrictionVariation * 2) - liquidFrictionVariation), 
+                // solidFriction: solidFriction + ((rnd() * solidFrictionVariation * 2) - solidFrictionVariation),
+                mass: calc(mass, massVariation), 
+                area: calc(area, areaVariation),  
+                airFriction: calc(airFriction, airFrictionVariation),  
+                liquidFriction: calc(liquidFriction, liquidFrictionVariation),  
+                solidFriction: calc(solidFriction, solidFrictionVariation),  
 
                 fill: fillColorFactory.get('random'),
                 stroke: strokeColorFactory.get('random'),
@@ -309,8 +392,10 @@ P.addParticles = function (req) {
 
             p.velocity.rotate(currentRotation);
 
-            let timeKill = Math.abs(killAfterTime + ((rnd() * killAfterTimeVariation * 2) - killAfterTimeVariation));
-            let radiusKill = Math.abs(killRadius + ((rnd() * killRadiusVariation * 2) - killRadiusVariation));
+            // let timeKill = Math.abs(killAfterTime + ((rnd() * killAfterTimeVariation * 2) - killAfterTimeVariation));
+            // let radiusKill = Math.abs(killRadius + ((rnd() * killRadiusVariation * 2) - killRadiusVariation));
+            let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
+            let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
 
             p.run(timeKill, radiusKill, killBeyondCanvas, killBeyondScale);
 

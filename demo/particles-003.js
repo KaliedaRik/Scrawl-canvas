@@ -193,7 +193,7 @@ const myemitter = scrawl.makeEmitter({
                         roll: roll,
                     });
                 }
-            })
+            });
         }
     },
 
