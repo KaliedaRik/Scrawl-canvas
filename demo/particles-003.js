@@ -1,5 +1,5 @@
 // # Demo Particles 003 
-// Emitter positioning
+// Position Emitter entity: start; pivot; mimic; path; mouse
 
 // [Run code](../../demo/particles-003.html)
 import scrawl from '../source/scrawl.js'
@@ -11,36 +11,33 @@ let canvas = scrawl.library.artefact.mycanvas;
 scrawl.importDomImage('#bunny');
 
 canvas.setBase({
-    backgroundColor: '#000040',
+    backgroundColor: 'aliceblue',
 });
 
 
 let wheel = scrawl.makeWheel({ 
 
     name: 'particle-wheel-entity',
-    radius: 10, 
+    radius: 20, 
     handle: ['center', 'center'],
-
-    fillStyle: 'bisque',
 
     startAngle: 20,
     endAngle: -20,
     includeCenter: true,
 
-    lineWidth: 2,
-    method: 'fillThenDraw',
+    fillStyle: 'darkred',
+    method: 'fill',
     visibility: false, 
 });
 
 let block = scrawl.makeBlock({ 
 
     name: 'particle-block-entity',
-    dimensions: [20, 8],
+    dimensions: [40, 16],
     handle: ['center', 'center'],
-    fillStyle: 'yellow',
 
-    lineWidth: 2,
-    method: 'fillThenDraw',
+    fillStyle: 'darkblue',
+    method: 'fill',
     visibility: false, 
 });
 
@@ -55,9 +52,7 @@ let star = scrawl.makeStar({
 
     handle: ['center', 'center'],
 
-    fillStyle: 'papayawhip',
-    lineWidth: 2,
-
+    fillStyle: 'gold',
     method: 'fillThenDraw',
     visibility: false, 
 })
@@ -75,26 +70,7 @@ let picture = scrawl.makePicture({
     copyWidth: '100%',
     copyHeight: '100%',
 
-    lineWidth: 2,
-
-    method: 'fillThenDraw',
-    visibility: false, 
-});
-
-let phrase = scrawl.makePhrase({
-
-    name: 'particle-phrase-entity',
-
-    text: 'Hello',
-    font: 'bold 40px Garamond, serif',
-
-    handle: ['center', 'center'],
-
-    fillStyle: 'green',
-
-    lineWidth: 2,
-
-    method: 'fillThenDraw',
+    method: 'fill',
     visibility: false, 
 });
 
@@ -103,45 +79,88 @@ let phrase = scrawl.makePhrase({
 let myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
-
     tickMultiplier: 2,
-
-    userAttributes: [
-        {
-            key: 'particleColor', 
-            defaultValue: '#b9b5df',
-        },
-        {
-            key: 'alphaDecay', 
-            defaultValue: 6,
-        },
-    ],
 });
 
+scrawl.makeBlock({ 
+
+    name: 'pivot-entity',
+    dimensions: [50, 30],
+    start: ['20%', '20%'],
+    handle: ['center', 'center'],
+    order: 1,
+    roll: 90,
+
+    strokeStyle: 'red',
+    lineWidth: 5,
+    method: 'draw',
+
+}).clone({
+
+    name: 'mimic-entity',
+    start: ['80%', '80%'],
+
+    delta: {
+        roll: 0.3,
+    },
+
+});
+
+scrawl.makeShape({
+
+    name: 'path-entity',
+
+    pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
+
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+
+    scale: 0.5,
+    roll: -90,
+    flipUpend: true,
+    scaleOutline: false,
+    useAsPath: true,
+    precision: 2,
+
+    strokeStyle: 'green',
+    lineWidth: 3,
+    method: 'draw',
+});
 
 const myemitter = scrawl.makeEmitter({
 
-    name: 'use-raw-2d-context',
+    name: 'position-tester',
     world: myWorld,
 
-    start: ['center', 'center'],
+    start: ['40%', '60%'],
 
-    historyLength: 5,
+    pivot: 'pivot-entity',
+    addPivotRotation: true,
 
-    killParticleAfter: 5,
+    mimic: 'mimic-entity',
+    useMimicStart: true,
+    useMimicRotation: true,
 
-    maxParticles: 500,
-    batchParticlesIn: 1, 
+    path: 'path-entity',
+    pathPosition: 0,
+    addPathRotation: true,
 
-    particleChoke: 0,
+    delta: {
+        pathPosition: 0.0004,
+    },
+
+    historyLength: 1,
+
+    generationRate: 50,
+    killAfterTime: 5,
 
     artefact: star,
 
     rangeX: 40,
     rangeFromX: -20,
 
-    rangeY: 40,
-    rangeFromY: -20,
+    rangeY: -40,
+    rangeFromY: -10,
 
     rangeZ: -1,
     rangeFromZ: -0.2,
@@ -151,18 +170,16 @@ const myemitter = scrawl.makeEmitter({
         if (particle && particle.history) {
 
             let history = particle.history,
-                remaining, alpha, scale, roll, position, z;
-
-            let {particleColor, alphaDecay} = myWorld;
+                fill = particle.fill,
+                remaining, alpha, scale, position, z,
+                roll = this.get('roll');
 
             history.forEach((p, index) => {
 
                 [remaining, z, ...position] = p;
                 
-                alpha = remaining / alphaDecay;
+                alpha = remaining / 6;
                 if (alpha < 0) alpha = 0;
-
-                roll = alpha * 720;
 
                 scale = 1 + (z / 3);
                 if (scale < 0.001) scale = 0; 
@@ -173,7 +190,6 @@ const myemitter = scrawl.makeEmitter({
                         start: position,
                         scale: scale,
                         globalAlpha: alpha,
-                        strokeStyle: particleColor,
                         roll: roll,
                     });
                 }
@@ -202,29 +218,11 @@ let report = function () {
     };
 }();
 
-let mouseCheck = function () {
-
-    let active = false;
-
-    return function () {
-
-        if (canvas.here.active !== active) {
-
-            active = canvas.here.active;
-
-            myemitter.set({
-                lockTo: (active) ? 'mouse' : 'start'
-            });
-        }
-    };
-}();
-
 // Create the Display cycle animation
 scrawl.makeRender({
 
     name: 'demo-animation',
     target: canvas,
-    commence: mouseCheck,
     afterShow: report,
 });
 
@@ -236,52 +234,13 @@ scrawl.observeAndUpdate({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: myWorld,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        'color-controller': ['particleColor', 'raw'],
-        'world-speed': ['tickMultiplier', 'float'],
-        'color-alpha': ['alphaDecay', 'float'],
-    },
-});
-
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
     target: myemitter,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
-
-        maxParticles: ['maxParticles', 'int'],
-        particleChoke: ['particleChoke', 'int'],
-        historyLength: ['historyLength', 'int'],
-        killParticleAfter: ['killParticleAfter', 'int'],
-        batchParticlesIn: ['batchParticlesIn', 'int'],
-    },
-});
-
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: canvas,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        background: ['backgroundColor', 'raw'],
+        position: ['lockTo', 'raw'],
     },
 });
 
@@ -313,10 +272,6 @@ const useArtefact = function () {
             case 'picture' :
                 choice = picture;
                 break;
-
-            case 'phrase' :
-                choice = phrase;
-                break;
         }
 
         if (choice) {
@@ -330,15 +285,8 @@ const useArtefact = function () {
 scrawl.addNativeListener(['input', 'change'], useArtefact, '#artefact');
 
 
-document.querySelector('#color-controller').value = '#F0F8FF';
-document.querySelector('#world-speed').value = 2;
-document.querySelector('#color-alpha').value = 6;
-document.querySelector('#maxParticles').value = 500;
-document.querySelector('#particleChoke').value = 0;
-document.querySelector('#historyLength').value = 5;
-document.querySelector('#killParticleAfter').value = 5;
-document.querySelector('#batchParticlesIn').value = 1;
 document.querySelector('#artefact').value = 'star';
+document.querySelector('#position').value = 'start';
 
 // #### Development and testing
 console.log(scrawl.library);

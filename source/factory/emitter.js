@@ -181,41 +181,6 @@ S.artefact = function (item) {
     if (art) this.artefact = art;
 };
 
-// // __group__
-// S.group = function (item) {
-
-//     let g;
-
-//     if (item) {
-
-//         if (this.group && this.group.type === 'Group') this.group.removeArtefacts(this.name);
-
-//         if (item.substring) {
-
-//             g = group[item];
-
-//             if (g) this.group = g;
-//             else this.group = item;
-//         }
-//         else this.group = item;
-//     }
-
-//     if (this.group && this.group.type === 'Group') this.group.addArtefacts(this.name);
-// };
-
-// // __host__ - internal function
-// S.host = function (item) {
-
-//     if (item) {
-
-//         let host = artefact[item];
-
-//         if (host && host.here) this.host = host.name;
-//         else this.host = item;
-//     }
-//     else this.host = '';
-// };
-
 S.fillColor = function (item) {
 
     if (isa_obj(item)) this.fillColorFactory.set(item);
@@ -228,10 +193,6 @@ S.strokeColor = function (item) {
 
 
 // #### Prototype functions
-
-// P.prepareStamp = λnull;
-// P.updateByDelta = λnull;
-
 P.prepareStamp = function () {
 
     if (this.dirtyHost) {
@@ -306,7 +267,7 @@ P.addParticles = function (req) {
     let i, p,
         rnd = Math.random;
 
-    let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, useGenerationArea, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, killBeyondScale} = this;
+    let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, useGenerationArea, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, killBeyondScale, currentRotation} = this;
 
     if (useGenerationArea) {
 
@@ -345,6 +306,8 @@ P.addParticles = function (req) {
                 fill: fillColorFactory.get('random'),
                 stroke: strokeColorFactory.get('random'),
             });
+
+            p.velocity.rotate(currentRotation);
 
             let timeKill = Math.abs(killAfterTime + ((rnd() * killAfterTimeVariation * 2) - killAfterTimeVariation));
             let radiusKill = Math.abs(killRadius + ((rnd() * killRadiusVariation * 2) - killRadiusVariation));
@@ -395,30 +358,6 @@ P.halt = function () {
     this.isRunning = false;
     return this;
 };
-
-
-// `getHost` - internal function - return the __host__ object. Hosts can be various things, for instance:
-// + Element wrapper will have a Stack as its host
-// + Stack and Canvas wrappers can also have a Stack host
-// + Cells will have either a Canvas, or another Cell, as their host
-// + Entity artefacts will use a Cell as their host
-//
-// All of the above can exist without a host (though in many cases this means they don't do much). Stack and Canvas wrappers will often be unhosted, sitting as `root` elements in the web page DOM
-// P.getHost = function () {
-
-//     if (this.currentHost) return this.currentHost;
-//     else if (this.host) {
-
-//         let host = artefact[this.host];
-
-//         if (host) {
-
-//             this.currentHost = host;
-//             return this.currentHost;
-//         }
-//     }
-//     return currentCorePosition;
-// };
 
 
 // #### Factory

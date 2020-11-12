@@ -637,6 +637,10 @@ export default function (P = {}) {
     };
 
 // __roll__
+    G.roll = function () {
+
+        return this.currentRotation;
+    };
     S.roll = function (item) {
 
         this.roll = item;
@@ -649,6 +653,10 @@ export default function (P = {}) {
     };
 
 // __scale__
+    G.scale = function () {
+
+        return this.currentScale;
+    };
     S.scale = function (item) {
 
         this.scale = item;

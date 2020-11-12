@@ -121,7 +121,7 @@ let myWorld = scrawl.makeWorld({
 
 const myemitter = scrawl.makeEmitter({
 
-    name: 'use-raw-2d-context',
+    name: 'use-artefact',
     world: myWorld,
 
     start: ['center', 'center'],
