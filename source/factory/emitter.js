@@ -12,12 +12,13 @@
 
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj } from '../core/utilities.js';
+import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
 import { requestParticle, releaseParticle } from './particle.js';
-import { makeVector } from './vector.js';
+import { requestCell, releaseCell } from './cell.js';
+import { makeVector, requestVector, releaseVector } from './vector.js';
 import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
@@ -295,8 +296,6 @@ P.addParticles = function (req) {
         return item + (Math.random() * itemVar);
     };
 
-    // let i, p, cx, cy,
-    //     rnd = Math.random;
     let i, p, cx, cy, temp;
 
     let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, killBeyondScale, currentRotation, generateAlongPath, generateInArea} = this;
@@ -306,6 +305,86 @@ P.addParticles = function (req) {
 
     if (generateInArea) {
 
+        if (!generateInArea.pathObject || generateInArea.dirtyPathObject) generateInArea.cleanPathObject();
+
+        const testCell = requestCell(),
+            testEngine = testCell.engine,
+            testVector = requestVector();
+
+        let {pathObject, winding, currentStampPosition, currentStampHandlePosition, currentDimensions} = generateInArea;
+
+        let [testX, testY] = currentStampPosition;
+        let [handleX, handleY] = currentStampHandlePosition;
+        let [width, height] = currentDimensions;
+
+        let testRoll = generateInArea.currentRotation,
+            testScale = generateInArea.currentScale,
+            testUpend = generateInArea.flipUpend,
+            testReverse = generateInArea.flipReverse;
+
+        if (!xt(generateInArea.species)) {
+
+            width *= testScale;
+            height *= testScale;
+            handleX *= testScale;
+            handleY *= testScale;
+        }
+
+        testCell.rotateDestination(testEngine, testX, testY, generateInArea);
+
+        const test = (item) => testEngine.isPointInPath(pathObject, item.x, item.y, winding);
+            
+        for (i = 0; i < req; i++) {
+
+            let coordFlag = false;
+
+            while (!coordFlag) {
+
+                testVector.set((Math.random() * width), (Math.random() * height)).vectorSubtractArray([handleX, handleY]);
+
+                if (testReverse) testVector.x = -testVector.x
+                if (testUpend) testVector.y = -testVector.y
+
+                testVector.rotate(testRoll).vectorAddArray(currentStampPosition);
+
+                if (test(testVector)) coordFlag = true;
+            }
+
+            p = requestParticle();
+
+            p.set({
+                positionX: testVector.x,
+                positionY: testVector.y,
+                positionZ: 0,
+
+                velocityX: velocityCalc(fx, x),
+                velocityY: velocityCalc(fy, y),
+                velocityZ: velocityCalc(fz, z),
+
+                historyLength, 
+                engine, 
+                forces, 
+                springs, 
+
+                mass: calc(mass, massVariation), 
+                area: calc(area, areaVariation),  
+                airFriction: calc(airFriction, airFrictionVariation),  
+                liquidFriction: calc(liquidFriction, liquidFrictionVariation),  
+                solidFriction: calc(solidFriction, solidFrictionVariation),  
+
+                fill: fillColorFactory.get('random'),
+                stroke: strokeColorFactory.get('random'),
+            });
+
+            let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
+            let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+
+            p.run(timeKill, radiusKill, killBeyondCanvas, killBeyondScale);
+
+            particleStore.push(p);
+        }
+        releaseCell(testCell);
+        releaseVector(testVector);
     }
     else if (generateAlongPath) {
 
