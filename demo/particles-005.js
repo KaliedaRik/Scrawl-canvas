@@ -70,16 +70,16 @@ let myWorld = scrawl.makeWorld({
     tickMultiplier: 2,
 });
 
-scrawl.makeEmitter({
+let emitter1 = scrawl.makeEmitter({
 
-    name: 'line-emitter',
+    name: 'emitter-one',
     world: myWorld,
 
-    generationRate: 100,
+    generationRate: 40,
     killAfterTime: 5,
 
-    rangeZ: -1,
-    rangeFromZ: -0.2,
+    rangeZ: 0.3,
+    rangeFromZ: 0.1,
 
     generateInArea: 'myblock',
 
@@ -116,6 +116,7 @@ scrawl.makeEmitter({
                 scale = 1 + (z / 3);
                 if (scale < 0.001) scale = 0; 
 
+                // Do not stamp the artefact if we cannot see it
                 if (alpha && scale) {
 
                     artefact.simpleStamp(host, {
@@ -125,24 +126,15 @@ scrawl.makeEmitter({
                         roll: roll,
                     });
                 }
+                else p.isRunning = false;
             });
         }
     },
+});
 
-}).run();
+let emitter2 = emitter1.clone({
 
-// This needs to be cloned!!!
-scrawl.makeEmitter({
-
-    name: 'line-emitter',
-    world: myWorld,
-
-    generationRate: 60,
-    killAfterTime: 5,
-
-    rangeZ: -1,
-    rangeFromZ: -0.2,
-
+    name: 'emitter-two',
     generateInArea: 'myshape',
 
     artefact: scrawl.makeBlock({
@@ -158,41 +150,10 @@ scrawl.makeEmitter({
         method: 'fillThenDraw',
         visibility: false, 
     }),
+});
 
-    stampAction: function (artefact, particle, host) {
-
-        if (particle && particle.history) {
-
-            let history = particle.history,
-                fill = particle.fill,
-                remaining, alpha, scale, position, z, roll;
-
-            history.forEach((p, index) => {
-
-                [remaining, z, ...position] = p;
-                
-                alpha = remaining / 6;
-                if (alpha < 0) alpha = 0;
-
-                roll = alpha * 720;
-
-                scale = 1 + (z / 3);
-                if (scale < 0.001) scale = 0; 
-
-                if (alpha && scale) {
-
-                    artefact.simpleStamp(host, {
-                        start: position,
-                        scale: scale,
-                        globalAlpha: alpha,
-                        roll: roll,
-                    });
-                }
-            });
-        }
-    },
-
-}).run();
+emitter1.run();
+emitter2.run();
 
 
 // #### Scene animation

@@ -211,19 +211,7 @@ P.initializePositions = function () {
 // `update` - calculate the particles's position vector
 P.update = function (tick, world) {
 
-    // add up loads from forces and springs
-    this.updateLoad(world);
-
-    // apply loads to update position
-    particleEngines[this.engine].call(this, tick * world.tickMultiplier);
-
-    // push new values into history array
-    this.manageHistory(tick);
-};
-
-// `updateLoad` - internal function
-P.updateLoad = function (world) {
-
+    // Add up loads from forces acting on this particle
     let i, iz, f;
 
     this.load.zero();
@@ -234,16 +222,25 @@ P.updateLoad = function (world) {
 
         if (f && f.action) f.action(this, world);
     });
+
+    // Apply loads to update position; three engines can be used: `euler` (the simplest engine, which is also the default), `improved-euler`, or `runge-kutta` - which is the most accurate, but also the most computationally intensive engine
+    particleEngines[this.engine].call(this, tick * world.tickMultiplier);
 };
 
-// `manageHistory` - internal function
-P.manageHistory = function (tick) {
+// `manageHistory` - internal function. Every particle can retain a history of its previous time and position moments, held in a ParticleHistory Array.
+P.manageHistory = function (tick, host) {
 
-    let {history, remainingTime, position, historyLength, hasLifetime, distanceLimit, initialPosition} = this;
+    let {history, remainingTime, position, historyLength, hasLifetime, distanceLimit, initialPosition, killBeyondCanvas} = this;
 
     let addHistoryFlag = true,
         remaining = 0;
 
+    // A particle can have a lifetime value - a float Number measured in seconds, stored in the `remainingTime` attribute. This is flagged for action in the `hasLifetime` attribute. The particle has, in effect, three states:
+    // + ___alive___ - on each tick a ParticleHistory object will be generated and added to the particle's `history` attribute array; if this addition takes the history array over its permitted length (as detailed in the particle's `historyLength` attribute) then the oldest ParticleHistory object is removed from the history array
+    // + ___dying___ - if the particle has existed for longer than its alotted time - as detailed in its `remainingTime` attribute - then it enters a post-life phase where history objects are no longer generated on each tick, but the oldest ParticleHistory object continues to be removed from the history array
+    // + ___dead___ - when the particle has existed for longer than its alotted time, and its history array is finally empty, then its `isRunning` flag can be set to false.
+    //
+    // Particle lifetime values are set by the emitter when creating the particles, based on the emitter's `killAfterTime` and `killAfterTimeVariation` attributes
     if (hasLifetime) {
 
         remaining = remainingTime - tick;
@@ -261,30 +258,42 @@ P.manageHistory = function (tick) {
         else this.remainingTime = remaining;
     }
 
-    if (distanceLimit) {
+    // A particle can be killed off under the following additional circumstances:
+    // + If we set the emitter's `killBeyondCanvas` flag to `true`
+    // + If we set a kill radius - a distance from the particle's initial position beyond which the particle will be removed - defined in the emitter's `killRadius` and `killRadiusVariation` attributes
+    let oldest = history[history.length - 1];
 
-        if (history.length) {
+    if (oldest) {
 
-            let test = requestVector().set(initialPosition);
+        let [or, oz, ox, oy] = oldest;
 
-            let [or, oz, ox, oy] = history[history.length - 1];
+        if (killBeyondCanvas) {
+
+            let [w, h] = host.currentDimensions;
+
+            if (ox < 0 || oy < 0 || ox > w || oy > h) {
+
+                addHistoryFlag = false;
+                this.isRunning = false;
+            }
+        }
+
+        if (distanceLimit) {
+
+            let test = requestVector(initialPosition);
 
             test.vectorSubtractArray([ox, oy, oz]);
 
             if (test.getMagnitude() > distanceLimit) {
 
-                console.log(test.getMagnitude(), distanceLimit)
-
-                history.forEach(obj => releaseParticleHistoryObject(obj));
-                history.length = 0;
                 addHistoryFlag = false;
                 this.isRunning = false;
             }
             releaseVector(test);
- 
         }
     }
 
+    // Generate a new ParticleHistory object, if required, and remove any old ParticleHistory object beyond the history array's permitted length (as defined in the emitter's `historyLength` attribute)
     if (addHistoryFlag) {
 
         let {x, y, z} = position;
@@ -304,8 +313,8 @@ P.manageHistory = function (tick) {
     }
 };
 
-// `run` - internal function
-P.run = function (timeKill, radiusKill, killBeyondCanvas, killBeyondScale) {
+// `run` - internal function. We define the triggers that will kill the particle at the same time as we start it running. This function should only be called by an Emitter entity. Note that there is no equivalent 'halt' function; instead, we set the particle's `isRunning` attribute to false to get it removed from the system. 
+P.run = function (timeKill, radiusKill, killBeyondCanvas) {
 
     this.hasLifetime = false;
     if (timeKill) {
@@ -322,7 +331,6 @@ P.run = function (timeKill, radiusKill, killBeyondCanvas, killBeyondScale) {
     }
 
     this.killBeyondCanvas = killBeyondCanvas;
-    this.killBeyondScale = killBeyondScale;
 
     this.isRunning = true;
 };
@@ -358,12 +366,14 @@ const releaseParticle = function (item) {
 
     if (item && item.type === 'Particle') {
 
-        [].concat(item.history).forEach(h => releaseHistory(h));
+        item.history.forEach(h => releaseParticleHistoryObject(h));
         item.history.length = 0;
 
-        item.set(item.defs);
+        if (particlePool.length < 500) {
 
-        particlePool.push(item);
+            item.set(item.defs);
+            particlePool.push(item);
+        }
     }
 };
 

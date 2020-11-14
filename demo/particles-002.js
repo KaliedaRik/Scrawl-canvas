@@ -131,6 +131,9 @@ const myemitter = scrawl.makeEmitter({
     generationRate: 10,
     killAfterTime: 5,
 
+    killRadius: 50, 
+    killRadiusVariation: 0,
+
     artefact: star,
 
     rangeX: 40,
@@ -169,6 +172,7 @@ const myemitter = scrawl.makeEmitter({
                 scale = 1 + (z / 3);
                 if (scale < 0.001) scale = 0; 
 
+                // Do not stamp the artefact if we cannot see it
                 if (alpha && scale) {
 
                     artefact.simpleStamp(host, {
@@ -178,6 +182,7 @@ const myemitter = scrawl.makeEmitter({
                         roll: roll,
                     });
                 }
+                else p.isRunning = false;
             });
         }
     },

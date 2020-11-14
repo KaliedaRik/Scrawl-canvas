@@ -11,7 +11,7 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
+import { constructors, artefact, world, styles } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
@@ -43,7 +43,9 @@ const Emitter = function (items = {}) {
     this.fillColorFactory = makeColor({ name: `${this.name}-fillColorFactory`});
     this.strokeColorFactory = makeColor({ name: `${this.name}-strokeColorFactory`});
 
+    this.preAction = λnull;
     this.stampAction = λnull;
+    this.postAction = λnull;
 
     this.range = makeVector();
     this.rangeFrom = makeVector();
@@ -81,7 +83,9 @@ let defaultAttributes = {
     world: null,
     artefact: null,
 
+    preAction: null,
     stampAction: null,
+    postAction: null,
 
     historyLength: 1,
     engine: 'euler',
@@ -122,8 +126,6 @@ let defaultAttributes = {
 
     killBeyondCanvas: false,
 
-    killBeyondScale: 0,
-
     generateAlongPath: false,
     generateInArea: false,
 
@@ -133,22 +135,71 @@ let defaultAttributes = {
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
-P.packetObjects = pushUnique(P.packetObjects, ['group', 'artefact', 'particle']);
+P.packetExclusions = pushUnique(P.packetExclusions, ['forces', 'springs', 'particleStore', 'deadParticles', 'liveParticles', 'fillColorFactory', 'strokeColorFactory']);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, ['world', 'artefact', 'generateInArea', 'generateAlongPath']);
+P.packetFunctions = pushUnique(P.packetFunctions, ['preAction', 'stampAction', 'postAction']);
 
+P.finalizePacketOut = function (copy, items) {
+
+    let forces = items.forces || this.forces || false;
+    if (forces) {
+
+        let tempForces = [];
+        forces.forEach(f => {
+
+            if (f.substring) tempForces.push(f);
+            else if (isa_obj(f) && f.name) tempForces.push(f.name);
+        });
+        copy.forces = tempForces;
+    }
+
+    let springs = items.springs || this.springs || false;
+    if (springs) {
+
+        let tempSprings = [];
+        this.springs.forEach(s => {
+
+            if (s.substring) tempSprings.push(s);
+            else if (isa_obj(s) && s.name) tempSprings.push(s.name);
+        });
+        copy.springs = tempSprings;
+    }
+
+    let tempParticles = [];
+    this.particleStore.forEach(p => tempParticles.push(p.saveAsPacket()));
+    copy.particleStore = tempParticles;
+
+    return copy;
+};
 
 // #### Clone management
-// No additional clone functionality required
+P.postCloneAction = function(clone, items) {
+
+    return clone;
+};
 
 
 // #### Kill management
-P.kill = function (killEntity) {
+P.kill = function (killArtefact = false, killWorld = false) {
 
-    // if (killEntity) this.entity.kill();
+    this.isRunning = false;
+
+    if (killArtefact) this.artefact.kill();
+
+    if (killWorld) this.world.kill();
+
+    this.fillColorFactory.kill();
+    this.strokeColorFactory.kill();
     
-    // this.particle.kill();
-    // this.deregister();
+    this.deadParticles.forEach(p => p.kill());
+    this.liveParticles.forEach(p => p.kill());
+    this.particleStore.forEach(p => p.kill());
 
-    // return true;
+    this.deregister();
+
+    return true;
 };
 
 
@@ -167,11 +218,29 @@ S.rangeFromY = function (val) { this.rangeFrom.y = val; };
 S.rangeFromZ = function (val) { this.rangeFrom.z = val; };
 S.rangeFrom = function (item) { this.rangeFrom.set(item); };
 
+S.preAction = function (item) {
+
+    if (isa_fn(item)) this.preAction = item;
+};
 S.stampAction = function (item) {
 
     if (isa_fn(item)) this.stampAction = item;
 };
+S.postAction = function (item) {
 
+    if (isa_fn(item)) this.postAction = item;
+};
+
+
+S.world = function (item) {
+
+    let w;
+
+    if (item.substring) w = world[item];
+    else if (isa_obj(item) && item.type === 'World') w = item;
+
+    if (w) this.world = w;
+};
 
 S.artefact = function (item) {
 
@@ -217,8 +286,11 @@ S.strokeColor = function (item) {
 
 
 // #### Prototype functions
+
+// `prepareStamp` - internal - overwrites the entity mixin function
 P.prepareStamp = function () {
 
+    // Entity-mixin-related functionality
     if (this.dirtyHost) {
 
         this.dirtyHost = false;
@@ -250,15 +322,18 @@ P.prepareStamp = function () {
     if (this.dirtyStampPositions) this.cleanStampPositions();
     if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
 
+    // Functionality specific to Emitter entitys
     let now = Date.now();
 
-    let {particleStore, deadParticles, liveParticles, minimumCount, maximumCount, generationRate, generatorChoke} = this;
+    let {particleStore, deadParticles, liveParticles, particleCount, generationRate, generatorChoke} = this;
 
+    // Create thew generator choke, if necessary
     if (!generatorChoke) {
 
         this.generatorChoke = generatorChoke = now;
     }
 
+    // Check through particles, removing all particles that have completed their lives
     particleStore.forEach(p => {
 
         if (p.isRunning) liveParticles.push(p);
@@ -272,22 +347,47 @@ P.prepareStamp = function () {
     particleStore.push(...liveParticles);
     liveParticles.length = 0;
 
+    // Determine how many new particles need to be generated
     let elapsed = now - generatorChoke;
 
     if (elapsed > 0 && generationRate) {
 
         let canGenerate = Math.floor((generationRate / 1000) * elapsed);
 
+        if (particleCount) {
+
+            let reqParticles = particleCount - particleStore.length;
+            
+            if (reqParticles <= 0) canGenerate = 0;
+            else if (reqParticles < canGenerate) canGenerate = reqParticles;
+        }
+
         if (canGenerate) {
 
             this.addParticles(canGenerate);
+
+            // We only update the choke value after particles have been generated
+            // + Ensures that if we only want 2 particles a second, our requirement will be respected
             this.generatorChoke = now;
         }
     }
 };
 
+// `addParticles` - internal function called by `prepareStamp` ... if you are not a fan of overly-complex functions, look away now.
+//
+// We can add particles to an emitter in a number of different ways, determined by the setting of two flag attributes on the emitter. The flags are actioned in the following order:
+// + __generateInArea__ - when this flag attribute is set to an artefact object, the emitter will use that artefact's outline to decide where new particles will be added to the scene
+// + __generateAlongPath__ - similarly, when this flag attribute is set to a shape-based entity (with its `useAsPath` attribute flag set to true), the emitter will use the path to dettermine wshere the new particle will be added.
+//
+// If neither of the above flags has been set, then the emitter will add particles from a single coordinate. This coordinate will be calculated according to the values set In the `lockTo` attribute (which can also be set using the `lockXTo` and `lockYTo` pseudo-attributes):
+// + ___start___ - use the emitter entity's start/handle/offset coordinates - which can be absolute px Number or relative % String values
+// + ___pivot___ - use a pivot entity to calculate the emitter's reference coordinate
+// + ___mimic___ - use a mimic entity to calculate the emitter's reference coordinate
+// + ___path___ - use a Shape-based entity's path to determine the emitter's reference coordinate
+// + ___mouse___ - use the mouse/touch/pointer cursor value as the emitter's coordinate
 P.addParticles = function (req) {
 
+    // internal helper functions, used when creating the particle
     const calc = function (item, itemVar) {
         return item + ((Math.random() * itemVar * 2) - itemVar);
     };
@@ -298,11 +398,13 @@ P.addParticles = function (req) {
 
     let i, p, cx, cy, temp;
 
-    let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, killBeyondScale, currentRotation, generateAlongPath, generateInArea} = this;
+    // The emitter object retains details of the initial values required for eachg particle it generates
+    let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea} = this;
 
     let {x, y, z} = range;
     let {x:fx, y:fy, z:fz} = rangeFrom;
 
+    // Use an artefact's current area location to determine where the particle will be generated
     if (generateInArea) {
 
         if (!generateInArea.pathObject || generateInArea.dirtyPathObject) generateInArea.cleanPathObject();
@@ -379,13 +481,14 @@ P.addParticles = function (req) {
             let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
             let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
 
-            p.run(timeKill, radiusKill, killBeyondCanvas, killBeyondScale);
+            p.run(timeKill, radiusKill, killBeyondCanvas);
 
             particleStore.push(p);
         }
         releaseCell(testCell);
         releaseVector(testVector);
     }
+    // Use an Shape-based entity's path to determine where the particle will be generated
     else if (generateAlongPath) {
 
         if (generateAlongPath.useAsPath) {
@@ -423,12 +526,13 @@ P.addParticles = function (req) {
                 let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
                 let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
 
-                p.run(timeKill, radiusKill, killBeyondCanvas, killBeyondScale);
+                p.run(timeKill, radiusKill, killBeyondCanvas);
 
                 particleStore.push(p);
             }
         }
     }
+    // Generate the particle using the emitter's start coordinate, or a reference artifact's coordinate
     else {
 
         [cx, cy] = currentStampPosition;
@@ -442,9 +546,6 @@ P.addParticles = function (req) {
                 positionY: cy,
                 positionZ: 0,
 
-                // velocityX: fx + (rnd() * x),
-                // velocityY: fy + (rnd() * y),
-                // velocityZ: fz + (rnd() * z),
                 velocityX: velocityCalc(fx, x),
                 velocityY: velocityCalc(fy, y),
                 velocityZ: velocityCalc(fz, z),
@@ -454,11 +555,6 @@ P.addParticles = function (req) {
                 forces, 
                 springs, 
 
-                // mass: mass + ((rnd() * massVariation * 2) - massVariation), 
-                // area: area + ((rnd() * areaVariation * 2) - areaVariation), 
-                // airFriction: airFriction + ((rnd() * airFrictionVariation * 2) - airFrictionVariation), 
-                // liquidFriction: liquidFriction + ((rnd() * liquidFrictionVariation * 2) - liquidFrictionVariation), 
-                // solidFriction: solidFriction + ((rnd() * solidFrictionVariation * 2) - solidFrictionVariation),
                 mass: calc(mass, massVariation), 
                 area: calc(area, areaVariation),  
                 airFriction: calc(airFriction, airFrictionVariation),  
@@ -471,12 +567,10 @@ P.addParticles = function (req) {
 
             p.velocity.rotate(currentRotation);
 
-            // let timeKill = Math.abs(killAfterTime + ((rnd() * killAfterTimeVariation * 2) - killAfterTimeVariation));
-            // let radiusKill = Math.abs(killRadius + ((rnd() * killRadiusVariation * 2) - killRadiusVariation));
             let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
             let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
 
-            p.run(timeKill, radiusKill, killBeyondCanvas, killBeyondScale);
+            p.run(timeKill, radiusKill, killBeyondCanvas);
 
             particleStore.push(p);
         }
@@ -489,7 +583,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (this.isRunning) {
 
-        let {world, artefact, particleStore, stampAction, lastUpdated} = this;
+        let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated} = this;
 
         if (artefact) {
 
@@ -500,11 +594,22 @@ P.stamp = function (force = false, host, changes) {
 
             if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
+            particleStore.forEach(p => p.update(deltaTime, world));
+
+            // TODO: apply springs at this point to affected particles
+
+            // TODO: detect and manage collisions
+
+            preAction.call(this, host);
+
             particleStore.forEach(p => {
 
-                p.update(deltaTime, world)
+                p.manageHistory(deltaTime, host);
                 stampAction.call(this, artefact, p, host);
             });
+
+            postAction.call(this, host);
+
             this.lastUpdated = now;
         }
     }
@@ -526,8 +631,6 @@ P.halt = function () {
 
 // #### Factory
 // ```
-// scrawl.makeParticle({
-// })
 // ```
 const makeEmitter = function (items) {
     return new Emitter(items);

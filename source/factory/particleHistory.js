@@ -60,8 +60,11 @@ const releaseParticleHistoryObject = function (history) {
 
     if (history && history.type === 'ParticleHistory') {
 
-        history.length = 0;
-        particleHistoryPool.push(history);
+        if (particleHistoryPool.length < 500) {
+            
+            history.length = 0;
+            particleHistoryPool.push(history);
+        }
     }
 };
 
