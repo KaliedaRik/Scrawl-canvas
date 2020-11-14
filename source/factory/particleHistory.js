@@ -60,7 +60,7 @@ const releaseParticleHistoryObject = function (history) {
 
     if (history && history.type === 'ParticleHistory') {
 
-        if (particleHistoryPool.length < 500) {
+        if (particleHistoryPool.length < 10) {
             
             history.length = 0;
             particleHistoryPool.push(history);

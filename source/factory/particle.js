@@ -107,7 +107,10 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 
 // #### Kill management
-P.kill = λnull;
+P.factoryKill = function () {
+
+    this.history.forEach(h => releaseParticleHistoryObject(h));
+};
 
 
 // #### Get, Set, deltaSet
@@ -369,11 +372,12 @@ const releaseParticle = function (item) {
         item.history.forEach(h => releaseParticleHistoryObject(h));
         item.history.length = 0;
 
-        if (particlePool.length < 500) {
+        if (particlePool.length < 10) {
 
             item.set(item.defs);
             particlePool.push(item);
         }
+        else item.kill()
     }
 };
 

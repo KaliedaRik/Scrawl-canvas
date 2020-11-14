@@ -183,13 +183,26 @@ let report = function () {
         testTime, testNow, dragging,
         testMessage = document.querySelector('#reportmessage');
 
+    let particlenames = scrawl.library.particlenames,
+        particle = scrawl.library.particle,
+        historyCount;
+
     return function () {
 
         testNow = Date.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        historyCount = 0;
+        particlenames.forEach(n => {
+
+            let p = particle[n];
+            if (p) historyCount += p.history.length;
+        });
+
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Particles: ${particlenames.length}
+    Drawn entitys: ${historyCount}`;
     };
 }();
 

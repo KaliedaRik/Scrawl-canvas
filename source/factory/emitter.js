@@ -131,6 +131,8 @@ let defaultAttributes = {
 
     // 
     particleStore: null,
+
+    resetAfterBlur: 3,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -583,7 +585,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (this.isRunning) {
 
-        let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated} = this;
+        let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur} = this;
 
         if (artefact) {
 
@@ -593,6 +595,14 @@ P.stamp = function (force = false, host, changes) {
                 now = Date.now();
 
             if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
+
+            if (deltaTime > resetAfterBlur) {
+
+                console.log('deltaTime exceeds 3 second', deltaTime); 
+                particleStore.forEach(p => releaseParticle(p));
+                particleStore.length = 0;
+                deltaTime = 16 / 1000;
+            }
 
             particleStore.forEach(p => p.update(deltaTime, world));
 
