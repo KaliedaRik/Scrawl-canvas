@@ -2,7 +2,8 @@
 // Details
 
 // #### Demos:
-// + Demos
+// + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
+// + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
 
 
 // #### Imports
@@ -91,11 +92,7 @@ constructors.Force = Force;
 makeForce({
 
     name: 'gravity',
-    action: (particle, world) => {
-
-        // see 'world-add-drag' grumbles below!
-        // + there's no need for a `gravityScale` value - that's just cheating the system
-        // + for the moment work with this because it gives us an animation to work with for collisions and restitution and stuff
+    action: (particle, world, host) => {
 
         let {mass, load} = particle;
 
@@ -111,7 +108,7 @@ makeForce({
 makeForce({
 
     name: 'air-drag',
-    action: (particle, world) => {
+    action: (particle, world, host) => {
 
         let {velocity, load, airFriction, area} = particle;
         let {airDensity, worldScale} = world;

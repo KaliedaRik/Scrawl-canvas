@@ -4,7 +4,15 @@
 // One key difference between World objects and other Scrawl-canvas objects is that we can define additional attributes (including their getter and setter functions) on the object using the `addAttribute` (and `removeAttribute`) functions.
 
 // #### Demos:
-// + Demos
+// + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
+// + [particles-002](../../demo/particles-002.html) - Emitter using artefacts
+// + [particles-003](../../demo/particles-003.html) - Position Emitter entity: start; pivot; mimic; path; mouse
+// + [particles-004](../../demo/particles-004.html) - Emit particles along the length of a path
+// + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
+// + [particles-006](../../demo/particles-006.html) - Fixed number of Particles in a field; preAction and postAction functionality
+// + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
+
+
 
 
 // #### Imports

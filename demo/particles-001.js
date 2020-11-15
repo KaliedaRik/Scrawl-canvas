@@ -78,33 +78,41 @@ const myEmitter = scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history) {
+        try {
 
-            let engine = host.engine,
-                history = particle.history,
-                remaining, radius, alpha, x, y, z,
-                endRad = Math.PI * 2;
+            if (particle && particle.history) {
 
-            engine.save();
-            engine.fillStyle = myWorld.get('particleColor');
+                let engine = host.engine,
+                    history = particle.history,
+                    remaining, radius, alpha, x, y, z,
+                    endRad = Math.PI * 2;
 
-            engine.beginPath();
-            history.forEach((p, index) => {
+                engine.save();
+                engine.fillStyle = myWorld.get('particleColor');
 
-                [remaining, z, x, y] = p;
-                radius = 6 * (1 + (z / 3));
-                alpha = remaining / myWorld.alphaDecay;
+                engine.beginPath();
+                history.forEach((p, index) => {
 
-                if (radius > 0) {
+                    [remaining, z, x, y] = p;
+                    radius = 6 * (1 + (z / 3));
+                    alpha = remaining / myWorld.alphaDecay;
 
-                    engine.globalAlpha = alpha;
-                    engine.moveTo(x, y);
-                    engine.arc(x, y, radius, 0, endRad);
-                }
-            });
-            engine.fill();
-            engine.restore();
+                    if (radius > 0) {
+
+                        engine.globalAlpha = alpha;
+                        engine.moveTo(x, y);
+                        engine.arc(x, y, radius, 0, endRad);
+                    }
+                });
+                engine.fill();
+                engine.restore();
+            }
         }
+        catch (e) {
+
+            console.log(e.message);
+        }
+
     },
 
 }).run();
@@ -272,4 +280,17 @@ document.querySelector('#rangefrom_z').value = -0.2;
 
 // #### Development and testing
 console.log(scrawl.library);
+
+window.onerror = function (message, file, line, col, error) {
+   alert("Trigger 1 (onerror) - Error occurred: " + error.message);
+   return false;
+};
+window.addEventListener("error", function (e) {
+   alert("Trigger 2 (addEventListener - error) - Error occurred: " + e.error.message);
+   return false;
+});
+window.addEventListener('unhandledrejection', function (e) {
+  alert("Trigger 2 (addEventListener - unhandledrejection) - Error occurred: " + e.reason.message);
+});
+
 

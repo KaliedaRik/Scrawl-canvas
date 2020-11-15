@@ -4,7 +4,12 @@
 
 // #### Demos:
 // + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
-// + [particles-002](../../demo/particles-002.html) - DEMO NAME
+// + [particles-002](../../demo/particles-002.html) - Emitter using artefacts
+// + [particles-003](../../demo/particles-003.html) - Position Emitter entity: start; pivot; mimic; path; mouse
+// + [particles-004](../../demo/particles-004.html) - Emit particles along the length of a path
+// + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
+// + [particles-006](../../demo/particles-006.html) - Fixed number of Particles in a field; preAction and postAction functionality
+// + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
 
 
 
@@ -212,7 +217,7 @@ P.initializePositions = function () {
 
 
 // `update` - calculate the particles's position vector
-P.update = function (tick, world) {
+P.update = function (tick, world, host) {
 
     // Add up loads from forces acting on this particle
     let i, iz, f;
@@ -223,7 +228,7 @@ P.update = function (tick, world) {
 
         let f = force[key];
 
-        if (f && f.action) f.action(this, world);
+        if (f && f.action) f.action(this, world, host);
     });
 
     // Apply loads to update position; three engines can be used: `euler` (the simplest engine, which is also the default), `improved-euler`, or `runge-kutta` - which is the most accurate, but also the most computationally intensive engine

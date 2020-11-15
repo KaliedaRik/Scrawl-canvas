@@ -7,7 +7,12 @@
 
 // #### Demos:
 // + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
-// + [particles-002](../../demo/particles-002.html) - DEMO NAME
+// + [particles-002](../../demo/particles-002.html) - Emitter using artefacts
+// + [particles-003](../../demo/particles-003.html) - Position Emitter entity: start; pivot; mimic; path; mouse
+// + [particles-004](../../demo/particles-004.html) - Emit particles along the length of a path
+// + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
+// + [particles-006](../../demo/particles-006.html) - Fixed number of Particles in a field; preAction and postAction functionality
+// + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
 
 
 // #### Imports
@@ -327,7 +332,7 @@ P.prepareStamp = function () {
     // Functionality specific to Emitter entitys
     let now = Date.now();
 
-    let {particleStore, deadParticles, liveParticles, particleCount, generationRate, generatorChoke} = this;
+    let {particleStore, deadParticles, liveParticles, particleCount, generationRate, generatorChoke, resetAfterBlur} = this;
 
     // Create thew generator choke, if necessary
     if (!generatorChoke) {
@@ -351,6 +356,13 @@ P.prepareStamp = function () {
 
     // Determine how many new particles need to be generated
     let elapsed = now - generatorChoke;
+
+    // Need to prevent generation of new particles if the elapsed time is due to the user focussing on another tab in the browser before returning to the tab running this Scrawl-canvas animation
+    if ((elapsed / 1000) > resetAfterBlur) {
+
+        elapsed = 0;
+        this.generatorChoke = now;
+    }
 
     if (elapsed > 0 && generationRate) {
 
@@ -589,6 +601,7 @@ P.stamp = function (force = false, host, changes) {
 
         if (artefact) {
 
+
             if (!host) host = this.getHost();
 
             let deltaTime = 16 / 1000,
@@ -596,6 +609,7 @@ P.stamp = function (force = false, host, changes) {
 
             if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
+            // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
             if (deltaTime > resetAfterBlur) {
 
                 particleStore.forEach(p => releaseParticle(p));
@@ -603,20 +617,23 @@ P.stamp = function (force = false, host, changes) {
                 deltaTime = 16 / 1000;
             }
 
-            particleStore.forEach(p => p.update(deltaTime, world));
+            particleStore.forEach(p => p.update(deltaTime, world, host));
 
             // TODO: apply springs at this point to affected particles
 
             // TODO: detect and manage collisions
 
+            // Perform canvas drawing before the main (developer-defined) `stampAction` function
             preAction.call(this, host);
 
+            // Emitter entitys must always be associated with one (and only one) artefact - it uses the artefact to rapidly visualise particles. The artefact can update its attributes (eg position, scale, roll, fillStyle, strokeStyle, etc) in response to the current Particle's attributes.
             particleStore.forEach(p => {
 
                 p.manageHistory(deltaTime, host);
                 stampAction.call(this, artefact, p, host);
             });
 
+            // Perform further canvas drawing after the main (developer-defined) `stampAction` function
             postAction.call(this, host);
 
             this.lastUpdated = now;
