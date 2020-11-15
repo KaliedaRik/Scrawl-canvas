@@ -598,7 +598,6 @@ P.stamp = function (force = false, host, changes) {
 
             if (deltaTime > resetAfterBlur) {
 
-                console.log('deltaTime exceeds 3 second', deltaTime); 
                 particleStore.forEach(p => releaseParticle(p));
                 particleStore.length = 0;
                 deltaTime = 16 / 1000;

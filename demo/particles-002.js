@@ -30,6 +30,11 @@ let wheel = scrawl.makeWheel({
     lineWidth: 2,
     method: 'fillThenDraw',
     visibility: false, 
+
+    noUserInteraction: true,
+    noPositionDependencies: true,
+    noFilters: true,
+    noDeltaUpdates: true,
 });
 
 let block = scrawl.makeBlock({ 
@@ -42,6 +47,11 @@ let block = scrawl.makeBlock({
     lineWidth: 2,
     method: 'fillThenDraw',
     visibility: false, 
+
+    noUserInteraction: true,
+    noPositionDependencies: true,
+    noFilters: true,
+    noDeltaUpdates: true,
 });
 
 let star = scrawl.makeStar({
@@ -60,7 +70,12 @@ let star = scrawl.makeStar({
 
     method: 'fillThenDraw',
     visibility: false, 
-})
+
+    noUserInteraction: true,
+    noPositionDependencies: true,
+    noFilters: true,
+    noDeltaUpdates: true,
+});
 
 let picture = scrawl.makePicture({
 
@@ -79,6 +94,11 @@ let picture = scrawl.makePicture({
 
     method: 'fillThenDraw',
     visibility: false, 
+
+    noUserInteraction: true,
+    noPositionDependencies: true,
+    noFilters: true,
+    noDeltaUpdates: true,
 });
 
 let phrase = scrawl.makePhrase({
@@ -96,6 +116,11 @@ let phrase = scrawl.makePhrase({
 
     method: 'fillThenDraw',
     visibility: false, 
+
+    noUserInteraction: true,
+    noPositionDependencies: true,
+    noFilters: true,
+    noDeltaUpdates: true,
 });
 
 

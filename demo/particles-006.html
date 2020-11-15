@@ -8,11 +8,29 @@
   <title>Demo Particles 006</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    canvas {
+      margin: 0 auto;
+    }
+  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 006</h1>
   <h2>Fixed number of 'eternal' Particles in a field; preAction and postAction functionality</h2>
+
+  <div class="controls">
+
+    <div class="green label">Particle count</div>
+    <div class="green"><input class="controlItem" id="particleCount" type="range" value="50" min="10" max="500" step="10" /></div>
+
+    <div class="green label">Connection radius</div>
+    <div class="green"><input class="controlItem" id="connectionRadius" type="range" value="80" min="10" max="150" step="1" /></div>
+
+  </div>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 

@@ -8,38 +8,47 @@ import scrawl from '../source/scrawl.js'
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-canvas.setBase({
-    backgroundColor: 'aliceblue',
+scrawl.library.group[canvas.base.name].set({
+
+    order: 1,
+})
+
+let dragItems = scrawl.makeGroup({
+
+    name: 'my-drag-items',
+    host: canvas.base.name,
+    order: 0,
 });
 
 
-scrawl.makeBlock({
+scrawl.makePhrase({
 
-    name: 'myblock',
+    name: 'hello',
+    group: 'my-drag-items',
 
-    startX: 170,
-    startY: 170,
+    text: 'HELLO!',
+
+    font: 'bold 100px sans-serif',
+    lineHeight: 0.8,
+
+    startX: 70,
+    startY: 200,
 
     handleX: 20,
     handleY: 20,
 
-    width: 100,
-    height: 100,
+    roll: -30,
+    scale: 1.1,
 
-    roll: 30,
-    scale: 1.5,
+    fillStyle: 'aliceblue',
+    method: 'fill',
 
-    flipReverse: true,
-    flipUpend: true,
-
-    strokeStyle: 'blue',
-    lineWidth: 2,
-    method: 'draw',
 });
 
 scrawl.makeShape({
 
     name: 'myshape',
+    group: 'my-drag-items',
 
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
@@ -51,17 +60,10 @@ scrawl.makeShape({
     flipUpend: true,
     scaleOutline: false,
 
-    strokeStyle: 'green',
-    lineWidth: 2,
-    method: 'draw',
+    fillStyle: 'white',
+    method: 'fill',
 });
 
-let dragItems = scrawl.makeGroup({
-
-    name: 'my-drag-items',
-    host: canvas.base.name,
-
-}).addArtefacts('myblock', 'myshape');
 
 // Create a World object; add some user-defined attributes to it
 let myWorld = scrawl.makeWorld({
@@ -75,25 +77,33 @@ let emitter1 = scrawl.makeEmitter({
     name: 'emitter-one',
     world: myWorld,
 
-    generationRate: 40,
+    generationRate: 60,
     killAfterTime: 5,
 
     rangeZ: 0.3,
     rangeFromZ: 0.1,
 
-    generateInArea: 'myblock',
+    generateInArea: 'hello',
 
     artefact: scrawl.makeWheel({
 
         name: 'particle-wheel-entity',
 
-        radius: 9,
+        radius: 12,
 
         handle: ['center', 'center'],
 
-        fillStyle: 'gold',
+        globalCompositeOperation: 'source-atop',
+
+        fillStyle: 'blue',
+        strokeStyle: 'white',
         method: 'fillThenDraw',
         visibility: false, 
+
+        noUserInteraction: true,
+        noPositionDependencies: true,
+        noFilters: true,
+        noDeltaUpdates: true,
     }),
 
     stampAction: function (artefact, particle, host) {
@@ -149,6 +159,13 @@ let emitter2 = emitter1.clone({
         fillStyle: 'red',
         method: 'fillThenDraw',
         visibility: false, 
+
+        globalCompositeOperation: 'source-atop',
+
+        noUserInteraction: true,
+        noPositionDependencies: true,
+        noFilters: true,
+        noDeltaUpdates: true,
     }),
 });
 

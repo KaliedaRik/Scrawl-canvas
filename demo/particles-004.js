@@ -85,7 +85,7 @@ const myemitter = scrawl.makeEmitter({
     name: 'line-emitter',
     world: myWorld,
 
-    generationRate: 100,
+    generationRate: 150,
     killAfterTime: 5,
 
     rangeY: 10,
@@ -110,6 +110,11 @@ const myemitter = scrawl.makeEmitter({
         fillStyle: 'gold',
         method: 'fillThenDraw',
         visibility: false, 
+
+        noUserInteraction: true,
+        noPositionDependencies: true,
+        noFilters: true,
+        noDeltaUpdates: true,
     }),
 
     stampAction: function (artefact, particle, host) {

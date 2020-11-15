@@ -28,9 +28,16 @@ let myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
     tickMultiplier: 2,
+
+    userAttributes: [
+        {
+            key: 'connectionRadius', 
+            defaultValue: 80,
+        },
+    ],
 });
 
-scrawl.makeEmitter({
+const myEmitter = scrawl.makeEmitter({
 
     name: 'field-emitter',
     world: myWorld,
@@ -63,12 +70,18 @@ scrawl.makeEmitter({
         method: 'fillThenDraw',
 
         visibility: false, 
+
+        noUserInteraction: true,
+        noPositionDependencies: true,
+        noFilters: true,
+        noDeltaUpdates: true,
     }),
 
     preAction: function (host) {
 
         let particles = this.particleStore,
-            engine = host.engine;
+            engine = host.engine,
+            radius = this.world.connectionRadius;
 
         engine.save();
 
@@ -99,9 +112,9 @@ scrawl.makeEmitter({
 
                         scrawl.releaseVector(test);
  
-                         if (mag < 80) {
+                         if (mag < radius) {
 
-                            let opacity = (80 - mag) / 80;
+                            let opacity = (radius - mag) / radius;
 
                             engine.globalAlpha = opacity;
 
@@ -214,6 +227,40 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+
+// #### User interaction
+// Setup form observer functionality
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: myWorld,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        connectionRadius: ['connectionRadius', 'int'],
+    },
+});
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: myEmitter,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        particleCount: ['particleCount', 'int'],
+    },
+});
 
 // #### Development and testing
 console.log(scrawl.library);
