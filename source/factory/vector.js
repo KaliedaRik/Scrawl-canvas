@@ -200,6 +200,31 @@ P.scalarMultiply = function (item) {
     return this;
 };
 
+P.vectorMultiply = function (item = {}) {
+
+    if (Array.isArray(item)) return this.vectorMultiplyArray(item);
+
+    let {x, y, z} = item;
+
+    if (isa_number(x)) this.x *= x;
+    if (isa_number(y)) this.y *= y;
+    if (isa_number(z)) this.z *= z;
+
+    return this;
+};
+
+P.vectorMultiplyArray = function (item) {
+
+    let [x, y, z] = item;
+
+    if (isa_number(x)) this.x *= x;
+    if (isa_number(y)) this.y *= y;
+    if (isa_number(z)) this.z *= z;
+
+    return this;
+};
+
+
 // Divide all Vector attributes by the argument Number
 P.scalarDivide = function (item) {
 

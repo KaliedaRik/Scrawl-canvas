@@ -157,6 +157,11 @@ import {
 
 
 import { 
+    makeNet,
+} from './factory/net.js';
+
+
+import { 
     makeOval,
 } from './factory/oval.js';
 
@@ -225,6 +230,11 @@ import {
 import { 
     importSprite,
 } from './factory/spriteAsset.js';
+
+
+import { 
+    makeSpring,
+} from './factory/particleSpring.js';
 
 
 import { 
@@ -392,6 +402,10 @@ export default {
     makeLoom,
 
 
+    // factory/net.js
+    makeNet,
+
+
     // factory/oval.js
     makeOval,
 
@@ -443,6 +457,10 @@ export default {
 
     // factory/spiral.js
     makeSpiral,
+
+
+    // factory/particleSpring.js
+    makeSpring,
 
 
     // factory/spriteAsset.js

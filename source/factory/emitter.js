@@ -58,6 +58,8 @@ const Emitter = function (items = {}) {
     this.deadParticles = [];
     this.liveParticles = [];
 
+    this.springs = [];
+
     if (!items.group) items.group = currentGroup;
 
     this.set(items);
@@ -597,7 +599,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (this.isRunning) {
 
-        let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur} = this;
+        let {world, artefact, particleStore, springs, preAction, stampAction, postAction, lastUpdated, resetAfterBlur} = this;
 
         if (artefact) {
 
@@ -614,12 +616,17 @@ P.stamp = function (force = false, host, changes) {
 
                 particleStore.forEach(p => releaseParticle(p));
                 particleStore.length = 0;
+                springs.forEach(s => s.kill());
+                springs.length = 0;
                 deltaTime = 16 / 1000;
             }
 
-            particleStore.forEach(p => p.update(deltaTime, world, host));
+            particleStore.forEach(p => p.applyForces(world, host));
 
-            // TODO: apply springs at this point to affected particles
+            springs.forEach(s => s.applySpring());
+
+            particleStore.forEach(p => p.update(deltaTime, world));
+
 
             // TODO: detect and manage collisions
 

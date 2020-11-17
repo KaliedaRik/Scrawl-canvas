@@ -3,15 +3,13 @@
 
 
 // #### Imports
-import { constructors, artefact, world, styles } from '../core/library.js';
+import { constructors, artefact, world, styles, particle } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
-import { currentCorePosition } from '../core/userInteraction.js';
 
-import { requestParticle, releaseParticle } from './particle.js';
-import { requestCell, releaseCell } from './cell.js';
+import { makeParticle } from './particle.js';
 import { makeVector, requestVector, releaseVector } from './vector.js';
-import { makeColor } from './color.js';
+import { makeSpring } from './particleSpring.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -32,18 +30,12 @@ const Net = function (items = {}) {
     this.onDown = λnull;
     this.onUp = λnull;
 
-    this.fillColorFactory = makeColor({ name: `${this.name}-fillColorFactory`});
-    this.strokeColorFactory = makeColor({ name: `${this.name}-strokeColorFactory`});
-
-    // this.preAction = λnull;
+    this.generate = λnull;
+    this.postGenerate = λnull;
     this.stampAction = λnull;
-    // this.postAction = λnull;
 
-    // this.range = makeVector();
-    // this.rangeFrom = makeVector();
     this.particleStore = [];
-    // this.deadParticles = [];
-    // this.liveParticles = [];
+    this.springs = [];
 
     if (!items.group) items.group = currentGroup;
 
@@ -72,101 +64,84 @@ P = entityMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-    // world: null,
-    // artefact: null,
+    world: null,
+    artefact: null,
 
-    // preAction: null,
-    // stampAction: null,
-    // postAction: null,
+    stampAction: null,
 
-    // historyLength: 1,
-    // engine: 'euler',
-    // forces: null,
-    // springs: null,
-    // mass: 1,
-    // area: 1,
-    // airFriction: 1,
-    // liquidFriction: 1, 
-    // solidFriction: 1,
+    generate: null,
+    postGenerate: null,
 
-    // massVariation: 0,
-    // areaVariation: 0,
-    // airFrictionVariation: 0,
-    // liquidFrictionVariation: 0, 
-    // solidFrictionVariation: 0,
+    historyLength: 1,
+    engine: 'euler',
+    forces: null,
+    springs: null,
+    mass: 1,
+    area: 1,
+    airFriction: 1,
+    liquidFriction: 1, 
+    solidFriction: 1,
 
-    // fillColorFactory: null,
-    // strokeColorFactory: null,
+    // weakNet, strongNet
+    rows: 0,
+    columns: 0, 
+    rowDistance: 0,
+    columnDistance: 0,
+    showSprings: false,
+    showSpringsColor: '#000000',
 
-    // // attributes specific to emitters
+    // Spring
+    springConstant: 50,
+    damperConstant: 10,
 
-    // // __range__ defines a vector whose x/y/z values represent the +/- values to be used when generating the initial 'velocity' value for new particles. 
-    // // + effectively a direction in which the new particles are fired when launched.
-    // // + we should also be able to change the direction when the emitter's `roll` attribute is non-zero
-    // range: null,
-    // rangeFrom: null,
+    // This is a ratio figure, not the actual rest length. If == 1, spring restLength will equal the initial distance between the two particles. < 1 and the length will be proportionately smaller; > 1 gives results in a longer length
+    restLength: 1,
 
-    // particleCount: 0,
+    particleStore: null,
 
-    // generationRate: 0,
-
-    // killAfterTime: 0,
-    // killAfterTimeVariation: 0,
-
-    // killRadius: 0,
-    // killRadiusVariation: 0,
-
-    // killBeyondCanvas: false,
-
-    // generateAlongPath: false,
-    // generateInArea: false,
-
-    // // 
-    // particleStore: null,
-
-    // resetAfterBlur: 3,
+    resetAfterBlur: 3,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
-// P.packetExclusions = pushUnique(P.packetExclusions, ['forces', 'springs', 'particleStore', 'deadParticles', 'liveParticles', 'fillColorFactory', 'strokeColorFactory']);
-// P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-// P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-// P.packetObjects = pushUnique(P.packetObjects, ['world', 'artefact', 'generateInArea', 'generateAlongPath']);
-// P.packetFunctions = pushUnique(P.packetFunctions, ['preAction', 'stampAction', 'postAction']);
+P.packetExclusions = pushUnique(P.packetExclusions, ['forces', 'springs', 'particleStore']);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, []);
+P.packetObjects = pushUnique(P.packetObjects, ['world', 'artefact']);
+P.packetFunctions = pushUnique(P.packetFunctions, ['generate', 'postGenerate', 'stampAction']);
 
-// P.finalizePacketOut = function (copy, items) {
+P.finalizePacketOut = function (copy, items) {
 
-//     let forces = items.forces || this.forces || false;
-//     if (forces) {
+    let forces = items.forces || this.forces || false;
+    if (forces) {
 
-//         let tempForces = [];
-//         forces.forEach(f => {
+        let tempForces = [];
+        forces.forEach(f => {
 
-//             if (f.substring) tempForces.push(f);
-//             else if (isa_obj(f) && f.name) tempForces.push(f.name);
-//         });
-//         copy.forces = tempForces;
-//     }
+            if (f.substring) tempForces.push(f);
+            else if (isa_obj(f) && f.name) tempForces.push(f.name);
+        });
+        copy.forces = tempForces;
+    }
 
-//     let springs = items.springs || this.springs || false;
-//     if (springs) {
+    let springs = items.springs || this.springs || false;
+    if (springs) {
 
-//         let tempSprings = [];
-//         this.springs.forEach(s => {
+        let tempSprings = [];
+        this.springs.forEach(s => {
 
-//             if (s.substring) tempSprings.push(s);
-//             else if (isa_obj(s) && s.name) tempSprings.push(s.name);
-//         });
-//         copy.springs = tempSprings;
-//     }
+            if (s.substring) tempSprings.push(s);
+            else if (isa_obj(s) && s.name) tempSprings.push(s.name);
+        });
+        copy.springs = tempSprings;
+    }
 
-//     let tempParticles = [];
-//     this.particleStore.forEach(p => tempParticles.push(p.saveAsPacket()));
-//     copy.particleStore = tempParticles;
+    let tempParticles = [];
+    this.particleStore.forEach(p => tempParticles.push(p.saveAsPacket()));
+    copy.particleStore = tempParticles;
 
-//     return copy;
-// };
+    return copy;
+};
 
 // #### Clone management
 P.postCloneAction = function(clone, items) {
@@ -184,11 +159,6 @@ P.kill = function (killArtefact = false, killWorld = false) {
 
     if (killWorld) this.world.kill();
 
-    this.fillColorFactory.kill();
-    this.strokeColorFactory.kill();
-    
-    this.deadParticles.forEach(p => p.kill());
-    this.liveParticles.forEach(p => p.kill());
     this.particleStore.forEach(p => p.kill());
 
     this.deregister();
@@ -202,28 +172,22 @@ let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// S.rangeX = function (val) { this.range.x = val; };
-// S.rangeY = function (val) { this.range.y = val; };
-// S.rangeZ = function (val) { this.range.z = val; };
-// S.range = function (item) { this.range.set(item); };
+S.generate = function (item) {
 
-// S.rangeFromX = function (val) { this.rangeFrom.x = val; };
-// S.rangeFromY = function (val) { this.rangeFrom.y = val; };
-// S.rangeFromZ = function (val) { this.rangeFrom.z = val; };
-// S.rangeFrom = function (item) { this.rangeFrom.set(item); };
+    if (isa_fn(item)) this.generate = item;
 
-// S.preAction = function (item) {
+    else if (item.substring && generators[item]) this.generate = generators[item];
+};
 
-//     if (isa_fn(item)) this.preAction = item;
-// };
+S.postGenerate = function (item) {
+
+    if (isa_fn(item)) this.postGenerate = item;
+};
+
 S.stampAction = function (item) {
 
     if (isa_fn(item)) this.stampAction = item;
 };
-// S.postAction = function (item) {
-
-//     if (isa_fn(item)) this.postAction = item;
-// };
 
 
 S.world = function (item) {
@@ -245,39 +209,6 @@ S.artefact = function (item) {
 
     if (art) this.artefact = art;
 };
-
-// S.generateAlongPath = function (item) {
-
-//     let art;
-
-//     if (item.substring) art = artefact[item];
-//     else if (isa_obj(item) && item.isArtefact) art = item;
-
-//     if (art && art.useAsPath) this.generateAlongPath = art;
-//     else this.generateAlongPath = false;
-// };
-
-// S.generateInArea = function (item) {
-
-//     let art;
-
-//     if (item.substring) art = artefact[item];
-//     else if (isa_obj(item) && item.isArtefact) art = item;
-
-//     if (art) this.generateInArea = art;
-//     else this.generateInArea = false;
-// };
-
-S.fillColor = function (item) {
-
-    if (isa_obj(item)) this.fillColorFactory.set(item);
-};
-
-S.strokeColor = function (item) {
-
-    if (isa_obj(item)) this.fillColorFactory.set(item);
-};
-
 
 // #### Prototype functions
 
@@ -315,317 +246,81 @@ P.prepareStamp = function () {
 
     if (this.dirtyStampPositions) this.cleanStampPositions();
     if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
-
-    // // Functionality specific to Emitter entitys
-    // let now = Date.now();
-
-    // let {particleStore, deadParticles, liveParticles, particleCount, generationRate, generatorChoke, resetAfterBlur} = this;
-
-    // // Create thew generator choke, if necessary
-    // if (!generatorChoke) {
-
-    //     this.generatorChoke = generatorChoke = now;
-    // }
-
-    // // Check through particles, removing all particles that have completed their lives
-    // particleStore.forEach(p => {
-
-    //     if (p.isRunning) liveParticles.push(p);
-    //     else deadParticles.push(p);
-    // });
-    // particleStore.length = 0;
-
-    // deadParticles.forEach(d => releaseParticle(d));
-    // deadParticles.length = 0;
-
-    // particleStore.push(...liveParticles);
-    // liveParticles.length = 0;
-
-    // // Determine how many new particles need to be generated
-    // let elapsed = now - generatorChoke;
-
-    // // Need to prevent generation of new particles if the elapsed time is due to the user focussing on another tab in the browser before returning to the tab running this Scrawl-canvas animation
-    // if ((elapsed / 1000) > resetAfterBlur) {
-
-    //     elapsed = 0;
-    //     this.generatorChoke = now;
-    // }
-
-    // if (elapsed > 0 && generationRate) {
-
-    //     let canGenerate = Math.floor((generationRate / 1000) * elapsed);
-
-    //     if (particleCount) {
-
-    //         let reqParticles = particleCount - particleStore.length;
-            
-    //         if (reqParticles <= 0) canGenerate = 0;
-    //         else if (reqParticles < canGenerate) canGenerate = reqParticles;
-    //     }
-
-    //     if (canGenerate) {
-
-    //         this.addParticles(canGenerate);
-
-    //         // We only update the choke value after particles have been generated
-    //         // + Ensures that if we only want 2 particles a second, our requirement will be respected
-    //         this.generatorChoke = now;
-    //     }
-    // }
 };
-
-// // `addParticles` - internal function called by `prepareStamp` ... if you are not a fan of overly-complex functions, look away now.
-// //
-// // We can add particles to an emitter in a number of different ways, determined by the setting of two flag attributes on the emitter. The flags are actioned in the following order:
-// // + __generateInArea__ - when this flag attribute is set to an artefact object, the emitter will use that artefact's outline to decide where new particles will be added to the scene
-// // + __generateAlongPath__ - similarly, when this flag attribute is set to a shape-based entity (with its `useAsPath` attribute flag set to true), the emitter will use the path to dettermine wshere the new particle will be added.
-// //
-// // If neither of the above flags has been set, then the emitter will add particles from a single coordinate. This coordinate will be calculated according to the values set In the `lockTo` attribute (which can also be set using the `lockXTo` and `lockYTo` pseudo-attributes):
-// // + ___start___ - use the emitter entity's start/handle/offset coordinates - which can be absolute px Number or relative % String values
-// // + ___pivot___ - use a pivot entity to calculate the emitter's reference coordinate
-// // + ___mimic___ - use a mimic entity to calculate the emitter's reference coordinate
-// // + ___path___ - use a Shape-based entity's path to determine the emitter's reference coordinate
-// // + ___mouse___ - use the mouse/touch/pointer cursor value as the emitter's coordinate
-// P.addParticles = function (req) {
-
-//     // internal helper functions, used when creating the particle
-//     const calc = function (item, itemVar) {
-//         return item + ((Math.random() * itemVar * 2) - itemVar);
-//     };
-
-//     const velocityCalc = function (item, itemVar) {
-//         return item + (Math.random() * itemVar);
-//     };
-
-//     let i, p, cx, cy, temp;
-
-//     // The emitter object retains details of the initial values required for eachg particle it generates
-//     let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea} = this;
-
-//     let {x, y, z} = range;
-//     let {x:fx, y:fy, z:fz} = rangeFrom;
-
-//     // Use an artefact's current area location to determine where the particle will be generated
-//     if (generateInArea) {
-
-//         if (!generateInArea.pathObject || generateInArea.dirtyPathObject) generateInArea.cleanPathObject();
-
-//         const testCell = requestCell(),
-//             testEngine = testCell.engine,
-//             testVector = requestVector();
-
-//         let {pathObject, winding, currentStampPosition, currentStampHandlePosition, currentDimensions} = generateInArea;
-
-//         let [testX, testY] = currentStampPosition;
-//         let [handleX, handleY] = currentStampHandlePosition;
-//         let [width, height] = currentDimensions;
-
-//         let testRoll = generateInArea.currentRotation,
-//             testScale = generateInArea.currentScale,
-//             testUpend = generateInArea.flipUpend,
-//             testReverse = generateInArea.flipReverse;
-
-//         if (!xt(generateInArea.species)) {
-
-//             width *= testScale;
-//             height *= testScale;
-//             handleX *= testScale;
-//             handleY *= testScale;
-//         }
-
-//         testCell.rotateDestination(testEngine, testX, testY, generateInArea);
-
-//         const test = (item) => testEngine.isPointInPath(pathObject, item.x, item.y, winding);
-            
-//         for (i = 0; i < req; i++) {
-
-//             let coordFlag = false;
-
-//             while (!coordFlag) {
-
-//                 testVector.set((Math.random() * width), (Math.random() * height)).vectorSubtractArray([handleX, handleY]);
-
-//                 if (testReverse) testVector.x = -testVector.x
-//                 if (testUpend) testVector.y = -testVector.y
-
-//                 testVector.rotate(testRoll).vectorAddArray(currentStampPosition);
-
-//                 if (test(testVector)) coordFlag = true;
-//             }
-
-//             p = requestParticle();
-
-//             p.set({
-//                 positionX: testVector.x,
-//                 positionY: testVector.y,
-//                 positionZ: 0,
-
-//                 velocityX: velocityCalc(fx, x),
-//                 velocityY: velocityCalc(fy, y),
-//                 velocityZ: velocityCalc(fz, z),
-
-//                 historyLength, 
-//                 engine, 
-//                 forces, 
-//                 springs, 
-
-//                 mass: calc(mass, massVariation), 
-//                 area: calc(area, areaVariation),  
-//                 airFriction: calc(airFriction, airFrictionVariation),  
-//                 liquidFriction: calc(liquidFriction, liquidFrictionVariation),  
-//                 solidFriction: calc(solidFriction, solidFrictionVariation),  
-
-//                 fill: fillColorFactory.get('random'),
-//                 stroke: strokeColorFactory.get('random'),
-//             });
-
-//             let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
-//             let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
-
-//             p.run(timeKill, radiusKill, killBeyondCanvas);
-
-//             particleStore.push(p);
-//         }
-//         releaseCell(testCell);
-//         releaseVector(testVector);
-//     }
-//     // Use an Shape-based entity's path to determine where the particle will be generated
-//     else if (generateAlongPath) {
-
-//         if (generateAlongPath.useAsPath) {
-
-//             for (i = 0; i < req; i++) {
-
-//                 temp = generateAlongPath.getPathPositionData(Math.random(), true);
-
-//                 p = requestParticle();
-
-//                 p.set({
-//                     positionX: temp.x,
-//                     positionY: temp.y,
-//                     positionZ: 0,
-
-//                     velocityX: velocityCalc(fx, x),
-//                     velocityY: velocityCalc(fy, y),
-//                     velocityZ: velocityCalc(fz, z),
-
-//                     historyLength, 
-//                     engine, 
-//                     forces, 
-//                     springs, 
-
-//                     mass: calc(mass, massVariation), 
-//                     area: calc(area, areaVariation),  
-//                     airFriction: calc(airFriction, airFrictionVariation),  
-//                     liquidFriction: calc(liquidFriction, liquidFrictionVariation),  
-//                     solidFriction: calc(solidFriction, solidFrictionVariation),  
-
-//                     fill: fillColorFactory.get('random'),
-//                     stroke: strokeColorFactory.get('random'),
-//                 });
-
-//                 let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
-//                 let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
-
-//                 p.run(timeKill, radiusKill, killBeyondCanvas);
-
-//                 particleStore.push(p);
-//             }
-//         }
-//     }
-//     // Generate the particle using the emitter's start coordinate, or a reference artifact's coordinate
-//     else {
-
-//         [cx, cy] = currentStampPosition;
-        
-//         for (i = 0; i < req; i++) {
-
-//             p = requestParticle();
-
-//             p.set({
-//                 positionX: cx,
-//                 positionY: cy,
-//                 positionZ: 0,
-
-//                 velocityX: velocityCalc(fx, x),
-//                 velocityY: velocityCalc(fy, y),
-//                 velocityZ: velocityCalc(fz, z),
-
-//                 historyLength, 
-//                 engine, 
-//                 forces, 
-//                 springs, 
-
-//                 mass: calc(mass, massVariation), 
-//                 area: calc(area, areaVariation),  
-//                 airFriction: calc(airFriction, airFrictionVariation),  
-//                 liquidFriction: calc(liquidFriction, liquidFrictionVariation),  
-//                 solidFriction: calc(solidFriction, solidFrictionVariation),  
-
-//                 fill: fillColorFactory.get('random'),
-//                 stroke: strokeColorFactory.get('random'),
-//             });
-
-//             p.velocity.rotate(currentRotation);
-
-//             let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
-//             let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
-
-//             p.run(timeKill, radiusKill, killBeyondCanvas);
-
-//             particleStore.push(p);
-//         }
-//     }
-// };
 
 // `stamp` - returns a Promise. This is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
 // + Overwriters the functionality defined in the 
 P.stamp = function (force = false, host, changes) {
 
-    // if (this.isRunning) {
+    if (this.isRunning) {
 
-    //     let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur} = this;
+        let {world, artefact, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor} = this;
 
-    //     if (artefact) {
+        if (artefact) {
 
 
-    //         if (!host) host = this.getHost();
+            if (!host) host = this.getHost();
 
-    //         let deltaTime = 16 / 1000,
-    //             now = Date.now();
+            let deltaTime = 16 / 1000,
+                now = Date.now();
 
-    //         if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
+            if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
-    //         // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
-    //         if (deltaTime > resetAfterBlur) {
+            // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
+            if (deltaTime > resetAfterBlur) {
 
-    //             particleStore.forEach(p => releaseParticle(p));
-    //             particleStore.length = 0;
-    //             deltaTime = 16 / 1000;
-    //         }
+                particleStore.forEach(p => p.kill());
+                particleStore.length = 0;
+                springs.forEach(s => s.kill());
+                springs.length = 0;
+                deltaTime = 16 / 1000;
+            }
 
-    //         particleStore.forEach(p => p.update(deltaTime, world, host));
+            if (!particleStore.length) {
 
-    //         // TODO: apply springs at this point to affected particles
+                generate.call(this, host);
+                postGenerate.call(this);
+            }
 
-    //         // TODO: detect and manage collisions
+            particleStore.forEach(p => p.applyForces(world, host));
 
-    //         // Perform canvas drawing before the main (developer-defined) `stampAction` function
-    //         preAction.call(this, host);
+            springs.forEach(s => s.applySpring());
 
-    //         // Emitter entitys must always be associated with one (and only one) artefact - it uses the artefact to rapidly visualise particles. The artefact can update its attributes (eg position, scale, roll, fillStyle, strokeStyle, etc) in response to the current Particle's attributes.
-    //         particleStore.forEach(p => {
+            particleStore.forEach(p => p.update(deltaTime, world));
 
-    //             p.manageHistory(deltaTime, host);
-    //             stampAction.call(this, artefact, p, host);
-    //         });
+            // TODO: detect and manage collisions
 
-    //         // Perform further canvas drawing after the main (developer-defined) `stampAction` function
-    //         postAction.call(this, host);
+            // Do visuals
+            if (showSprings) {
 
-    //         this.lastUpdated = now;
-    //     }
-    // }
+                let engine = host.engine;
+
+                engine.save();
+                engine.strokeStyle = showSpringsColor;
+                engine.lineWidth = 1;
+                engine.setTransform(1, 0, 0, 1, 0, 0);
+                engine.beginPath();
+
+                springs.forEach(s => {
+
+                    let {particleFrom, particleTo} = s;
+
+                    engine.moveTo(particleFrom.position.x, particleFrom.position.y);
+                    engine.lineTo(particleTo.position.x, particleTo.position.y);
+                });
+                engine.stroke();
+                engine.restore();
+            }
+
+            particleStore.forEach(p => {
+
+                p.manageHistory(deltaTime, host);
+                stampAction.call(this, artefact, p, host);
+            });
+
+            this.lastUpdated = now;
+        }
+    }
     return Promise.resolve(true);
 };
 
@@ -639,6 +334,294 @@ P.halt = function () {
 
     this.isRunning = false;
     return this;
+};
+
+P.restart = function () {
+
+    this.particleStore.forEach(p => p.kill());
+    this.particleStore.length = 0;
+    this.springs.forEach(s => s.kill());
+    this.springs.length = 0;
+    
+    this.lastUpdated = Date.now();
+
+    this.isRunning = true;
+    return this;
+};
+
+const generators = {
+
+    'weak-net': function (host) {
+
+        let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
+
+        let [x, y] = this.currentStampPosition;
+        let [width, height] = host.currentDimensions;
+
+        let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
+        let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
+
+        let dx, dy, p, i, j;
+
+        // generate particles
+        for (i = 0; i < rows; i++) {
+
+            dy = (deltaR * i) + y;
+
+            for (j = 0; j < columns; j++) {
+
+                dx = (deltaC * j) + x;
+
+                p = makeParticle({
+
+                    name: `${name}-${i}-${j}`,
+
+                    positionX: dx,
+                    positionY: dy,
+                    positionZ: 0,
+
+                    velocityX: 0,
+                    velocityY: 0,
+                    velocityZ: 0,
+
+                    historyLength, 
+                    engine, 
+                    forces, 
+
+                    mass,
+                    area,  
+                    airFriction,  
+                    liquidFriction,  
+                    solidFriction,  
+
+                    fill: artefact.get('fillStyle'),
+                    stroke: artefact.get('strokeStyle'),
+                });
+
+                p.run(0, 0, false);
+
+                particleStore.push(p);
+            }
+        }
+
+        // generate springs
+        for (i = 0; i < rows; i++) {
+
+            for (j = 0; j < columns - 1; j++) {
+
+                let f = particle[`${name}-${i}-${j}`],
+                    t = particle[`${name}-${i}-${j + 1}`],
+                    v = requestVector(f.position).vectorSubtract(t.position),
+                    l = v.getMagnitude();
+
+                let s = makeSpring({
+
+                    name: `${name}-horizontal-${i}-${j}`,
+
+                    particleFrom: f,
+                    particleTo: t,
+
+                    springConstant, 
+                    damperConstant,
+
+                    restLength: l * restLength,
+                });
+
+                springs.push(s);
+                releaseVector(v);
+            }
+        }
+
+        for (i = 0; i < columns; i++) {
+
+            for (j = 0; j < rows - 1; j++) {
+
+                let f = particle[`${name}-${j}-${i}`],
+                    t = particle[`${name}-${j + 1}-${i}`],
+                    v = requestVector(f.position).vectorSubtract(t.position),
+                    l = v.getMagnitude();
+
+                let s = makeSpring({
+
+                    name: `${name}-vertical-${i}-${j}`,
+
+                    particleFrom: f,
+                    particleTo: t,
+
+                    springConstant, 
+                    damperConstant,
+
+                    restLength: l * restLength,
+                });
+
+                springs.push(s);
+                releaseVector(v);
+            }
+        }
+    },
+
+    'strong-net': function (host) {
+
+        let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
+
+        let [x, y] = this.currentStampPosition;
+        let [width, height] = host.currentDimensions;
+
+        let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
+        let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
+
+        let dx, dy, p, i, j;
+
+        // generate particles
+        for (i = 0; i < rows; i++) {
+
+            dy = (deltaR * i) + y;
+
+            for (j = 0; j < columns; j++) {
+
+                dx = (deltaC * j) + x;
+
+                p = makeParticle({
+
+                    name: `${name}-${i}-${j}`,
+
+                    positionX: dx,
+                    positionY: dy,
+                    positionZ: 0,
+
+                    velocityX: 0,
+                    velocityY: 0,
+                    velocityZ: 0,
+
+                    historyLength, 
+                    engine, 
+                    forces, 
+
+                    mass,
+                    area,  
+                    airFriction,  
+                    liquidFriction,  
+                    solidFriction,  
+
+                    fill: artefact.get('fillStyle'),
+                    stroke: artefact.get('strokeStyle'),
+                });
+
+                p.run(0, 0, false);
+
+                particleStore.push(p);
+            }
+        }
+
+        // generate springs
+        for (i = 0; i < rows; i++) {
+
+            for (j = 0; j < columns - 1; j++) {
+
+                let f = particle[`${name}-${i}-${j}`],
+                    t = particle[`${name}-${i}-${j + 1}`],
+                    v = requestVector(f.position).vectorSubtract(t.position),
+                    l = v.getMagnitude();
+
+                let s = makeSpring({
+
+                    name: `${name}-horizontal-${i}-${j}`,
+
+                    particleFrom: f,
+                    particleTo: t,
+
+                    springConstant, 
+                    damperConstant,
+
+                    restLength: l * restLength,
+                });
+
+                springs.push(s);
+                releaseVector(v);
+            }
+        }
+
+        for (i = 0; i < columns; i++) {
+
+            for (j = 0; j < rows - 1; j++) {
+
+                let f = particle[`${name}-${j}-${i}`],
+                    t = particle[`${name}-${j + 1}-${i}`],
+                    v = requestVector(f.position).vectorSubtract(t.position),
+                    l = v.getMagnitude();
+
+                let s = makeSpring({
+
+                    name: `${name}-vertical-${i}-${j}`,
+
+                    particleFrom: f,
+                    particleTo: t,
+
+                    springConstant, 
+                    damperConstant,
+
+                    restLength: l * restLength,
+                });
+
+                springs.push(s);
+                releaseVector(v);
+            }
+        }
+
+        for (i = 0; i < columns - 1; i++) {
+
+            for (j = 0; j < rows - 1; j++) {
+
+                let f = particle[`${name}-${j}-${i}`],
+                    t = particle[`${name}-${j + 1}-${i + 1}`],
+                    v = requestVector(f.position).vectorSubtract(t.position),
+                    l = v.getMagnitude();
+
+                let s = makeSpring({
+
+                    name: `${name}-diagonal-right-${i}-${j}`,
+
+                    particleFrom: f,
+                    particleTo: t,
+
+                    springConstant, 
+                    damperConstant,
+
+                    restLength: l * restLength,
+                });
+
+                springs.push(s);
+                releaseVector(v);
+            }
+        }
+
+        for (i = 0; i < columns - 1; i++) {
+
+            for (j = rows - 1; j > 0; j--) {
+
+                let f = particle[`${name}-${j}-${i}`],
+                    t = particle[`${name}-${j - 1}-${i + 1}`],
+                    v = requestVector(f.position).vectorSubtract(t.position),
+                    l = v.getMagnitude();
+
+                let s = makeSpring({
+
+                    name: `${name}-diagonal-left-${i}-${j}`,
+
+                    particleFrom: f,
+                    particleTo: t,
+
+                    springConstant, 
+                    damperConstant,
+
+                    restLength: l * restLength,
+                });
+
+                springs.push(s);
+                releaseVector(v);
+            }
+        }
+    },
 };
 
 

@@ -216,11 +216,8 @@ P.initializePositions = function () {
 
 
 
-// `update` - calculate the particles's position vector
-P.update = function (tick, world, host) {
-
-    // Add up loads from forces acting on this particle
-    let i, iz, f;
+// `applyForces` - calculate the particles's position vector
+P.applyForces = function (world, host) {
 
     this.load.zero();
 
@@ -230,8 +227,10 @@ P.update = function (tick, world, host) {
 
         if (f && f.action) f.action(this, world, host);
     });
+};
 
-    // Apply loads to update position; three engines can be used: `euler` (the simplest engine, which is also the default), `improved-euler`, or `runge-kutta` - which is the most accurate, but also the most computationally intensive engine
+P.update = function (tick, world) {
+
     particleEngines[this.engine].call(this, tick * world.tickMultiplier);
 };
 
