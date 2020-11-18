@@ -5,7 +5,7 @@
 // #### Demos:
 // + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
 // + [particles-002](../../demo/particles-002.html) - Emitter using artefacts
-// + [particles-003](../../demo/particles-003.html) - Position Emitter entity: start; pivot; mimic; path; mouse
+// + [particles-003](../../demo/particles-003.html) - Position Emitter entity: start; pivot; mimic; path; mouse; drag-and-drop
 // + [particles-004](../../demo/particles-004.html) - Emit particles along the length of a path
 // + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
 // + [particles-006](../../demo/particles-006.html) - Fixed number of Particles in a field; preAction and postAction functionality
@@ -221,17 +221,21 @@ P.applyForces = function (world, host) {
 
     this.load.zero();
 
-    this.forces.forEach(key => {
+    if (!this.isBeingDragged) {
 
-        let f = force[key];
+        this.forces.forEach(key => {
 
-        if (f && f.action) f.action(this, world, host);
-    });
+            let f = force[key];
+
+            if (f && f.action) f.action(this, world, host);
+        });
+    }
 };
 
 P.update = function (tick, world) {
 
-    particleEngines[this.engine].call(this, tick * world.tickMultiplier);
+    if (this.isBeingDragged) this.position.setFromVector(this.isBeingDragged).vectorAdd(this.dragOffset);
+    else particleEngines[this.engine].call(this, tick * world.tickMultiplier);
 };
 
 // `manageHistory` - internal function. Every particle can retain a history of its previous time and position moments, held in a ParticleHistory Array.

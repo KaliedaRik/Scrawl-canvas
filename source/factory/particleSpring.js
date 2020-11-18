@@ -2,7 +2,7 @@
 // Details
 
 // #### Demos:
-// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects; drag-and-drop particles
+// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
 
 
 // #### Imports

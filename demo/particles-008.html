@@ -21,6 +21,7 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 008</h1>
   <h2>Net entity: generation and basic functionality, including Spring objects</h2>
+  <h3>Note that physics models can be a little tempramental!</h3>
 
   <div class="controls">
 
@@ -35,11 +36,24 @@
     <div class="green label">Rest length (multiplier)</div>
     <div class="green"><input class="controlItem" id="restLength" type="range" value="1" min="0.5" max="2" step="0.1" /></div>
 
-    <div class="lavender label">Spring constant</div>
-    <div class="lavender"><input class="controlItem" id="springConstant" type="range" value="50" min="5" max="300" step="5" /></div>
+    <div class="green label">Spring constant</div>
+    <div class="green"><input class="controlItem" id="springConstant" type="range" value="50" min="5" max="300" step="5" /></div>
 
-    <div class="lavender label">Damper constant</div>
-    <div class="lavender"><input class="controlItem" id="damperConstant" type="range" value="10" min="5" max="50" step="1" /></div>
+    <div class="green label">Damper constant</div>
+    <div class="green"><input class="controlItem" id="damperConstant" type="range" value="10" min="5" max="50" step="1" /></div>
+
+
+    <div class="lavender label">Tick multiplier</div>
+    <div class="lavender"><input class="controlItem" id="tickMultiplier" type="range" value="2" min="0.5" max="3" step="0.05" /></div>
+
+    <div class="pink label">Engine</div>
+    <div class="pink">
+      <select class="controlItem" id="engine">
+        <option value="euler">euler</option>
+        <option value="improved-euler">improved-euler</option>
+        <option value="runge-kutta">runge-kutta</option>
+      </select>
+    </div>
 
   </div>
 

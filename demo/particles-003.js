@@ -1,5 +1,5 @@
 // # Demo Particles 003 
-// Position Emitter entity: start; pivot; mimic; path; mouse
+// Position Emitter entity: start; pivot; mimic; path; mouse; drag-and-drop
 
 // [Run code](../../demo/particles-003.html)
 import scrawl from '../source/scrawl.js'
@@ -26,7 +26,7 @@ let wheel = scrawl.makeWheel({
     includeCenter: true,
 
     fillStyle: 'darkred',
-    method: 'fill',
+    method: 'fillThenDraw',
     visibility: false, 
 
     noUserInteraction: true,
@@ -41,8 +41,8 @@ let block = scrawl.makeBlock({
     dimensions: [40, 16],
     handle: ['center', 'center'],
 
-    fillStyle: 'darkblue',
-    method: 'fill',
+    fillStyle: 'purple',
+    method: 'fillThenDraw',
     visibility: false, 
 
     noUserInteraction: true,
@@ -111,7 +111,7 @@ scrawl.makeBlock({
     order: 1,
     roll: 90,
 
-    strokeStyle: 'red',
+    strokeStyle: 'darkred',
     lineWidth: 5,
     method: 'draw',
 
@@ -186,6 +186,10 @@ const myemitter = scrawl.makeEmitter({
 
     rangeZ: -1,
     rangeFromZ: -0.2,
+
+    hitRadius: 20,
+    showHitRadius: true,
+    hitRadiusColor: 'red',
 
     stampAction: function (artefact, particle, host) {
 
@@ -265,6 +269,21 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// Make the Emitter draggable
+scrawl.makeGroup({
+
+    name: 'my-draggable-group',
+
+}).addArtefacts('position-tester');
+
+scrawl.makeDragZone({
+
+    zone: canvas,
+    collisionGroup: 'my-draggable-group',
+    endOn: ['up', 'leave'],
+});
+
+
 // Setup form observer functionality
 scrawl.observeAndUpdate({
 

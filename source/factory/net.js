@@ -4,7 +4,7 @@
 
 // #### Imports
 import { constructors, artefact, world, styles, particle } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt } from '../core/utilities.js';
+import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
 import { makeParticle } from './particle.js';
@@ -100,6 +100,11 @@ let defaultAttributes = {
     particleStore: null,
 
     resetAfterBlur: 3,
+
+    particlesAreDraggable: false,
+    hitRadius: 10,
+    showHitRadius: false,
+    hitRadiusColor: '#000000',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -254,7 +259,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (this.isRunning) {
 
-        let {world, artefact, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor} = this;
+        let {world, artefact, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
 
         if (artefact) {
 
@@ -318,6 +323,26 @@ P.stamp = function (force = false, host, changes) {
                 stampAction.call(this, artefact, p, host);
             });
 
+            if (showHitRadius) {
+
+                let engine = host.engine;
+
+                engine.save();
+                engine.lineWidth = 1;
+                engine.strokeStyle = hitRadiusColor;
+
+                engine.setTransform(1, 0, 0, 1, 0, 0);
+                engine.beginPath();
+
+                particleStore.forEach(p => {
+                    engine.moveTo(p.position.x, p.position.y);
+                    engine.arc(p.position.x, p.position.y, hitRadius, 0, Math.PI * 2);
+                });
+                
+                engine.stroke();
+                engine.restore();
+            }
+
             this.lastUpdated = now;
         }
     }
@@ -346,6 +371,100 @@ P.restart = function () {
     this.lastUpdated = Date.now();
 
     this.isRunning = true;
+    return this;
+};
+
+P.checkHit = function (items = [], mycell) {
+
+    this.lastHitParticle = null;
+
+    if (!this.particlesAreDraggable) return false;
+
+    if (this.noUserInteraction) return false;
+
+    let tests = (!Array.isArray(items)) ?  [items] : items;
+
+    let particleStore = this.particleStore,
+        res = false,
+        tx, ty, i, iz, p;
+
+    if (tests.some(test => {
+
+        if (Array.isArray(test)) {
+
+            tx = test[0];
+            ty = test[1];
+        }
+        else if (xta(test, test.x, test.y)) {
+
+            tx = test.x;
+            ty = test.y;
+        }
+        else return false;
+
+        if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+
+        let v = requestVector();
+
+        for (i = 0, iz = particleStore.length; i < iz; i++) {
+
+            p = particleStore[i];
+
+            v.set(p.position).vectorSubtract(test);
+
+            if (v.getMagnitude() < this.hitRadius) {
+
+                res = p;
+                break;
+            }
+        }
+        releaseVector(v);
+
+        return res;
+
+    }, this)) {
+
+        let r = this.checkHitReturn(tx, ty, mycell, res);
+
+        this.lastHitParticle = res;
+
+        return r;
+    }
+    return false;
+};
+
+// Function overwritten by entitys, if required
+P.checkHitReturn = function (x, y, cell, particle) {
+
+    return {
+        x: x,
+        y: y,
+        artefact: this,
+        particle: particle,
+    };
+};
+
+// `pickupArtefact`
+P.pickupArtefact = function (items = {}) {
+
+    let particle = this.lastHitParticle;
+
+    if (xta(items, particle)) {
+
+        particle.isBeingDragged = items;
+        particle.dragOffset = requestVector(particle.position).vectorSubtract(items);
+        this.lastHitParticle
+    }
+    return this;
+};
+
+// `dropArtefact`
+P.dropArtefact = function () {
+
+    this.lastHitParticle.isBeingDragged = null;
+    releaseVector(this.lastHitParticle.dragOffset);
+    this.lastHitParticle.dragOffset = null;
+    this.lastHitParticle = null;
     return this;
 };
 

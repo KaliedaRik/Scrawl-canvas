@@ -162,6 +162,8 @@ let report = function () {
         testMessage = document.querySelector('#reportmessage');
 
     let springConst = document.querySelector('#springConstant'),
+        restLength = document.querySelector('#restLength'),
+        tickMultiplier = document.querySelector('#tickMultiplier'),
         damperConst = document.querySelector('#damperConstant');
 
 
@@ -172,6 +174,8 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Tick multiplier: ${tickMultiplier.value}
+    Rest length multiplier: ${restLength.value}
     Wind speed: ${myWorld.wind.toFixed(2)}
     Spring constant: ${springConst.value}
     Damper constant: ${damperConst.value}`;
@@ -190,23 +194,6 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: myWorld,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        'color-controller': ['particleColor', 'raw'],
-        'world-speed': ['tickMultiplier', 'float'],
-        'color-alpha': ['alphaDecay', 'float'],
-    },
-});
 const updateSprings = function (e) {
 
     if (e && e.target && e.target.id) {
@@ -215,6 +202,8 @@ const updateSprings = function (e) {
         if (e.target.id === 'damperConstant') myNet.set({ damperConstant: parseFloat(e.target.value)});
         if (e.target.id === 'restLength') myNet.set({ restLength: parseFloat(e.target.value)});
         if (e.target.id === 'generate') myNet.set({ generate: e.target.value});
+        if (e.target.id === 'engine') myNet.set({ engine: e.target.value});
+        if (e.target.id === 'tickMultiplier') myWorld.set({ tickMultiplier: parseFloat(e.target.value)});
 
         myNet.restart();
     }
@@ -225,6 +214,8 @@ document.querySelector('#generate').value = 'weak-net';
 document.querySelector('#springConstant').value = 50;
 document.querySelector('#damperConstant').value = 10;
 document.querySelector('#restLength').value = 1;
+document.querySelector('#engine').value = 'runge-kutta';
+document.querySelector('#tickMultiplier').value = 2;
 
 
 // #### Development and testing

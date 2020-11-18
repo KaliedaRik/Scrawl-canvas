@@ -8,7 +8,7 @@
 // #### Demos:
 // + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
 // + [particles-002](../../demo/particles-002.html) - Emitter using artefacts
-// + [particles-003](../../demo/particles-003.html) - Position Emitter entity: start; pivot; mimic; path; mouse
+// + [particles-003](../../demo/particles-003.html) - Position Emitter entity: start; pivot; mimic; path; mouse; drag-and-drop
 // + [particles-004](../../demo/particles-004.html) - Emit particles along the length of a path
 // + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
 // + [particles-006](../../demo/particles-006.html) - Fixed number of Particles in a field; preAction and postAction functionality
@@ -17,7 +17,7 @@
 
 // #### Imports
 import { constructors, artefact, world, styles } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt } from '../core/utilities.js';
+import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
@@ -58,8 +58,6 @@ const Emitter = function (items = {}) {
     this.deadParticles = [];
     this.liveParticles = [];
 
-    this.springs = [];
-
     if (!items.group) items.group = currentGroup;
 
     this.set(items);
@@ -97,7 +95,6 @@ let defaultAttributes = {
     historyLength: 1,
     engine: 'euler',
     forces: null,
-    springs: null,
     mass: 1,
     area: 1,
     airFriction: 1,
@@ -140,11 +137,15 @@ let defaultAttributes = {
     particleStore: null,
 
     resetAfterBlur: 3,
+
+    hitRadius: 10,
+    showHitRadius: false,
+    hitRadiusColor: '#000000',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
-P.packetExclusions = pushUnique(P.packetExclusions, ['forces', 'springs', 'particleStore', 'deadParticles', 'liveParticles', 'fillColorFactory', 'strokeColorFactory']);
+P.packetExclusions = pushUnique(P.packetExclusions, ['forces', 'particleStore', 'deadParticles', 'liveParticles', 'fillColorFactory', 'strokeColorFactory']);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
 P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, ['world', 'artefact', 'generateInArea', 'generateAlongPath']);
@@ -162,18 +163,6 @@ P.finalizePacketOut = function (copy, items) {
             else if (isa_obj(f) && f.name) tempForces.push(f.name);
         });
         copy.forces = tempForces;
-    }
-
-    let springs = items.springs || this.springs || false;
-    if (springs) {
-
-        let tempSprings = [];
-        this.springs.forEach(s => {
-
-            if (s.substring) tempSprings.push(s);
-            else if (isa_obj(s) && s.name) tempSprings.push(s.name);
-        });
-        copy.springs = tempSprings;
     }
 
     let tempParticles = [];
@@ -415,7 +404,7 @@ P.addParticles = function (req) {
     let i, p, cx, cy, temp;
 
     // The emitter object retains details of the initial values required for eachg particle it generates
-    let {historyLength, engine, forces, springs, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea} = this;
+    let {historyLength, engine, forces, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea} = this;
 
     let {x, y, z} = range;
     let {x:fx, y:fy, z:fz} = rangeFrom;
@@ -482,7 +471,6 @@ P.addParticles = function (req) {
                 historyLength, 
                 engine, 
                 forces, 
-                springs, 
 
                 mass: calc(mass, massVariation), 
                 area: calc(area, areaVariation),  
@@ -527,7 +515,6 @@ P.addParticles = function (req) {
                     historyLength, 
                     engine, 
                     forces, 
-                    springs, 
 
                     mass: calc(mass, massVariation), 
                     area: calc(area, areaVariation),  
@@ -569,7 +556,6 @@ P.addParticles = function (req) {
                 historyLength, 
                 engine, 
                 forces, 
-                springs, 
 
                 mass: calc(mass, massVariation), 
                 area: calc(area, areaVariation),  
@@ -599,7 +585,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (this.isRunning) {
 
-        let {world, artefact, particleStore, springs, preAction, stampAction, postAction, lastUpdated, resetAfterBlur} = this;
+        let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 
         if (artefact) {
 
@@ -616,15 +602,10 @@ P.stamp = function (force = false, host, changes) {
 
                 particleStore.forEach(p => releaseParticle(p));
                 particleStore.length = 0;
-                springs.forEach(s => s.kill());
-                springs.length = 0;
                 deltaTime = 16 / 1000;
             }
 
             particleStore.forEach(p => p.applyForces(world, host));
-
-            springs.forEach(s => s.applySpring());
-
             particleStore.forEach(p => p.update(deltaTime, world));
 
 
@@ -643,6 +624,22 @@ P.stamp = function (force = false, host, changes) {
             // Perform further canvas drawing after the main (developer-defined) `stampAction` function
             postAction.call(this, host);
 
+            if (showHitRadius) {
+
+                let engine = host.engine;
+
+                engine.save();
+                engine.lineWidth = 1;
+                engine.strokeStyle = hitRadiusColor;
+
+                engine.setTransform(1, 0, 0, 1, 0, 0);
+                engine.beginPath();
+                engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
+                engine.stroke();
+
+                engine.restore();
+            }
+
             this.lastUpdated = now;
         }
     }
@@ -659,6 +656,49 @@ P.halt = function () {
 
     this.isRunning = false;
     return this;
+};
+
+P.checkHit = function (items = [], mycell) {
+
+    if (this.noUserInteraction) return false;
+
+    let tests = (!Array.isArray(items)) ?  [items] : items;
+
+    let currentStampPosition = this.currentStampPosition,
+        res = false,
+        tx, ty;
+
+    if (tests.some(test => {
+
+        if (Array.isArray(test)) {
+
+            tx = test[0];
+            ty = test[1];
+        }
+        else if (xta(test, test.x, test.y)) {
+
+            tx = test.x;
+            ty = test.y;
+        }
+        else return false;
+
+        if (!tx.toFixed || !ty.toFixed || isNaN(tx) || isNaN(ty)) return false;
+
+        let v = requestVector(currentStampPosition).vectorSubtract(test);
+
+        if (v.getMagnitude() < this.hitRadius) res = true;
+
+        releaseVector(v);
+
+        return res;
+
+    }, this)) {
+
+        let r = this.checkHitReturn(tx, ty, mycell);
+
+        return r;
+    }
+    return false;
 };
 
 
