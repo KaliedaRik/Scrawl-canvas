@@ -253,6 +253,11 @@ import {
 
 
 import { 
+    makeTracer,
+} from './factory/tracer.js';
+
+
+import { 
     makeTween,
 } from './factory/tween.js';
 
@@ -477,6 +482,10 @@ export default {
 
     // factory/ticker.js
     makeTicker,
+
+
+    // factory/tracer.js
+    makeTracer,
 
 
     // factory/tween.js
