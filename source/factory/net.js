@@ -2,8 +2,14 @@
 // Description TODO
 
 
+// #### Demos:
+// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
+// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
+// + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
+
+
 // #### Imports
-import { constructors, artefact, world, styles, particle } from '../core/library.js';
+import { constructors, artefact, entity, world, styles, particle } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
@@ -82,17 +88,21 @@ let defaultAttributes = {
     liquidFriction: 1, 
     solidFriction: 1,
 
-    // weakNet, strongNet
+    // weak-net, strong-net
     rows: 0,
     columns: 0, 
     rowDistance: 0,
     columnDistance: 0,
-    showSprings: false,
-    showSpringsColor: '#000000',
+
+    // weak-shape, strong-shape
+    shapeTemplate: null,
+    precision: 20,
 
     // Spring
     springConstant: 50,
     damperConstant: 10,
+    showSprings: false,
+    showSpringsColor: '#000000',
 
     // This is a ratio figure, not the actual rest length. If == 1, spring restLength will equal the initial distance between the two particles. < 1 and the length will be proportionately smaller; > 1 gives results in a longer length
     restLength: 1,
@@ -112,7 +122,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 P.packetExclusions = pushUnique(P.packetExclusions, ['forces', 'springs', 'particleStore']);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
 P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, ['world', 'artefact']);
+P.packetObjects = pushUnique(P.packetObjects, ['world', 'artefact', 'shapeTemplate']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['generate', 'postGenerate', 'stampAction']);
 
 P.finalizePacketOut = function (copy, items) {
@@ -127,18 +137,6 @@ P.finalizePacketOut = function (copy, items) {
             else if (isa_obj(f) && f.name) tempForces.push(f.name);
         });
         copy.forces = tempForces;
-    }
-
-    let springs = items.springs || this.springs || false;
-    if (springs) {
-
-        let tempSprings = [];
-        this.springs.forEach(s => {
-
-            if (s.substring) tempSprings.push(s);
-            else if (isa_obj(s) && s.name) tempSprings.push(s.name);
-        });
-        copy.springs = tempSprings;
     }
 
     let tempParticles = [];
@@ -213,6 +211,16 @@ S.artefact = function (item) {
     else if (isa_obj(item) && item.isArtefact) art = item;
 
     if (art) this.artefact = art;
+};
+
+S.shapeTemplate = function (item) {
+
+    let art;
+
+    if (item.substring) art = entity[item];
+    else if (isa_obj(item) && item.isArtefact && xt(item.species)) art = item;
+
+    if (art) this.shapeTemplate = art;
 };
 
 // #### Prototype functions
@@ -474,68 +482,67 @@ const generators = {
 
         let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
 
-        let [x, y] = this.currentStampPosition;
-        let [width, height] = host.currentDimensions;
+        if (host && rows > 0 && columns > 0) {
 
-        let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
-        let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
+            let [x, y] = this.currentStampPosition;
+            let [width, height] = host.currentDimensions;
 
-        let dx, dy, p, i, j;
+            let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
+            let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
 
-        // generate particles
-        for (i = 0; i < rows; i++) {
+            let dx, dy, p, i, j;
 
-            dy = (deltaR * i) + y;
+            // generate particles
+            for (i = 0; i < rows; i++) {
 
-            for (j = 0; j < columns; j++) {
+                dy = (deltaR * i) + y;
 
-                dx = (deltaC * j) + x;
+                for (j = 0; j < columns; j++) {
 
-                p = makeParticle({
+                    dx = (deltaC * j) + x;
 
-                    name: `${name}-${i}-${j}`,
+                    p = makeParticle({
 
-                    positionX: dx,
-                    positionY: dy,
-                    positionZ: 0,
+                        name: `${name}-${i}-${j}`,
 
-                    velocityX: 0,
-                    velocityY: 0,
-                    velocityZ: 0,
+                        positionX: dx,
+                        positionY: dy,
+                        positionZ: 0,
 
-                    historyLength, 
-                    engine, 
-                    forces, 
+                        velocityX: 0,
+                        velocityY: 0,
+                        velocityZ: 0,
 
-                    mass,
-                    area,  
-                    airFriction,  
-                    liquidFriction,  
-                    solidFriction,  
+                        historyLength, 
+                        engine, 
+                        forces, 
 
-                    fill: artefact.get('fillStyle'),
-                    stroke: artefact.get('strokeStyle'),
-                });
+                        mass,
+                        area,  
+                        airFriction,  
+                        liquidFriction,  
+                        solidFriction,  
 
-                p.run(0, 0, false);
+                        fill: artefact.get('fillStyle'),
+                        stroke: artefact.get('strokeStyle'),
+                    });
 
-                particleStore.push(p);
+                    p.run(0, 0, false);
+
+                    particleStore.push(p);
+                }
             }
-        }
 
-        // generate springs
-        for (i = 0; i < rows; i++) {
+            const springMaker = function (myF, myT) {
 
-            for (j = 0; j < columns - 1; j++) {
+                let v, l, s;
 
-                let f = particle[`${name}-${i}-${j}`],
-                    t = particle[`${name}-${i}-${j + 1}`],
-                    v = requestVector(f.position).vectorSubtract(t.position),
-                    l = v.getMagnitude();
+                v = requestVector(f.position).vectorSubtract(t.position);
+                l = v.getMagnitude();
 
-                let s = makeSpring({
+                s = makeSpring({
 
-                    name: `${name}-horizontal-${i}-${j}`,
+                    name: `${name}-link-${i}-${i+1}`,
 
                     particleFrom: f,
                     particleTo: t,
@@ -548,33 +555,29 @@ const generators = {
 
                 springs.push(s);
                 releaseVector(v);
+            };
+
+            let f, t;
+
+            // generate springs
+            for (i = 0; i < rows; i++) {
+
+                for (j = 0; j < columns - 1; j++) {
+
+                    f = particle[`${name}-${i}-${j}`];
+                    t = particle[`${name}-${i}-${j + 1}`];
+                    springMaker(f, t);
+                }
             }
-        }
 
-        for (i = 0; i < columns; i++) {
+            for (i = 0; i < columns; i++) {
 
-            for (j = 0; j < rows - 1; j++) {
+                for (j = 0; j < rows - 1; j++) {
 
-                let f = particle[`${name}-${j}-${i}`],
-                    t = particle[`${name}-${j + 1}-${i}`],
-                    v = requestVector(f.position).vectorSubtract(t.position),
-                    l = v.getMagnitude();
-
-                let s = makeSpring({
-
-                    name: `${name}-vertical-${i}-${j}`,
-
-                    particleFrom: f,
-                    particleTo: t,
-
-                    springConstant, 
-                    damperConstant,
-
-                    restLength: l * restLength,
-                });
-
-                springs.push(s);
-                releaseVector(v);
+                    f = particle[`${name}-${j}-${i}`];
+                    t = particle[`${name}-${j + 1}-${i}`];
+                    springMaker(f, t);
+                }
             }
         }
     },
@@ -583,44 +586,183 @@ const generators = {
 
         let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
 
-        let [x, y] = this.currentStampPosition;
-        let [width, height] = host.currentDimensions;
+        if (host && rows > 0 && columns > 0) {
 
-        let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
-        let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
+            let [x, y] = this.currentStampPosition;
+            let [width, height] = host.currentDimensions;
 
-        let dx, dy, p, i, j;
+            let deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
+            let deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
 
-        // generate particles
-        for (i = 0; i < rows; i++) {
+            let dx, dy, p, i, j;
 
-            dy = (deltaR * i) + y;
+            // generate particles
+            for (i = 0; i < rows; i++) {
 
-            for (j = 0; j < columns; j++) {
+                dy = (deltaR * i) + y;
 
-                dx = (deltaC * j) + x;
+                for (j = 0; j < columns; j++) {
+
+                    dx = (deltaC * j) + x;
+
+                    p = makeParticle({
+
+                        name: `${name}-${i}-${j}`,
+
+                        positionX: dx,
+                        positionY: dy,
+                        positionZ: 0,
+
+                        velocityX: 0,
+                        velocityY: 0,
+                        velocityZ: 0,
+
+                        historyLength, 
+                        engine, 
+                        forces, 
+
+                        mass,
+                        area,  
+                        airFriction,  
+                        liquidFriction,  
+                        solidFriction,  
+
+                        fill: artefact.get('fillStyle'),
+                        stroke: artefact.get('strokeStyle'),
+                    });
+
+                    p.run(0, 0, false);
+
+                    particleStore.push(p);
+                }
+            }
+
+            const springMaker = function (myF, myT) {
+
+                let v, l, s;
+
+                v = requestVector(f.position).vectorSubtract(t.position);
+                l = v.getMagnitude();
+
+                s = makeSpring({
+
+                    name: `${name}-link-${i}-${i+1}`,
+
+                    particleFrom: f,
+                    particleTo: t,
+
+                    springConstant, 
+                    damperConstant,
+
+                    restLength: l * restLength,
+                });
+
+                springs.push(s);
+                releaseVector(v);
+            };
+
+            let f, t;
+
+            // generate springs
+            for (i = 0; i < rows; i++) {
+
+                for (j = 0; j < columns - 1; j++) {
+
+                    f = particle[`${name}-${i}-${j}`];
+                    t = particle[`${name}-${i}-${j + 1}`];
+                    springMaker(f, t);
+                }
+            }
+
+            for (i = 0; i < columns; i++) {
+
+                for (j = 0; j < rows - 1; j++) {
+
+                    f = particle[`${name}-${j}-${i}`];
+                    t = particle[`${name}-${j + 1}-${i}`];
+                    springMaker(f, t);
+                }
+            }
+
+            for (i = 0; i < columns - 1; i++) {
+
+                for (j = 0; j < rows - 1; j++) {
+
+                    f = particle[`${name}-${j}-${i}`];
+                    t = particle[`${name}-${j + 1}-${i + 1}`];
+                    springMaker(f, t);
+                }
+            }
+
+            for (i = 0; i < columns - 1; i++) {
+
+                for (j = rows - 1; j > 0; j--) {
+
+                    f = particle[`${name}-${j}-${i}`];
+                    t = particle[`${name}-${j - 1}-${i + 1}`];
+                    springMaker(f, t);
+                }
+            }
+        }
+    },
+
+    'weak-shape': function (host) {
+
+        let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision } = this;
+
+        const springMaker = function (myF, myT) {
+
+            let v, l, s;
+
+            v = requestVector(f.position).vectorSubtract(t.position);
+            l = v.getMagnitude();
+
+            s = makeSpring({
+
+                name: `${name}-link-${i}-${i+1}`,
+
+                particleFrom: f,
+                particleTo: t,
+
+                springConstant, 
+                damperConstant,
+
+                restLength: l * restLength,
+            });
+
+            springs.push(s);
+            releaseVector(v);
+        };
+
+        let i, p, f, t;
+
+        if (shapeTemplate && precision) {
+
+            for (i = 0; i < precision; i++) {
+
+                let coords = shapeTemplate.getPathPositionData(i / precision);
 
                 p = makeParticle({
 
-                    name: `${name}-${i}-${j}`,
+                    name: `${name}-${i}`,
 
-                    positionX: dx,
-                    positionY: dy,
+                    positionX: coords.x,
+                    positionY: coords.y,
                     positionZ: 0,
 
                     velocityX: 0,
                     velocityY: 0,
                     velocityZ: 0,
 
-                    historyLength, 
-                    engine, 
-                    forces, 
+                    historyLength,
+                    engine,
+                    forces,
 
                     mass,
-                    area,  
-                    airFriction,  
-                    liquidFriction,  
-                    solidFriction,  
+                    area,
+                    airFriction,
+                    liquidFriction,
+                    solidFriction,
 
                     fill: artefact.get('fillStyle'),
                     stroke: artefact.get('strokeStyle'),
@@ -630,114 +772,177 @@ const generators = {
 
                 particleStore.push(p);
             }
-        }
 
-        // generate springs
-        for (i = 0; i < rows; i++) {
+            for (i = 0; i < precision - 1; i++) {
 
-            for (j = 0; j < columns - 1; j++) {
-
-                let f = particle[`${name}-${i}-${j}`],
-                    t = particle[`${name}-${i}-${j + 1}`],
-                    v = requestVector(f.position).vectorSubtract(t.position),
-                    l = v.getMagnitude();
-
-                let s = makeSpring({
-
-                    name: `${name}-horizontal-${i}-${j}`,
-
-                    particleFrom: f,
-                    particleTo: t,
-
-                    springConstant, 
-                    damperConstant,
-
-                    restLength: l * restLength,
-                });
-
-                springs.push(s);
-                releaseVector(v);
+                f = particle[`${name}-${i}`];
+                t = particle[`${name}-${i + 1}`];
+                springMaker(f, t);
             }
-        }
 
-        for (i = 0; i < columns; i++) {
+            f = particle[`${name}-${precision - 1}`];
+            t = particle[`${name}-${0}`];
+            springMaker(f, t);
 
-            for (j = 0; j < rows - 1; j++) {
+            for (i = 0; i < precision - 2; i++) {
 
-                let f = particle[`${name}-${j}-${i}`],
-                    t = particle[`${name}-${j + 1}-${i}`],
-                    v = requestVector(f.position).vectorSubtract(t.position),
-                    l = v.getMagnitude();
-
-                let s = makeSpring({
-
-                    name: `${name}-vertical-${i}-${j}`,
-
-                    particleFrom: f,
-                    particleTo: t,
-
-                    springConstant, 
-                    damperConstant,
-
-                    restLength: l * restLength,
-                });
-
-                springs.push(s);
-                releaseVector(v);
+                f = particle[`${name}-${i}`];
+                t = particle[`${name}-${i + 2}`];
+                springMaker(f, t);
             }
-        }
 
-        for (i = 0; i < columns - 1; i++) {
+            f = particle[`${name}-${precision - 2}`];
+            t = particle[`${name}-${0}`];
+            springMaker(f, t);
 
-            for (j = 0; j < rows - 1; j++) {
+            f = particle[`${name}-${precision - 1}`];
+            t = particle[`${name}-${1}`];
+            springMaker(f, t);
 
-                let f = particle[`${name}-${j}-${i}`],
-                    t = particle[`${name}-${j + 1}-${i + 1}`],
-                    v = requestVector(f.position).vectorSubtract(t.position),
-                    l = v.getMagnitude();
+            for (i = 0; i < precision - 3; i++) {
 
-                let s = makeSpring({
-
-                    name: `${name}-diagonal-right-${i}-${j}`,
-
-                    particleFrom: f,
-                    particleTo: t,
-
-                    springConstant, 
-                    damperConstant,
-
-                    restLength: l * restLength,
-                });
-
-                springs.push(s);
-                releaseVector(v);
+                f = particle[`${name}-${i}`];
+                t = particle[`${name}-${i + 3}`];
+                springMaker(f, t);
             }
+
+            f = particle[`${name}-${precision - 3}`];
+            t = particle[`${name}-${0}`];
+            springMaker(f, t);
+
+            f = particle[`${name}-${precision - 2}`];
+            t = particle[`${name}-${1}`];
+            springMaker(f, t);
+
+            f = particle[`${name}-${precision - 1}`];
+            t = particle[`${name}-${2}`];
+            springMaker(f, t);
         }
+    },
 
-        for (i = 0; i < columns - 1; i++) {
+    'strong-shape': function (host) {
 
-            for (j = rows - 1; j > 0; j--) {
+        let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision } = this;
 
-                let f = particle[`${name}-${j}-${i}`],
-                    t = particle[`${name}-${j - 1}-${i + 1}`],
-                    v = requestVector(f.position).vectorSubtract(t.position),
-                    l = v.getMagnitude();
+        const springMaker = function (myF, myT) {
 
-                let s = makeSpring({
+            let v, l, s;
 
-                    name: `${name}-diagonal-left-${i}-${j}`,
+            v = requestVector(f.position).vectorSubtract(t.position);
+            l = v.getMagnitude();
 
-                    particleFrom: f,
-                    particleTo: t,
+            s = makeSpring({
 
-                    springConstant, 
-                    damperConstant,
+                name: `${name}-link-${i}-${i+1}`,
 
-                    restLength: l * restLength,
+                particleFrom: f,
+                particleTo: t,
+
+                springConstant, 
+                damperConstant,
+
+                restLength: l * restLength,
+            });
+
+            springs.push(s);
+            releaseVector(v);
+        };
+
+        let i, p, f, t;
+
+        if (shapeTemplate && precision) {
+
+            for (i = 0; i < precision; i++) {
+
+                let coords = shapeTemplate.getPathPositionData(i / precision);
+
+                p = makeParticle({
+
+                    name: `${name}-${i}`,
+
+                    positionX: coords.x,
+                    positionY: coords.y,
+                    positionZ: 0,
+
+                    velocityX: 0,
+                    velocityY: 0,
+                    velocityZ: 0,
+
+                    historyLength,
+                    engine,
+                    forces,
+
+                    mass,
+                    area,
+                    airFriction,
+                    liquidFriction,
+                    solidFriction,
+
+                    fill: artefact.get('fillStyle'),
+                    stroke: artefact.get('strokeStyle'),
                 });
 
-                springs.push(s);
-                releaseVector(v);
+                p.run(0, 0, false);
+
+                particleStore.push(p);
+            }
+
+            for (i = 0; i < precision - 1; i++) {
+
+                f = particle[`${name}-${i}`];
+                t = particle[`${name}-${i + 1}`];
+                springMaker(f, t);
+            }
+
+            f = particle[`${name}-${precision - 1}`];
+            t = particle[`${name}-${0}`];
+            springMaker(f, t);
+
+            for (i = 0; i < precision - 2; i++) {
+
+                f = particle[`${name}-${i}`];
+                t = particle[`${name}-${i + 2}`];
+                springMaker(f, t);
+            }
+
+            f = particle[`${name}-${precision - 2}`];
+            t = particle[`${name}-${0}`];
+            springMaker(f, t);
+
+            f = particle[`${name}-${precision - 1}`];
+            t = particle[`${name}-${1}`];
+            springMaker(f, t);
+
+            for (i = 0; i < precision - 3; i++) {
+
+                f = particle[`${name}-${i}`];
+                t = particle[`${name}-${i + 3}`];
+                springMaker(f, t);
+            }
+
+            f = particle[`${name}-${precision - 3}`];
+            t = particle[`${name}-${0}`];
+            springMaker(f, t);
+
+            f = particle[`${name}-${precision - 2}`];
+            t = particle[`${name}-${1}`];
+            springMaker(f, t);
+
+            f = particle[`${name}-${precision - 1}`];
+            t = particle[`${name}-${2}`];
+            springMaker(f, t);
+
+            let halfPrecision = Math.floor(precision / 2);
+
+            for (i = 0; i < precision - halfPrecision; i++) {
+
+                f = particle[`${name}-${i}`];
+
+                if (i + halfPrecision < precision - 1) {
+
+                    t = particle[`${name}-${i + halfPrecision}`];
+                    springMaker(f, t);
+                }
             }
         }
     },

@@ -100,6 +100,7 @@ const myNet = scrawl.makeNet({
     showSprings: true,
     showSpringsColor: 'green',
 
+    mass: 1,
     forces: ['gravity', 'wind'],
 
     engine: 'runge-kutta',
@@ -162,6 +163,7 @@ let report = function () {
         testMessage = document.querySelector('#reportmessage');
 
     let springConst = document.querySelector('#springConstant'),
+        mass = document.querySelector('#mass'),
         restLength = document.querySelector('#restLength'),
         tickMultiplier = document.querySelector('#tickMultiplier'),
         damperConst = document.querySelector('#damperConstant');
@@ -175,6 +177,7 @@ let report = function () {
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     Tick multiplier: ${tickMultiplier.value}
+    Particle mass: ${mass.value}
     Rest length multiplier: ${restLength.value}
     Wind speed: ${myWorld.wind.toFixed(2)}
     Spring constant: ${springConst.value}
@@ -203,6 +206,7 @@ const updateSprings = function (e) {
         if (e.target.id === 'restLength') myNet.set({ restLength: parseFloat(e.target.value)});
         if (e.target.id === 'generate') myNet.set({ generate: e.target.value});
         if (e.target.id === 'engine') myNet.set({ engine: e.target.value});
+        if (e.target.id === 'mass') myNet.set({ mass: parseFloat(e.target.value)});
         if (e.target.id === 'tickMultiplier') myWorld.set({ tickMultiplier: parseFloat(e.target.value)});
 
         myNet.restart();
@@ -214,6 +218,7 @@ document.querySelector('#generate').value = 'weak-net';
 document.querySelector('#springConstant').value = 50;
 document.querySelector('#damperConstant').value = 10;
 document.querySelector('#restLength').value = 1;
+document.querySelector('#mass').value = 1;
 document.querySelector('#engine').value = 'runge-kutta';
 document.querySelector('#tickMultiplier').value = 2;
 

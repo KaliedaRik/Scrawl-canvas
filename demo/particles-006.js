@@ -1,5 +1,5 @@
 // # Demo Particles 006 
-// Fixed number of 'eternal' Particles in a field; preAction and postAction functionality
+// Fixed number of particles in a field; preAction and postAction functionality
 
 // [Run code](../../demo/particles-006.html)
 import scrawl from '../source/scrawl.js'

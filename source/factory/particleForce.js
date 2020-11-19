@@ -4,6 +4,8 @@
 // #### Demos:
 // + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
 // + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
+// + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
+// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
 
 
 // #### Imports

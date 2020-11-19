@@ -1,7 +1,7 @@
-// # Demo Particles 009 
-// Net particles: drag-and-drop; collisions
+// # Demo Particles 010 
+// Net entity: using a shape path as a net template
 
-// [Run code](../../demo/particles-009.html)
+// [Run code](../../demo/particles-010.html)
 import scrawl from '../source/scrawl.js'
 
 
@@ -12,58 +12,30 @@ canvas.setBase({
     backgroundColor: 'slategray',
 });
 
-scrawl.makeLine({
 
-    name: 'topline',
+scrawl.makeShape({
 
-    startX: '10%',
-    startY: '5%',
-    endX: '90%',
-    endY: '5%',
+    name: 'my-first-template-arrow',
 
-    lineWidth: 20,
-    lineCap: 'round',
-    strokeStyle: 'brown',
+    pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
-    method: 'draw',
-});
-
-
-const bigball = scrawl.makeWheel({
-
-    name: 'big-ball',
-    radius: 80,
+    start: ['33%', '33%'],
     handle: ['center', 'center'],
-    start: ['center', 320],
 
-    fillStyle: 'coral',
-    strokeStyle: 'orange',
-    lineWidth: 3,
-    method: 'fillThenDraw',
+    scale: 0.3,
+    roll: -90,
+    flipUpend: true,
+
+    useAsPath: true,
+
+}).clone({
+
+    name: 'my-second-template-arrow',
+    start: ['67%', '67%'],
 });
 
-scrawl.makeForce({
 
-    name: 'wheel-repellor',
-    action: (particle, world, host) => {
 
-        let {load, position} = particle;
-
-        let ballPosition = bigball.get('position');
-
-        let v = scrawl.requestVector(ballPosition).vectorSubtract(position);
-
-        let mag = v.getMagnitude();
-
-        if (mag && mag < bigball.get('radius')) {
-
-            v.scalarMultiply(1 / (mag / 1000));
-            load.vectorSubtract(v)
-        }
-
-        scrawl.releaseVector(v);
-    },
-});
 
 
 // Create a World object; add some user-defined attributes to it
@@ -76,54 +48,17 @@ let myWorld = scrawl.makeWorld({
 
 const myNet = scrawl.makeNet({
 
-    name: 'test-net',
+    name: 'weak-arrow',
     world: myWorld,
 
-    pivot: 'topline',
-    lockTo: 'pivot',
+    generate: 'weak-shape',
+    shapeTemplate: 'my-first-template-arrow',
+    precision: 40,
 
-    generate: 'weak-net',
-
-    postGenerate: function () {
-
-        const regex = RegExp('-0-[0-9]+$');
-
-        this.particleStore.forEach(p => {
-
-            if (regex.test(p.name)) {
-
-                p.set({ 
-                    fill: 'lightgrey',
-                    stroke: 'red',
-                    forces: [],
-                });
-
-                this.springs.forEach(s => {
-
-                    if (s && s.particleFrom && s.particleFrom.name === p.name) {
-
-                        s.particleFromIsStatic = true;
-                    }
-                    if (s && s.particleTo && s.particleTo.name === p.name) {
-
-                        s.particleToIsStatic = true;
-                    }
-                })
-            }
-        });
-    },
-
-    rows: 15,
-    columns: 17,
-    rowDistance: 25,
-    columnDistance: 30,
     showSprings: true,
     showSpringsColor: 'azure',
 
-    forces: ['gravity', 'wheel-repellor'],
-
-    mass: 3,
-    springConstant: 100,
+    springConstant: 300,
 
     engine: 'runge-kutta',
 
@@ -163,8 +98,73 @@ const myNet = scrawl.makeNet({
 
     particlesAreDraggable: true,
 
-}).run();
+})
 
+myNet.run();
+
+// myNet.clone({
+
+//     name: 'strong-arrow',
+//     generate: 'strong-shape',
+//     shapeTemplate: 'my-second-template-arrow',
+
+// }).run;
+
+const myNet2 = scrawl.makeNet({
+
+    name: 'strong-arrow',
+    world: myWorld,
+
+    generate: 'strong-shape',
+    shapeTemplate: 'my-second-template-arrow',
+    precision: 40,
+
+    showSprings: true,
+    showSpringsColor: 'azure',
+
+    springConstant: 300,
+
+    engine: 'runge-kutta',
+
+    artefact: scrawl.makeWheel({
+
+        name: 'particle-wheel',
+        radius: 7,
+
+        handle: ['center', 'center'],
+
+        method: 'fillThenDraw',
+        fillStyle: 'yellow',
+        strokeStyle: 'gold',
+
+        visibility: false, 
+
+        noUserInteraction: true,
+        noPositionDependencies: true,
+        noFilters: true,
+        noDeltaUpdates: true,
+    }),
+
+    stampAction: function (artefact, particle, host) {
+
+        if (particle && particle.history && particle.history[0]) {
+
+            let [r, z, startX, startY] = particle.history[0];
+
+            artefact.simpleStamp(host, { 
+                startX, 
+                startY,
+                fillStyle: particle.fill, 
+                strokeStyle: particle.stroke, 
+            });
+        }
+    },
+
+    particlesAreDraggable: true,
+
+});
+
+myNet2.run();
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -199,7 +199,7 @@ scrawl.makeGroup({
 
     name: 'my-draggable-group',
 
-}).addArtefacts('test-net', 'big-ball');
+}).addArtefacts('weak-arrow', 'strong-arrow');
 
 scrawl.makeDragZone({
 
