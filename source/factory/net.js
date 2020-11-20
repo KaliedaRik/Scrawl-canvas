@@ -83,10 +83,6 @@ let defaultAttributes = {
     forces: null,
     springs: null,
     mass: 1,
-    area: 1,
-    airFriction: 1,
-    liquidFriction: 1, 
-    solidFriction: 1,
 
     // weak-net, strong-net
     rows: 0,
@@ -97,6 +93,7 @@ let defaultAttributes = {
     // weak-shape, strong-shape
     shapeTemplate: null,
     precision: 20,
+    joinTemplateEnds: false,
 
     // Spring
     springConstant: 50,
@@ -480,7 +477,7 @@ const generators = {
 
     'weak-net': function (host) {
 
-        let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
+        let { particleStore, artefact, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
 
         if (host && rows > 0 && columns > 0) {
 
@@ -518,10 +515,6 @@ const generators = {
                         forces, 
 
                         mass,
-                        area,  
-                        airFriction,  
-                        liquidFriction,  
-                        solidFriction,  
 
                         fill: artefact.get('fillStyle'),
                         stroke: artefact.get('strokeStyle'),
@@ -584,7 +577,7 @@ const generators = {
 
     'strong-net': function (host) {
 
-        let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
+        let { particleStore, artefact, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
 
         if (host && rows > 0 && columns > 0) {
 
@@ -622,10 +615,6 @@ const generators = {
                         forces, 
 
                         mass,
-                        area,  
-                        airFriction,  
-                        liquidFriction,  
-                        solidFriction,  
 
                         fill: artefact.get('fillStyle'),
                         stroke: artefact.get('strokeStyle'),
@@ -708,7 +697,7 @@ const generators = {
 
     'weak-shape': function (host) {
 
-        let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision } = this;
+        let { particleStore, artefact, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
 
         const springMaker = function (myF, myT) {
 
@@ -759,10 +748,6 @@ const generators = {
                     forces,
 
                     mass,
-                    area,
-                    airFriction,
-                    liquidFriction,
-                    solidFriction,
 
                     fill: artefact.get('fillStyle'),
                     stroke: artefact.get('strokeStyle'),
@@ -780,9 +765,12 @@ const generators = {
                 springMaker(f, t);
             }
 
-            f = particle[`${name}-${precision - 1}`];
-            t = particle[`${name}-${0}`];
-            springMaker(f, t);
+            if (joinTemplateEnds) {
+
+                f = particle[`${name}-${precision - 1}`];
+                t = particle[`${name}-${0}`];
+                springMaker(f, t);
+            }
 
             for (i = 0; i < precision - 2; i++) {
 
@@ -791,13 +779,16 @@ const generators = {
                 springMaker(f, t);
             }
 
-            f = particle[`${name}-${precision - 2}`];
-            t = particle[`${name}-${0}`];
-            springMaker(f, t);
+            if (joinTemplateEnds) {
 
-            f = particle[`${name}-${precision - 1}`];
-            t = particle[`${name}-${1}`];
-            springMaker(f, t);
+                f = particle[`${name}-${precision - 2}`];
+                t = particle[`${name}-${0}`];
+                springMaker(f, t);
+
+                f = particle[`${name}-${precision - 1}`];
+                t = particle[`${name}-${1}`];
+                springMaker(f, t);
+            }
 
             for (i = 0; i < precision - 3; i++) {
 
@@ -806,23 +797,26 @@ const generators = {
                 springMaker(f, t);
             }
 
-            f = particle[`${name}-${precision - 3}`];
-            t = particle[`${name}-${0}`];
-            springMaker(f, t);
+            if (joinTemplateEnds) {
 
-            f = particle[`${name}-${precision - 2}`];
-            t = particle[`${name}-${1}`];
-            springMaker(f, t);
+                f = particle[`${name}-${precision - 3}`];
+                t = particle[`${name}-${0}`];
+                springMaker(f, t);
 
-            f = particle[`${name}-${precision - 1}`];
-            t = particle[`${name}-${2}`];
-            springMaker(f, t);
+                f = particle[`${name}-${precision - 2}`];
+                t = particle[`${name}-${1}`];
+                springMaker(f, t);
+
+                f = particle[`${name}-${precision - 1}`];
+                t = particle[`${name}-${2}`];
+                springMaker(f, t);
+            }
         }
     },
 
     'strong-shape': function (host) {
 
-        let { particleStore, artefact, historyLength, engine, forces, springs, mass, area, airFriction, liquidFriction, solidFriction, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision } = this;
+        let { particleStore, artefact, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
 
         const springMaker = function (myF, myT) {
 
@@ -873,10 +867,6 @@ const generators = {
                     forces,
 
                     mass,
-                    area,
-                    airFriction,
-                    liquidFriction,
-                    solidFriction,
 
                     fill: artefact.get('fillStyle'),
                     stroke: artefact.get('strokeStyle'),
@@ -894,9 +884,12 @@ const generators = {
                 springMaker(f, t);
             }
 
-            f = particle[`${name}-${precision - 1}`];
-            t = particle[`${name}-${0}`];
-            springMaker(f, t);
+            if (joinTemplateEnds) {
+
+                f = particle[`${name}-${precision - 1}`];
+                t = particle[`${name}-${0}`];
+                springMaker(f, t);
+            }
 
             for (i = 0; i < precision - 2; i++) {
 
@@ -905,13 +898,16 @@ const generators = {
                 springMaker(f, t);
             }
 
-            f = particle[`${name}-${precision - 2}`];
-            t = particle[`${name}-${0}`];
-            springMaker(f, t);
+            if (joinTemplateEnds) {
 
-            f = particle[`${name}-${precision - 1}`];
-            t = particle[`${name}-${1}`];
-            springMaker(f, t);
+                f = particle[`${name}-${precision - 2}`];
+                t = particle[`${name}-${0}`];
+                springMaker(f, t);
+
+                f = particle[`${name}-${precision - 1}`];
+                t = particle[`${name}-${1}`];
+                springMaker(f, t);
+            }
 
             for (i = 0; i < precision - 3; i++) {
 
@@ -920,17 +916,20 @@ const generators = {
                 springMaker(f, t);
             }
 
-            f = particle[`${name}-${precision - 3}`];
-            t = particle[`${name}-${0}`];
-            springMaker(f, t);
+            if (joinTemplateEnds) {
 
-            f = particle[`${name}-${precision - 2}`];
-            t = particle[`${name}-${1}`];
-            springMaker(f, t);
+                f = particle[`${name}-${precision - 3}`];
+                t = particle[`${name}-${0}`];
+                springMaker(f, t);
 
-            f = particle[`${name}-${precision - 1}`];
-            t = particle[`${name}-${2}`];
-            springMaker(f, t);
+                f = particle[`${name}-${precision - 2}`];
+                t = particle[`${name}-${1}`];
+                springMaker(f, t);
+
+                f = particle[`${name}-${precision - 1}`];
+                t = particle[`${name}-${2}`];
+                springMaker(f, t);
+            }
 
             let halfPrecision = Math.floor(precision / 2);
 

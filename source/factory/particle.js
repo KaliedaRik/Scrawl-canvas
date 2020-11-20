@@ -12,11 +12,13 @@
 // + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
 // + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
 // + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
+// + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
+// + [particles-011](../../demo/particles-011.html) - Tracer entity: basic functionality
 
 
 
 // #### Imports
-import { constructors, artefact, force } from '../core/library.js';
+import { constructors, artefact, force, spring } from '../core/library.js';
 import { mergeOver, pushUnique, λnull, isa_obj } from '../core/utilities.js';
 
 import { requestParticleHistoryObject, releaseParticleHistoryObject } from './particleHistory.js';
@@ -77,23 +79,8 @@ let defaultAttributes = {
 // __forces__ - 
     forces: null,
 
-// __springs__ - 
-    springs: null,
-
 // __mass__ - 
     mass: 1,
-
-// __area__ - 
-    area: 1,
-
-// __airFriction__ - 
-    airFriction: 1,
-
-// __liquidFriction__ - 
-    liquidFriction: 1, 
-
-// __solidFriction__ - 
-    solidFriction: 1,
 
 // __fill__ and __stroke__ - 
     fill: '#000000',
@@ -117,6 +104,16 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);
 P.factoryKill = function () {
 
     this.history.forEach(h => releaseParticleHistoryObject(h));
+
+    let deadSprings = [];
+
+    spring.forEach(s => {
+
+        if (s.particleFrom && s.particleFrom.name === this.name) deadSprings.push[s];
+        else if (s.particleTo && s.particleTo.name === this.name) deadSprings.push[s];
+    });
+
+    deadSprings.forEach(s => s.kill());
 };
 
 
@@ -193,7 +190,6 @@ S.forces = function (item) {
 
 // Remove certain attributes from the set/deltaSet functionality
 S.load = λnull;
-S.springs = λnull;
 S.history = λnull;
 
 D.load = λnull;
@@ -210,7 +206,7 @@ P.initializePositions = function () {
     this.load = makeVector();
 
     this.forces = [];
-    this.springs = [];
+    // this.springs = [];
     this.history = [];
 
     this.isRunning = false;

@@ -96,16 +96,8 @@ let defaultAttributes = {
     engine: 'euler',
     forces: null,
     mass: 1,
-    area: 1,
-    airFriction: 1,
-    liquidFriction: 1, 
-    solidFriction: 1,
 
     massVariation: 0,
-    areaVariation: 0,
-    airFrictionVariation: 0,
-    liquidFrictionVariation: 0, 
-    solidFrictionVariation: 0,
 
     fillColorFactory: null,
     strokeColorFactory: null,
@@ -133,7 +125,6 @@ let defaultAttributes = {
     generateAlongPath: false,
     generateInArea: false,
 
-    // 
     particleStore: null,
 
     resetAfterBlur: 3,
@@ -404,7 +395,7 @@ P.addParticles = function (req) {
     let i, p, cx, cy, temp;
 
     // The emitter object retains details of the initial values required for eachg particle it generates
-    let {historyLength, engine, forces, mass, massVariation, area, areaVariation, airFriction, airFrictionVariation, liquidFriction, liquidFrictionVariation, solidFriction, solidFrictionVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea} = this;
+    let {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea} = this;
 
     let {x, y, z} = range;
     let {x:fx, y:fy, z:fz} = rangeFrom;
@@ -473,10 +464,6 @@ P.addParticles = function (req) {
                 forces, 
 
                 mass: calc(mass, massVariation), 
-                area: calc(area, areaVariation),  
-                airFriction: calc(airFriction, airFrictionVariation),  
-                liquidFriction: calc(liquidFriction, liquidFrictionVariation),  
-                solidFriction: calc(solidFriction, solidFrictionVariation),  
 
                 fill: fillColorFactory.get('random'),
                 stroke: strokeColorFactory.get('random'),
@@ -517,11 +504,7 @@ P.addParticles = function (req) {
                     forces, 
 
                     mass: calc(mass, massVariation), 
-                    area: calc(area, areaVariation),  
-                    airFriction: calc(airFriction, airFrictionVariation),  
-                    liquidFriction: calc(liquidFriction, liquidFrictionVariation),  
-                    solidFriction: calc(solidFriction, solidFrictionVariation),  
-
+ 
                     fill: fillColorFactory.get('random'),
                     stroke: strokeColorFactory.get('random'),
                 });
@@ -558,10 +541,6 @@ P.addParticles = function (req) {
                 forces, 
 
                 mass: calc(mass, massVariation), 
-                area: calc(area, areaVariation),  
-                airFriction: calc(airFriction, airFrictionVariation),  
-                liquidFriction: calc(liquidFriction, liquidFrictionVariation),  
-                solidFriction: calc(solidFriction, solidFrictionVariation),  
 
                 fill: fillColorFactory.get('random'),
                 stroke: strokeColorFactory.get('random'),

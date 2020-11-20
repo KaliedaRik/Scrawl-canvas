@@ -107,28 +107,6 @@ makeForce({
     },
 });
 
-makeForce({
-
-    name: 'air-drag',
-    action: (particle, world, host) => {
-
-        let {velocity, load, airFriction, area} = particle;
-        let {airDensity, worldScale} = world;
-
-        if (area) {
-
-            let dragForce = requestVector(velocity).reverse().normalize();
-            let magnitude = velocity.getMagnitude()
-            let forceScale = 0.5 * airDensity * magnitude * magnitude * (area * worldScale) * airFriction;
-
-            dragForce.scalarMultiply(forceScale);
-            load.vectorAdd(dragForce);
-
-            releaseVector(dragForce);
-        }
-    },
-});
-
 
 // #### Exports
 export {

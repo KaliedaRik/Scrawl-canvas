@@ -8,11 +8,10 @@ import scrawl from '../source/scrawl.js'
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-scrawl.importDomImage('#bunny');
-
 canvas.setBase({
     backgroundColor: 'aliceblue',
 });
+
 
 scrawl.makeShape({
 
@@ -72,24 +71,19 @@ scrawl.makeTracer({
         if (particle && particle.history) {
 
             let history = particle.history,
-                engine = host.engine,
                 remaining, z, position;
-
-            engine.save();
 
             history.forEach((p, index) => {
 
-                [remaining, z, ...position] = p;
-                
-                artefact.simpleStamp(host, {
-                    start: position,
-                    scale: 0.6,
-                    globalAlpha: 1,
-                    fillStyle: 'red',
-                });
-            });
+                if (index < 10 || (index > 20 && index < 30) || index > 40) {
 
-            engine.restore();
+                    [remaining, z, ...position] = p;
+                    
+                    artefact.simpleStamp(host, {
+                        start: position,
+                    });
+                }
+            });
         }
     },
 }).clone({
@@ -97,35 +91,11 @@ scrawl.makeTracer({
     name: 'trace-2',
     pathPosition: 0.33,
 
-    stampAction: function (artefact, particle, host) {
-
-        if (particle && particle.history) {
-
-            let history = particle.history,
-                engine = host.engine,
-                remaining, z, position;
-
-            engine.save();
-
-            history.forEach((p, index) => {
-
-                [remaining, z, ...position] = p;
-                
-                artefact.simpleStamp(host, {
-                    start: position,
-                    scale: 1,
-                    globalAlpha: 0.2,
-                    fillStyle: 'green',
-                });
-            });
-
-            engine.restore();
-        }
-    },
-}).clone({
-
-    name: 'trace-3',
-    pathPosition: 0.67,
+    artefact: scrawl.library.artefact['burn-1'].clone({
+        name: 'burn-2',
+        fillStyle: 'green',
+        globalAlpha: 0.2,
+    }),
 
     stampAction: function (artefact, particle, host) {
 
@@ -133,10 +103,39 @@ scrawl.makeTracer({
 
             let history = particle.history,
                 len = history.length,
-                engine = host.engine,
                 remaining, z, position;
 
-            engine.save();
+            history.forEach((p, index) => {
+
+                if (index % 3 === 0) {
+
+                    [remaining, z, ...position] = p;
+                    
+                    artefact.simpleStamp(host, {
+                        start: position,
+                        globalAlpha: (len - index) / len,
+                    });
+                }
+            });
+        }
+    },
+}).clone({
+
+    name: 'trace-3',
+    pathPosition: 0.67,
+
+    artefact: scrawl.library.artefact['burn-1'].clone({
+        name: 'burn-3',
+        fillStyle: 'blue',
+    }),
+
+    stampAction: function (artefact, particle, host) {
+
+        if (particle && particle.history) {
+
+            let history = particle.history,
+                len = history.length,
+                remaining, z, position;
 
             history.forEach((p, index) => {
 
@@ -145,12 +144,8 @@ scrawl.makeTracer({
                 artefact.simpleStamp(host, {
                     start: position,
                     scale: ((len - index) / len) * 2,
-                    globalAlpha: 0.2,
-                    fillStyle: 'blue',
                 });
             });
-
-            engine.restore();
         }
     },
 });
@@ -163,10 +158,6 @@ let report = function () {
     let testTicker = Date.now(),
         testTime, testNow, dragging,
         testMessage = document.querySelector('#reportmessage');
-
-    let particlenames = scrawl.library.particlenames,
-        particle = scrawl.library.particle,
-        historyCount;
 
     return function () {
 

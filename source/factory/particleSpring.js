@@ -4,6 +4,7 @@
 // #### Demos:
 // + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
 // + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
+// + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
 
 
 // #### Imports

@@ -12,7 +12,8 @@
 // + [particles-006](../../demo/particles-006.html) - Fixed number of particles in a field; preAction and postAction functionality
 // + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
 // + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
-// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop; collisions
+// + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
+// + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
 
 
 
@@ -54,8 +55,6 @@ const World = function (items = {}) {
 
     this.set(items);
 
-    if (!this.action) this.action = λnull;
-
     return this;
 };
 
@@ -79,12 +78,6 @@ let defaultAttributes = {
     // x, y and z components of __gravity__, measured in meters/secondSquared (used in `gravity` force calculations)
     gravity: null,
 
-    // __airDensity__, measured in kilograms/meter3 (used in `air-drag` force calculations)
-    airDensity: 1.23,
-
-    // __worldScale__ - where a value of 1 represents 1px == 1meterSquared (used in `air-drag` force calculations)
-    worldScale: 0.0001,
-
     // __tickMultiplier__ - a positive float Number value. Larger values increase the physics effect - equivalent to speeding up the animation
     tickMultiplier: 1,
 
@@ -97,7 +90,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-P.packetFunctions = pushUnique(P.packetFunctions, ['action']);
+// No additional packet management functionality required
 
 
 // #### Clone management

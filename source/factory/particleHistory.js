@@ -5,6 +5,8 @@
 // #### Demos:
 // + [particles-001](../../demo/particles-001.html) - Emitter entity, and Particle World, basic functionality
 // + [particles-002](../../demo/particles-002.html) - Emitter using artefacts
+// + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
+// + [particles-011](../../demo/particles-011.html) - Tracer entity: basic functionality
 
 
 // #### Imports

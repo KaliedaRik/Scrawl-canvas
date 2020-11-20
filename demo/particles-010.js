@@ -28,6 +28,8 @@ scrawl.makeShape({
 
     useAsPath: true,
 
+    fillStyle: 'gray',
+
 }).clone({
 
     name: 'my-second-template-arrow',
@@ -51,9 +53,40 @@ const myNet = scrawl.makeNet({
     name: 'weak-arrow',
     world: myWorld,
 
-    generate: 'weak-shape',
     shapeTemplate: 'my-first-template-arrow',
     precision: 40,
+    joinTemplateEnds: true,
+
+    generate: 'weak-shape',
+
+    postGenerate: function () {
+
+        const regex = RegExp('-0$');
+
+        this.particleStore.forEach(p => {
+
+            if (regex.test(p.name)) {
+
+                p.set({ 
+                    fill: 'red',
+                    stroke: 'black',
+                    forces: [],
+                });
+
+                this.springs.forEach(s => {
+
+                    if (s && s.particleFrom && s.particleFrom.name === p.name) {
+
+                        s.particleFromIsStatic = true;
+                    }
+                    if (s && s.particleTo && s.particleTo.name === p.name) {
+
+                        s.particleToIsStatic = true;
+                    }
+                })
+            }
+        });
+    },
 
     showSprings: true,
     showSpringsColor: 'azure',
@@ -115,9 +148,40 @@ const myNet2 = scrawl.makeNet({
     name: 'strong-arrow',
     world: myWorld,
 
-    generate: 'strong-shape',
     shapeTemplate: 'my-second-template-arrow',
     precision: 40,
+    joinTemplateEnds: true,
+
+    generate: 'strong-shape',
+
+    postGenerate: function () {
+
+        const regex = RegExp('-0$');
+
+        this.particleStore.forEach(p => {
+
+            if (regex.test(p.name)) {
+
+                p.set({ 
+                    fill: 'red',
+                    stroke: 'black',
+                    forces: [],
+                });
+
+                this.springs.forEach(s => {
+
+                    if (s && s.particleFrom && s.particleFrom.name === p.name) {
+
+                        s.particleFromIsStatic = true;
+                    }
+                    if (s && s.particleTo && s.particleTo.name === p.name) {
+
+                        s.particleToIsStatic = true;
+                    }
+                })
+            }
+        });
+    },
 
     showSprings: true,
     showSpringsColor: 'azure',
