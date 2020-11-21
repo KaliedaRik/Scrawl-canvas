@@ -1,5 +1,26 @@
 // # Particle factory
-// Description TODO
+// The Scrawl-canvas particle physics engine is a simple system designed to allow developers a way to add particle-based effects to their canvas animation scenes. The physics engine is built on top of the following components:
+// + [Particle objects](./particle.html), which represent a 3-dimensional coordinate - based on a Scrawl-canvas [Vector object](./vector.html) - and include a history of recent positions which we can use to determine how to display that particle on screen.
+// + [History arrays](./particleHistory.html) which can be pooled (reused) to cut down on Array creation and distruction during the animation.
+// + [Force objects](./particleForce.html) which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a __gravity__ force object is pre-defined by Scrawl-canvas.
+// + [Spring objects](./particleSpring.html) used to define a constraint (connection) between two particles in a system.
+// + [World objects](./particleWorld.html) where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.
+//
+// We do not have to handle particle generation and manipulation ourselves. Instead, Scrawl-canvas gives us three dedicated __entitys__ which we use to add particle animation effects to the canvas scene. These entitys are:
+// + [Tracer](./tracer.html) - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.
+// + [Emitter](./emitter.html) - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.
+// + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
+//
+// #### Particle physics
+// The Scrawl-canvas particle physics engine system is based on a fairly classical understanding of particle ___kinetics___ (applying forces and constraints to a small, spherical object in 3D space) and ___kinematics___ (the movement of the small object in response to the forces and constraints applied to it).
+//
+// __Particles__ are represented in the system by a simple Scrawl-canvas object which wraps a set of Scrawl-canvas Vector objects describing the particle's position, velocity and load. The object also includes a history array detailing the recent particle's most recent movements, an array of Force objects, a mass attribute (for gravity calculations), and an engine attribute - particles can use different engines to calculate their movements, depending on the needs of the animation; more precise engines are slower, but more stable.
+// + Note that all Particles are positioned using ___absolute__ (pixel-based) coordinates; they cannot be positioned relatively (using String% values), or by reference to an artefact or another Particle.
+// + Entitys that use Particles for their display - Emitter, Net, Tracer - can, however, use all the normal entity positioning strategies.
+// + All artefacts (including all entitys) can position themselves by reference to a named (non-recycled) Particle.
+//
+// #### The particle pool
+// As part of a particle animation many thousands of Particle objects may need to be generated, used and then discarded. Scrawl-canvas attempts to make this more efficient by pooling particle objects so that they can be reused as the animation progresses. 
 
 
 // #### Demos:
@@ -14,16 +35,17 @@
 // + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
 // + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
 // + [particles-011](../../demo/particles-011.html) - Tracer entity: basic functionality
-
+// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
 
 
 // #### Imports
 import { constructors, artefact, force, spring } from '../core/library.js';
-import { mergeOver, pushUnique, λnull, isa_obj } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull } from '../core/utilities.js';
 
 import { requestParticleHistoryObject, releaseParticleHistoryObject } from './particleHistory.js';
 import { requestVector, releaseVector, makeVector } from './vector.js';
 
+// The Particle object uses the base mixin, thus it supports all the normal Scrawl-canvas functionality such as `get`, `set`, `setDelta`, `clone`, `kill`, etc.
 import baseMix from '../mixin/base.js';
 
 
@@ -44,6 +66,7 @@ const Particle = function (items = {}) {
 // #### Particle prototype
 let P = Particle.prototype = Object.create(Object.prototype);
 
+// Particles have their own section in the Scrawl-canvas library. They are not artefacts or assets.
 P.type = 'Particle';
 P.lib = 'particle';
 P.isArtefact = false;
@@ -58,31 +81,34 @@ P = baseMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-// The __position__ attribute represents a particle's world coordinate, and is held in an `[x, y, z]` Vector object. The default values are `{x:0, y:0, z:0}`, placing the artifact at the world's top-left corner.
+// The __position__ attribute represents a particle's world coordinate, and is held in an `{x:value, y:value, z:value}` Vector object. The default values are `{x:0, y:0, z:0}`, placing the artifact at the Cdell canvas's top-left corner. We can set the position using the __positionX__, __positionY__ and __positionZ__ pseudo-attributes.
     position: null,
 
-// __velocity__ - 
+// __velocity__ - Vector object, generally used internally as part of the particle physics calculation. We can give a particle an initial velocity using the __velocityX__, __velocityY__ and __velocityZ__ pseudo-attributes.
     velocity: null,
 
-// __load__ - 
+// __load__ - Vector object used internally as part of the particle physics calculation. Never attempt to amend this attribute as it gets reset to zero at the start of every Display cycle.
     load: null,
 
-// __history__ - 
+// __history__ - Array used to hold ParticleHistory arrays, which in turn include data on the particles position at a given time, and the time remaining for that particle to live. The latest history arrays are added to the start of the array, with the oldest history arrays at the end of the array.
     history: null,
 
-// __historyLength__ - 
+// __historyLength__ - Number - we control how many ParticleHistory arrays the Particle will retain.
     historyLength: 1,
 
-// __engine__ - 
+// __engine__ - a String value naming the physics engine to be used to calculate this Particle's movement in response to all the forces applied to it. Scrawl-canvas comes with three in-built engines:
+//+ __'euler'__ - the simplest, quickest and least stable engine (default)
+//+ __'runge-kutta'__ - the most complex, slowest and most stable engine
+//+ __'improved-euler'__ - an engine that sits between the other two engines in terms of complexity, speed and stability.
     engine: 'euler',
 
-// __forces__ - 
+// __forces__ - an Array to hold Force objects that will be applied to this Particle.
     forces: null,
 
-// __mass__ - 
+// __mass__ - a Number value representing the Particle's mass (in kg) - this value is used in the gravity force calculation.
     mass: 1,
 
-// __fill__ and __stroke__ - 
+// __fill__ and __stroke__ - CSS color values which can be used to display the Particle during the animation.
     fill: '#000000',
     stroke: '#000000',
 };
@@ -97,7 +123,7 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 
 // #### Clone management
-// No additional clone functionality required
+// In general we don't need to create or clone Particles objects ourselves; their generation is managed behind the scenes by the physics-related entitys.
 
 
 // #### Kill management
@@ -122,12 +148,12 @@ let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
-// __position__, __positionX__, __positionY__, __positionZ__
-// + Currently assuming that arguments to the pseudo-attribute S and D functions are Numbers
+// __positionX__, __positionY__, __positionZ__
 G.positionX = function () { return this.position.x; };
 G.positionY = function () { return this.position.y; };
 G.positionZ = function () { return this.position.z; };
 
+// We return the __position__ value as an `[x, y, z]` Array rather than as an object
 G.position = function () {
 
     let s = this.position;
@@ -147,7 +173,7 @@ D.positionZ = function (coord) { this.position.z += coord; };
 D.position = λnull;
 
 // __velocity__, __velocityX__, __velocityY__, __velocityZ__
-// + Currently assuming that arguments to the pseudo-attribute S and D functions are Numbers
+// + There should be no need to access/amend these values
 G.velocityX = function () { return this.velocity.x; };
 G.velocityY = function () { return this.velocity.y; };
 G.velocityZ = function () { return this.velocity.z; };
@@ -173,8 +199,7 @@ D.velocityZ = function (coord) { this.velocity.z += coord; };
 
 D.velocity = λnull;
 
-// __forces__
-// + Currently assuming that arguments to the pseudo-attribute S and D functions are Numbers
+// __forces__ - generally no need to add forces to Particles ourselves as this is handled by the physics-based entitys
 S.forces = function (item) {
 
     if (item) {
@@ -196,7 +221,7 @@ D.load = λnull;
 
 
 // #### Prototype functions
-// `initializePositions` - Internal function called by all particle factories 
+// `initializePositions` - internal function called by all particle factories 
 // + Setup initial Arrays and Objects.
 P.initializePositions = function () {
 
@@ -206,15 +231,14 @@ P.initializePositions = function () {
     this.load = makeVector();
 
     this.forces = [];
-    // this.springs = [];
     this.history = [];
 
+    // __isRunning__ - a Boolean flag used as part of internal Particle lifetime management
     this.isRunning = false;
 };
 
-
-
-// `applyForces` - calculate the particles's position vector
+// `applyForces` - internal function used to calculate the particles's load vector
+// + Requires both a __world__ object and a __host__ (Cell) object as arguments
 P.applyForces = function (world, host) {
 
     this.load.zero();
@@ -230,6 +254,8 @@ P.applyForces = function (world, host) {
     }
 };
 
+// `update` - internal function used to calculate the Particles's position vector from its load and velocity vectors
+// + Requires both a __tick__ Number (measured in seconds) and a __host__ (Cell) object as arguments
 P.update = function (tick, world) {
 
     if (this.isBeingDragged) this.position.setFromVector(this.isBeingDragged).vectorAdd(this.dragOffset);
@@ -322,9 +348,10 @@ P.manageHistory = function (tick, host) {
     }
 };
 
-// `run` - internal function. We define the triggers that will kill the particle at the same time as we start it running. This function should only be called by an Emitter entity. Note that there is no equivalent 'halt' function; instead, we set the particle's `isRunning` attribute to false to get it removed from the system. 
+// `run` - internal function. We define the triggers that will kill the particle at the same time as we start it running. This function should only be called by an physics entity (Emitter, Net, Tracer). Note that there is no equivalent `halt` function; instead, we set the particle's `isRunning` attribute to false to get it removed from the system. 
 P.run = function (timeKill, radiusKill, killBeyondCanvas) {
 
+    // We can kill a Particle if it has lasted longer than its alloted lifetime. Lifetime (if required) is assigned to the Particle by its entity when generated.
     this.hasLifetime = false;
     if (timeKill) {
 
@@ -332,6 +359,7 @@ P.run = function (timeKill, radiusKill, killBeyondCanvas) {
         this.hasLifetime = true;
     }
 
+    // We can kill a Particle if it has passed a certain distance beyond its initial position. Kill radius value (if required) is assigned to the Particle by its entity when generated.
     this.distanceLimit = 0;
     if (radiusKill) {
         
@@ -339,6 +367,7 @@ P.run = function (timeKill, radiusKill, killBeyondCanvas) {
         this.distanceLimit = radiusKill;
     }
 
+    // We can kill a Particle if it has moved beyond the Cell's canvas's dimensions. This boolean is set on the Particle by its entity when generated.
     this.killBeyondCanvas = killBeyondCanvas;
 
     this.isRunning = true;
@@ -346,7 +375,7 @@ P.run = function (timeKill, radiusKill, killBeyondCanvas) {
 
 
 // #### Factory
-// Scrawl-canvas does not expose the particle factory functions in the scrawl object. Instead, particles are consumed by the [emitter entity factory](./emitter.html) via the particle pool.
+// Scrawl-canvas does not expose the particle factory functions in the scrawl object. Instead, particles are consumed by the physics-based entitys: [Tracer](./tracer.html); [Emitter](./emitter.html); [Net](./net.html).
 const makeParticle = function (items) {
     return new Particle(items);
 };
@@ -355,7 +384,7 @@ constructors.Particle = Particle;
 
 
 // #### Particle pool
-// An attempt to reuse simple particles rather than constantly creating and deleting them
+// An attempt to reuse Particle objects rather than constantly creating and deleting them
 const particlePool = [];
 
 // `exported function` - retrieve a Particle from the particle pool
@@ -388,6 +417,8 @@ const releaseParticle = function (item) {
 };
 
 
+// #### Particle physics engines
+// These functions are called by the `update` function which assigns the Particle object as `this` as part of the call.
 const particleEngines = {
 
     'euler': function (tick) {
@@ -462,6 +493,7 @@ const particleEngines = {
         releaseVector(acc1, acc2, acc3, acc4, acc5, vel);
     },
 };
+
 
 // #### Exports
 export {
