@@ -522,7 +522,7 @@ P.prepareStamp = function() {
     if (this.dirtyHandle) this.cleanHandle();
     if (this.dirtyRotation) this.cleanRotation();
 
-    if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+    if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) {
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;

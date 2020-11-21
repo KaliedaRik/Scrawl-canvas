@@ -13,6 +13,7 @@
 // + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
 // + [particles-006](../../demo/particles-006.html) - Fixed number of Particles in a field; preAction and postAction functionality
 // + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
+// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
 
 
 // #### Imports
@@ -302,7 +303,7 @@ P.prepareStamp = function () {
 
     if (this.dirtyRotation) this.cleanRotation();
 
-    if (this.lockTo.indexOf('mouse') >= 0) {
+    if (this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) {
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;

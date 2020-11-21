@@ -124,8 +124,8 @@
 
 
 // #### Imports
-import { artefact, group, tween } from '../core/library.js';
-import { λnull, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique } from '../core/utilities.js';
+import { artefact, group, tween, particle } from '../core/library.js';
+import { λnull, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique, isa_boolean } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
@@ -238,8 +238,10 @@ export default function (P = {}) {
 // __mimicked__ - internal Array holding details of the artefacts using this artefact as their mimic reference.
         mimicked: null,
 
+// __particle__ - attribute to store any particle the artefact mey be using for its position reference
+		particle: null,
 
-// __lockTo__ - `[x-lock, y-lock]` Array; locks can be set to: `start` (the default), `pivot`, `path`, `mimic`, or `mouse`.
+// __lockTo__ - `[x-lock, y-lock]` Array; locks can be set to: `start` (the default), `pivot`, `path`, `mimic`, `particle`, or `mouse`.
 // + The lock values can be set individually using the pseudo-attributes __lockXTo__ and __lockYTo__.
         lockTo: null,
 
@@ -610,6 +612,26 @@ export default function (P = {}) {
         this.dirtyDimensions = true;
     }
 
+// __particle__
+    S.particle = function (item) {
+
+        if (isa_boolean(item) && !item) {
+
+            this.particle = null;
+
+            if (this.lockTo[0] === 'particle') this.lockTo[0] = 'start';
+            if (this.lockTo[1] === 'particle') this.lockTo[1] = 'start';
+
+            this.dirtyStampPositions = true;
+            this.dirtyStampHandlePositions = true;
+        }
+        else {
+
+            this.particle = item;
+            this.dirtyStampPositions = true;
+            this.dirtyStampHandlePositions = true;
+        }
+    };
 // __lockXTo__, __lockYTo__, __lockTo__
     S.lockTo = function (item) {
 
@@ -1260,7 +1282,8 @@ export default function (P = {}) {
                 cache = this.currentStartCache,
                 pivot = this.pivot,
                 path = this.path,
-                mimic = this.mimic;
+                mimic = this.mimic,
+                part = this.particle;
 
             if (isBeingDragged) {
 
@@ -1279,6 +1302,7 @@ export default function (P = {}) {
                     if (lock === 'pivot' && !pivot) lock = 'start';
                     else if (lock === 'path' && !path) lock = 'start';
                     else if (lock === 'mimic' && !mimic) lock = 'start';
+                    else if (lock === 'particle' && !part) lock = 'start';
 
                     if (lock === 'mouse') hereFlag = true;
 
@@ -1294,6 +1318,11 @@ export default function (P = {}) {
                 lock = localLockArray[i];
 
                 switch (lock) {
+
+                    case 'start' :
+                    
+                        coord = start[i] + offset[i];
+                        break;
 
                     case 'pivot' :
 
@@ -1344,6 +1373,28 @@ export default function (P = {}) {
                         }
                         else coord = start[i] + offset[i];
 
+                        break;
+
+                    case 'particle' :
+
+                        let tempPart = part;
+
+                    	if (part.substring) {
+
+                            tempPart = part;
+                    		this.particle = part = particle[part];
+                    	}
+
+                    	if (!part) {
+
+                    		this.particle = part = tempPart;
+                    		coord = start[i] + offset[i];
+                    	}
+                    	else {
+
+	                    	if (i) coord = part.position.y + offset[i];
+	                    	else coord = part.position.x + offset[i];
+                    	}
                         break;
 
                     case 'mouse' :

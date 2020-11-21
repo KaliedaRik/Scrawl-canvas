@@ -7,6 +7,7 @@
 
 // #### Demos:
 // + [particles-011](../../demo/particles-011.html) - Tracer entity: basic functionality
+// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
 
 
 // #### Imports
@@ -41,7 +42,7 @@ const Tracer = function (items = {}) {
 
     this.stampAction = λnull;
 
-    this.particle = makeParticle(items);
+    this.trace = makeParticle(items);
 
     if (!items.group) items.group = currentGroup;
 
@@ -72,7 +73,7 @@ let defaultAttributes = {
 
     artefact: null,
 
-    particle: null,
+    trace: null,
 
     stampAction: null,
 
@@ -99,8 +100,8 @@ P.finalizePacketOut = function (copy, items) {
 // #### Clone management
 P.postCloneAction = function(clone, items) {
 
-    clone.particle = makeParticle({
-        name: this.name,
+    clone.trace = makeParticle({
+        name: clone.name,
         historyLength: items.historyLength || this.historyLength || 1,
     });
 
@@ -113,7 +114,7 @@ P.kill = function (killArtefact = false) {
 
     if (killArtefact) this.artefact.kill();
 
-    this.particle.kill();
+    this.trace.kill();
 
     this.deregister();
 
@@ -148,18 +149,18 @@ S.artefact = function (item) {
 // + Overwriters the functionality defined in the 
 P.stamp = function (force = false, host, changes) {
 
-    let {artefact, particle, stampAction, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
+    let {artefact, trace, stampAction, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 
     if (artefact) {
 
         if (!host) host = this.getHost();
 
-        particle.set({
+        trace.set({
             position: currentStampPosition,
         });
 
-        particle.manageHistory(0, host);
-        stampAction.call(this, artefact, particle, host);
+        trace.manageHistory(0, host);
+        stampAction.call(this, artefact, trace, host);
 
         if (showHitRadius) {
 

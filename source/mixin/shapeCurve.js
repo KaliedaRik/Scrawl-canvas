@@ -4,7 +4,7 @@
 // These entitys have additional positioning coordinates (`startControl` and `endControl` for Bezier entitys; `control` for Quadratic entitys; all three entity types use the `end` coordinate) which we use to construct and position them. Other artefacts can pivot themselves to these coordinates, and path-defined entitys can pivot the coordinates to other artefacts.
 
 // #### Imports
-import { artefact } from '../core/library.js';
+import { artefact, particle } from '../core/library.js';
 import { mergeOver, isa_boolean, xt, xta, addStrings, removeItem, pushUnique } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
@@ -42,8 +42,11 @@ export default function (P = {}) {
         addEndPathHandle: false,
         addEndPathOffset: true,
 
+// __endParticle__ - attribute to store any particle the artefact mey be using for its position reference
+        endParticle: '',
+
 // __endLockTo__
-// + Like the `start` coordinate, the `end` coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: `coord` (default, for absolute positioning), `pivot`, `path`, `mouse`.
+// + Like the `start` coordinate, the `end` coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: `coord` (default, for absolute positioning), `pivot`, `path`, `position`, `mouse`.
 // + The end coordinate does not support 'mimic' relative positioning.
 // + The end lock does not support setting the `x` and `y` coordinates separately - its value is a string argument, not an `[x, y]` array!
         endLockTo: '',
@@ -111,6 +114,14 @@ P.factoryKill = function () {
     S.endPivot = function (item) {
 
         this.setControlHelper(item, 'endPivot', 'end');
+        this.updateDirty();
+        this.dirtyEnd = true;
+    };
+
+    // __endParticle__
+    S.endParticle = function (item) {
+
+        this.setControlHelper(item, 'endParticle', 'end');
         this.updateDirty();
         this.dirtyEnd = true;
     };
@@ -218,54 +229,57 @@ P.factoryKill = function () {
     // `setControlHelper` - internal setter helper function
     P.setControlHelper = function (item, attr, label) {
 
-        let isPivot = (attr.indexOf('Pivot') > 0) ? true : false;
-
         if (isa_boolean(item) && !item) {
 
             this[attr] = null;
 
-            if (isPivot) {
-
-                if (this[`${label}LockTo`] === 'pivot') {
-
-                    this[`${label}LockTo`] = 'start';
-
-                    if (label === 'startControl') this.dirtyStartControlLock = true;
-                    else if (label === 'control') this.dirtyControlLock = true;
-                    else if (label === 'endControl') this.dirtyEndControlLock = true;
-                    else this.dirtyEndLock = true;
-                }
-            }
-            else {
-
-                if (this[`${label}LockTo`] === 'path') {
-
-                    this[`${label}LockTo`] = 'start';
-
-                    if (label === 'startControl') this.dirtyStartControlLock = true;
-                    else if (label === 'control') this.dirtyControlLock = true;
-                    else if (label === 'endControl') this.dirtyEndControlLock = true;
-                    else this.dirtyEndLock = true;
-                }
-            }
+            if (label === 'startControl') this.dirtyStartControlLock = true;
+            else if (label === 'control') this.dirtyControlLock = true;
+            else if (label === 'endControl') this.dirtyEndControlLock = true;
+            else this.dirtyEndLock = true;
         }
         else if (item) {
 
             let oldControl = this[attr],
                 newControl = (item.substring) ? artefact[item] : item;
 
-            if (newControl && newControl.isArtefact) {
+            if (attr.indexOf('Pivot') > 0) {
+                
+                if (newControl && newControl.isArtefact) {
 
-                if (oldControl && oldControl.isArtefact) {
-
-                    if (isPivot) removeItem(oldControl.pivoted, this.name);
-                    else removeItem(oldControl.pathed, this.name);
+                    if (oldControl && oldControl.isArtefact) removeItem(oldControl.pivoted, this.name);
+                    pushUnique(newControl.pivoted, this.name);
+                    this[attr] = newControl;
                 }
+            }
 
-                if (isPivot) pushUnique(newControl.pivoted, this.name);
-                else pushUnique(newControl.pathed, this.name);
+            else if (attr.indexOf('Path') > 0) {
+                
+                if (newControl && newControl.isArtefact) {
 
-                this[attr] = newControl;
+                    if (oldControl && oldControl.isArtefact) removeItem(oldControl.pathed, this.name);
+                    pushUnique(newControl.pathed, this.name);
+                    this[attr] = newControl;
+                }
+            }
+
+            else if (attr.indexOf('Particle') > 0) {
+                
+                newControl = (item.substring) ? particle[item] : item;
+
+                // For particles, we only care in cases where the particle has not yet been generated
+                // + Net entitys only create their particles at the time of their first Display cycle stamp operation, which will often be after the curve entity (line, quadratic, bezier) has been defined and created.
+                if (!newControl) {
+
+                    this.updateDirty();
+
+                    if (label === 'startControl') this.dirtyStartControl = true;
+                    else if (label === 'control') this.dirtyControl = true;
+                    else if (label === 'endControl') this.dirtyEndControl = true;
+                    else this.dirtyEnd = true;
+
+                    this[attr] = item;
+                }
             }
         }
     };
@@ -355,7 +369,7 @@ P.factoryKill = function () {
             if (this.dirtyScale || this.dirtySpecies || this.dirtyStartControl || this.dirtyEndControl || this.dirtyControl || this.dirtyEnd)  this.pathCalculatedOnce = false;
         }
 
-        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) {
 
             this.dirtyStampPositions = true;
 
@@ -373,10 +387,11 @@ P.factoryKill = function () {
         if (this.dirtyScale) this.cleanScale();
 
         if (this.dirtyStart) this.cleanStart();
-        if (this.dirtyStartControl) this.cleanControl('startControl');
-        if (this.dirtyEndControl) this.cleanControl('endControl');
-        if (this.dirtyControl) this.cleanControl('control');
-        if (this.dirtyEnd) this.cleanControl('end');
+
+        if (this.dirtyStartControl || this.startControlLockTo === 'particle') this.cleanControl('startControl');
+        if (this.dirtyEndControl || this.endControlLockTo === 'particle') this.cleanControl('endControl');
+        if (this.dirtyControl || this.controlLockTo === 'particle') this.cleanControl('control');
+        if (this.dirtyEnd || this.endLockTo === 'particle') this.cleanControl('end');
 
         if (this.dirtyOffset) this.cleanOffset();
         if (this.dirtyRotation) this.cleanRotation();
@@ -412,8 +427,10 @@ P.factoryKill = function () {
 
         let pivotLabel = `${label}Pivot`,
             pathLabel = `${label}Path`,
+            particleLabel = `${label}Particle`,
             pivot = this[pivotLabel],
             path = this[pathLabel],
+            part = this[particleLabel],
             art, pathData;
 
         if (pivot && pivot.substring) {
@@ -430,6 +447,13 @@ P.factoryKill = function () {
             if (art) path = art;
         }
 
+        if (part && part.substring) {
+
+            art = particle[part];
+
+            if (art) part = art;
+        }
+
         let lock = this[`${label}LockTo`], 
             x, y, ox, oy, here, host, dims, flag,
             raw = this[label],
@@ -437,6 +461,7 @@ P.factoryKill = function () {
 
         if (lock === 'pivot' && (!pivot || pivot.substring)) lock = 'coord';
         else if (lock === 'path' && (!path || path.substring)) lock = 'coord';
+        else if (lock === 'particle' && (!part || part.substring)) lock = 'coord';
 
         switch(lock) {
 
@@ -469,6 +494,14 @@ P.factoryKill = function () {
                     x -= path.currentOffset[0];
                     y -= path.currentOffset[1];
                 }
+
+                break;
+
+            case 'particle' :
+
+                x = part.position.x;
+                y = part.position.y;
+                this.pathCalculatedOnce = false;
 
                 break;
 

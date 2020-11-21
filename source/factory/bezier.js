@@ -120,6 +120,9 @@ let defaultAttributes = {
     addStartControlPathHandle: false,
     addStartControlPathOffset: true,
 
+// __startControlParticle__ - attribute to store any particle the artefact mey be using for its position reference
+    startControlParticle: '',
+
 // The __endControl__ coordinate ('pin') defines the bezier curve's second control point.
 // + Similar to the `start` coordinate, the `endControl` coordinate can be updated using the pseudo-attributes __endControlX__ and __endControlY__.
     endControl: null,
@@ -137,6 +140,9 @@ let defaultAttributes = {
     endControlPathPosition: 0,
     addEndControlPathHandle: false,
     addEndControlPathOffset: true,
+
+// __endControlParticle__ - attribute to store any particle the artefact mey be using for its position reference
+    endControlParticle: '',
 
 // __startControlLockTo__, __endControlLockTo__
 // + Like the `start` coordinate, the `startControl` and `endControl` coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: `coord` (default, for absolute positioning), `pivot`, `path`, `mouse`.
@@ -177,6 +183,14 @@ S.endControlPivot = function (item) {
     this.dirtyEndControl = true;
 };
 
+// __endControlParticle__
+S.endControlParticle = function (item) {
+
+    this.setControlHelper(item, 'endControlParticle', 'endControl');
+    this.updateDirty();
+    this.dirtyEndControl = true;
+};
+
 // __endControlPath__
 S.endControlPath = function (item) {
 
@@ -204,6 +218,14 @@ D.endControlPathPosition = function (item) {
 S.startControlPivot = function (item) {
 
     this.setControlHelper(item, 'startControlPivot', 'startControl');
+    this.updateDirty();
+    this.dirtyStartControl = true;
+};
+
+// __startControlParticle__
+S.startControlParticle = function (item) {
+
+    this.setControlHelper(item, 'startControlParticle', 'startControl');
     this.updateDirty();
     this.dirtyStartControl = true;
 };

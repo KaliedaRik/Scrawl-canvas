@@ -6,10 +6,11 @@
 // + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
 // + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
 // + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
+// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
 
 
 // #### Imports
-import { constructors, artefact, entity, world, styles, particle } from '../core/library.js';
+import { constructors, artefact, artefactnames, entity, world, styles, particle } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
@@ -159,8 +160,8 @@ P.kill = function (killArtefact = false, killWorld = false) {
 
     if (killWorld) this.world.kill();
 
-    this.particleStore.forEach(p => p.kill());
-
+    this.purgeParticlesFromLibrary();
+    
     this.deregister();
 
     return true;
@@ -259,48 +260,49 @@ P.prepareStamp = function () {
 };
 
 // `stamp` - returns a Promise. This is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
-// + Overwriters the functionality defined in the 
+// + Overwriters the functionality defined in mixin/entity.js
 P.stamp = function (force = false, host, changes) {
 
+    // Unlike other entitys, Net entitys need to be __running__ before they can be stamped
     if (this.isRunning) {
 
-        let {world, artefact, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
+        let {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
 
-        if (artefact) {
+        // The Net entity will not stamp itself if it doesn't have an artefact (entity) to stamp itself with.
+        if (art) {
 
-
+            // The host is the Cell object on which we will be displaying the Net entity and all its associated artefacts and additional graphics
             if (!host) host = this.getHost();
 
+            // The particle system is a physics system, which means we need to advance it by a small amount of time as part of each Display cycle
             let deltaTime = 16 / 1000,
                 now = Date.now();
 
             if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
-            // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
+            // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restart the emitter's animation.
             if (deltaTime > resetAfterBlur) {
 
-                particleStore.forEach(p => p.kill());
-                particleStore.length = 0;
-                springs.forEach(s => s.kill());
-                springs.length = 0;
+                this.purgeParticlesFromLibrary();
                 deltaTime = 16 / 1000;
             }
 
+            // If we have no particles, we need to generate them
             if (!particleStore.length) {
 
                 generate.call(this, host);
                 postGenerate.call(this);
             }
 
+            // The physics core of the function: 
+            // + Calculate the forces acting on each of the Net entity's particles
+            // + Add the Spring constraints to the particles
+            // + Get the particles to update themselves, using the appropriate physics engine
             particleStore.forEach(p => p.applyForces(world, host));
-
             springs.forEach(s => s.applySpring());
-
             particleStore.forEach(p => p.update(deltaTime, world));
 
-            // TODO: detect and manage collisions
-
-            // Do visuals
+            // Additional visuals are available - specifically we can draw in the springs acting on particle pairs before we stamp the artefact on them
             if (showSprings) {
 
                 let engine = host.engine;
@@ -322,12 +324,16 @@ P.stamp = function (force = false, host, changes) {
                 engine.restore();
             }
 
+            // The display cycle core of the function
+            // + Get each particle to update its history
+            // + Using that history, get each particle to stamp some ink onto the canvas.
             particleStore.forEach(p => {
 
                 p.manageHistory(deltaTime, host);
-                stampAction.call(this, artefact, p, host);
+                stampAction.call(this, art, p, host);
             });
 
+            // A second set of additional visuals - display each particle's hit region
             if (showHitRadius) {
 
                 let engine = host.engine;
@@ -348,9 +354,11 @@ P.stamp = function (force = false, host, changes) {
                 engine.restore();
             }
 
+            // The final critical step - remember the absolute time value of when we started to perform this Display cycle
             this.lastUpdated = now;
         }
     }
+    // The function will always return a Promise which has been resolved (it will never 'fail', though it might refuse to work)
     return Promise.resolve(true);
 };
 
@@ -359,19 +367,51 @@ P.run = function () {
     this.isRunning = true;
     return this;
 };
-
 P.halt = function () {
 
     this.isRunning = false;
     return this;
 };
+P.purgeParticlesFromLibrary = function () {
+
+    let {particleStore, springs} = this;
+
+    // Net entity particles can be referenced by other artefacts (when using them for positioning coordinates. New particles will be created with the same names as the old ones, so it is enough to replace these references with the String names of the particles)
+    artefactnames.forEach(a => {
+
+        let tempArt = artefact[a];
+
+        if (tempArt) {
+
+            if (tempArt.particle && !tempArt.particle.substring && tempArt.particle.name) tempArt.particle = tempArt.particle.name;
+
+            // Polyline entitys go one step further in that they can also use Particles in their pin array
+            if (tempArt.type === 'Polyline' && tempArt.useParticlesAsPins) {
+
+                tempArt.pins.forEach((pin, index) => {
+
+                    if (isa_obj(pin) && pin.type === 'Particle') {
+
+                        tempArt.pins[index] = pin.name;
+                        tempArt.dirtyPins = true;
+                    }
+                });
+            }
+        }
+    });
+
+    // Now we can tell all the Net entity's particles to kill themselves
+    particleStore.forEach(p => p.kill());
+    particleStore.length = 0;
+
+    // We can also get rid of all the Spring objects as they will be recreated alongside the particle objects as part of the Net entity's `generate` functionality.
+    springs.forEach(s => s.kill());
+    springs.length = 0;
+};
 
 P.restart = function () {
 
-    this.particleStore.forEach(p => p.kill());
-    this.particleStore.length = 0;
-    this.springs.forEach(s => s.kill());
-    this.springs.length = 0;
+    this.purgeParticlesFromLibrary();
     
     this.lastUpdated = Date.now();
 
@@ -477,7 +517,7 @@ const generators = {
 
     'weak-net': function (host) {
 
-        let { particleStore, artefact, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
+        let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
 
         if (host && rows > 0 && columns > 0) {
 
@@ -516,8 +556,8 @@ const generators = {
 
                         mass,
 
-                        fill: artefact.get('fillStyle'),
-                        stroke: artefact.get('strokeStyle'),
+                        fill: art.get('fillStyle'),
+                        stroke: art.get('strokeStyle'),
                     });
 
                     p.run(0, 0, false);
@@ -577,7 +617,7 @@ const generators = {
 
     'strong-net': function (host) {
 
-        let { particleStore, artefact, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
+        let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
 
         if (host && rows > 0 && columns > 0) {
 
@@ -616,8 +656,8 @@ const generators = {
 
                         mass,
 
-                        fill: artefact.get('fillStyle'),
-                        stroke: artefact.get('strokeStyle'),
+                        fill: art.get('fillStyle'),
+                        stroke: art.get('strokeStyle'),
                     });
 
                     p.run(0, 0, false);
@@ -697,7 +737,7 @@ const generators = {
 
     'weak-shape': function (host) {
 
-        let { particleStore, artefact, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
+        let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
 
         const springMaker = function (myF, myT) {
 
@@ -749,8 +789,8 @@ const generators = {
 
                     mass,
 
-                    fill: artefact.get('fillStyle'),
-                    stroke: artefact.get('strokeStyle'),
+                    fill: art.get('fillStyle'),
+                    stroke: art.get('strokeStyle'),
                 });
 
                 p.run(0, 0, false);
@@ -816,7 +856,7 @@ const generators = {
 
     'strong-shape': function (host) {
 
-        let { particleStore, artefact, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
+        let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
 
         const springMaker = function (myF, myT) {
 
@@ -868,8 +908,8 @@ const generators = {
 
                     mass,
 
-                    fill: artefact.get('fillStyle'),
-                    stroke: artefact.get('strokeStyle'),
+                    fill: art.get('fillStyle'),
+                    stroke: art.get('strokeStyle'),
                 });
 
                 p.run(0, 0, false);

@@ -114,6 +114,9 @@ let defaultAttributes = {
     addControlPathHandle: false,
     addControlPathOffset: true,
 
+// __controlParticle__ - attribute to store any particle the artefact mey be using for its position reference
+    controlParticle: '',
+
 // __controlLockTo__
 // + Like the `start` coordinate, the `control` coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: `coord` (default, for absolute positioning), `pivot`, `path`, `mouse`.
 // + The control coordinate does not support 'mimic' relative positioning.
@@ -148,6 +151,14 @@ let G = P.getters,
 S.controlPivot = function (item) {
 
     this.setControlHelper(item, 'controlPivot', 'control');
+    this.updateDirty();
+    this.dirtyControl = true;
+};
+
+// __controlParticle__
+S.controlParticle = function (item) {
+
+    this.setControlHelper(item, 'controlParticle', 'control');
     this.updateDirty();
     this.dirtyControl = true;
 };

@@ -438,7 +438,7 @@ export default function (P = {}) {
         if (this.dirtyRotation) this.cleanRotation();
 
 // To handle situations where the entity position is currently under the influence of the mouse/touch cursor - where true, entity will set its own `dirtyStampPositions`, `dirtyStampHandlePositions` flags
-        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) {
+        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) {
 
             this.dirtyStampPositions = true;
             this.dirtyStampHandlePositions = true;

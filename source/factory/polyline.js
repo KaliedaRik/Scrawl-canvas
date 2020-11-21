@@ -33,7 +33,7 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
+import { constructors, artefact, particle } from '../core/library.js';
 import { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
@@ -100,6 +100,9 @@ let defaultAttributes = {
     closed: false,
 
     mapToPins: false,
+
+    // __useParticlesAsPins__ - when true, all pins should map directly to Particle objects (as supplied in a Net entity)
+    useParticlesAsPins: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -388,6 +391,8 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
+    if (this.useParticlesAsPins) this.dirtyPins = true;
+
     if (this.dirtyPins || this.dirtyLock) this.dirtySpecies = true;
 
     if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyHandle) {
@@ -395,9 +400,9 @@ P.prepareStamp = function() {
         this.dirtyPathObject = true;
 
         if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
-   }
+    }
 
-    if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) this.dirtyStampPositions = true;
+    if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) this.dirtyStampPositions = true;
 
     if (this.dirtyScale) this.cleanScale();
 
@@ -505,65 +510,91 @@ P.cleanPinsArray = function () {
 
     current.length = 0;
 
-    let w = 1,
-        h = 1,
-        host = this.getHost(),
-        clean = this.cleanCoordinate,
-        x, y, dims;
+    if (this.useParticlesAsPins) {
 
-    if (host) {
+        pins.forEach((part, index) => {
 
-        dims = host.currentDimensions;
+            let temp;
 
-        if (dims) {
+            if (part && part.substring) {
 
-            [w, h] = dims;
+                temp = particle[part];
+                if (temp) pins[index] = temp;
+            }
+            else temp = part;
+
+            let pos = (temp && temp.position) ? temp.position : false;
+
+            if (pos) current.push([pos.x, pos.y]);
+        });
+
+        if (!current.length) this.dirtyPins = true;
+    }
+    else {
+
+        let w = 1,
+            h = 1,
+            host = this.getHost(),
+            clean = this.cleanCoordinate,
+            x, y, dims;
+
+        if (host) {
+
+            dims = host.currentDimensions;
+
+            if (dims) {
+
+                [w, h] = dims;
+            }
         }
+
+        pins.forEach((item, index) => {
+
+            let temp;
+
+            if (item && item.substring) {
+
+                temp = artefact[item];
+                pins[index] = temp;
+            }
+            else temp = item;
+
+            if (temp) {
+
+                if (Array.isArray(temp)) {
+
+                    [x, y] = temp;
+
+                    current.push([clean(x, w), clean(y, h)]);
+                }
+                else if (isa_obj(temp) && temp.currentStart) {
+
+                    let name = this.name;
+
+                    if (temp.pivoted.indexOf(name) < 0) pushUnique(temp.pivoted, name);
+
+                    current.push([...temp.currentStampPosition]);
+                }
+            }
+        });
     }
 
-    pins.forEach((item, index) => {
+    if (current.length) {
 
-        let temp;
+        // Calculate the local offset
+        let mx = current[0][0],
+            my = current[0][1];
 
-        if (item && item.substring) {
+        current.forEach(e => {
 
-            temp = artefact[item];
-            pins[index] = temp;
-        }
-        else temp = item;
+            if (e[0] < mx) mx = e[0];
+            if (e[1] < my) my = e[1];
+        })
+        this.localOffset = [mx, my];
 
-        if (temp) {
-
-            if (Array.isArray(temp)) {
-
-                [x, y] = temp;
-
-                current.push([clean(x, w), clean(y, h)]);
-            }
-            else if (isa_obj(temp) && temp.currentStart) {
-
-                let name = this.name;
-
-                if (temp.pivoted.indexOf(name) < 0) pushUnique(temp.pivoted, name);
-
-                current.push([...temp.currentStampPosition]);
-            }
-        }
-    });
-
-    // Calculate the local offset
-    let mx = current[0][0],
-        my = current[0][1];
-
-    current.forEach(e => {
-
-        if (e[0] < mx) mx = e[0];
-        if (e[1] < my) my = e[1];
-    })
-    this.localOffset = [mx, my];
-
-    this.updatePivotSubscribers();
-}
+        this.updatePivotSubscribers();
+    }
+};
 
 
 // `makePolylinePath` - internal helper function - called by `cleanSpecies`
@@ -580,44 +611,48 @@ P.makePolylinePath = function () {
     // 1. go through the pins array and get current values for each, pushed into currentPins array
     if (this.dirtyPins) this.cleanPinsArray();
 
-    // 2. build the line
-    let cLen = cPin.length,
-        first = cPin[0],
-        last = cPin[cLen - 1],
-        calc = [],
-        result = 'm0,0';
+    if (cPin.length) {
 
-    if (closed) {
+        // 2. build the line
+        let cLen = cPin.length,
+            first = cPin[0],
+            last = cPin[cLen - 1],
+            calc = [],
+            result = 'm0,0';
 
-        let startPoint = [].concat(...getPathParts(...last, ...first, ...cPin[1], tension));
+        if (closed) {
 
-        for (let i = 0; i < cLen - 2; i++) {
+            let startPoint = [].concat(...getPathParts(...last, ...first, ...cPin[1], tension));
 
-            calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
+            for (let i = 0; i < cLen - 2; i++) {
+
+                calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
+            }
+
+            calc = calc.concat(...getPathParts(...cPin[cLen - 2], ...last, ...first, tension));
+
+            calc.unshift(startPoint[4], startPoint[5]);
+            calc.push(startPoint[0], startPoint[1], startPoint[2], startPoint[3]);
+
+            if (tension) result = buildCurve(first[0], first[1], calc) + 'z';
+            else result = buildLine(first[0], first[1], calc) + 'z';
         }
+        else {
 
-        calc = calc.concat(...getPathParts(...cPin[cLen - 2], ...last, ...first, tension));
+            calc.push(first[0], first[1]);
 
-        calc.unshift(startPoint[4], startPoint[5]);
-        calc.push(startPoint[0], startPoint[1], startPoint[2], startPoint[3]);
+            for (let i = 0; i < cLen - 2; i++) {
 
-        if (tension) result = buildCurve(first[0], first[1], calc) + 'z';
-        else result = buildLine(first[0], first[1], calc) + 'z';
-    }
-    else {
+                calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
+            }
+            calc.push(last[0], last[1], last[0], last[1]);
 
-        calc.push(first[0], first[1]);
-
-        for (let i = 0; i < cLen - 2; i++) {
-
-            calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + 1], ...cPin[i + 2], tension));
+            if (tension) result = buildCurve(first[0], first[1], calc);
+            else result = buildLine(first[0], first[1], calc);
         }
-        calc.push(last[0], last[1], last[0], last[1]);
-
-        if (tension) result = buildCurve(first[0], first[1], calc);
-        else result = buildLine(first[0], first[1], calc);
+        return result;
     }
-    return result;
+    return 'm0,0';
 };
 
 P.calculateLocalPathAdditionalActions = function () {

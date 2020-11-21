@@ -375,7 +375,7 @@ export default function (P = {}) {
             if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
        }
 
-        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0) this.dirtyStampPositions = true;
+        if (this.isBeingDragged || this.lockTo.indexOf('mouse') >= 0 || this.lockTo.indexOf('particle') >= 0) this.dirtyStampPositions = true;
 
         if (this.dirtyScale) this.cleanScale();
 
