@@ -545,38 +545,11 @@ export default function (P = {}) {
     }
 
 // `getCornerCoordinate`
-    P.getCornerCoordinate = function (corner, coordinate) {
+    const cornerCoordinateLabels = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
+    P.getCornerCoordinate = function (corner) {
 
-        let x, y;
-
-        switch (corner) {
-
-            case 'topLeft' :
-                [x, y] = this.checkCornerPositions('topLeft');
-                break;
-
-            case 'topRight' :
-                [x, y] = this.checkCornerPositions('topRight');
-                break;
-
-            case 'bottomRight' :
-                [x, y] = this.checkCornerPositions('bottomRight');
-                break;
-
-            case 'bottomLeft' :
-                [x, y] = this.checkCornerPositions('bottomLeft');
-                break;
-
-            default :
-                [x, y] = this.currentStampPosition;
-        }
-
-        if (coordinate) {
-
-            if (coordinate === 'x') return x;
-            if (coordinate === 'y') return y;
-        }
-        return [x, y];
+        if (cornerCoordinateLabels.indexOf(corner) >= 0) return this.checkCornerPositions(corner);
+        else return [].concat(this.currentStampPosition);
     };
 
 

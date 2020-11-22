@@ -15,7 +15,7 @@
 
 // #### Imports
 import * as library from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, generateUuid, isa_boolean, isa_obj, addStrings, xt, xta, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, generateUniqueString, isa_boolean, isa_obj, addStrings, xt, xta, λnull } from '../core/utilities.js';
 
 // #### Export function
 export default function (P = {}) {
@@ -592,7 +592,7 @@ export default function (P = {}) {
     P.makeName = function (item) {
 
         if (item && item.substring && library[`${this.lib}names`].indexOf(item) < 0) this.name = item;                
-        else this.name = generateUuid();
+        else this.name = generateUniqueString();
 
         return this;
     };

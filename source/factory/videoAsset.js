@@ -13,7 +13,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { generateUuid, xt, λthis, λnull } from '../core/utilities.js';
+import { generateUniqueString, xt, λthis, λnull } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -337,7 +337,7 @@ const importMediaStream = function (items = {}) {
     if (items.facing) constraints.video.facingMode = items.facing;
     
     // We need a video element to receive the media stream
-    let name = items.name || generateUuid();
+    let name = items.name || generateUniqueString();
 
     let el = document.createElement('video');
 

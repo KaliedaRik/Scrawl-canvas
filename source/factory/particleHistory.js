@@ -69,19 +69,20 @@ const requestParticleHistoryObject = function (items, y) {
     if (!particleHistoryPool.length) particleHistoryPool.push(new ParticleHistory());
 
     let c = particleHistoryPool.shift();
+
     return c
 };
 
 // `exported function` - return a ParticleHistory array to the history pool. Failing to return arrays to the pool may lead to more inefficient code and possible memory leaks.
-const releaseParticleHistoryObject = function (history) {
+const releaseParticleHistoryObject = function (h) {
 
-    if (history && history.type === 'ParticleHistory') {
+    if (h && h.type === 'ParticleHistory') {
 
-        if (particleHistoryPool.length < 10) {
-            
-            history.length = 0;
-            particleHistoryPool.push(history);
-        }
+        h.length = 0;
+        particleHistoryPool.push(h);
+
+        // Do not keep excessive numbers of under-utilised arrays in the pool
+        if (particleHistoryPool.length > 4096) particleHistoryPool.length = 0;
     }
 };
 

@@ -300,19 +300,13 @@ P.updateDirty = function () {
 };
 
 // `getPinAt` - 
-P.getPinAt = function (index, coord) {
+P.getPinAt = function (index) {
 
     let i = Math.floor(index);
 
     if (this.useAsPath) {
 
         let pos = this.getPathPositionData(this.unitPartials[i]);
-
-        if (coord) {
-
-            if (coord === 'x') return pos.x;
-            if (coord === 'y') return pos.y;
-        }
         return [pos.x, pos.y];
     }
     else {
@@ -336,15 +330,9 @@ P.getPinAt = function (index, coord) {
             dx = px - lx;
             dy = py - ly;
         }
-
-        if (coord) {
-
-            if (coord === 'x') return sx + dx;
-            if (coord === 'y') return sy + dy;
-        }
         return [sx + dx, sy + dy];
     }
-    return (coord) ? 0 : [0, 0];
+    return [0, 0];
 };
 
 // `updatePinAt` - 

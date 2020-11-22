@@ -110,6 +110,15 @@ const generateUuid = () => {
 };
 
 
+// __generateUuid__ is a simple (crude) uuid generator 
+// https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0
+// (imported 2020-11-22)
+const generateUniqueString = () => {
+
+    return performance.now().toString(36) + Math.random().toString(36).substr(2);
+};
+
+
 // __isa_boolean__ checks to make sure the argument is a boolean
 const isa_boolean = item => (typeof item === 'boolean') ? true : false;
 
@@ -284,6 +293,7 @@ export {
     λthis,
     λpromise,
     generateUuid,
+    generateUniqueString,
     isa_boolean,
     isa_canvas,
     isa_dom,

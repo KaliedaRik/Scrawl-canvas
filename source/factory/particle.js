@@ -407,20 +407,20 @@ const releaseParticle = function (item) {
         item.history.forEach(h => releaseParticleHistoryObject(h));
         item.history.length = 0;
 
-        if (particlePool.length < 10) {
+        item.set(item.defs);
+        particlePool.push(item);
 
-            item.set(item.defs);
-            particlePool.push(item);
-        }
-        else item.kill()
+        // Do not keep excessive numbers of under-utilised particle objects in the pool
+        if (particlePool.length > 512) particlePool.length = 0;
     }
 };
 
 
 // #### Particle physics engines
-// These functions are called by the `update` function which assigns the Particle object as `this` as part of the call.
+// These functions are called by the `update` function which assigns the Particle object as `this` as part of the call. The engines calculate particle acceleration and apply it to particle velocity and then, taking into account the time elapsed since the previous tick, particle position.
 const particleEngines = {
 
+    // __euler__ - the simplest and quickest engine, and the least accurate
     'euler': function (tick) {
 
         let {position, velocity, load, mass} = this;
@@ -439,11 +439,11 @@ const particleEngines = {
         releaseVector(acc, vel);
     },
 
+    // __improved-euler__ is more accurate than the euler engine, but takes longer to calculate
     'improved-euler': function (tick) {
 
         let {position, velocity, load, mass} = this;
 
-        // linear motion
         let acc1 = requestVector(),
             acc2 = requestVector(),
             acc3 = requestVector(),
@@ -462,11 +462,11 @@ const particleEngines = {
         releaseVector(acc1, acc2, acc3, vel);
     },
 
+    // __runge-kutta__ is very accurate, but also a lot more computationally expensive
     'runge-kutta': function (tick) {
 
         let {position, velocity, load, mass} = this;
 
-        // linear motion
         let acc1 = requestVector(),
             acc2 = requestVector(),
             acc3 = requestVector(),

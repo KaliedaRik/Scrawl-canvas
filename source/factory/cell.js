@@ -43,7 +43,7 @@
 // #### Imports
 import { artefact, asset, tween, radian, constructors, styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
 
-import { generateUuid, isa_canvas, mergeOver, λthis, λnull } from '../core/utilities.js';
+import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
@@ -1537,7 +1537,7 @@ const requestCell = function () {
     if (!cellPool.length) {
 
         cellPool.push(makeCell({
-            name: `pool_${generateUuid()}`,
+            name: `pool_${generateUniqueString()}`,
             isPool: true
         }));
     }

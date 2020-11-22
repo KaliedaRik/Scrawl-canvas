@@ -7,7 +7,7 @@
 
 
 // #### Imports
-import { isa_canvas, generateUuid, isa_dom, pushUnique, removeItem, xt } from "./utilities.js";
+import { isa_canvas, generateUniqueString, isa_dom, pushUnique, removeItem, xt } from "./utilities.js";
 import { artefact, canvas, group, stack, css, xcss } from "./library.js";
 
 import { makeStack } from "../factory/stack.js";
@@ -86,7 +86,7 @@ const addInitialStackElement = function (el) {
 
     if (!myname) {
 
-        myname = generateUuid();
+        myname = generateUniqueString();
         el.id = myname;
     }
 
@@ -182,7 +182,7 @@ const addStack = function (items = {}) {
 
     // make sure the stack-to-be element has an id attribute
     name = items.name || el.id || el.getAttribute('name') || '';
-    if (!name) name = generateUuid();
+    if (!name) name = generateUniqueString();
     el.id = name;
 
     // set the 'data-stack' attribute on the stack-to-be element
@@ -267,7 +267,7 @@ const addInitialCanvasElement = function (el) {
 
     if (!myname) {
 
-        myname = generateUuid();
+        myname = generateUniqueString();
         el.id = myname;
     }
 
@@ -349,7 +349,7 @@ const setCurrentCanvas = function (item) {
 const addCanvas = function (items = {}) {
 
     let el = document.createElement('canvas'),
-        myname = (items.name) ? items.name : generateUuid(),
+        myname = (items.name) ? items.name : generateUniqueString(),
         host = items.host,
         mygroup = 'root',
         width = items.width || 300,

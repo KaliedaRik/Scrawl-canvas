@@ -178,5 +178,20 @@ scrawl.makeRender({
 });
 
 
+// #### User interaction
+// Make the arrow draggable
+scrawl.makeGroup({
+
+    name: 'my-draggable-group',
+
+}).addArtefacts('my-arrow');
+
+scrawl.makeDragZone({
+
+    zone: canvas,
+    collisionGroup: 'my-draggable-group',
+    endOn: ['up', 'leave'],
+});
+
 // #### Development and testing
 console.log(scrawl.library);
