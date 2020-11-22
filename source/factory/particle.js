@@ -39,7 +39,7 @@
 
 
 // #### Imports
-import { constructors, artefact, force, spring } from '../core/library.js';
+import { constructors, force, spring } from '../core/library.js';
 import { mergeOver, pushUnique, λnull } from '../core/utilities.js';
 
 import { requestParticleHistoryObject, releaseParticleHistoryObject } from './particleHistory.js';
@@ -411,7 +411,12 @@ const releaseParticle = function (item) {
         particlePool.push(item);
 
         // Do not keep excessive numbers of under-utilised particle objects in the pool
-        if (particlePool.length > 512) particlePool.length = 0;
+        if (particlePool.length > 50) {
+
+            let temp = [].concat(particlePool);
+            particlePool.length = 0;
+            temp.forEach(p => p.kill());
+        }
     }
 };
 

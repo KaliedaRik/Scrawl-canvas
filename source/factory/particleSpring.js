@@ -10,6 +10,15 @@
 // + [Tracer](./tracer.html) - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.
 // + [Emitter](./emitter.html) - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.
 // + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
+//
+// #### Particle physics
+// The Scrawl-canvas particle physics engine system is based on a fairly classical understanding of particle ___kinetics___ (applying forces and constraints to a small, spherical object in 3D space) and ___kinematics___ (the movement of the small object in response to the forces and constraints applied to it).
+//
+// A Scrawl-canvas __Spring__ object connects together two Particle objects, linking them together with a set of constraints which together exert a spring force on the Particles.
+// + Currently Scrawl-canvas offers only the spring constraint for connecting Particles; it does not (yet) define joint or other types of constraint.
+// + The [Net](./net.html) entity is, at the moment, the only entity which makes use of Spring objects.
+//
+// The Spring factory uses the Base mixin, thus Spring objects can be cloned and killed like other Scrawl-canvas objects. Spring objects are stored in the `scrawl.library.spring` section of the Scrawl-canvas library object.
 
 
 // #### Demos:
@@ -20,7 +29,7 @@
 
 // #### Imports
 import { constructors, particle } from '../core/library.js';
-import { mergeOver, pushUnique, λnull, isa_fn } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from './vector.js';
 
@@ -57,19 +66,19 @@ P = baseMix(P);
 
 // #### Spring attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [tween mixin](../mixin/tween.html): __order__, __ticker__, __targets__, __time__, __action__, __reverseOnCycleEnd__, __reversed__.
 let defaultAttributes = {
 
+    // __particleFrom__, __particleTo__ - String name of a Particle, or the Particle object itself. These attributes hold references to the Particle objects involved in this constraint.
     particleFrom: null,
     particleFromIsStatic: false,
 
     particleTo: null,
     particleToIsStatic: false,
 
-    // `springConstant` - Larger values make the spring stiffer. Suggested values: 5 - 300
+    // `springConstant` - float Number. Larger values make the spring stiffer. Suggested values: 5 - 300
     springConstant: 50,
 
-    // `damperConstant` - Larger values forces the spring to take a longer time to come to equilibrium. Suggested values: 5 - 50
+    // `damperConstant` - float Number. Larger values forces the spring to take a longer time to come to equilibrium. Suggested values: 5 - 50
     damperConstant: 10,
 
     // `restLength` - The spring's ideal length - the further away from its ideal, the more force the spring will apply to its connected body objects to get them back to their optimal distance 
@@ -99,13 +108,13 @@ P.kill = function () {
 // #### Get, Set, deltaSet
 let S = P.setters;
 
+// `particleFrom`, `particleTo`
 S.particleFrom = function (item) {
 
     if (item.substring) item = particle[item];
 
     if (item && item.type === 'Particle') this.particleFrom = item;
 };
-
 S.particleTo = function (item) {
 
     if (item.substring) item = particle[item];
@@ -114,6 +123,8 @@ S.particleTo = function (item) {
 };
 
 
+// #### Prototype functions
+// `applySpring` - internal function
 P.applySpring = function () {
 
     let {particleFrom, particleTo, particleFromIsStatic, particleToIsStatic, springConstant, damperConstant, restLength} = this;

@@ -10,6 +10,22 @@
 // + [Tracer](./tracer.html) - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.
 // + [Emitter](./emitter.html) - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.
 // + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
+//
+// #### Particle physics
+// The Scrawl-canvas particle physics engine system is based on a fairly classical understanding of particle ___kinetics___ (applying forces and constraints to a small, spherical object in 3D space) and ___kinematics___ (the movement of the small object in response to the forces and constraints applied to it).
+//
+// A Scrawl-canvas __Force__ object is, essentially, a wrapper around an `action` function which calculates a force operating on a particle. The force object __must__ have a unique name. Also ...
+//
+// The action function __must__ accept three arguments, in the following order:
+// + a Particle object
+// + a World object
+// + a Cell object
+//
+// The function __must add__ the result of its calculation to the Particle object's `load` Vector.
+//
+// ... See the __gravity force__, below, for an example of how to construct a Force object.
+//
+// The Force factory uses the Base mixin, thus Force objects can be cloned and killed like other Scrawl-canvas objects. Force objects are stored in the `scrawl.library.force` section of the Scrawl-canvas library object.
 
 
 // #### Demos:
@@ -17,6 +33,7 @@
 // + [particles-007](../../demo/particles-007.html) - Particle Force objects: generation and functionality
 // + [particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
 // + [particles-009](../../demo/particles-009.html) - Net particles: drag-and-drop functionality
+// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
 
 
 // #### Imports
@@ -58,7 +75,6 @@ P = baseMix(P);
 
 // #### Force attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [tween mixin](../mixin/tween.html): __order__, __ticker__, __targets__, __time__, __action__, __reverseOnCycleEnd__, __reversed__.
 let defaultAttributes = {
 
     action: null,
@@ -81,7 +97,6 @@ P.kill = function () {
 
     return true;
 };
-
 
 
 // #### Get, Set, deltaSet

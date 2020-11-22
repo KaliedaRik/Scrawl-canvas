@@ -10,6 +10,18 @@
 // + [Tracer](./tracer.html) - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.
 // + [Emitter](./emitter.html) - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.
 // + [Net](./net.html) - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.
+//
+// __ParticleHistory__ objects are Arrays in which Scrawl-canvas records history data for a given particle at a specified time. The array holds data in the following format:
+// ```
+// [
+//     Number:particle-life-time-remaining, 
+//     Number:particle-z-position, 
+//     Number:particle-x-position, 
+//     Number:particle-y-position
+// ]
+// ```
+//
+// Because of the number of ParticleHistory arrays that can be generated and discarded in even a simple particle physics animation, Scrawl-canvas includes functionality to pool and reuse ParticleHistory arrays. The exported functions `requestParticleHistoryObject` and `releaseParticleHistoryObject` give us access to the pool mechanism.
 
 
 // #### Demos:
@@ -17,6 +29,7 @@
 // + [particles-002](../../demo/particles-002.html) - Emitter using artefacts
 // + [particles-005](../../demo/particles-005.html) - Emit particles from inside an artefact's area
 // + [particles-011](../../demo/particles-011.html) - Tracer entity: basic functionality
+// + [particles-012](../../demo/particles-012.html) - Use Net entity particles as reference coordinates for other artefacts
 
 
 // #### Imports
@@ -82,7 +95,7 @@ const releaseParticleHistoryObject = function (h) {
         particleHistoryPool.push(h);
 
         // Do not keep excessive numbers of under-utilised arrays in the pool
-        if (particleHistoryPool.length > 4096) particleHistoryPool.length = 0;
+        if (particleHistoryPool.length > 100) particleHistoryPool.length = 0;
     }
 };
 

@@ -25,11 +25,9 @@
 // + [particles-010](../../demo/particles-010.html) - Net entity: using a shape path as a net template
 
 
-
-
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, λnull, isa_fn, xt } from '../core/utilities.js';
+import { mergeOver, isa_fn, xt } from '../core/utilities.js';
 
 import { makeQuaternion } from './quaternion.js';
 import { makeVector } from './vector.js';
@@ -115,17 +113,22 @@ P.kill = function () {
 };
 
 
-
 // #### Get, Set, deltaSet
 let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
+// __gravity__, with pseudo-attributes _gravityX_, _gravityY_, _gravityZ_
 S.gravityX = function (item) { if (this.gravity && xt(item)) this.gravity.setX(item); };
 S.gravityY = function (item) { if (this.gravity && xt(item)) this.gravity.setY(item); };
 S.gravityZ = function (item) { if (this.gravity && xt(item)) this.gravity.setZ(item); };
 S.gravity = function (item) { if (this.gravity && xt(item)) this.gravity.set(item); };
 
+
+// #### Prototype functions
+// `addAttribute`, `removeAttribute` - we can use these functions to add and remove other attributes to the World object. See the following Demos for examples of constructing a World object and adding attributes to it: 
+// + [particles-007](../../demo/particles-007.html) Particle Force objects: generation and functionality; and 
+// + [particles-008](../../demo/particles-008.html) Net entity: generation and basic functionality, including Spring objects.
 P.addAttribute = function (items = {}) {
 
     let {key, defaultValue, setter, deltaSetter, getter} = items;
@@ -141,7 +144,6 @@ P.addAttribute = function (items = {}) {
     }
     return this;
 };
-
 P.removeAttribute = function (key) {
 
     if (key && key.substring) {
@@ -156,6 +158,7 @@ P.removeAttribute = function (key) {
     return this;
 };
 
+// `initializeAttributes` - internal function called by the constructor.
 P.initializeAttributes = function (types) {
 
     for (let [key, value] of Object.entries(types)) {
