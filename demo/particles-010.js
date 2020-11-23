@@ -97,7 +97,7 @@ const myNet = scrawl.makeNet({
 
     artefact: scrawl.makeWheel({
 
-        name: 'particle-wheel',
+        name: 'particle-wheel-1',
         radius: 7,
 
         handle: ['center', 'center'],
@@ -116,17 +116,13 @@ const myNet = scrawl.makeNet({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history && particle.history[0]) {
-
-            let [r, z, startX, startY] = particle.history[0];
+            let [r, z, ...start] = particle.history[0];
 
             artefact.simpleStamp(host, { 
-                startX, 
-                startY,
+                start,
                 fillStyle: particle.fill, 
                 strokeStyle: particle.stroke, 
             });
-        }
     },
 
     particlesAreDraggable: true,
@@ -135,100 +131,99 @@ const myNet = scrawl.makeNet({
 
 myNet.run();
 
-// myNet.clone({
-
-//     name: 'strong-arrow',
-//     generate: 'strong-shape',
-//     shapeTemplate: 'my-second-template-arrow',
-
-// }).run;
-
-const myNet2 = scrawl.makeNet({
+myNet.clone({
 
     name: 'strong-arrow',
-    world: myWorld,
-
-    shapeTemplate: 'my-second-template-arrow',
-    precision: 40,
-    joinTemplateEnds: true,
-
     generate: 'strong-shape',
-
-    postGenerate: function () {
-
-        const regex = RegExp('-0$');
-
-        this.particleStore.forEach(p => {
-
-            if (regex.test(p.name)) {
-
-                p.set({ 
-                    fill: 'red',
-                    stroke: 'black',
-                    forces: [],
-                });
-
-                this.springs.forEach(s => {
-
-                    if (s && s.particleFrom && s.particleFrom.name === p.name) {
-
-                        s.particleFromIsStatic = true;
-                    }
-                    if (s && s.particleTo && s.particleTo.name === p.name) {
-
-                        s.particleToIsStatic = true;
-                    }
-                })
-            }
-        });
-    },
-
-    showSprings: true,
-    showSpringsColor: 'azure',
-
-    springConstant: 300,
-
-    engine: 'runge-kutta',
-
-    artefact: scrawl.makeWheel({
-
-        name: 'particle-wheel',
-        radius: 7,
-
-        handle: ['center', 'center'],
-
-        method: 'fillThenDraw',
-        fillStyle: 'yellow',
-        strokeStyle: 'gold',
-
-        visibility: false, 
-
-        noUserInteraction: true,
-        noPositionDependencies: true,
-        noFilters: true,
-        noDeltaUpdates: true,
+    shapeTemplate: 'my-second-template-arrow',
+    artefact: scrawl.library.artefact['particle-wheel-1'].clone({
+        name: 'particle-wheel-2',
     }),
 
-    stampAction: function (artefact, particle, host) {
+}).run;
 
-        if (particle && particle.history && particle.history[0]) {
+// const myNet2 = scrawl.makeNet({
 
-            let [r, z, startX, startY] = particle.history[0];
+//     name: 'strong-arrow',
+//     world: myWorld,
 
-            artefact.simpleStamp(host, { 
-                startX, 
-                startY,
-                fillStyle: particle.fill, 
-                strokeStyle: particle.stroke, 
-            });
-        }
-    },
+//     shapeTemplate: 'my-second-template-arrow',
+//     precision: 40,
+//     joinTemplateEnds: true,
 
-    particlesAreDraggable: true,
+//     generate: 'strong-shape',
 
-});
+//     postGenerate: function () {
 
-myNet2.run();
+//         const regex = RegExp('-0$');
+
+//         this.particleStore.forEach(p => {
+
+//             if (regex.test(p.name)) {
+
+//                 p.set({ 
+//                     fill: 'red',
+//                     stroke: 'black',
+//                     forces: [],
+//                 });
+
+//                 this.springs.forEach(s => {
+
+//                     if (s && s.particleFrom && s.particleFrom.name === p.name) {
+
+//                         s.particleFromIsStatic = true;
+//                     }
+//                     if (s && s.particleTo && s.particleTo.name === p.name) {
+
+//                         s.particleToIsStatic = true;
+//                     }
+//                 })
+//             }
+//         });
+//     },
+
+//     showSprings: true,
+//     showSpringsColor: 'azure',
+
+//     springConstant: 300,
+
+//     engine: 'runge-kutta',
+
+//     artefact: scrawl.makeWheel({
+
+//         name: 'particle-wheel',
+//         radius: 7,
+
+//         handle: ['center', 'center'],
+
+//         method: 'fillThenDraw',
+//         fillStyle: 'yellow',
+//         strokeStyle: 'gold',
+
+//         visibility: false, 
+
+//         noUserInteraction: true,
+//         noPositionDependencies: true,
+//         noFilters: true,
+//         noDeltaUpdates: true,
+//     }),
+
+//     stampAction: function (artefact, particle, host) {
+
+//             let [r, z, ...start] = particle.history[0];
+
+//             artefact.simpleStamp(host, { 
+//                 start,
+//                 fillStyle: particle.fill, 
+//                 strokeStyle: particle.stroke, 
+//             });
+//     },
+
+//     particlesAreDraggable: true,
+
+// });
+
+// myNet2.run();
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo

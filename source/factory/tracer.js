@@ -19,15 +19,12 @@
 
 
 // #### Imports
-import { constructors, artefact, world, styles } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
+import { constructors, artefact } from '../core/library.js';
+import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xta } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
-import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeParticle } from './particle.js';
-import { requestCell, releaseCell } from './cell.js';
-import { makeVector, requestVector, releaseVector } from './vector.js';
-import { makeColor } from './color.js';
+import { requestVector, releaseVector } from './vector.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -159,32 +156,29 @@ P.stamp = function (force = false, host, changes) {
 
     let {artefact, trace, stampAction, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 
-    if (artefact) {
+    if (!host) host = this.getHost();
 
-        if (!host) host = this.getHost();
+    trace.set({
+        position: currentStampPosition,
+    });
 
-        trace.set({
-            position: currentStampPosition,
-        });
+    trace.manageHistory(0, host);
+    stampAction.call(this, artefact, trace, host);
 
-        trace.manageHistory(0, host);
-        stampAction.call(this, artefact, trace, host);
+    if (showHitRadius) {
 
-        if (showHitRadius) {
+        let engine = host.engine;
 
-            let engine = host.engine;
+        engine.save();
+        engine.lineWidth = 1;
+        engine.strokeStyle = hitRadiusColor;
 
-            engine.save();
-            engine.lineWidth = 1;
-            engine.strokeStyle = hitRadiusColor;
+        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.beginPath();
+        engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
+        engine.stroke();
 
-            engine.setTransform(1, 0, 0, 1, 0, 0);
-            engine.beginPath();
-            engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
-            engine.stroke();
-
-            engine.restore();
-        }
+        engine.restore();
     }
     return Promise.resolve(true);
 };

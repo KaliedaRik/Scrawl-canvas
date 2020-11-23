@@ -148,17 +148,13 @@ const myNet = scrawl.makeNet({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history && particle.history[0]) {
+        let [r, z, ...start] = particle.history[0];
 
-            let [r, z, startX, startY] = particle.history[0];
-
-            artefact.simpleStamp(host, { 
-                startX, 
-                startY,
-                fillStyle: particle.fill, 
-                strokeStyle: particle.stroke, 
-            });
-        }
+        artefact.simpleStamp(host, { 
+            start,
+            fillStyle: particle.fill, 
+            strokeStyle: particle.stroke, 
+        });
     },
 
     particlesAreDraggable: true,

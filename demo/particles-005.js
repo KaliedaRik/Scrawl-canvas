@@ -108,37 +108,22 @@ let emitter1 = scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history) {
+        let history = particle.history,
+            remaining, globalAlpha, scale, start, z, roll;
 
-            let history = particle.history,
-                fill = particle.fill,
-                remaining, alpha, scale, position, z, roll;
+        history.forEach((p, index) => {
 
-            history.forEach((p, index) => {
+            [remaining, z, ...start] = p;
+            
+            globalAlpha = remaining / 6;
+            scale = 1 + (z / 3);
 
-                [remaining, z, ...position] = p;
-                
-                alpha = remaining / 6;
-                if (alpha < 0) alpha = 0;
+            if (globalAlpha > 0 && scale > 0) {
 
-                roll = alpha * 720;
-
-                scale = 1 + (z / 3);
-                if (scale < 0.001) scale = 0; 
-
-                // Do not stamp the artefact if we cannot see it
-                if (alpha && scale) {
-
-                    artefact.simpleStamp(host, {
-                        start: position,
-                        scale: scale,
-                        globalAlpha: alpha,
-                        roll: roll,
-                    });
-                }
-                else p.isRunning = false;
-            });
-        }
+                roll = globalAlpha * 720;
+                artefact.simpleStamp(host, {start, scale, globalAlpha, roll});
+            }
+        });
     },
 });
 
@@ -200,7 +185,7 @@ let report = function () {
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     Particles: ${particlenames.length}
-    Drawn entitys: ${historyCount}`;
+    Stamps per display: ${historyCount}`;
     };
 }();
 

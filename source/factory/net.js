@@ -20,12 +20,12 @@
 
 
 // #### Imports
-import { constructors, artefact, artefactnames, entity, world, styles, particle } from '../core/library.js';
+import { constructors, artefact, artefactnames, entity, world, particle } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
 import { makeParticle } from './particle.js';
-import { makeVector, requestVector, releaseVector } from './vector.js';
+import { requestVector, releaseVector } from './vector.js';
 import { makeSpring } from './particleSpring.js';
 
 import baseMix from '../mixin/base.js';
@@ -278,95 +278,91 @@ P.stamp = function (force = false, host, changes) {
 
         let {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
 
-        // The Net entity will not stamp itself if it doesn't have an artefact (entity) to stamp itself with.
-        if (art) {
+        // The host is the Cell object on which we will be displaying the Net entity and all its associated artefacts and additional graphics
+        if (!host) host = this.getHost();
 
-            // The host is the Cell object on which we will be displaying the Net entity and all its associated artefacts and additional graphics
-            if (!host) host = this.getHost();
+        // The particle system is a physics system, which means we need to advance it by a small amount of time as part of each Display cycle
+        let deltaTime = 16 / 1000,
+            now = Date.now();
 
-            // The particle system is a physics system, which means we need to advance it by a small amount of time as part of each Display cycle
-            let deltaTime = 16 / 1000,
-                now = Date.now();
+        if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
-            if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
+        // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restart the emitter's animation.
+        if (deltaTime > resetAfterBlur) {
 
-            // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restart the emitter's animation.
-            if (deltaTime > resetAfterBlur) {
-
-                this.purgeParticlesFromLibrary();
-                deltaTime = 16 / 1000;
-            }
-
-            // If we have no particles, we need to generate them
-            if (!particleStore.length) {
-
-                generate.call(this, host);
-                postGenerate.call(this);
-            }
-
-            // The physics core of the function: 
-            // + Calculate the forces acting on each of the Net entity's particles
-            // + Add the Spring constraints to the particles
-            // + Get the particles to update themselves, using the appropriate physics engine
-            particleStore.forEach(p => p.applyForces(world, host));
-            springs.forEach(s => s.applySpring());
-            particleStore.forEach(p => p.update(deltaTime, world));
-
-            // Additional visuals are available - specifically we can draw in the springs acting on particle pairs before we stamp the artefact on them
-            if (showSprings) {
-
-                let engine = host.engine;
-
-                engine.save();
-                engine.strokeStyle = showSpringsColor;
-                engine.lineWidth = 1;
-                engine.setTransform(1, 0, 0, 1, 0, 0);
-                engine.beginPath();
-
-                springs.forEach(s => {
-
-                    let {particleFrom, particleTo} = s;
-
-                    engine.moveTo(particleFrom.position.x, particleFrom.position.y);
-                    engine.lineTo(particleTo.position.x, particleTo.position.y);
-                });
-                engine.stroke();
-                engine.restore();
-            }
-
-            // The display cycle core of the function
-            // + Get each particle to update its history
-            // + Using that history, get each particle to stamp some ink onto the canvas.
-            particleStore.forEach(p => {
-
-                p.manageHistory(deltaTime, host);
-                stampAction.call(this, art, p, host);
-            });
-
-            // A second set of additional visuals - display each particle's hit region
-            if (showHitRadius) {
-
-                let engine = host.engine;
-
-                engine.save();
-                engine.lineWidth = 1;
-                engine.strokeStyle = hitRadiusColor;
-
-                engine.setTransform(1, 0, 0, 1, 0, 0);
-                engine.beginPath();
-
-                particleStore.forEach(p => {
-                    engine.moveTo(p.position.x, p.position.y);
-                    engine.arc(p.position.x, p.position.y, hitRadius, 0, Math.PI * 2);
-                });
-                
-                engine.stroke();
-                engine.restore();
-            }
-
-            // The final critical step - remember the absolute time value of when we started to perform this Display cycle
-            this.lastUpdated = now;
+            this.purgeParticlesFromLibrary();
+            deltaTime = 16 / 1000;
         }
+
+        // If we have no particles, we need to generate them
+        if (!particleStore.length) {
+
+            generate.call(this, host);
+            postGenerate.call(this);
+        }
+
+        // The physics core of the function: 
+        // + Calculate the forces acting on each of the Net entity's particles
+        // + Add the Spring constraints to the particles
+        // + Get the particles to update themselves, using the appropriate physics engine
+        particleStore.forEach(p => p.applyForces(world, host));
+        springs.forEach(s => s.applySpring());
+        particleStore.forEach(p => p.update(deltaTime, world));
+
+        // Additional visuals are available - specifically we can draw in the springs acting on particle pairs before we stamp the artefact on them
+        if (showSprings) {
+
+            let engine = host.engine;
+
+            engine.save();
+            engine.strokeStyle = showSpringsColor;
+            engine.lineWidth = 1;
+            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.beginPath();
+
+            springs.forEach(s => {
+
+                let {particleFrom, particleTo} = s;
+
+                engine.moveTo(particleFrom.position.x, particleFrom.position.y);
+                engine.lineTo(particleTo.position.x, particleTo.position.y);
+            });
+            engine.stroke();
+            engine.restore();
+        }
+
+        // The display cycle core of the function
+        // + Get each particle to update its history
+        // + Using that history, get each particle to stamp some ink onto the canvas.
+        particleStore.forEach(p => {
+
+            p.manageHistory(deltaTime, host);
+            stampAction.call(this, art, p, host);
+        });
+
+        // A second set of additional visuals - display each particle's hit region
+        if (showHitRadius) {
+
+            let engine = host.engine;
+
+            engine.save();
+            engine.lineWidth = 1;
+            engine.strokeStyle = hitRadiusColor;
+
+            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.beginPath();
+
+            particleStore.forEach(p => {
+                engine.moveTo(p.position.x, p.position.y);
+                engine.arc(p.position.x, p.position.y, hitRadius, 0, Math.PI * 2);
+            });
+            
+            engine.stroke();
+            engine.restore();
+        }
+
+        // The final critical step - remember the absolute time value of when we started to perform this Display cycle
+        this.lastUpdated = now;
     }
     // The function will always return a Promise which has been resolved (it will never 'fail', though it might refuse to work)
     return Promise.resolve(true);

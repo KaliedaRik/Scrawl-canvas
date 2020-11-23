@@ -24,10 +24,9 @@
 
 
 // #### Imports
-import { constructors, artefact, world, styles } from '../core/library.js';
+import { constructors, artefact, world } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
-import { currentCorePosition } from '../core/userInteraction.js';
 
 import { requestParticle, releaseParticle } from './particle.js';
 import { requestCell, releaseCell } from './cell.js';
@@ -574,61 +573,56 @@ P.stamp = function (force = false, host, changes) {
 
         let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 
-        if (artefact) {
+        if (!host) host = this.getHost();
 
+        let deltaTime = 16 / 1000,
+            now = Date.now();
 
-            if (!host) host = this.getHost();
+        if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
-            let deltaTime = 16 / 1000,
-                now = Date.now();
+        // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
+        if (deltaTime > resetAfterBlur) {
 
-            if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
-
-            // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
-            if (deltaTime > resetAfterBlur) {
-
-                particleStore.forEach(p => releaseParticle(p));
-                particleStore.length = 0;
-                deltaTime = 16 / 1000;
-            }
-
-            particleStore.forEach(p => p.applyForces(world, host));
-            particleStore.forEach(p => p.update(deltaTime, world));
-
-
-            // TODO: detect and manage collisions
-
-            // Perform canvas drawing before the main (developer-defined) `stampAction` function
-            preAction.call(this, host);
-
-            // Emitter entitys must always be associated with one (and only one) artefact - it uses the artefact to rapidly visualise particles. The artefact can update its attributes (eg position, scale, roll, fillStyle, strokeStyle, etc) in response to the current Particle's attributes.
-            particleStore.forEach(p => {
-
-                p.manageHistory(deltaTime, host);
-                stampAction.call(this, artefact, p, host);
-            });
-
-            // Perform further canvas drawing after the main (developer-defined) `stampAction` function
-            postAction.call(this, host);
-
-            if (showHitRadius) {
-
-                let engine = host.engine;
-
-                engine.save();
-                engine.lineWidth = 1;
-                engine.strokeStyle = hitRadiusColor;
-
-                engine.setTransform(1, 0, 0, 1, 0, 0);
-                engine.beginPath();
-                engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
-                engine.stroke();
-
-                engine.restore();
-            }
-
-            this.lastUpdated = now;
+            particleStore.forEach(p => releaseParticle(p));
+            particleStore.length = 0;
+            deltaTime = 16 / 1000;
         }
+
+        particleStore.forEach(p => p.applyForces(world, host));
+        particleStore.forEach(p => p.update(deltaTime, world));
+
+
+        // TODO: detect and manage collisions
+
+        // Perform canvas drawing before the main (developer-defined) `stampAction` function
+        preAction.call(this, host);
+
+        particleStore.forEach(p => {
+
+            p.manageHistory(deltaTime, host);
+            stampAction.call(this, artefact, p, host);
+        });
+
+        // Perform further canvas drawing after the main (developer-defined) `stampAction` function
+        postAction.call(this, host);
+
+        if (showHitRadius) {
+
+            let engine = host.engine;
+
+            engine.save();
+            engine.lineWidth = 1;
+            engine.strokeStyle = hitRadiusColor;
+
+            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.beginPath();
+            engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
+            engine.stroke();
+
+            engine.restore();
+        }
+
+        this.lastUpdated = now;
     }
     return Promise.resolve(true);
 };

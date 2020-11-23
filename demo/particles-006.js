@@ -132,12 +132,8 @@ const myEmitter = scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history && particle.history[0]) {
-
-            let [r, z, startX, startY] = particle.history[0];
-
-            artefact.simpleStamp(host, { startX, startY });
-        }
+        let [r, z, ...start] = particle.history[0];
+        artefact.simpleStamp(host, {start});
     },
 
     postAction: function (host) {
@@ -215,7 +211,7 @@ let report = function () {
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     Particles: ${particlenames.length}
-    Drawn entitys: ${historyCount}`;
+    Stamps per display: ${historyCount} + all the connecting lines`;
     };
 }();
 

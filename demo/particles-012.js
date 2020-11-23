@@ -310,22 +310,19 @@ scrawl.makeTracer({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history) {
+        let history = particle.history,
+            len = history.length,
+            remaining, z, start;
 
-            let history = particle.history,
-                len = history.length,
-                remaining, z, position;
+        history.forEach((p, index) => {
 
-            history.forEach((p, index) => {
-
-                [remaining, z, ...position] = p;
-                
-                artefact.simpleStamp(host, {
-                    start: position,
-                    scale: (len - index) / len,
-                });
+            [remaining, z, ...start] = p;
+            
+            artefact.simpleStamp(host, {
+                start,
+                scale: (len - index) / len,
             });
-        }
+        });
     },
 
 }).clone({
@@ -363,10 +360,6 @@ scrawl.makeEmitter({
     killAfterTime: 5,
     killAfterTimeVariation: 0.1,
 
-    artefact: scrawl.makeBlock({
-        visibility: false,
-    }),
-
     rangeX: 20,
     rangeFromX: -10,
 
@@ -378,34 +371,31 @@ scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history) {
+        let engine = host.engine,
+            history = particle.history,
+            remaining, radius, alpha, x, y, z,
+            endRad = Math.PI * 2;
 
-            let engine = host.engine,
-                history = particle.history,
-                remaining, radius, alpha, x, y, z,
-                endRad = Math.PI * 2;
+        engine.save();
+        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.fillStyle = 'orchid';
 
-            engine.save();
-            engine.setTransform(1, 0, 0, 1, 0, 0);
-            engine.fillStyle = 'orchid';
+        engine.beginPath();
+        history.forEach((p, index) => {
 
-            engine.beginPath();
-            history.forEach((p, index) => {
+            [remaining, z, x, y] = p;
+            radius = 5 * (1 + (z / 3));
+            alpha = remaining / 8;
 
-                [remaining, z, x, y] = p;
-                radius = 5 * (1 + (z / 3));
-                alpha = remaining / 8;
+            if (radius > 0) {
 
-                if (radius > 0) {
-
-                    engine.globalAlpha = alpha;
-                    engine.moveTo(x, y);
-                    engine.arc(x, y, radius, 0, endRad);
-                }
-            });
-            engine.fill();
-            engine.restore();
-        }
+                engine.globalAlpha = alpha;
+                engine.moveTo(x, y);
+                engine.arc(x, y, radius, 0, endRad);
+            }
+        });
+        engine.fill();
+        engine.restore();
     },
 }).run();
 

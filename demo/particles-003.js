@@ -193,36 +193,30 @@ const myemitter = scrawl.makeEmitter({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history) {
+        let history = particle.history,
+            fill = particle.fill,
+            remaining, alpha, scale, position, z,
+            roll = this.get('roll');
 
-            let history = particle.history,
-                fill = particle.fill,
-                remaining, alpha, scale, position, z,
-                roll = this.get('roll');
+        history.forEach((p, index) => {
 
-            history.forEach((p, index) => {
+            [remaining, z, ...position] = p;
+            
+            alpha = remaining / 6;
 
-                [remaining, z, ...position] = p;
-                
-                alpha = remaining / 6;
-                if (alpha < 0) alpha = 0;
+            scale = 1 + (z / 3);
 
-                scale = 1 + (z / 3);
-                if (scale < 0.001) scale = 0; 
+            // Do not stamp the artefact if we cannot see it
+            if (alpha > 0 && scale > 0) {
 
-                // Do not stamp the artefact if we cannot see it
-                if (alpha && scale) {
-
-                    artefact.simpleStamp(host, {
-                        start: position,
-                        scale: scale,
-                        globalAlpha: alpha,
-                        roll: roll,
-                    });
-                }
-                else p.isRunning = false;
-            });
-        }
+                artefact.simpleStamp(host, {
+                    start: position,
+                    scale: scale,
+                    globalAlpha: alpha,
+                    roll: roll,
+                });
+            }
+        });
     },
 
 }).run();
@@ -255,7 +249,7 @@ let report = function () {
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     Particles: ${particlenames.length}
-    Drawn entitys: ${historyCount}`;
+    Stamps per display: ${historyCount}`;
     };
 }();
 

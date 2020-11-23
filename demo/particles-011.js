@@ -68,23 +68,17 @@ scrawl.makeTracer({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history) {
+        let history = particle.history,
+            remaining, z, start;
 
-            let history = particle.history,
-                remaining, z, position;
+        history.forEach((p, index) => {
 
-            history.forEach((p, index) => {
+            if (index < 10 || (index > 20 && index < 30) || index > 40) {
 
-                if (index < 10 || (index > 20 && index < 30) || index > 40) {
-
-                    [remaining, z, ...position] = p;
-                    
-                    artefact.simpleStamp(host, {
-                        start: position,
-                    });
-                }
-            });
-        }
+                [remaining, z, ...start] = p;
+                artefact.simpleStamp(host, { start });
+            }
+        });
     },
 }).clone({
 
@@ -99,25 +93,22 @@ scrawl.makeTracer({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history) {
+        let history = particle.history,
+            len = history.length,
+            remaining, z, start;
 
-            let history = particle.history,
-                len = history.length,
-                remaining, z, position;
+        history.forEach((p, index) => {
 
-            history.forEach((p, index) => {
+            if (index % 3 === 0) {
 
-                if (index % 3 === 0) {
-
-                    [remaining, z, ...position] = p;
-                    
-                    artefact.simpleStamp(host, {
-                        start: position,
-                        globalAlpha: (len - index) / len,
-                    });
-                }
-            });
-        }
+                [remaining, z, ...start] = p;
+                
+                artefact.simpleStamp(host, {
+                    start,
+                    globalAlpha: (len - index) / len,
+                });
+            }
+        });
     },
 }).clone({
 
@@ -131,22 +122,19 @@ scrawl.makeTracer({
 
     stampAction: function (artefact, particle, host) {
 
-        if (particle && particle.history) {
+        let history = particle.history,
+            len = history.length,
+            remaining, z, start;
 
-            let history = particle.history,
-                len = history.length,
-                remaining, z, position;
+        history.forEach((p, index) => {
 
-            history.forEach((p, index) => {
-
-                [remaining, z, ...position] = p;
-                
-                artefact.simpleStamp(host, {
-                    start: position,
-                    scale: ((len - index) / len) * 2,
-                });
+            [remaining, z, ...start] = p;
+            
+            artefact.simpleStamp(host, {
+                start,
+                scale: ((len - index) / len) * 2,
             });
-        }
+        });
     },
 });
 
