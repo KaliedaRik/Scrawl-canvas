@@ -251,7 +251,49 @@ P.clone = λthis;
 
 
 // #### Kill functionality
-P.kill = function () {
+// P.kill = function () {
+
+//     let name = this.name,
+//         host = this.host,
+//         h, g;
+
+//     // rootElements and uiSubscribedElements arrays
+//     removeItem(rootElements, name);
+//     setRootElementsSort();
+
+//     removeItem(uiSubscribedElements, name);
+
+//     // Host and host Group
+//     if (host && host !== 'root') {
+
+//         h = (this.currentHost) ? this.currentHost : artefact[host];
+
+//         if (h) {
+
+//             h.removeGroups(name);
+
+//             g = group[h.name];
+//             if (g) g.removeArtefacts(name);
+//         }
+//     }
+
+//     // Canvas Group
+//     if (group[name]) group[name].kill();
+
+//     // Base Cell
+//     this.base.kill();
+
+//     // DOM removals
+//     this.navigation.remove();
+//     this.textHold.remove();
+//     this.ariaLabelElement.remove();
+//     this.ariaDescriptionElement.remove();
+//     this.domElement.remove();
+
+//     // Scrawl-canvas library
+//     return this.deregister();
+// }
+P.factoryKill = function () {
 
     let name = this.name,
         host = this.host,
@@ -289,10 +331,7 @@ P.kill = function () {
     this.ariaLabelElement.remove();
     this.ariaDescriptionElement.remove();
     this.domElement.remove();
-
-    // Scrawl-canvas library
-    return this.deregister();
-}
+};
 
 
 // #### Get, Set, deltaSet

@@ -40,6 +40,8 @@ const bigball = scrawl.makeWheel({
     strokeStyle: 'orange',
     lineWidth: 3,
     method: 'fillThenDraw',
+
+    bringToFrontOnDrag: false,
 });
 
 scrawl.makeForce({

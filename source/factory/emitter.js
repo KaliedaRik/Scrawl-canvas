@@ -24,7 +24,7 @@
 
 
 // #### Imports
-import { constructors, artefact, world } from '../core/library.js';
+import { constructors, tween, artefact, group, world } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
@@ -40,27 +40,32 @@ import entityMix from '../mixin/entity.js';
 // #### Emitter constructor
 const Emitter = function (items = {}) {
 
+    // The constructor doesn't use the entity mixin constructor, so everything there needs to be replicated here.
     this.makeName(items.name);
     this.register();
-
     this.initializePositions();
-
     this.set(this.defs);
 
+    // The entity has a hit zone which can be used for drag-and-drop, and other user interactions. Thus the `onXYZ` UI functions remain relevant.
     this.onEnter = λnull;
     this.onLeave = λnull;
     this.onDown = λnull;
     this.onUp = λnull;
 
+    // Each instantiated entity will include two color factories - one for creating random fillStyle color Strings for generated particles, the other for generating strokeStyle colors.
     this.fillColorFactory = makeColor({ name: `${this.name}-fillColorFactory`});
     this.strokeColorFactory = makeColor({ name: `${this.name}-strokeColorFactory`});
 
+    // The `range` attributes use Vector objects in which to hold their data.
+    this.range = makeVector();
+    this.rangeFrom = makeVector();
+
+    // As part of its `stamp` functionality the Emitter entity will invoke three user-defined `xyzAction` functions. If none of these functions are supplied to the entity, then it will not display anything on the canvas.
     this.preAction = λnull;
     this.stampAction = λnull;
     this.postAction = λnull;
 
-    this.range = makeVector();
-    this.rangeFrom = makeVector();
+    // Setup the particle store, including the arrays used for winnowing out and killing dead particles
     this.particleStore = [];
     this.deadParticles = [];
     this.liveParticles = [];
@@ -92,19 +97,16 @@ P = entityMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
+    // __world__ - World object; can be set using the String name of a World object, or the World object itself.
     world: null,
+
+    // __artefact__ - In theory, any Scrawl-canvas object whose `isArtefact` flag is set to `true` can be assigned to this attribute. However this has not been tested on non-entity artefacts. For now, stick to Scrawl-canvas entity objects.
+    // + Can be set using the String name of an artefact object, or the artefact object itself.
     artefact: null,
 
     preAction: null,
     stampAction: null,
     postAction: null,
-
-    historyLength: 1,
-    engine: 'euler',
-    forces: null,
-    mass: 1,
-
-    massVariation: 0,
 
     fillColorFactory: null,
     strokeColorFactory: null,
@@ -117,9 +119,14 @@ let defaultAttributes = {
     range: null,
     rangeFrom: null,
 
+    particleStore: null,
+
     particleCount: 0,
 
     generationRate: 0,
+
+    generateAlongPath: false,
+    generateInArea: false,
 
     killAfterTime: 0,
     killAfterTimeVariation: 0,
@@ -129,16 +136,23 @@ let defaultAttributes = {
 
     killBeyondCanvas: false,
 
-    generateAlongPath: false,
-    generateInArea: false,
+    historyLength: 1,
+    engine: 'euler',
 
-    particleStore: null,
+    forces: null,
 
-    resetAfterBlur: 3,
+    mass: 1,
+    massVariation: 0,
 
+    // Note that the __hitRadius__ attribute is tied directly to the __width__ and __height__ attributes (which are effectively meaningless for this entity)
+    // + This attribute is absolute - unlike other Scrawl-canvas radius attributes it cannot be set using a percentage String value
     hitRadius: 10,
+
+    // We can tell the entity to display its hit zone by setting the `showHitRadius` flag. The hit zone outline color attribute `hitRadiusColor` accepts any valid CSS color String value
     showHitRadius: false,
     hitRadiusColor: '#000000',
+
+    resetAfterBlur: 3,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -178,7 +192,7 @@ P.postCloneAction = function(clone, items) {
 
 
 // #### Kill management
-P.kill = function (killArtefact = false, killWorld = false) {
+P.factoryKill = function (killArtefact, killWorld) {
 
     this.isRunning = false;
 
@@ -192,10 +206,6 @@ P.kill = function (killArtefact = false, killWorld = false) {
     this.deadParticles.forEach(p => p.kill());
     this.liveParticles.forEach(p => p.kill());
     this.particleStore.forEach(p => p.kill());
-
-    this.deregister();
-
-    return true;
 };
 
 
@@ -279,6 +289,41 @@ S.strokeColor = function (item) {
 
     if (isa_obj(item)) this.fillColorFactory.set(item);
 };
+
+S.hitRadius = function (item) {
+
+    if (item.toFixed) {
+
+        this.hitRadius = item;
+        this.width = this.height = item * 2;
+    }
+};
+D.hitRadius = function (item) {
+
+    if (item.toFixed) {
+
+        this.hitRadius += item;
+        this.width = this.height = this.hitRadius * 2;
+    }
+};
+S.width = function (item) {
+
+    if (item.toFixed) {
+
+        this.hitRadius = item / 2;
+        this.width = this.height = item;
+    }
+};
+D.width = function (item) {
+
+    if (item.toFixed) {
+
+        this.hitRadius = item / 2;
+        this.width = this.height = item;
+    }
+};
+S.height = S.width;
+D.height = D.width;
 
 
 // #### Prototype functions
@@ -569,62 +614,67 @@ P.addParticles = function (req) {
 // + Overwriters the functionality defined in the 
 P.stamp = function (force = false, host, changes) {
 
-    if (this.isRunning) {
+    let self = this;
 
-        let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
+    return new Promise((resolve, reject) => {
 
-        if (!host) host = this.getHost();
+        if (self.isRunning) {
 
-        let deltaTime = 16 / 1000,
-            now = Date.now();
+            let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = self;
 
-        if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
+            if (!host) host = self.getHost();
 
-        // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
-        if (deltaTime > resetAfterBlur) {
+            let deltaTime = 16 / 1000,
+                now = Date.now();
 
-            particleStore.forEach(p => releaseParticle(p));
-            particleStore.length = 0;
-            deltaTime = 16 / 1000;
+            if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
+
+            // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
+            if (deltaTime > resetAfterBlur) {
+
+                particleStore.forEach(p => releaseParticle(p));
+                particleStore.length = 0;
+                deltaTime = 16 / 1000;
+            }
+
+            particleStore.forEach(p => p.applyForces(world, host));
+            particleStore.forEach(p => p.update(deltaTime, world));
+
+
+            // TODO: detect and manage collisions
+
+            // Perform canvas drawing before the main (developer-defined) `stampAction` function
+            preAction.call(self, host);
+
+            particleStore.forEach(p => {
+
+                p.manageHistory(deltaTime, host);
+                stampAction.call(self, artefact, p, host);
+            });
+
+            // Perform further canvas drawing after the main (developer-defined) `stampAction` function
+            postAction.call(self, host);
+
+            if (showHitRadius) {
+
+                let engine = host.engine;
+
+                engine.save();
+                engine.lineWidth = 1;
+                engine.strokeStyle = hitRadiusColor;
+
+                engine.setTransform(1, 0, 0, 1, 0, 0);
+                engine.beginPath();
+                engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
+                engine.stroke();
+
+                engine.restore();
+            }
+
+            self.lastUpdated = now;
         }
-
-        particleStore.forEach(p => p.applyForces(world, host));
-        particleStore.forEach(p => p.update(deltaTime, world));
-
-
-        // TODO: detect and manage collisions
-
-        // Perform canvas drawing before the main (developer-defined) `stampAction` function
-        preAction.call(this, host);
-
-        particleStore.forEach(p => {
-
-            p.manageHistory(deltaTime, host);
-            stampAction.call(this, artefact, p, host);
-        });
-
-        // Perform further canvas drawing after the main (developer-defined) `stampAction` function
-        postAction.call(this, host);
-
-        if (showHitRadius) {
-
-            let engine = host.engine;
-
-            engine.save();
-            engine.lineWidth = 1;
-            engine.strokeStyle = hitRadiusColor;
-
-            engine.setTransform(1, 0, 0, 1, 0, 0);
-            engine.beginPath();
-            engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
-            engine.stroke();
-
-            engine.restore();
-        }
-
-        this.lastUpdated = now;
-    }
-    return Promise.resolve(true);
+        resolve('Emitter.stamp resolving');
+    });
 };
 
 P.run = function () {

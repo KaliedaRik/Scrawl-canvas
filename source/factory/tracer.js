@@ -19,7 +19,7 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
+import { constructors, tween, artefact, group } from '../core/library.js';
 import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xta } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
@@ -115,15 +115,10 @@ P.postCloneAction = function(clone, items) {
 
 
 // #### Kill management
-P.kill = function (killArtefact = false) {
+P.factoryKill = function (killArtefact) {
 
     if (killArtefact) this.artefact.kill();
-
     this.trace.kill();
-
-    this.deregister();
-
-    return true;
 };
 
 
@@ -154,33 +149,38 @@ S.artefact = function (item) {
 // + Overwriters the functionality defined in the 
 P.stamp = function (force = false, host, changes) {
 
-    let {artefact, trace, stampAction, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
+    let self = this;
 
-    if (!host) host = this.getHost();
+    return new Promise((resolve, reject) => {
 
-    trace.set({
-        position: currentStampPosition,
+        let {artefact, trace, stampAction, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = self;
+
+        if (!host) host = self.getHost();
+
+        trace.set({
+            position: currentStampPosition,
+        });
+
+        trace.manageHistory(0, host);
+        stampAction.call(self, artefact, trace, host);
+
+        if (showHitRadius) {
+
+            let engine = host.engine;
+
+            engine.save();
+            engine.lineWidth = 1;
+            engine.strokeStyle = hitRadiusColor;
+
+            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.beginPath();
+            engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
+            engine.stroke();
+
+            engine.restore();
+        }
+        resolve('Tracer.stamp resolving');
     });
-
-    trace.manageHistory(0, host);
-    stampAction.call(this, artefact, trace, host);
-
-    if (showHitRadius) {
-
-        let engine = host.engine;
-
-        engine.save();
-        engine.lineWidth = 1;
-        engine.strokeStyle = hitRadiusColor;
-
-        engine.setTransform(1, 0, 0, 1, 0, 0);
-        engine.beginPath();
-        engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
-        engine.stroke();
-
-        engine.restore();
-    }
-    return Promise.resolve(true);
 };
 
 P.checkHit = function (items = [], mycell) {

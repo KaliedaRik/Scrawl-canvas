@@ -245,6 +245,9 @@ export default function (P = {}) {
 // + The lock values can be set individually using the pseudo-attributes __lockXTo__ and __lockYTo__.
         lockTo: null,
 
+// __bringToFrontOnDrag__ - flag which, when set (default), will force the artefact currently being dragged to appear on top of other artefacts
+		bringToFrontOnDrag: true,
+
 
 // All artefacts (except compound entities such as Loom) can be scaled by setting their __scale__ attribute to an appropriate float Number value:
 // + A value of __0__ effectively makes the artefact disappear from the display (though setting the artefact's __visibility__ flag to false is a more efficient approach).
@@ -331,7 +334,7 @@ export default function (P = {}) {
 
 
 // #### Kill management
-    P.kill = function () {
+    P.kill = function (flag1 = false, flag2 = false) {
 
         let myname = this.name
 
@@ -352,6 +355,9 @@ export default function (P = {}) {
                 if (art.pivot && art.pivot.name === myname) art.set({ pivot: false});
                 if (art.mimic && art.mimic.name === myname) art.set({ mimic: false});
                 if (art.path && art.path.name === myname) art.set({ path: false});
+                if (art.generateAlongPath && art.generateAlongPath.name === myname) art.set({ generateAlongPath: false});
+                if (art.generateInArea && art.generateInArea.name === myname) art.set({ generateInArea: false});
+                if (art.artefact && art.artefact.name === myname) art.set({ artefact: false});
 
                 if (Array.isArray(art.pins)) {
 
@@ -370,7 +376,7 @@ export default function (P = {}) {
         });
 
         // Factory-specific actions required to complete the kill
-        this.factoryKill();
+        this.factoryKill(flag1, flag2);
         
         // Remove artefact from the Scrawl-canvas library
         this.deregister();
@@ -1743,9 +1749,11 @@ export default function (P = {}) {
                 this.currentDragOffset[1] = this.mimic.get('startY') - y;
             }
 
-            this.order += 9999;
+            if (this.bringToFrontOnDrag) {
 
-            this.group.batchResort = true;
+            	this.order += 9999;
+	            this.group.batchResort = true;
+            }
 
             if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
         }
@@ -1760,9 +1768,15 @@ export default function (P = {}) {
 
         this.currentDragOffset.set(this.currentDragCache);
 
-        this.order = (this.order >= 9999) ? this.order - 9999 : 0;
+        if (this.bringToFrontOnDrag) {
 
-        this.group.batchResort = true;
+        	this.order -= 9999;
+
+        	if (this.order < 0) this.order = 0;
+
+	        this.group.batchResort = true;
+        }
+
 
         if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
 

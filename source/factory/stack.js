@@ -161,7 +161,32 @@ P.clone = λthis;
 
 
 // #### Kill functionality
-P.kill = function () {
+// P.kill = function () {
+
+//     let myname = this.name;
+
+//     // rootElements and uiSubscribedElements arrays
+//     removeItem(rootElements, myname);
+//     setRootElementsSort();
+
+//     removeItem(uiSubscribedElements, myname);
+
+//     // Groups
+//     if (group[myname]) group[myname].kill();
+
+//     Object.entries(artefact).forEach(([name, art]) => {
+
+//         if (art.host === myname) art.kill();
+//     });
+
+//     // DOM removals
+//     this.domElement.remove();
+
+//     // Scrawl-canvas library
+//     return this.deregister();
+// }
+// #### Kill functionality
+P.factoryKill = function () {
 
     let myname = this.name;
 
@@ -181,10 +206,9 @@ P.kill = function () {
 
     // DOM removals
     this.domElement.remove();
-
-    // Scrawl-canvas library
-    return this.deregister();
 }
+
+
 
 
 // #### Get, Set, deltaSet

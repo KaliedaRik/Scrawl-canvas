@@ -30,11 +30,11 @@
     <div class="green label">World speed</div>
     <div class="green"><input class="controlItem" id="world-speed" type="range" value="2" min="0.5" max="4" step="0.01" /></div>
 
-    <div class="green label">World alpha decay</div>
-    <div class="green"><input class="controlItem" id="color-alpha" type="range" value="6" min="1" max="10" step="0.1" /></div>
+    <div class="green label">Opacity</div>
+    <div class="green"><input class="controlItem" id="opacity" type="range" value="0.2" min="0.01" max="1" step="0.01" /></div>
 
-    <div class="green label">Particle stroke color</div>
-    <div class="green"><input class="controlItem" id="color-controller" type="color" value="#b9b5df" /></div>
+    <div class="green label">Outline color</div>
+    <div class="green"><input class="controlItem" id="outline-color" type="color" value="#b9b5df" /></div>
 
     <div class="green label">Background color</div>
     <div class="green"><input class="controlItem" id="background" type="color" value="#000040" /></div>
@@ -50,6 +50,12 @@
 
     <div class="blue label">History length</div>
     <div class="blue"><input class="controlItem" id="historyLength" type="range" value="20" min="1" max="200" step="1" /></div>
+
+    <div class="blue label">Kill radius (px)</div>
+    <div class="blue"><input class="controlItem" id="kill-radius" type="range" value="50" min="5" max="100" step="1" /></div>
+
+    <div class="blue label">Kill radius variation (px)</div>
+    <div class="blue"><input class="controlItem" id="kill-radius-variation" type="range" value="0" min="0" max="100" step="1" /></div>
 
     <div class="pink label">Artefact</div>
     <div class="pink">
@@ -73,7 +79,17 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li>Create a particle world object</li>
+      <li>Create some Scrawl-canvas entitys which we can use with our Emitter entity</li>
+      <li>Create a particle Emitter entity</li>
+      <li>Check to see that the Emitter entity can lock to the mouse cursor</li>
+      <li>Check the effect of changing the world object's tickMultiplier (world speed) attribute</li>
+      <li>Check that particle color, and opacity appearance, can be controlled via the user-defined attributes in the world object (particle stroke color, minimum fill color, maximum fill color, opacity)</li>
+      <li>Check the effects of changing the following emitter/particle attributes: historyLength; generationRate</li>
+      <li>Confirm that particles comply with changes in the emitter's kill radius attributes</li>
+      <li>Check that the canvas backgroundColor attribute can be updated (background color)</li>
+      <li>Change the emitter's artefact; check that the update is immediate and impacts on all existing particles as well as new ones</li>
+      <li>Navigate away from the web page (open another tab in the browser) and, a few seconds later, navigate back to the page - check that the animation resets and starts, and does not freeze the page</li>
     </ul>
     <p><a href="../docs/demo/particles-002.html">Annotated code</a></p>
   </div>

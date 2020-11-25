@@ -13,6 +13,7 @@ canvas.setBase({
 });
 
 
+// Create user-controllable Bezier entity 
 scrawl.makeWheel({
 
     name: 'pin-1',
@@ -73,19 +74,23 @@ scrawl.makeBezier({
     useAsPath: true,
 });
 
-// Create a World object; add some user-defined attributes to it
+
+// #### Particle physics animation scene
+
+// Create a World object which we can then assign to the particle emitter
 let myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
     tickMultiplier: 2,
 });
 
+// Create the particle Emitter entity
 const myemitter = scrawl.makeEmitter({
 
     name: 'line-emitter',
     world: myWorld,
 
-    generationRate: 150,
+    generationRate: 120,
     killAfterTime: 5,
 
     rangeY: 10,
@@ -94,8 +99,10 @@ const myemitter = scrawl.makeEmitter({
     rangeZ: -1,
     rangeFromZ: -0.2,
 
+    // We tell the Emitter to generate its particles along our curve by setting its `generateAlongPath` attribute to the Bezier entity's String name, or the entity object itself.
     generateAlongPath: 'my-bezier',
 
+    // We can define an entity to be used as the Emitter's stamp at the same time as we define the Emitter itself
     artefact: scrawl.makeStar({
 
         name: 'particle-star-entity',
@@ -120,32 +127,22 @@ const myemitter = scrawl.makeEmitter({
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
-            fill = particle.fill,
-            remaining, alpha, scale, position, z, roll;
+            remaining, globalAlpha, scale, start, z, roll;
 
         history.forEach((p, index) => {
 
-            [remaining, z, ...position] = p;
-            
-            alpha = remaining / 6;
-
+            [remaining, z, ...start] = p;
+            globalAlpha = remaining / 6;
             scale = 1 + (z / 3);
 
-            // Do not stamp the artefact if we cannot see it
-            if (alpha > 0 && scale > 0) {
+            if (globalAlpha > 0 && scale > 0) {
 
-                roll = alpha * 720;
+                roll = globalAlpha * 720;
 
-                artefact.simpleStamp(host, {
-                    start: position,
-                    scale: scale,
-                    globalAlpha: alpha,
-                    roll: roll,
-                });
+                artefact.simpleStamp(host, {start, scale, globalAlpha, roll});
             }
         });
     },
-
 }).run();
 
 
@@ -195,7 +192,6 @@ scrawl.makeDragZone({
     zone: canvas,
     collisionGroup: pins,
     endOn: ['up', 'leave'],
-    exposeCurrentArtefact: true,
 });
 
 

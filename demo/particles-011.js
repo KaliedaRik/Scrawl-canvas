@@ -32,6 +32,8 @@ scrawl.makeShape({
     fillStyle: 'lavender',
     lineWidth: 8,
     method: 'fillThenDraw',
+
+    bringToFrontOnDrag: false,
 });
 
 scrawl.makeTracer({

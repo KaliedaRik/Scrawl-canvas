@@ -144,15 +144,18 @@ P.packetObjects = pushUnique(P.packetObjects, ['asset']);
 
 
 // #### Kill management
-P.kill = function () {
+// P.kill = function () {
+
+//     this.asset.unsubscribe(this);
+//     if (this.group && this.group.name) this.group.removeArtefacts(this.name);
+//     this.demolishAnchor();
+//     this.deregister();
+//     return this;
+// };
+P.factoryKill = function () {
 
     this.asset.unsubscribe(this);
-    if (this.group && this.group.name) this.group.removeArtefacts(this.name);
-    this.demolishAnchor();
-    this.deregister();
-    return this;
 };
-
 
 // #### Get, Set, deltaSet
 let G = P.getters,

@@ -19,7 +19,7 @@ scrawl.makeLine({
     endX: 'center',
     endY: 'bottom',
 
-    lineWidth: 30,
+    lineWidth: 16,
     lineCap: 'round',
     strokeStyle: 'brown',
 

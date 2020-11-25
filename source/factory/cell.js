@@ -230,7 +230,63 @@ P.clone = λthis;
 
 
 // #### Kill functionality
-P.kill = function () {
+// P.kill = function () {
+
+//     let myname = this.name
+
+//     // Remove artefact from all canvases
+//     Object.entries(canvas).forEach(([name, cvs]) => {
+
+//         if (cvs.cells.indexOf(myname) >= 0) cvs.removeCell(myname);
+
+//         if (cvs.base && cvs.base.name === myname) {
+
+//             cvs.set({
+//                 visibility: false,
+//             });
+//         }
+//     });
+
+//     // If the artefact has an anchor, it needs to be removed
+//     if (this.anchor) this.demolishAnchor();
+
+//     // Remove from other artefacts
+//     Object.entries(artefact).forEach(([name, art]) => {
+
+//         if (art.name !== myname) {
+
+//             if (art.pivot && art.pivot.name === myname) art.set({ pivot: false});
+//             if (art.mimic && art.mimic.name === myname) art.set({ mimic: false});
+//             if (art.path && art.path.name === myname) art.set({ path: false});
+
+//             let state = art.state;
+
+//             if (state) {
+
+//                 let fill = state.fillStyle,
+//                     stroke = state.strokeStyle;
+
+//                 if (fill.name && fill.name === myname) state.fillStyle = state.defs.fillStyle;
+//                 if (stroke.name && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+//             }
+//         }
+//     });
+
+//     // Remove from tweens and actions targets arrays
+//     Object.entries(tween).forEach(([name, t]) => {
+
+//         if (t.checkForTarget(myname)) t.removeFromTargets(this);
+//     });
+
+//     // Kill group
+//     if (group[this.name]) group[this.name].kill();
+
+//     // Remove artefact from the Scrawl-canvas library
+//     this.deregister();
+    
+//     return this;
+// };
+P.factoryKill = function () {
 
     let myname = this.name
 
@@ -247,17 +303,10 @@ P.kill = function () {
         }
     });
 
-    // If the artefact has an anchor, it needs to be removed
-    if (this.anchor) this.demolishAnchor();
-
     // Remove from other artefacts
     Object.entries(artefact).forEach(([name, art]) => {
 
         if (art.name !== myname) {
-
-            if (art.pivot && art.pivot.name === myname) art.set({ pivot: false});
-            if (art.mimic && art.mimic.name === myname) art.set({ mimic: false});
-            if (art.path && art.path.name === myname) art.set({ path: false});
 
             let state = art.state;
 
@@ -272,21 +321,9 @@ P.kill = function () {
         }
     });
 
-    // Remove from tweens and actions targets arrays
-    Object.entries(tween).forEach(([name, t]) => {
-
-        if (t.checkForTarget(myname)) t.removeFromTargets(this);
-    });
-
     // Kill group
-    if (group[this.name]) group[this.name].kill();
-
-    // Remove artefact from the Scrawl-canvas library
-    this.deregister();
-    
-    return this;
+    if (group[myname]) group[myname].kill();
 };
-
 
 // #### Get, Set, deltaSet
 let G = P.getters, 

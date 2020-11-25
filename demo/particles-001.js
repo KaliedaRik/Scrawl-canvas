@@ -8,7 +8,7 @@ import scrawl from '../source/scrawl.js'
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
-// Initial canvas background color - we will also be allowing the user to control this attribute
+// Initial canvas background color - we will also allow the user to control this attribute's value
 canvas.setBase({
     backgroundColor: '#000040',
 });
@@ -181,8 +181,6 @@ let report = function () {
         colorController = document.querySelector('#color-controller'),
         colorAlpha = document.querySelector('#color-alpha'),
         background = document.querySelector('#background'),
-
-
         historyLength = document.querySelector('#historyLength'),
         killAfterTime = document.querySelector('#killAfterTime'),
         killAfterTimeVariation = document.querySelector('#killAfterTimeVariation'),
@@ -192,7 +190,6 @@ let report = function () {
         rangeFromY = document.querySelector('#rangefrom_y'),
         rangeZ = document.querySelector('#range_z'),
         rangeFromZ = document.querySelector('#rangefrom_z'),
-
         generationRate = document.querySelector('#generationRate');
 
     return function () {
@@ -210,7 +207,7 @@ let report = function () {
         });
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Particles: ${particlenames.length}, historyLength: ${historyLength.value}
+    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}
     Stamps per display: ${historyCount}
 
     backgroundColor: ${background.value}, tickMultiplier: ${worldSpeed.value}
