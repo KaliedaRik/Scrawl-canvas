@@ -9,11 +9,11 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
     canvas {
       margin: 0 auto;
-    }
-    img {
-      display: none;
     }
   </style>
 </head>
@@ -21,6 +21,25 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 011</h1>
   <h2>Tracer entity: generation and functionality</h2>
+
+  <div class="controls">
+
+    <div class="green label">Select filter</div>
+    <div class="green">
+      <select class="controlItem" id="filter">
+        <option value="">none</option>
+        <option value="grayscale">grayscale</option>
+        <option value="invert">invert</option>
+        <option value="matrix">matrix</option>
+        <option value="tint">tint</option>
+        <option value="venetianBlinds">UD venetianBlinds</option>
+      </select>
+    </div>
+
+    <div class="green label">&nbsp;</div>
+    <div class="green">&nbsp;</div>
+
+  </div>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
@@ -35,9 +54,6 @@
   </div>
 
   <script src="particles-011.js" type="module"></script>
-
-  <img id="bunny" src="img/bunny.png" />
-
 </body>
 
 </html>

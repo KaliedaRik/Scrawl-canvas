@@ -599,6 +599,8 @@ const actions = {
                 alpha = filter.includeAlpha || false,
                 shrink = filter.shrinkingRadius || false,
                 passes = filter.passes || 1,
+                vertical = filter.processVertical,
+                horizontal = filter.processHorizontal,
                 len = data.length,
                 imageWidth = image.width,
                 imageHeight = image.height,
@@ -609,23 +611,29 @@ const actions = {
 
                 let j, jz;
 
-                tempDataFrom = tempDataTo.slice(); 
+                if (vertical) {
 
-                for (j = localX * 4, jz = (localX + localWidth) * 4; j < jz; j++) {
+                    tempDataFrom = tempDataTo.slice(); 
 
-                    if (alpha) processColumn(j);
-                    else {
+                    for (j = localX * 4, jz = (localX + localWidth) * 4; j < jz; j++) {
 
-                        if (j % 4 !== 3) processColumn(j);
+                        if (alpha) processColumn(j);
+                        else {
+
+                            if (j % 4 !== 3) processColumn(j);
+                        }
                     }
                 }
 
-                tempDataFrom = tempDataTo.slice(); 
+                if (horizontal) {
 
-                for (j = localY, jz = localY + localHeight; j < jz; j++) {
+                    tempDataFrom = tempDataTo.slice(); 
 
-                    if (alpha) processRowWithAlpha(j);
-                    else processRowNoAlpha(j);
+                    for (j = localY, jz = localY + localHeight; j < jz; j++) {
+
+                        if (alpha) processRowWithAlpha(j);
+                        else processRowNoAlpha(j);
+                    }
                 }
             };
 
@@ -711,7 +719,7 @@ const actions = {
                 }
                 cagePointer = 0;
 
-                for (x = 1; x < imageHeight; x++) {
+                for (x = 1; x < imageWidth; x++) {
 
                     rowPosX = rowPos + (x * 4);
 
@@ -778,7 +786,7 @@ const actions = {
                 }
                 cagePointer = 0;
 
-                for (x = 1; x < imageHeight; x++) {
+                for (x = 1; x < imageWidth; x++) {
 
                     rowPosX = rowPos + (x * 4);
 

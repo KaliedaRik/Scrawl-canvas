@@ -64,6 +64,15 @@ scrawl.makeShape({
 
 // #### Particle physics animation scene
 
+// Create gradient
+scrawl.makeGradient({
+    name: 'linear1',
+    endX: '100%',
+})
+.updateColor(0, 'pink')
+.updateColor(999, 'darkgreen');
+
+
 // Create entitys that we can use with the particle emitter
 let wheel = scrawl.makeWheel({ 
 
@@ -75,7 +84,7 @@ let wheel = scrawl.makeWheel({
     endAngle: -20,
     includeCenter: true,
 
-    fillStyle: 'darkred',
+    fillStyle: 'linear1',
     method: 'fillThenDraw',
     visibility: false, 
 
@@ -91,7 +100,9 @@ let block = scrawl.makeBlock({
     dimensions: [40, 16],
     handle: ['center', 'center'],
 
-    fillStyle: 'purple',
+    fillStyle: 'linear1',
+    lockFillStyleToEntity: true,
+
     method: 'fillThenDraw',
     visibility: false, 
 
@@ -220,6 +231,8 @@ const myemitter = scrawl.makeEmitter({
 
             if (globalAlpha > 0 && scale > 0) {
 
+                // Note that `simpleStamp` will work with both linear and radial gradients, but will ignore any attempt to add a filter to the Emitter entity.
+                // + If a filter is required, then a more creative solution needs to be used, such as displaying the Emitter in its own Cell with the filter applied at the Cell level.
                 artefact.simpleStamp(host, {start, scale, globalAlpha, roll});
             }
         });

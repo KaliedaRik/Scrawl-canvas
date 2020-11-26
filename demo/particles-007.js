@@ -15,6 +15,75 @@ canvas.setBase({
 });
 
 
+// Define filters - need to test them all, plus some user-defined filters
+scrawl.makeFilter({
+    name: 'grayscale',
+    method: 'grayscale',
+}).clone({
+    name: 'sepia',
+    method: 'sepia',
+}).clone({
+    name: 'invert',
+    method: 'invert',
+});
+
+scrawl.makeFilter({
+    name: 'tint',
+    method: 'tint',
+    redInRed: 0.5,      redInGreen: 1,      redInBlue: 0.9,
+    greenInRed: 0,      greenInGreen: 0.3,  greenInBlue: 0.8,
+    blueInRed: 0.8,     blueInGreen: 0.8,   blueInBlue: 0.4,
+});
+
+scrawl.makeFilter({
+    name: 'pixelate',
+    method: 'pixelate',
+    tileWidth: 4,
+    tileHeight: 4,
+});
+
+scrawl.makeFilter({
+    name: 'blur',
+    method: 'blur',
+    radius: 5,
+    passes: 1,
+});
+
+scrawl.makeFilter({
+    name: 'matrix',
+    method: 'matrix',
+    weights: [-1, -1, 0, -1, 1, 1, 0, 1, 1],
+});
+
+scrawl.makeFilter({
+    name: 'venetianBlinds',
+    method: 'userDefined',
+    level: 9,
+
+    userDefined: `
+        let i, iz, j, jz,
+            level = filter.level || 6,
+            halfLevel = level / 2,
+            yw, transparent, pos;
+
+        for (i = localY, iz = localY + localHeight; i < iz; i++) {
+
+            transparent = (i % level > halfLevel) ? true : false;
+
+            if (transparent) {
+
+                yw = (i * iWidth) + 3;
+                
+                for (j = localX, jz = localX + localWidth; j < jz; j ++) {
+
+                    pos = yw + (j * 4);
+                    data[pos] = 0;
+                }
+            }
+        }`,
+});
+
+
 scrawl.makeBlock({
 
     name: 'field-block',
@@ -61,16 +130,18 @@ scrawl.makeForce({
     action: (particle, world, host) => {
 
         let {load, position} = particle;
+        let {here} = canvas;
 
-        let {here} = host;
+        if (here.active) {
 
-        let v = scrawl.requestVector(here).vectorSubtract(position);
+            let v = scrawl.requestVector(here).vectorSubtract(position);
 
-        let mag = v.getMagnitude();
+            let mag = v.getMagnitude();
 
-        if (mag < 100) load.vectorAdd(v);
+            if (mag < 100) load.vectorAdd(v);
 
-        scrawl.releaseVector(v);
+            scrawl.releaseVector(v);
+        }
     },
 });
 
@@ -106,7 +177,6 @@ const myEmitter = scrawl.makeEmitter({
 
         noUserInteraction: true,
         noPositionDependencies: true,
-        noFilters: true,
         noDeltaUpdates: true,
     }),
 
@@ -115,7 +185,6 @@ const myEmitter = scrawl.makeEmitter({
         let [r, z, ...start] = particle.history[0];
         artefact.simpleStamp(host, {start});
     },
-
 }).run();
 
 
@@ -192,6 +261,24 @@ scrawl.observeAndUpdate({
         particleCount: ['particleCount', 'int'],
     },
 });
+
+const filterChoice = function (e) {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+    let val = e.target.value;
+
+    myEmitter.clearFilters();
+    if (val) myEmitter.addFilters(val);
+};
+scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
+
+// Set DOM form initial input values
+document.querySelector('#filter').value = '';
+document.querySelector('#particleCount').value = 50;
+document.querySelector('#brownianIntensity').value = 2;
+
 
 // #### Development and testing
 console.log(scrawl.library);

@@ -138,10 +138,13 @@ let defaultAttributes = {
 // + the __passes__ attribute (1+) determines how many times the blur filter will iterate
 // + the __shrinkingRadius__ flag reduces the radius by approx 70% on each successive pass
 // + when __includeAlpha__ flag is true, filter will include the alpha channel - note this may make the edges of the entity translucent
+// + because the blur filter works on a 2-pass basis, we can restrict its operation to the vertical and horizontal directions by setting the `processVertical` and `processHorizontal` flags appropriately
     radius: 1,
     passes: 1,
     shrinkingRadius: false,
     includeAlpha: false,
+    processVertical: true,
+    processHorizontal: true,
 
 
 // The `matrix` method requires a weights attribute - an array of 9 numbers (also known as a __kernel__) in the following format:

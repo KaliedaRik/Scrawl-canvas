@@ -95,6 +95,14 @@ P = entityMix(P);
 
 // #### Emitter attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag__.
+// + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
+// + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
+// + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
+// + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
+// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor___.
+// + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
+// + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 let defaultAttributes = {
 
     // __world__ - World object; can be set using the String name of a World object, or the World object itself.
@@ -610,71 +618,63 @@ P.addParticles = function (req) {
     }
 };
 
-// `stamp` - returns a Promise. This is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
-// + Overwriters the functionality defined in the 
-P.stamp = function (force = false, host, changes) {
+// `regularStampSynchronousActions` - overwriters the functionality defined in the entity.js mixin
+P.regularStampSynchronousActions = function () {
 
-    let self = this;
+    if (this.isRunning) {
 
-    return new Promise((resolve, reject) => {
+        let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 
-        if (self.isRunning) {
+        // if (!host) host = self.getHost();
+        let host = this.currentHost;
 
-            let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = self;
+        let deltaTime = 16 / 1000,
+            now = Date.now();
 
-            if (!host) host = self.getHost();
+        if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
-            let deltaTime = 16 / 1000,
-                now = Date.now();
+        // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
+        if (deltaTime > resetAfterBlur) {
 
-            if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
-
-            // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
-            if (deltaTime > resetAfterBlur) {
-
-                particleStore.forEach(p => releaseParticle(p));
-                particleStore.length = 0;
-                deltaTime = 16 / 1000;
-            }
-
-            particleStore.forEach(p => p.applyForces(world, host));
-            particleStore.forEach(p => p.update(deltaTime, world));
-
-
-            // TODO: detect and manage collisions
-
-            // Perform canvas drawing before the main (developer-defined) `stampAction` function
-            preAction.call(self, host);
-
-            particleStore.forEach(p => {
-
-                p.manageHistory(deltaTime, host);
-                stampAction.call(self, artefact, p, host);
-            });
-
-            // Perform further canvas drawing after the main (developer-defined) `stampAction` function
-            postAction.call(self, host);
-
-            if (showHitRadius) {
-
-                let engine = host.engine;
-
-                engine.save();
-                engine.lineWidth = 1;
-                engine.strokeStyle = hitRadiusColor;
-
-                engine.setTransform(1, 0, 0, 1, 0, 0);
-                engine.beginPath();
-                engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
-                engine.stroke();
-
-                engine.restore();
-            }
-
-            self.lastUpdated = now;
+            particleStore.forEach(p => releaseParticle(p));
+            particleStore.length = 0;
+            deltaTime = 16 / 1000;
         }
-        resolve('Emitter.stamp resolving');
-    });
+
+        particleStore.forEach(p => p.applyForces(world, host));
+        particleStore.forEach(p => p.update(deltaTime, world));
+
+
+        // Perform canvas drawing before the main (developer-defined) `stampAction` function
+        preAction.call(this, host);
+
+        particleStore.forEach(p => {
+
+            p.manageHistory(deltaTime, host);
+            stampAction.call(this, artefact, p, host);
+        });
+
+        // Perform further canvas drawing after the main (developer-defined) `stampAction` function
+        postAction.call(this, host);
+
+        if (showHitRadius) {
+
+            let engine = host.engine;
+
+            engine.save();
+            engine.lineWidth = 1;
+            engine.strokeStyle = hitRadiusColor;
+
+            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.beginPath();
+            engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
+            engine.stroke();
+
+            engine.restore();
+        }
+
+        this.lastUpdated = now;
+    }
 };
 
 P.run = function () {

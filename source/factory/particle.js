@@ -304,7 +304,8 @@ P.manageHistory = function (tick, host) {
 
         if (killBeyondCanvas) {
 
-            let [w, h] = host.currentDimensions;
+            let w = host.element.width,
+                h = host.element.height;
 
             if (ox < 0 || oy < 0 || ox > w || oy > h) {
 

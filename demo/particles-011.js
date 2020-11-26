@@ -13,6 +13,58 @@ canvas.setBase({
 });
 
 
+// Define filters - need to test them all, plus some user-defined filters
+scrawl.makeFilter({
+    name: 'grayscale',
+    method: 'grayscale',
+}).clone({
+    name: 'invert',
+    method: 'invert',
+});
+
+scrawl.makeFilter({
+    name: 'tint',
+    method: 'tint',
+    redInRed: 0.5,      redInGreen: 1,      redInBlue: 0.9,
+    greenInRed: 0,      greenInGreen: 0.3,  greenInBlue: 0.8,
+    blueInRed: 0.8,     blueInGreen: 0.8,   blueInBlue: 0.4,
+});
+
+scrawl.makeFilter({
+    name: 'matrix',
+    method: 'matrix',
+    weights: [-1, -1, 0, -1, 1, 1, 0, 1, 1],
+});
+
+scrawl.makeFilter({
+    name: 'venetianBlinds',
+    method: 'userDefined',
+    level: 9,
+
+    userDefined: `
+        let i, iz, j, jz,
+            level = filter.level || 6,
+            halfLevel = level / 2,
+            yw, transparent, pos;
+
+        for (i = localY, iz = localY + localHeight; i < iz; i++) {
+
+            transparent = (i % level > halfLevel) ? true : false;
+
+            if (transparent) {
+
+                yw = (i * iWidth) + 3;
+                
+                for (j = localX, jz = localX + localWidth; j < jz; j ++) {
+
+                    pos = yw + (j * 4);
+                    data[pos] = 0;
+                }
+            }
+        }`,
+});
+
+
 scrawl.makeShape({
 
     name: 'my-arrow',
@@ -176,12 +228,29 @@ scrawl.makeGroup({
 
 }).addArtefacts('my-arrow');
 
+// #### User interaction
 scrawl.makeDragZone({
 
     zone: canvas,
     collisionGroup: 'my-draggable-group',
     endOn: ['up', 'leave'],
 });
+
+const filterChoice = function (e) {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+    let val = e.target.value,
+        entity = scrawl.library.entity['trace-2'];
+
+    entity.clearFilters();
+    if (val) entity.addFilters(val);
+};
+scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
+
+document.querySelector('#filter').value = '';
+
 
 // #### Development and testing
 console.log(scrawl.library);
