@@ -104,7 +104,6 @@ P.kill = function () {
 };
 
 
-
 // #### Get, Set, deltaSet
 let S = P.setters;
 
@@ -154,6 +153,58 @@ P.applySpring = function () {
 
 
 // #### Factory
+// ```
+// scrawl.makeNet({
+//
+//     name: 'test-net',
+//
+//     generate: function () {
+//
+//         let { name, particleStore, springs, springConstant, damperConstant } = this;
+//
+//         let leftParticle, rightParticle;
+//
+//         // generate particles
+//         leftParticle = makeParticle({
+//
+//             name: `${name}-left`,
+//
+//             positionX: 0,
+//             positionY: 0,
+//         });
+//
+//         rightParticle = leftParticle.clone({
+//
+//             name: `${name}-right`,
+//             positionX: 100,
+//         });
+//
+//         leftParticle.run(0, 0, false);
+//         rightParticle.run(0, 0, false);
+//
+//         particleStore.push(leftParticle, rightParticle);
+//
+//         // generate spring
+//         let mySpring = makeSpring({
+//
+//             name: `${name}-link-${i}-${i+1}`,
+//
+//             particleFrom: leftParticle,
+//             particleTo: rightParticle,
+//
+//             springConstant, 
+//             damperConstant,
+//
+//             restLength: 100,
+//         });
+//
+//         springs.push(mySpring);
+//     },
+//
+//     ...
+//
+// }).run();
+// ```
 const makeSpring = function (items) {
     return new Spring(items);
 };

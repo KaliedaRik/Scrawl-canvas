@@ -114,9 +114,7 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-let G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+let S = P.setters;
 
 // __gravity__, with pseudo-attributes _gravityX_, _gravityY_, _gravityZ_
 S.gravityX = function (item) { if (this.gravity && xt(item)) this.gravity.setX(item); };
@@ -126,6 +124,7 @@ S.gravity = function (item) { if (this.gravity && xt(item)) this.gravity.set(ite
 
 
 // #### Prototype functions
+
 // `addAttribute`, `removeAttribute` - we can use these functions to add and remove other attributes to the World object. See the following Demos for examples of constructing a World object and adding attributes to it: 
 // + [particles-007](../../demo/particles-007.html) Particle Force objects: generation and functionality; and 
 // + [particles-008](../../demo/particles-008.html) Net entity: generation and basic functionality, including Spring objects.
@@ -181,6 +180,29 @@ P.initializeAttributes = function (types) {
 
 
 // #### Factory
+// ```
+// scrawl.makeWorld({
+//
+//     name: 'demo-world',
+//
+//     tickMultiplier: 2,
+//
+//     userAttributes: [
+//
+//         {
+//             key: 'testCoordinate', 
+//             type: 'Coordinate',
+//             getter: function () { return [].concat(this.testCoordinate) },
+//             setter: function (item) { this.testCoordinate.set(item) },
+//         },
+//         {
+//             key: 'particleColor', 
+//             defaultValue: '#F0F8FF',
+//         },
+//     ],
+//     testCoordinate: [100, 100],
+// });
+// ```
 const makeWorld = function (items) {
     return new World(items);
 };

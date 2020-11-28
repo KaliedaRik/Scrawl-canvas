@@ -386,40 +386,5 @@ const demoAnimation = scrawl.makeRender({
 });
 
 
-// #### User interaction
-// Setup form observer functionality for display block
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: cell1,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        'cell-filter': ['filter', 'raw'],
-    },
-});
-
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: scrawl.library.entity['label-2'],
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        'entity-filter': ['filter', 'raw'],
-    },
-});
-
-
 // #### Development and testing
 console.log(scrawl.library);

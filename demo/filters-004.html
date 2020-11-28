@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 004</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 004</h1>
+  <h2>Parameters for: threshold filter</h2>
+
+  <div class="controls">
+
+    <div class="green label">Low color</div>
+    <div class="green"><input class="controlItem" id="lowColor" type="color" value="#000000" /></div>
+
+    <div class="green label">High color</div>
+    <div class="green"><input class="controlItem" id="highColor" type="color" value="#ffffff" /></div>
+
+    <div class="lavender label">Level</div>
+    <div class="lavender"><input class="controlItem" id="level" type="range" value="127" min="0" max="255" step="1" /></div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create a threshold filter and apply it to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
+    </ul>
+
+    <p><a href="../docs/demo/filters-004.html">Annotated code</a></p>
+  </div>
+
+  <script src="filters-004.js" type="module"></script>
+
+</body>
+
+</html>

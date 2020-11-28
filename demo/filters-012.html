@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 012</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+    canvas {
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 012</h1>
+  <h2>SVG-based filter example: gaussian blur</h2>
+
+  <div class="controls">
+
+    <div class="blue label">Standard deviation</div>
+    <div class="blue"><input class="controlItem" id="stdDeviation" type="range" value="5" min="0" max="20" step="0.1" /></div>
+
+    <div class="blue label">Edge mode</div>
+    <div class="blue">
+      <select class="controlItem" id="edgeMode">
+        <option value="duplicate">duplicate</option>
+        <option value="wrap">wrap</option>
+        <option value="none">none</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>...</li>
+    </ul>
+
+    <p><a href="../docs/demo/filters-012.html">Annotated code</a></p>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <filter id="svg-blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" edgeMode="duplicate" />
+    </filter>
+  </svg>
+
+  <script src="filters-012.js" type="module"></script>
+
+</body>
+
+</html>

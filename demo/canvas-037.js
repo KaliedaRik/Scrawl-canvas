@@ -60,43 +60,6 @@ let piccie = scrawl.makePicture({
     copyStartY: fromTop,
 });
 
-// The Wheel entity, with its associated filter. The rim is a separate Wheel entity pivoted to the filtered Wheel
-scrawl.makeFilter({
-    name: 'do-nothing',
-    method: 'none',
-});
-
-let filterTarget = scrawl.makeWheel({
-
-    name: 'pixel-wheel',
-
-    radius: 80,
-
-    start: ['25%', '25%'],
-    handle: ['center', 'center'],
-
-    filters: ['do-nothing'],
-    filter: 'none',
-
-    // We set the `isStencil` flag to `true` so that the background covered by the wheel is displayed through the filter
-    isStencil: true,
-
-});
-
-filterTarget.clone({
-
-    name: 'pixel-wheel-rim',
-
-    pivot: 'pixel-wheel',
-    lockTo: 'pivot',
-
-    method: 'draw',
-    lineWidth: 6,
-    strokeStyle: 'red',
-
-    filters: [],
-});
-
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -124,38 +87,6 @@ const demoAnimation = scrawl.makeRender({
     afterShow: report,
 });
 
-
-// #### Built-in user interaction
-// Drag-and-drop the filtered Wheel around the canvas - uses the Scrawl-canvas `makeDragZone` functionality
-scrawl.makeGroup({
-
-    name: 'drag-group',
-
-}).addArtefacts('pixel-wheel');
-
-scrawl.makeDragZone({
-
-    zone: canvas,
-    collisionGroup: 'drag-group',
-    endOn: ['up', 'leave'],
-});
-
-// Filter selection
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: filterTarget,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        'css-filter': ['filter', 'raw'],
-    },
-});
 
 // #### Bespoke user interaction
 // We shall build the "zoom" and "pan" effects using event listeners.

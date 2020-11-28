@@ -40,7 +40,6 @@ import entityMix from '../mixin/entity.js';
 // #### Emitter constructor
 const Emitter = function (items = {}) {
 
-    // The constructor doesn't use the entity mixin constructor, so everything there needs to be replicated here.
     this.makeName(items.name);
     this.register();
     this.initializePositions();
@@ -100,7 +99,7 @@ P = entityMix(P);
 // + Attributes defined in the [pivot mixin](../mixin/pivot.html): __pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation__.
 // + Attributes defined in the [mimic mixin](../mixin/mimic.html): __mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic__.
 // + Attributes defined in the [path mixin](../mixin/path.html): __path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed__.
-// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor___.
+// + Attributes defined in the [entity mixin](../mixin/entity.html): __method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, _fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter___.
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 let defaultAttributes = {
@@ -112,27 +111,39 @@ let defaultAttributes = {
     // + Can be set using the String name of an artefact object, or the artefact object itself.
     artefact: null,
 
+    // The user-defined stamp functions __preAction__, __stampAction__ and __postAction__ are invoked in turn one each tick of the Display cycle. By default these functions do nothing, meaning nothing gets drawn to the canvas
+    // + `preAction` and `postAction` - these functions receive a single argument, a Cell wrapper on which we can draw additional graphics (if needed) - see Demo [Particles 006](../../demo/particles-006.html) for a working example
+    // + `stampAction` - define all major rendering actions in this function. The function receives the following arguments: `(artefact, particle, host)` - where `artefact` is the Emitter entity's artefact object (if any has been defined/set); `particle` is the current Particle object whose history needs to be rendered onto the canvas; and `host` is the Cell wrapper on which we will draw our graphics
     preAction: null,
     stampAction: null,
     postAction: null,
 
-    fillColorFactory: null,
-    strokeColorFactory: null,
+    // __fillColorFactory__ and __strokeColorFactory__ - Color objects - there will never be a need to define these attributes as this is done as part of the factory's object build functionality. Used to generate fill and stroke colors for each newly generated particle
+    // fillColorFactory: null,
+    // strokeColorFactory: null,
 
-    // attributes specific to emitters
-
-    // __range__ defines a vector whose x/y/z values represent the +/- values to be used when generating the initial 'velocity' value for new particles. 
-    // + effectively a direction in which the new particles are fired when launched.
-    // + we should also be able to change the direction when the emitter's `roll` attribute is non-zero
+    // __range__ and __rangeFrom__ - Vector objects with some convenience pseudo-attributes to make setting them a bit easier: _rangeX, rangeY, rangeZ, rangeFromX, rangeFromY, rangeFromZ_.
+    // + These attributes set each generated particle'sinitial velocity; their values represent the distance travelled in the x, y and z directions, as measured in pixels-per-second.
+    // + The `rangeFrom` attributes (float Numbers that can be negative) the lowest value in that dimension that will be generated. This value is ___local to the particle___ thus negative values are to the left (x) or above (y) or behind (z) the particle's initial position.
+    // + The `range` attributes (again, float Numbers that can be negative) are the ___maximum (or least maximum) random value___ which will be added to the rangeFrom value. 
+    // + All particles are assigned a (constrained) random velocity in this manner when they are generated.
     range: null,
     rangeFrom: null,
 
-    particleStore: null,
 
-    particleCount: 0,
+    // particleStore: null,
 
+    // __generationRate__ - positive integer Number - Emitter entitys use ___ephemeral particles___ to produce their visual effects, generating a steady stream of particles over time and then killing them off in various ways. Attribute _sets the maximum number of particles that the Emitter will generate every second_.
     generationRate: 0,
 
+    // __particleCount__ - positive integer Number - attribute _sets the maximum number of particles that the Emitter will generate every second_.
+    particleCount: 0,
+
+    // __generateAlongPath__, __generateInArea__ - Object-based flags (default: `false`) - to set the flags, assign an entity object to them
+    // + the default action is for the Emitter to generate its particles from a single coordinate which can be determined from the Emitter's `lockTo` attribute - thus the coordinate can be the absolute/relative start coordinates, or a path/pivot/mimic reference entity, or a Net particle, or the mouse cursor.
+    // + If we set the `generateAlongPath` attribute to a path-based entity then the Emitter will use that path to set the initial coordinate for all its generated particles
+    // + If we set the `generateInArea` attribute to any entity then the Emitter will use that entity's area to set the initial coordinate for all its generated particles
+    // + `generateInArea` takes precedence over `generateAlongPath`, which in turn takes precedence over the default coordinate behaviour
     generateAlongPath: false,
     generateInArea: false,
 

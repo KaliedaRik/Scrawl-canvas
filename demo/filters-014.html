@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 014</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 1fr;
+      width: 400px;
+      margin: 0 auto;
+    }
+    img {
+      display: none;
+    }
+    canvas {
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 014</h1>
+  <h2>SVG-based filter example: duotone</h2>
+
+  <div class="controls">
+
+    <div class="pink"><input class="controlItem feFuncR" id="r1" type="number" min="0" max="1" step="0.001" value="0.996" /></div>
+    <div class="pink"><input class="controlItem feFuncR" id="r2" type="number" min="0" max="1" step="0.001" value="0.984" /></div>
+
+    <div class="green"><input class="controlItem feFuncG" id="g1" type="number" min="0" max="1" step="0.001" value="0.125" /></div>
+    <div class="green"><input class="controlItem feFuncG" id="g2" type="number" min="0" max="1" step="0.001" value="0.941" /></div>
+
+    <div class="blue"><input class="controlItem feFuncB" id="b1" type="number" min="0" max="1" step="0.001" value="0.552" /></div>
+    <div class="blue"><input class="controlItem feFuncB" id="b2" type="number" min="0" max="1" step="0.001" value="0.478" /></div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>...</li>
+    </ul>
+
+    <p><a href="../docs/demo/filters-014.html">Annotated code</a></p>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <filter id="svg-duotone">
+      <feColorMatrix type="matrix" values=".33 .33 .33 0 0
+        .33 .33 .33 0 0
+        .33 .33 .33 0 0
+         0   0   0  1 0">
+      </feColorMatrix>
+
+      <feComponentTransfer color-interpolation-filters="sRGB">
+        <feFuncR type="table" tableValues=".996 0.984"></feFuncR>
+        <feFuncG type="table" tableValues=".125 0.941"></feFuncG>
+        <feFuncB type="table" tableValues=".552 0.478"></feFuncB>
+      </feComponentTransfer>
+    </filter>
+  </svg>
+
+  <script src="filters-014.js" type="module"></script>
+
+</body>
+
+</html>

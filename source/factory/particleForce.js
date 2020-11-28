@@ -110,6 +110,35 @@ S.action = function (item) {
 
 
 // #### Factory
+// ```
+// let myRepellorBall = scrawl.makeWheel({
+//
+//     name: 'big-ball',
+//     radius: 30,
+// });
+//
+// scrawl.makeForce({
+//
+//     name: 'example-repellor',
+//     action: (particle, world, host) => {
+//
+//         let {load, position} = particle;
+//
+//         let ballPosition = myRepellorBall.get('position');
+//
+//         let tempVector = scrawl.requestVector(ballPosition).vectorSubtract(position);
+//
+//         let magnitude = tempVector.getMagnitude();
+//
+//         if (magnitude && magnitude < myRepellorBall.get('radius')) {
+//
+//             tempVector.scalarMultiply(1 / (magnitude / 1000));
+//             load.vectorSubtract(tempVector)
+//         }
+//         scrawl.releaseVector(tempVector);
+//     },
+// });
+// ```
 const makeForce = function (items) {
     return new Force(items);
 };
