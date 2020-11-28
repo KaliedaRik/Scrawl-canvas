@@ -173,7 +173,12 @@ P.postCloneAction = function(clone, items) {
 P.factoryKill = function (killArtefact, killWorld) {
 
     this.isRunning = false;
-    if (killArtefact) this.artefact.kill();
+    if (killArtefact) {
+
+        this.artefact.kill();
+        if (this.shapeTemplate) this.shapeTemplate.kill();
+    }
+
     if (killWorld) this.world.kill();
     this.purgeParticlesFromLibrary();
 };

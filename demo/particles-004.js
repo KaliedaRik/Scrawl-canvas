@@ -85,7 +85,7 @@ let myWorld = scrawl.makeWorld({
 });
 
 // Create the particle Emitter entity
-const myemitter = scrawl.makeEmitter({
+scrawl.makeEmitter({
 
     name: 'line-emitter',
     world: myWorld,
@@ -143,8 +143,7 @@ const myemitter = scrawl.makeEmitter({
             }
         });
     },
-}).run();
-
+});
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo

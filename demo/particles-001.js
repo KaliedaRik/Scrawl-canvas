@@ -160,10 +160,7 @@ const myEmitter = scrawl.makeEmitter({
         // Restore the engine's state.
         engine.restore();
     },
-
-// The Emitter entity is a particle physics animation. It needs to be running if we are to see its effect.
-}).run();
-
+});
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo

@@ -237,10 +237,7 @@ const myemitter = scrawl.makeEmitter({
             }
         });
     },
-
-// Start the Emitter animation immediately after the entity's creation
-}).run();
-
+});
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo

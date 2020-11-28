@@ -185,7 +185,7 @@ const myEmitter = scrawl.makeEmitter({
         let [r, z, ...start] = particle.history[0];
         artefact.simpleStamp(host, {start});
     },
-}).run();
+});
 
 
 // #### Scene animation

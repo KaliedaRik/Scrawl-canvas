@@ -119,8 +119,6 @@ let defaultAttributes = {
     postAction: null,
 
     // __fillColorFactory__ and __strokeColorFactory__ - Color objects - there will never be a need to define these attributes as this is done as part of the factory's object build functionality. Used to generate fill and stroke colors for each newly generated particle
-    // fillColorFactory: null,
-    // strokeColorFactory: null,
 
     // __range__ and __rangeFrom__ - Vector objects with some convenience pseudo-attributes to make setting them a bit easier: _rangeX, rangeY, rangeZ, rangeFromX, rangeFromY, rangeFromZ_.
     // + These attributes set each generated particle'sinitial velocity; their values represent the distance travelled in the x, y and z directions, as measured in pixels-per-second.
@@ -130,13 +128,12 @@ let defaultAttributes = {
     range: null,
     rangeFrom: null,
 
-
-    // particleStore: null,
+    // __particleStore__ - an Array where all the Emitter's current particles will be stored. To render the entity, we need to iterate through these particles and use them to repeatedly stamp the Emitter's artefact - or perform equivalent &lt;canvas> context engine instructions - onto the host Cell. These actions will be defined in the `stampAction` function.
 
     // __generationRate__ - positive integer Number - Emitter entitys use ___ephemeral particles___ to produce their visual effects, generating a steady stream of particles over time and then killing them off in various ways. Attribute _sets the maximum number of particles that the Emitter will generate every second_.
     generationRate: 0,
 
-    // __particleCount__ - positive integer Number - attribute _sets the maximum number of particles that the Emitter will generate every second_.
+    // __particleCount__ - positive integer Number - attribute _sets the maximum number of particles that the Emitter will manage and display at any one time_.
     particleCount: 0,
 
     // __generateAlongPath__, __generateInArea__ - Object-based flags (default: `false`) - to set the flags, assign an entity object to them
@@ -147,6 +144,10 @@ let defaultAttributes = {
     generateAlongPath: false,
     generateInArea: false,
 
+    // Emitter entitys will continuously generate new particles (up to the limit set in the `particleCount` attribute). The `killAfterTime`, `killRadius` and `killBeyondCanvas` attributes set out the circumstances in which existing particles will be removed from the entity's `particleStore` attribute
+    // + __killAfterTime__ - a positive float Number - sets the maximum time (measured in ___seconds___) that a particle will live before it is killed and removed. This time is set on particle generation and is not updatable. We can add some randomness to the time through the __killAfterTimeVariation__ attribute.
+    // + __killRadius__ - a positive float Number - sets the maximum distance (measurted in pixels) from its initial position that a particle can move. If it moves beyond that distance, it will be killed. Again, some variation can be introduced through the __killRadiusVariation__ attribute.
+    // + __killBeyondCanvas__ - a Boolean flag (default: `false`) - when set, any particle that moves beyond its host Cell's canvas dimensions will be killed and removed.
     killAfterTime: 0,
     killAfterTimeVariation: 0,
 
@@ -155,13 +156,20 @@ let defaultAttributes = {
 
     killBeyondCanvas: false,
 
+    // __historyLength__ - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle's `history` Array. The Emitter entity will set the maximum permitted length of the history array whenever it generates a new Particle. 
     historyLength: 1,
-    engine: 'euler',
 
+    // Emitter entitys will, as part of the Display cycle, apply any force objects assigned to a Particle. The initial forces assigned to every new Particle will be in line with the Force objects included in the Emitter's __forces__ Array.
+    // + To set the Array, supply a new Array containing Force objects, and/or the name Strings of those Force objects, to the `forces` attribute.
     forces: null,
 
+    // __mass__, __massVariation__ - positive float Number - the initial mass assigned to each Particle when it is generated.
+    // + The `mass` attribute is used by the pre-defined ___gravity Force___
     mass: 1,
     massVariation: 0,
+
+    // Physics calculations are handled by the Emitter entity's physics __engine__ which must be a String value of either `euler` (the default engine), `improved-euler` or `runge-kutta`.
+    engine: 'euler',
 
     // Note that the __hitRadius__ attribute is tied directly to the __width__ and __height__ attributes (which are effectively meaningless for this entity)
     // + This attribute is absolute - unlike other Scrawl-canvas radius attributes it cannot be set using a percentage String value
@@ -171,6 +179,7 @@ let defaultAttributes = {
     showHitRadius: false,
     hitRadiusColor: '#000000',
 
+    // __resetAfterBlur__ - positive float Number (measuring seconds) - physics simulations can be brittle, particularly if they are forced to calculate Particle loads (accelerations), velocities and speeds over a large time step. Rather than manage that time step in cases where the user may neglect or navigate away from the browser tab containing the physics animation, Scrawl-canvas will stop, clear, and recreate the scene if the time it takes the user to return to (re-focus on) the web page is greater than the value set in this attribute.
     resetAfterBlur: 3,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -350,7 +359,6 @@ D.height = D.width;
 // `prepareStamp` - internal - overwrites the entity mixin function
 P.prepareStamp = function () {
 
-    // Entity-mixin-related functionality
     if (this.dirtyHost) {
 
         this.dirtyHost = false;
@@ -632,74 +640,61 @@ P.addParticles = function (req) {
 // `regularStampSynchronousActions` - overwriters the functionality defined in the entity.js mixin
 P.regularStampSynchronousActions = function () {
 
-    if (this.isRunning) {
+    let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 
-        let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
+    let host = this.currentHost;
 
-        // if (!host) host = self.getHost();
-        let host = this.currentHost;
+    let deltaTime = 16 / 1000,
+        now = Date.now();
 
-        let deltaTime = 16 / 1000,
-            now = Date.now();
+    if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
-        if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
+    // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
+    if (deltaTime > resetAfterBlur) {
 
-        // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter's animation.
-        if (deltaTime > resetAfterBlur) {
-
-            particleStore.forEach(p => releaseParticle(p));
-            particleStore.length = 0;
-            deltaTime = 16 / 1000;
-        }
-
-        particleStore.forEach(p => p.applyForces(world, host));
-        particleStore.forEach(p => p.update(deltaTime, world));
-
-
-        // Perform canvas drawing before the main (developer-defined) `stampAction` function
-        preAction.call(this, host);
-
-        particleStore.forEach(p => {
-
-            p.manageHistory(deltaTime, host);
-            stampAction.call(this, artefact, p, host);
-        });
-
-        // Perform further canvas drawing after the main (developer-defined) `stampAction` function
-        postAction.call(this, host);
-
-        if (showHitRadius) {
-
-            let engine = host.engine;
-
-            engine.save();
-            engine.lineWidth = 1;
-            engine.strokeStyle = hitRadiusColor;
-
-            engine.setTransform(1, 0, 0, 1, 0, 0);
-            engine.beginPath();
-            engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
-            engine.stroke();
-
-            engine.restore();
-        }
-
-        this.lastUpdated = now;
+        particleStore.forEach(p => releaseParticle(p));
+        particleStore.length = 0;
+        deltaTime = 16 / 1000;
     }
+
+    particleStore.forEach(p => p.applyForces(world, host));
+    particleStore.forEach(p => p.update(deltaTime, world));
+
+
+    // Perform canvas drawing before the main (developer-defined) `stampAction` function
+    preAction.call(this, host);
+
+    particleStore.forEach(p => {
+
+        p.manageHistory(deltaTime, host);
+        stampAction.call(this, artefact, p, host);
+    });
+
+    // Perform further canvas drawing after the main (developer-defined) `stampAction` function
+    postAction.call(this, host);
+
+    if (showHitRadius) {
+
+        let engine = host.engine;
+
+        engine.save();
+        engine.lineWidth = 1;
+        engine.strokeStyle = hitRadiusColor;
+
+        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.beginPath();
+        engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, Math.PI * 2);
+        engine.stroke();
+
+        engine.restore();
+    }
+
+    this.lastUpdated = now;
 };
 
-P.run = function () {
-
-    this.isRunning = true;
-    return this;
-};
-
-P.halt = function () {
-
-    this.isRunning = false;
-    return this;
-};
-
+// `checkHit` - overwrites the function defined in mixin/position.js
+// + The Emitter entity's hit area is a circle centred on the entity's rotation/reflection (start) position or, where the entity's position is determined by reference (pivot, mimic, path, etc), the reference's current position.
+// + Emitter entitys can be dragged and dropped around a canvas display like any other Scrawl-canvas artefact.
 P.checkHit = function (items = [], mycell) {
 
     if (this.noUserInteraction) return false;
@@ -746,6 +741,64 @@ P.checkHit = function (items = [], mycell) {
 
 // #### Factory
 // ```
+// let myWorld = scrawl.makeWorld({
+//
+//     name: 'demo-world',
+//     tickMultiplier: 2,
+//     userAttributes: [
+//         {
+//             key: 'particleColor', 
+//             defaultValue: '#F0F8FF',
+//         },
+//         {
+//             key: 'alphaDecay', 
+//             defaultValue: 6,
+//         },
+//     ],
+// });
+//
+// scrawl.makeEmitter({
+//
+//     name: 'use-raw-2d-context',
+//     world: myWorld,
+//     start: ['center', 'center'],
+//
+//     generationRate: 60,
+//     killAfterTime: 5,
+//
+//     historyLength: 50,
+//
+//     rangeX: 40,
+//     rangeFromX: -20,
+//     rangeY: 40,
+//     rangeFromY: -20,
+//     rangeZ: -1,
+//     rangeFromZ: -0.2,
+//
+//     stampAction: function (artefact, particle, host) {
+//
+//         let engine = host.engine,
+//             history = particle.history,
+//             remaining, radius, alpha, x, y, z,
+//             endRad = Math.PI * 2;
+//
+//         engine.save();
+//         engine.fillStyle = myWorld.get('particleColor');
+//         engine.beginPath();
+//         history.forEach((p, index) => {
+//             [remaining, z, x, y] = p;
+//             radius = 6 * (1 + (z / 3));
+//             alpha = remaining / myWorld.alphaDecay;
+//             if (radius > 0 && alpha > 0) {
+//                 engine.moveTo(x, y);
+//                 engine.arc(x, y, radius, 0, endRad);
+//             }
+//         });
+//         engine.globalAlpha = alpha;
+//         engine.fill();
+//         engine.restore();
+//     },
+// });
 // ```
 const makeEmitter = function (items) {
     return new Emitter(items);

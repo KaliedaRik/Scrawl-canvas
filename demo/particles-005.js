@@ -72,7 +72,7 @@ let myWorld = scrawl.makeWorld({
     tickMultiplier: 2,
 });
 
-let emitter1 = scrawl.makeEmitter({
+scrawl.makeEmitter({
 
     name: 'emitter-one',
     world: myWorld,
@@ -125,9 +125,8 @@ let emitter1 = scrawl.makeEmitter({
             }
         });
     },
-});
 
-let emitter2 = emitter1.clone({
+}).clone({
 
     name: 'emitter-two',
     generateInArea: 'myshape',
@@ -153,9 +152,6 @@ let emitter2 = emitter1.clone({
         noDeltaUpdates: true,
     }),
 });
-
-emitter1.run();
-emitter2.run();
 
 
 // #### Scene animation

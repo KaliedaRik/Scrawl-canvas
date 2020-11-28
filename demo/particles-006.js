@@ -180,8 +180,7 @@ const myEmitter = scrawl.makeEmitter({
             engine.restore();
         }
     },
-
-}).run();
+});
 
 
 // #### Scene animation

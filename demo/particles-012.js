@@ -397,7 +397,7 @@ scrawl.makeEmitter({
         engine.fill();
         engine.restore();
     },
-}).run();
+});
 
 scrawl.makePolyline({
 

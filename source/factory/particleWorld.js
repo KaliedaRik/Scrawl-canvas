@@ -114,7 +114,9 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-let S = P.setters;
+let G = P.getters,
+    S = P.setters,
+    D = P.deltaSetters;
 
 // __gravity__, with pseudo-attributes _gravityX_, _gravityY_, _gravityZ_
 S.gravityX = function (item) { if (this.gravity && xt(item)) this.gravity.setX(item); };

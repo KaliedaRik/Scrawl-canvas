@@ -217,9 +217,7 @@ const myemitter = scrawl.makeEmitter({
             }
         });
     },
-
-}).run();
-
+});
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
