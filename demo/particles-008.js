@@ -134,8 +134,7 @@ const myNet = scrawl.makeNet({
             strokeStyle: particle.stroke, 
         });
     },
-
-}).run();
+});
 
 
 // #### Scene animation

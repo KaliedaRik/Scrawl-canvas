@@ -211,8 +211,7 @@ const myNet = scrawl.makeNet({
     },
 
     particlesAreDraggable: true,
-
-}).run();
+});
 
 
 // #### Scene animation

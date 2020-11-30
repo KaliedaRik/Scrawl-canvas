@@ -70,7 +70,16 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li>Create a particle world object; add a user-defined attribute ('wind') to it.</li>
+      <li>Create a wind Force, and a 'changeWind' function that updates the World.wind attribute at the start of each Display cycle.</li>
+      <li>Create a Net entity; set the 'columnDistance' attribute to a % String to make sure it will correctly convert it to a pixel distance. Set the 'generate' attribute to 'weak-net'; the 'forces' attribute to ['gravity', 'wind']; etc.</li>
+      <li>Include a 'postGenerate' function that will identify three specific particles, change their 'fill' and 'stroke' attributes to new colors, and go through the Scrawl-canvas scrawl.library.spring section to set the 'particleFromIsStatic' flag of all Spring objects associated with these Particles to true.</li>
+      <li>Confirm that the Net entity generates a mesh of particles, with three particles in the leftmost column displaying a different color, and not moving.</li>
+      <li>Check that particles respond to the gravity and wind forces appropriately (we are looking for a flapping sheet animation).</li>
+      <li>Check the effect of changing the Net attributes 'mass', 'springConstant', 'damperConstant' and 'restLength'.</li>
+      <li>Check the effect of changing the Net's 'engine' attribute - note that simulation failure is expected under various conditions (and is not a test failure).</li>
+      <li>Check the effect of changing the Net's 'generate' attribute</li>
+      <li>Navigate away from the web page (open another tab in the browser) and, a few seconds later, navigate back to the page - check that the animation resets and starts, and does not freeze the page</li>
     </ul>
     <p><a href="../docs/demo/particles-008.html">Annotated code</a></p>
   </div>

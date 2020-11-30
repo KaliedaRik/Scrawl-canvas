@@ -27,7 +27,10 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li>Create a path-based shape entity (an arrow).</li>
+      <li>Create a Net entity, setting its 'generate' attribute to 'weak-shape' and its 'shapeTemplate' attribute to the arrow entity. Make the Net entity's first particle static.</li>
+      <li>Clone the arrow, and the Net entity; set the cloned Net's 'generate' attribute to 'strong-shape'</li>
+      <li>Check that the particles can be dragged, and will - generally - reform their shapes after being dragged (note that the strong arrow is, in particular, unstable in this demo and will collapse if dragged too far).</li>
     </ul>
     <p><a href="../docs/demo/particles-010.html">Annotated code</a></p>
   </div>

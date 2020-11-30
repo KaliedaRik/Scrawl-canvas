@@ -111,15 +111,6 @@ let defaultAttributes = {
     // + Can be set using the String name of an artefact object, or the artefact object itself.
     artefact: null,
 
-    // The user-defined stamp functions __preAction__, __stampAction__ and __postAction__ are invoked in turn one each tick of the Display cycle. By default these functions do nothing, meaning nothing gets drawn to the canvas
-    // + `preAction` and `postAction` - these functions receive a single argument, a Cell wrapper on which we can draw additional graphics (if needed) - see Demo [Particles 006](../../demo/particles-006.html) for a working example
-    // + `stampAction` - define all major rendering actions in this function. The function receives the following arguments: `(artefact, particle, host)` - where `artefact` is the Emitter entity's artefact object (if any has been defined/set); `particle` is the current Particle object whose history needs to be rendered onto the canvas; and `host` is the Cell wrapper on which we will draw our graphics
-    preAction: null,
-    stampAction: null,
-    postAction: null,
-
-    // __fillColorFactory__ and __strokeColorFactory__ - Color objects - there will never be a need to define these attributes as this is done as part of the factory's object build functionality. Used to generate fill and stroke colors for each newly generated particle
-
     // __range__ and __rangeFrom__ - Vector objects with some convenience pseudo-attributes to make setting them a bit easier: _rangeX, rangeY, rangeZ, rangeFromX, rangeFromY, rangeFromZ_.
     // + These attributes set each generated particle'sinitial velocity; their values represent the distance travelled in the x, y and z directions, as measured in pixels-per-second.
     // + The `rangeFrom` attributes (float Numbers that can be negative) the lowest value in that dimension that will be generated. This value is ___local to the particle___ thus negative values are to the left (x) or above (y) or behind (z) the particle's initial position.
@@ -127,8 +118,6 @@ let defaultAttributes = {
     // + All particles are assigned a (constrained) random velocity in this manner when they are generated.
     range: null,
     rangeFrom: null,
-
-    // __particleStore__ - an Array where all the Emitter's current particles will be stored. To render the entity, we need to iterate through these particles and use them to repeatedly stamp the Emitter's artefact - or perform equivalent &lt;canvas> context engine instructions - onto the host Cell. These actions will be defined in the `stampAction` function.
 
     // __generationRate__ - positive integer Number - Emitter entitys use ___ephemeral particles___ to produce their visual effects, generating a steady stream of particles over time and then killing them off in various ways. Attribute _sets the maximum number of particles that the Emitter will generate every second_.
     generationRate: 0,
@@ -181,6 +170,17 @@ let defaultAttributes = {
 
     // __resetAfterBlur__ - positive float Number (measuring seconds) - physics simulations can be brittle, particularly if they are forced to calculate Particle loads (accelerations), velocities and speeds over a large time step. Rather than manage that time step in cases where the user may neglect or navigate away from the browser tab containing the physics animation, Scrawl-canvas will stop, clear, and recreate the scene if the time it takes the user to return to (re-focus on) the web page is greater than the value set in this attribute.
     resetAfterBlur: 3,
+
+    // ##### Not defined in the defs object, but set up in the constructor and setters
+    
+    // __particleStore__ - an Array where all the Emitter's current particles will be stored. To render the entity, we need to iterate through these particles and use them to repeatedly stamp the Emitter's artefact - or perform equivalent &lt;canvas> context engine instructions - onto the host Cell. These actions will be defined in the `stampAction` function.
+
+    // The user-defined stamp functions __preAction__, __stampAction__ and __postAction__ are invoked in turn one each tick of the Display cycle. By default these functions do nothing, meaning nothing gets drawn to the canvas
+    // + `preAction` and `postAction` - these functions receive a single argument, a Cell wrapper on which we can draw additional graphics (if needed) - see Demo [Particles 006](../../demo/particles-006.html) for a working example
+    // + `stampAction` - define all major rendering actions in this function. The function receives the following arguments: `(artefact, particle, host)` - where `artefact` is the Emitter entity's artefact object (if any has been defined/set); `particle` is the current Particle object whose history needs to be rendered onto the canvas; and `host` is the Cell wrapper on which we will draw our graphics
+
+    // __fillColorFactory__ and __strokeColorFactory__ - Color objects - there will never be a need to define these attributes as this is done as part of the factory's object build functionality. Used to generate fill and stroke colors for each newly generated particle
+
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 

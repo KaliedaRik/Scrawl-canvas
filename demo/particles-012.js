@@ -78,7 +78,7 @@ const myNet = scrawl.makeNet({
         name: 'unseen-net-block',
         visibility: false, 
     }),
-}).run();
+});
 
 
 scrawl.makeBlock({

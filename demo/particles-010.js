@@ -37,9 +37,6 @@ scrawl.makeShape({
 });
 
 
-
-
-
 // Create a World object; add some user-defined attributes to it
 let myWorld = scrawl.makeWorld({
 
@@ -125,20 +122,17 @@ const myNet = scrawl.makeNet({
             });
     },
     particlesAreDraggable: true,
-});
 
-myNet.run();
-
-myNet.clone({
+}).clone({
 
     name: 'strong-arrow',
     generate: 'strong-shape',
     shapeTemplate: 'my-second-template-arrow',
+
     artefact: scrawl.library.artefact['particle-wheel-1'].clone({
         name: 'particle-wheel-2',
     }),
-
-}).run();
+});
 
 
 // #### Scene animation

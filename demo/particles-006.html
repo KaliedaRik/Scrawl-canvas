@@ -39,7 +39,11 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>...</li>
+      <li>Create a Block entity to match the canvas dimensions, to act as a generation area for an Emitter with a set number of required particles.</li>
+      <li>Create the Emitter alongside its World object, artefact entity and pre-, post- and stampAction functions.</li>
+      <li>Check that the pre- and post- actions work as expected, displaying lines between close Particles, and between Particles and the mouse cursor. Check that the functions respond to changes in the World object's user-defined 'connectionRadius' attribute.</li>
+      <li>Check that Particles that move beyond the canvas display are killed and replaced by new Particles.</li>
+      <li>Check that the requested number of particles, and the actual number of particles displayed, match (with allowances for particle generation and natural particle culling).</li>
     </ul>
     <p><a href="../docs/demo/particles-006.html">Annotated code</a></p>
   </div>

@@ -37,20 +37,25 @@ const Net = function (items = {}) {
 
     this.makeName(items.name);
     this.register();
-
     this.initializePositions();
-
     this.set(this.defs);
 
+    // The entity places a `hitRadius` around each of its particles - effectively a distributed hit zone which can be used for drag-and-drop, and other user interactions..
     this.onEnter = λnull;
     this.onLeave = λnull;
     this.onDown = λnull;
     this.onUp = λnull;
 
+    // Net entitys generate their Particles once, on initialization, in line with the `generate` function's instructions. Scrtawl-canvas includes a number of pre-built generator functions, which we can reference by their String names: `weak-net`, `strong-net`, `weak-shape`, `strong-shape`
     this.generate = λnull;
+
+    // The `postGenerate` function runs imediately after the `generate` function. We can use it to amend the attributes of selected Particles, for instance to make them static.
     this.postGenerate = λnull;
+
+    // As part of its `stamp` functionality the Net entity will invoke the `stampAction` function. If not supplied, the entity will not display anything on the canvas.
     this.stampAction = λnull;
 
+    // Setup the particle store, and the entity's `springs` Array
     this.particleStore = [];
     this.springs = [];
 
@@ -89,48 +94,81 @@ P = entityMix(P);
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 let defaultAttributes = {
 
+    // __world__ - World object; can be set using the String name of a World object, or the World object itself.
     world: null,
+
+    // __artefact__ - In theory, any Scrawl-canvas object whose `isArtefact` flag is set to `true` can be assigned to this attribute. However this has not been tested on non-entity artefacts. For now, stick to Scrawl-canvas entity objects.
+    // + Can be set using the String name of an artefact object, or the artefact object itself.
     artefact: null,
 
-    stampAction: null,
-
-    generate: null,
-    postGenerate: null,
-
+    // __historyLength__ - positive integer Number - every Particle will keep a record of its recent state, in a set of ParticleHistory arrays stored in the Particle's `history` Array. The Net entity will set the maximum permitted length of the history array whenever it generates a new Particle. 
     historyLength: 1,
-    engine: 'euler',
+
+    // Net entitys will, as part of the Display cycle, apply any force objects assigned to a Particle. The initial forces assigned to every new Particle will be in line with the Force objects included in the Net's __forces__ Array.
+    // + To set the Array, supply a new Array containing Force objects, and/or the name Strings of those Force objects, to the `forces` attribute.
     forces: null,
-    springs: null,
+
+    // __mass__ - positive float Number - the initial mass assigned to each Particle when it is generated. Note that, unlike Net entitys, a Net entity will generate all its Particles with the same mass value
+    // + The `mass` attribute is used by the pre-defined ___gravity Force___
     mass: 1,
 
-    // weak-net, strong-net
+    // Physics calculations are handled by the Net entity's physics __engine__ which must be a String value of either `euler` (the default engine), `improved-euler` or `runge-kutta`.
+    engine: 'euler',
+
+    // __springConstant__, __damperConstant__ - positive float Numbers - used for the initial values for any Spring objects generated to connect two Particles
+    springConstant: 50,
+    damperConstant: 10,
+
+    // This is a ratio figure, not the actual rest length. If `== 1`, spring restLength will equal the initial distance between the two particles. `< 1` and the length will be proportionately smaller; `> 1` gives results in a longer length
+    restLength: 1,
+
+    // __showSprings__ - Boolean flag - when set, Scrawl-canvas will display the Spring connections between Particle pairs
+    showSprings: false,
+
+    // __showSpringColor__ - CSS color String - the strokeStyle color used to display the Spring objects
+    showSpringsColor: '#000000',
+
+    // ##### weak-net, strong-net
+    // __rows__, __columns__ - positive integer Numbers
     rows: 0,
     columns: 0, 
+
+    // __rowDistance__, __columnDistance__ - positive float Numbers, representing the absolute pixel distance between rows and columns, or percentage String values representing the distance as measured relative to the host Cell's dimensions
     rowDistance: 0,
     columnDistance: 0,
 
-    // weak-shape, strong-shape
+    // ##### weak-shape, strong-shape
+    // __shapeTemplate__ - String name of a shape-based entity, or the entity object itself - used as the template along which particles will be generated
     shapeTemplate: null,
+
+    // __precision__ - positive integer Number - the number of particles to generate along the template path
     precision: 20,
+
+    // __joinTemplateEnds__ - Boolean flag - when set, springs will be generated to connect the start and the end particles on the template  path
     joinTemplateEnds: false,
 
-    // Spring
-    springConstant: 50,
-    damperConstant: 10,
-    showSprings: false,
-    showSpringsColor: '#000000',
+    particlesAreDraggable: false,
 
-    // This is a ratio figure, not the actual rest length. If == 1, spring restLength will equal the initial distance between the two particles. < 1 and the length will be proportionately smaller; > 1 gives results in a longer length
-    restLength: 1,
+    // Note that the __hitRadius__ attribute - a positive float Number - is absolute, and has nothing to do with the entity's dimensions. Net entity hit zones are tied to its Particles, not its start coordinate.
+    hitRadius: 10,
 
-    particleStore: null,
 
+    // __showHitRadius__ - Boolean flag - when set, Scrawl-canvas will display appropriate circles around each of the Net entity's Particles (in addition to any artefact stamped at the Particle's position)
+    showHitRadius: false,
+
+    // __hitRadiusColor__ - CSS color String - the strokeStyle color used to display the hit radius
+    hitRadiusColor: '#000000',
+
+    // __resetAfterBlur__ - positive float Number (measuring seconds) - physics simulations can be brittle, particularly if they are forced to calculate Particle loads (accelerations), velocities and speeds over a large time step. Rather than manage that time step in cases where the user may neglect or navigate away from the browser tab containing the physics animation, Scrawl-canvas will stop, clear, and recreate the scene if the time it takes the user to return to (re-focus on) the web page is greater than the value set in this attribute.
     resetAfterBlur: 3,
 
-    particlesAreDraggable: false,
-    hitRadius: 10,
-    showHitRadius: false,
-    hitRadiusColor: '#000000',
+    // ##### Not defined in the defs object, but set up in the constructor and setters
+    
+    // __particleStore__ - an Array where all the Net's current particles will be stored. To render the entity, we need to iterate through these particles and use them to repeatedly stamp the Net's artefact - or perform equivalent &lt;canvas> context engine instructions - onto the host Cell. These actions will be defined in the `stampAction` function.
+
+    // __stampAction__ - define all major rendering actions in this function. The function receives the following arguments: `(artefact, particle, host)` - where `artefact` is the Net entity's artefact object (if any has been defined/set); `particle` is the current Particle object whose history needs to be rendered onto the canvas; and `host` is the Cell wrapper on which we will draw our graphics
+
+    // __springs__ - Array - holds all the entity's Spring objects
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -181,6 +219,43 @@ P.factoryKill = function (killArtefact, killWorld) {
 
     if (killWorld) this.world.kill();
     this.purgeParticlesFromLibrary();
+};
+
+P.purgeParticlesFromLibrary = function () {
+
+    let {particleStore, springs} = this;
+
+    // Net entity particles can be referenced by other artefacts (when using them for positioning coordinates. New particles will be created with the same names as the old ones, so it is enough to replace these references with the String names of the particles)
+    artefactnames.forEach(a => {
+
+        let tempArt = artefact[a];
+
+        if (tempArt) {
+
+            if (tempArt.particle && !tempArt.particle.substring && tempArt.particle.name) tempArt.particle = tempArt.particle.name;
+
+            // Polyline entitys go one step further in that they can also use Particles in their pin array
+            if (tempArt.type === 'Polyline' && tempArt.useParticlesAsPins) {
+
+                tempArt.pins.forEach((pin, index) => {
+
+                    if (isa_obj(pin) && pin.type === 'Particle') {
+
+                        tempArt.pins[index] = pin.name;
+                        tempArt.dirtyPins = true;
+                    }
+                });
+            }
+        }
+    });
+
+    // Now we can tell all the Net entity's particles to kill themselves
+    particleStore.forEach(p => p.kill());
+    particleStore.length = 0;
+
+    // We can also get rid of all the Spring objects as they will be recreated alongside the particle objects as part of the Net entity's `generate` functionality.
+    springs.forEach(s => s.kill());
+    springs.length = 0;
 };
 
 
@@ -239,194 +314,110 @@ S.shapeTemplate = function (item) {
 
 // #### Prototype functions
 
-// `prepareStamp` - internal - overwrites the entity mixin function
-P.prepareStamp = function () {
-
-    // Entity-mixin-related functionality
-    if (this.dirtyHost) {
-
-        this.dirtyHost = false;
-        this.dirtyDimensions = true;
-    }
-
-    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
-
-    if (this.dirtyScale) this.cleanScale();
-
-    if (this.dirtyDimensions) this.cleanDimensions();
-
-    if (this.dirtyLock) this.cleanLock();
-
-    if (this.dirtyStart) this.cleanStart();
-
-    if (this.dirtyOffset) this.cleanOffset();
-
-    if (this.dirtyHandle) this.cleanHandle();
-
-    if (this.dirtyRotation) this.cleanRotation();
-
-    if (this.lockTo.indexOf('mouse') >= 0) {
-
-        this.dirtyStampPositions = true;
-        this.dirtyStampHandlePositions = true;
-    }
-
-    if (this.dirtyStampPositions) this.cleanStampPositions();
-    if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
-};
-
 // `regularStampSynchronousActions` - overwriters the functionality defined in the entity.js mixin
 P.regularStampSynchronousActions = function () {
 
-    // Unlike other entitys, Net entitys need to be __running__ before they can be stamped
-    if (this.isRunning) {
+    let {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
 
-        let {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
+    let host = this.currentHost;
 
-        let host = this.currentHost;
+    // The particle system is a physics system, which means we need to advance it by a small amount of time as part of each Display cycle
+    let deltaTime = 16 / 1000,
+        now = Date.now();
 
-        // The particle system is a physics system, which means we need to advance it by a small amount of time as part of each Display cycle
-        let deltaTime = 16 / 1000,
-            now = Date.now();
+    if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
 
-        if (lastUpdated) deltaTime = (now - lastUpdated) / 1000;
+    // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restart the Net's animation.
+    if (deltaTime > resetAfterBlur) {
 
-        // If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restart the emitter's animation.
-        if (deltaTime > resetAfterBlur) {
-
-            this.purgeParticlesFromLibrary();
-            deltaTime = 16 / 1000;
-        }
-
-        // If we have no particles, we need to generate them
-        if (!particleStore.length) {
-
-            generate.call(this, host);
-            postGenerate.call(this);
-        }
-
-        // The physics core of the function: 
-        // + Calculate the forces acting on each of the Net entity's particles
-        // + Add the Spring constraints to the particles
-        // + Get the particles to update themselves, using the appropriate physics engine
-        particleStore.forEach(p => p.applyForces(world, host));
-        springs.forEach(s => s.applySpring());
-        particleStore.forEach(p => p.update(deltaTime, world));
-
-        // Additional visuals are available - specifically we can draw in the springs acting on particle pairs before we stamp the artefact on them
-        if (showSprings) {
-
-            let engine = host.engine;
-
-            engine.save();
-            engine.strokeStyle = showSpringsColor;
-            engine.lineWidth = 1;
-            engine.setTransform(1, 0, 0, 1, 0, 0);
-            engine.beginPath();
-
-            springs.forEach(s => {
-
-                let {particleFrom, particleTo} = s;
-
-                engine.moveTo(particleFrom.position.x, particleFrom.position.y);
-                engine.lineTo(particleTo.position.x, particleTo.position.y);
-            });
-            engine.stroke();
-            engine.restore();
-        }
-
-        // The display cycle core of the function
-        // + Get each particle to update its history
-        // + Using that history, get each particle to stamp some ink onto the canvas.
-        particleStore.forEach(p => {
-
-            p.manageHistory(deltaTime, host);
-            stampAction.call(this, art, p, host);
-        });
-
-        // A second set of additional visuals - display each particle's hit region
-        if (showHitRadius) {
-
-            let engine = host.engine;
-
-            engine.save();
-            engine.lineWidth = 1;
-            engine.strokeStyle = hitRadiusColor;
-
-            engine.setTransform(1, 0, 0, 1, 0, 0);
-            engine.beginPath();
-
-            particleStore.forEach(p => {
-                engine.moveTo(p.position.x, p.position.y);
-                engine.arc(p.position.x, p.position.y, hitRadius, 0, Math.PI * 2);
-            });
-            
-            engine.stroke();
-            engine.restore();
-        }
-
-        // The final critical step - remember the absolute time value of when we started to perform this Display cycle
-        this.lastUpdated = now;
+        this.purgeParticlesFromLibrary();
+        deltaTime = 16 / 1000;
     }
-};
 
-P.run = function () {
+    // If we have no particles, we need to generate them
+    if (!particleStore.length) {
 
-    this.isRunning = true;
-    return this;
-};
-P.halt = function () {
+        generate.call(this, host);
+        postGenerate.call(this);
+    }
 
-    this.isRunning = false;
-    return this;
-};
-P.purgeParticlesFromLibrary = function () {
+    // The physics core of the function: 
+    // + Calculate the forces acting on each of the Net entity's particles
+    // + Add the Spring constraints to the particles
+    // + Get the particles to update themselves, using the appropriate physics engine
+    particleStore.forEach(p => p.applyForces(world, host));
+    springs.forEach(s => s.applySpring());
+    particleStore.forEach(p => p.update(deltaTime, world));
 
-    let {particleStore, springs} = this;
+    // Additional visuals are available - specifically we can draw in the springs acting on particle pairs before we stamp the artefact on them
+    if (showSprings) {
 
-    // Net entity particles can be referenced by other artefacts (when using them for positioning coordinates. New particles will be created with the same names as the old ones, so it is enough to replace these references with the String names of the particles)
-    artefactnames.forEach(a => {
+        let engine = host.engine;
 
-        let tempArt = artefact[a];
+        engine.save();
+        engine.strokeStyle = showSpringsColor;
+        engine.lineWidth = 1;
+        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.beginPath();
 
-        if (tempArt) {
+        springs.forEach(s => {
 
-            if (tempArt.particle && !tempArt.particle.substring && tempArt.particle.name) tempArt.particle = tempArt.particle.name;
+            let {particleFrom, particleTo} = s;
 
-            // Polyline entitys go one step further in that they can also use Particles in their pin array
-            if (tempArt.type === 'Polyline' && tempArt.useParticlesAsPins) {
+            engine.moveTo(particleFrom.position.x, particleFrom.position.y);
+            engine.lineTo(particleTo.position.x, particleTo.position.y);
+        });
+        engine.stroke();
+        engine.restore();
+    }
 
-                tempArt.pins.forEach((pin, index) => {
+    // The display cycle core of the function
+    // + Get each particle to update its history
+    // + Using that history, get each particle to stamp some ink onto the canvas.
+    particleStore.forEach(p => {
 
-                    if (isa_obj(pin) && pin.type === 'Particle') {
-
-                        tempArt.pins[index] = pin.name;
-                        tempArt.dirtyPins = true;
-                    }
-                });
-            }
-        }
+        p.manageHistory(deltaTime, host);
+        stampAction.call(this, art, p, host);
     });
 
-    // Now we can tell all the Net entity's particles to kill themselves
-    particleStore.forEach(p => p.kill());
-    particleStore.length = 0;
+    // A second set of additional visuals - display each particle's hit region
+    if (showHitRadius) {
 
-    // We can also get rid of all the Spring objects as they will be recreated alongside the particle objects as part of the Net entity's `generate` functionality.
-    springs.forEach(s => s.kill());
-    springs.length = 0;
+        let engine = host.engine;
+
+        engine.save();
+        engine.lineWidth = 1;
+        engine.strokeStyle = hitRadiusColor;
+
+        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.beginPath();
+
+        particleStore.forEach(p => {
+            engine.moveTo(p.position.x, p.position.y);
+            engine.arc(p.position.x, p.position.y, hitRadius, 0, Math.PI * 2);
+        });
+        
+        engine.stroke();
+        engine.restore();
+    }
+
+    // The final critical step - remember the absolute time value of when we started to perform this Display cycle
+    this.lastUpdated = now;
 };
 
+// `restart` - force the Net to purge its particles/springs, rebuild itself, and restart its animation from the beginning
 P.restart = function () {
 
     this.purgeParticlesFromLibrary();
     
     this.lastUpdated = Date.now();
 
-    this.isRunning = true;
     return this;
 };
 
+// `checkHit` - overwrites the function defined in mixin/position.js
+// + The Net entity's hit areas are circles centred on the entity's Particle's positions. 
+// + Nets cannot be dragged; the Particles that make up the Net can be dragged.
 P.checkHit = function (items = [], mycell) {
 
     this.lastHitParticle = null;
@@ -486,7 +477,8 @@ P.checkHit = function (items = [], mycell) {
     return false;
 };
 
-// Function overwritten by entitys, if required
+// `checkHitReturn` - overwrites the function defined in mixin/position.js
+// + The return object includes the Particle object that recorded the hit, saved in the object's `particle` attribute
 P.checkHitReturn = function (x, y, cell, particle) {
 
     return {
@@ -497,7 +489,8 @@ P.checkHitReturn = function (x, y, cell, particle) {
     };
 };
 
-// `pickupArtefact`
+// `pickupArtefact` - overwrites the function defined in mixin/position.js
+// + One of the entity's Particle objects is being dragged, not the entity itself
 P.pickupArtefact = function (items = {}) {
 
     let particle = this.lastHitParticle;
@@ -511,7 +504,8 @@ P.pickupArtefact = function (items = {}) {
     return this;
 };
 
-// `dropArtefact`
+// `dropArtefact` - overwrites the function defined in mixin/position.js
+// + One of the entity's Particle objects is being dragged, not the entity itself
 P.dropArtefact = function () {
 
     this.lastHitParticle.isBeingDragged = null;
@@ -521,8 +515,11 @@ P.dropArtefact = function () {
     return this;
 };
 
+// #### Pre-defined Net generators
 const generators = {
 
+    // `weak-net` - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to four of its closest horizontal and vertical neighbors
+    // + Can be used to model cloth
     'weak-net': function (host) {
 
         let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
@@ -623,6 +620,8 @@ const generators = {
         }
     },
 
+    // `strong-net` - a net made up of rows and columns, with particles at each row/column intersection. The generator will connect each Particle with springs to up to eight of its closest horizontal, vertical and diagonal neighbors
+    // + Can be used to model a soft-bodied object
     'strong-net': function (host) {
 
         let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = this;
@@ -743,6 +742,7 @@ const generators = {
         }
     },
 
+    // `weak-shape` - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors
     'weak-shape': function (host) {
 
         let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
@@ -862,6 +862,7 @@ const generators = {
         }
     },
 
+    // `strong-shape` - a rope of Particles set along a path. The generator will connect each Particle with springs to up to six of its closest neighbors, and make an additional connection with a Particle at some distance from it (to act as a strut)
     'strong-shape': function (host) {
 
         let { particleStore, artefact:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = this;
@@ -997,8 +998,6 @@ const generators = {
 
 
 // #### Factory
-// ```
-// ```
 const makeNet = function (items) {
     return new Net(items);
 };
