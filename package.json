@@ -34,10 +34,9 @@
   },
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
+    "docco": "^0.8.0",
     "rollup": "^2.15.0",
     "rollup-plugin-terser": "^6.1.0"
   },
-  "dependencies": {
-    "docco": "^0.8.0"
-  }
+  "dependencies": {}
 }
